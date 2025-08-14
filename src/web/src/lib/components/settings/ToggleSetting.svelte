@@ -1,21 +1,18 @@
 <!-- ToggleSetting.svelte - Improved contrast toggle component -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
 	interface Props {
 		label: string;
 		checked: boolean;
 		helpText?: string;
 		disabled?: boolean;
+		onchange?: (checked: boolean) => void;
 	}
 
-	let { label, checked = false, helpText, disabled = false }: Props = $props();
-
-	const dispatch = createEventDispatcher();
+	let { label, checked = false, helpText, disabled = false, onchange }: Props = $props();
 
 	function handleToggle() {
 		if (disabled) return;
-		dispatch('change', !checked);
+		onchange?.(!checked);
 	}
 </script>
 

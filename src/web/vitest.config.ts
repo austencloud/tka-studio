@@ -20,4 +20,7 @@ export default defineConfig({
       },
     },
   },
+  resolve: {
+    conditions: ["browser"],
+  },
 });

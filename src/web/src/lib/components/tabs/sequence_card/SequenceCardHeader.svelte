@@ -1,19 +1,14 @@
 <!-- SequenceCardHeader.svelte - Header component matching desktop modern styling -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
-	const dispatch = createEventDispatcher<{
-		exportAll: void;
-		refresh: void;
-		regenerateImages: void;
-	}>();
-
 	interface Props {
 		isExporting?: boolean;
 		isRegenerating?: boolean;
 		progressValue?: number;
 		progressMessage?: string;
 		showProgress?: boolean;
+		onexportall?: () => void;
+		onrefresh?: () => void;
+		onregenerateimages?: () => void;
 	}
 
 	let {
@@ -22,6 +17,9 @@
 		progressValue = 0,
 		progressMessage = 'Select a sequence length to view cards',
 		showProgress = false,
+		onexportall,
+		onrefresh,
+		onregenerateimages
 	}: Props = $props();
 
 	// Button states
@@ -52,7 +50,7 @@
 			<button
 				class="action-btn export-btn"
 				disabled={exportDisabled}
-				onclick={() => dispatch('exportAll')}
+				onclick={() => onexportall?.()}
 				title="Export all sequence cards to files"
 			>
 				<span class="btn-icon">📤</span>
@@ -61,7 +59,7 @@
 
 			<button
 				class="action-btn refresh-btn"
-				onclick={() => dispatch('refresh')}
+				onclick={() => onrefresh?.()}
 				title="Refresh the card display"
 			>
 				<span class="btn-icon">🔄</span>
@@ -71,7 +69,7 @@
 			<button
 				class="action-btn regenerate-btn"
 				disabled={regenerateDisabled}
-				onclick={() => dispatch('regenerateImages')}
+				onclick={() => onregenerateimages?.()}
 				title="Regenerate all sequence card images"
 			>
 				<span class="btn-icon">🔧</span>

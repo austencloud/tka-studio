@@ -6,33 +6,43 @@
 -->
 
 <script lang="ts">
-	import { createEventDispatcher, onDestroy, onMount } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
+
+	interface Props {
+		timeRemaining?: number; // seconds
+		totalTime?: number; // seconds
+		isRunning?: boolean;
+		isPaused?: boolean;
+		showWarnings?: boolean;
+		size?: 'small' | 'medium' | 'large';
+		ontimeup?: () => void;
+		onwarning?: (data: { timeRemaining: number }) => void;
+		ontick?: (data: { timeRemaining: number }) => void;
+	}
 
 	// Props
-	export let timeRemaining: number = 120; // seconds
-	export let totalTime: number = 120; // seconds
-	export let isRunning: boolean = false;
-	export let isPaused: boolean = false;
-	export let showWarnings: boolean = true;
-	export let size: 'small' | 'medium' | 'large' = 'medium';
-
-	// Events
-	const dispatch = createEventDispatcher<{
-		timeUp: void;
-		warning: { timeRemaining: number };
-		tick: { timeRemaining: number };
-	}>();
+	let {
+		timeRemaining = 120,
+		totalTime = 120,
+		isRunning = false,
+		isPaused = false,
+		showWarnings = true,
+		size = 'medium',
+		ontimeup,
+		onwarning,
+		ontick
+	}: Props = $props();
 
 	// State
 	let interval: NodeJS.Timeout | null = null;
 	let lastWarningTime = 0;
 
-	// Reactive statements
-	$: formattedTime = formatTime(timeRemaining);
-	$: progressPercentage = totalTime > 0 ? (timeRemaining / totalTime) * 100 : 0;
-	$: timerClass = getTimerClass();
-	$: isWarning = timeRemaining <= 30 && timeRemaining > 10;
-	$: isCritical = timeRemaining <= 10;
+	// Derived state
+	let formattedTime = $derived(formatTime(timeRemaining));
+	let progressPercentage = $derived(totalTime > 0 ? (timeRemaining / totalTime) * 100 : 0);
+	let timerClass = $derived(getTimerClass());
+	let isWarning = $derived(timeRemaining <= 30 && timeRemaining > 10);
+	let isCritical = $derived(timeRemaining <= 10);
 
 	// Lifecycle
 	onMount(() => {
@@ -46,11 +56,13 @@
 	});
 
 	// Watch for prop changes
-	$: if (isRunning && !interval) {
-		startTimer();
-	} else if (!isRunning && interval) {
-		stopTimer();
-	}
+	$effect(() => {
+		if (isRunning && !interval) {
+			startTimer();
+		} else if (!isRunning && interval) {
+			stopTimer();
+		}
+	});
 
 	// Methods
 	function startTimer() {
@@ -59,7 +71,7 @@
 		interval = setInterval(() => {
 			if (timeRemaining > 0) {
 				timeRemaining--;
-				dispatch('tick', { timeRemaining });
+				ontick?.({ timeRemaining });
 
 				// Check for warnings
 				if (showWarnings) {
@@ -68,7 +80,7 @@
 
 				// Check if time is up
 				if (timeRemaining <= 0) {
-					dispatch('timeUp');
+					ontimeup?.();
 					stopTimer();
 				}
 			}
@@ -88,7 +100,7 @@
 		for (const warningTime of warningTimes) {
 			if (timeRemaining === warningTime && lastWarningTime !== warningTime) {
 				lastWarningTime = warningTime;
-				dispatch('warning', { timeRemaining });
+				onwarning?.({ timeRemaining });
 				break;
 			}
 		}

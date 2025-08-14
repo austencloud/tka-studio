@@ -1,7 +1,6 @@
 <!-- BackgroundTab.svelte - Background settings tab for the settings dialog -->
 <script lang="ts">
 	import type { BackgroundType, QualityLevel } from '$lib/components/backgrounds/types/types';
-	import { createEventDispatcher } from 'svelte';
 	import SelectInput from '../SelectInput.svelte';
 	import SettingCard from '../SettingCard.svelte';
 	import ToggleSetting from '../ToggleSetting.svelte';
@@ -12,10 +11,10 @@
 			backgroundQuality?: QualityLevel;
 			backgroundEnabled?: boolean;
 		};
+		onupdate?: (data: { key: string; value: any }) => void;
 	}
 
-	let { settings }: Props = $props();
-	const dispatch = createEventDispatcher();
+	let { settings, onupdate }: Props = $props();
 
 	// Local state for form values - FIXED: Use app's default ('aurora') not component default
 	let backgroundType = $state<BackgroundType>(settings.backgroundType || 'aurora');
@@ -40,9 +39,9 @@
 
 	// Update handlers removed - now using inline functions
 
-	function handleEnabledChange(event: CustomEvent) {
-		backgroundEnabled = event.detail;
-		dispatch('update', { key: 'backgroundEnabled', value: backgroundEnabled });
+	function handleEnabledChange(checked: boolean) {
+		backgroundEnabled = checked;
+		onupdate?.({ key: 'backgroundEnabled', value: backgroundEnabled });
 	}
 
 	// Background descriptions for user guidance
@@ -66,7 +65,7 @@
 			label="Enable Background"
 			checked={backgroundEnabled}
 			helpText="Show animated background behind the interface"
-			on:change={handleEnabledChange}
+			onchange={handleEnabledChange}
 		/>
 
 		{#if backgroundEnabled}
@@ -77,7 +76,7 @@
 				helpText={currentDescription}
 				onchange={(value) => {
 					backgroundType = value as BackgroundType;
-					dispatch('update', { key: 'backgroundType', value: backgroundType });
+					onupdate?.({ key: 'backgroundType', value: backgroundType });
 				}}
 			/>
 
@@ -88,7 +87,7 @@
 				helpText="Higher quality shows more particles and effects"
 				onchange={(value) => {
 					backgroundQuality = value as QualityLevel;
-					dispatch('update', { key: 'backgroundQuality', value: backgroundQuality });
+					onupdate?.({ key: 'backgroundQuality', value: backgroundQuality });
 				}}
 			/>
 		{/if}

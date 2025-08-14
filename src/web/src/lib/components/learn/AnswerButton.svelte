@@ -6,22 +6,27 @@
 -->
 
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
+	interface Props {
+		content: string;
+		isSelected?: boolean;
+		isCorrect?: boolean;
+		showFeedback?: boolean;
+		disabled?: boolean;
+		onclick?: () => void;
+	}
 
 	// Props
-	export let content: string;
-	export let isSelected = false;
-	export let isCorrect = false;
-	export let showFeedback = false;
-	export let disabled = false;
+	let {
+		content,
+		isSelected = false,
+		isCorrect = false,
+		showFeedback = false,
+		disabled = false,
+		onclick
+	}: Props = $props();
 
-	// Events
-	const dispatch = createEventDispatcher<{
-		click: void;
-	}>();
-
-	// Reactive statements
-	$: buttonClass = getButtonClass();
+	// Derived state
+	let buttonClass = $derived(getButtonClass());
 
 	// Methods
 	function getButtonClass(): string {
@@ -50,7 +55,7 @@
 
 	function handleClick() {
 		if (!disabled) {
-			dispatch('click');
+			onclick?.();
 		}
 	}
 </script>

@@ -7,23 +7,29 @@
 
 <script lang="ts">
 	import type { PictographData } from '$domain/PictographData';
-	import { createEventDispatcher } from 'svelte';
 	import PictographRenderer from './PictographRenderer.svelte';
 
+	interface Props {
+		pictographData: PictographData;
+		isSelected?: boolean;
+		isCorrect?: boolean;
+		showFeedback?: boolean;
+		disabled?: boolean;
+		onclick?: () => void;
+	}
+
 	// Props
-	export let pictographData: PictographData;
-	export let isSelected = false;
-	export let isCorrect = false;
-	export let showFeedback = false;
-	export let disabled = false;
+	let {
+		pictographData,
+		isSelected = false,
+		isCorrect = false,
+		showFeedback = false,
+		disabled = false,
+		onclick
+	}: Props = $props();
 
-	// Events
-	const dispatch = createEventDispatcher<{
-		click: void;
-	}>();
-
-	// Reactive statements
-	$: cardClass = getCardClass();
+	// Derived state
+	let cardClass = $derived(getCardClass());
 
 	// Methods
 	function getCardClass(): string {
@@ -52,7 +58,7 @@
 
 	function handleClick() {
 		if (!disabled) {
-			dispatch('click');
+			onclick?.();
 		}
 	}
 </script>

@@ -1,14 +1,14 @@
 <!-- ExportActionsCard.svelte - Export action buttons matching desktop app -->
 <script lang="ts">
 	import type { SequenceData } from '$services/interfaces';
-	import { createEventDispatcher } from 'svelte';
 
 	interface Props {
 		currentSequence: SequenceData | null;
+		onexportcurrent?: () => void;
+		onexportall?: () => void;
 	}
 
-	let { currentSequence }: Props = $props();
-	const dispatch = createEventDispatcher();
+	let { currentSequence, onexportcurrent, onexportall }: Props = $props();
 
 	// Loading states
 	let isExportingCurrent = $state(false);
@@ -25,7 +25,7 @@
 
 		try {
 			isExportingCurrent = true;
-			dispatch('exportCurrent');
+			onexportcurrent?.();
 
 			// Simulate export process (replace with actual export logic)
 			await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -42,7 +42,7 @@
 
 		try {
 			isExportingAll = true;
-			dispatch('exportAll');
+			onexportall?.();
 
 			// Simulate export process (replace with actual export logic)
 			await new Promise((resolve) => setTimeout(resolve, 1500));

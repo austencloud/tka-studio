@@ -2,12 +2,14 @@
 <script lang="ts">
 	import type { BeatData } from '$services/interfaces';
 	import { onMount } from 'svelte';
-	// Create dispatcher for events
-	import { createEventDispatcher } from 'svelte';
-	const dispatch = createEventDispatcher();
+
+	interface Props {
+		currentBeatData?: BeatData | null;
+		onorientationchanged?: (data: { color: 'blue' | 'red'; orientation: string }) => void;
+	}
 
 	// Props
-	let { currentBeatData = null }: { currentBeatData?: BeatData | null } = $props();
+	let { currentBeatData = null, onorientationchanged }: Props = $props();
 
 	// State variables
 	let blueOrientation = $state('in');
@@ -30,7 +32,7 @@
 		selectedArrow = `${color}_${orientation}`;
 
 		// Dispatch the change event
-		dispatch('orientationChanged', {
+		onorientationchanged?.({
 			color,
 			orientation,
 		});

@@ -80,7 +80,12 @@ Matches the desktop version exactly:
 	});
 </script>
 
-<div class="option-picker-section" class:expanded={sectionExpanded}>
+<div
+	class="option-picker-section"
+	class:expanded={sectionExpanded}
+	role="region"
+	aria-label="{letterType} pictographs section"
+>
 	<!-- Section Header -->
 	<OptionPickerSectionHeader {letterType} onToggle={toggleSection} />
 
@@ -98,6 +103,7 @@ Matches the desktop version exactly:
 						class:selected={selectedPictograph?.id === pictograph.id}
 						role="button"
 						tabindex="0"
+						aria-label="Select {pictograph.letter || 'pictograph'} pictograph"
 						onclick={() => handlePictographSelected(pictograph)}
 						onkeydown={(e) => {
 							if (e.key === 'Enter' || e.key === ' ') {

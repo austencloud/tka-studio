@@ -14,6 +14,13 @@
 	async function handleTabClick(targetTab: ActiveRightPanel) {
 		await constructTabTransitionService.handleMainTabTransition(targetTab);
 	}
+
+	function handleKeyDown(event: KeyboardEvent, targetTab: ActiveRightPanel) {
+		if (event.key === 'Enter' || event.key === ' ') {
+			event.preventDefault();
+			handleTabClick(targetTab);
+		}
+	}
 </script>
 
 <div class="main-tab-navigation" data-testid="tab-navigation">
@@ -22,6 +29,7 @@
 		class="main-tab-btn"
 		class:active={activeRightPanel === 'build'}
 		onclick={() => handleTabClick('build')}
+		onkeydown={(e) => handleKeyDown(e, 'build')}
 	>
 		🔨 Build
 	</button>
@@ -30,6 +38,7 @@
 		class="main-tab-btn"
 		class:active={activeRightPanel === 'generate'}
 		onclick={() => handleTabClick('generate')}
+		onkeydown={(e) => handleKeyDown(e, 'generate')}
 	>
 		🤖 Generate
 	</button>
@@ -38,6 +47,7 @@
 		class="main-tab-btn"
 		class:active={activeRightPanel === 'edit'}
 		onclick={() => handleTabClick('edit')}
+		onkeydown={(e) => handleKeyDown(e, 'edit')}
 	>
 		🔧 Edit
 	</button>
@@ -46,6 +56,7 @@
 		class="main-tab-btn"
 		class:active={activeRightPanel === 'export'}
 		onclick={() => handleTabClick('export')}
+		onkeydown={(e) => handleKeyDown(e, 'export')}
 	>
 		🔤 Export
 	</button>

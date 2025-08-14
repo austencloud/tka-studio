@@ -1,18 +1,13 @@
 <!-- SequenceCardNavigation.svelte - Navigation sidebar matching desktop modern styling -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
-	const dispatch = createEventDispatcher<{
-		lengthSelected: number;
-		columnCountChanged: number;
-	}>();
-
 	interface Props {
 		selectedLength?: number;
 		columnCount?: number;
+		onlengthselected?: (length: number) => void;
+		oncolumncountchanged?: (count: number) => void;
 	}
 
-	let { selectedLength = 16, columnCount = 2 }: Props = $props();
+	let { selectedLength = 16, columnCount = 2, onlengthselected, oncolumncountchanged }: Props = $props();
 
 	// Length options matching desktop app exactly
 	const lengthOptions = [
@@ -33,14 +28,14 @@
 
 	function handleLengthClick(length: number) {
 		selectedLength = length;
-		dispatch('lengthSelected', length);
+		onlengthselected?.(length);
 	}
 
 	function handleColumnChange(event: Event) {
 		const target = event.target as HTMLSelectElement;
 		const newCount = parseInt(target.value);
 		columnCount = newCount;
-		dispatch('columnCountChanged', newCount);
+		oncolumncountchanged?.(newCount);
 	}
 </script>
 

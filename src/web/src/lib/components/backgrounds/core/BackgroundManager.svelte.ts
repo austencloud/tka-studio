@@ -1,4 +1,3 @@
-import { writable, derived, get } from "svelte/store";
 import { PerformanceTracker } from "./PerformanceTracker";
 import type {
   Dimensions,
@@ -7,14 +6,14 @@ import type {
 } from "../types/types";
 
 export class BackgroundManager {
-  public dimensions = writable<Dimensions>({ width: 0, height: 0 });
-  public performanceMetrics = writable<PerformanceMetrics>({
+  public dimensions = $state<Dimensions>({ width: 0, height: 0 });
+  public performanceMetrics = $state<PerformanceMetrics>({
     fps: 60,
     warnings: [],
   });
-  public isActive = writable<boolean>(true);
-  public qualityMode = writable<QualityLevel>("high");
-  public isLoading = writable<boolean>(false);
+  public isActive = $state<boolean>(true);
+  public qualityMode = $state<QualityLevel>("high");
+  public isLoading = $state<boolean>(false);
 
   private performanceTracker: PerformanceTracker;
 
@@ -25,9 +24,8 @@ export class BackgroundManager {
 
   private reportCallback: ((metrics: PerformanceMetrics) => void) | null = null;
 
-  public shouldRender = derived(
-    [this.performanceMetrics, this.isActive],
-    ([$metrics, $isActive]) => $isActive && $metrics.fps > 30,
+  public shouldRender = $derived(
+    this.isActive && this.performanceMetrics.fps > 30,
   );
 
   constructor() {
@@ -51,10 +49,10 @@ export class BackgroundManager {
     const initialWidth = isBrowser ? window.innerWidth : 1280;
     const initialHeight = isBrowser ? window.innerHeight : 720;
 
-    this.dimensions.set({
+    this.dimensions = {
       width: initialWidth,
       height: initialHeight,
-    });
+    };
 
     canvas.width = initialWidth;
     canvas.height = initialHeight;
@@ -94,18 +92,18 @@ export class BackgroundManager {
       this.performanceTracker.update();
 
       const perfStatus = this.performanceTracker.getPerformanceStatus();
-      this.performanceMetrics.set({
+      this.performanceMetrics = {
         fps: perfStatus.fps,
         warnings: perfStatus.warnings,
-      });
+      };
 
       if (this.reportCallback) {
-        this.reportCallback(get(this.performanceMetrics));
+        this.reportCallback(this.performanceMetrics);
       }
 
-      const dimensions = get(this.dimensions);
+      const dimensions = this.dimensions;
 
-      if (get(this.shouldRender)) {
+      if (this.shouldRender) {
         this.ctx.clearRect(0, 0, dimensions.width, dimensions.height);
 
         renderFn(this.ctx, dimensions);
@@ -142,11 +140,11 @@ export class BackgroundManager {
   }
 
   public setQuality(quality: QualityLevel): void {
-    this.qualityMode.set(quality);
+    this.qualityMode = quality;
   }
 
   public setLoading(isLoading: boolean): void {
-    this.isLoading.set(isLoading);
+    this.isLoading = isLoading;
   }
 
   private handleResize(): void {
@@ -160,19 +158,19 @@ export class BackgroundManager {
     this.canvas.width = newWidth;
     this.canvas.height = newHeight;
 
-    this.dimensions.set({ width: newWidth, height: newHeight });
+    this.dimensions = { width: newWidth, height: newHeight };
 
-    const currentQuality = get(this.qualityMode);
-    this.qualityMode.set("low");
+    const currentQuality = this.qualityMode;
+    this.qualityMode = "low";
 
     setTimeout(() => {
-      this.qualityMode.set(currentQuality);
+      this.qualityMode = currentQuality;
     }, 500);
   }
 
   private handleVisibilityChange(): void {
     const isVisible = document.visibilityState === "visible";
-    this.isActive.set(isVisible);
+    this.isActive = isVisible;
   }
 }
 

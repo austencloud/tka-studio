@@ -1,6 +1,5 @@
 <!-- GeneralTab.svelte - Compact general settings with fade system controls -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
 	import SelectInput from '../SelectInput.svelte';
 	import SettingCard from '../SettingCard.svelte';
 	import TextInput from '../TextInput.svelte';
@@ -18,10 +17,10 @@
 
 	interface Props {
 		settings: AppSettings;
+		onupdate?: (data: { key: string; value: any }) => void;
 	}
 
-	let { settings }: Props = $props();
-	const dispatch = createEventDispatcher();
+	let { settings, onupdate }: Props = $props();
 
 	// Local state for form values
 	let userName = $state(settings.userName || '');
@@ -39,31 +38,31 @@
 	];
 
 	// Animation handlers (simplified)
-	function handleAnimationsEnabledChange(event: CustomEvent) {
-		animationsEnabled = event.detail;
-		dispatch('update', { key: 'animationsEnabled', value: animationsEnabled });
+	function handleAnimationsEnabledChange(checked: boolean) {
+		animationsEnabled = checked;
+		onupdate?.({ key: 'animationsEnabled', value: animationsEnabled });
 		console.log(`🎨 Animations ${animationsEnabled ? 'enabled' : 'disabled'}`);
 	}
-	function handleUserNameChange(event: CustomEvent) {
-		userName = event.detail;
-		dispatch('update', { key: 'userName', value: userName });
+	function handleUserNameChange(value: string) {
+		userName = value;
+		onupdate?.({ key: 'userName', value: userName });
 	}
 
-	function handleAutoSaveChange(event: CustomEvent) {
-		autoSave = event.detail;
-		dispatch('update', { key: 'autoSave', value: autoSave });
+	function handleAutoSaveChange(checked: boolean) {
+		autoSave = checked;
+		onupdate?.({ key: 'autoSave', value: autoSave });
 	}
 
 	function handleGridModeChange(value: string) {
 		if (value === 'diamond' || value === 'box') {
 			gridMode = value;
-			dispatch('update', { key: 'gridMode', value: gridMode });
+			onupdate?.({ key: 'gridMode', value: gridMode });
 		}
 	}
 
-	function handleWorkbenchColumnsChange(event: CustomEvent) {
-		workbenchColumns = parseInt(event.detail);
-		dispatch('update', { key: 'workbenchColumns', value: workbenchColumns });
+	function handleWorkbenchColumnsChange(value: string) {
+		workbenchColumns = parseInt(value);
+		onupdate?.({ key: 'workbenchColumns', value: workbenchColumns });
 	}
 </script>
 
@@ -75,7 +74,7 @@
 			placeholder="Enter your name..."
 			maxlength={50}
 			helpText="Appears on exported sequences"
-			on:change={handleUserNameChange}
+			onchange={handleUserNameChange}
 		/>
 	</SettingCard>
 
@@ -84,7 +83,7 @@
 			label="Enable Animations"
 			checked={animationsEnabled}
 			helpText="Enable smooth animations and transitions"
-			on:change={handleAnimationsEnabledChange}
+			onchange={handleAnimationsEnabledChange}
 		/>
 	</SettingCard>
 
@@ -93,7 +92,7 @@
 			label="Auto-save Settings"
 			checked={autoSave}
 			helpText="Save changes automatically"
-			on:change={handleAutoSaveChange}
+			onchange={handleAutoSaveChange}
 		/>
 
 		<SelectInput
@@ -111,7 +110,7 @@
 			min={1}
 			max={12}
 			helpText="Number of columns in sequence workbench"
-			on:change={handleWorkbenchColumnsChange}
+			onchange={handleWorkbenchColumnsChange}
 		/>
 	</SettingCard>
 </div>

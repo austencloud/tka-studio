@@ -1,12 +1,17 @@
 <!-- ExportPanel.svelte - Export panel matching desktop app exactly -->
 <script lang="ts">
 	import { getCurrentSequence } from '$lib/state/sequenceState.svelte';
-	import { createEventDispatcher } from 'svelte';
 	import ExportActionsCard from './ExportActionsCard.svelte';
 	import ExportPreviewCard from './ExportPreviewCard.svelte';
 	import ExportSettingsCard from './ExportSettingsCard.svelte';
 
-	const dispatch = createEventDispatcher();
+	interface Props {
+		onsettingchanged?: (data: { setting: string; value: any }) => void;
+		onpreviewupdaterequested?: (settings: any) => void;
+		onexportrequested?: (data: { type: string; config: any }) => void;
+	}
+
+	let { onsettingchanged, onpreviewupdaterequested, onexportrequested }: Props = $props();
 
 	// Current sequence for export
 	let currentSequence = $derived(getCurrentSequence());
@@ -31,15 +36,15 @@
 	});
 
 	// Handle setting changes
-	function handleSettingChanged(event: CustomEvent) {
-		const { setting, value } = event.detail;
+	function handleSettingChanged(data: { setting: string; value: any }) {
+		const { setting, value } = data;
 		exportSettings = { ...exportSettings, [setting]: value };
 
 		// Emit to parent for persistence
-		dispatch('settingChanged', { setting, value });
+		onsettingchanged?.({ setting, value });
 
 		// Trigger preview update
-		dispatch('previewUpdateRequested', exportSettings);
+		onpreviewupdaterequested?.(exportSettings);
 	}
 
 	// Handle export current sequence
@@ -54,7 +59,7 @@
 			settings: exportSettings,
 		};
 
-		dispatch('exportRequested', { type: 'current', config: exportConfig });
+		onexportrequested?.({ type: 'current', config: exportConfig });
 	}
 
 	// Handle export all sequences
@@ -63,7 +68,7 @@
 			settings: exportSettings,
 		};
 
-		dispatch('exportRequested', { type: 'all', config: exportConfig });
+		onexportrequested?.({ type: 'all', config: exportConfig });
 	}
 </script>
 
@@ -81,13 +86,13 @@
 			<!-- Actions should always be visible; place first and keep out of scroll -->
 			<ExportActionsCard
 				{currentSequence}
-				on:exportCurrent={handleExportCurrent}
-				on:exportAll={handleExportAll}
+				onexportcurrent={handleExportCurrent}
+				onexportall={handleExportAll}
 			/>
 
 			<!-- Scroll only the settings, not the actions -->
 			<div class="settings-scroll">
-				<ExportSettingsCard {exportSettings} on:settingChanged={handleSettingChanged} />
+				<ExportSettingsCard {exportSettings} onsettingchanged={handleSettingChanged} />
 			</div>
 		</div>
 

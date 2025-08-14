@@ -1,7 +1,5 @@
 <!-- ExportSettingsCard.svelte - Consolidated export settings matching desktop app -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
 	interface Props {
 		exportSettings: {
 			include_start_position: boolean;
@@ -15,10 +13,10 @@
 			user_name: string;
 			custom_note: string;
 		};
+		onsettingchanged?: (data: { setting: string; value: any }) => void;
 	}
 
-	let { exportSettings }: Props = $props();
-	const dispatch = createEventDispatcher();
+	let { exportSettings, onsettingchanged }: Props = $props();
 
 	// Format options matching desktop app
 	const formatOptions = [
@@ -44,17 +42,17 @@
 
 	// Handle checkbox changes
 	function handleCheckboxChange(setting: string, checked: boolean) {
-		dispatch('settingChanged', { setting, value: checked });
+		onsettingchanged?.({ setting, value: checked });
 	}
 
 	// Handle select changes
 	function handleSelectChange(setting: string, value: string) {
-		dispatch('settingChanged', { setting, value });
+		onsettingchanged?.({ setting, value });
 	}
 
 	// Handle text input changes
 	function handleTextChange(setting: string, value: string) {
-		dispatch('settingChanged', { setting, value });
+		onsettingchanged?.({ setting, value });
 	}
 </script>
 

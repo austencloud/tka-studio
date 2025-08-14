@@ -1,5 +1,5 @@
 import type { PictographData } from "$lib/domain/PictographData";
-import { render, screen } from "@testing-library/svelte";
+import { fireEvent, render, screen } from "@testing-library/svelte";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import OptionPickerSection from "../OptionPickerSection.svelte";
 
@@ -78,8 +78,9 @@ describe("OptionPickerSection", () => {
     it("should render pictographs when expanded", () => {
       render(OptionPickerSection, { props: defaultProps });
 
-      // Should render pictograph containers
-      const pictographContainers = screen.getAllByRole("button");
+      // Should render pictograph containers (excluding the header toggle button)
+      const pictographContainers =
+        screen.getAllByLabelText(/Select .* pictograph/);
       expect(pictographContainers).toHaveLength(2);
     });
 
@@ -88,9 +89,16 @@ describe("OptionPickerSection", () => {
         props: { ...defaultProps, isExpanded: false },
       });
 
-      // Should not render pictograph containers when collapsed
-      const pictographContainers = screen.queryAllByRole("button");
+      // Should not render pictograph containers when collapsed (but header button should still be there)
+      const pictographContainers =
+        screen.queryAllByLabelText(/Select .* pictograph/);
       expect(pictographContainers).toHaveLength(0);
+
+      // Header toggle button should still be present
+      const toggleButton = screen.getByRole("button", {
+        name: /Type1: Dual-Shift/i,
+      });
+      expect(toggleButton).toBeInTheDocument();
     });
   });
 
@@ -123,7 +131,8 @@ describe("OptionPickerSection", () => {
         props: { ...defaultProps, onPictographSelected: mockOnSelect },
       });
 
-      const pictographButtons = screen.getAllByRole("button");
+      const pictographButtons =
+        screen.getAllByLabelText(/Select .* pictograph/);
       if (pictographButtons[0]) {
         await pictographButtons[0].click();
       }
@@ -137,12 +146,12 @@ describe("OptionPickerSection", () => {
         props: { ...defaultProps, onPictographSelected: mockOnSelect },
       });
 
-      const pictographButtons = screen.getAllByRole("button");
+      const pictographButtons =
+        screen.getAllByLabelText(/Select .* pictograph/);
       if (pictographButtons[0]) {
         pictographButtons[0].focus();
-        await pictographButtons[0].dispatchEvent(
-          new KeyboardEvent("keydown", { key: "Enter" }),
-        );
+        // Use fireEvent for better compatibility with Svelte event handlers
+        await fireEvent.keyDown(pictographButtons[0], { key: "Enter" });
       }
 
       expect(mockOnSelect).toHaveBeenCalledWith(mockPictographs[0]);
@@ -156,7 +165,7 @@ describe("OptionPickerSection", () => {
       });
 
       expect(
-        screen.getByText(/No options available for this type/i),
+        screen.getByText(/No options available for this type/i)
       ).toBeInTheDocument();
     });
   });
@@ -165,10 +174,18 @@ describe("OptionPickerSection", () => {
     it("should have proper ARIA attributes", () => {
       render(OptionPickerSection, { props: defaultProps });
 
-      const pictographButtons = screen.getAllByRole("button");
+      // Check that pictograph containers have proper accessibility attributes
+      const pictographButtons =
+        screen.getAllByLabelText(/Select .* pictograph/);
       pictographButtons.forEach((button) => {
         expect(button).toHaveAttribute("tabindex", "0");
+        expect(button).toHaveAttribute("role", "button");
+        expect(button).toHaveAttribute("aria-label");
       });
+
+      // Check that the section has proper region role
+      const section = screen.getByRole("region");
+      expect(section).toHaveAttribute("aria-label");
     });
   });
 });

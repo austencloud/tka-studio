@@ -1,7 +1,5 @@
 <!-- TextInput.svelte - Improved contrast text input -->
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte';
-
 	interface Props {
 		label: string;
 		value: string;
@@ -15,8 +13,6 @@
 		required?: boolean;
 		onchange?: (value: string) => void;
 	}
-
-	const dispatch = createEventDispatcher<{ change: string }>();
 
 	let {
 		label,
@@ -36,7 +32,6 @@
 		const target = event.target;
 		if (target instanceof HTMLInputElement) {
 			onchange?.(target.value);
-			dispatch('change', target.value);
 		}
 	}
 </script>

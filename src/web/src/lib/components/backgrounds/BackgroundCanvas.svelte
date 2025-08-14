@@ -216,7 +216,7 @@
 
 	// Import the old manager for backward compatibility
 	// This is only used if the component is used outside of a BackgroundProvider
-	import { createBackgroundManager } from './core/BackgroundManager';
+	import { createBackgroundManager } from './core/BackgroundManager.svelte';
 	function createBackgroundManagerFallback() {
 		console.warn(
 			'BackgroundCanvas is being used without a BackgroundProvider. Consider updating your code to use the new context-based API.'

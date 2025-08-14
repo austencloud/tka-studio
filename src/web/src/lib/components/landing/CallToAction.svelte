@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
-  
   interface Props {
     text: string;
     link?: string;
@@ -9,6 +7,9 @@
     internal?: boolean;
     disabled?: boolean;
     loading?: boolean;
+    onsuccess?: () => void;
+    onerror?: (error: any) => void;
+    onclicked?: () => void;
   }
 
   let { 
@@ -18,10 +19,11 @@
     primary = true,
     internal = false,
     disabled = false,
-    loading = false
+    loading = false,
+    onsuccess,
+    onerror,
+    onclicked
   }: Props = $props();
-
-  const dispatch = createEventDispatcher();
 
   async function handleClick(event: MouseEvent) {
     if (disabled || loading) {
@@ -35,10 +37,10 @@
       loading = true;
       try {
         await onclick();
-        dispatch('success');
+        onsuccess?.();
       } catch (error) {
         console.error('Action failed:', error);
-        dispatch('error', error);
+        onerror?.(error);
       } finally {
         loading = false;
       }
@@ -47,7 +49,7 @@
 
     // External link - let browser handle naturally
     if (link && !internal) {
-      dispatch('click');
+      onclicked?.();
       return;
     }
 
@@ -55,7 +57,7 @@
     if (onclick) {
       event.preventDefault();
       await onclick();
-      dispatch('click');
+      onclicked?.();
     }
   }
 </script>

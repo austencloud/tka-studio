@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { BeatData } from '$lib/domain';
 	import { beatFrameService } from '$lib/services/BeatFrameService.svelte';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { onMount } from 'svelte';
 	import BeatView from './BeatView.svelte';
 
 	interface Props {
@@ -13,6 +13,7 @@
 		onStartClick?: () => void;
 		isScrollable?: boolean;
 		fullScreenMode?: boolean;
+		onnaturalheightchange?: (data: { height: number }) => void;
 	}
 
 	let {
@@ -24,6 +25,7 @@
 		onStartClick,
 		isScrollable = false,
 		fullScreenMode = false,
+		onnaturalheightchange,
 	}: Props = $props();
 
 	const config = $derived(beatFrameService.config);
@@ -37,8 +39,6 @@
 	});
 
 	let containerRef: HTMLElement;
-
-	const dispatch = createEventDispatcher<{ naturalheightchange: { height: number } }>();
 
 	// Track container dimensions and update beat frame service
 	onMount(() => {
@@ -83,7 +83,7 @@
 	// Emit natural height whenever calculated frame dimensions change
 	$effect(() => {
 		if (frameDimensions?.height != null) {
-			dispatch('naturalheightchange', { height: frameDimensions.height });
+			onnaturalheightchange?.({ height: frameDimensions.height });
 		}
 	});
 

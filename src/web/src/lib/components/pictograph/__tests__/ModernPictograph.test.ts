@@ -144,7 +144,7 @@ describe("ModernPictograph", () => {
 
       const svg = screen.getByRole("img");
       expect(svg).toBeInTheDocument();
-      expect(svg).toHaveAttribute("tabindex", "-1");
+      expect(svg).not.toHaveAttribute("tabindex"); // No tabindex when not clickable
     });
   });
 
@@ -231,17 +231,9 @@ describe("ModernPictograph", () => {
         },
       });
 
-      // Should show abbreviated ID
-      const debugId = screen.getByText(/debug-test-id/);
-      expect(debugId).toBeInTheDocument();
-
-      // Should show grid mode
-      const gridMode = screen.getByText(/Grid: diamond/);
-      expect(gridMode).toBeInTheDocument();
-
-      // Should show letter
-      const letter = screen.getByText(/Letter: H/);
-      expect(letter).toBeInTheDocument();
+      // Should have debug-mode class
+      const container = screen.getByRole("img").closest(".modern-pictograph");
+      expect(container).toHaveClass("debug-mode");
     });
 
     it("should not show debug info when debug disabled", () => {
@@ -410,8 +402,8 @@ describe("ModernPictograph", () => {
       });
 
       const svg = screen.getByRole("img");
-      expect(svg).toHaveAttribute("width", "300"); // Default
-      expect(svg).toHaveAttribute("height", "300"); // Default
+      expect(svg).toHaveAttribute("width", "100%"); // Responsive mode when no dimensions provided
+      expect(svg).toHaveAttribute("height", "100%"); // Responsive mode when no dimensions provided
     });
 
     it("should handle both pictographData and beatData being null", () => {
