@@ -11,7 +11,6 @@ The TKA project is structured as a monorepo with separate `desktop/` and `web/` 
 #### Setup Instructions:
 
 1. **Connect Repository to Netlify:**
-
    - Go to [Netlify Dashboard](https://app.netlify.com)
    - Click "Add new site" → "Import an existing project"
    - Connect your GitHub account and select the `TKA` repository
@@ -19,7 +18,6 @@ The TKA project is structured as a monorepo with separate `desktop/` and `web/` 
 
 2. **Build Configuration:**
    The root-level `netlify.toml` is configured to:
-
    - Set `web/` as the base directory
    - Run `npm ci && npm run build` in the web directory
    - Publish the `build/` output directory
@@ -47,7 +45,6 @@ npx netlify deploy --prod --dir=build
 ### Environment Variables
 
 Set these in Netlify's environment variables section if needed:
-
 - `NODE_VERSION=18`
 - Any API keys or configuration specific to your deployment
 
@@ -90,14 +87,124 @@ Keeping both projects in the same repository provides:
 ## CI/CD Considerations
 
 You can set up GitHub Actions to:
-
 - Test both applications
 - Deploy web app to Netlify automatically
 - Build desktop app releases
 - Run cross-platform tests
 
 Example workflow locations:
-
 - `.github/workflows/web-deploy.yml` - Web deployment
 - `.github/workflows/desktop-build.yml` - Desktop builds
 - `.github/workflows/tests.yml` - Run tests for both projects
+# Netlify configuration for TKA Web Application
+# SvelteKit application with TypeScript and modern build setup
+# Configured for monorepo deployment
+
+[build]
+  # Base directory for the web app in monorepo
+  base = "web/"
+  
+  # Build command for SvelteKit
+  command = "npm run build"
+  
+  # Output directory after build (relative to base)
+  publish = "build"
+  
+  # Functions directory (if you add serverless functions later)
+  functions = "netlify/functions"
+
+[build.environment]
+  # Node.js version
+  NODE_VERSION = "18"
+  
+  # Enable newer npm features
+  NPM_FLAGS = "--prefix=/opt/buildhome/.nvm/versions/node/v18/bin/"
+
+# SvelteKit routing - handle client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = ["admin"]}
+
+# Main SPA fallback for all routes
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# API routes (if you add them)
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/_app/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Development context (preview deployments)
+[context.deploy-preview]
+  command = "npm run build"
+
+[context.branch-deploy]
+  command = "npm run build"
+
+# Production context
+[context.production]
+  command = "npm run build"
+  
+  # Production environment variables (set these in Netlify dashboard)
+  [context.production.environment]
+    NODE_ENV = "production"
+
+# Development context for local testing
+[context.dev]
+  command = "npm run dev"
+  port = 5173
+
+# Plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+  
+  [plugins.inputs.thresholds]
+    performance = 0.8
+    accessibility = 0.9
+    best-practices = 0.8
+    seo = 0.8
+
+# Form handling (if you add contact forms later)
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+# Edge functions directory (if you use them)
+[build]
+  edge_functions = "netlify/edge-functions"

@@ -3,15 +3,15 @@ name: Deploy Web App to Netlify
 on:
   push:
     branches: [main]
-    paths: ['web/**']
+    paths: ["web/**"]
   pull_request:
     branches: [main]
-    paths: ['web/**']
+    paths: ["web/**"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,8 +19,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: "18"
+          cache: "npm"
           cache-dependency-path: web/package-lock.json
 
       - name: Install dependencies
@@ -47,7 +47,7 @@ jobs:
         if: github.event_name == 'pull_request'
         uses: nwtgck/actions-netlify@v3.0
         with:
-          publish-dir: './web/build'
+          publish-dir: "./web/build"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions (PR #${{ github.event.number }})"
           alias: deploy-preview-${{ github.event.number }}
@@ -59,7 +59,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         uses: nwtgck/actions-netlify@v3.0
         with:
-          publish-dir: './web/build'
+          publish-dir: "./web/build"
           production-branch: main
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy-message: "Deploy from GitHub Actions (main branch)"

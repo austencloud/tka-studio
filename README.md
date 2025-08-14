@@ -7,6 +7,7 @@ A comprehensive application for creating, editing, and learning kinetic sequence
 This is a monorepo containing two main applications:
 
 ### 🌐 Web Application (`/web`)
+
 - **Technology:** SvelteKit + TypeScript
 - **Purpose:** Browser-based sequence editor and viewer
 - **Deployment:** Netlify (see [DEPLOYMENT.md](DEPLOYMENT.md))
@@ -17,6 +18,7 @@ This is a monorepo containing two main applications:
   - Responsive design
 
 ### 🖥️ Desktop Application (`/desktop`)
+
 - **Technology:** Python (with GUI framework)
 - **Purpose:** Full-featured desktop application
 - **Distribution:** Standalone executables
@@ -29,6 +31,7 @@ This is a monorepo containing two main applications:
 ## Quick Start
 
 ### Web Development
+
 ```bash
 cd web/
 npm install
@@ -36,6 +39,7 @@ npm run dev
 ```
 
 ### Desktop Development
+
 ```bash
 cd desktop/
 python -m venv venv
@@ -49,13 +53,17 @@ python main.py  # Adjust to your entry point
 See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed deployment instructions.
 
 ### Web App (Netlify)
+
 The web application is configured for automatic deployment to Netlify:
+
 - **Production:** Deploys automatically from `main` branch
 - **Preview:** Deploys on pull requests
 - **Configuration:** Root-level `netlify.toml`
 
 ### Desktop App
+
 Build standalone executables for distribution:
+
 ```bash
 cd desktop/
 pip install pyinstaller
