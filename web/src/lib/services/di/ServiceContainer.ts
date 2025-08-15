@@ -10,7 +10,7 @@ export interface ServiceInterface<T = unknown> {
 
 export function createServiceInterface<T>(
   token: string,
-  implementation: new (...args: unknown[]) => T,
+  implementation: new (...args: unknown[]) => T
 ): ServiceInterface<T> {
   return { token, implementation };
 }
@@ -43,14 +43,14 @@ export class ServiceContainer {
 
   registerFactory<T>(
     serviceInterface: ServiceInterface<T>,
-    factory: Factory<T>,
+    factory: Factory<T>
   ): void {
     this.factories.set(serviceInterface.token, factory);
   }
 
   registerSingleton<T>(
     serviceInterface: ServiceInterface<T>,
-    instance: T,
+    instance: T
   ): void {
     this.singletons.set(serviceInterface.token, instance);
   }

@@ -24,7 +24,7 @@ export class CanvasRenderer {
     blueStaffImage: HTMLImageElement | null,
     redStaffImage: HTMLImageElement | null,
     blueProp: PropState,
-    redProp: PropState,
+    redProp: PropState
   ): void {
     // Clear canvas exactly as in standalone
     ctx.clearRect(0, 0, canvasSize, canvasSize);
@@ -49,7 +49,7 @@ export class CanvasRenderer {
     ctx: CanvasRenderingContext2D,
     canvasSize: number,
     gridVisible: boolean,
-    gridImage: HTMLImageElement | null,
+    gridImage: HTMLImageElement | null
   ): void {
     if (!gridVisible || !gridImage) return;
     ctx.drawImage(gridImage, 0, 0, canvasSize, canvasSize);
@@ -62,7 +62,7 @@ export class CanvasRenderer {
     ctx: CanvasRenderingContext2D,
     canvasSize: number,
     propState: PropState,
-    staffImage: HTMLImageElement,
+    staffImage: HTMLImageElement
   ): void {
     if (!propState) return;
 
@@ -116,7 +116,7 @@ export class CanvasRenderer {
       -STAFF_CENTER_X * gridScaleFactor,
       -STAFF_CENTER_Y * gridScaleFactor,
       staffWidth,
-      staffHeight,
+      staffHeight
     );
     ctx.restore();
   }

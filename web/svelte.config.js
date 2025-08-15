@@ -23,13 +23,7 @@ const config = {
 
     // Prerender SEO pages for better search engine crawling
     prerender: {
-      entries: [
-        "*",
-        "/about",
-        "/features",
-        "/getting-started",
-        "/browse",
-      ],
+      entries: ["*", "/about", "/features", "/getting-started", "/browse"],
     },
 
     // Move the path aliases from tsconfig.json to here

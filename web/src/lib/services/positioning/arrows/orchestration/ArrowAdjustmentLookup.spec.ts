@@ -57,7 +57,7 @@ describe("ArrowAdjustmentLookup (advanced orchestration)", () => {
       mocks.mockOriKeyGen as any,
       mocks.mockPlacementKeyGen as any,
       mocks.mockTurnsGen as any,
-      mocks.mockAttrGen as any,
+      mocks.mockAttrGen as any
     );
 
     const pictograph = { letter: "C", grid_mode: "diamond" } as any;
@@ -68,7 +68,7 @@ describe("ArrowAdjustmentLookup (advanced orchestration)", () => {
     expect(mocks.mockSpecial.getSpecialAdjustment).toHaveBeenCalledWith(
       motion,
       pictograph,
-      undefined,
+      undefined
     );
   });
 
@@ -82,7 +82,7 @@ describe("ArrowAdjustmentLookup (advanced orchestration)", () => {
       mocks.mockOriKeyGen as any,
       mocks.mockPlacementKeyGen as any,
       mocks.mockTurnsGen as any,
-      mocks.mockAttrGen as any,
+      mocks.mockAttrGen as any
     );
 
     const pictograph = { letter: "A", grid_mode: "diamond" } as any;
@@ -94,7 +94,7 @@ describe("ArrowAdjustmentLookup (advanced orchestration)", () => {
       "pro",
       0,
       "pro",
-      "diamond",
+      "diamond"
     );
   });
 
@@ -108,7 +108,7 @@ describe("ArrowAdjustmentLookup (advanced orchestration)", () => {
       mocks.mockOriKeyGen as any,
       mocks.mockPlacementKeyGen as any,
       mocks.mockTurnsGen as any,
-      mocks.mockAttrGen as any,
+      mocks.mockAttrGen as any
     );
 
     const pictograph = { motions: { blue: {}, red: {} } } as any;
@@ -118,10 +118,10 @@ describe("ArrowAdjustmentLookup (advanced orchestration)", () => {
 
     expect(mocks.mockOriKeyGen.generateOrientationKey).toHaveBeenCalledWith(
       motion,
-      pictograph,
+      pictograph
     );
     expect(mocks.mockTurnsGen.generateTurnsTuple).toHaveBeenCalledWith(
-      pictograph,
+      pictograph
     );
     expect(mocks.mockAttrGen.getKeyFromArrow).toHaveBeenCalled();
   });

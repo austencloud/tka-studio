@@ -336,7 +336,7 @@ export class CodexService implements ICodexService {
     this.csvDataService = new CsvDataService();
     this.optionDataService = new OptionDataService();
     console.log(
-      "🔧 CodexService initialized with specific letter mapping and desktop functionality",
+      "🔧 CodexService initialized with specific letter mapping and desktop functionality"
     );
   }
 
@@ -386,7 +386,7 @@ export class CodexService implements ICodexService {
     return (
       allPictographs.find(
         (pictograph) =>
-          pictograph.letter?.toLowerCase() === letter.toLowerCase(),
+          pictograph.letter?.toLowerCase() === letter.toLowerCase()
       ) || null
     );
   }
@@ -416,12 +416,12 @@ export class CodexService implements ICodexService {
 
       // Get specific pictographs only from diamond mode (like desktop app)
       this.codexPictographs = this.getCodexPictographsForGridMode(
-        GridMode.DIAMOND,
+        GridMode.DIAMOND
       );
 
       this.initialized = true;
       console.log(
-        `✅ CodexService initialized with ${this.codexPictographs.length} diamond pictographs from mapping`,
+        `✅ CodexService initialized with ${this.codexPictographs.length} diamond pictographs from mapping`
       );
     } catch (error) {
       console.error("❌ Failed to initialize CodexService:", error);
@@ -436,7 +436,7 @@ export class CodexService implements ICodexService {
     console.log(`🔍 Getting codex pictographs for ${gridMode} mode...`);
     const csvRows = this.csvDataService.getParsedData(gridMode);
     console.log(
-      `📊 Found ${csvRows.length} total CSV rows for ${gridMode} mode`,
+      `📊 Found ${csvRows.length} total CSV rows for ${gridMode} mode`
     );
 
     const codexPictographs: PictographData[] = [];
@@ -451,39 +451,39 @@ export class CodexService implements ICodexService {
           row.startPos === mapping.startPos &&
           row.endPos === mapping.endPos &&
           row.blueMotionType === mapping.blueMotion &&
-          row.redMotionType === mapping.redMotion,
+          row.redMotionType === mapping.redMotion
       );
 
       if (matchingRow) {
         console.log(
           `✅ Found matching row for letter "${letter}":`,
-          matchingRow,
+          matchingRow
         );
         const pictograph = this.convertCsvRowToPictographData(
           matchingRow,
           gridMode,
-          codexPictographs.length, // Use codex index for unique IDs
+          codexPictographs.length // Use codex index for unique IDs
         );
         if (pictograph) {
           codexPictographs.push(pictograph);
           console.log(
             `📊 Added pictograph for letter "${letter}":`,
-            pictograph.id,
+            pictograph.id
           );
         } else {
           console.warn(
-            `⚠️ Failed to convert CSV row to pictograph for letter "${letter}"`,
+            `⚠️ Failed to convert CSV row to pictograph for letter "${letter}"`
           );
         }
       } else {
         console.warn(
-          `⚠️ No CSV data found for codex letter ${letter} in ${gridMode} mode`,
+          `⚠️ No CSV data found for codex letter ${letter} in ${gridMode} mode`
         );
         // Log what we're looking for vs what's available
         const letterRows = csvRows.filter((row) => row.letter === letter);
         console.log(
           `Available rows for letter "${letter}":`,
-          letterRows.length > 0 ? letterRows.slice(0, 3) : "none",
+          letterRows.length > 0 ? letterRows.slice(0, 3) : "none"
         );
       }
     });
@@ -498,20 +498,20 @@ export class CodexService implements ICodexService {
   private convertCsvRowToPictographData(
     row: ParsedCsvRow,
     gridMode: GridMode,
-    index: number,
+    index: number
   ): PictographData | null {
     try {
       // Use the public conversion method from OptionDataService
       return this.optionDataService.convertCsvRowToPictographData(
         row,
         gridMode,
-        index,
+        index
       );
     } catch (error) {
       console.error(
         "❌ Error converting CSV row to PictographData:",
         error,
-        row,
+        row
       );
       return null;
     }
@@ -528,14 +528,14 @@ export class CodexService implements ICodexService {
    * Apply rotate operation to all pictographs
    */
   async rotateAllPictographs(
-    pictographs: PictographData[],
+    pictographs: PictographData[]
   ): Promise<PictographData[]> {
     // For now, return unchanged pictographs
     // In a full implementation, this would apply rotation transformations
     console.log(
       "🔄 Rotate operation applied to",
       pictographs.length,
-      "pictographs",
+      "pictographs"
     );
     return [...pictographs];
   }
@@ -544,14 +544,14 @@ export class CodexService implements ICodexService {
    * Apply mirror operation to all pictographs
    */
   async mirrorAllPictographs(
-    pictographs: PictographData[],
+    pictographs: PictographData[]
   ): Promise<PictographData[]> {
     // For now, return unchanged pictographs
     // In a full implementation, this would apply mirror transformations
     console.log(
       "🪞 Mirror operation applied to",
       pictographs.length,
-      "pictographs",
+      "pictographs"
     );
     return [...pictographs];
   }
@@ -560,14 +560,14 @@ export class CodexService implements ICodexService {
    * Apply color swap operation to all pictographs
    */
   async colorSwapAllPictographs(
-    pictographs: PictographData[],
+    pictographs: PictographData[]
   ): Promise<PictographData[]> {
     // For now, return unchanged pictographs
     // In a full implementation, this would swap red and blue motion types
     console.log(
       "⚫⚪ Color swap operation applied to",
       pictographs.length,
-      "pictographs",
+      "pictographs"
     );
     return [...pictographs];
   }

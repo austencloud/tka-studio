@@ -45,7 +45,7 @@ describe("DirectionalTupleProcessor (legacy parity)", () => {
     const result = proc.processDirectionalTuples(
       base,
       motion,
-      Location.NORTHEAST,
+      Location.NORTHEAST
     );
 
     // For pro cw diamond, NE tuple should equal [base.x, base.y]
@@ -68,7 +68,7 @@ describe("DirectionalTupleProcessor (legacy parity)", () => {
     const result = proc.processDirectionalTuples(
       base,
       motion,
-      Location.SOUTHEAST,
+      Location.SOUTHEAST
     );
 
     // For pro cw diamond, SE tuple should equal [-base.y, base.x]

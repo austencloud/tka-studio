@@ -10,7 +10,7 @@ export class SpecialPlacementOriKeyGenerator
 {
   generateOrientationKey(
     _motionData: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): string {
     try {
       const blueMotion = pictographData.motions?.blue;

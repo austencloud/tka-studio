@@ -23,7 +23,7 @@ export class PngMetadataExtractor {
       const response = await fetch(filePath);
       if (!response.ok) {
         throw new Error(
-          `Failed to fetch PNG file: ${response.status} ${response.statusText}`,
+          `Failed to fetch PNG file: ${response.status} ${response.statusText}`
         );
       }
 
@@ -59,7 +59,7 @@ export class PngMetadataExtractor {
    */
   private static findTextChunk(
     data: Uint8Array,
-    keyword: string,
+    keyword: string
   ): string | null {
     let offset = 8; // Skip PNG signature
 
@@ -77,7 +77,7 @@ export class PngMetadataExtractor {
         data[offset],
         data[offset + 1],
         data[offset + 2],
-        data[offset + 3],
+        data[offset + 3]
       );
       offset += 4;
 
@@ -126,29 +126,29 @@ export class PngMetadataExtractor {
   static async debugSequenceMetadata(sequenceName: string): Promise<void> {
     try {
       console.log(
-        `🔍 [UNIFIED METADATA] Extracting complete metadata for ${sequenceName}...`,
+        `🔍 [UNIFIED METADATA] Extracting complete metadata for ${sequenceName}...`
       );
       const metadata = await this.extractSequenceMetadata(sequenceName);
 
       console.log(
-        `📋 [UNIFIED METADATA] Complete JSON structure for ${sequenceName}:`,
+        `📋 [UNIFIED METADATA] Complete JSON structure for ${sequenceName}:`
       );
       console.log(JSON.stringify(metadata, null, 2));
 
       // Show author and start position from the unified structure
       const firstEntry = metadata[0] || {};
       const startPositionEntries = metadata.filter(
-        (step: any) => step.sequence_start_position,
+        (step: any) => step.sequence_start_position
       );
 
       console.log(
-        `👤 [UNIFIED METADATA] Author: ${firstEntry.author || "MISSING"}`,
+        `👤 [UNIFIED METADATA] Author: ${firstEntry.author || "MISSING"}`
       );
       console.log(
-        `📍 [UNIFIED METADATA] Start Position: ${startPositionEntries[0]?.sequence_start_position || "MISSING"}`,
+        `📍 [UNIFIED METADATA] Start Position: ${startPositionEntries[0]?.sequence_start_position || "MISSING"}`
       );
       console.log(
-        `📊 [UNIFIED METADATA] Level: ${firstEntry.level || "MISSING"}`,
+        `📊 [UNIFIED METADATA] Level: ${firstEntry.level || "MISSING"}`
       );
 
       // Extract motion types for each beat
@@ -160,13 +160,13 @@ export class PngMetadataExtractor {
         const blueMotion = step.blue_attributes?.motion_type || "unknown";
         const redMotion = step.red_attributes?.motion_type || "unknown";
         console.log(
-          `  Beat ${index + 1} (${step.letter}): blue=${blueMotion}, red=${redMotion}`,
+          `  Beat ${index + 1} (${step.letter}): blue=${blueMotion}, red=${redMotion}`
         );
       });
     } catch (error) {
       console.error(
         `❌ [UNIFIED METADATA] Failed to extract metadata for ${sequenceName}:`,
-        error,
+        error
       );
     }
   }

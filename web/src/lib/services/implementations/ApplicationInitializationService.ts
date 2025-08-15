@@ -16,7 +16,7 @@ export class ApplicationInitializationService
 {
   constructor(
     private settingsService: ISettingsService,
-    private persistenceService: IPersistenceService,
+    private persistenceService: IPersistenceService
   ) {}
 
   /**
@@ -42,7 +42,7 @@ export class ApplicationInitializationService
     } catch (error) {
       console.error("❌ Application initialization failed:", error);
       throw new Error(
-        `Initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -82,7 +82,7 @@ export class ApplicationInitializationService
     } catch (error) {
       console.error("❌ Persistence initialization failed:", error);
       throw new Error(
-        `Persistence initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Persistence initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }

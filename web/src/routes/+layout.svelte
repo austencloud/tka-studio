@@ -1,102 +1,106 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import { onMount, setContext } from 'svelte';
-	import '../app.css';
-	import type { ServiceContainer } from '../lib/services/di/ServiceContainer';
+  import type { Snippet } from "svelte";
+  import { onMount, setContext } from "svelte";
+  import "../app.css";
+  import type { ServiceContainer } from "../lib/services/di/ServiceContainer";
 
-	interface Props {
-		children: Snippet;
-	}
+  interface Props {
+    children: Snippet;
+  }
 
-	let { children }: Props = $props();
+  let { children }: Props = $props();
 
-	// Application bootstrap
-	let container: ServiceContainer | null = $state(null);
-	let isInitialized = $state(false);
-	let initializationError = $state<string | null>(null);
+  // Application bootstrap
+  let container: ServiceContainer | null = $state(null);
+  let isInitialized = $state(false);
+  let initializationError = $state<string | null>(null);
 
-	// Set context immediately (will be null initially)
-	setContext('di-container', () => container);
+  // Set context immediately (will be null initially)
+  setContext("di-container", () => container);
 
-	onMount(async () => {
-		try {
-			try {
-				// Import bootstrap function
-				const { createWebApplication } = await import('$services/bootstrap');
+  onMount(async () => {
+    try {
+      try {
+        // Import bootstrap function
+        const { createWebApplication } = await import("$services/bootstrap");
 
-				// Create DI container
-				container = await createWebApplication();
+        // Create DI container
+        container = await createWebApplication();
 
-				// Mark as initialized
-				isInitialized = true;
-			} catch (error) {
-				console.error('❌ Failed to initialize application:', error);
-				initializationError = error instanceof Error ? error.message : 'Unknown error';
-			}
-		} catch (outerError) {
-			console.error('🚨 CRITICAL: Application initialization failed:', outerError);
-			initializationError = 'Critical initialization failure';
-		}
-	});
+        // Mark as initialized
+        isInitialized = true;
+      } catch (error) {
+        console.error("❌ Failed to initialize application:", error);
+        initializationError =
+          error instanceof Error ? error.message : "Unknown error";
+      }
+    } catch (outerError) {
+      console.error(
+        "🚨 CRITICAL: Application initialization failed:",
+        outerError
+      );
+      initializationError = "Critical initialization failure";
+    }
+  });
 </script>
 
 <svelte:head>
-	<title>TKA - The Kinetic Constructor</title>
+  <title>TKA - The Kinetic Constructor</title>
 </svelte:head>
 
 {#if initializationError}
-	<div class="error-screen">
-		<h1>Initialization Failed</h1>
-		<p>{initializationError}</p>
-		<button onclick={() => window.location.reload()}>Retry</button>
-	</div>
+  <div class="error-screen">
+    <h1>Initialization Failed</h1>
+    <p>{initializationError}</p>
+    <button onclick={() => window.location.reload()}>Retry</button>
+  </div>
 {:else if !isInitialized}
-	<div class="loading-screen">
-		<div class="spinner"></div>
-		<p>Initializing TKA...</p>
-	</div>
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <p>Initializing TKA...</p>
+  </div>
 {:else}
-	<!-- Container is provided via context, children renders with access -->
-	{@render children()}
+  <!-- Container is provided via context, children renders with access -->
+  {@render children()}
 {/if}
 
 <style>
-	.error-screen {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 100vh;
-		padding: 2rem;
-		text-align: center;
-	}
+  .error-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    text-align: center;
+  }
 
-	.loading-screen {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 100vh;
-		padding: 2rem;
-		text-align: center;
-	}
+  .loading-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    text-align: center;
+  }
 
-	.spinner {
-		width: 40px;
-		height: 40px;
-		border: 4px solid #f3f3f3;
-		border-top: 4px solid #3498db;
-		border-radius: 50%;
-		animation: spin 1s linear infinite;
-		margin-bottom: 1rem;
-	}
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
 
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-	}
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
 </style>

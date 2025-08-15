@@ -231,7 +231,7 @@ export function extractMotionData(beat: WebAppBeatData): ExtractedMotionData {
  * Convert web app MotionData to animator PropAttributes
  */
 export function convertMotionDataToPropAttributes(
-  motionData: WebAppMotionData,
+  motionData: WebAppMotionData
 ): PropAttributes {
   return {
     start_loc: String(motionData.start_loc),
@@ -290,7 +290,7 @@ export function adaptSequenceData(data: AnySequenceData): UnifiedSequenceData {
  * Type guard for unified sequence data
  */
 export function isUnifiedSequenceData(
-  data: unknown,
+  data: unknown
 ): data is UnifiedSequenceData {
   return (
     data !== null &&
@@ -307,7 +307,7 @@ export function isUnifiedSequenceData(
  * Type guard for web app sequence data
  */
 export function isWebAppSequenceData(
-  data: unknown,
+  data: unknown
 ): data is WebAppSequenceData {
   return (
     data !== null &&
@@ -331,7 +331,7 @@ export function isLegacySequenceData(data: unknown): data is SequenceData {
  * Convert legacy array format to unified format
  */
 export function convertLegacyToUnified(
-  legacyData: SequenceData,
+  legacyData: SequenceData
 ): UnifiedSequenceData {
   const [meta, ...steps] = legacyData;
 
@@ -377,7 +377,7 @@ export function convertLegacyToUnified(
  * Convert web app format to unified format
  */
 export function convertWebAppToUnified(
-  webAppData: WebAppSequenceData,
+  webAppData: WebAppSequenceData
 ): UnifiedSequenceData {
   return {
     ...webAppData,
@@ -391,7 +391,7 @@ export function convertWebAppToUnified(
  * Used when converting legacy data to web app format
  */
 export function convertPropAttributesToMotionData(
-  propAttrs: PropAttributes,
+  propAttrs: PropAttributes
 ): WebAppMotionData {
   return {
     motion_type: propAttrs.motion_type,
@@ -415,7 +415,7 @@ export function convertPropAttributesToMotionData(
  * Converts web app beats back to animator step format for engine compatibility
  */
 export function extractStepsFromUnified(
-  data: UnifiedSequenceData,
+  data: UnifiedSequenceData
 ): SequenceStep[] {
   return data.beats.map((beat) => {
     const motionData = extractMotionData(beat);
@@ -432,7 +432,7 @@ export function extractStepsFromUnified(
  * Extract sequence metadata from unified sequence data
  */
 export function extractMetaFromUnified(
-  data: UnifiedSequenceData,
+  data: UnifiedSequenceData
 ): SequenceMeta {
   return {
     id: data.id,

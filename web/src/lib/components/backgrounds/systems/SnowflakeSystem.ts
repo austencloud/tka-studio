@@ -53,7 +53,7 @@ export const createSnowflakeSystem = () => {
 
   const initialize = (
     { width, height }: Dimensions,
-    quality: string,
+    quality: string
   ): Snowflake[] => {
     let adjustedDensity = config.snowflake.density;
 
@@ -73,7 +73,7 @@ export const createSnowflakeSystem = () => {
 
   const update = (
     flakes: Snowflake[],
-    { width, height }: Dimensions,
+    { width, height }: Dimensions
   ): Snowflake[] => {
     windChangeTimer++;
     if (windChangeTimer >= config.snowflake.windChangeInterval) {
@@ -107,7 +107,7 @@ export const createSnowflakeSystem = () => {
   const draw = (
     flakes: Snowflake[],
     ctx: CanvasRenderingContext2D,
-    { width: _width, height: _height }: Dimensions,
+    { width: _width, height: _height }: Dimensions
   ): void => {
     if (!ctx) return;
     ctx.globalAlpha = 1.0;
@@ -140,13 +140,13 @@ export const createSnowflakeSystem = () => {
     flakes: Snowflake[],
     _oldDimensions: Dimensions,
     newDimensions: Dimensions,
-    quality: string,
+    quality: string
   ): Snowflake[] => {
     const targetCount = Math.floor(
       newDimensions.width *
         newDimensions.height *
         config.snowflake.density *
-        (quality === "low" ? 0.5 : quality === "medium" ? 0.75 : 1),
+        (quality === "low" ? 0.5 : quality === "medium" ? 0.75 : 1)
     );
 
     const currentCount = flakes.length;
@@ -155,7 +155,7 @@ export const createSnowflakeSystem = () => {
       return [
         ...flakes,
         ...Array.from({ length: targetCount - currentCount }, () =>
-          createSnowflake(newDimensions.width, newDimensions.height),
+          createSnowflake(newDimensions.width, newDimensions.height)
         ),
       ];
     } else if (targetCount < currentCount) {

@@ -61,7 +61,7 @@ export class DeepOceanBackgroundSystem implements BackgroundSystem {
     this.initializeLightRays(dimensions);
 
     console.log(
-      `🌊 Deep Ocean background initialized with ${this.state.bubbles.length} bubbles, ${this.state.marineLife.length} marine life`,
+      `🌊 Deep Ocean background initialized with ${this.state.bubbles.length} bubbles, ${this.state.marineLife.length} marine life`
     );
   }
 
@@ -318,7 +318,7 @@ export class DeepOceanBackgroundSystem implements BackgroundSystem {
 
   private drawOceanGradient(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     const gradient = ctx.createLinearGradient(0, 0, 0, dimensions.height);
     gradient.addColorStop(0, this.state.currentGradient.top);
@@ -332,7 +332,7 @@ export class DeepOceanBackgroundSystem implements BackgroundSystem {
 
   private drawLightRays(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     if (this.quality === "minimal") return;
 
@@ -342,7 +342,7 @@ export class DeepOceanBackgroundSystem implements BackgroundSystem {
         ray.x,
         0,
         ray.x + Math.sin((ray.angle * Math.PI) / 180) * dimensions.height,
-        dimensions.height,
+        dimensions.height
       );
 
       gradient.addColorStop(0, `rgba(135, 206, 235, ${ray.opacity})`);
@@ -371,7 +371,7 @@ export class DeepOceanBackgroundSystem implements BackgroundSystem {
         bubble.y - bubble.radius * 0.3,
         bubble.radius * 0.3,
         0,
-        Math.PI * 2,
+        Math.PI * 2
       );
       ctx.fillStyle = `rgba(255, 255, 255, 0.8)`;
       ctx.fill();
@@ -427,7 +427,7 @@ export class DeepOceanBackgroundSystem implements BackgroundSystem {
 
   private drawJellyfish(
     ctx: CanvasRenderingContext2D,
-    marine: MarineLife,
+    marine: MarineLife
   ): void {
     const size = marine.size;
     const pulse = Math.sin(marine.animationPhase) * 0.1 + 1;
@@ -475,7 +475,7 @@ export class DeepOceanBackgroundSystem implements BackgroundSystem {
 
   private drawParticles(
     ctx: CanvasRenderingContext2D,
-    layerOpacity: number,
+    layerOpacity: number
   ): void {
     ctx.save();
     this.state.particles.forEach((particle) => {

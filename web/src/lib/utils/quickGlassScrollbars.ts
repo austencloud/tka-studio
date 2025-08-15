@@ -17,7 +17,7 @@ export function applyQuickGlassScrollbar(
     | "secondary"
     | "minimal"
     | "hover"
-    | "gradient" = "primary",
+    | "gradient" = "primary"
 ): void {
   if (!element) return;
 
@@ -27,7 +27,7 @@ export function applyQuickGlassScrollbar(
     "quick-glass-secondary",
     "quick-glass-minimal",
     "quick-glass-hover",
-    "quick-glass-gradient",
+    "quick-glass-gradient"
   );
 
   // Add the new variant class
@@ -67,7 +67,7 @@ export function removeQuickGlassScrollbar(element: HTMLElement | null): void {
     "quick-glass-secondary",
     "quick-glass-minimal",
     "quick-glass-hover",
-    "quick-glass-gradient",
+    "quick-glass-gradient"
   );
 }
 

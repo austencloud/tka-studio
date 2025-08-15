@@ -35,7 +35,7 @@ describe("SpecialPlacementService", () => {
       const u = String(url);
       if (
         u.endsWith(
-          "/data/arrow_placement/diamond/special/from_layer2/C_placements.json",
+          "/data/arrow_placement/diamond/special/from_layer2/C_placements.json"
         )
       ) {
         return new Response(JSON.stringify(data), { status: 200 });
@@ -75,7 +75,7 @@ describe("SpecialPlacementService", () => {
       const u = String(url);
       if (
         u.endsWith(
-          "/data/arrow_placement/box/special/from_layer1/A_placements.json",
+          "/data/arrow_placement/box/special/from_layer1/A_placements.json"
         )
       ) {
         return new Response(JSON.stringify(data), { status: 200 });

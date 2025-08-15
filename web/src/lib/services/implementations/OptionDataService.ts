@@ -76,13 +76,13 @@ export class OptionDataService implements IOptionDataService {
   async getNextOptionsFromEndPosition(
     endPosition: string,
     gridMode: DomainGridMode = DomainGridMode.DIAMOND,
-    filters?: OptionFilters,
+    filters?: OptionFilters
   ): Promise<PictographData[]> {
     try {
       // Get matching options from CSV data
       const csvOptions = this.csvDataService.getNextOptions(
         endPosition,
-        gridMode,
+        gridMode
       );
 
       if (csvOptions.length === 0) {
@@ -92,7 +92,7 @@ export class OptionDataService implements IOptionDataService {
       // Convert CSV rows to PictographData with unique IDs
       const pictographOptions = csvOptions
         .map((row, index) =>
-          this.convertCsvRowToPictographDataInternal(row, gridMode, index),
+          this.convertCsvRowToPictographDataInternal(row, gridMode, index)
         )
         .filter((option): option is PictographData => option !== null);
 
@@ -102,14 +102,14 @@ export class OptionDataService implements IOptionDataService {
       if (filters?.difficulty) {
         filteredOptions = this.filterOptionsByDifficulty(
           filteredOptions,
-          filters.difficulty,
+          filters.difficulty
         );
       }
 
       if (filters?.motionTypes) {
         filteredOptions = this.filterByMotionTypes(
           filteredOptions,
-          filters.motionTypes,
+          filters.motionTypes
         );
       }
 
@@ -117,7 +117,7 @@ export class OptionDataService implements IOptionDataService {
         filteredOptions = this.filterByTurns(
           filteredOptions,
           filters.minTurns,
-          filters.maxTurns,
+          filters.maxTurns
         );
       }
 
@@ -130,7 +130,7 @@ export class OptionDataService implements IOptionDataService {
 
   async getNextOptions(
     currentSequence: SequenceData,
-    filters?: OptionFilters,
+    filters?: OptionFilters
   ): Promise<PictographData[]> {
     try {
       // Get the last beat to understand context
@@ -156,7 +156,7 @@ export class OptionDataService implements IOptionDataService {
       return await this.getNextOptionsFromEndPosition(
         endPosition,
         gridMode,
-        filters,
+        filters
       );
     } catch (error) {
       console.error("❌ Error generating options:", error);
@@ -166,7 +166,7 @@ export class OptionDataService implements IOptionDataService {
 
   filterOptionsByDifficulty(
     options: PictographData[],
-    level: DifficultyLevel,
+    level: DifficultyLevel
   ): PictographData[] {
     const limits = this.DIFFICULTY_MOTION_LIMITS[level];
 
@@ -211,7 +211,7 @@ export class OptionDataService implements IOptionDataService {
 
   validateOptionCompatibility(
     option: PictographData,
-    sequence: SequenceData,
+    sequence: SequenceData
   ): ValidationResult {
     const errors: ValidationError[] = [];
 
@@ -230,7 +230,7 @@ export class OptionDataService implements IOptionDataService {
       // Validate motion continuity
       const continuityErrors = this.validateMotionContinuity(
         lastBeat.pictograph_data,
-        option,
+        option
       );
       // Convert string errors to ValidationError objects
       const validationErrors = continuityErrors.map((error) => ({
@@ -258,7 +258,7 @@ export class OptionDataService implements IOptionDataService {
   convertCsvRowToPictographData(
     row: ParsedCsvRow,
     gridMode: DomainGridMode,
-    index: number = 0,
+    index: number = 0
   ): PictographData | null {
     return this.convertCsvRowToPictographDataInternal(row, gridMode, index);
   }
@@ -269,7 +269,7 @@ export class OptionDataService implements IOptionDataService {
   private convertCsvRowToPictographDataInternal(
     row: ParsedCsvRow,
     gridMode: DomainGridMode,
-    index: number = 0,
+    index: number = 0
   ): PictographData | null {
     try {
       // Create motion data for blue and red
@@ -324,7 +324,7 @@ export class OptionDataService implements IOptionDataService {
       console.error(
         "❌ Error converting CSV row to PictographData:",
         error,
-        row,
+        row
       );
       return null;
     }
@@ -335,7 +335,7 @@ export class OptionDataService implements IOptionDataService {
    */
   private createMotionDataFromCsv(
     row: ParsedCsvRow,
-    color: "blue" | "red",
+    color: "blue" | "red"
   ): MotionData {
     const motionType = row[`${color}MotionType`] as string;
     const propRotDir = row[`${color}PropRotDir`] as string;
@@ -350,7 +350,7 @@ export class OptionDataService implements IOptionDataService {
         this.mapLocationString(startLoc),
         this.mapLocationString(endLoc),
         0, // Basic turns for now - could be enhanced to read from CSV
-        Orientation.IN, // Standard start orientation
+        Orientation.IN // Standard start orientation
       );
     return motion;
   }
@@ -448,18 +448,18 @@ export class OptionDataService implements IOptionDataService {
 
   private filterByMotionTypes(
     options: PictographData[],
-    motionTypes: MotionType[],
+    motionTypes: MotionType[]
   ): PictographData[] {
     return options.filter((option) => {
       const blueValid =
         !option.motions?.blue ||
         motionTypes.includes(
-          (option.motions.blue as MotionData).motion_type as MotionType,
+          (option.motions.blue as MotionData).motion_type as MotionType
         );
       const redValid =
         !option.motions?.red ||
         motionTypes.includes(
-          (option.motions.red as MotionData).motion_type as MotionType,
+          (option.motions.red as MotionData).motion_type as MotionType
         );
       return blueValid && redValid;
     });
@@ -468,7 +468,7 @@ export class OptionDataService implements IOptionDataService {
   private filterByTurns(
     options: PictographData[],
     minTurns?: number,
-    maxTurns?: number,
+    maxTurns?: number
   ): PictographData[] {
     return options.filter((option) => {
       // Check blue motion turns
@@ -497,7 +497,7 @@ export class OptionDataService implements IOptionDataService {
 
   private validateMotionContinuity(
     lastPictograph: PictographData,
-    nextOption: PictographData,
+    nextOption: PictographData
   ): string[] {
     const errors: string[] = [];
 

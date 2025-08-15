@@ -100,7 +100,7 @@ export const gridCoordinates: Record<"diamond" | "box", GridCoordinateData> = {
  * Parse coordinate string "(x, y)" into {x, y} object
  */
 export function parseCoordinates(
-  coordString: string,
+  coordString: string
 ): { x: number; y: number } | null {
   if (!coordString || coordString === "None") return null;
 
@@ -133,7 +133,7 @@ export function createGridData(mode: "diamond" | "box"): GridData {
       Object.entries(points).map(([key, value]) => [
         key,
         { coordinates: parseCoordinates(value) },
-      ]),
+      ])
     );
 
   return {

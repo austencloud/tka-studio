@@ -31,7 +31,7 @@ export class BetaOffsetCalculator {
    */
   calculateNewPositionWithOffset(
     currentPosition: Position,
-    direction: Direction,
+    direction: Direction
   ): Position {
     const offset = this.getOffsetForDirection(direction);
 
@@ -76,7 +76,7 @@ export class BetaOffsetCalculator {
    */
   calculateBetaSeparationOffsets(
     blueDirection: Direction | null,
-    redDirection: Direction | null,
+    redDirection: Direction | null
   ): { blue: Position; red: Position } {
     const blueOffset = blueDirection
       ? this.getOffsetForDirection(blueDirection)

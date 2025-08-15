@@ -12,7 +12,7 @@ export interface IArrowPlacementKeyService {
   generatePlacementKey(
     motionData: MotionData,
     pictographData: PictographData,
-    availableKeys: string[],
+    availableKeys: string[]
   ): string;
 
   generateBasicKey(motionType: MotionType): string;
@@ -40,20 +40,20 @@ export class ArrowPlacementKeyService implements IArrowPlacementKeyService {
   generatePlacementKey(
     motionData: MotionData,
     pictographData: PictographData,
-    availableKeys: string[],
+    availableKeys: string[]
   ): string {
     const rawMotionType = this.getRawMotionType(motionData);
     const motionType = this.normalizeMotionType(rawMotionType);
     const letter = pictographData.letter;
 
     console.log(
-      `Generating placement key for ${motionType}, letter: ${letter}`,
+      `Generating placement key for ${motionType}, letter: ${letter}`
     );
 
     // Generate candidate keys in order of preference
     const candidateKeys = this.generateCandidateKeys(
       motionData,
-      pictographData,
+      pictographData
     );
 
     // Select the first available key from candidates
@@ -82,7 +82,7 @@ export class ArrowPlacementKeyService implements IArrowPlacementKeyService {
    */
   private generateCandidateKeys(
     motionData: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): string[] {
     const rawMotionType = this.getRawMotionType(motionData);
     const motionType = this.normalizeMotionType(rawMotionType);
@@ -172,7 +172,7 @@ export class ArrowPlacementKeyService implements IArrowPlacementKeyService {
       }
     }
     console.warn(
-      `Invalid motion type: ${String(motionType)}, defaulting to 'pro'`,
+      `Invalid motion type: ${String(motionType)}, defaulting to 'pro'`
     );
     return "pro";
   }
@@ -182,7 +182,7 @@ export class ArrowPlacementKeyService implements IArrowPlacementKeyService {
    */
   debugCandidateKeys(
     motionData: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): string[] {
     const candidates = this.generateCandidateKeys(motionData, pictographData);
     console.log("Candidate placement keys:", candidates);

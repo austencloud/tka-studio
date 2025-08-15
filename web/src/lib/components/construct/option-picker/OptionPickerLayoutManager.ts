@@ -55,7 +55,7 @@ export class OptionPickerLayoutManager {
    * Calculate sophisticated responsive layout using the advanced layout system
    */
   static calculateLayout(
-    params: LayoutCalculationParams,
+    params: LayoutCalculationParams
   ): LayoutCalculationResult {
     const {
       count,
@@ -80,7 +80,7 @@ export class OptionPickerLayoutManager {
     // Get enhanced device information
     const enhancedDeviceInfo = getEnhancedDeviceType(
       containerWidth,
-      isMobileUserAgent,
+      isMobileUserAgent
     );
     const deviceType = enhancedDeviceInfo.deviceType;
     const isMobile = deviceType === "smallMobile" || deviceType === "mobile";
@@ -95,7 +95,7 @@ export class OptionPickerLayoutManager {
       containerWidth,
       isMobile,
       isPortrait,
-      foldableInfo,
+      foldableInfo
     );
 
     // Extract grid columns count from the CSS grid template
@@ -159,7 +159,7 @@ export class OptionPickerLayoutManager {
   static getResponsiveConfig(
     count: number,
     containerWidth: number,
-    containerHeight: number,
+    containerHeight: number
   ): ResponsiveLayoutConfig {
     const result = this.calculateLayout({
       count,
@@ -175,7 +175,7 @@ export class OptionPickerLayoutManager {
    */
   static shouldUseMobileLayout(
     containerWidth: number,
-    _isMobileUserAgent?: boolean,
+    _isMobileUserAgent?: boolean
   ): boolean {
     const result = this.calculateLayout({
       count: 1, // Minimal count for device detection
@@ -211,7 +211,7 @@ export class OptionPickerLayoutManager {
     count: number,
     containerWidth: number,
     containerHeight: number,
-    targetColumns?: number,
+    targetColumns?: number
   ): number {
     if (targetColumns) {
       // If specific column count is requested, calculate directly
@@ -238,7 +238,7 @@ export class OptionPickerLayoutManager {
   static calculateGridGap(
     count: number,
     containerWidth: number,
-    containerHeight: number,
+    containerHeight: number
   ): string {
     const result = this.calculateLayout({
       count,

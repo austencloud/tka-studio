@@ -31,7 +31,7 @@ import { calculateArrowLocation } from "./utils/arrowLocationCalculator";
  * Convert legacy pictograph data to modern domain structure
  */
 export function legacyToModernPictographData(
-  legacy: LegacyPictographData,
+  legacy: LegacyPictographData
 ): ModernPictographData {
   return {
     id: legacy.id,
@@ -76,7 +76,7 @@ export function legacyToModernPictographData(
  * Convert modern pictograph data to legacy structure (for service compatibility)
  */
 export function modernToLegacyPictographData(
-  modern: ModernPictographData,
+  modern: ModernPictographData
 ): LegacyPictographData {
   return {
     id: modern.id,
@@ -96,7 +96,7 @@ export function modernToLegacyPictographData(
  * Convert beat data to pictograph data for rendering
  */
 export function beatDataToPictographData(
-  beat: ModernBeatData,
+  beat: ModernBeatData
 ): ModernPictographData | null {
   if (!beat.pictograph_data) {
     return null;
@@ -157,7 +157,7 @@ function createEmptyModernPropData(color: "blue" | "red"): ModernPropData {
  */
 export function legacyToModernArrowData(
   legacy: Record<string, unknown>,
-  color: "blue" | "red",
+  color: "blue" | "red"
 ): ModernArrowData {
   // Calculate the correct arrow location based on start/end positions
   const calculatedLocation = calculateArrowLocation({
@@ -231,7 +231,7 @@ export function legacyToModernArrowData(
  */
 export function legacyToModernPropData(
   legacy: Record<string, unknown>,
-  color: "blue" | "red",
+  color: "blue" | "red"
 ): ModernPropData {
   return {
     id: (legacy.id as string) || crypto.randomUUID(),
@@ -321,7 +321,7 @@ export function extractLegacyPropData(legacy: Record<string, unknown>): {
  * Convert any pictograph data (legacy or modern) to modern structure
  */
 export function ensureModernPictographData(
-  data: Record<string, unknown>,
+  data: Record<string, unknown>
 ): ModernPictographData | null {
   if (!data) return null;
 
@@ -411,7 +411,7 @@ export function ensureModernPictographData(
   // If it's from the service interfaces
   if (data.arrows || data.props) {
     return legacyToModernPictographData(
-      data as unknown as LegacyPictographData,
+      data as unknown as LegacyPictographData
     );
   }
 
@@ -423,7 +423,7 @@ export function ensureModernPictographData(
  */
 export function debugDataStructure(
   data: unknown,
-  label: string = "Data",
+  label: string = "Data"
 ): void {
   // Runtime type inspection only (debug utility)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

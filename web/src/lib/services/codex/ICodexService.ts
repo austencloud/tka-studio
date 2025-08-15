@@ -36,21 +36,21 @@ export interface ICodexService {
    * Apply rotate operation to all pictographs
    */
   rotateAllPictographs(
-    pictographs: PictographData[],
+    pictographs: PictographData[]
   ): Promise<PictographData[]>;
 
   /**
    * Apply mirror operation to all pictographs
    */
   mirrorAllPictographs(
-    pictographs: PictographData[],
+    pictographs: PictographData[]
   ): Promise<PictographData[]>;
 
   /**
    * Apply color swap operation to all pictographs
    */
   colorSwapAllPictographs(
-    pictographs: PictographData[],
+    pictographs: PictographData[]
   ): Promise<PictographData[]>;
 
   /**

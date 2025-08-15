@@ -51,7 +51,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
 
   constructor(
     lookupService?: IArrowAdjustmentLookup,
-    tupleProcessor?: IDirectionalTupleProcessor,
+    tupleProcessor?: IDirectionalTupleProcessor
   ) {
     /**
      * Initialize with focused services.
@@ -70,7 +70,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     motionData: MotionData,
     letter: string,
     location: Location,
-    arrowColor?: string,
+    arrowColor?: string
   ): Promise<Point> {
     /**
      * Calculate arrow position adjustment with streamlined parameters.
@@ -91,7 +91,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         motionData,
         letter,
         location,
-        arrowColor,
+        arrowColor
       );
     } catch (error) {
       // Log error and return default for backward compatibility
@@ -105,7 +105,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     motionData: MotionData,
     letter: string,
     location: Location,
-    arrowColor?: string,
+    arrowColor?: string
   ): Promise<Point> {
     /**
      * Calculate arrow position adjustment with proper error handling.
@@ -129,20 +129,20 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         pictographData,
         motionData,
         letter,
-        arrowColor,
+        arrowColor
       );
 
       // STEP 2: Process directional tuples - EXACTLY like legacy
       const finalAdjustment = this.tupleProcessor.processDirectionalTuples(
         baseAdjustment,
         motionData,
-        location,
+        location
       );
 
       return finalAdjustment;
     } catch (error) {
       console.error(
-        `Adjustment calculation failed for letter ${letter}: ${error}`,
+        `Adjustment calculation failed for letter ${letter}: ${error}`
       );
       throw new Error(`Arrow adjustment calculation failed: ${error}`);
     }
@@ -153,7 +153,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     motionData: MotionData,
     letter: string,
     location: Location,
-    arrowColor?: string,
+    arrowColor?: string
   ): Point {
     /**
      * Synchronous version of calculateAdjustment for use in sync contexts.
@@ -168,17 +168,17 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
       const finalAdjustment = this.tupleProcessor.processDirectionalTuples(
         baseAdjustment,
         motionData,
-        location,
+        location
       );
 
       console.debug(
-        `Sync adjustment for ${motionData.motion_type} ${motionData.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`,
+        `Sync adjustment for ${motionData.motion_type} ${motionData.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`
       );
 
       return finalAdjustment;
     } catch (error) {
       console.warn(
-        `Sync adjustment calculation failed for letter ${letter}: ${error}`,
+        `Sync adjustment calculation failed for letter ${letter}: ${error}`
       );
       return { x: 0, y: 0 };
     }
@@ -246,7 +246,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
       new SpecialPlacementOriKeyGenerator(),
       new PlacementKeyGenerator(),
       new TurnsTupleKeyGenerator(),
-      new AttributeKeyGenerator(),
+      new AttributeKeyGenerator()
     );
   }
 
@@ -254,7 +254,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     /**Create tuple processor with default dependencies.*/
     return new DirectionalTupleProcessor(
       new DirectionalTupleCalculator(),
-      new QuadrantIndexCalculator(),
+      new QuadrantIndexCalculator()
     );
   }
 }

@@ -54,7 +54,7 @@ export class ArrowAdjustmentLookup {
     orientationKeyService: ISpecialPlacementOriKeyGenerator,
     placementKeyService: IPlacementKeyGenerator,
     turnsTupleService: ITurnsTupleKeyGenerator,
-    attributeKeyService: IAttributeKeyGenerator,
+    attributeKeyService: IAttributeKeyGenerator
   ) {
     /**Initialize with required services for lookup operations.*/
     this.specialPlacementService = specialPlacementService;
@@ -69,7 +69,7 @@ export class ArrowAdjustmentLookup {
     pictographData: PictographData,
     motionData: MotionData,
     letter: string,
-    arrowColor?: string,
+    arrowColor?: string
   ): Promise<Point> {
     /**
      * Get base adjustment using streamlined lookup logic.
@@ -94,18 +94,18 @@ export class ArrowAdjustmentLookup {
       // Generate required keys for special placement lookup
       const [oriKey, turnsTuple, attrKey] = this.generateLookupKeys(
         pictographData,
-        motionData,
+        motionData
       );
 
       console.debug(
-        `Generated keys - ori: ${oriKey}, turns: ${turnsTuple}, attr: ${attrKey}`,
+        `Generated keys - ori: ${oriKey}, turns: ${turnsTuple}, attr: ${attrKey}`
       );
 
       try {
         const specialAdjustment = await this.lookupSpecialPlacement(
           motionData,
           pictographData,
-          arrowColor,
+          arrowColor
         );
         return specialAdjustment;
       } catch {
@@ -116,10 +116,10 @@ export class ArrowAdjustmentLookup {
       // STEP 2: Fall back to default calculation
       const defaultAdjustment = await this.calculateDefaultAdjustment(
         motionData,
-        pictographData,
+        pictographData
       );
       console.debug(
-        `Using default adjustment: (${defaultAdjustment.x.toFixed(1)}, ${defaultAdjustment.y.toFixed(1)})`,
+        `Using default adjustment: (${defaultAdjustment.x.toFixed(1)}, ${defaultAdjustment.y.toFixed(1)})`
       );
       return defaultAdjustment;
     } catch (error) {
@@ -130,13 +130,13 @@ export class ArrowAdjustmentLookup {
 
   private generateLookupKeys(
     pictographData: PictographData,
-    motionData: MotionData,
+    motionData: MotionData
   ): [string, string, string] {
     /**Generate all required keys for special placement lookup.*/
     try {
       const oriKey = this.orientationKeyService.generateOrientationKey(
         motionData,
-        pictographData,
+        pictographData
       );
       const turnsTuple =
         this.turnsTupleService.generateTurnsTuple(pictographData);
@@ -163,7 +163,7 @@ export class ArrowAdjustmentLookup {
 
       const attrKey = this.attributeKeyService.getKeyFromArrow(
         tempArrow,
-        pictographData,
+        pictographData
       );
 
       return [oriKey, turnsTuple.join(","), attrKey];
@@ -176,7 +176,7 @@ export class ArrowAdjustmentLookup {
   private async lookupSpecialPlacement(
     motionData: MotionData,
     pictographData: PictographData,
-    arrowColor?: string,
+    arrowColor?: string
   ): Promise<Point> {
     /**
      * Look up special placement using exact legacy logic.
@@ -189,7 +189,7 @@ export class ArrowAdjustmentLookup {
         await this.specialPlacementService.getSpecialAdjustment(
           motionData,
           pictographData,
-          arrowColor,
+          arrowColor
         );
 
       if (adjustment) {
@@ -213,7 +213,7 @@ export class ArrowAdjustmentLookup {
   private async calculateDefaultAdjustment(
     motionData: MotionData,
     pictographData: PictographData,
-    gridMode: string = "diamond",
+    gridMode: string = "diamond"
   ): Promise<Point> {
     /**
      * Calculate default adjustment using placement key and motion type.
@@ -224,10 +224,10 @@ export class ArrowAdjustmentLookup {
       // Build a map of available placement keys for the motion/grid
       const keys = await this.defaultPlacementService.getAvailablePlacementKeys(
         motionData.motion_type as MotionType,
-        pictographData.grid_mode as GridMode,
+        pictographData.grid_mode as GridMode
       );
       const defaultPlacements: Record<string, unknown> = Object.fromEntries(
-        (keys || []).map((k) => [k, true]),
+        (keys || []).map((k) => [k, true])
       );
 
       // Generate placement key for default lookup
@@ -235,7 +235,7 @@ export class ArrowAdjustmentLookup {
         motionData,
         pictographData,
         defaultPlacements,
-        gridMode,
+        gridMode
       );
 
       // Get adjustment from default placement service
@@ -244,7 +244,7 @@ export class ArrowAdjustmentLookup {
           placementKey,
           motionData.turns || 0,
           motionData.motion_type as MotionType,
-          gridMode as GridMode,
+          gridMode as GridMode
         );
 
       return adjustmentPoint;

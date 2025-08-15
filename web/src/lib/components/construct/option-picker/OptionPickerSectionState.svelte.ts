@@ -56,7 +56,7 @@ export interface SectionState {
  */
 export function createSectionState(
   letterType: string,
-  initialExpanded: boolean = true,
+  initialExpanded: boolean = true
 ) {
   // Basic state using runes
   let loadingOptions = $state(false);
@@ -69,18 +69,18 @@ export function createSectionState(
   let containerWidth = $state(
     typeof window !== "undefined"
       ? Math.max(300, window.innerWidth * 0.8)
-      : BREAKPOINTS.desktop,
+      : BREAKPOINTS.desktop
   );
   let containerHeight = $state(
     typeof window !== "undefined"
       ? Math.max(200, window.innerHeight * 0.6)
-      : 768,
+      : 768
   );
   let windowWidth = $state(
-    typeof window !== "undefined" ? window.innerWidth : BREAKPOINTS.desktop,
+    typeof window !== "undefined" ? window.innerWidth : BREAKPOINTS.desktop
   );
   let windowHeight = $state(
-    typeof window !== "undefined" ? window.innerHeight : 768,
+    typeof window !== "undefined" ? window.innerHeight : 768
   );
 
   // Derived sophisticated layout state using runes
@@ -95,12 +95,12 @@ export function createSectionState(
 
   const deviceType = $derived(() => enhancedDeviceInfo().deviceType);
   const isMobile = $derived(
-    () => deviceType() === "smallMobile" || deviceType() === "mobile",
+    () => deviceType() === "smallMobile" || deviceType() === "mobile"
   );
   const isTablet = $derived(() => deviceType() === "tablet");
   const isPortrait = $derived(() => containerHeight > containerWidth);
   const containerAspect = $derived(() =>
-    getContainerAspect(containerWidth, containerHeight),
+    getContainerAspect(containerWidth, containerHeight)
   );
 
   // Calculate responsive layout configuration
@@ -115,14 +115,14 @@ export function createSectionState(
       containerWidth,
       isMobile(),
       isPortrait(),
-      foldableInfo(),
+      foldableInfo()
     );
   });
 
   // Legacy compatibility derived state
   const optionPickerWidth = $derived(() => containerWidth);
   const isGroupable = $derived(() =>
-    ["Type4", "Type5", "Type6"].includes(letterType),
+    ["Type4", "Type5", "Type6"].includes(letterType)
   );
 
   // Additional derived state
@@ -312,18 +312,18 @@ export function createOptionPickerState() {
   let containerWidth = $state(
     typeof window !== "undefined"
       ? Math.max(300, window.innerWidth * 0.8)
-      : BREAKPOINTS.desktop,
+      : BREAKPOINTS.desktop
   );
   let containerHeight = $state(
     typeof window !== "undefined"
       ? Math.max(200, window.innerHeight * 0.6)
-      : 768,
+      : 768
   );
   let windowWidth = $state(
-    typeof window !== "undefined" ? window.innerWidth : BREAKPOINTS.desktop,
+    typeof window !== "undefined" ? window.innerWidth : BREAKPOINTS.desktop
   );
   let windowHeight = $state(
-    typeof window !== "undefined" ? window.innerHeight : 768,
+    typeof window !== "undefined" ? window.innerHeight : 768
   );
 
   // Derived sophisticated state using runes
@@ -338,12 +338,12 @@ export function createOptionPickerState() {
 
   const deviceType = $derived(() => enhancedDeviceInfo().deviceType);
   const isMobile = $derived(
-    () => deviceType() === "smallMobile" || deviceType() === "mobile",
+    () => deviceType() === "smallMobile" || deviceType() === "mobile"
   );
   const isTablet = $derived(() => deviceType() === "tablet");
   const isPortrait = $derived(() => containerHeight > containerWidth);
   const containerAspect = $derived(() =>
-    getContainerAspect(containerWidth, containerHeight),
+    getContainerAspect(containerWidth, containerHeight)
   );
 
   // Calculate layout for current options
@@ -356,7 +356,7 @@ export function createOptionPickerState() {
       containerWidth,
       isMobile(),
       isPortrait(),
-      foldableInfo(),
+      foldableInfo()
     );
   });
 
@@ -425,7 +425,7 @@ export function createOptionPickerState() {
         sectionStates.forEach((sectionState) => {
           sectionState.updateContainerDimensions(
             containerWidth,
-            containerHeight,
+            containerHeight
           );
         });
 

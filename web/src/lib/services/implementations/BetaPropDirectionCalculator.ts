@@ -150,7 +150,7 @@ export class BetaPropDirectionCalculator {
     // Handle shift motions (pro, anti, float)
     if (
       [MotionType.PRO, MotionType.ANTI, MotionType.FLOAT].includes(
-        motionData.motion_type,
+        motionData.motion_type
       )
     ) {
       return this.handleShiftMotion(prop, motionData);
@@ -165,7 +165,7 @@ export class BetaPropDirectionCalculator {
    */
   private handleShiftMotion(
     _prop: PropData,
-    motionData: MotionData,
+    motionData: MotionData
   ): Direction | null {
     const isRadial = this.endsWithRadialOrientation();
     const startLoc =
@@ -187,7 +187,7 @@ export class BetaPropDirectionCalculator {
   private getShiftDirection(
     isRadial: boolean,
     startLoc: string,
-    endLoc: string,
+    endLoc: string
   ): Direction | null {
     const map = isRadial
       ? this.directionMapRadialShift

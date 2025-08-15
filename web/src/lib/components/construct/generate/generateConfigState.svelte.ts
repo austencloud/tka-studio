@@ -48,7 +48,7 @@ const DEFAULT_CONFIG: GenerationConfig = {
  * Creates simple reactive state for generation configuration
  */
 export function createGenerationConfigState(
-  initialConfig?: Partial<GenerationConfig>,
+  initialConfig?: Partial<GenerationConfig>
 ) {
   // Initialize config
   let config = $state<GenerationConfig>({

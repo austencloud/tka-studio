@@ -4,14 +4,14 @@ Resource Modal Component
 Detailed modal view for resources with landing page content and additional information.
 -->
 <script lang="ts">
-  import type { Resource } from './resourcesData';
-  import { categories, levels } from './resourcesData';
+  import type { Resource } from "./resourcesData";
+  import { categories, levels } from "./resourcesData";
 
   // Props
   const {
     resource,
     isOpen = false,
-    onClose = () => {}
+    onClose = () => {},
   } = $props<{
     resource: Resource | null;
     isOpen?: boolean;
@@ -25,32 +25,37 @@ Detailed modal view for resources with landing page content and additional infor
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       onClose();
     }
   }
 
   function getCategoryLabel(categoryValue: string): string {
-    return categories.find(c => c.value === categoryValue)?.label || categoryValue;
+    return (
+      categories.find((c) => c.value === categoryValue)?.label || categoryValue
+    );
   }
 
   function getLevelLabel(levelValue: string): string {
-    return levels.find(l => l.value === levelValue)?.label || levelValue;
+    return levels.find((l) => l.value === levelValue)?.label || levelValue;
   }
 
   function getStatusIcon(status: string): string {
     switch (status) {
-      case 'vendor': return '🏪';
-      case 'historical': return '📚';
-      default: return '✨';
+      case "vendor":
+        return "🏪";
+      case "historical":
+        return "📚";
+      default:
+        return "✨";
     }
   }
 </script>
 
 {#if isOpen && resource}
   <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <div 
-    class="modal-overlay" 
+  <div
+    class="modal-overlay"
     onclick={handleOverlayClick}
     onkeydown={handleKeydown}
     role="dialog"
@@ -65,16 +70,16 @@ Detailed modal view for resources with landing page content and additional infor
             {resource.name}
             <span class="status-icon">{getStatusIcon(resource.status)}</span>
           </h2>
-          <button 
-            type="button" 
-            class="close-btn" 
+          <button
+            type="button"
+            class="close-btn"
             onclick={onClose}
             aria-label="Close modal"
           >
             ×
           </button>
         </div>
-        
+
         <div class="modal-meta">
           <span class="category-badge category-{resource.category}">
             {getCategoryLabel(resource.category)}
@@ -82,7 +87,7 @@ Detailed modal view for resources with landing page content and additional infor
           <span class="level-badge level-{resource.level}">
             {getLevelLabel(resource.level)}
           </span>
-          {#if resource.status === 'vendor' && resource.foundingYear}
+          {#if resource.status === "vendor" && resource.foundingYear}
             <span class="founding-badge">Est. {resource.foundingYear}</span>
           {/if}
         </div>
@@ -95,11 +100,15 @@ Detailed modal view for resources with landing page content and additional infor
         </section>
 
         <section class="value-section">
-          <h3>{resource.status === 'vendor' ? 'Why Shop Here' : 'Why It\'s Essential'}</h3>
+          <h3>
+            {resource.status === "vendor"
+              ? "Why Shop Here"
+              : "Why It's Essential"}
+          </h3>
           <p>{resource.value}</p>
         </section>
 
-        {#if resource.status === 'vendor' && resource.specialties}
+        {#if resource.status === "vendor" && resource.specialties}
           <section class="specialties-section">
             <h3>Specialties</h3>
             <div class="specialty-tags">
@@ -128,13 +137,17 @@ Detailed modal view for resources with landing page content and additional infor
       </div>
 
       <footer class="modal-footer">
-        <a 
-          href={resource.url} 
-          target="_blank" 
+        <a
+          href={resource.url}
+          target="_blank"
           rel="noopener noreferrer"
           class="visit-btn primary"
         >
-          Visit {resource.status === 'vendor' ? 'Store' : resource.status === 'historical' ? 'Archive' : 'Site'}
+          Visit {resource.status === "vendor"
+            ? "Store"
+            : resource.status === "historical"
+              ? "Archive"
+              : "Site"}
         </a>
         <button type="button" class="close-modal-btn" onclick={onClose}>
           Close
@@ -162,8 +175,12 @@ Detailed modal view for resources with landing page content and additional infor
   }
 
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   .modal-content {
@@ -178,7 +195,7 @@ Detailed modal view for resources with landing page content and additional infor
   }
 
   @keyframes slideUp {
-    from { 
+    from {
       opacity: 0;
       transform: translateY(20px);
     }

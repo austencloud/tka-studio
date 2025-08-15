@@ -46,7 +46,7 @@ export class ScrollLayoutMetricsUtil {
     containerHeight: number,
     deviceInfo: DeviceInfo,
     foldableInfo: FoldableDetectionResult,
-    layoutConfig: ResponsiveLayoutConfig,
+    layoutConfig: ResponsiveLayoutConfig
   ): LayoutMetrics {
     const metrics: LayoutMetrics = {
       shouldUseCompactLayout: containerHeight < 400,
@@ -86,7 +86,7 @@ export class ScrollLayoutMetricsUtil {
    */
   static calculateScrollBehavior(
     layoutMetrics: LayoutMetrics,
-    foldableInfo: FoldableDetectionResult,
+    foldableInfo: FoldableDetectionResult
   ): ScrollBehaviorConfig {
     return {
       smoothScrolling:
@@ -101,7 +101,7 @@ export class ScrollLayoutMetricsUtil {
    */
   static generateCSSProperties(
     layoutMetrics: LayoutMetrics,
-    scrollBehavior: ScrollBehaviorConfig,
+    scrollBehavior: ScrollBehaviorConfig
   ): Record<string, string | number> {
     return {
       "--scroll-width": scrollBehavior.scrollbarWidth,
@@ -117,7 +117,7 @@ export class ScrollLayoutMetricsUtil {
    */
   static generateCSSClasses(
     layoutMetrics: LayoutMetrics,
-    _foldableInfo: FoldableDetectionResult,
+    _foldableInfo: FoldableDetectionResult
   ): string[] {
     const classes: string[] = [];
 
@@ -137,7 +137,7 @@ export class ScrollLayoutMetricsUtil {
    */
   static getResponsiveBreakpoints(
     containerWidth: number,
-    containerHeight: number,
+    containerHeight: number
   ): {
     isSmallMobile: boolean;
     isMobile: boolean;
@@ -163,7 +163,7 @@ export class ScrollLayoutMetricsUtil {
    */
   static validateContainerDimensions(
     containerWidth: number,
-    containerHeight: number,
+    containerHeight: number
   ): {
     isValid: boolean;
     warnings: string[];
@@ -186,14 +186,14 @@ export class ScrollLayoutMetricsUtil {
     if (containerHeight < 300) {
       warnings.push("Container height is very short");
       recommendations.push(
-        "Consider minimum height of 300px for content visibility",
+        "Consider minimum height of 300px for content visibility"
       );
     }
 
     if (containerWidth > 2000) {
       warnings.push("Container width is extremely wide");
       recommendations.push(
-        "Consider maximum width constraints for optimal layout",
+        "Consider maximum width constraints for optimal layout"
       );
     }
 
@@ -201,7 +201,7 @@ export class ScrollLayoutMetricsUtil {
     if (aspectRatio > 3 || aspectRatio < 0.3) {
       warnings.push("Container has extreme aspect ratio");
       recommendations.push(
-        "Consider more balanced aspect ratio for better user experience",
+        "Consider more balanced aspect ratio for better user experience"
       );
     }
 
@@ -225,7 +225,7 @@ export function calculateQuickLayoutMetrics(
     gridClass: "",
     aspectClass: "",
     scaleFactor: 1.0,
-  },
+  }
 ): {
   metrics: LayoutMetrics;
   scrollBehavior: ScrollBehaviorConfig;
@@ -237,21 +237,21 @@ export function calculateQuickLayoutMetrics(
     containerHeight,
     deviceInfo,
     deviceInfo.foldableInfo,
-    layoutConfig,
+    layoutConfig
   );
 
   const scrollBehavior = ScrollLayoutMetricsUtil.calculateScrollBehavior(
     metrics,
-    deviceInfo.foldableInfo,
+    deviceInfo.foldableInfo
   );
 
   const cssProperties = ScrollLayoutMetricsUtil.generateCSSProperties(
     metrics,
-    scrollBehavior,
+    scrollBehavior
   );
   const cssClasses = ScrollLayoutMetricsUtil.generateCSSClasses(
     metrics,
-    deviceInfo.foldableInfo,
+    deviceInfo.foldableInfo
   );
 
   return {
@@ -269,7 +269,7 @@ export function createLayoutMetricsCalculator(
   containerWidth: () => number,
   containerHeight: () => number,
   deviceInfo: () => DeviceInfo,
-  layoutConfig: () => ResponsiveLayoutConfig,
+  layoutConfig: () => ResponsiveLayoutConfig
 ) {
   return {
     get metrics() {
@@ -278,7 +278,7 @@ export function createLayoutMetricsCalculator(
         containerHeight(),
         deviceInfo(),
         deviceInfo().foldableInfo,
-        layoutConfig(),
+        layoutConfig()
       );
     },
     get scrollBehavior() {
@@ -287,11 +287,11 @@ export function createLayoutMetricsCalculator(
         containerHeight(),
         deviceInfo(),
         deviceInfo().foldableInfo,
-        layoutConfig(),
+        layoutConfig()
       );
       return ScrollLayoutMetricsUtil.calculateScrollBehavior(
         metrics,
-        deviceInfo().foldableInfo,
+        deviceInfo().foldableInfo
       );
     },
     get cssProperties() {
@@ -300,15 +300,15 @@ export function createLayoutMetricsCalculator(
         containerHeight(),
         deviceInfo(),
         deviceInfo().foldableInfo,
-        layoutConfig(),
+        layoutConfig()
       );
       const scrollBehavior = ScrollLayoutMetricsUtil.calculateScrollBehavior(
         metrics,
-        deviceInfo().foldableInfo,
+        deviceInfo().foldableInfo
       );
       return ScrollLayoutMetricsUtil.generateCSSProperties(
         metrics,
-        scrollBehavior,
+        scrollBehavior
       );
     },
     get cssClasses() {
@@ -317,11 +317,11 @@ export function createLayoutMetricsCalculator(
         containerHeight(),
         deviceInfo(),
         deviceInfo().foldableInfo,
-        layoutConfig(),
+        layoutConfig()
       );
       return ScrollLayoutMetricsUtil.generateCSSClasses(
         metrics,
-        deviceInfo().foldableInfo,
+        deviceInfo().foldableInfo
       );
     },
   };

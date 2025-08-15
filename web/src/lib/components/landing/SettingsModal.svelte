@@ -1,17 +1,33 @@
 <script lang="ts">
   interface Props {
     isOpen: boolean;
-    currentBackground: 'deepOcean' | 'snowfall' | 'nightSky';
+    currentBackground: "deepOcean" | "snowfall" | "nightSky";
     onClose: () => void;
     onBackgroundChange: (background: string) => void;
   }
 
-  let { isOpen, currentBackground, onClose, onBackgroundChange }: Props = $props();
+  let { isOpen, currentBackground, onClose, onBackgroundChange }: Props =
+    $props();
 
   const backgroundOptions = [
-    { id: 'nightSky', label: 'Night Sky', icon: '🌌', description: 'Starry night with constellations' },
-    { id: 'deepOcean', label: 'Deep Ocean', icon: '🌊', description: 'Underwater marine life' },
-    { id: 'snowfall', label: 'Snowfall', icon: '❄️', description: 'Gentle falling snow' }
+    {
+      id: "nightSky",
+      label: "Night Sky",
+      icon: "🌌",
+      description: "Starry night with constellations",
+    },
+    {
+      id: "deepOcean",
+      label: "Deep Ocean",
+      icon: "🌊",
+      description: "Underwater marine life",
+    },
+    {
+      id: "snowfall",
+      label: "Snowfall",
+      icon: "❄️",
+      description: "Gentle falling snow",
+    },
   ];
 
   function handleBackgroundSelect(backgroundId: string) {
@@ -25,7 +41,7 @@
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       onClose();
     }
   }
@@ -46,17 +62,17 @@
       <!-- Header -->
       <div class="modal-header">
         <h2 id="settings-title">Background Settings</h2>
-        <button 
-          class="close-button" 
+        <button
+          class="close-button"
           onclick={onClose}
           aria-label="Close settings"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path 
-              d="M18 6L6 18M6 6l12 12" 
-              stroke="currentColor" 
-              stroke-width="2" 
-              stroke-linecap="round" 
+            <path
+              d="M18 6L6 18M6 6l12 12"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
               stroke-linejoin="round"
             />
           </svg>
@@ -83,11 +99,11 @@
                 {#if currentBackground === option.id}
                   <div class="active-indicator">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <path 
-                        d="M20 6L9 17l-5-5" 
-                        stroke="currentColor" 
-                        stroke-width="2" 
-                        stroke-linecap="round" 
+                      <path
+                        d="M20 6L9 17l-5-5"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
                         stroke-linejoin="round"
                       />
                     </svg>
@@ -135,7 +151,7 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 1.5rem;
-    box-shadow: 
+    box-shadow:
       0 20px 40px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     max-width: 500px;
@@ -240,7 +256,7 @@
   .background-option.active {
     background: rgba(102, 126, 234, 0.2);
     border-color: rgba(102, 126, 234, 0.4);
-    box-shadow: 
+    box-shadow:
       0 4px 16px rgba(102, 126, 234, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }

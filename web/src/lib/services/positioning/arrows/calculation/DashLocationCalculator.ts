@@ -35,7 +35,7 @@ type ArrowColor = "red" | "blue";
 export interface IDashLocationCalculator {
   calculateDashLocationFromPictographData(
     pictographData: PictographData,
-    isBlueArrow: boolean,
+    isBlueArrow: boolean
   ): Location;
   calculateDashLocation(
     motion: MotionData,
@@ -47,7 +47,7 @@ export interface IDashLocationCalculator {
     isPhiDash?: boolean,
     isPsiDash?: boolean,
     isLambda?: boolean,
-    isLambdaDash?: boolean,
+    isLambdaDash?: boolean
   ): Location;
 }
 
@@ -220,7 +220,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
 
   calculateDashLocationFromPictographData(
     pictographData: PictographData,
-    isBlueArrow: boolean,
+    isBlueArrow: boolean
   ): Location {
     /**
      * High-level method to calculate dash location from pictograph data.
@@ -258,7 +258,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
       letterInfo.isPhiDash,
       letterInfo.isPsiDash,
       letterInfo.isLambda,
-      letterInfo.isLambdaDash,
+      letterInfo.isLambdaDash
     );
   }
 
@@ -272,7 +272,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
     isPhiDash = false,
     isPsiDash = false,
     isLambda = false,
-    isLambdaDash = false,
+    isLambdaDash = false
   ): Location {
     /**
      * Calculate dash arrow location using proven calculation algorithms.
@@ -299,7 +299,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
         motion,
         letterType,
         gridMode,
-        shiftLocation,
+        shiftLocation
       );
     }
 
@@ -309,7 +309,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
 
   private getLambdaDashZeroTurnsLocation(
     motion: MotionData,
-    otherMotion: MotionData,
+    otherMotion: MotionData
   ): Location {
     /**Handle Λ_DASH (Lambda Dash) zero turns special case.*/
     const key = `${motion.start_loc},${motion.end_loc},${otherMotion.end_loc}`;
@@ -319,7 +319,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
   private getPhiDashPsiDashLocation(
     motion: MotionData,
     otherMotion?: MotionData,
-    arrowColor?: ArrowColor,
+    arrowColor?: ArrowColor
   ): Location {
     /**Handle Φ_DASH and Ψ_DASH location calculation.*/
     if (!otherMotion || !arrowColor) {
@@ -345,7 +345,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
 
   private getLambdaZeroTurnsLocation(
     motion: MotionData,
-    otherMotion: MotionData,
+    otherMotion: MotionData
   ): Location {
     /**Handle Λ (Lambda) zero turns special case.*/
     const key = `${motion.start_loc},${motion.end_loc},${otherMotion.end_loc}`;
@@ -356,7 +356,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
     motion: MotionData,
     letterType?: LetterType,
     gridMode?: GridMode,
-    shiftLocation?: Location,
+    shiftLocation?: Location
   ): Location {
     /**Calculate default zero turns dash location.*/
     // Type 3 scenario detection and handling
@@ -364,7 +364,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
       return this.calculateDashLocationBasedOnShift(
         motion,
         gridMode,
-        shiftLocation,
+        shiftLocation
       );
     }
 
@@ -390,7 +390,7 @@ export class DashLocationCalculator implements IDashLocationCalculator {
   private calculateDashLocationBasedOnShift(
     motion: MotionData,
     gridMode: GridMode,
-    shiftLocation: Location,
+    shiftLocation: Location
   ): Location {
     /**Calculate Type 3 dash location based on shift arrow location.*/
     const startLoc = motion.start_loc;

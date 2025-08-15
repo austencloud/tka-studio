@@ -64,12 +64,12 @@ export class SequenceIndexService implements ISequenceIndexService {
       this.addToIndex(
         this.searchIndex.wordIndex,
         sequence.word.toLowerCase(),
-        sequence.id,
+        sequence.id
       );
       this.addToIndex(
         this.searchIndex.wordIndex,
         sequence.name.toLowerCase(),
-        sequence.id,
+        sequence.id
       );
 
       // Index by author
@@ -77,7 +77,7 @@ export class SequenceIndexService implements ISequenceIndexService {
         this.addToIndex(
           this.searchIndex.authorIndex,
           sequence.author.toLowerCase(),
-          sequence.id,
+          sequence.id
         );
       }
 
@@ -86,7 +86,7 @@ export class SequenceIndexService implements ISequenceIndexService {
         this.addToIndex(
           this.searchIndex.tagIndex,
           tag.toLowerCase(),
-          sequence.id,
+          sequence.id
         );
       }
 
@@ -98,7 +98,7 @@ export class SequenceIndexService implements ISequenceIndexService {
           this.addToIndex(
             this.searchIndex.metadataIndex,
             term.toLowerCase(),
-            sequence.id,
+            sequence.id
           );
         }
       }
@@ -174,7 +174,7 @@ export class SequenceIndexService implements ISequenceIndexService {
 
   async getSuggestions(
     partialQuery: string,
-    maxSuggestions = 10,
+    maxSuggestions = 10
   ): Promise<string[]> {
     if (!this.searchIndex || partialQuery.length < 2) {
       return [];
@@ -208,7 +208,7 @@ export class SequenceIndexService implements ISequenceIndexService {
   private addToIndex(
     index: Map<string, Set<string>>,
     key: string,
-    sequenceId: string,
+    sequenceId: string
   ): void {
     if (!index.has(key)) {
       index.set(key, new Set());
@@ -267,7 +267,7 @@ export class SequenceIndexService implements ISequenceIndexService {
 
   private sortByRelevance(
     sequences: BrowseSequenceMetadata[],
-    query: string,
+    query: string
   ): BrowseSequenceMetadata[] {
     const queryLower = query.toLowerCase();
 
@@ -280,7 +280,7 @@ export class SequenceIndexService implements ISequenceIndexService {
 
   private calculateRelevanceScore(
     sequence: BrowseSequenceMetadata,
-    query: string,
+    query: string
   ): number {
     let score = 0;
 
@@ -382,7 +382,7 @@ export class SequenceIndexService implements ISequenceIndexService {
         isCircular: false,
         tags: ["flow", "practice", "generated"].slice(
           0,
-          Math.floor(Math.random() * 3) + 1,
+          Math.floor(Math.random() * 3) + 1
         ),
         metadata: { scanned: true, index: i },
       };
@@ -395,7 +395,7 @@ export class SequenceIndexService implements ISequenceIndexService {
       result.sequenceLength = Math.floor(Math.random() * 8) + 3;
       result.level = Math.floor(Math.random() * 4) + 1;
       result.dateAdded = new Date(
-        Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000,
+        Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
       );
       result.propType = "fans";
       result.startingPosition = "center";

@@ -74,7 +74,7 @@ export function getAvailableSortConfigs(): SortConfig[] {
 export function createCustomSortConfig(
   method: SortMethod,
   direction: "asc" | "desc",
-  displayName?: string,
+  displayName?: string
 ): SortConfig {
   return {
     method,

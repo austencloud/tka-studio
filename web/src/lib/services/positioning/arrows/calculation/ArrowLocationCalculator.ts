@@ -64,7 +64,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
 
   calculateLocation(
     motion: MotionData,
-    pictographData?: PictographData,
+    pictographData?: PictographData
   ): Location {
     /**
      * Calculate arrow location based on motion type and data.
@@ -92,7 +92,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
         return this.calculateDashLocation(motion, pictographData);
       default:
         console.warn(
-          `Unknown motion type: ${motionType}, using start location`,
+          `Unknown motion type: ${motionType}, using start location`
         );
         return motion.start_loc || Location.NORTH;
     }
@@ -128,7 +128,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
      */
     if (!motion.start_loc || !motion.end_loc) {
       console.warn(
-        "Shift motion missing start_loc or end_loc, using start_loc",
+        "Shift motion missing start_loc or end_loc, using start_loc"
       );
       return motion.start_loc || Location.NORTH;
     }
@@ -145,7 +145,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
 
   private calculateDashLocation(
     motion: MotionData,
-    pictographData?: PictographData,
+    pictographData?: PictographData
   ): Location {
     /**
      * Calculate location for dash arrows.
@@ -165,7 +165,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
      */
     if (!pictographData) {
       console.warn(
-        "No pictograph data provided for dash location calculation, using start location",
+        "No pictograph data provided for dash location calculation, using start location"
       );
       return motion.start_loc || Location.NORTH;
     }
@@ -174,7 +174,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
 
     return this.dashLocationService.calculateDashLocationFromPictographData(
       pictographData,
-      isBlueArrow,
+      isBlueArrow
     );
   }
 
@@ -245,7 +245,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
 
   isBlueArrowMotion(
     motion: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): boolean {
     /**Determine if the given motion belongs to the blue arrow.*/
     // Compare the motion with blue and red motions in pictograph data

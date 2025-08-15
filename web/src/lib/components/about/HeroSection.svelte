@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   let isVisible = $state(false);
 
@@ -22,14 +22,16 @@
     <h2>Philosophy</h2>
     <div class="philosophy-content">
       <p>
-        The Kinetic Alphabet represents a paradigm shift in how flow artists approach their craft. 
-        By providing a systematic framework for understanding movement, we enable practitioners 
-        to develop deeper technical skills while preserving the artistic freedom that defines flow arts.
+        The Kinetic Alphabet represents a paradigm shift in how flow artists
+        approach their craft. By providing a systematic framework for
+        understanding movement, we enable practitioners to develop deeper
+        technical skills while preserving the artistic freedom that defines flow
+        arts.
       </p>
       <p>
-        Our approach combines rigorous technical methodology with creative expression, 
-        allowing artists to build a solid foundation while exploring infinite possibilities 
-        for personal artistic development.
+        Our approach combines rigorous technical methodology with creative
+        expression, allowing artists to build a solid foundation while exploring
+        infinite possibilities for personal artistic development.
       </p>
     </div>
   </div>
@@ -56,7 +58,7 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     margin: var(--spacing-lg);

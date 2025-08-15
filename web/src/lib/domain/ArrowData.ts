@@ -59,7 +59,7 @@ export function createArrowData(data: Partial<ArrowData> = {}): ArrowData {
 
 export function updateArrowData(
   arrow: ArrowData,
-  updates: Partial<ArrowData>,
+  updates: Partial<ArrowData>
 ): ArrowData {
   return {
     ...arrow,

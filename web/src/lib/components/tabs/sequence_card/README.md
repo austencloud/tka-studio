@@ -103,7 +103,7 @@ The Sequence Card tab provides a visual interface for managing and viewing seque
 
 ```svelte
 <script>
-	import SequenceCardTab from './tabs/SequenceCardTab.svelte';
+  import SequenceCardTab from "./tabs/SequenceCardTab.svelte";
 </script>
 
 <SequenceCardTab />

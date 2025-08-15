@@ -27,7 +27,7 @@ export class BrowseService implements IBrowseService {
       console.log(
         "📦 Returning cached sequences:",
         this.cachedSequences.length,
-        "items",
+        "items"
       );
       return this.cachedSequences;
     }
@@ -39,25 +39,25 @@ export class BrowseService implements IBrowseService {
       console.log(
         "✅ Successfully loaded from sequence index:",
         sequences.length,
-        "sequences",
+        "sequences"
       );
       console.log(
         "📋 Sequence IDs:",
-        sequences.map((s) => s.id),
+        sequences.map((s) => s.id)
       );
       this.cachedSequences = sequences;
       return sequences;
     } catch (error) {
       console.warn(
         "❌ Failed to load sequence index, generating from dictionary:",
-        error,
+        error
       );
       // Fallback to scanning dictionary folders
       const sequences = await this.generateSequenceIndex();
       console.log(
         "🔧 Generated sequences as fallback:",
         sequences.length,
-        "sequences",
+        "sequences"
       );
       this.cachedSequences = sequences;
       return sequences;
@@ -67,7 +67,7 @@ export class BrowseService implements IBrowseService {
   async applyFilter(
     sequences: BrowseSequenceMetadata[],
     filterType: FilterType,
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): Promise<BrowseSequenceMetadata[]> {
     console.log("🔍 BrowseService.applyFilter() called with:");
     console.log("  - filterType:", filterType);
@@ -77,7 +77,7 @@ export class BrowseService implements IBrowseService {
     if (filterType === FilterTypeEnum.ALL_SEQUENCES) {
       console.log(
         "✅ ALL_SEQUENCES filter detected - returning all sequences:",
-        sequences.length,
+        sequences.length
       );
       return sequences;
     }
@@ -121,14 +121,14 @@ export class BrowseService implements IBrowseService {
     console.log(
       "📊 Filter result:",
       filtered.length,
-      "sequences after filtering",
+      "sequences after filtering"
     );
     return filtered;
   }
 
   async sortSequences(
     sequences: BrowseSequenceMetadata[],
-    sortMethod: SortMethod,
+    sortMethod: SortMethod
   ): Promise<BrowseSequenceMetadata[]> {
     const sorted = [...sequences];
 
@@ -149,15 +149,15 @@ export class BrowseService implements IBrowseService {
         });
       case SortMethodEnum.SEQUENCE_LENGTH:
         return sorted.sort(
-          (a, b) => (a.sequenceLength || 0) - (b.sequenceLength || 0),
+          (a, b) => (a.sequenceLength || 0) - (b.sequenceLength || 0)
         );
       case SortMethodEnum.AUTHOR:
         return sorted.sort((a, b) =>
-          (a.author || "").localeCompare(b.author || ""),
+          (a.author || "").localeCompare(b.author || "")
         );
       case SortMethodEnum.POPULARITY:
         return sorted.sort(
-          (a, b) => Number(b.isFavorite) - Number(a.isFavorite),
+          (a, b) => Number(b.isFavorite) - Number(a.isFavorite)
         );
       default:
         return sorted;
@@ -166,7 +166,7 @@ export class BrowseService implements IBrowseService {
 
   async groupSequencesIntoSections(
     sequences: BrowseSequenceMetadata[],
-    sortMethod: SortMethod,
+    sortMethod: SortMethod
   ): Promise<Record<string, BrowseSequenceMetadata[]>> {
     const sections: Record<string, BrowseSequenceMetadata[]> = {};
 
@@ -182,7 +182,7 @@ export class BrowseService implements IBrowseService {
   }
 
   async getUniqueValues(
-    field: keyof BrowseSequenceMetadata,
+    field: keyof BrowseSequenceMetadata
   ): Promise<string[]> {
     const sequences = await this.loadSequenceMetadata();
     const values = new Set<string>();
@@ -290,7 +290,7 @@ export class BrowseService implements IBrowseService {
       result.sequenceLength = Math.floor(Math.random() * 8) + 3;
       result.level = Math.floor(Math.random() * 4) + 1;
       result.dateAdded = new Date(
-        Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000,
+        Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000
       );
       result.propType = "fans";
       result.startingPosition = "center";
@@ -301,7 +301,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByStartingLetter(
     sequences: BrowseSequenceMetadata[],
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): BrowseSequenceMetadata[] {
     if (!filterValue || typeof filterValue !== "string") return sequences;
 
@@ -320,23 +320,23 @@ export class BrowseService implements IBrowseService {
     }
 
     return sequences.filter(
-      (s) => s.word[0]?.toUpperCase() === filterValue.toUpperCase(),
+      (s) => s.word[0]?.toUpperCase() === filterValue.toUpperCase()
     );
   }
 
   private filterByContainsLetters(
     sequences: BrowseSequenceMetadata[],
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): BrowseSequenceMetadata[] {
     if (!filterValue || typeof filterValue !== "string") return sequences;
     return sequences.filter((s) =>
-      s.word.toLowerCase().includes(filterValue.toLowerCase()),
+      s.word.toLowerCase().includes(filterValue.toLowerCase())
     );
   }
 
   private filterByLength(
     sequences: BrowseSequenceMetadata[],
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): BrowseSequenceMetadata[] {
     if (!filterValue) return sequences;
 
@@ -352,7 +352,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByDifficulty(
     sequences: BrowseSequenceMetadata[],
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): BrowseSequenceMetadata[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.difficultyLevel === filterValue);
@@ -360,7 +360,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByStartingPosition(
     sequences: BrowseSequenceMetadata[],
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): BrowseSequenceMetadata[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.startingPosition === filterValue);
@@ -368,7 +368,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByAuthor(
     sequences: BrowseSequenceMetadata[],
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): BrowseSequenceMetadata[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.author === filterValue);
@@ -376,14 +376,14 @@ export class BrowseService implements IBrowseService {
 
   private filterByGridMode(
     sequences: BrowseSequenceMetadata[],
-    filterValue: FilterValue,
+    filterValue: FilterValue
   ): BrowseSequenceMetadata[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.gridMode === filterValue);
   }
 
   private filterByRecent(
-    sequences: BrowseSequenceMetadata[],
+    sequences: BrowseSequenceMetadata[]
   ): BrowseSequenceMetadata[] {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     return sequences.filter((s) => {
@@ -407,7 +407,7 @@ export class BrowseService implements IBrowseService {
 
   private getSectionKey(
     sequence: BrowseSequenceMetadata,
-    sortMethod: SortMethod,
+    sortMethod: SortMethod
   ): string {
     switch (sortMethod) {
       case SortMethodEnum.ALPHABETICAL:

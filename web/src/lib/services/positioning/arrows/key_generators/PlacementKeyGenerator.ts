@@ -13,7 +13,7 @@ export class PlacementKeyGenerator implements IPlacementKeyGenerator {
     motionData: MotionData,
     pictographData: PictographData,
     defaultPlacements: Record<string, unknown>,
-    _gridMode?: string,
+    _gridMode?: string
   ): string {
     // Interpret defaultPlacements as a set of available keys
     const availableKeys = Object.keys(defaultPlacements || {});
@@ -21,20 +21,20 @@ export class PlacementKeyGenerator implements IPlacementKeyGenerator {
       // Fall back: pick the first candidate from service
       const candidates = this.service.debugCandidateKeys(
         motionData,
-        pictographData,
+        pictographData
       );
       return (
         candidates[0] ??
         this.service.generateBasicKey(
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          (motionData as any).motion_type || "pro",
+          (motionData as any).motion_type || "pro"
         )
       );
     }
 
     const candidates = this.service.debugCandidateKeys(
       motionData,
-      pictographData,
+      pictographData
     );
     for (const key of candidates) {
       if (availableKeys.includes(key)) return key;
@@ -42,7 +42,7 @@ export class PlacementKeyGenerator implements IPlacementKeyGenerator {
     // Fallback to basic
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return this.service.generateBasicKey(
-      (motionData as any).motion_type || "pro",
+      (motionData as any).motion_type || "pro"
     );
   }
 }

@@ -32,7 +32,7 @@ export class ResourceTracker implements ResourceTrackerInterface {
   public trackResource<T>(resource: T): T {
     if (!this.isActive) {
       console.warn(
-        "Attempting to track a resource after ResourceTracker has been disposed",
+        "Attempting to track a resource after ResourceTracker has been disposed"
       );
       return resource;
     }

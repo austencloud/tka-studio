@@ -53,7 +53,7 @@ export function createDeviceState() {
     getCapabilities(): DeviceCapabilities;
     getResponsiveSettings(): ResponsiveSettings;
     onCapabilitiesChanged(
-      callback: (caps: DeviceCapabilities) => void,
+      callback: (caps: DeviceCapabilities) => void
     ): () => void;
   }) {
     try {
@@ -68,14 +68,14 @@ export function createDeviceState() {
         (caps: DeviceCapabilities) => {
           deviceCapabilities = caps;
           responsiveSettings = deviceService.getResponsiveSettings();
-        },
+        }
       );
 
       return cleanup;
     } catch (error) {
       console.warn(
         "DeviceDetectionService not available, using defaults:",
-        error,
+        error
       );
       // Fallback defaults (matches your original)
       responsiveSettings = {

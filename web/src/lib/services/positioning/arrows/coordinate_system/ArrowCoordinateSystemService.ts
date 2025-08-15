@@ -108,7 +108,7 @@ export class ArrowCoordinateSystemService
     const coords = this.LAYER2_POINTS[location];
     if (!coords) {
       console.warn(
-        `No layer2 coordinates for location: ${location}, using center`,
+        `No layer2 coordinates for location: ${location}, using center`
       );
       return this.getSceneCenter();
     }
@@ -120,7 +120,7 @@ export class ArrowCoordinateSystemService
     const coords = this.HAND_POINTS[location];
     if (!coords) {
       console.warn(
-        `No hand point coordinates for location: ${location}, using center`,
+        `No hand point coordinates for location: ${location}, using center`
       );
       return this.getSceneCenter();
     }

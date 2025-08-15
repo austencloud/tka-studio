@@ -66,10 +66,10 @@ export interface IPanelManagementService {
 
   // Events
   onPanelStateChanged(
-    callback: (panelId: string, state: PanelState) => void,
+    callback: (panelId: string, state: PanelState) => void
   ): void;
   offPanelStateChanged(
-    callback: (panelId: string, state: PanelState) => void,
+    callback: (panelId: string, state: PanelState) => void
   ): void;
 }
 

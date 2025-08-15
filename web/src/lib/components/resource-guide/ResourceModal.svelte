@@ -1,78 +1,83 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { modalManager, type ResourceModalData } from '$lib/stores/modalStore.svelte';
-  
+  import { onMount } from "svelte";
+  import {
+    modalManager,
+    type ResourceModalData,
+  } from "$lib/stores/modalStore.svelte";
+
   interface Props {
     isOpen?: boolean;
     onClose?: () => void;
     children?: any;
   }
-  
+
   let { isOpen = false, onClose = () => {}, children }: Props = $props();
-  
+
   // DOM element references - used in reactive contexts so need $state
   let modalContainer: HTMLElement | undefined = $state();
   let modalContent: HTMLElement | undefined = $state();
   let closeButton: HTMLElement | undefined = $state();
-  
+
   // Reactive state
   let previouslyFocusedElement: HTMLElement | null = null;
-  let currentSection = $state('');
-  
+  let currentSection = $state("");
+
   // Derived data from modal manager
   const data = $derived(modalManager.modalData);
   const loading = $derived(false); // modalStore.svelte.ts doesn't have isLoading, so default to false
-  
+
   // Handle body scroll lock
   function lockBodyScroll() {
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = getScrollbarWidth() + 'px';
+    if (typeof document !== "undefined") {
+      document.body.style.overflow = "hidden";
+      document.body.style.paddingRight = getScrollbarWidth() + "px";
     }
   }
-  
+
   function unlockBodyScroll() {
-    if (typeof document !== 'undefined') {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
+    if (typeof document !== "undefined") {
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
     }
   }
-  
+
   function getScrollbarWidth(): number {
-    if (typeof window === 'undefined') return 0;
+    if (typeof window === "undefined") return 0;
     return window.innerWidth - document.documentElement.clientWidth;
   }
-  
+
   // Handle close
   function handleClose() {
     onClose();
     modalManager.closeModal();
   }
-  
+
   // Handle backdrop click
   function handleBackdropClick(event: MouseEvent) {
     if (event.target === modalContainer) {
       handleClose();
     }
   }
-  
+
   // Handle escape key and focus trap
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       handleClose();
-    } else if (event.key === 'Tab') {
+    } else if (event.key === "Tab") {
       // Focus trap implementation
       if (!modalContent) return;
-      
+
       const focusableElements = modalContent.querySelectorAll(
         'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       );
-      
+
       if (!focusableElements?.length) return;
-      
+
       const firstElement = focusableElements[0] as HTMLElement;
-      const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
-      
+      const lastElement = focusableElements[
+        focusableElements.length - 1
+      ] as HTMLElement;
+
       if (event.shiftKey) {
         if (document.activeElement === firstElement) {
           event.preventDefault();
@@ -86,12 +91,12 @@
       }
     }
   }
-  
+
   // Handle modal state changes with $effect
   $effect(() => {
     if (isOpen) {
       lockBodyScroll();
-      if (typeof document !== 'undefined') {
+      if (typeof document !== "undefined") {
         previouslyFocusedElement = document.activeElement as HTMLElement;
         // Focus the close button after a brief delay
         setTimeout(() => {
@@ -106,7 +111,7 @@
         previouslyFocusedElement.focus();
       }
     }
-    
+
     // Cleanup function
     return () => {
       if (!isOpen) {
@@ -114,17 +119,20 @@
       }
     };
   });
-  
+
   // Intersection observer for table of contents
   onMount(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          currentSection = entry.target.id;
-        }
-      });
-    }, { threshold: 0.6 });
-    
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            currentSection = entry.target.id;
+          }
+        });
+      },
+      { threshold: 0.6 }
+    );
+
     return () => observer.disconnect();
   });
 </script>
@@ -145,18 +153,30 @@
     <!-- Modal Container -->
     <div class="modal-container" bind:this={modalContent}>
       <!-- Close Button -->
-      <button 
+      <button
         class="modal-close"
         bind:this={closeButton}
         onclick={handleClose}
         aria-label="Close modal"
         type="button"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M18 6L6 18M6 6L18 18"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </button>
-      
+
       {#if loading}
         <!-- Loading State -->
         <div class="modal-loading">
@@ -167,25 +187,30 @@
         <!-- Resource Content -->
         <div class="resource-content">
           <!-- Header -->
-          <header class="resource-header" style="background: {data.heroGradient}">
+          <header
+            class="resource-header"
+            style="background: {data.heroGradient}"
+          >
             <div class="header-content">
               <h1 id="modal-title" class="resource-title">{data.title}</h1>
               <p class="resource-subtitle">{data.subtitle}</p>
               <div class="resource-meta">
-                <span class="creator-badge" style="color: {data.creatorColor}">{data.creator}</span>
+                <span class="creator-badge" style="color: {data.creatorColor}"
+                  >{data.creator}</span
+                >
                 <span class="category-badge">{data.category}</span>
                 <span class="level-badge">{data.level}</span>
               </div>
             </div>
           </header>
-          
+
           <!-- Navigation -->
           {#if data.tableOfContents && data.tableOfContents.length > 0}
             <nav class="resource-nav" aria-label="Resource sections">
               <div class="nav-links">
                 {#each data.tableOfContents as section}
-                  <a 
-                    href="#{section.id}" 
+                  <a
+                    href="#{section.id}"
                     class="nav-link"
                     class:active={currentSection === section.id}
                   >
@@ -195,40 +220,44 @@
               </div>
             </nav>
           {/if}
-          
+
           <!-- Main Content -->
           <main class="resource-main" id="modal-description">
             <!-- Content will be provided by children slot -->
             {@render children?.()}
           </main>
-          
+
           <!-- Related Resources -->
           {#if data.relatedResources && data.relatedResources.length > 0}
             <aside class="related-resources">
               <h3>Related Resources</h3>
               <div class="related-links">
                 {#each data.relatedResources as related}
-                  <a 
-                    href={related.url} 
+                  <a
+                    href={related.url}
                     class="related-link"
-                    class:internal={related.type === 'internal'}
-                    target={related.type === 'external' ? '_blank' : '_self'}
-                    rel={related.type === 'external' ? 'noopener noreferrer' : ''}
+                    class:internal={related.type === "internal"}
+                    target={related.type === "external" ? "_blank" : "_self"}
+                    rel={related.type === "external"
+                      ? "noopener noreferrer"
+                      : ""}
                   >
                     <span class="related-name">{related.name}</span>
-                    <span class="related-description">{related.description}</span>
+                    <span class="related-description"
+                      >{related.description}</span
+                    >
                   </a>
                 {/each}
               </div>
             </aside>
           {/if}
-          
+
           <!-- Footer -->
           <footer class="resource-footer">
-            <a 
-              href={data.url} 
-              target="_blank" 
-              rel="noopener noreferrer" 
+            <a
+              href={data.url}
+              target="_blank"
+              rel="noopener noreferrer"
               class="visit-original"
             >
               Visit Original Resource →
@@ -344,7 +373,9 @@
   }
 
   @keyframes spin {
-    to { transform: rotate(360deg); }
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   /* Resource Content */

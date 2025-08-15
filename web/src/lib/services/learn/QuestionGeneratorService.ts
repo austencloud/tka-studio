@@ -31,7 +31,7 @@ export class QuestionGeneratorService {
    */
   static generateQuestion(
     lessonType: LessonType,
-    pictographDataset?: Record<string, PictographData[]>,
+    pictographDataset?: Record<string, PictographData[]>
   ): QuestionData {
     const questionId = this.generateQuestionId();
 
@@ -39,17 +39,17 @@ export class QuestionGeneratorService {
       case LessonType.PICTOGRAPH_TO_LETTER:
         return this.generatePictographToLetterQuestion(
           questionId,
-          pictographDataset,
+          pictographDataset
         );
       case LessonType.LETTER_TO_PICTOGRAPH:
         return this.generateLetterToPictographQuestion(
           questionId,
-          pictographDataset,
+          pictographDataset
         );
       case LessonType.VALID_NEXT_PICTOGRAPH:
         return this.generateValidNextPictographQuestion(
           questionId,
-          pictographDataset,
+          pictographDataset
         );
       default:
         throw new Error(`Unsupported lesson type: ${lessonType}`);
@@ -61,7 +61,7 @@ export class QuestionGeneratorService {
    */
   private static generatePictographToLetterQuestion(
     questionId: string,
-    _pictographDataset?: Record<string, PictographData[]>,
+    _pictographDataset?: Record<string, PictographData[]>
   ): QuestionData {
     // For now, use mock data - this would be replaced with actual pictograph service
     const availableLetters = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -79,7 +79,7 @@ export class QuestionGeneratorService {
     const wrongLetters = this.generateWrongLetters(
       correctLetter,
       availableLetters,
-      3,
+      3
     );
     const allOptions = [correctLetter, ...wrongLetters];
     this.shuffleArray(allOptions);
@@ -108,7 +108,7 @@ export class QuestionGeneratorService {
    */
   private static generateLetterToPictographQuestion(
     questionId: string,
-    _pictographDataset?: Record<string, PictographData[]>,
+    _pictographDataset?: Record<string, PictographData[]>
   ): QuestionData {
     const availableLetters = ["A", "B", "C", "D", "E", "F", "G", "H"];
     const correctLetter = this.getRandomLetter(availableLetters);
@@ -125,7 +125,7 @@ export class QuestionGeneratorService {
     const wrongPictographs = this.generateWrongPictographs(
       correctLetter,
       availableLetters,
-      3,
+      3
     );
     const allPictographs = [correctPictograph, ...wrongPictographs];
     this.shuffleArray(allPictographs);
@@ -154,7 +154,7 @@ export class QuestionGeneratorService {
    */
   private static generateValidNextPictographQuestion(
     questionId: string,
-    _pictographDataset?: Record<string, PictographData[]>,
+    _pictographDataset?: Record<string, PictographData[]>
   ): QuestionData {
     // Mock initial pictograph
     const initialPictograph = {
@@ -207,10 +207,10 @@ export class QuestionGeneratorService {
   private static generateWrongLetters(
     correctLetter: string,
     availableLetters: string[],
-    count: number,
+    count: number
   ): string[] {
     const wrongLetters = availableLetters.filter(
-      (letter) => letter !== correctLetter,
+      (letter) => letter !== correctLetter
     );
     return this.getRandomItems(wrongLetters, count);
   }
@@ -221,12 +221,12 @@ export class QuestionGeneratorService {
   private static generateWrongPictographs(
     correctLetter: string,
     availableLetters: string[],
-    count: number,
+    count: number
   ): PictographData[] {
     const wrongLetters = this.generateWrongLetters(
       correctLetter,
       availableLetters,
-      count,
+      count
     );
     return wrongLetters.map((letter) => ({
       letter,
@@ -243,7 +243,7 @@ export class QuestionGeneratorService {
     let filteredLetters = availableLetters;
     if (this.previousCorrectLetter) {
       filteredLetters = availableLetters.filter(
-        (letter) => letter !== this.previousCorrectLetter,
+        (letter) => letter !== this.previousCorrectLetter
       );
     }
     const letter = this.getRandomItem(filteredLetters);

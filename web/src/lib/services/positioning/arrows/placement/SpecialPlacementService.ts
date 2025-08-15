@@ -49,7 +49,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
   async getSpecialAdjustment(
     motionData: MotionData,
     pictographData: PictographData,
-    arrowColor?: string,
+    arrowColor?: string
   ): Promise<Point | null> {
     if (!motionData || !pictographData.letter) {
       return null;
@@ -134,7 +134,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
   private async ensureLetterPlacementsLoaded(
     gridMode: string,
     oriKey: string,
-    letter: string,
+    letter: string
   ): Promise<void> {
     try {
       if (!this.specialPlacements[gridMode]) {
@@ -167,7 +167,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
         const response = await fetch(basePath);
         if (!response.ok) {
           console.debug(
-            `No special placement file for ${gridMode}/${oriKey}/${letter}: ${response.status} ${response.statusText}`,
+            `No special placement file for ${gridMode}/${oriKey}/${letter}: ${response.status} ${response.statusText}`
           );
           // Mark as empty to avoid re-fetching repeatedly
           this.specialPlacements[gridMode][oriKey][letter] = {};
@@ -176,12 +176,12 @@ export class SpecialPlacementService implements ISpecialPlacementService {
         const data = (await response.json()) as Record<string, unknown>;
         this.specialPlacements[gridMode][oriKey][letter] = data;
         console.debug(
-          `Loaded special placements for ${gridMode}/${oriKey}/${letter}`,
+          `Loaded special placements for ${gridMode}/${oriKey}/${letter}`
         );
       } catch (error) {
         console.debug(
           `Failed to load special placements for ${gridMode}/${oriKey}/${letter} from ${basePath}:`,
-          error,
+          error
         );
         this.specialPlacements[gridMode][oriKey][letter] = {};
       }
@@ -201,7 +201,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
    */
   private generateOrientationKey(
     _motion: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): string {
     try {
       const blueMotion = pictographData.motions?.blue;

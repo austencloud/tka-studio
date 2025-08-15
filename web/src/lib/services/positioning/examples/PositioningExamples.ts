@@ -144,7 +144,7 @@ export async function exampleGranularPositioning() {
     motion,
     pictographData.letter || "",
     location,
-    "blue",
+    "blue"
   );
   console.log("Calculated adjustment:", adjustment);
 
@@ -245,7 +245,7 @@ export class EnhancedArrowPositioningIntegration {
     const [x, y, rotation] = this.orchestrator.calculateArrowPosition(
       arrowData,
       pictographData,
-      motionData,
+      motionData
     );
 
     return { x, y, rotation };

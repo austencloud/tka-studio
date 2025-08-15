@@ -80,7 +80,7 @@ export function createDefaultBrowseState(): BrowseState {
 }
 
 export function createBrowseSequenceMetadata(
-  sequence: SequenceData,
+  sequence: SequenceData
 ): BrowseSequenceMetadata {
   return {
     id: sequence.id,
@@ -132,7 +132,7 @@ export function createDefaultDisplayState(): BrowseDisplayState {
 
 export function updateBrowseState(
   state: BrowseState,
-  updates: Partial<BrowseState>,
+  updates: Partial<BrowseState>
 ): BrowseState {
   return { ...state, ...updates };
 }

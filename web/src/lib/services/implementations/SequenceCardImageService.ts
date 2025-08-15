@@ -25,7 +25,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
 
   constructor(
     private pictographRenderingService: IPictographRenderingService,
-    private cacheService: ISequenceCardCacheService,
+    private cacheService: ISequenceCardCacheService
   ) {}
 
   /**
@@ -33,7 +33,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
    */
   async generateSequenceCardImage(
     sequence: SequenceData,
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<Blob> {
     try {
       console.log(`Generating image for sequence "${sequence.name}"`);
@@ -41,7 +41,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       // Check cache first
       const cachedImage = await this.cacheService.retrieveImage(
         sequence.id || sequence.name,
-        options,
+        options
       );
 
       if (cachedImage) {
@@ -56,14 +56,14 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       await this.cacheService.storeImage(
         sequence.id || sequence.name,
         imageBlob,
-        options,
+        options
       );
 
       return imageBlob;
     } catch (error) {
       console.error("Failed to generate sequence card image:", error);
       throw new Error(
-        `Image generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Image generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -74,7 +74,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
   async generateBatchImages(
     sequences: SequenceData[],
     options: ExportOptions,
-    onProgress?: (progress: ProgressInfo) => void,
+    onProgress?: (progress: ProgressInfo) => void
   ): Promise<ExportResult[]> {
     const batchId = `batch_${Date.now()}`;
     this.currentBatchId = batchId;
@@ -85,7 +85,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
 
     try {
       console.log(
-        `Starting batch image generation for ${sequences.length} sequences`,
+        `Starting batch image generation for ${sequences.length} sequences`
       );
 
       for (let i = 0; i < sequences.length; i++) {
@@ -136,7 +136,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
         } catch (error) {
           console.error(
             `Failed to generate image for sequence "${sequence.name}":`,
-            error,
+            error
           );
 
           // Create failed result
@@ -168,7 +168,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       }
 
       console.log(
-        `Batch generation completed. ${results.filter((r) => r.success).length}/${sequences.length} successful`,
+        `Batch generation completed. ${results.filter((r) => r.success).length}/${sequences.length} successful`
       );
       return results;
     } catch (error) {
@@ -185,7 +185,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
    */
   async getCachedImage(
     sequenceId: string,
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<Blob | null> {
     return await this.cacheService.retrieveImage(sequenceId, options);
   }
@@ -195,7 +195,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
    */
   async preloadImages(
     sequences: SequenceData[],
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<void> {
     console.log(`Preloading images for ${sequences.length} sequences`);
 
@@ -205,7 +205,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       } catch (error) {
         console.warn(
           `Failed to preload image for sequence "${sequence.name}":`,
-          error,
+          error
         );
       }
     });
@@ -255,28 +255,28 @@ export class SequenceCardImageService implements ISequenceCardImageService {
    */
   private async generateImageFromSequence(
     sequence: SequenceData,
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<Blob> {
     try {
       // 1. Generate SVG for each beat
       const beatSVGs = await Promise.all(
         sequence.beats.map((beat) =>
-          this.pictographRenderingService.renderBeat(beat),
-        ),
+          this.pictographRenderingService.renderBeat(beat)
+        )
       );
 
       // 2. Compose sequence layout SVG
       const sequenceSVG = await this.composeSequenceLayout(
         beatSVGs,
         sequence,
-        options,
+        options
       );
 
       // 3. Add metadata overlays (title, beat numbers, etc.)
       const finalSVG = await this.addMetadataOverlays(
         sequenceSVG,
         sequence,
-        options,
+        options
       );
 
       // 4. Convert SVG to high-quality Canvas
@@ -287,7 +287,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
     } catch (error) {
       console.error("SVG to image conversion failed:", error);
       throw new Error(
-        `SVG conversion failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `SVG conversion failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -298,7 +298,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
   private async composeSequenceLayout(
     beatSVGs: SVGElement[],
     sequence: SequenceData,
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<SVGElement> {
     const beatCount = sequence.beats.length;
     const { beatSize, spacing } = options;
@@ -313,7 +313,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
     // Create container SVG
     const containerSVG = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "svg",
+      "svg"
     );
     containerSVG.setAttribute("width", totalWidth.toString());
     containerSVG.setAttribute("height", totalHeight.toString());
@@ -323,7 +323,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
     if (options.backgroundColor) {
       const background = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "rect",
+        "rect"
       );
       background.setAttribute("width", "100%");
       background.setAttribute("height", "100%");
@@ -341,20 +341,20 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       // Create group for beat
       const beatGroup = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "g",
+        "g"
       );
       beatGroup.setAttribute("transform", `translate(${x}, ${y})`);
 
       // Scale beat SVG to fit beatSize
       const beatContainer = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "svg",
+        "svg"
       );
       beatContainer.setAttribute("width", beatSize.toString());
       beatContainer.setAttribute("height", beatSize.toString());
       beatContainer.setAttribute(
         "viewBox",
-        beatSVG.getAttribute("viewBox") || "0 0 100 100",
+        beatSVG.getAttribute("viewBox") || "0 0 100 100"
       );
 
       // Copy beat SVG content
@@ -373,7 +373,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
   private async addMetadataOverlays(
     svg: SVGElement,
     sequence: SequenceData,
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<SVGElement> {
     const svgWidth = parseInt(svg.getAttribute("width") || "800");
     const svgHeight = parseInt(svg.getAttribute("height") || "600");
@@ -386,7 +386,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
     // Create new container with padding
     const containerSVG = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "svg",
+      "svg"
     );
     containerSVG.setAttribute("width", newWidth.toString());
     containerSVG.setAttribute("height", newHeight.toString());
@@ -396,7 +396,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
     if (options.backgroundColor) {
       const background = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "rect",
+        "rect"
       );
       background.setAttribute("width", "100%");
       background.setAttribute("height", "100%");
@@ -408,7 +408,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
     if (options.includeTitle) {
       const titleText = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "text",
+        "text"
       );
       titleText.setAttribute("x", (newWidth / 2).toString());
       titleText.setAttribute("y", (padding / 2).toString());
@@ -424,11 +424,11 @@ export class SequenceCardImageService implements ISequenceCardImageService {
     // Add the main sequence SVG
     const sequenceGroup = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "g",
+      "g"
     );
     sequenceGroup.setAttribute(
       "transform",
-      `translate(${padding}, ${padding * 2})`,
+      `translate(${padding}, ${padding * 2})`
     );
     sequenceGroup.innerHTML = svg.innerHTML;
     containerSVG.appendChild(sequenceGroup);
@@ -440,7 +440,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       // Add beat count
       const beatCountText = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "text",
+        "text"
       );
       beatCountText.setAttribute("x", padding.toString());
       beatCountText.setAttribute("y", metadataY.toString());
@@ -454,7 +454,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       if (sequence.difficulty_level && options.includeDifficulty) {
         const difficultyText = document.createElementNS(
           "http://www.w3.org/2000/svg",
-          "text",
+          "text"
         );
         difficultyText.setAttribute("x", (newWidth / 2).toString());
         difficultyText.setAttribute("y", metadataY.toString());
@@ -470,7 +470,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       if (sequence.author && options.includeAuthor) {
         const authorText = document.createElementNS(
           "http://www.w3.org/2000/svg",
-          "text",
+          "text"
         );
         authorText.setAttribute("x", (newWidth - padding).toString());
         authorText.setAttribute("y", metadataY.toString());
@@ -491,7 +491,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
    */
   private async svgToCanvas(
     svg: SVGElement,
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<HTMLCanvasElement> {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -553,7 +553,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
   private async canvasToBlob(
     canvas: HTMLCanvasElement,
     sequence: SequenceData,
-    options: ExportOptions,
+    options: ExportOptions
   ): Promise<Blob> {
     return new Promise((resolve, reject) => {
       // Determine quality based on format
@@ -570,7 +570,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
           }
         },
         `image/${options.format.toLowerCase()}`,
-        quality,
+        quality
       );
     });
   }
@@ -579,7 +579,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
    * Get image dimensions from blob
    */
   private async getImageDimensions(
-    blob: Blob,
+    blob: Blob
   ): Promise<{ width: number; height: number }> {
     return new Promise((resolve, reject) => {
       const img = new Image();

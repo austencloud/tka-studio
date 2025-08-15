@@ -217,7 +217,7 @@ export interface AnimationSystem<T> {
   draw: (
     state: T,
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ) => void;
   cleanup?: () => void;
   setQuality?: (quality: QualityLevel) => void;
@@ -225,7 +225,7 @@ export interface AnimationSystem<T> {
     state: T,
     oldDimensions: Dimensions,
     newDimensions: Dimensions,
-    quality: QualityLevel,
+    quality: QualityLevel
   ) => T;
   setAccessibility?: (settings: AccessibilitySettings) => void;
 }

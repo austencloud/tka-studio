@@ -45,7 +45,7 @@ describe("ArrowAdjustmentCalculator (end-to-end positioning)", () => {
       motion,
       "A",
       "NE" as any,
-      "blue",
+      "blue"
     );
 
     // Should return some adjustment (base + directional tuple)

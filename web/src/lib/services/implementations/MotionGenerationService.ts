@@ -24,7 +24,7 @@ export class MotionGenerationService implements IMotionGenerationService {
   async generateMotion(
     color: "blue" | "red",
     _options: GenerationOptions,
-    _previousBeats: BeatData[],
+    _previousBeats: BeatData[]
   ): Promise<MotionData> {
     try {
       console.log(`Generating ${color} motion`);
@@ -86,7 +86,7 @@ export class MotionGenerationService implements IMotionGenerationService {
     } catch (error) {
       console.error(`Failed to generate ${color} motion:`, error);
       throw new Error(
-        `Motion generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Motion generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -97,7 +97,7 @@ export class MotionGenerationService implements IMotionGenerationService {
   private calculateTurns(
     motionType: string,
     startLoc: string,
-    endLoc: string,
+    endLoc: string
   ): number {
     // Simple turn calculation (placeholder)
     if (motionType === "static") return 0;
@@ -136,7 +136,7 @@ export class MotionGenerationService implements IMotionGenerationService {
       allowedMotionTypes?: string[];
       allowedStartLocations?: string[];
       allowedEndLocations?: string[];
-    },
+    }
   ): Promise<MotionData> {
     // TODO: Implement constrained generation
     // For now, use basic generation
@@ -149,7 +149,7 @@ export class MotionGenerationService implements IMotionGenerationService {
   validateMotion(
     motion: MotionData,
     _color: "blue" | "red",
-    _previousBeats: BeatData[],
+    _previousBeats: BeatData[]
   ): { isValid: boolean; reasons: string[] } {
     const reasons: string[] = [];
 

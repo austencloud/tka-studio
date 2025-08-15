@@ -158,14 +158,14 @@ export function createArrowDebugState(): ArrowDebugState {
   let showAdjustmentVectors = $state(true);
 
   let currentDebugData = $state<ArrowPositioningDebugData>(
-    createEmptyDebugData(),
+    createEmptyDebugData()
   );
 
   let isCalculating = $state(false);
   let autoUpdate = $state(true);
 
   let expandedSections = $state(
-    new Set(["coordinate_system", "positioning_steps"]),
+    new Set(["coordinate_system", "positioning_steps"])
   );
 
   // Service instances
@@ -176,11 +176,11 @@ export function createArrowDebugState(): ArrowDebugState {
 
   // Computed values
   const currentMotionData = $derived(
-    selectedPictograph?.motions?.[selectedArrowColor] || null,
+    selectedPictograph?.motions?.[selectedArrowColor] || null
   );
 
   const currentArrowData = $derived(
-    selectedPictograph?.arrows?.[selectedArrowColor] || null,
+    selectedPictograph?.arrows?.[selectedArrowColor] || null
   );
 
   // Function to ensure services are initialized
@@ -244,7 +244,7 @@ export function createArrowDebugState(): ArrowDebugState {
         if (locationCalculator) {
           debugData.calculatedLocation = locationCalculator.calculateLocation(
             currentMotionData,
-            selectedPictograph,
+            selectedPictograph
           );
           debugData.locationDebugInfo = {
             motionType: currentMotionData.motion_type || "",
@@ -272,7 +272,7 @@ export function createArrowDebugState(): ArrowDebugState {
           debugData.initialPosition =
             coordinateSystemService.getInitialPosition(
               currentMotionData,
-              debugData.calculatedLocation,
+              debugData.calculatedLocation
             );
 
           debugData.coordinateSystemDebugInfo = {
@@ -300,7 +300,7 @@ export function createArrowDebugState(): ArrowDebugState {
         if (debugData.calculatedLocation && rotationCalculator) {
           debugData.finalRotation = rotationCalculator.calculateRotation(
             currentMotionData,
-            debugData.calculatedLocation,
+            debugData.calculatedLocation
           );
         }
       } catch (error) {
@@ -322,14 +322,14 @@ export function createArrowDebugState(): ArrowDebugState {
             currentMotionData,
             selectedPictograph.letter || "",
             debugData.calculatedLocation,
-            selectedArrowColor,
+            selectedArrowColor
           );
 
           // Also try to get individual components for debugging
           await calculateIndividualAdjustments(
             debugData,
             selectedPictograph,
-            currentMotionData,
+            currentMotionData
           );
 
           debugData.tupleProcessedAdjustment = fullAdjustment;
@@ -368,7 +368,7 @@ export function createArrowDebugState(): ArrowDebugState {
   async function calculateIndividualAdjustments(
     debugData: ArrowPositioningDebugData,
     pictograph: PictographData,
-    motion: MotionData,
+    motion: MotionData
   ): Promise<void> {
     // This would require access to the internal services of the adjustment calculator
     // For now, we'll provide placeholder debug info
@@ -405,7 +405,7 @@ export function createArrowDebugState(): ArrowDebugState {
   }
 
   function getUsedCoordinateSet(
-    motion: MotionData,
+    motion: MotionData
   ): "hand_points" | "layer2_points" | "center" {
     const motionType = motion.motion_type?.toLowerCase();
     if (["pro", "anti", "float"].includes(motionType || "")) {

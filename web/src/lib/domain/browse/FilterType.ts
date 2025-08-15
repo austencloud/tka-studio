@@ -30,7 +30,7 @@ export interface FilterConfig {
 export function createFilterConfig(
   type: FilterType,
   value: FilterValue,
-  displayName?: string,
+  displayName?: string
 ): FilterConfig {
   return {
     type,
@@ -41,7 +41,7 @@ export function createFilterConfig(
 
 export function formatFilterDisplayName(
   type: FilterType,
-  value: FilterValue,
+  value: FilterValue
 ): string {
   switch (type) {
     case FilterType.STARTING_LETTER:

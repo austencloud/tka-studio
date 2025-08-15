@@ -28,7 +28,7 @@ export class LocalStoragePersistenceService implements IPersistenceService {
     } catch (error) {
       console.error("Failed to save sequence:", error);
       throw new Error(
-        `Failed to save sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to save sequence: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -101,7 +101,7 @@ export class LocalStoragePersistenceService implements IPersistenceService {
     } catch (error) {
       console.error(`Failed to delete sequence ${id}:`, error);
       throw new Error(
-        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }

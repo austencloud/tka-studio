@@ -24,12 +24,12 @@ import type { Point } from "../../types";
 export interface IDirectionalTupleCalculator {
   calculateDirectionalTuple(
     motion: MotionData,
-    location: Location,
+    location: Location
   ): [number, number];
   generateDirectionalTuples(
     motion: MotionData,
     baseX: number,
-    baseY: number,
+    baseY: number
   ): Array<[number, number]>;
 }
 
@@ -41,7 +41,7 @@ export interface IDirectionalTupleProcessor {
   processDirectionalTuples(
     baseAdjustment: Point,
     _motion: MotionData,
-    location: Location,
+    location: Location
   ): Point;
 }
 
@@ -52,7 +52,7 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
 
   calculateDirectionalTuple(
     _motion: MotionData,
-    _location: Location,
+    _location: Location
   ): [number, number] {
     /**
      * Legacy parity: Additional directional tuple is not separately added.
@@ -64,7 +64,7 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
   generateDirectionalTuples(
     motion: MotionData,
     baseX: number,
-    baseY: number,
+    baseY: number
   ): Array<[number, number]> {
     /**
      * Generate directional tuples using legacy mappings by motion type, rotation, and inferred grid.
@@ -369,13 +369,13 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
 
   constructor(
     private directionalTupleService: IDirectionalTupleCalculator,
-    private quadrantIndexService: IQuadrantIndexCalculator,
+    private quadrantIndexService: IQuadrantIndexCalculator
   ) {}
 
   processDirectionalTuples(
     baseAdjustment: Point,
     _motion: MotionData,
-    location: Location,
+    location: Location
   ): Point {
     /**
      * Process directional tuples to calculate final adjustment.
@@ -394,7 +394,7 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
         this.directionalTupleService.generateDirectionalTuples(
           _motion,
           baseAdjustment.x,
-          baseAdjustment.y,
+          baseAdjustment.y
         );
 
       // Calculate quadrant index for tuple selection
@@ -409,7 +409,7 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
     } catch (error) {
       console.warn(
         "Directional tuple processing failed, using base adjustment:",
-        error,
+        error
       );
       return baseAdjustment;
     }

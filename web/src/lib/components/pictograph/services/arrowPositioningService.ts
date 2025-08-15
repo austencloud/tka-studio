@@ -48,10 +48,10 @@ export class ArrowPositioningService {
   async calculatePosition(
     arrowData: ArrowData,
     motionData: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): Promise<ArrowPositionResult> {
     console.log(
-      `🎯 ArrowPositioningService.calculatePosition called for ${arrowData.color} arrow`,
+      `🎯 ArrowPositioningService.calculatePosition called for ${arrowData.color} arrow`
     );
     console.log(`Arrow data:`, {
       motion_type: arrowData.motion_type,
@@ -74,11 +74,11 @@ export class ArrowPositioningService {
       const [x, y, rotation] = this.orchestrator.calculateArrowPosition(
         arrowData,
         pictographData,
-        motionData,
+        motionData
       );
 
       console.log(
-        `✅ Orchestrator returned: (${x}, ${y}) rotation: ${rotation}°`,
+        `✅ Orchestrator returned: (${x}, ${y}) rotation: ${rotation}°`
       );
       return { x, y, rotation };
     } catch (error) {
@@ -93,23 +93,23 @@ export class ArrowPositioningService {
   calculatePositionSync(
     arrowData: ArrowData,
     motionData: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): ArrowPositionResult {
     try {
       console.log(`🎯 Calculating sync position for ${arrowData.color} arrow`);
       console.log(
-        `Motion: ${motionData.motion_type}, Start: ${motionData.start_loc}, End: ${motionData.end_loc}`,
+        `Motion: ${motionData.motion_type}, Start: ${motionData.start_loc}, End: ${motionData.end_loc}`
       );
 
       // Use the synchronous positioning method
       const [x, y, rotation] = this.orchestrator.calculateArrowPosition(
         arrowData,
         pictographData,
-        motionData,
+        motionData
       );
 
       console.log(
-        `✅ Calculated sync position: (${x}, ${y}) rotation: ${rotation}°`,
+        `✅ Calculated sync position: (${x}, ${y}) rotation: ${rotation}°`
       );
 
       return { x, y, rotation };
@@ -125,7 +125,7 @@ export class ArrowPositioningService {
   shouldMirror(
     arrowData: ArrowData,
     _motionData: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): boolean {
     try {
       return this.orchestrator.shouldMirrorArrow(arrowData, pictographData);
@@ -139,7 +139,7 @@ export class ArrowPositioningService {
    * Legacy interface for backward compatibility
    */
   async calculatePosition_legacy(
-    input: ArrowPositioningInput,
+    input: ArrowPositioningInput
   ): Promise<Position> {
     const arrowData: ArrowData = {
       color: input.arrow_type,
@@ -168,7 +168,7 @@ export class ArrowPositioningService {
     const result = await this.calculatePosition(
       arrowData,
       motionData,
-      pictographData,
+      pictographData
     );
     return { x: result.x, y: result.y };
   }
@@ -178,10 +178,10 @@ export class ArrowPositioningService {
    */
   private getFallbackPosition(motionData: MotionData): ArrowPositionResult {
     const coordinates = this.calculateLocationCoordinates(
-      motionData.start_loc || "center",
+      motionData.start_loc || "center"
     );
     console.log(
-      `🔄 Using fallback position: (${coordinates.x}, ${coordinates.y})`,
+      `🔄 Using fallback position: (${coordinates.x}, ${coordinates.y})`
     );
 
     return {

@@ -116,7 +116,7 @@ export class LessonConfigService {
    */
   static supportsQuestionFormat(
     lessonType: LessonType,
-    format: QuestionFormat,
+    format: QuestionFormat
   ): boolean {
     const config = this.getLessonConfig(lessonType);
     return config.questionFormat === format;
@@ -127,7 +127,7 @@ export class LessonConfigService {
    */
   static supportsAnswerFormat(
     lessonType: LessonType,
-    format: AnswerFormat,
+    format: AnswerFormat
   ): boolean {
     const config = this.getLessonConfig(lessonType);
     return config.answerFormat === format;
@@ -230,7 +230,7 @@ export class LessonConfigService {
    */
   static getEstimatedCompletionTime(
     lessonType: LessonType,
-    quizMode: QuizMode,
+    quizMode: QuizMode
   ): number {
     const baseTime = this.getDifficultyLevel(lessonType) * 2; // 2 minutes per difficulty level
 

@@ -54,7 +54,7 @@ export class SequenceAnimationEngine {
     try {
       console.log(
         "StandalonePortedEngine: Initializing with data:",
-        sequenceData,
+        sequenceData
       );
 
       if (!Array.isArray(sequenceData) || sequenceData.length < 3) {
@@ -75,7 +75,7 @@ export class SequenceAnimationEngine {
 
       console.log(
         "StandalonePortedEngine: Parsed steps:",
-        this.parsedSteps.length,
+        this.parsedSteps.length
       );
       console.log("StandalonePortedEngine: Total beats:", this.totalBeats);
 
@@ -106,7 +106,7 @@ export class SequenceAnimationEngine {
     // EXACT LOGIC FROM STANDALONE HTML - DO NOT MODIFY
     const clampedBeat = Math.max(0, Math.min(currentBeat, this.totalBeats));
     const currentAnimationStepIndex = Math.floor(
-      clampedBeat === this.totalBeats ? this.totalBeats - 1 : clampedBeat,
+      clampedBeat === this.totalBeats ? this.totalBeats - 1 : clampedBeat
     );
     const currentStepArrayIndex = currentAnimationStepIndex + 2; // Map beat 0..N-1 to array index 2..N+1
     const t =
@@ -118,7 +118,7 @@ export class SequenceAnimationEngine {
 
     if (!stepDefinition) {
       console.error(
-        `StandalonePortedEngine: No step definition for array index ${currentStepArrayIndex} (beat: ${clampedBeat})`,
+        `StandalonePortedEngine: No step definition for array index ${currentStepArrayIndex} (beat: ${clampedBeat})`
       );
       return;
     }
@@ -130,11 +130,11 @@ export class SequenceAnimationEngine {
       console.log(
         "🔧 [MOTION DEBUG] ===== CALCULATING STATE FOR BEAT",
         currentBeat,
-        "=====",
+        "====="
       );
       console.log(
         "🔧 [MOTION DEBUG] Step definition:",
-        JSON.stringify(stepDefinition, null, 2),
+        JSON.stringify(stepDefinition, null, 2)
       );
       console.log("🔧 [MOTION DEBUG] Blue endpoints:", blueEndpoints);
       console.log("🔧 [MOTION DEBUG] Red endpoints:", redEndpoints);
@@ -144,22 +144,22 @@ export class SequenceAnimationEngine {
       this.bluePropState.centerPathAngle = lerpAngle(
         blueEndpoints.startCenterAngle,
         blueEndpoints.targetCenterAngle,
-        t,
+        t
       );
       this.bluePropState.staffRotationAngle = lerpAngle(
         blueEndpoints.startStaffAngle,
         blueEndpoints.targetStaffAngle,
-        t,
+        t
       );
       this.redPropState.centerPathAngle = lerpAngle(
         redEndpoints.startCenterAngle,
         redEndpoints.targetCenterAngle,
-        t,
+        t
       );
       this.redPropState.staffRotationAngle = lerpAngle(
         redEndpoints.startStaffAngle,
         redEndpoints.targetStaffAngle,
-        t,
+        t
       );
 
       console.log("🔧 [MOTION DEBUG] After interpolation:");
@@ -168,7 +168,7 @@ export class SequenceAnimationEngine {
 
       // Pro motion override removed - turns calculation now handled in calculateStepEndpoints
       console.log(
-        "🔧 [MOTION DEBUG] Pro motion override removed - using calculated endpoints",
+        "🔧 [MOTION DEBUG] Pro motion override removed - using calculated endpoints"
       );
 
       // Update coordinates from angles
@@ -180,7 +180,7 @@ export class SequenceAnimationEngine {
       console.log("🔧 [MOTION DEBUG] Red final:", { ...this.redPropState });
     } else {
       console.error(
-        "StandalonePortedEngine: Could not calculate endpoints for step",
+        "StandalonePortedEngine: Could not calculate endpoints for step"
       );
     }
   }
@@ -190,16 +190,16 @@ export class SequenceAnimationEngine {
    */
   private initializePropStates(): void {
     console.log(
-      "🔧 [MOTION DEBUG] StandalonePortedEngine: Initializing prop states",
+      "🔧 [MOTION DEBUG] StandalonePortedEngine: Initializing prop states"
     );
     console.log(
       "🔧 [MOTION DEBUG] Parsed steps length:",
-      this.parsedSteps.length,
+      this.parsedSteps.length
     );
 
     if (!this.parsedSteps || this.parsedSteps.length < 2) {
       console.warn(
-        "🔧 [MOTION DEBUG] No parsed steps available, using fallback initialization",
+        "🔧 [MOTION DEBUG] No parsed steps available, using fallback initialization"
       );
       // Fallback to hardcoded positions
       this.bluePropState = {
@@ -219,7 +219,7 @@ export class SequenceAnimationEngine {
       const startStateStep = this.parsedSteps[1];
       console.log(
         "🔧 [MOTION DEBUG] Start state step:",
-        JSON.stringify(startStateStep, null, 2),
+        JSON.stringify(startStateStep, null, 2)
       );
 
       const blueStartEndpoints = calculateStepEndpoints(startStateStep, "blue");
@@ -227,7 +227,7 @@ export class SequenceAnimationEngine {
 
       console.log(
         "🔧 [MOTION DEBUG] Blue start endpoints:",
-        blueStartEndpoints,
+        blueStartEndpoints
       );
       console.log("🔧 [MOTION DEBUG] Red start endpoints:", redStartEndpoints);
 

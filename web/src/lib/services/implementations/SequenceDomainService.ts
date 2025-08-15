@@ -77,7 +77,7 @@ export class SequenceDomainService implements ISequenceDomainService {
     const validation = this.validateCreateRequest(request);
     if (!validation.isValid) {
       throw new Error(
-        `Invalid sequence request: ${validation.errors.join(", ")}`,
+        `Invalid sequence request: ${validation.errors.join(", ")}`
       );
     }
 
@@ -109,7 +109,7 @@ export class SequenceDomainService implements ISequenceDomainService {
   updateBeat(
     sequence: SequenceData,
     beatIndex: number,
-    beatData: BeatData,
+    beatData: BeatData
   ): SequenceData {
     // Validation from desktop BeatSequenceService
     if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
@@ -149,7 +149,7 @@ export class SequenceDomainService implements ISequenceDomainService {
     // Extract letters from beats (desktop logic)
     const word = sequence.beats
       .map(
-        (beat) => beat.pictograph_data?.letter || beat.metadata?.letter || "?",
+        (beat) => beat.pictograph_data?.letter || beat.metadata?.letter || "?"
       )
       .join("");
 

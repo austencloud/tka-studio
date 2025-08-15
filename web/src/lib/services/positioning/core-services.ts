@@ -17,13 +17,13 @@ export interface IArrowLocationCalculator {
    */
   calculateLocation(
     motion: MotionData,
-    pictographData?: PictographData,
+    pictographData?: PictographData
   ): Location;
   getSupportedMotionTypes(): MotionType[];
   validateMotionData(motion: MotionData): boolean;
   isBlueArrowMotion(
     motion: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): boolean;
 }
 
@@ -45,7 +45,7 @@ export interface IArrowAdjustmentCalculator {
     motionData: MotionData,
     letter: string,
     location: Location,
-    arrowColor?: string,
+    arrowColor?: string
   ): Promise<Point>;
 
   /**
@@ -56,7 +56,7 @@ export interface IArrowAdjustmentCalculator {
     motionData: MotionData,
     letter: string,
     location: Location,
-    arrowColor?: string,
+    arrowColor?: string
   ): Point;
 }
 
@@ -80,7 +80,7 @@ export interface IDashLocationCalculator {
    */
   calculateDashLocationFromPictographData(
     pictographData: PictographData,
-    isBlueArrow: boolean,
+    isBlueArrow: boolean
   ): Location;
   calculateDashLocation(
     motion: MotionData,
@@ -92,7 +92,7 @@ export interface IDashLocationCalculator {
     isPhiDash?: boolean,
     isPsiDash?: boolean,
     isLambda?: boolean,
-    isLambdaDash?: boolean,
+    isLambdaDash?: boolean
   ): Location;
 }
 
@@ -103,7 +103,7 @@ export interface IArrowPositioningOrchestrator {
   calculateArrowPosition(
     arrowData: ArrowData,
     pictographData: PictographData,
-    motionData?: MotionData,
+    motionData?: MotionData
   ): [number, number, number];
 
   /**
@@ -116,7 +116,7 @@ export interface IArrowPositioningOrchestrator {
    */
   shouldMirrorArrow(
     arrowData: ArrowData,
-    pictographData?: PictographData,
+    pictographData?: PictographData
   ): boolean;
 
   /**
@@ -124,6 +124,6 @@ export interface IArrowPositioningOrchestrator {
    */
   applyMirrorTransform(
     arrowItem: HTMLElement | SVGElement,
-    shouldMirror: boolean,
+    shouldMirror: boolean
   ): void;
 }

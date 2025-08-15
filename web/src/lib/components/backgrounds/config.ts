@@ -37,7 +37,7 @@ export const SnowfallConfig = {
 export function detectAppropriateQuality(): QualityLevel {
   // Check for reduced motion preference
   const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
+    "(prefers-reduced-motion: reduce)"
   ).matches;
   if (prefersReducedMotion) {
     return "minimal";
@@ -92,7 +92,7 @@ export function detectAppropriateQuality(): QualityLevel {
   // Check if we're on a mobile device
   const isMobile =
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent,
+      navigator.userAgent
     );
   if (isMobile) {
     return "medium";

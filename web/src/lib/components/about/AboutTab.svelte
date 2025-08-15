@@ -1,19 +1,19 @@
 <script lang="ts">
-  import HeroSection from './HeroSection.svelte';
-  import QuickAccess from './QuickAccess.svelte';
-  import ProjectOverview from './ProjectOverview.svelte';
-  import Features from './Features.svelte';
-  import GettingStarted from './GettingStarted.svelte';
-  import ResourcesHistorian from './ResourcesHistorian.svelte';
-  import ContactSection from './ContactSection.svelte';
+  import HeroSection from "./HeroSection.svelte";
+  import QuickAccess from "./QuickAccess.svelte";
+  import ProjectOverview from "./ProjectOverview.svelte";
+  import Features from "./Features.svelte";
+  import GettingStarted from "./GettingStarted.svelte";
+  import ResourcesHistorian from "./ResourcesHistorian.svelte";
+  import ContactSection from "./ContactSection.svelte";
 
   // Smooth scrolling utility for section navigation
   function scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
+      element.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
       });
     }
   }
@@ -26,13 +26,28 @@
     <div class="nav-content">
       <span class="nav-title">Quick Navigation:</span>
       <div class="nav-links">
-        <button onclick={() => scrollToSection('hero')} class="nav-link">Philosophy</button>
-        <button onclick={() => scrollToSection('quick-access')} class="nav-link">Quick Access</button>
-        <button onclick={() => scrollToSection('overview')} class="nav-link">Overview</button>
-        <button onclick={() => scrollToSection('features')} class="nav-link">Features</button>
-        <button onclick={() => scrollToSection('getting-started')} class="nav-link">Getting Started</button>
-        <button onclick={() => scrollToSection('resources')} class="nav-link">Resources</button>
-        <button onclick={() => scrollToSection('contact')} class="nav-link">Contact</button>
+        <button onclick={() => scrollToSection("hero")} class="nav-link"
+          >Philosophy</button
+        >
+        <button onclick={() => scrollToSection("quick-access")} class="nav-link"
+          >Quick Access</button
+        >
+        <button onclick={() => scrollToSection("overview")} class="nav-link"
+          >Overview</button
+        >
+        <button onclick={() => scrollToSection("features")} class="nav-link"
+          >Features</button
+        >
+        <button
+          onclick={() => scrollToSection("getting-started")}
+          class="nav-link">Getting Started</button
+        >
+        <button onclick={() => scrollToSection("resources")} class="nav-link"
+          >Resources</button
+        >
+        <button onclick={() => scrollToSection("contact")} class="nav-link"
+          >Contact</button
+        >
       </div>
     </div>
   </nav>
@@ -149,11 +164,16 @@
 
   /* Section Separators */
   .section-container:not(:last-child)::after {
-    content: '';
+    content: "";
     display: block;
     width: 100px;
     height: 2px;
-    background: linear-gradient(90deg, transparent 0%, var(--primary-color) 50%, transparent 100%);
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--primary-color) 50%,
+      transparent 100%
+    );
     margin: var(--spacing-2xl) auto;
   }
 

@@ -44,13 +44,13 @@ import { PositioningServiceFactory } from "../../positioning/PositioningServiceF
 export const IArrowPlacementDataServiceInterface =
   createServiceInterface<IArrowPlacementDataService>(
     "IArrowPlacementDataService",
-    ArrowPlacementDataService,
+    ArrowPlacementDataService
   );
 
 export const IArrowPlacementKeyServiceInterface =
   createServiceInterface<IArrowPlacementKeyService>(
     "IArrowPlacementKeyService",
-    ArrowPlacementKeyService,
+    ArrowPlacementKeyService
   );
 
 export const IArrowPositioningServiceInterface =
@@ -60,10 +60,10 @@ export const IArrowPositioningServiceInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as IArrowPlacementDataService | undefined,
-          args[1] as IArrowPlacementKeyService | undefined,
+          args[1] as IArrowPlacementKeyService | undefined
         );
       }
-    },
+    }
   );
 
 // Enhanced positioning service interfaces
@@ -74,13 +74,13 @@ export const IArrowLocationCalculatorInterface =
       constructor(...args: unknown[]) {
         super(args[0] as DashLocationCalculator | undefined);
       }
-    },
+    }
   );
 
 export const IArrowRotationCalculatorInterface =
   createServiceInterface<IArrowRotationCalculator>(
     "IArrowRotationCalculator",
-    ArrowRotationCalculator,
+    ArrowRotationCalculator
   );
 
 export const IArrowAdjustmentCalculatorInterface =
@@ -90,22 +90,22 @@ export const IArrowAdjustmentCalculatorInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as any,
-          args[1] as IDirectionalTupleProcessor | undefined,
+          args[1] as IDirectionalTupleProcessor | undefined
         );
       }
-    },
+    }
   );
 
 export const IArrowCoordinateSystemServiceInterface =
   createServiceInterface<IArrowCoordinateSystemService>(
     "IArrowCoordinateSystemService",
-    ArrowCoordinateSystemService,
+    ArrowCoordinateSystemService
   );
 
 export const IDashLocationCalculatorInterface =
   createServiceInterface<IDashLocationCalculator>(
     "IDashLocationCalculator",
-    DashLocationCalculator,
+    DashLocationCalculator
   );
 
 export const IDirectionalTupleProcessorInterface =
@@ -115,10 +115,10 @@ export const IDirectionalTupleProcessorInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as IDirectionalTupleCalculator,
-          args[1] as IQuadrantIndexCalculator,
+          args[1] as IQuadrantIndexCalculator
         );
       }
-    },
+    }
   );
 
 export const IArrowPositioningOrchestratorInterface =
@@ -130,14 +130,14 @@ export const IArrowPositioningOrchestratorInterface =
           args[0] as IArrowLocationCalculator,
           args[1] as IArrowRotationCalculator,
           args[2] as IArrowAdjustmentCalculator,
-          args[3] as IArrowCoordinateSystemService,
+          args[3] as IArrowCoordinateSystemService
         );
       }
-    },
+    }
   );
 
 export const IPositioningServiceFactoryInterface =
   createServiceInterface<IPositioningServiceFactory>(
     "IPositioningServiceFactory",
-    PositioningServiceFactory,
+    PositioningServiceFactory
   );

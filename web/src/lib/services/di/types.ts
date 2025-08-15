@@ -10,7 +10,7 @@ export interface ServiceInterface<T = unknown> {
 
 export function createServiceInterface<T>(
   token: string,
-  implementation: new (...args: unknown[]) => T,
+  implementation: new (...args: unknown[]) => T
 ): ServiceInterface<T> {
   return { token, implementation };
 }

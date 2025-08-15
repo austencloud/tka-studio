@@ -30,7 +30,7 @@ export class OrientationCalculationService {
     const validTurns = [0, 0.5, 1, 1.5, 2, 2.5, 3];
     if (!validTurns.includes(motion.turns)) {
       console.warn(
-        `Invalid turns value: ${motion.turns}. Using start orientation.`,
+        `Invalid turns value: ${motion.turns}. Using start orientation.`
       );
       return motion.start_ori;
     }
@@ -41,7 +41,7 @@ export class OrientationCalculationService {
       return this.calculateWholeTurnOrientation(
         motion.motion_type,
         motion.turns,
-        motion.start_ori,
+        motion.start_ori
       );
     } else {
       // Half turns: 0.5, 1.5, 2.5
@@ -49,7 +49,7 @@ export class OrientationCalculationService {
         motion.motion_type,
         motion.turns,
         motion.start_ori,
-        motion.prop_rot_dir,
+        motion.prop_rot_dir
       );
     }
   }
@@ -73,7 +73,7 @@ export class OrientationCalculationService {
   private calculateWholeTurnOrientation(
     motionType: MotionType,
     turns: number,
-    startOri: Orientation,
+    startOri: Orientation
   ): Orientation {
     if (motionType === MotionType.PRO || motionType === MotionType.STATIC) {
       // PRO/STATIC: even turns keep orientation, odd turns switch
@@ -96,7 +96,7 @@ export class OrientationCalculationService {
     motionType: MotionType,
     turns: number,
     startOri: Orientation,
-    propRotDir: RotationDirection,
+    propRotDir: RotationDirection
   ): Orientation {
     // Convert prop rotation direction to string for mapping
     const rotDir =
@@ -177,7 +177,7 @@ export class OrientationCalculationService {
     startLoc: Location,
     endLoc: Location,
     turns: number = 0,
-    startOri: Orientation = Orientation.IN,
+    startOri: Orientation = Orientation.IN
   ): MotionData {
     // Create initial motion data
     const motion: MotionData = {

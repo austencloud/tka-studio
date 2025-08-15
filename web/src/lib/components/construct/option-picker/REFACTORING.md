@@ -65,8 +65,8 @@ The large `OptionPickerScroll.svelte` file has been successfully refactored into
 
 ```svelte
 <script>
-	import OptionPickerScrollContainer from './OptionPickerScrollContainer.svelte';
-	import { createOptionPickerScrollState } from './optionPickerScrollState.svelte.ts';
+  import OptionPickerScrollContainer from "./OptionPickerScrollContainer.svelte";
+  import { createOptionPickerScrollState } from "./optionPickerScrollState.svelte.ts";
 </script>
 
 <OptionPickerScrollContainer {pictographs} {onPictographSelected} />
@@ -94,7 +94,7 @@ const scrollState = createOptionPickerScrollState(props);
 
 ```svelte
 <script>
-	import OptionPickerScroll from './OptionPickerScroll.svelte';
+  import OptionPickerScroll from "./OptionPickerScroll.svelte";
 </script>
 
 <OptionPickerScroll {pictographs} {onPictographSelected} />

@@ -16,12 +16,12 @@ export interface IDefaultPlacementServiceJson {
     placementKey: string,
     turns: number | string,
     motionType: MotionType,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<{ x: number; y: number }>;
 
   getAvailablePlacementKeys(
     motionType: MotionType,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<string[]>;
 
   isLoaded(): boolean;
@@ -29,7 +29,7 @@ export interface IDefaultPlacementServiceJson {
   getPlacementData(
     motionType: MotionType,
     placementKey: string,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<{ [turns: string]: [number, number] }>;
 
   debugAvailableKeys(motionType: MotionType, gridMode: GridMode): Promise<void>;
@@ -56,11 +56,11 @@ export class DefaultPlacementService implements IDefaultPlacementServiceJson {
     placementKey: string,
     turns: number | string,
     motionType: MotionType,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<{ x: number; y: number }> {
     console.log(
       `DefaultPlacementService.getDefaultAdjustment() called with:`,
-      `placement_key=${placementKey}, turns=${turns}, motion_type=${motionType}, grid_mode=${gridMode}`,
+      `placement_key=${placementKey}, turns=${turns}, motion_type=${motionType}, grid_mode=${gridMode}`
     );
 
     try {
@@ -72,18 +72,18 @@ export class DefaultPlacementService implements IDefaultPlacementServiceJson {
         motionType,
         placementKey,
         turns,
-        gridMode,
+        gridMode
       );
 
       console.log(
-        `Found default adjustment for ${placementKey} at ${turns} turns: [${adjustment.x}, ${adjustment.y}]`,
+        `Found default adjustment for ${placementKey} at ${turns} turns: [${adjustment.x}, ${adjustment.y}]`
       );
 
       return adjustment;
     } catch (error) {
       console.warn(
         `Failed to get default adjustment for ${placementKey} at ${turns} turns:`,
-        error,
+        error
       );
       return { x: 0, y: 0 };
     }
@@ -99,12 +99,12 @@ export class DefaultPlacementService implements IDefaultPlacementServiceJson {
    */
   async getAvailablePlacementKeys(
     motionType: MotionType,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<string[]> {
     await this._loadAllDefaultPlacements();
     return this.placementDataService.getAvailablePlacementKeys(
       motionType,
-      gridMode,
+      gridMode
     );
   }
 
@@ -137,15 +137,15 @@ export class DefaultPlacementService implements IDefaultPlacementServiceJson {
     try {
       await this.placementDataService.loadPlacementData();
       console.log(
-        "✅ DefaultPlacementService: All placement data loaded successfully",
+        "✅ DefaultPlacementService: All placement data loaded successfully"
       );
     } catch (error) {
       console.error(
         "❌ DefaultPlacementService: Failed to load placement data:",
-        error,
+        error
       );
       throw new Error(
-        `Default placement loading failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Default placement loading failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -162,13 +162,13 @@ export class DefaultPlacementService implements IDefaultPlacementServiceJson {
   async getPlacementData(
     motionType: MotionType,
     placementKey: string,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<{ [turns: string]: [number, number] }> {
     await this._loadAllDefaultPlacements();
     return this.placementDataService.getPlacementData(
       motionType,
       placementKey,
-      gridMode,
+      gridMode
     );
   }
 
@@ -181,7 +181,7 @@ export class DefaultPlacementService implements IDefaultPlacementServiceJson {
    */
   async debugAvailableKeys(
     motionType: MotionType,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<void> {
     await this._loadAllDefaultPlacements();
     await this.placementDataService.debugAvailableKeys(motionType, gridMode);

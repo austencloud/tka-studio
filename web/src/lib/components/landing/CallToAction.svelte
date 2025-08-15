@@ -12,9 +12,9 @@
     onclicked?: () => void;
   }
 
-  let { 
-    text, 
-    link, 
+  let {
+    text,
+    link,
     onclick,
     primary = true,
     internal = false,
@@ -22,7 +22,7 @@
     loading = false,
     onsuccess,
     onerror,
-    onclicked
+    onclicked,
   }: Props = $props();
 
   async function handleClick(event: MouseEvent) {
@@ -39,7 +39,7 @@
         await onclick();
         onsuccess?.();
       } catch (error) {
-        console.error('Action failed:', error);
+        console.error("Action failed:", error);
         onerror?.(error);
       } finally {
         loading = false;
@@ -81,9 +81,29 @@
       {#if loading}
         <span class="button-spinner" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="16" height="16">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M12,2 A10,10 0 0,1 22,12" stroke="currentColor" stroke-width="2" fill="none">
-              <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
+            <path
+              d="M12,2 A10,10 0 0,1 22,12"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from="0 12 12"
+                to="360 12 12"
+                dur="1s"
+                repeatCount="indefinite"
+              />
             </path>
           </svg>
         </span>
@@ -111,9 +131,29 @@
       {#if loading}
         <span class="button-spinner" aria-hidden="true">
           <svg viewBox="0 0 24 24" width="16" height="16">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-            <path d="M12,2 A10,10 0 0,1 22,12" stroke="currentColor" stroke-width="2" fill="none">
-              <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+            <circle
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            />
+            <path
+              d="M12,2 A10,10 0 0,1 22,12"
+              stroke="currentColor"
+              stroke-width="2"
+              fill="none"
+            >
+              <animateTransform
+                attributeName="transform"
+                attributeType="XML"
+                type="rotate"
+                from="0 12 12"
+                to="360 12 12"
+                dur="1s"
+                repeatCount="indefinite"
+              />
             </path>
           </svg>
         </span>
@@ -147,7 +187,7 @@
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
-    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     will-change: transform, box-shadow, background-color;
   }
 
@@ -181,7 +221,7 @@
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(118, 75, 162, 0.3),
       0 4px 16px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -212,7 +252,7 @@
     -webkit-backdrop-filter: blur(10px);
     color: var(--text-color, white);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
@@ -222,7 +262,7 @@
     color: #667eea;
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 
+    box-shadow:
       0 16px 32px rgba(0, 0, 0, 0.15),
       0 6px 16px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);

@@ -172,7 +172,7 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
 
   private calculateAntiRotation(
     motion: MotionData,
-    location: Location,
+    location: Location
   ): number {
     /**Calculate rotation for ANTI arrows based on rotation direction.*/
     const rotDir = motion.prop_rot_dir?.toLowerCase();
@@ -186,7 +186,7 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
 
   private calculateDashRotation(
     motion: MotionData,
-    location: Location,
+    location: Location
   ): number {
     /**Calculate rotation for DASH arrows with special NO_ROTATION handling.*/
     const rotDir = motion.prop_rot_dir?.toLowerCase();
@@ -208,7 +208,7 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
 
   private calculateFloatRotation(
     motion: MotionData,
-    location: Location,
+    location: Location
   ): number {
     /**Calculate rotation for FLOAT arrows (similar to PRO).*/
     return this.calculateProRotation(motion, location);

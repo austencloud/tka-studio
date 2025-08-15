@@ -114,7 +114,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
     if (this.Q.enableShootingStars)
       this.shootingStarState = this.shootingStarSystem.update(
         this.shootingStarState,
-        dim,
+        dim
       );
     this.updateSpaceship(dim);
     this.updateComet(dim);
@@ -172,7 +172,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
       const density = pCfg.density * this.Q.densityMultiplier;
       const count = Math.floor(dim.width * dim.height * density);
       const stars: Star[] = Array.from({ length: count }).map(() =>
-        this.makeStar(dim),
+        this.makeStar(dim)
       );
       return {
         stars,
@@ -214,12 +214,12 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
                   0.3 *
                     Math.sin(
                       (s.twinklePhase +=
-                        s.twinkleSpeed * (this.a11y.reducedMotion ? 0.3 : 1)),
+                        s.twinkleSpeed * (this.a11y.reducedMotion ? 0.3 : 1))
                     ));
             }
           });
         }
-      },
+      }
     );
   }
   private drawParallax(ctx: CanvasRenderingContext2D) {
@@ -241,7 +241,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
             ctx.fill();
           });
         }
-      },
+      }
     );
     ctx.globalAlpha = 1;
   }
@@ -255,7 +255,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
     this.nebulae = Array.from({ length: this.cfg.nebula.count }).map(() => {
       const r = this.randFloat(
         this.cfg.nebula.minRadius,
-        this.cfg.nebula.maxRadius,
+        this.cfg.nebula.maxRadius
       );
       return {
         x: Math.random() * dim.width,
@@ -273,7 +273,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
     this.nebulae.forEach(
       (n) =>
         (n.phase +=
-          this.randFloat(speedRange.min, speedRange.max) * effectiveSpeed),
+          this.randFloat(speedRange.min, speedRange.max) * effectiveSpeed)
     );
   }
   private drawNebulae(ctx: CanvasRenderingContext2D) {
@@ -312,7 +312,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
       const nearStars = this.layers.near.stars;
       const numLines = Math.min(
         this.cfg.constellations.maxLines,
-        Math.floor(nearStars.length / 2),
+        Math.floor(nearStars.length / 2)
       );
       for (let i = 0; i < numLines; i++) {
         const aIndex = this.randInt(0, nearStars.length - 1);
@@ -341,7 +341,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
         l.dir *= -1;
         l.opacity = Math.max(
           0,
-          Math.min(this.cfg.constellations.opacity, l.opacity),
+          Math.min(this.cfg.constellations.opacity, l.opacity)
         );
       }
     });
@@ -370,7 +370,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
     const baseSize = Math.min(dim.width, dim.height);
     const radius = Math.min(
       baseSize * bodyCfg.radiusPercent,
-      bodyCfg.maxRadiusPx,
+      bodyCfg.maxRadiusPx
     );
 
     const moonIlluminationData = this.getMoonIllumination(new Date()); // Get current moon phase
@@ -566,7 +566,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
       s.y,
       Math.max(1, s.width * 0.1),
       0,
-      2 * Math.PI,
+      2 * Math.PI
     );
     ctx.fill();
 

@@ -45,13 +45,13 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
     if (this.isInitialized) {
       this.snowflakes = this.snowflakeSystem.update(
         this.snowflakes,
-        dimensions,
+        dimensions
       );
       const { qualitySettings } = getOptimizedConfig(this.quality);
       if (qualitySettings.enableShootingStars) {
         this.shootingStarState = this.shootingStarSystem.update(
           this.shootingStarState,
-          dimensions,
+          dimensions
         );
       }
     }
@@ -63,7 +63,7 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
     drawBackgroundGradient(
       ctx,
       dimensions,
-      config.core.background.gradientStops,
+      config.core.background.gradientStops
     );
 
     if (this.isInitialized) {
@@ -90,13 +90,13 @@ export class SnowfallBackgroundSystem implements BackgroundSystem {
 
   public handleResize(
     oldDimensions: Dimensions,
-    newDimensions: Dimensions,
+    newDimensions: Dimensions
   ): void {
     this.snowflakes = this.snowflakeSystem.adjustToResize(
       this.snowflakes,
       oldDimensions,
       newDimensions,
-      this.quality,
+      this.quality
     );
 
     this.shootingStarState = this.shootingStarSystem.initialState;

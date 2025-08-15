@@ -58,7 +58,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
     } catch (error) {
       console.error("Failed to generate sequence:", error);
       throw new Error(
-        `Sequence generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Sequence generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -69,7 +69,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
   private async generateBeat(
     beatNumber: number,
     options: GenerationOptions,
-    previousBeats: BeatData[],
+    previousBeats: BeatData[]
   ): Promise<BeatData> {
     try {
       console.log(`Generating beat ${beatNumber}/${options.length}`);
@@ -78,13 +78,13 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       const blueMotion = await this.motionGenerationService.generateMotion(
         "blue",
         options,
-        previousBeats,
+        previousBeats
       );
 
       const redMotion = await this.motionGenerationService.generateMotion(
         "red",
         options,
-        previousBeats,
+        previousBeats
       );
 
       // Create beat
@@ -110,7 +110,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
     } catch (error) {
       console.error(`Failed to generate beat ${beatNumber}:`, error);
       throw new Error(
-        `Beat generation failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Beat generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -125,7 +125,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
 
     if (
       !Object.values(DomainGridMode).includes(
-        options.gridMode as DomainGridMode,
+        options.gridMode as DomainGridMode
       )
     ) {
       throw new Error('Grid mode must be either "diamond" or "box"');
@@ -135,7 +135,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       !["beginner", "intermediate", "advanced"].includes(options.difficulty)
     ) {
       throw new Error(
-        'Difficulty must be "beginner", "intermediate", or "advanced"',
+        'Difficulty must be "beginner", "intermediate", or "advanced"'
       );
     }
   }
@@ -162,7 +162,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
    */
   async generatePatternSequence(
     pattern: "circular" | "linear" | "random",
-    options: GenerationOptions,
+    options: GenerationOptions
   ): Promise<SequenceData> {
     // TODO: Implement pattern-specific generation
     console.log(`Generating ${pattern} pattern sequence`);
@@ -177,7 +177,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
   async generateVariations(
     baseSequence: SequenceData,
     variationType: "timing" | "direction" | "complexity",
-    count: number = 3,
+    count: number = 3
   ): Promise<SequenceData[]> {
     // TODO: Implement sequence variations
     console.log(`Generating ${count} ${variationType} variations`);

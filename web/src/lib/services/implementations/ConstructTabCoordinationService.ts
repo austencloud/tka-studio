@@ -3,7 +3,7 @@
  *
  * Coordinates between construct tab components (start position picker, option picker, workbench).
  * Based on desktop ConstructTabCoordinationService but simplified for web with runes.
- * 
+ *
  * FIXED: Added proper state synchronization to resolve start position selection getting stuck
  */
 
@@ -117,7 +117,7 @@ export class ConstructTabCoordinationService
         // **CRITICAL FIX: Update the singleton state that UI components watch**
         console.log("🔄 Updating singleton sequence state with new sequence");
         sequenceStateService.setCurrentSequence(updatedSequence);
-        
+
         // Also clear loading state
         sequenceStateService.setLoading(false);
 
@@ -126,7 +126,7 @@ export class ConstructTabCoordinationService
           sequence: updatedSequence,
           startPosition: startPosition,
         });
-        
+
         console.log(
           "🎯 Set updated sequence as current sequence:",
           updatedSequence.id,
@@ -141,7 +141,9 @@ export class ConstructTabCoordinationService
       } else {
         console.error("❌ Failed to reload updated sequence");
         sequenceStateService.setLoading(false);
-        sequenceStateService.setError("Failed to create sequence with start position");
+        sequenceStateService.setError(
+          "Failed to create sequence with start position"
+        );
         return;
       }
 
@@ -160,7 +162,6 @@ export class ConstructTabCoordinationService
 
       // Transition to option picker
       await this.handleUITransitionRequest("option_picker");
-
     } catch (error) {
       console.error("❌ Error handling start position set:", error);
       sequenceStateService.setLoading(false);
@@ -176,7 +177,7 @@ export class ConstructTabCoordinationService
     try {
       // Get current sequence from singleton state
       const currentSequence = sequenceStateService.currentSequence;
-      
+
       if (!currentSequence) {
         console.error("❌ No current sequence available for adding beat");
         return;
@@ -185,11 +186,16 @@ export class ConstructTabCoordinationService
       console.log(`🎭 Adding beat to sequence: ${currentSequence.id}`);
 
       // **CRITICAL: Use the service to add the beat**
-      if ('addBeat' in this.sequenceService && typeof this.sequenceService.addBeat === 'function') {
+      if (
+        "addBeat" in this.sequenceService &&
+        typeof this.sequenceService.addBeat === "function"
+      ) {
         await this.sequenceService.addBeat(currentSequence.id, beatData);
-        
+
         // Reload the updated sequence
-        const updatedSequence = await this.sequenceService.getSequence(currentSequence.id);
+        const updatedSequence = await this.sequenceService.getSequence(
+          currentSequence.id
+        );
         if (updatedSequence) {
           // **CRITICAL: Update singleton state**
           sequenceStateService.setCurrentSequence(updatedSequence);
@@ -203,7 +209,6 @@ export class ConstructTabCoordinationService
 
       // Notify components
       this.notifyComponents("beat_added", { beatData });
-
     } catch (error) {
       console.error("❌ Error handling beat added:", error);
       sequenceStateService.setError(
@@ -289,10 +294,14 @@ export class ConstructTabCoordinationService
 
       if (hasStartPosition || hasBeats) {
         targetPanel = "option_picker";
-        console.log("🎯 UI should show option picker (has start position or beats)");
+        console.log(
+          "🎯 UI should show option picker (has start position or beats)"
+        );
       } else {
         targetPanel = "start_position_picker";
-        console.log("🎯 UI should show start position picker (no start position or beats)");
+        console.log(
+          "🎯 UI should show start position picker (no start position or beats)"
+        );
       }
 
       // Transition to appropriate panel

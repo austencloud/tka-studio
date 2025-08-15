@@ -30,12 +30,12 @@ export interface IArrowPlacementDataService {
     motionType: MotionType,
     placementKey: string,
     turns: number | string,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<{ x: number; y: number }>;
 
   getAvailablePlacementKeys(
     motionType: MotionType,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<string[]>;
 
   isLoaded(): boolean;
@@ -94,7 +94,7 @@ export class ArrowPlacementDataService implements IArrowPlacementDataService {
     } catch (error) {
       console.error("❌ Failed to load arrow placement data:", error);
       throw new Error(
-        `Placement data loading failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Placement data loading failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -113,7 +113,7 @@ export class ArrowPlacementDataService implements IArrowPlacementDataService {
         console.log(`Loaded ${motionType} placements for ${gridMode} grid`);
       } catch (error) {
         console.warn(
-          `Could not load ${motionType} placements for ${gridMode}: ${error}`,
+          `Could not load ${motionType} placements for ${gridMode}: ${error}`
         );
         this.allPlacements[gridMode][motionType] = {};
       }
@@ -143,7 +143,7 @@ export class ArrowPlacementDataService implements IArrowPlacementDataService {
     motionType: MotionType,
     placementKey: string,
     turns: number | string,
-    gridMode: GridMode = DomainGridMode.DIAMOND,
+    gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<{ x: number; y: number }> {
     await this.ensureDataLoaded();
 
@@ -171,14 +171,14 @@ export class ArrowPlacementDataService implements IArrowPlacementDataService {
 
     if (!adjustment) {
       console.warn(
-        `No adjustment for turns: ${turnsStr} in placement: ${placementKey}`,
+        `No adjustment for turns: ${turnsStr} in placement: ${placementKey}`
       );
       return { x: 0, y: 0 };
     }
 
     const [x, y] = adjustment;
     console.log(
-      `Found adjustment for ${motionType} ${placementKey} ${turnsStr}: [${x}, ${y}]`,
+      `Found adjustment for ${motionType} ${placementKey} ${turnsStr}: [${x}, ${y}]`
     );
 
     return { x, y };
@@ -189,7 +189,7 @@ export class ArrowPlacementDataService implements IArrowPlacementDataService {
    */
   async getAvailablePlacementKeys(
     motionType: MotionType,
-    gridMode: GridMode = DomainGridMode.DIAMOND,
+    gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<string[]> {
     await this.ensureDataLoaded();
 
@@ -239,12 +239,12 @@ export class ArrowPlacementDataService implements IArrowPlacementDataService {
    */
   async debugAvailableKeys(
     motionType: MotionType,
-    gridMode: GridMode = DomainGridMode.DIAMOND,
+    gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<void> {
     const keys = await this.getAvailablePlacementKeys(motionType, gridMode);
     console.log(
       `Available placement keys for ${motionType} (${gridMode}):`,
-      keys,
+      keys
     );
   }
 
@@ -254,7 +254,7 @@ export class ArrowPlacementDataService implements IArrowPlacementDataService {
   async getPlacementData(
     motionType: MotionType,
     placementKey: string,
-    gridMode: GridMode = DomainGridMode.DIAMOND,
+    gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<{ [turns: string]: [number, number] }> {
     await this.ensureDataLoaded();
 

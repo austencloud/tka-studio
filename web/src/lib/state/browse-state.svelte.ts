@@ -44,7 +44,7 @@ export function createBrowseState(
   navigationService: INavigationService,
   _filterPersistenceService: IFilterPersistenceService,
   sectionService: ISectionService,
-  deleteService: IDeleteService,
+  deleteService: IDeleteService
 ) {
   // ✅ STATE PERSISTENCE: Initialize state manager
   const stateManager = getBrowseTabStateManager();
@@ -70,7 +70,7 @@ export function createBrowseState(
 
   // Navigation and filtering state
   let currentFilter = $state<{ type: FilterType; value: FilterValue } | null>(
-    null,
+    null
   );
   let currentSort = $state<SortMethod>(SortMethodEnum.ALPHABETICAL);
   let navigationMode = $state<NavigationMode>(NavigationMode.FILTER_SELECTION);
@@ -101,7 +101,7 @@ export function createBrowseState(
       totalSections: sequenceSections.length,
       totalSequences: sequenceSections.reduce(
         (sum, section) => sum + section.count,
-        0,
+        0
       ),
       expandedSections: sequenceSections.filter((section) => section.isExpanded)
         .length,
@@ -161,7 +161,7 @@ export function createBrowseState(
         if (filterType.startsWith("navigation_")) {
           const sectionType = filterType.replace(
             "navigation_",
-            "",
+            ""
           ) as NavigationSection["type"];
 
           // Find the navigation item that matches the saved filter
@@ -177,13 +177,13 @@ export function createBrowseState(
           const filtered = navigationService.getSequencesForNavigationItem(
             matchingItem,
             sectionType,
-            allSequences,
+            allSequences
           );
 
           // Apply current sort
           const sorted = await browseService.sortSequences(
             filtered,
-            currentSort,
+            currentSort
           );
 
           // Update reactive state
@@ -211,13 +211,13 @@ export function createBrowseState(
           const filtered = await browseService.applyFilter(
             allSequences,
             filterTypeEnum,
-            filterValueEnum,
+            filterValueEnum
           );
 
           // Apply current sort
           const sorted = await browseService.sortSequences(
             filtered,
-            currentSort,
+            currentSort
           );
 
           // Update reactive state
@@ -240,7 +240,7 @@ export function createBrowseState(
       console.log(
         "🎯 browse-state.applyFilter() called with:",
         filterType,
-        filterValue,
+        filterValue
       );
       loadingState.isLoading = true;
       loadingState.currentOperation = "Applying filter...";
@@ -262,7 +262,7 @@ export function createBrowseState(
       const filtered = await browseService.applyFilter(
         allSequences,
         filterType,
-        filterValue,
+        filterValue
       );
       console.log("🔍 Filtered sequences received:", filtered.length, "items");
 
@@ -290,7 +290,7 @@ export function createBrowseState(
       // Delegate sorting to service
       const sorted = await browseService.sortSequences(
         filteredSequences,
-        sortMethod,
+        sortMethod
       );
 
       // Update reactive state
@@ -323,7 +323,7 @@ export function createBrowseState(
         results = await browseService.applyFilter(
           searchResults,
           currentFilter.type,
-          currentFilter.value,
+          currentFilter.value
         );
       }
 
@@ -374,14 +374,14 @@ export function createBrowseState(
           seq.thumbnails.map((thumb) => ({
             sequenceId: seq.id,
             thumbnailPath: thumb,
-          })),
+          }))
         );
 
       // Preload thumbnails individually
       for (const thumbnail of thumbnailsToPreload) {
         await thumbnailService.preloadThumbnail(
           thumbnail.sequenceId,
-          thumbnail.thumbnailPath,
+          thumbnail.thumbnailPath
         );
       }
     } catch (error) {
@@ -411,7 +411,7 @@ export function createBrowseState(
   // Helper function for derived sections
   function groupSequencesBySection(
     sequences: BrowseSequenceMetadata[],
-    sortMethod: SortMethod,
+    sortMethod: SortMethod
   ): Record<string, BrowseSequenceMetadata[]> {
     const sections: Record<string, BrowseSequenceMetadata[]> = {};
 
@@ -428,7 +428,7 @@ export function createBrowseState(
 
   function getSectionKey(
     sequence: BrowseSequenceMetadata,
-    sortMethod: SortMethod,
+    sortMethod: SortMethod
   ): string {
     switch (sortMethod) {
       case SortMethodEnum.ALPHABETICAL:
@@ -478,7 +478,7 @@ export function createBrowseState(
     try {
       const sections = await navigationService.generateNavigationSections(
         allSequences,
-        Array.from(favorites),
+        Array.from(favorites)
       );
       navigationSections = sections;
     } catch (error) {
@@ -490,7 +490,7 @@ export function createBrowseState(
     try {
       const sections = await sectionService.organizeSections(
         displayedSequences,
-        sectionConfiguration,
+        sectionConfiguration
       );
       sequenceSections = sections;
     } catch (error) {
@@ -501,7 +501,7 @@ export function createBrowseState(
   function toggleNavigationSection(sectionId: string) {
     navigationSections = navigationService.toggleSectionExpansion(
       sectionId,
-      navigationSections,
+      navigationSections
     );
   }
 
@@ -509,19 +509,19 @@ export function createBrowseState(
     navigationSections = navigationService.setActiveItem(
       sectionId,
       itemId,
-      navigationSections,
+      navigationSections
     );
   }
 
   async function filterSequencesByNavigation(
     sectionType: NavigationSection["type"],
-    item: NavigationItem,
+    item: NavigationItem
   ): Promise<BrowseSequenceMetadata[]> {
     try {
       const filtered = navigationService.getSequencesForNavigationItem(
         item,
         sectionType,
-        allSequences,
+        allSequences
       );
 
       // Update displayed sequences
@@ -551,16 +551,16 @@ export function createBrowseState(
   function toggleSequenceSection(sectionId: string) {
     sequenceSections = sectionService.toggleSectionExpansion(
       sectionId,
-      sequenceSections,
+      sequenceSections
     );
   }
 
   async function updateSectionConfiguration(
-    updates: Partial<SectionConfiguration>,
+    updates: Partial<SectionConfiguration>
   ) {
     sectionConfiguration = sectionService.updateSectionConfiguration(
       sectionConfiguration,
-      updates,
+      updates
     );
     await generateSequenceSections();
   }
@@ -569,7 +569,7 @@ export function createBrowseState(
     try {
       const confirmationData = await deleteService.prepareDeleteConfirmation(
         sequence,
-        allSequences,
+        allSequences
       );
       deleteConfirmation = confirmationData;
       showDeleteDialog = true;
@@ -584,20 +584,20 @@ export function createBrowseState(
     try {
       const result = await deleteService.deleteSequence(
         deleteConfirmation.sequence.id,
-        allSequences,
+        allSequences
       );
 
       if (result.success && deleteConfirmation) {
         const deletedSequenceId = deleteConfirmation.sequence.id;
         // Remove from sequences
         allSequences = allSequences.filter(
-          (seq) => seq.id !== deletedSequenceId,
+          (seq) => seq.id !== deletedSequenceId
         );
         filteredSequences = filteredSequences.filter(
-          (seq) => seq.id !== deletedSequenceId,
+          (seq) => seq.id !== deletedSequenceId
         );
         displayedSequences = displayedSequences.filter(
-          (seq) => seq.id !== deletedSequenceId,
+          (seq) => seq.id !== deletedSequenceId
         );
 
         // Clear selection if deleted sequence was selected

@@ -20,7 +20,7 @@ export class DefaultPropPositioner {
 
   constructor(
     private gridData: GridData,
-    private gridMode: string,
+    private gridMode: string
   ) {
     // Validate grid data on initialization
     if (!gridData || !gridData.allHandPointsNormal) {
@@ -30,7 +30,7 @@ export class DefaultPropPositioner {
     if (this.debugMode) {
       console.log(
         "🎯 DefaultPropPositioner initialized with grid mode:",
-        gridMode,
+        gridMode
       );
     }
   }
@@ -46,7 +46,7 @@ export class DefaultPropPositioner {
       if (this.debugMode) {
         console.log(
           `✅ Found grid point "${pointName}":`,
-          gridPoint.coordinates,
+          gridPoint.coordinates
         );
       }
       return gridPoint.coordinates;
@@ -54,7 +54,7 @@ export class DefaultPropPositioner {
       const fallback = this.getFallbackCoordinates(location);
       if (this.debugMode) {
         console.warn(
-          `⚠️ Grid point "${pointName}" not found, using fallback: (${fallback.x}, ${fallback.y})`,
+          `⚠️ Grid point "${pointName}" not found, using fallback: (${fallback.x}, ${fallback.y})`
         );
       }
       return fallback;
@@ -65,7 +65,7 @@ export class DefaultPropPositioner {
    * Get grid point by name from grid data
    */
   private getGridPoint(
-    pointName: string,
+    pointName: string
   ): { coordinates: { x: number; y: number } } | null {
     // Try to find the point in allHandPointsNormal
     if (
@@ -113,7 +113,7 @@ export class DefaultPropPositioner {
    */
   static calculatePosition(
     location: string,
-    gridMode: string = "diamond",
+    gridMode: string = "diamond"
   ): { x: number; y: number } {
     try {
       const gridData = createGridData(gridMode as "diamond" | "box");

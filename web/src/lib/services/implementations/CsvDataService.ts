@@ -64,7 +64,7 @@ export class CsvDataService {
 
         if (!diamondResponse.ok || !boxResponse.ok) {
           throw new Error(
-            `Failed to load CSV files: Diamond=${diamondResponse.status}, Box=${boxResponse.status}`,
+            `Failed to load CSV files: Diamond=${diamondResponse.status}, Box=${boxResponse.status}`
           );
         }
 
@@ -86,7 +86,7 @@ export class CsvDataService {
     } catch (error) {
       console.error("❌ Error loading CSV data:", error);
       throw new Error(
-        `Failed to load CSV data: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to load CSV data: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -113,7 +113,7 @@ export class CsvDataService {
    */
   getNextOptions(
     endPosition: string,
-    gridMode: GridMode = GridMode.DIAMOND,
+    gridMode: GridMode = GridMode.DIAMOND
   ): ParsedCsvRow[] {
     if (!this.parsedData) {
       return [];
@@ -125,7 +125,7 @@ export class CsvDataService {
 
       // Filter options where startPos matches the endPosition (positional continuity)
       const matchingOptions = dataset.filter(
-        (row) => row.startPos === endPosition,
+        (row) => row.startPos === endPosition
       );
 
       return matchingOptions;
@@ -238,7 +238,7 @@ export class CsvDataService {
    */
   debugPosition(
     _position: string,
-    gridMode: GridMode = GridMode.DIAMOND,
+    gridMode: GridMode = GridMode.DIAMOND
   ): void {
     if (!this.parsedData) {
       return;

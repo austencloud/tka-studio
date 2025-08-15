@@ -18,7 +18,7 @@ import type {
 export class SequenceService implements ISequenceService {
   constructor(
     private sequenceDomainService: ISequenceDomainService,
-    private persistenceService: IPersistenceService,
+    private persistenceService: IPersistenceService
   ) {}
 
   /**
@@ -33,7 +33,7 @@ export class SequenceService implements ISequenceService {
     } catch (error) {
       console.error("Failed to create sequence:", error);
       throw new Error(
-        `Failed to create sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to create sequence: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -44,7 +44,7 @@ export class SequenceService implements ISequenceService {
   async updateBeat(
     sequenceId: string,
     beatIndex: number,
-    beatData: BeatData,
+    beatData: BeatData
   ): Promise<void> {
     try {
       // Load the current sequence
@@ -58,14 +58,14 @@ export class SequenceService implements ISequenceService {
       const updatedSequence = this.sequenceDomainService.updateBeat(
         currentSequence,
         beatIndex,
-        beatData,
+        beatData
       );
 
       await this.persistenceService.saveSequence(updatedSequence);
     } catch (error) {
       console.error("Failed to update beat:", error);
       throw new Error(
-        `Failed to update beat: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to update beat: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -75,7 +75,7 @@ export class SequenceService implements ISequenceService {
    */
   async setSequenceStartPosition(
     sequenceId: string,
-    startPosition: BeatData,
+    startPosition: BeatData
   ): Promise<void> {
     try {
       // Load the current sequence
@@ -95,7 +95,7 @@ export class SequenceService implements ISequenceService {
     } catch (error) {
       console.error("Failed to set start position:", error);
       throw new Error(
-        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -109,7 +109,7 @@ export class SequenceService implements ISequenceService {
     } catch (error) {
       console.error("Failed to delete sequence:", error);
       throw new Error(
-        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to delete sequence: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -124,7 +124,7 @@ export class SequenceService implements ISequenceService {
       // If sequence not found, try to load from PNG metadata
       if (!sequence) {
         console.log(
-          `🎬 Sequence ${id} not found, attempting to load from PNG metadata`,
+          `🎬 Sequence ${id} not found, attempting to load from PNG metadata`
         );
         try {
           sequence = await this.loadSequenceFromPNG(id);
@@ -162,7 +162,7 @@ export class SequenceService implements ISequenceService {
    */
   async addBeat(
     sequenceId: string,
-    beatData?: Partial<BeatData>,
+    beatData?: Partial<BeatData>
   ): Promise<void> {
     try {
       const sequence = await this.getSequence(sequenceId);
@@ -191,7 +191,7 @@ export class SequenceService implements ISequenceService {
     } catch (error) {
       console.error("Failed to add beat:", error);
       throw new Error(
-        `Failed to add beat: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to add beat: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -219,7 +219,7 @@ export class SequenceService implements ISequenceService {
     } catch (error) {
       console.error("Failed to remove beat:", error);
       throw new Error(
-        `Failed to remove beat: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to remove beat: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }
@@ -233,7 +233,7 @@ export class SequenceService implements ISequenceService {
     try {
       // Extract metadata from PNG file using the reliable extractor
       const pngMetadata = await PngMetadataExtractor.extractSequenceMetadata(
-        id.toUpperCase(),
+        id.toUpperCase()
       );
 
       if (!pngMetadata || pngMetadata.length === 0) {
@@ -257,7 +257,7 @@ export class SequenceService implements ISequenceService {
    */
   private async convertPngMetadataToSequence(
     id: string,
-    pngMetadata: any[],
+    pngMetadata: any[]
   ): Promise<SequenceData> {
     console.log(`🔄 Converting standalone data to web app format for ${id}`);
 
@@ -372,7 +372,7 @@ export class SequenceService implements ISequenceService {
 
     // Fallback: Return error - no fake sequences
     throw new Error(
-      `No PNG metadata found for sequence ${id}. Please ensure the sequence has a valid PNG thumbnail with embedded metadata.`,
+      `No PNG metadata found for sequence ${id}. Please ensure the sequence has a valid PNG thumbnail with embedded metadata.`
     );
   }
 }

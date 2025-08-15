@@ -1,36 +1,37 @@
 <!-- SEO-Optimized About Page with User Redirect -->
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { browser } from '$app/environment';
-  import { handleSEORedirect } from '$lib/utils/seoUtils';
-  import AboutTab from '$lib/components/about/AboutTab.svelte';
-  import type { PageData } from './$types';
+  import { onMount } from "svelte";
+  import { browser } from "$app/environment";
+  import { handleSEORedirect } from "$lib/utils/seoUtils";
+  import AboutTab from "$lib/components/about/AboutTab.svelte";
+  import type { PageData } from "./$types";
 
   interface Props {
     data: PageData;
   }
-  
+
   let { data }: Props = $props();
 
   // Redirect users to main app while preserving SEO benefits
   onMount(() => {
     if (browser) {
-      handleSEORedirect('about');
+      handleSEORedirect("about");
     }
   });
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    "name": "TKA - The Kinetic Constructor",
-    "description": "Revolutionary browser-based tool for creating kinetic typography animations",
-    "applicationCategory": "DesignApplication",
-    "operatingSystem": "Web Browser",
-    "offers": {
+    name: "TKA - The Kinetic Constructor",
+    description:
+      "Revolutionary browser-based tool for creating kinetic typography animations",
+    applicationCategory: "DesignApplication",
+    operatingSystem: "Web Browser",
+    offers: {
       "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
+      price: "0",
+      priceCurrency: "USD",
+    },
   };
 </script>
 
@@ -42,7 +43,7 @@
   <meta property="og:type" content={data.meta.ogType} />
   <meta property="og:url" content={data.meta.ogUrl} />
   <link rel="canonical" href={data.meta.canonical} />
-  
+
   <!-- Structured Data for SEO -->
   {@html `<script type="application/ld+json">${JSON.stringify(structuredData)}</script>`}
 </svelte:head>

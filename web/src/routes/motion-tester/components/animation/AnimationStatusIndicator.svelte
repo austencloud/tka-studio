@@ -5,33 +5,36 @@ Single responsibility: Display current animation state (playing/paused) and prog
 No controls, no interaction - just pure status display.
 -->
 <script lang="ts">
-	interface Props {
-		isPlaying: boolean;
-		progress: number;
-	}
+  interface Props {
+    isPlaying: boolean;
+    progress: number;
+  }
 
-	let { isPlaying, progress }: Props = $props();
+  let { isPlaying, progress }: Props = $props();
 
-	let progressPercent = $derived(Math.round(progress * 100));
-	let statusText = $derived(isPlaying ? 'Playing' : 'Paused');
+  let progressPercent = $derived(Math.round(progress * 100));
+  let statusText = $derived(isPlaying ? "Playing" : "Paused");
 </script>
 
 <div class="status-indicator" role="status" aria-live="polite">
-	<span class="status-text" aria-label={`Animation ${statusText} at ${progressPercent} percent`}>
-		{statusText} • {progressPercent}%
-	</span>
+  <span
+    class="status-text"
+    aria-label={`Animation ${statusText} at ${progressPercent} percent`}
+  >
+    {statusText} • {progressPercent}%
+  </span>
 </div>
 
 <style>
-	.status-indicator {
-		text-align: center;
-	}
+  .status-indicator {
+    text-align: center;
+  }
 
-	.status-text {
-		font-size: 12px;
-		font-weight: 600;
-		color: #a5b4fc;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-	}
+  .status-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #a5b4fc;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
 </style>

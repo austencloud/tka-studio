@@ -16,7 +16,7 @@ describe("Positioning Pipeline Integration", () => {
     expect(typeof orchestrator.calculateAllArrowPositions).toBe("function");
 
     console.log(
-      "✅ Orchestrator created successfully with sophisticated pipeline",
+      "✅ Orchestrator created successfully with sophisticated pipeline"
     );
   });
 

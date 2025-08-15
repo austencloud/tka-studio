@@ -160,7 +160,7 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
 
   private drawSpaceBackground(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     // Create deep space gradient
     const gradient = ctx.createRadialGradient(
@@ -169,7 +169,7 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
       0,
       dimensions.width / 2,
       dimensions.height / 2,
-      Math.max(dimensions.width, dimensions.height) / 2,
+      Math.max(dimensions.width, dimensions.height) / 2
     );
 
     gradient.addColorStop(0, "rgb(5, 5, 15)"); // Dark center
@@ -182,7 +182,7 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
 
   private drawStars(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     const centerX = dimensions.width / 2;
     const centerY = dimensions.height / 2;
@@ -227,19 +227,19 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
           0,
           x2d,
           y2d,
-          size * 2,
+          size * 2
         );
         glowGradient.addColorStop(
           0,
-          `rgba(${color.r}, ${color.g}, ${color.b}, ${brightness})`,
+          `rgba(${color.r}, ${color.g}, ${color.b}, ${brightness})`
         );
         glowGradient.addColorStop(
           0.5,
-          `rgba(${color.r}, ${color.g}, ${color.b}, ${brightness * 0.3})`,
+          `rgba(${color.r}, ${color.g}, ${color.b}, ${brightness * 0.3})`
         );
         glowGradient.addColorStop(
           1,
-          `rgba(${color.r}, ${color.g}, ${color.b}, 0)`,
+          `rgba(${color.r}, ${color.g}, ${color.b}, 0)`
         );
 
         ctx.fillStyle = glowGradient;
@@ -260,7 +260,7 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
 
   private drawNebulaEffect(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     // Add subtle nebula clouds for enhanced visual appeal
     ctx.save();
@@ -272,7 +272,7 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
       0,
       dimensions.width * 0.3,
       dimensions.height * 0.7,
-      dimensions.width * 0.4,
+      dimensions.width * 0.4
     );
 
     nebulaGradient.addColorStop(0, "rgba(100, 50, 150, 0.3)");
@@ -289,7 +289,7 @@ export class StarfieldBackgroundSystem implements BackgroundSystem {
       0,
       dimensions.width * 0.8,
       dimensions.height * 0.2,
-      dimensions.width * 0.3,
+      dimensions.width * 0.3
     );
 
     nebula2Gradient.addColorStop(0, "rgba(150, 100, 50, 0.2)");

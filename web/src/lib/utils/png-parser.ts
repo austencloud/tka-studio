@@ -16,7 +16,7 @@ const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
 const METADATA_KEYWORD = "metadata";
 
 export async function extractSequenceFromPNG(
-  file: File,
+  file: File
 ): Promise<PNGParseResult> {
   try {
     const arrayBuffer = await readFileAsArrayBuffer(file);
@@ -92,7 +92,7 @@ function parsePNGMetadata(data: Uint8Array): PNGMetadata | null {
       data[offset],
       data[offset + 1],
       data[offset + 2],
-      data[offset + 3],
+      data[offset + 3]
     );
     offset += 4;
 

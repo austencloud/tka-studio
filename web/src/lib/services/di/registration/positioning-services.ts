@@ -24,7 +24,7 @@ import { ArrowPositioningService } from "../../implementations/ArrowPositioningS
  * Register all positioning services with their dependencies
  */
 export async function registerPositioningServices(
-  container: ServiceContainer,
+  container: ServiceContainer
 ): Promise<void> {
   // Register placement services (no dependencies)
   container.registerSingletonClass(IArrowPlacementDataServiceInterface);
@@ -63,14 +63,14 @@ export async function registerPositioningServices(
   // Register ArrowPositioningService with dependencies
   container.registerFactory(IArrowPositioningServiceInterface, () => {
     const placementDataService = container.resolve(
-      IArrowPlacementDataServiceInterface,
+      IArrowPlacementDataServiceInterface
     );
     const placementKeyService = container.resolve(
-      IArrowPlacementKeyServiceInterface,
+      IArrowPlacementKeyServiceInterface
     );
     return new ArrowPositioningService(
       placementDataService,
-      placementKeyService,
+      placementKeyService
     );
   });
 }

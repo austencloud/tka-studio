@@ -27,13 +27,13 @@ export interface ISectionService {
   /** Organize sequences into sections based on configuration */
   organizeSections(
     sequences: BrowseSequenceMetadata[],
-    config: SectionConfiguration,
+    config: SectionConfiguration
   ): Promise<SequenceSection[]>;
 
   /** Toggle section expansion state */
   toggleSectionExpansion(
     sectionId: string,
-    sections: SequenceSection[],
+    sections: SequenceSection[]
   ): SequenceSection[];
 
   /** Get default section configuration */
@@ -42,7 +42,7 @@ export interface ISectionService {
   /** Update section configuration */
   updateSectionConfiguration(
     config: SectionConfiguration,
-    updates: Partial<SectionConfiguration>,
+    updates: Partial<SectionConfiguration>
   ): SectionConfiguration;
 
   /** Get section statistics */
@@ -57,7 +57,7 @@ export interface ISectionService {
 export class SectionService implements ISectionService {
   async organizeSections(
     sequences: BrowseSequenceMetadata[],
-    config: SectionConfiguration,
+    config: SectionConfiguration
   ): Promise<SequenceSection[]> {
     if (config.groupBy === "none") {
       return [
@@ -80,7 +80,7 @@ export class SectionService implements ISectionService {
 
   toggleSectionExpansion(
     sectionId: string,
-    sections: SequenceSection[],
+    sections: SequenceSection[]
   ): SequenceSection[] {
     return sections.map((section) => ({
       ...section,
@@ -100,7 +100,7 @@ export class SectionService implements ISectionService {
 
   updateSectionConfiguration(
     config: SectionConfiguration,
-    updates: Partial<SectionConfiguration>,
+    updates: Partial<SectionConfiguration>
   ): SectionConfiguration {
     return {
       ...config,
@@ -112,10 +112,10 @@ export class SectionService implements ISectionService {
     const totalSections = sections.length;
     const totalSequences = sections.reduce(
       (sum, section) => sum + section.count,
-      0,
+      0
     );
     const expandedSections = sections.filter(
-      (section) => section.isExpanded,
+      (section) => section.isExpanded
     ).length;
     const averageSequencesPerSection =
       totalSections > 0 ? totalSequences / totalSections : 0;
@@ -132,7 +132,7 @@ export class SectionService implements ISectionService {
   // Private helper methods
   private groupSequences(
     sequences: BrowseSequenceMetadata[],
-    groupBy: SectionConfiguration["groupBy"],
+    groupBy: SectionConfiguration["groupBy"]
   ): Map<string, BrowseSequenceMetadata[]> {
     const groups = new Map<string, BrowseSequenceMetadata[]>();
 
@@ -149,7 +149,7 @@ export class SectionService implements ISectionService {
 
   private getGroupKey(
     sequence: BrowseSequenceMetadata,
-    groupBy: SectionConfiguration["groupBy"],
+    groupBy: SectionConfiguration["groupBy"]
   ): string {
     switch (groupBy) {
       case "letter":
@@ -179,7 +179,7 @@ export class SectionService implements ISectionService {
 
   private createSections(
     grouped: Map<string, BrowseSequenceMetadata[]>,
-    config: SectionConfiguration,
+    config: SectionConfiguration
   ): SequenceSection[] {
     const sections: SequenceSection[] = [];
 
@@ -205,7 +205,7 @@ export class SectionService implements ISectionService {
 
   private createSectionId(
     key: string,
-    groupBy: SectionConfiguration["groupBy"],
+    groupBy: SectionConfiguration["groupBy"]
   ): string {
     return `${groupBy}-${key.toLowerCase().replace(/\s+/g, "-")}`;
   }
@@ -213,7 +213,7 @@ export class SectionService implements ISectionService {
   private createSectionTitle(
     key: string,
     groupBy: SectionConfiguration["groupBy"],
-    count: number,
+    count: number
   ): string {
     const countText = count === 1 ? "1 sequence" : `${count} sequences`;
 
@@ -248,7 +248,7 @@ export class SectionService implements ISectionService {
 
   private sortSequencesInSection(
     sequences: BrowseSequenceMetadata[],
-    sortMethod: SortMethod,
+    sortMethod: SortMethod
   ): BrowseSequenceMetadata[] {
     const sorted = [...sequences];
 
@@ -292,7 +292,7 @@ export class SectionService implements ISectionService {
 
       case "author":
         return sorted.sort((a, b) =>
-          (a.author || "").localeCompare(b.author || ""),
+          (a.author || "").localeCompare(b.author || "")
         );
 
       default:
@@ -302,7 +302,7 @@ export class SectionService implements ISectionService {
 
   private sortSections(
     sections: SequenceSection[],
-    _groupBy: SectionConfiguration["groupBy"],
+    _groupBy: SectionConfiguration["groupBy"]
   ): SequenceSection[] {
     return sections.sort((a, b) => {
       // Primary sort by sortOrder
@@ -317,7 +317,7 @@ export class SectionService implements ISectionService {
 
   private getSectionSortOrder(
     key: string,
-    groupBy: SectionConfiguration["groupBy"],
+    groupBy: SectionConfiguration["groupBy"]
   ): number {
     switch (groupBy) {
       case "letter":

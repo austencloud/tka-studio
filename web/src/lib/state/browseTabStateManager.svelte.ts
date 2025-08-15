@@ -131,7 +131,7 @@ export class BrowseTabStateManager {
    */
   async saveViewState(
     mode: "grid" | "list",
-    gridColumns?: number,
+    gridColumns?: number
   ): Promise<void> {
     if (!browser) return;
 
@@ -155,7 +155,7 @@ export class BrowseTabStateManager {
     scrollTop: number,
     scrollLeft: number,
     containerHeight: number,
-    containerWidth: number,
+    containerWidth: number
   ): Promise<void> {
     if (!browser) return;
 
@@ -178,7 +178,7 @@ export class BrowseTabStateManager {
    */
   async saveSelectionState(
     selectedSequenceId: string | null,
-    selectedVariationIndex: number | null,
+    selectedVariationIndex: number | null
   ): Promise<void> {
     if (!browser) return;
 
@@ -204,7 +204,7 @@ export class BrowseTabStateManager {
    */
   restoreScrollPosition(
     container: HTMLElement,
-    scrollState: BrowseScrollState,
+    scrollState: BrowseScrollState
   ): void {
     if (!container || !scrollState) return;
 
@@ -238,7 +238,7 @@ export class BrowseTabStateManager {
           container.scrollTop,
           container.scrollLeft,
           container.clientHeight,
-          container.clientWidth,
+          container.clientWidth
         );
       }, this.SAVE_DEBOUNCE_MS);
     };
@@ -262,7 +262,7 @@ export class BrowseTabStateManager {
    * Map SortMethod enum to string for persistence
    */
   private mapSortMethodToString(
-    method: SortMethod,
+    method: SortMethod
   ): "name_asc" | "name_desc" | "difficulty" | "length" | "recent" | "author" {
     switch (method) {
       case SortMethod.ALPHABETICAL:

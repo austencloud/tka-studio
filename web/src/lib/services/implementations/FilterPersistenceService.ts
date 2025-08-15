@@ -57,7 +57,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       };
       sessionStorage.setItem(
         this.BROWSE_STATE_KEY,
-        JSON.stringify(stateToSave),
+        JSON.stringify(stateToSave)
       );
     } catch (error) {
       console.error("Failed to save browse state:", error);
@@ -74,7 +74,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       // Convert date strings back to Date objects
       if (parsed.currentFilter?.appliedAt) {
         parsed.currentFilter.appliedAt = new Date(
-          parsed.currentFilter.appliedAt,
+          parsed.currentFilter.appliedAt
         );
       }
       if (parsed.lastUpdated) {
@@ -107,7 +107,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
           !(
             f.type === filter.type &&
             JSON.stringify(f.value) === JSON.stringify(filter.value)
-          ),
+          )
       );
 
       // Add new filter to the beginning
@@ -118,7 +118,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
 
       sessionStorage.setItem(
         this.FILTER_HISTORY_KEY,
-        JSON.stringify(trimmedHistory),
+        JSON.stringify(trimmedHistory)
       );
     } catch (error) {
       console.error("Failed to save filter to history:", error);
@@ -141,7 +141,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
         }) => ({
           ...filter,
           appliedAt: new Date(filter.appliedAt),
-        }),
+        })
       );
     } catch (error) {
       console.warn("Failed to load filter history:", error);

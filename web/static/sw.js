@@ -66,7 +66,7 @@ self.addEventListener("install", (event) => {
       } catch (error) {
         console.error("❌ Install failed:", error);
       }
-    })(),
+    })()
   );
 });
 
@@ -81,7 +81,7 @@ self.addEventListener("activate", (event) => {
         const cacheNames = await caches.keys();
         const oldCaches = cacheNames.filter(
           (name) =>
-            name.includes("tka-launcher") && !name.includes(CACHE_VERSION),
+            name.includes("tka-launcher") && !name.includes(CACHE_VERSION)
         );
 
         await Promise.all(oldCaches.map((name) => caches.delete(name)));
@@ -106,7 +106,7 @@ self.addEventListener("activate", (event) => {
       } catch (error) {
         console.error("❌ Activation failed:", error);
       }
-    })(),
+    })()
   );
 });
 
@@ -378,7 +378,7 @@ self.addEventListener("push", (event) => {
     };
 
     event.waitUntil(
-      self.registration.showNotification(data.title || "TKA Launcher", options),
+      self.registration.showNotification(data.title || "TKA Launcher", options)
     );
   } catch (error) {
     console.error("Push notification failed:", error);
@@ -419,7 +419,7 @@ self.addEventListener("notificationclick", (event) => {
             await self.clients.openWindow("/");
           }
       }
-    })(),
+    })()
   );
 });
 
@@ -453,7 +453,7 @@ self.addEventListener("message", (event) => {
 // Utility functions
 function matchesPattern(pathname, patterns) {
   return patterns.some(
-    (pattern) => pathname.startsWith(pattern) || pathname.includes(pattern),
+    (pattern) => pathname.startsWith(pattern) || pathname.includes(pattern)
   );
 }
 
@@ -480,7 +480,7 @@ async function getCacheStatus() {
       const cache = await caches.open(name);
       const keys = await cache.keys();
       return { name, size: keys.length };
-    }),
+    })
   );
 
   return {

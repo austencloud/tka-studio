@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { enterAppMode } from '$lib/state/appModeState.svelte';
-  import { switchTab } from '$lib/state/appState.svelte';
-  import CallToAction from './CallToAction.svelte';
-  import { onMount } from 'svelte';
+  import { enterAppMode } from "$lib/state/appModeState.svelte";
+  import { switchTab } from "$lib/state/appState.svelte";
+  import CallToAction from "./CallToAction.svelte";
+  import { onMount } from "svelte";
 
   let isVisible = $state(false);
 
@@ -12,20 +12,25 @@
 
   // Enhanced constructor button - enters app mode
   async function handleConstructorClick() {
-    console.log('🔧 Entering constructor mode...');
+    console.log("🔧 Entering constructor mode...");
     await enterAppMode();
     // Switch to construct tab after entering app mode
-    switchTab('construct');
+    switchTab("construct");
   }
 
   // External links for downloads
-  const pdfBookLink = "https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link";
-  const desktopAppLink = "https://github.com/austencloud/tka-sequence-constructor/releases/download/v0.1.2/TKA_Setup.exe";
+  const pdfBookLink =
+    "https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link";
+  const desktopAppLink =
+    "https://github.com/austencloud/tka-sequence-constructor/releases/download/v0.1.2/TKA_Setup.exe";
 </script>
 
 <svelte:head>
   <title>The Kinetic Alphabet - Flow Arts Choreography Toolbox</title>
-  <meta name="description" content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Learn, create, and share movement sequences." />
+  <meta
+    name="description"
+    content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Learn, create, and share movement sequences."
+  />
 </svelte:head>
 
 <main class="home-container">
@@ -33,10 +38,13 @@
   <section class="hero" class:visible={isVisible}>
     <div class="hero-content">
       <h1 class="hero-title">The Kinetic Alphabet</h1>
-      <p class="hero-subtitle">A Revolutionary Flow Arts Choreography Toolbox</p>
+      <p class="hero-subtitle">
+        A Revolutionary Flow Arts Choreography Toolbox
+      </p>
       <p class="hero-description">
-        A systematic approach to flow arts that provides structured methods for learning,
-        creating, and sharing movement sequences. Supports poi, staff, fans, and other flow arts.
+        A systematic approach to flow arts that provides structured methods for
+        learning, creating, and sharing movement sequences. Supports poi, staff,
+        fans, and other flow arts.
       </p>
 
       <div class="cta-group">
@@ -70,25 +78,37 @@
         <div class="feature-card">
           <div class="feature-icon">📚</div>
           <h3>Systematic Learning</h3>
-          <p>Complex movements are broken down into understandable components through a structured notation system.</p>
+          <p>
+            Complex movements are broken down into understandable components
+            through a structured notation system.
+          </p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🎯</div>
           <h3>Precision Training</h3>
-          <p>The system supports muscle memory development and technical precision through methodical movement approaches.</p>
+          <p>
+            The system supports muscle memory development and technical
+            precision through methodical movement approaches.
+          </p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🔧</div>
           <h3>Digital Tools</h3>
-          <p>The Kinetic Constructor enables visualization, creation, and sharing of choreographic sequences.</p>
+          <p>
+            The Kinetic Constructor enables visualization, creation, and sharing
+            of choreographic sequences.
+          </p>
         </div>
 
         <div class="feature-card">
           <div class="feature-icon">🌟</div>
           <h3>Creative Framework</h3>
-          <p>The system provides foundational knowledge that enables exploration of infinite sequence possibilities.</p>
+          <p>
+            The system provides foundational knowledge that enables exploration
+            of infinite sequence possibilities.
+          </p>
         </div>
       </div>
     </div>
@@ -102,25 +122,37 @@
         <div class="step">
           <div class="step-number">1</div>
           <h3>Download the PDF</h3>
-          <p>The comprehensive Level 1 guide introduces core concepts and foundational principles.</p>
+          <p>
+            The comprehensive Level 1 guide introduces core concepts and
+            foundational principles.
+          </p>
         </div>
 
         <div class="step">
           <div class="step-number">2</div>
           <h3>Practice the Basics</h3>
-          <p>Fundamental movements and notation system can be learned through guided exercises.</p>
+          <p>
+            Fundamental movements and notation system can be learned through
+            guided exercises.
+          </p>
         </div>
 
         <div class="step">
           <div class="step-number">3</div>
           <h3>Use the Constructor</h3>
-          <p>The web-based constructor allows creation and visualization of custom sequences.</p>
+          <p>
+            The web-based constructor allows creation and visualization of
+            custom sequences.
+          </p>
         </div>
 
         <div class="step">
           <div class="step-number">4</div>
           <h3>Join the Community</h3>
-          <p>Connect with flow artists and share creations through our growing community platform.</p>
+          <p>
+            Connect with flow artists and share creations through our growing
+            community platform.
+          </p>
         </div>
       </div>
     </div>
@@ -153,7 +185,7 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     margin: var(--spacing-lg);
@@ -246,7 +278,7 @@
     border-radius: 1.5rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     display: flex;
@@ -259,10 +291,18 @@
     animation: cardSlideIn 0.8s ease-out forwards;
   }
 
-  .feature-card:nth-child(1) { animation-delay: 0.1s; }
-  .feature-card:nth-child(2) { animation-delay: 0.2s; }
-  .feature-card:nth-child(3) { animation-delay: 0.3s; }
-  .feature-card:nth-child(4) { animation-delay: 0.4s; }
+  .feature-card:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+  .feature-card:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+  .feature-card:nth-child(3) {
+    animation-delay: 0.3s;
+  }
+  .feature-card:nth-child(4) {
+    animation-delay: 0.4s;
+  }
 
   @keyframes cardSlideIn {
     to {
@@ -275,7 +315,7 @@
     transform: translateY(-10px) scale(1.02);
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 
+    box-shadow:
       0 20px 40px rgba(118, 75, 162, 0.2),
       0 8px 20px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);

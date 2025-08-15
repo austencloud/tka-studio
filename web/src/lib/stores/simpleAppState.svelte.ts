@@ -152,7 +152,7 @@ export function setTheme(theme: "light" | "dark"): void {
 export function setInitializationState(
   initialized: boolean,
   initializing: boolean,
-  error: string | null = null,
+  error: string | null = null
 ): void {
   appState.isInitialized = initialized;
   appState.isInitializing = initializing;

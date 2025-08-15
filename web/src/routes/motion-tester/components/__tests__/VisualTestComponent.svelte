@@ -6,135 +6,138 @@
 -->
 
 <script lang="ts">
-  import { resolve } from '$lib/services/bootstrap';
-  import { IAnimatedPictographDataServiceInterface } from '$lib/services/di/interfaces/motion-tester-interfaces';
-  import Pictograph from '$lib/components/pictograph/Pictograph.svelte';
-  import type { PictographData } from '$lib/domain';
+  import { resolve } from "$lib/services/bootstrap";
+  import { IAnimatedPictographDataServiceInterface } from "$lib/services/di/interfaces/motion-tester-interfaces";
+  import Pictograph from "$lib/components/pictograph/Pictograph.svelte";
+  import type { PictographData } from "$lib/domain";
 
   // Resolve service
-  const pictographDataService = resolve(IAnimatedPictographDataServiceInterface);
+  const pictographDataService = resolve(
+    IAnimatedPictographDataServiceInterface
+  );
 
   // Test configurations
   const testConfigs = [
     {
-      name: 'Basic Pro Motion',
-      gridType: 'diamond',
+      name: "Basic Pro Motion",
+      gridType: "diamond",
       blueMotionParams: {
-        motionType: 'pro',
-        startLoc: 'n',
-        endLoc: 's',
-        startOri: 'in',
-        endOri: 'out',
-        propRotDir: 'cw',
-        turns: 1
+        motionType: "pro",
+        startLoc: "n",
+        endLoc: "s",
+        startOri: "in",
+        endOri: "out",
+        propRotDir: "cw",
+        turns: 1,
       },
       redMotionParams: {
-        motionType: 'anti',
-        startLoc: 'e',
-        endLoc: 'w',
-        startOri: 'out',
-        endOri: 'in',
-        propRotDir: 'ccw',
-        turns: 1
-      }
+        motionType: "anti",
+        startLoc: "e",
+        endLoc: "w",
+        startOri: "out",
+        endOri: "in",
+        propRotDir: "ccw",
+        turns: 1,
+      },
     },
     {
-      name: 'Float Motion',
-      gridType: 'box',
+      name: "Float Motion",
+      gridType: "box",
       blueMotionParams: {
-        motionType: 'float',
-        startLoc: 'ne',
-        endLoc: 'sw',
-        startOri: 'clock',
-        endOri: 'counter',
-        propRotDir: 'no_rot',
-        turns: 0
+        motionType: "float",
+        startLoc: "ne",
+        endLoc: "sw",
+        startOri: "clock",
+        endOri: "counter",
+        propRotDir: "no_rot",
+        turns: 0,
       },
       redMotionParams: {
-        motionType: 'float',
-        startLoc: 'nw',
-        endLoc: 'se',
-        startOri: 'counter',
-        endOri: 'clock',
-        propRotDir: 'no_rot',
-        turns: 0
-      }
+        motionType: "float",
+        startLoc: "nw",
+        endLoc: "se",
+        startOri: "counter",
+        endOri: "clock",
+        propRotDir: "no_rot",
+        turns: 0,
+      },
     },
     {
-      name: 'Dash Motion',
-      gridType: 'diamond',
+      name: "Dash Motion",
+      gridType: "diamond",
       blueMotionParams: {
-        motionType: 'dash',
-        startLoc: 'n',
-        endLoc: 'n',
-        startOri: 'in',
-        endOri: 'in',
-        propRotDir: 'no_rot',
-        turns: 0
+        motionType: "dash",
+        startLoc: "n",
+        endLoc: "n",
+        startOri: "in",
+        endOri: "in",
+        propRotDir: "no_rot",
+        turns: 0,
       },
       redMotionParams: {
-        motionType: 'dash',
-        startLoc: 's',
-        endLoc: 's',
-        startOri: 'out',
-        endOri: 'out',
-        propRotDir: 'no_rot',
-        turns: 0
-      }
+        motionType: "dash",
+        startLoc: "s",
+        endLoc: "s",
+        startOri: "out",
+        endOri: "out",
+        propRotDir: "no_rot",
+        turns: 0,
+      },
     },
     {
-      name: 'Static Motion',
-      gridType: 'box',
+      name: "Static Motion",
+      gridType: "box",
       blueMotionParams: {
-        motionType: 'static',
-        startLoc: 'w',
-        endLoc: 'w',
-        startOri: 'in',
-        endOri: 'in',
-        propRotDir: 'no_rot',
-        turns: 0
+        motionType: "static",
+        startLoc: "w",
+        endLoc: "w",
+        startOri: "in",
+        endOri: "in",
+        propRotDir: "no_rot",
+        turns: 0,
       },
       redMotionParams: {
-        motionType: 'static',
-        startLoc: 'e',
-        endLoc: 'e',
-        startOri: 'out',
-        endOri: 'out',
-        propRotDir: 'no_rot',
-        turns: 0
-      }
-    }
+        motionType: "static",
+        startLoc: "e",
+        endLoc: "e",
+        startOri: "out",
+        endOri: "out",
+        propRotDir: "no_rot",
+        turns: 0,
+      },
+    },
   ];
 
   // Generate pictograph data for each test config
   let testResults: Array<{
-    config: typeof testConfigs[0];
+    config: (typeof testConfigs)[0];
     pictographData: PictographData | null;
     error?: string;
   }> = [];
 
   function runTests() {
-    testResults = testConfigs.map(config => {
+    testResults = testConfigs.map((config) => {
       try {
         const mockState = {
           gridType: config.gridType,
           blueMotionParams: config.blueMotionParams,
           redMotionParams: config.redMotionParams,
-          animationState: { progress: 0.5 }
+          animationState: { progress: 0.5 },
         };
 
-        const pictographData = pictographDataService.createAnimatedPictographData(mockState as any);
-        
+        const pictographData =
+          pictographDataService.createAnimatedPictographData(mockState as any);
+
         return {
           config,
           pictographData,
-          error: pictographData ? undefined : 'Service returned null'
+          error: pictographData ? undefined : "Service returned null",
         };
       } catch (error) {
         return {
           config,
           pictographData: null,
-          error: error instanceof Error ? error.message : 'Unknown error'
+          error: error instanceof Error ? error.message : "Unknown error",
         };
       }
     });
@@ -150,27 +153,33 @@
 
 <div class="visual-test-container">
   <h2>🧪 AnimatedPictographDataService Visual Tests</h2>
-  
+
   <div class="test-controls">
-    <button on:click={runTests} class="run-tests-btn">
-      🔄 Re-run Tests
-    </button>
+    <button on:click={runTests} class="run-tests-btn"> 🔄 Re-run Tests </button>
   </div>
 
   <div class="test-results">
     {#each testResults as result, index}
       <div class="test-case">
         <h3>{result.config.name}</h3>
-        
+
         <div class="test-info">
           <div class="config-details">
             <h4>Configuration:</h4>
             <ul>
               <li><strong>Grid:</strong> {result.config.gridType}</li>
-              <li><strong>Blue Motion:</strong> {result.config.blueMotionParams.motionType} 
-                  ({result.config.blueMotionParams.startLoc} → {result.config.blueMotionParams.endLoc})</li>
-              <li><strong>Red Motion:</strong> {result.config.redMotionParams.motionType} 
-                  ({result.config.redMotionParams.startLoc} → {result.config.redMotionParams.endLoc})</li>
+              <li>
+                <strong>Blue Motion:</strong>
+                {result.config.blueMotionParams.motionType}
+                ({result.config.blueMotionParams.startLoc} → {result.config
+                  .blueMotionParams.endLoc})
+              </li>
+              <li>
+                <strong>Red Motion:</strong>
+                {result.config.redMotionParams.motionType}
+                ({result.config.redMotionParams.startLoc} → {result.config
+                  .redMotionParams.endLoc})
+              </li>
             </ul>
           </div>
 
@@ -186,17 +195,19 @@
                   width={200}
                   height={200}
                 />
-                <button 
-                  on:click={() => logPictographData(result.pictographData, result.config.name)}
+                <button
+                  on:click={() =>
+                    logPictographData(
+                      result.pictographData,
+                      result.config.name
+                    )}
                   class="log-data-btn"
                 >
                   📋 Log Data
                 </button>
               </div>
             {:else}
-              <div class="no-data">
-                ⚠️ No pictograph data generated
-              </div>
+              <div class="no-data">⚠️ No pictograph data generated</div>
             {/if}
           </div>
         </div>
@@ -207,9 +218,12 @@
   <div class="test-summary">
     <h3>📈 Test Summary</h3>
     <p>
-      <strong>Total Tests:</strong> {testResults.length}<br>
-      <strong>Passed:</strong> {testResults.filter(r => r.pictographData && !r.error).length}<br>
-      <strong>Failed:</strong> {testResults.filter(r => r.error || !r.pictographData).length}
+      <strong>Total Tests:</strong>
+      {testResults.length}<br />
+      <strong>Passed:</strong>
+      {testResults.filter((r) => r.pictographData && !r.error).length}<br />
+      <strong>Failed:</strong>
+      {testResults.filter((r) => r.error || !r.pictographData).length}
     </p>
   </div>
 </div>
@@ -226,7 +240,7 @@
   }
 
   .run-tests-btn {
-    background: #4CAF50;
+    background: #4caf50;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -290,7 +304,7 @@
   }
 
   .log-data-btn {
-    background: #2196F3;
+    background: #2196f3;
     color: white;
     border: none;
     padding: 5px 10px;
@@ -300,7 +314,7 @@
   }
 
   .log-data-btn:hover {
-    background: #1976D2;
+    background: #1976d2;
   }
 
   .error {

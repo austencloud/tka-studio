@@ -53,7 +53,7 @@ The large `GeneratePanel.svelte` file has been refactored into simple, focused c
 
 ```svelte
 <script>
-	import GeneratePanel from './GeneratePanel.svelte';
+  import GeneratePanel from "./GeneratePanel.svelte";
 </script>
 
 <GeneratePanel />
@@ -63,7 +63,7 @@ The large `GeneratePanel.svelte` file has been refactored into simple, focused c
 
 ```svelte
 <script>
-	import GeneratePanelContainer from './generate/GeneratePanelContainer.svelte';
+  import GeneratePanelContainer from "./generate/GeneratePanelContainer.svelte";
 </script>
 
 <GeneratePanelContainer />

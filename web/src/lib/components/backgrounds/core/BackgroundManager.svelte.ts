@@ -25,7 +25,7 @@ export class BackgroundManager {
   private reportCallback: ((metrics: PerformanceMetrics) => void) | null = null;
 
   public shouldRender = $derived(
-    this.isActive && this.performanceMetrics.fps > 30,
+    this.isActive && this.performanceMetrics.fps > 30
   );
 
   constructor() {
@@ -34,7 +34,7 @@ export class BackgroundManager {
 
   public initializeCanvas(
     canvas: HTMLCanvasElement,
-    onReady?: () => void,
+    onReady?: () => void
   ): void {
     this.canvas = canvas;
 
@@ -62,7 +62,7 @@ export class BackgroundManager {
 
       document.addEventListener(
         "visibilitychange",
-        this.handleVisibilityChange.bind(this),
+        this.handleVisibilityChange.bind(this)
       );
     }
 
@@ -73,7 +73,7 @@ export class BackgroundManager {
 
   public startAnimation(
     renderFn: (ctx: CanvasRenderingContext2D, dimensions: Dimensions) => void,
-    reportFn?: (metrics: PerformanceMetrics) => void,
+    reportFn?: (metrics: PerformanceMetrics) => void
   ): void {
     if (!this.ctx || !this.canvas) {
       console.error("Canvas not initialized");
@@ -131,7 +131,7 @@ export class BackgroundManager {
       window.removeEventListener("resize", this.handleResize.bind(this));
       document.removeEventListener(
         "visibilitychange",
-        this.handleVisibilityChange.bind(this),
+        this.handleVisibilityChange.bind(this)
       );
     }
 

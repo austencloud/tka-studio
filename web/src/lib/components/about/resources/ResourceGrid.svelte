@@ -4,14 +4,14 @@ Resource Grid Component
 Grid layout for displaying filtered resources with responsive design and loading states.
 -->
 <script lang="ts">
-  import type { Resource } from './resourcesData';
-  import ResourceCard from './ResourceCard.svelte';
+  import type { Resource } from "./resourcesData";
+  import ResourceCard from "./ResourceCard.svelte";
 
   // Props
   const {
     resources,
     isLoading = false,
-    onOpenModal = () => {}
+    onOpenModal = () => {},
   } = $props<{
     resources: Resource[];
     isLoading?: boolean;
@@ -66,8 +66,12 @@ Grid layout for displaying filtered resources with responsive design and loading
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .empty-state {

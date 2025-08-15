@@ -28,46 +28,46 @@ import { ThumbnailService } from "../../implementations/ThumbnailService";
 // Core browse services
 export const IBrowseServiceInterface = createServiceInterface<IBrowseService>(
   "IBrowseService",
-  BrowseService,
+  BrowseService
 );
 
 export const IThumbnailServiceInterface =
   createServiceInterface<IThumbnailService>(
     "IThumbnailService",
-    ThumbnailService,
+    ThumbnailService
   );
 
 export const ISequenceIndexServiceInterface =
   createServiceInterface<ISequenceIndexService>(
     "ISequenceIndexService",
-    SequenceIndexService,
+    SequenceIndexService
   );
 
 // Advanced browse services
 export const IFavoritesServiceInterface =
   createServiceInterface<IFavoritesService>(
     "IFavoritesService",
-    FavoritesService,
+    FavoritesService
   );
 
 export const INavigationServiceInterface =
   createServiceInterface<INavigationService>(
     "INavigationService",
-    NavigationService,
+    NavigationService
   );
 
 export const ISectionServiceInterface = createServiceInterface<ISectionService>(
   "ISectionService",
-  SectionService,
+  SectionService
 );
 
 export const IFilterPersistenceServiceInterface =
   createServiceInterface<IFilterPersistenceService>(
     "IFilterPersistenceService",
-    FilterPersistenceService,
+    FilterPersistenceService
   );
 
 export const IDeleteServiceInterface = createServiceInterface<IDeleteService>(
   "IDeleteService",
-  DeleteService,
+  DeleteService
 );

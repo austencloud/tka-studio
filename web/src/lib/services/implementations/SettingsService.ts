@@ -36,7 +36,7 @@ export class SettingsService implements ISettingsService {
    */
   async updateSetting<K extends keyof AppSettings>(
     key: K,
-    value: AppSettings[K],
+    value: AppSettings[K]
   ): Promise<void> {
     try {
       this._settings[key] = value;
@@ -45,7 +45,7 @@ export class SettingsService implements ISettingsService {
     } catch (error) {
       console.error(`Failed to update setting ${key}:`, error);
       throw new Error(
-        `Failed to update setting: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to update setting: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }

@@ -20,7 +20,7 @@ export class BackgroundFactory {
   };
 
   public static createBackgroundSystem(
-    params: BackgroundFactoryParams | BackgroundType,
+    params: BackgroundFactoryParams | BackgroundType
   ): BackgroundSystem {
     const options: BackgroundFactoryParams =
       typeof params === "string" ? { type: params } : params;
@@ -39,7 +39,7 @@ export class BackgroundFactory {
       if (options.accessibility?.reducedMotion === undefined) {
         // Check if not explicitly set
         const reducedMotionQuery = window.matchMedia(
-          "(prefers-reduced-motion: reduce)",
+          "(prefers-reduced-motion: reduce)"
         );
         if (reducedMotionQuery.matches) {
           accessibility.reducedMotion = true;
@@ -72,7 +72,7 @@ export class BackgroundFactory {
         break;
       default:
         console.warn(
-          `Unknown background type "${options.type}". Defaulting to snowfall.`,
+          `Unknown background type "${options.type}". Defaulting to snowfall.`
         );
         backgroundSystem = new SnowfallBackgroundSystem(); // Default to snowfall
     }

@@ -218,14 +218,14 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 
   private drawWavyGradient(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     // Create wavy gradient background similar to desktop version
     const gradient = ctx.createLinearGradient(
       0,
       dimensions.height,
       dimensions.width,
-      0,
+      0
     );
 
     const colors = [
@@ -249,7 +249,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 
       gradient.addColorStop(
         position,
-        `rgba(${hslColor.r}, ${hslColor.g}, ${hslColor.b}, ${color.a ?? 1})`,
+        `rgba(${hslColor.r}, ${hslColor.g}, ${hslColor.b}, ${color.a ?? 1})`
       );
     }
 
@@ -259,7 +259,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 
   private drawBlobs(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     for (const blob of this.blobs) {
       const x = blob.x * dimensions.width;
@@ -279,7 +279,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
 
   private drawSparkles(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     for (const sparkle of this.sparkles) {
       const x = sparkle.x * dimensions.width;
@@ -301,7 +301,7 @@ export class AuroraBackgroundSystem implements BackgroundSystem {
   private hsvToRgb(
     h: number,
     s: number,
-    v: number,
+    v: number
   ): { r: number; g: number; b: number } {
     let r: number, g: number, b: number;
 

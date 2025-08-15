@@ -39,7 +39,7 @@ export function createCodexState() {
             id.includes(term) ||
             letter.startsWith(term)
           );
-        }),
+        })
   );
 
   // Filtered pictographs by letter for row display

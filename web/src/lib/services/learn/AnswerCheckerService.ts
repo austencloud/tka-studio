@@ -27,7 +27,7 @@ export class AnswerCheckerService {
   static checkAnswer(
     questionData: QuestionData,
     userAnswer: unknown,
-    selectedOption?: AnswerOption,
+    selectedOption?: AnswerOption
   ): AnswerResult {
     if (!questionData || userAnswer === null || userAnswer === undefined) {
       return {
@@ -42,19 +42,19 @@ export class AnswerCheckerService {
         return this.checkPictographToLetterAnswer(
           questionData,
           userAnswer,
-          selectedOption,
+          selectedOption
         );
       case LessonType.LETTER_TO_PICTOGRAPH:
         return this.checkLetterToPictographAnswer(
           questionData,
           userAnswer,
-          selectedOption,
+          selectedOption
         );
       case LessonType.VALID_NEXT_PICTOGRAPH:
         return this.checkValidNextPictographAnswer(
           questionData,
           userAnswer,
-          selectedOption,
+          selectedOption
         );
       default:
         return {
@@ -71,7 +71,7 @@ export class AnswerCheckerService {
   private static checkPictographToLetterAnswer(
     questionData: QuestionData,
     userAnswer: unknown,
-    _selectedOption?: AnswerOption,
+    _selectedOption?: AnswerOption
   ): AnswerResult {
     const correctLetter = questionData.correctAnswer;
     const userLetter =
@@ -101,7 +101,7 @@ export class AnswerCheckerService {
   private static checkLetterToPictographAnswer(
     questionData: QuestionData,
     userAnswer: unknown,
-    _selectedOption?: AnswerOption,
+    _selectedOption?: AnswerOption
   ): AnswerResult {
     const correctPictograph = questionData.correctAnswer;
     const userPictograph = userAnswer;
@@ -109,7 +109,7 @@ export class AnswerCheckerService {
     // Compare pictograph data
     const isCorrect = this.comparePictographs(
       userPictograph as Record<string, unknown>,
-      correctPictograph as Record<string, unknown>,
+      correctPictograph as Record<string, unknown>
     );
 
     const base = {
@@ -133,7 +133,7 @@ export class AnswerCheckerService {
   private static checkValidNextPictographAnswer(
     questionData: QuestionData,
     userAnswer: unknown,
-    _selectedOption?: AnswerOption,
+    _selectedOption?: AnswerOption
   ): AnswerResult {
     const initialPictograph = questionData.questionContent;
     const userPictograph = userAnswer;
@@ -141,7 +141,7 @@ export class AnswerCheckerService {
     // Check if the user's pictograph can follow the initial one
     const isCorrect = this.canPictographFollow(
       initialPictograph as Record<string, unknown>,
-      userPictograph as Record<string, unknown>,
+      userPictograph as Record<string, unknown>
     );
 
     const base = {
@@ -164,7 +164,7 @@ export class AnswerCheckerService {
    */
   private static comparePictographs(
     pictograph1: Record<string, unknown>,
-    pictograph2: Record<string, unknown>,
+    pictograph2: Record<string, unknown>
   ): boolean {
     if (!pictograph1 || !pictograph2) return false;
 
@@ -181,7 +181,7 @@ export class AnswerCheckerService {
    */
   private static canPictographFollow(
     firstPictograph: Record<string, unknown>,
-    secondPictograph: Record<string, unknown>,
+    secondPictograph: Record<string, unknown>
   ): boolean {
     if (!firstPictograph || !secondPictograph) return false;
 
@@ -208,21 +208,21 @@ export class AnswerCheckerService {
    */
   static validateAnswerFormat(
     lessonType: LessonType,
-    answer: unknown,
+    answer: unknown
   ): boolean {
     switch (lessonType) {
       case LessonType.PICTOGRAPH_TO_LETTER:
         return typeof answer === "string" && answer.length === 1;
       case LessonType.LETTER_TO_PICTOGRAPH:
         return Boolean(
-          answer && typeof answer === "object" && "letter" in answer,
+          answer && typeof answer === "object" && "letter" in answer
         );
       case LessonType.VALID_NEXT_PICTOGRAPH:
         return Boolean(
           answer &&
             typeof answer === "object" &&
             "start_pos" in answer &&
-            "end_pos" in answer,
+            "end_pos" in answer
         );
       default:
         return false;
@@ -251,7 +251,7 @@ export class AnswerCheckerService {
   static calculateConfidence(
     questionData: QuestionData,
     userAnswer: unknown,
-    timeToAnswer: number,
+    timeToAnswer: number
   ): number {
     const result = this.checkAnswer(questionData, userAnswer);
 
@@ -281,7 +281,7 @@ export class AnswerCheckerService {
   static getPerformanceFeedback(
     correctAnswers: number,
     totalAnswers: number,
-    averageTime: number,
+    averageTime: number
   ): string {
     const accuracy = totalAnswers > 0 ? correctAnswers / totalAnswers : 0;
 
@@ -304,7 +304,7 @@ export class AnswerCheckerService {
    * Analyze answer patterns to identify learning gaps.
    */
   static analyzeLearningGaps(
-    answerHistory: Array<{ questionData: QuestionData; isCorrect: boolean }>,
+    answerHistory: Array<{ questionData: QuestionData; isCorrect: boolean }>
   ): string[] {
     const gaps: string[] = [];
     const lessonTypeStats: Record<
@@ -337,7 +337,7 @@ export class AnswerCheckerService {
               break;
             case LessonType.VALID_NEXT_PICTOGRAPH:
               gaps.push(
-                "Difficulty understanding pictograph flow and connections",
+                "Difficulty understanding pictograph flow and connections"
               );
               break;
           }

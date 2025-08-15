@@ -40,7 +40,7 @@ export function createMotionData(data: Partial<MotionData> = {}): MotionData {
 
 export function updateMotionData(
   motion: MotionData,
-  updates: Partial<MotionData>,
+  updates: Partial<MotionData>
 ): MotionData {
   return {
     ...motion,
@@ -71,7 +71,7 @@ export function hasPrefloatData(motion: MotionData): boolean {
 }
 
 export function motionDataToObject(
-  motion: MotionData,
+  motion: MotionData
 ): Record<string, unknown> {
   return {
     motion_type: motion.motion_type,
@@ -88,7 +88,7 @@ export function motionDataToObject(
 }
 
 export function motionDataFromObject(
-  data: Record<string, unknown>,
+  data: Record<string, unknown>
 ): MotionData {
   const partialData: Record<string, unknown> = {};
 

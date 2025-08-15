@@ -55,7 +55,7 @@ describe("BeatView Integration", () => {
 
       // Should have pictograph container
       const pictographContainer = container.querySelector(
-        ".pictograph-container",
+        ".pictograph-container"
       );
       expect(pictographContainer).toBeInTheDocument();
 
@@ -79,7 +79,7 @@ describe("BeatView Integration", () => {
 
       // Should NOT have pictograph container
       const pictographContainer = container.querySelector(
-        ".pictograph-container",
+        ".pictograph-container"
       );
       expect(pictographContainer).not.toBeInTheDocument();
 
@@ -108,7 +108,7 @@ describe("BeatView Integration", () => {
 
       // Verify ModernPictograph would receive correct props
       const pictographContainer = document.querySelector(
-        ".pictograph-container",
+        ".pictograph-container"
       );
       expect(pictographContainer).toBeInTheDocument();
     });
@@ -258,7 +258,7 @@ describe("BeatView Integration", () => {
       // ModernPictograph should receive the click handler
       // This is verified by the presence of the pictograph container
       const pictographContainer = document.querySelector(
-        ".pictograph-container",
+        ".pictograph-container"
       );
       expect(pictographContainer).toBeInTheDocument();
     });
@@ -475,7 +475,7 @@ describe("BeatView Integration", () => {
       // The pictograph should be sized based on beatSize - 8
       // This would be verified by the ModernPictograph props
       const pictographContainer = document.querySelector(
-        ".pictograph-container",
+        ".pictograph-container"
       );
       expect(pictographContainer).toBeInTheDocument();
     });

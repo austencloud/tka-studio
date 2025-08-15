@@ -29,7 +29,7 @@ export interface SequenceData {
 }
 
 export function createSequenceData(
-  data: Partial<SequenceData> = {},
+  data: Partial<SequenceData> = {}
 ): SequenceData {
   const result: SequenceData = {
     id: data.id ?? crypto.randomUUID(),
@@ -65,7 +65,7 @@ export function createSequenceData(
 
 export function updateSequenceData(
   sequence: SequenceData,
-  updates: Partial<SequenceData>,
+  updates: Partial<SequenceData>
 ): SequenceData {
   return {
     ...sequence,
@@ -75,7 +75,7 @@ export function updateSequenceData(
 
 export function addBeatToSequence(
   sequence: SequenceData,
-  beat: BeatData,
+  beat: BeatData
 ): SequenceData {
   return updateSequenceData(sequence, {
     beats: [...sequence.beats, beat],
@@ -84,7 +84,7 @@ export function addBeatToSequence(
 
 export function removeBeatFromSequence(
   sequence: SequenceData,
-  beatIndex: number,
+  beatIndex: number
 ): SequenceData {
   if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
     return sequence;
@@ -99,7 +99,7 @@ export function removeBeatFromSequence(
 export function updateBeatInSequence(
   sequence: SequenceData,
   beatIndex: number,
-  beat: BeatData,
+  beat: BeatData
 ): SequenceData {
   if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
     return sequence;

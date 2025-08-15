@@ -101,7 +101,7 @@ export async function GET() {
         sequences: [],
         count: 0,
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

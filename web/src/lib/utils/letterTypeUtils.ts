@@ -96,7 +96,7 @@ export function getLettersOfType(type: LetterType): string[] {
  */
 export function isLetterOfType(
   letter: string | null,
-  type: LetterType,
+  type: LetterType
 ): boolean {
   if (!letter) return type === "Type1";
   return getLetterType(letter) === type;

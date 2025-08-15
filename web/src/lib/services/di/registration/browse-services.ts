@@ -19,7 +19,7 @@ import {
  * Register all browse services
  */
 export async function registerBrowseServices(
-  container: ServiceContainer,
+  container: ServiceContainer
 ): Promise<void> {
   // Register browse services
   container.registerSingletonClass(IBrowseServiceInterface);

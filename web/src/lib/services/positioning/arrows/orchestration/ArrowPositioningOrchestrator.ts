@@ -45,7 +45,7 @@ export class ArrowPositioningOrchestrator
     locationCalculator: IArrowLocationCalculator,
     rotationCalculator: IArrowRotationCalculator,
     adjustmentCalculator: IArrowAdjustmentCalculator,
-    coordinateSystem: IArrowCoordinateSystemService,
+    coordinateSystem: IArrowCoordinateSystemService
   ) {
     this.locationCalculator = locationCalculator;
     this.rotationCalculator = rotationCalculator;
@@ -57,7 +57,7 @@ export class ArrowPositioningOrchestrator
   async calculateArrowPositionAsync(
     arrowData: ArrowData,
     pictographData: PictographData,
-    motionData?: MotionData,
+    motionData?: MotionData
   ): Promise<[number, number, number]> {
     /**
      * Calculate arrow position using sophisticated microservices pipeline.
@@ -72,7 +72,7 @@ export class ArrowPositioningOrchestrator
 
       if (!motion) {
         console.warn(
-          `No motion data for ${arrowData.color}, returning center position`,
+          `No motion data for ${arrowData.color}, returning center position`
         );
         const center = this.coordinateSystem.getSceneCenter();
         return [center.x, center.y, 0.0];
@@ -83,29 +83,29 @@ export class ArrowPositioningOrchestrator
       // STEP 1: Calculate arrow location using sophisticated location calculator
       const location = this.locationCalculator.calculateLocation(
         motion,
-        pictographData,
+        pictographData
       );
       console.debug(
-        `Calculated location: ${location} for ${arrowData.color} ${motion.motion_type}`,
+        `Calculated location: ${location} for ${arrowData.color} ${motion.motion_type}`
       );
 
       // STEP 2: Get initial position from precise coordinate system
       let initialPosition = this.coordinateSystem.getInitialPosition(
         motion,
-        location,
+        location
       );
       initialPosition = this.ensureValidPosition(initialPosition);
       console.debug(
-        `Initial position: (${initialPosition.x}, ${initialPosition.y})`,
+        `Initial position: (${initialPosition.x}, ${initialPosition.y})`
       );
 
       // STEP 3: Calculate rotation using comprehensive rotation calculator
       const rotation = this.rotationCalculator.calculateRotation(
         motion,
-        location,
+        location
       );
       console.debug(
-        `Calculated rotation: ${rotation}° for ${motion.motion_type} ${motion.prop_rot_dir}`,
+        `Calculated rotation: ${rotation}° for ${motion.motion_type} ${motion.prop_rot_dir}`
       );
 
       // STEP 4: Calculate adjustment using sophisticated adjustment calculator
@@ -114,10 +114,10 @@ export class ArrowPositioningOrchestrator
         motion,
         letter,
         location,
-        arrowData.color,
+        arrowData.color
       );
       console.debug(
-        `Calculated adjustment: (${adjustment.x}, ${adjustment.y})`,
+        `Calculated adjustment: (${adjustment.x}, ${adjustment.y})`
       );
 
       const [adjustmentX, adjustmentY] =
@@ -140,7 +140,7 @@ export class ArrowPositioningOrchestrator
   calculateArrowPosition(
     arrowData: ArrowData,
     pictographData: PictographData,
-    motionData?: MotionData,
+    motionData?: MotionData
   ): [number, number, number] {
     /**
      * Synchronous wrapper for calculateArrowPosition.
@@ -152,7 +152,7 @@ export class ArrowPositioningOrchestrator
 
       if (!motion) {
         console.warn(
-          `No motion data for ${arrowData.color}, returning center position`,
+          `No motion data for ${arrowData.color}, returning center position`
         );
         const center = this.coordinateSystem.getSceneCenter();
         return [center.x, center.y, 0.0];
@@ -163,16 +163,16 @@ export class ArrowPositioningOrchestrator
       // Calculate location and rotation synchronously
       const location = this.locationCalculator.calculateLocation(
         motion,
-        pictographData,
+        pictographData
       );
       let initialPosition = this.coordinateSystem.getInitialPosition(
         motion,
-        location,
+        location
       );
       initialPosition = this.ensureValidPosition(initialPosition);
       const rotation = this.rotationCalculator.calculateRotation(
         motion,
-        location,
+        location
       );
 
       // Use proper adjustment calculator for synchronous operation
@@ -181,7 +181,7 @@ export class ArrowPositioningOrchestrator
         motion,
         letter,
         location,
-        arrowData.color,
+        arrowData.color
       );
       const [adjustmentX, adjustmentY] =
         this.extractAdjustmentValues(adjustment);
@@ -218,13 +218,13 @@ export class ArrowPositioningOrchestrator
           const [x, y, rotation] = this.calculateArrowPositionSync(
             arrowData,
             pictographData,
-            motionData,
+            motionData
           );
 
           // Calculate mirror state
           const shouldMirror = this.shouldMirrorArrow(
             arrowData,
-            pictographData,
+            pictographData
           );
 
           // Update arrow with all calculated values
@@ -236,11 +236,11 @@ export class ArrowPositioningOrchestrator
               position_y: y,
               rotation_angle: rotation,
               is_mirrored: shouldMirror,
-            },
+            }
           );
 
           console.log(
-            `Updated ${color} arrow: position=(${x}, ${y}), rotation=${rotation}°, mirrored=${shouldMirror}`,
+            `Updated ${color} arrow: position=(${x}, ${y}), rotation=${rotation}°, mirrored=${shouldMirror}`
           );
         }
       }
@@ -253,7 +253,7 @@ export class ArrowPositioningOrchestrator
 
   shouldMirrorArrow(
     arrowData: ArrowData,
-    pictographData?: PictographData,
+    pictographData?: PictographData
   ): boolean {
     /**
      * Determine if arrow should be mirrored using enhanced motion analysis.
@@ -284,7 +284,7 @@ export class ArrowPositioningOrchestrator
 
   applyMirrorTransform(
     arrowItem: HTMLElement | SVGElement,
-    shouldMirror: boolean,
+    shouldMirror: boolean
   ): void {
     /**
      * Apply mirror transformation with enhanced positioning awareness.
@@ -314,7 +314,7 @@ export class ArrowPositioningOrchestrator
   private calculateArrowPositionSync(
     _arrowData: ArrowData,
     _pictographData: PictographData,
-    motionData: MotionData,
+    motionData: MotionData
   ): [number, number, number] {
     /**
      * Internal synchronous method for full positioning calculation with adjustments.
@@ -325,20 +325,20 @@ export class ArrowPositioningOrchestrator
     // STEP 1: Calculate arrow location
     const location = this.locationCalculator.calculateLocation(
       motion,
-      _pictographData,
+      _pictographData
     );
 
     // STEP 2: Get initial position
     let initialPosition = this.coordinateSystem.getInitialPosition(
       motion,
-      location,
+      location
     );
     initialPosition = this.ensureValidPosition(initialPosition);
 
     // STEP 3: Calculate rotation
     const rotation = this.rotationCalculator.calculateRotation(
       motion,
-      location,
+      location
     );
 
     // STEP 4: Calculate adjustment using simplified method for sync operation
@@ -355,7 +355,7 @@ export class ArrowPositioningOrchestrator
 
   private getMotionFromPictograph(
     arrowData: ArrowData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): MotionData | undefined {
     /**Extract motion data from pictograph data.*/
     if (!pictographData?.motions) {
@@ -379,7 +379,7 @@ export class ArrowPositioningOrchestrator
   }
 
   private extractAdjustmentValues(
-    adjustment: Point | number,
+    adjustment: Point | number
   ): [number, number] {
     /**Extract x and y values from adjustment object.*/
     if (typeof adjustment === "number") {
@@ -412,11 +412,11 @@ export class ArrowPositioningOrchestrator
       const finalAdjustment = this.processDirectionalTuples(
         baseAdjustment,
         motion,
-        location,
+        location
       );
 
       console.debug(
-        `Basic adjustment for ${motion.motion_type} ${motion.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`,
+        `Basic adjustment for ${motion.motion_type} ${motion.turns} turns at ${location}: (${finalAdjustment.x}, ${finalAdjustment.y})`
       );
       return finalAdjustment;
     } catch (error) {
@@ -478,7 +478,7 @@ export class ArrowPositioningOrchestrator
   private processDirectionalTuples(
     baseAdjustment: Point,
     motion: MotionData,
-    location: Location,
+    location: Location
   ): Point {
     /**Process directional tuples to get location-specific adjustments.*/
     try {
@@ -486,7 +486,7 @@ export class ArrowPositioningOrchestrator
       const directionalTuples = this.generateDirectionalTuples(
         motion,
         baseAdjustment.x,
-        baseAdjustment.y,
+        baseAdjustment.y
       );
 
       // Calculate quadrant index for tuple selection
@@ -496,14 +496,14 @@ export class ArrowPositioningOrchestrator
       const selectedTuple = directionalTuples[quadrantIndex] || [0, 0];
 
       console.debug(
-        `Directional tuples: ${JSON.stringify(directionalTuples)}, quadrant: ${quadrantIndex}, selected: [${selectedTuple[0]}, ${selectedTuple[1]}]`,
+        `Directional tuples: ${JSON.stringify(directionalTuples)}, quadrant: ${quadrantIndex}, selected: [${selectedTuple[0]}, ${selectedTuple[1]}]`
       );
 
       return { x: selectedTuple[0], y: selectedTuple[1] };
     } catch (error) {
       console.warn(
         "Directional tuple processing failed, using base adjustment:",
-        error,
+        error
       );
       return baseAdjustment;
     }
@@ -512,7 +512,7 @@ export class ArrowPositioningOrchestrator
   private generateDirectionalTuples(
     motion: MotionData,
     baseX: number,
-    baseY: number,
+    baseY: number
   ): Array<[number, number]> {
     /**Generate directional tuples using rotation matrices.*/
     const motionType = motion.motion_type;
@@ -609,7 +609,7 @@ export class ArrowPositioningOrchestrator
   private updateArrowInPictograph(
     pictographData: PictographData,
     color: string,
-    updates: Partial<ArrowData>,
+    updates: Partial<ArrowData>
   ): PictographData {
     /**Update arrow properties in pictograph data.*/
     // Create a deep copy and update the specific arrow

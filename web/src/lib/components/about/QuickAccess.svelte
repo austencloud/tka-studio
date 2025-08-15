@@ -1,6 +1,6 @@
 <script lang="ts">
   function handleConstructorClick() {
-    window.location.href = '/constructor';
+    window.location.href = "/constructor";
   }
 </script>
 
@@ -9,10 +9,7 @@
   <div class="container">
     <h2>Quick Access</h2>
     <div class="quick-grid">
-      <button 
-        onclick={handleConstructorClick} 
-        class="quick-link constructor"
-      >
+      <button onclick={handleConstructorClick} class="quick-link constructor">
         <div class="quick-icon">🔧</div>
         <div class="quick-content">
           <h3>Start Creating</h3>
@@ -20,10 +17,10 @@
         </div>
       </button>
 
-      <a 
-        href="https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link" 
-        target="_blank" 
-        rel="noopener noreferrer" 
+      <a
+        href="https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link"
+        target="_blank"
+        rel="noopener noreferrer"
         class="quick-link learn"
       >
         <div class="quick-icon">📚</div>
@@ -33,8 +30,8 @@
         </div>
       </a>
 
-      <a 
-        href="https://github.com/austencloud/tka-sequence-constructor/releases/download/v0.1.2/TKA_Setup.exe" 
+      <a
+        href="https://github.com/austencloud/tka-sequence-constructor/releases/download/v0.1.2/TKA_Setup.exe"
         class="quick-link download"
         target="_blank"
         rel="noopener noreferrer"

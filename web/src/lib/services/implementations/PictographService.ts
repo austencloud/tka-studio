@@ -32,7 +32,7 @@ export class PictographService implements IPictographService {
    */
   async updateArrow(
     _pictographId: string,
-    _arrowData: ArrowData,
+    _arrowData: ArrowData
   ): Promise<PictographData> {
     // TODO: Implement pictograph data management
     throw new Error("updateArrow not yet implemented");

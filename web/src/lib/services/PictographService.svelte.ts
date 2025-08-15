@@ -18,7 +18,7 @@ interface PictographServiceConfig {
  * Create a reactive pictograph service using runes
  */
 export function createPictographService(
-  config: Partial<PictographServiceConfig> = {},
+  config: Partial<PictographServiceConfig> = {}
 ) {
   // Configuration with defaults
   const serviceConfig: PictographServiceConfig = {
@@ -42,7 +42,7 @@ export function createPictographService(
     const requiredComponents = getRequiredComponents();
     if (requiredComponents.length === 0) return 100;
     return Math.round(
-      (loadedComponents.size / requiredComponents.length) * 100,
+      (loadedComponents.size / requiredComponents.length) * 100
     );
   });
 
@@ -84,7 +84,7 @@ export function createPictographService(
       try {
         errorMessage = null;
         const modernData = ensureModernPictographData(
-          data as Record<string, unknown>,
+          data as Record<string, unknown>
         );
 
         if (modernData) {
@@ -177,7 +177,7 @@ export const globalPictographService = createPictographService();
  */
 export function createBeatPictographService(
   beat: BeatData,
-  config?: Partial<PictographServiceConfig>,
+  config?: Partial<PictographServiceConfig>
 ) {
   const service = createPictographService(config);
   service.setBeatData(beat);

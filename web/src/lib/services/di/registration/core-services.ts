@@ -34,7 +34,7 @@ import { IArrowPositioningServiceInterface } from "../interfaces/positioning-int
  * Register all core services with their dependencies
  */
 export async function registerCoreServices(
-  container: ServiceContainer,
+  container: ServiceContainer
 ): Promise<void> {
   // Register domain services (no dependencies)
   container.registerSingletonClass(ISequenceDomainServiceInterface);
@@ -55,7 +55,7 @@ export async function registerCoreServices(
   // Register services with dependencies using factories
   container.registerFactory(ISequenceServiceInterface, () => {
     const sequenceDomainService = container.resolve(
-      ISequenceDomainServiceInterface,
+      ISequenceDomainServiceInterface
     );
     const persistenceService = container.resolve(IPersistenceServiceInterface);
     return new SequenceService(sequenceDomainService, persistenceService);
@@ -64,18 +64,18 @@ export async function registerCoreServices(
   container.registerFactory(IConstructTabCoordinationServiceInterface, () => {
     const sequenceService = container.resolve(ISequenceServiceInterface);
     const startPositionService = container.resolve(
-      IStartPositionServiceInterface,
+      IStartPositionServiceInterface
     );
     return new ConstructTabCoordinationService(
       sequenceService,
-      startPositionService,
+      startPositionService
     );
   });
 
   // Register pictograph rendering service (depends on positioning services)
   container.registerFactory(IPictographRenderingServiceInterface, () => {
     const arrowPositioning = container.resolve(
-      IArrowPositioningServiceInterface,
+      IArrowPositioningServiceInterface
     );
     const propRendering = container.resolve(IPropRenderingServiceInterface);
     return new PictographRenderingService(arrowPositioning, propRendering);
@@ -97,7 +97,7 @@ export async function registerCoreServices(
     const persistenceService = container.resolve(IPersistenceServiceInterface);
     return new ApplicationInitializationService(
       settingsService,
-      persistenceService,
+      persistenceService
     );
   });
 }

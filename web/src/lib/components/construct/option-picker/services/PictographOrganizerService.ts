@@ -72,7 +72,7 @@ export class PictographOrganizerService {
         console.warn(
           "Letter type detection error for pictograph:",
           pictograph.letter,
-          error,
+          error
         );
         // Fallback: put all problematic options in Type1 section
         organized.individual["Type1"]?.push(pictograph);
@@ -127,10 +127,10 @@ export class PictographOrganizerService {
     return {
       individual: Object.keys(organized.individual).filter(
         (key) =>
-          organized.individual[key] && organized.individual[key].length > 0,
+          organized.individual[key] && organized.individual[key].length > 0
       ),
       grouped: Object.keys(organized.grouped).filter(
-        (key) => organized.grouped[key] && organized.grouped[key].length > 0,
+        (key) => organized.grouped[key] && organized.grouped[key].length > 0
       ),
     };
   }
@@ -140,12 +140,12 @@ export class PictographOrganizerService {
    */
   getCategoryCount(
     organized: OrganizedPictographs,
-    category: "individual" | "grouped",
+    category: "individual" | "grouped"
   ): number {
     const sections = organized[category];
     return Object.values(sections).reduce(
       (total, section) => total + section.length,
-      0,
+      0
     );
   }
 
@@ -170,7 +170,7 @@ export class PictographOrganizerService {
  * Provides a convenient factory function following your service patterns
  */
 export function createPictographOrganizer(
-  config?: Partial<PictographOrganizationConfig>,
+  config?: Partial<PictographOrganizationConfig>
 ): PictographOrganizerService {
   const finalConfig = config
     ? { ...DEFAULT_CONFIG, ...config }
@@ -183,7 +183,7 @@ export function createPictographOrganizer(
  * Quick organization function for simple use cases
  */
 export function organizePictographsQuick(
-  pictographs: PictographData[],
+  pictographs: PictographData[]
 ): OrganizedPictographs {
   const organizer = createPictographOrganizer();
   return organizer.organizePictographs(pictographs);

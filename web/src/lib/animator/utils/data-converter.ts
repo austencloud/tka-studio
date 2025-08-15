@@ -47,7 +47,7 @@ export interface WebAppMotionData {
  * Convert web app sequence data to standalone format
  */
 export function convertWebAppToStandalone(
-  webAppData: WebAppSequenceData,
+  webAppData: WebAppSequenceData
 ): any[] {
   console.log("Converting web app data to standalone format:", webAppData);
   console.log("Number of beats:", webAppData.beats?.length || 0);
@@ -68,11 +68,11 @@ export function convertWebAppToStandalone(
   console.log("🔍 [DATA COMPARISON] First beat structure:", firstBeat);
   console.log(
     "🔍 [DATA COMPARISON] First beat pictograph_data:",
-    firstBeat?.pictograph_data,
+    firstBeat?.pictograph_data
   );
   console.log(
     "🔍 [DATA COMPARISON] First beat motions:",
-    firstBeat?.pictograph_data?.motions,
+    firstBeat?.pictograph_data?.motions
   );
 
   // Log motion types specifically
@@ -81,21 +81,21 @@ export function convertWebAppToStandalone(
     if (motions.blue) {
       console.log(
         `🎯 [DATA COMPARISON] Blue motion motion_type:`,
-        motions.blue.motion_type,
+        motions.blue.motion_type
       );
       console.log(
         `🎯 [DATA COMPARISON] Blue motion full data:`,
-        JSON.stringify(motions.blue, null, 2),
+        JSON.stringify(motions.blue, null, 2)
       );
     }
     if (motions.red) {
       console.log(
         `🎯 [DATA COMPARISON] Red motion motion_type:`,
-        motions.red.motion_type,
+        motions.red.motion_type
       );
       console.log(
         `🎯 [DATA COMPARISON] Red motion full data:`,
-        JSON.stringify(motions.red, null, 2),
+        JSON.stringify(motions.red, null, 2)
       );
     }
   }
@@ -175,7 +175,7 @@ export function convertWebAppToStandalone(
  * Convert web app motion data to prop attributes
  */
 function convertMotionToPropAttributes(
-  motion?: WebAppMotionData,
+  motion?: WebAppMotionData
 ): PropAttributes {
   if (!motion) {
     // Default static motion
@@ -232,36 +232,36 @@ export function isStandaloneFormat(data: any): boolean {
 export function ensureStandaloneFormat(data: any): any[] {
   console.log(
     "🔍 [DATA COMPARISON] ensureStandaloneFormat called with data:",
-    JSON.stringify(data, null, 2),
+    JSON.stringify(data, null, 2)
   );
 
   if (isStandaloneFormat(data)) {
     console.log("✅ [DATA COMPARISON] Data is already in standalone format");
     console.log(
       "📊 [DATA COMPARISON] Standalone data structure:",
-      JSON.stringify(data, null, 2),
+      JSON.stringify(data, null, 2)
     );
     return data;
   }
 
   if (isWebAppFormat(data)) {
     console.log(
-      "🔄 [DATA COMPARISON] Converting web app format to standalone format",
+      "🔄 [DATA COMPARISON] Converting web app format to standalone format"
     );
     console.log(
       "📥 [DATA COMPARISON] Input web app data:",
-      JSON.stringify(data, null, 2),
+      JSON.stringify(data, null, 2)
     );
     const converted = convertWebAppToStandalone(data);
     console.log(
       "📤 [DATA COMPARISON] Output standalone data:",
-      JSON.stringify(converted, null, 2),
+      JSON.stringify(converted, null, 2)
     );
     return converted;
   }
 
   throw new Error(
-    "Unknown sequence data format - cannot convert to standalone format",
+    "Unknown sequence data format - cannot convert to standalone format"
   );
 }
 

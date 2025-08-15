@@ -16,7 +16,7 @@ describe("PlacementKeyGenerator", () => {
       motion,
       pictograph,
       defaultPlacements,
-      "diamond",
+      "diamond"
     );
     expect(key).toBe("pro_to_layer1_alpha_A");
   });

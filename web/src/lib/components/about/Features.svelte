@@ -6,25 +6,37 @@
       <div class="feature-card">
         <div class="feature-icon">📚</div>
         <h3>Systematic Learning</h3>
-        <p>Complex movements are broken down into understandable components through a structured notation system.</p>
+        <p>
+          Complex movements are broken down into understandable components
+          through a structured notation system.
+        </p>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon">🎯</div>
         <h3>Precision Training</h3>
-        <p>The system supports muscle memory development and technical precision through methodical movement approaches.</p>
+        <p>
+          The system supports muscle memory development and technical precision
+          through methodical movement approaches.
+        </p>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon">🔧</div>
         <h3>Digital Tools</h3>
-        <p>The Kinetic Constructor enables visualization, creation, and sharing of choreographic sequences.</p>
+        <p>
+          The Kinetic Constructor enables visualization, creation, and sharing
+          of choreographic sequences.
+        </p>
       </div>
 
       <div class="feature-card">
         <div class="feature-icon">🌟</div>
         <h3>Creative Framework</h3>
-        <p>The system provides foundational knowledge that enables exploration of infinite sequence possibilities.</p>
+        <p>
+          The system provides foundational knowledge that enables exploration of
+          infinite sequence possibilities.
+        </p>
       </div>
     </div>
   </div>
@@ -68,7 +80,7 @@
     border-radius: 1.5rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     display: flex;
@@ -82,7 +94,7 @@
     transform: translateY(-10px) scale(1.02);
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 
+    box-shadow:
       0 20px 40px rgba(118, 75, 162, 0.2),
       0 8px 20px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);

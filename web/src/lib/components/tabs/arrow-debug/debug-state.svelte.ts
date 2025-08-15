@@ -41,7 +41,7 @@ export function createDebugState() {
   let gridMode = $state<"diamond" | "box">("diamond");
 
   let expandedSections = $state(
-    new Set(["input_data", "location_calculation"]),
+    new Set(["input_data", "location_calculation"])
   );
 
   // Initialize real data services
@@ -58,7 +58,7 @@ export function createDebugState() {
     locationCalculator,
     rotationCalculator,
     adjustmentCalculator,
-    coordinateSystemService,
+    coordinateSystemService
   );
 
   // Create debug data with proper structure
@@ -102,7 +102,7 @@ export function createDebugState() {
       const allPictographs = await codexService.loadAllPictographs();
 
       console.log(
-        `✅ Loaded ${allPictographs.length} real pictographs from CSV data`,
+        `✅ Loaded ${allPictographs.length} real pictographs from CSV data`
       );
       return allPictographs;
     } catch (error) {
@@ -123,7 +123,7 @@ export function createDebugState() {
       if (realPictographs.length > 0) {
         selectedPictograph = realPictographs[0];
         console.log(
-          `✅ Selected first pictograph: ${selectedPictograph.letter || selectedPictograph.id}`,
+          `✅ Selected first pictograph: ${selectedPictograph.letter || selectedPictograph.id}`
         );
       }
     } catch (error) {
@@ -224,7 +224,7 @@ export function createDebugState() {
       try {
         const calculatedLocation = locationCalculator.calculateLocation(
           currentMotionData,
-          selectedPictograph,
+          selectedPictograph
         );
         currentDebugData.calculatedLocation = calculatedLocation;
         currentDebugData.locationDebugInfo = {
@@ -248,7 +248,7 @@ export function createDebugState() {
         if (currentDebugData.calculatedLocation) {
           const initialPosition = coordinateSystemService.getInitialPosition(
             currentMotionData,
-            currentDebugData.calculatedLocation as any,
+            currentDebugData.calculatedLocation as any
           );
           currentDebugData.initialPosition = initialPosition;
 
@@ -285,7 +285,7 @@ export function createDebugState() {
         if (currentDebugData.calculatedLocation) {
           const rotation = rotationCalculator.calculateRotation(
             currentMotionData,
-            currentDebugData.calculatedLocation as any,
+            currentDebugData.calculatedLocation as any
           );
           currentDebugData.finalRotation = rotation;
         }
@@ -306,7 +306,7 @@ export function createDebugState() {
             selectedPictograph,
             currentMotionData,
             selectedPictograph.letter || "A",
-            currentDebugData.calculatedLocation as any,
+            currentDebugData.calculatedLocation as any
           );
           currentDebugData.defaultAdjustment = adjustment;
 

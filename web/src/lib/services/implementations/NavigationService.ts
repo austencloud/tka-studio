@@ -28,20 +28,20 @@ export interface INavigationService {
   /** Generate navigation sections from sequences */
   generateNavigationSections(
     sequences: BrowseSequenceMetadata[],
-    favorites: string[],
+    favorites: string[]
   ): Promise<NavigationSection[]>;
 
   /** Toggle section expansion state */
   toggleSectionExpansion(
     sectionId: string,
-    sections: NavigationSection[],
+    sections: NavigationSection[]
   ): NavigationSection[];
 
   /** Set active navigation item */
   setActiveItem(
     sectionId: string,
     itemId: string,
-    sections: NavigationSection[],
+    sections: NavigationSection[]
   ): NavigationSection[];
 
   /** Clear all active states */
@@ -51,21 +51,21 @@ export interface INavigationService {
   getSequencesForNavigationItem(
     item: NavigationItem,
     sectionType: NavigationSection["type"],
-    allSequences: BrowseSequenceMetadata[],
+    allSequences: BrowseSequenceMetadata[]
   ): BrowseSequenceMetadata[];
 
   /** Update section counts based on current sequences */
   updateSectionCounts(
     sections: NavigationSection[],
     sequences: BrowseSequenceMetadata[],
-    favorites: string[],
+    favorites: string[]
   ): NavigationSection[];
 }
 
 export class NavigationService implements INavigationService {
   async generateNavigationSections(
     sequences: BrowseSequenceMetadata[],
-    favorites: string[],
+    favorites: string[]
   ): Promise<NavigationSection[]> {
     const sections: NavigationSection[] = [
       await this.generateFavoritesSection(sequences, favorites),
@@ -81,7 +81,7 @@ export class NavigationService implements INavigationService {
 
   toggleSectionExpansion(
     sectionId: string,
-    sections: NavigationSection[],
+    sections: NavigationSection[]
   ): NavigationSection[] {
     return sections.map((section) => ({
       ...section,
@@ -93,7 +93,7 @@ export class NavigationService implements INavigationService {
   setActiveItem(
     sectionId: string,
     itemId: string,
-    sections: NavigationSection[],
+    sections: NavigationSection[]
   ): NavigationSection[] {
     return sections.map((section) => ({
       ...section,
@@ -117,7 +117,7 @@ export class NavigationService implements INavigationService {
   getSequencesForNavigationItem(
     item: NavigationItem,
     sectionType: NavigationSection["type"],
-    allSequences: BrowseSequenceMetadata[],
+    allSequences: BrowseSequenceMetadata[]
   ): BrowseSequenceMetadata[] {
     switch (sectionType) {
       case "length": {
@@ -127,7 +127,7 @@ export class NavigationService implements INavigationService {
 
       case "letter":
         return allSequences.filter((seq) =>
-          seq.word.startsWith(item.value as string),
+          seq.word.startsWith(item.value as string)
         );
 
       case "level":
@@ -157,7 +157,7 @@ export class NavigationService implements INavigationService {
   updateSectionCounts(
     sections: NavigationSection[],
     sequences: BrowseSequenceMetadata[],
-    favorites: string[],
+    favorites: string[]
   ): NavigationSection[] {
     return sections.map((section) => ({
       ...section,
@@ -173,10 +173,10 @@ export class NavigationService implements INavigationService {
   // Private helper methods
   private async generateFavoritesSection(
     sequences: BrowseSequenceMetadata[],
-    favorites: string[],
+    favorites: string[]
   ): Promise<NavigationSection> {
     const favoriteSequences = sequences.filter((seq) =>
-      favorites.includes(seq.id),
+      favorites.includes(seq.id)
     );
 
     return {
@@ -198,7 +198,7 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateDateSection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: BrowseSequenceMetadata[]
   ): Promise<NavigationSection> {
     const dateGroups = new Map<string, BrowseSequenceMetadata[]>();
 
@@ -238,7 +238,7 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateLengthSection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: BrowseSequenceMetadata[]
   ): Promise<NavigationSection> {
     const lengthGroups = new Map<number, BrowseSequenceMetadata[]>();
 
@@ -274,7 +274,7 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateLetterSection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: BrowseSequenceMetadata[]
   ): Promise<NavigationSection> {
     const letterGroups = new Map<string, BrowseSequenceMetadata[]>();
 
@@ -310,7 +310,7 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateLevelSection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: BrowseSequenceMetadata[]
   ): Promise<NavigationSection> {
     const levelGroups = new Map<string, BrowseSequenceMetadata[]>();
 
@@ -347,7 +347,7 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateAuthorSection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: BrowseSequenceMetadata[]
   ): Promise<NavigationSection> {
     const authorGroups = new Map<string, BrowseSequenceMetadata[]>();
 
@@ -385,7 +385,7 @@ export class NavigationService implements INavigationService {
   private calculateSectionCount(
     section: NavigationSection,
     sequences: BrowseSequenceMetadata[],
-    favorites: string[],
+    favorites: string[]
   ): number {
     switch (section.type) {
       case "favorites":

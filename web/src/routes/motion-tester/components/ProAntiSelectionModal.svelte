@@ -5,44 +5,44 @@ Appears when user moves away from float motion and needs to choose
 between Pro (natural) or Anti (reverse) circular motion direction.
 -->
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { MotionType } from '$lib/domain/enums';
-	import '$lib/styles/modal-animations.css';
+  import { onMount } from "svelte";
+  import { MotionType } from "$lib/domain/enums";
+  import "$lib/styles/modal-animations.css";
 
-	interface Props {
-		onMotionTypeSelect: (motionType: MotionType) => void;
-		onClose: () => void;
-		color: string;
-		triggerElement?: HTMLElement; // The element that triggered the modal
-	}
+  interface Props {
+    onMotionTypeSelect: (motionType: MotionType) => void;
+    onClose: () => void;
+    color: string;
+    triggerElement?: HTMLElement; // The element that triggered the modal
+  }
 
-	let { onMotionTypeSelect, onClose, color, triggerElement }: Props = $props();
-	
-	let mounted = $state(false);
+  let { onMotionTypeSelect, onClose, color, triggerElement }: Props = $props();
 
-	onMount(() => {
-		mounted = true;
-		if (triggerElement) {
-			// Find the prop panel container (should be the closest .prop-section)
-			const propPanel = triggerElement.closest('.prop-section') as HTMLElement;
-			if (propPanel) {
-				renderModalOverPropPanel(propPanel);
-			}
-		}
+  let mounted = $state(false);
 
-		return () => {
-			if (modalElement && modalElement.parentNode) {
-				modalElement.parentNode.removeChild(modalElement);
-			}
-		};
-	});
+  onMount(() => {
+    mounted = true;
+    if (triggerElement) {
+      // Find the prop panel container (should be the closest .prop-section)
+      const propPanel = triggerElement.closest(".prop-section") as HTMLElement;
+      if (propPanel) {
+        renderModalOverPropPanel(propPanel);
+      }
+    }
 
-	let modalElement: HTMLElement;
+    return () => {
+      if (modalElement && modalElement.parentNode) {
+        modalElement.parentNode.removeChild(modalElement);
+      }
+    };
+  });
 
-	function renderModalOverPropPanel(propPanel: HTMLElement) {
-		// Create modal element as a child of the prop panel
-		modalElement = document.createElement('div');
-		modalElement.style.cssText = `
+  let modalElement: HTMLElement;
+
+  function renderModalOverPropPanel(propPanel: HTMLElement) {
+    // Create modal element as a child of the prop panel
+    modalElement = document.createElement("div");
+    modalElement.style.cssText = `
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -51,23 +51,23 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 			z-index: 1000;
 			pointer-events: auto;
 		`;
-		
-		// Ensure the prop panel has relative positioning
-		const currentPosition = window.getComputedStyle(propPanel).position;
-		if (currentPosition === 'static') {
-			propPanel.style.position = 'relative';
-		}
-		
-		propPanel.appendChild(modalElement);
-		renderModalContent();
-	}
 
-	function renderModalContent() {
-		if (!modalElement) return;
+    // Ensure the prop panel has relative positioning
+    const currentPosition = window.getComputedStyle(propPanel).position;
+    if (currentPosition === "static") {
+      propPanel.style.position = "relative";
+    }
 
-		const backdrop = document.createElement('div');
-		backdrop.className = 'modal-backdrop';
-		backdrop.style.cssText = `
+    propPanel.appendChild(modalElement);
+    renderModalContent();
+  }
+
+  function renderModalContent() {
+    if (!modalElement) return;
+
+    const backdrop = document.createElement("div");
+    backdrop.className = "modal-backdrop";
+    backdrop.style.cssText = `
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -81,9 +81,9 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 			justify-content: center;
 		`;
 
-		const content = document.createElement('div');
-		content.className = 'modal-content';
-		content.style.cssText = `
+    const content = document.createElement("div");
+    content.className = "modal-content";
+    content.style.cssText = `
 			position: relative;
 			background: rgba(20, 20, 30, 0.95);
 			border: 1px solid rgba(255, 255, 255, 0.2);
@@ -96,8 +96,8 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 			z-index: 10000;
 		`;
 
-		// Add modal content HTML
-		content.innerHTML = `
+    // Add modal content HTML
+    content.innerHTML = `
 			<div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
 				<span class="modal-title" style="font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.9); text-transform: uppercase; letter-spacing: 0.5px;">Select Turn Direction</span>
 				<button class="close-btn" style="background: none; border: none; color: rgba(255, 255, 255, 0.6); font-size: 18px; font-weight: 700; cursor: pointer; padding: 0; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 4px;">×</button>
@@ -120,48 +120,48 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 			</div>
 		`;
 
-		// Add event listeners
-		backdrop.addEventListener('click', (e) => {
-			if (e.target === backdrop) onClose();
-		});
+    // Add event listeners
+    backdrop.addEventListener("click", (e) => {
+      if (e.target === backdrop) onClose();
+    });
 
-		content.querySelector('.close-btn')?.addEventListener('click', onClose);
+    content.querySelector(".close-btn")?.addEventListener("click", onClose);
 
-		content.querySelectorAll('.motion-option').forEach(button => {
-			const htmlButton = button as HTMLElement;
-			htmlButton.addEventListener('click', () => {
-				const motionType = htmlButton.getAttribute('data-motion');
-				if (motionType === 'pro') {
-					onMotionTypeSelect(MotionType.PRO);
-				} else if (motionType === 'anti') {
-					onMotionTypeSelect(MotionType.ANTI);
-				}
-				onClose();
-			});
+    content.querySelectorAll(".motion-option").forEach((button) => {
+      const htmlButton = button as HTMLElement;
+      htmlButton.addEventListener("click", () => {
+        const motionType = htmlButton.getAttribute("data-motion");
+        if (motionType === "pro") {
+          onMotionTypeSelect(MotionType.PRO);
+        } else if (motionType === "anti") {
+          onMotionTypeSelect(MotionType.ANTI);
+        }
+        onClose();
+      });
 
-			// Add hover effects
-			htmlButton.addEventListener('mouseenter', () => {
-				htmlButton.style.background = `rgba(${color}, 0.2)`;
-				htmlButton.style.borderColor = `rgba(${color}, 0.4)`;
-				htmlButton.style.color = 'white';
-			});
+      // Add hover effects
+      htmlButton.addEventListener("mouseenter", () => {
+        htmlButton.style.background = `rgba(${color}, 0.2)`;
+        htmlButton.style.borderColor = `rgba(${color}, 0.4)`;
+        htmlButton.style.color = "white";
+      });
 
-			htmlButton.addEventListener('mouseleave', () => {
-				htmlButton.style.background = 'rgba(255, 255, 255, 0.05)';
-				htmlButton.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-				htmlButton.style.color = 'rgba(255, 255, 255, 0.7)';
-			});
-		});
+      htmlButton.addEventListener("mouseleave", () => {
+        htmlButton.style.background = "rgba(255, 255, 255, 0.05)";
+        htmlButton.style.borderColor = "rgba(255, 255, 255, 0.15)";
+        htmlButton.style.color = "rgba(255, 255, 255, 0.7)";
+      });
+    });
 
-		backdrop.appendChild(content);
-		modalElement.appendChild(backdrop);
-	}
+    backdrop.appendChild(content);
+    modalElement.appendChild(backdrop);
+  }
 
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
-			onClose();
-		}
-	}
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === "Escape") {
+      onClose();
+    }
+  }
 </script>
 
 <svelte:window onkeydown={handleKeyDown} />

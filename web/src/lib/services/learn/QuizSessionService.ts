@@ -60,7 +60,7 @@ export class QuizSessionService {
   static updateSessionProgress(
     sessionId: string,
     isCorrect: boolean,
-    timeElapsed?: number,
+    timeElapsed?: number
   ): QuizSession | null {
     const session = this.getSession(sessionId);
     if (!session || !session.isActive) {
@@ -142,7 +142,7 @@ export class QuizSessionService {
   private static calculateResults(session: QuizSession): LessonResults {
     if (!session.lessonType || !session.quizMode) {
       throw new Error(
-        "Session must have lessonType and quizMode to calculate results",
+        "Session must have lessonType and quizMode to calculate results"
       );
     }
 
@@ -200,7 +200,7 @@ export class QuizSessionService {
    */
   static startTimer(
     sessionId: string,
-    onTick?: (timeRemaining: number) => void,
+    onTick?: (timeRemaining: number) => void
   ): void {
     const session = this.getSession(sessionId);
     if (!session || session.quizMode !== QuizMode.COUNTDOWN) return;

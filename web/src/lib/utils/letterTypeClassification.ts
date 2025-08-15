@@ -76,7 +76,7 @@ export function getLetterType(letter: string | null | undefined): LetterType {
  * Get the border color for a letter type
  */
 export function getLetterBorderColor(
-  letter: string | null | undefined,
+  letter: string | null | undefined
 ): string {
   const letterType = getLetterType(letter);
   return BORDER_COLORS[letterType];
@@ -94,7 +94,7 @@ export function getBorderColorForType(letterType: LetterType): string {
  */
 export function isLetterType(
   letter: string | null | undefined,
-  type: LetterType,
+  type: LetterType
 ): boolean {
   return getLetterType(letter) === type;
 }

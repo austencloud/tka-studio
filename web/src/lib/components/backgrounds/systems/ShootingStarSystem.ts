@@ -12,7 +12,7 @@ export const createShootingStarSystem = () => {
   function getRandomInterval(): number {
     return (
       Math.floor(
-        Math.random() * (config.maxInterval - config.minInterval + 1),
+        Math.random() * (config.maxInterval - config.minInterval + 1)
       ) + config.minInterval
     );
   }
@@ -60,7 +60,7 @@ export const createShootingStarSystem = () => {
       prevX: startPos.x,
       prevY: startPos.y,
       tailLength: Math.floor(
-        randomFloat(config.tailLength.min, config.tailLength.max),
+        randomFloat(config.tailLength.min, config.tailLength.max)
       ),
       opacity: 1.0,
       offScreen: false,
@@ -71,7 +71,7 @@ export const createShootingStarSystem = () => {
 
   const updateShootingStar = (
     star: ShootingStar | null,
-    { width, height }: Dimensions,
+    { width, height }: Dimensions
   ): ShootingStar | null => {
     if (!star) return null;
 
@@ -122,7 +122,7 @@ export const createShootingStarSystem = () => {
 
   const drawShootingStar = (
     star: ShootingStar | null,
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D
   ): void => {
     if (!star || !ctx) return;
 
@@ -133,7 +133,7 @@ export const createShootingStarSystem = () => {
       const fadeFactor = 5;
       const opacity = Math.max(
         0,
-        ((index + 1) / tailLength) ** fadeFactor * star.opacity,
+        ((index + 1) / tailLength) ** fadeFactor * star.opacity
       );
 
       ctx.globalAlpha = opacity;
@@ -159,7 +159,7 @@ export const createShootingStarSystem = () => {
 
   const update = (
     state: ShootingStarState,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): ShootingStarState => {
     const timer = state.timer + 1;
 

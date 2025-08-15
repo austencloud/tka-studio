@@ -121,11 +121,11 @@ export function createMetadataTesterState() {
               (seq: ThumbnailFile) =>
                 seq.word !== "A_A" &&
                 !seq.word.includes("_") &&
-                seq.word.length > 0,
+                seq.word.length > 0
             );
             state.thumbnails = filteredSequences;
             console.log(
-              `✅ Loaded ${filteredSequences.length} sequences from API (${data.sequences.length - filteredSequences.length} filtered out)`,
+              `✅ Loaded ${filteredSequences.length} sequences from API (${data.sequences.length - filteredSequences.length} filtered out)`
             );
             return;
           }
@@ -182,7 +182,7 @@ export function createMetadataTesterState() {
         (seq) =>
           !seq.includes("_") && // Exclude sequences with underscores (test sequences)
           seq !== "A_A" && // Specifically exclude A_A
-          seq.length > 0,
+          seq.length > 0
       );
 
       let foundCount = 0;
@@ -251,7 +251,7 @@ export function createMetadataTesterState() {
 
     try {
       const metadata = await PngMetadataExtractor.extractMetadata(
-        thumbnail.path,
+        thumbnail.path
       );
       state.extractedMetadata = metadata;
       state.rawMetadata = JSON.stringify(metadata, null, 2);
@@ -280,10 +280,10 @@ export function createMetadataTesterState() {
 
     // Filter out start position entries and count actual beats
     const startPositionEntries = metadata.filter(
-      (step: any) => step.sequence_start_position,
+      (step: any) => step.sequence_start_position
     );
     const realBeats = metadata.filter(
-      (step: any) => step.letter && !step.sequence_start_position,
+      (step: any) => step.letter && !step.sequence_start_position
     );
 
     // Basic counts
@@ -300,7 +300,7 @@ export function createMetadataTesterState() {
 
     // Check for author inconsistency across beats
     const authorsFound = new Set(
-      metadata.map((step: any) => step.author).filter(Boolean),
+      metadata.map((step: any) => step.author).filter(Boolean)
     );
     const authorInconsistent = authorsFound.size > 1;
 
@@ -314,7 +314,7 @@ export function createMetadataTesterState() {
     const levelsFound = new Set(
       metadata
         .map((step: any) => step.level)
-        .filter((l) => l !== undefined && l !== null),
+        .filter((l) => l !== undefined && l !== null)
     );
     const levelInconsistent = levelsFound.size > 1;
 
@@ -326,7 +326,7 @@ export function createMetadataTesterState() {
 
     // Check for start position inconsistency
     const startPositionsFound = new Set(
-      startPositionEntries.map((step: any) => step.sequence_start_position),
+      startPositionEntries.map((step: any) => step.sequence_start_position)
     );
     const startPositionInconsistent = startPositionsFound.size > 1;
 
@@ -448,7 +448,7 @@ export function createMetadataTesterState() {
     const totalIssues = errorCount + warningCount * 0.5; // Warnings count as half
     const healthScore = Math.max(
       0,
-      Math.round((1 - totalIssues / maxPossibleIssues) * 100),
+      Math.round((1 - totalIssues / maxPossibleIssues) * 100)
     );
 
     // Generate error and warning arrays for batch analysis
@@ -469,7 +469,7 @@ export function createMetadataTesterState() {
       errors.push(`Duplicate beats found: ${duplicateBeats.length}`);
     if (invalidBeatStructure.length > 0)
       errors.push(
-        `Invalid beat structure in ${invalidBeatStructure.length} beats`,
+        `Invalid beat structure in ${invalidBeatStructure.length} beats`
       );
 
     // Warnings
@@ -479,7 +479,7 @@ export function createMetadataTesterState() {
     if (startPositionInconsistent) warnings.push("Start position inconsistent");
     if (missingRequiredFields.length > 0)
       warnings.push(
-        `Missing required fields in ${missingRequiredFields.length} beats`,
+        `Missing required fields in ${missingRequiredFields.length} beats`
       );
     if (realBeatsCount !== sequenceLength && sequenceLength > 0)
       warnings.push("Beat count mismatch with sequence length");
@@ -549,15 +549,15 @@ export function createMetadataTesterState() {
       if (startPositionMissing) console.log("   - Missing start position");
       if (missingLetters.length)
         console.log(
-          `   - Missing letters in beats: ${missingLetters.join(", ")}`,
+          `   - Missing letters in beats: ${missingLetters.join(", ")}`
         );
       if (missingMotionData.length)
         console.log(
-          `   - Missing motion data in beats: ${missingMotionData.join(", ")}`,
+          `   - Missing motion data in beats: ${missingMotionData.join(", ")}`
         );
       if (invalidMotionTypes.length)
         console.log(
-          `   - Invalid motion types: ${invalidMotionTypes.length} found`,
+          `   - Invalid motion types: ${invalidMotionTypes.length} found`
         );
     }
   }
@@ -702,10 +702,10 @@ export function createMetadataTesterState() {
       console.log(`Batch Analysis Complete:`);
       console.log(`- Sequences Analyzed: ${analyzed}`);
       console.log(
-        `- Healthy Sequences (80+ score): ${healthySequences} (${Math.round((healthySequences / analyzed) * 100)}%)`,
+        `- Healthy Sequences (80+ score): ${healthySequences} (${Math.round((healthySequences / analyzed) * 100)}%)`
       );
       console.log(
-        `- Unhealthy Sequences: ${analyzed - healthySequences} (${Math.round(((analyzed - healthySequences) / analyzed) * 100)}%)`,
+        `- Unhealthy Sequences: ${analyzed - healthySequences} (${Math.round(((analyzed - healthySequences) / analyzed) * 100)}%)`
       );
       console.log(`- Average Health Score: ${averageHealth.toFixed(1)}%`);
       console.log(`- Total Errors: ${totalErrors}`);

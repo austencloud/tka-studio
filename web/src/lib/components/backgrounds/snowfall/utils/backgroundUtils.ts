@@ -3,7 +3,7 @@ import type { Dimensions, GradientStop } from "../../types/types";
 export function drawBackgroundGradient(
   ctx: CanvasRenderingContext2D,
   dimensions: Dimensions,
-  gradientStops: GradientStop[],
+  gradientStops: GradientStop[]
 ): void {
   const gradient = ctx.createLinearGradient(0, 0, 0, dimensions.height);
 
@@ -22,13 +22,13 @@ export function drawBackgroundGradient(
 export function calculateParticleCount(
   dimensions: Dimensions,
   baseDensity: number,
-  quality: "high" | "medium" | "low",
+  quality: "high" | "medium" | "low"
 ): number {
   let adjustedDensity = baseDensity;
 
   const screenSizeFactor = Math.min(
     1,
-    (dimensions.width * dimensions.height) / (1920 * 1080),
+    (dimensions.width * dimensions.height) / (1920 * 1080)
   );
   adjustedDensity *= screenSizeFactor;
 

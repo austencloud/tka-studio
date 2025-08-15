@@ -40,7 +40,7 @@ export class PropRenderingService implements IPropRenderingService {
     _propType: string,
     _color: "blue" | "red",
     _motionData: MotionData,
-    _gridMode: GridMode = DomainGridMode.DIAMOND,
+    _gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<SVGElement> {
     // Props are now handled by ModernPictograph.svelte -> Prop.svelte components
     // This service-level rendering is disabled to prevent duplicate CIRCLE_PROP elements
@@ -57,7 +57,7 @@ export class PropRenderingService implements IPropRenderingService {
   async calculatePropPosition(
     motionData: MotionData,
     color: "blue" | "red",
-    gridMode: GridMode = DomainGridMode.DIAMOND,
+    gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<PropPosition> {
     try {
       // Use end location for prop positioning (domain uses end_loc)
@@ -66,7 +66,7 @@ export class PropRenderingService implements IPropRenderingService {
       // Use DefaultPropPositioner for consistent positioning
       const basePosition = DefaultPropPositioner.calculatePosition(
         location,
-        gridMode,
+        gridMode
       );
 
       // Calculate rotation using PropRotAngleManager for parity with legacy
@@ -133,7 +133,7 @@ export class PropRenderingService implements IPropRenderingService {
    */
   private applyColorTransformation(
     svgContent: string,
-    color: "blue" | "red",
+    color: "blue" | "red"
   ): string {
     const targetColor = this.COLOR_TRANSFORMATIONS[color];
 
@@ -144,7 +144,7 @@ export class PropRenderingService implements IPropRenderingService {
     // Replace stroke patterns for outlines
     svgContent = svgContent.replace(
       /stroke="[^"]*"/g,
-      `stroke="${targetColor}"`,
+      `stroke="${targetColor}"`
     );
     svgContent = svgContent.replace(/stroke:[^;]*/g, `stroke:${targetColor}`);
 
@@ -161,7 +161,7 @@ export class PropRenderingService implements IPropRenderingService {
    */
   private calculatePropRotation(
     motionData: MotionData,
-    location?: string,
+    location?: string
   ): number {
     // Use PropRotAngleManager for consistent rotation calculation with legacy
     const endLocation =

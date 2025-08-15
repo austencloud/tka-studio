@@ -27,7 +27,7 @@ export interface ScrollbarConfig {
  */
 export function applyGlassScrollbar(
   element: HTMLElement,
-  config: ScrollbarConfig,
+  config: ScrollbarConfig
 ): void {
   if (!element) {
     console.warn("Glass scrollbar: Element is null or undefined");
@@ -88,7 +88,7 @@ export function removeGlassScrollbar(element: HTMLElement): void {
  */
 export function applyScrollDirection(
   element: HTMLElement,
-  direction: ScrollDirection,
+  direction: ScrollDirection
 ): void {
   if (!element) return;
 
@@ -165,7 +165,7 @@ export function getRecommendedVariant(context: string): ScrollbarVariant {
  */
 export function createScrollListener(
   callback: (event: Event) => void,
-  throttleMs: number = 16,
+  throttleMs: number = 16
 ): (event: Event) => void {
   let ticking = false;
 
@@ -190,7 +190,7 @@ export function smoothScrollToElement(
     offset?: number;
     duration?: number;
     variant?: ScrollbarVariant;
-  } = {},
+  } = {}
 ): Promise<void> {
   return new Promise((resolve) => {
     const { offset = 0, duration = 500, variant = "primary" } = options;
@@ -240,7 +240,7 @@ export function autoApplyGlassScrollbars(): void {
   });
 
   console.log(
-    `🎨 Auto-applied glass scrollbars to ${elements.length} elements`,
+    `🎨 Auto-applied glass scrollbars to ${elements.length} elements`
   );
 }
 
@@ -265,7 +265,7 @@ export function initializeGlassScrollbars(): void {
 
             // Check child elements
             const childElements = node.querySelectorAll(
-              "[data-glass-scrollbar]",
+              "[data-glass-scrollbar]"
             );
             childElements.forEach((child) => {
               if (child instanceof HTMLElement) {

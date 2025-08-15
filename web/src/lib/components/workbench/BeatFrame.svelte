@@ -1,320 +1,346 @@
 <script lang="ts">
-	import type { BeatData } from '$lib/domain';
-	import { beatFrameService } from '$lib/services/BeatFrameService.svelte';
-	import { onMount } from 'svelte';
-	import BeatView from './BeatView.svelte';
+  import type { BeatData } from "$lib/domain";
+  import { beatFrameService } from "$lib/services/BeatFrameService.svelte";
+  import { onMount } from "svelte";
+  import BeatView from "./BeatView.svelte";
 
-	interface Props {
-		beats: ReadonlyArray<BeatData> | BeatData[];
-		startPosition?: BeatData | null;
-		selectedBeatIndex?: number;
-		onBeatClick?: (index: number) => void;
-		onBeatDoubleClick?: (index: number) => void;
-		onStartClick?: () => void;
-		isScrollable?: boolean;
-		fullScreenMode?: boolean;
-		onnaturalheightchange?: (data: { height: number }) => void;
-	}
+  interface Props {
+    beats: ReadonlyArray<BeatData> | BeatData[];
+    startPosition?: BeatData | null;
+    selectedBeatIndex?: number;
+    onBeatClick?: (index: number) => void;
+    onBeatDoubleClick?: (index: number) => void;
+    onStartClick?: () => void;
+    isScrollable?: boolean;
+    fullScreenMode?: boolean;
+    onnaturalheightchange?: (data: { height: number }) => void;
+  }
 
-	let {
-		beats,
-		startPosition = null,
-		selectedBeatIndex = -1,
-		onBeatClick,
-		onBeatDoubleClick,
-		onStartClick,
-		isScrollable = false,
-		fullScreenMode = false,
-		onnaturalheightchange,
-	}: Props = $props();
+  let {
+    beats,
+    startPosition = null,
+    selectedBeatIndex = -1,
+    onBeatClick,
+    onBeatDoubleClick,
+    onStartClick,
+    isScrollable = false,
+    fullScreenMode = false,
+    onnaturalheightchange,
+  }: Props = $props();
 
-	const config = $derived(beatFrameService.config);
-	const hoveredBeatIndex = $derived(beatFrameService.hoveredBeatIndex);
-	
-	// Use layout info instead of just dimensions for better responsiveness
-	const layoutInfo = $derived(beatFrameService.calculateLayoutInfo(beats.length));
-	const frameDimensions = $derived({
-		width: layoutInfo.totalWidth,
-		height: layoutInfo.totalHeight
-	});
+  const config = $derived(beatFrameService.config);
+  const hoveredBeatIndex = $derived(beatFrameService.hoveredBeatIndex);
 
-	let containerRef: HTMLElement;
+  // Use layout info instead of just dimensions for better responsiveness
+  const layoutInfo = $derived(
+    beatFrameService.calculateLayoutInfo(beats.length)
+  );
+  const frameDimensions = $derived({
+    width: layoutInfo.totalWidth,
+    height: layoutInfo.totalHeight,
+  });
 
-	// Track container dimensions and update beat frame service
-	onMount(() => {
-		if (containerRef) {
-			// Set up resize observer with debouncing
-			let timeoutId: ReturnType<typeof setTimeout>;
-			const resizeObserver = new ResizeObserver((entries) => {
-				clearTimeout(timeoutId);
-				timeoutId = setTimeout(() => {
-					for (const entry of entries) {
-						const { width, height } = entry.contentRect;
-						beatFrameService.setContainerDimensions(width, height, fullScreenMode);
-					}
-				}, 100); // Debounce by 100ms
-			});
+  let containerRef: HTMLElement;
 
-			resizeObserver.observe(containerRef);
+  // Track container dimensions and update beat frame service
+  onMount(() => {
+    if (containerRef) {
+      // Set up resize observer with debouncing
+      let timeoutId: ReturnType<typeof setTimeout>;
+      const resizeObserver = new ResizeObserver((entries) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          for (const entry of entries) {
+            const { width, height } = entry.contentRect;
+            beatFrameService.setContainerDimensions(
+              width,
+              height,
+              fullScreenMode
+            );
+          }
+        }, 100); // Debounce by 100ms
+      });
 
-			// Initial dimension setting
-			const rect = containerRef.getBoundingClientRect();
-			beatFrameService.setContainerDimensions(rect.width, rect.height, fullScreenMode);
+      resizeObserver.observe(containerRef);
 
-			return () => {
-				clearTimeout(timeoutId);
-				resizeObserver.disconnect();
-			};
-		}
-	});
+      // Initial dimension setting
+      const rect = containerRef.getBoundingClientRect();
+      beatFrameService.setContainerDimensions(
+        rect.width,
+        rect.height,
+        fullScreenMode
+      );
 
-	// Update fullscreen mode when it changes (debounced)
-	let fullscreenUpdateTimeout: ReturnType<typeof setTimeout>;
-	$effect(() => {
-		clearTimeout(fullscreenUpdateTimeout);
-		fullscreenUpdateTimeout = setTimeout(() => {
-			if (containerRef) {
-				const rect = containerRef.getBoundingClientRect();
-				beatFrameService.setContainerDimensions(rect.width, rect.height, fullScreenMode);
-			}
-		}, 50);
-	});
+      return () => {
+        clearTimeout(timeoutId);
+        resizeObserver.disconnect();
+      };
+    }
+  });
 
-	// Emit natural height whenever calculated frame dimensions change
-	$effect(() => {
-		if (frameDimensions?.height != null) {
-			onnaturalheightchange?.({ height: frameDimensions.height });
-		}
-	});
+  // Update fullscreen mode when it changes (debounced)
+  let fullscreenUpdateTimeout: ReturnType<typeof setTimeout>;
+  $effect(() => {
+    clearTimeout(fullscreenUpdateTimeout);
+    fullscreenUpdateTimeout = setTimeout(() => {
+      if (containerRef) {
+        const rect = containerRef.getBoundingClientRect();
+        beatFrameService.setContainerDimensions(
+          rect.width,
+          rect.height,
+          fullScreenMode
+        );
+      }
+    }, 50);
+  });
 
-	// Determine if scrolling is needed based on layout info
-	const shouldScroll = $derived(layoutInfo.shouldScroll);
-	
-	// Use shouldScroll for internal logic, but still respect the isScrollable prop from parent
-	const effectiveScrollable = $derived(isScrollable || shouldScroll);
+  // Emit natural height whenever calculated frame dimensions change
+  $effect(() => {
+    if (frameDimensions?.height != null) {
+      onnaturalheightchange?.({ height: frameDimensions.height });
+    }
+  });
 
-	// Update service configuration when layout info changes (outside derived) - with safeguards
-	let lastCellSize = 0;
-	let lastColumns = 0;
-	$effect(() => {
-		// Only update if values actually changed and are valid
-		if (
-			layoutInfo.cellSize > 0 &&
-			layoutInfo.cellSize !== lastCellSize &&
-			layoutInfo.columns !== lastColumns
-		) {
-			lastCellSize = layoutInfo.cellSize;
-			lastColumns = layoutInfo.columns;
+  // Determine if scrolling is needed based on layout info
+  const shouldScroll = $derived(layoutInfo.shouldScroll);
 
-			// DEBUG: Log layout info changes
-			console.log('[MODERN] Layout info updated:', {
-				cellSize: layoutInfo.cellSize,
-				columns: layoutInfo.columns,
-				beatCount: beats.length,
-				containerDimensions: beatFrameService.containerDimensions,
-				frameDimensions,
-				shouldScroll: layoutInfo.shouldScroll
-			});
+  // Use shouldScroll for internal logic, but still respect the isScrollable prop from parent
+  const effectiveScrollable = $derived(isScrollable || shouldScroll);
 
-			// Only update if significantly different to prevent micro-adjustments
-			if (Math.abs(layoutInfo.cellSize - beatFrameService.config.beatSize) > 1) {
-				beatFrameService.setConfig({
-					beatSize: layoutInfo.cellSize,
-					columns: layoutInfo.columns
-				});
-			}
-		}
-	});
+  // Update service configuration when layout info changes (outside derived) - with safeguards
+  let lastCellSize = 0;
+  let lastColumns = 0;
+  $effect(() => {
+    // Only update if values actually changed and are valid
+    if (
+      layoutInfo.cellSize > 0 &&
+      layoutInfo.cellSize !== lastCellSize &&
+      layoutInfo.columns !== lastColumns
+    ) {
+      lastCellSize = layoutInfo.cellSize;
+      lastColumns = layoutInfo.columns;
 
-	function handleBeatClick(index: number) {
-		onBeatClick?.(index);
-	}
+      // DEBUG: Log layout info changes
+      console.log("[MODERN] Layout info updated:", {
+        cellSize: layoutInfo.cellSize,
+        columns: layoutInfo.columns,
+        beatCount: beats.length,
+        containerDimensions: beatFrameService.containerDimensions,
+        frameDimensions,
+        shouldScroll: layoutInfo.shouldScroll,
+      });
 
-	function handleBeatDoubleClick(index: number) {
-		onBeatDoubleClick?.(index);
-	}
+      // Only update if significantly different to prevent micro-adjustments
+      if (
+        Math.abs(layoutInfo.cellSize - beatFrameService.config.beatSize) > 1
+      ) {
+        beatFrameService.setConfig({
+          beatSize: layoutInfo.cellSize,
+          columns: layoutInfo.columns,
+        });
+      }
+    }
+  });
 
-	function handleBeatHover(index: number) {
-		beatFrameService.setHoveredBeat(index);
-	}
+  function handleBeatClick(index: number) {
+    onBeatClick?.(index);
+  }
 
-	function handleBeatLeave() {
-		beatFrameService.clearHoveredBeat();
-	}
+  function handleBeatDoubleClick(index: number) {
+    onBeatDoubleClick?.(index);
+  }
+
+  function handleBeatHover(index: number) {
+    beatFrameService.setHoveredBeat(index);
+  }
+
+  function handleBeatLeave() {
+    beatFrameService.clearHoveredBeat();
+  }
 </script>
 
-<div class="beat-frame-container" class:scrollable-active={effectiveScrollable} bind:this={containerRef}>
-	<div class="beat-frame-scroll">
-		<div
-			class="beat-frame"
-			style:width="{frameDimensions.width}px"
-			style:height="{frameDimensions.height}px"
-		>
-			<!-- Start Position tile at [0,0] when enabled -->
-			{#if config.hasStartTile}
-				<div
-					class="start-tile"
-					class:has-pictograph={startPosition?.pictograph_data}
-					style:width="{config.beatSize}px"
-					style:height="{config.beatSize}px"
-					title="Start Position"
-					role="button"
-					tabindex="0"
-					onclick={() => onStartClick?.()}
-					onkeydown={(e) => {
-						if (e.key === 'Enter' || e.key === ' ') {
-							e.preventDefault();
-							onStartClick?.();
-						}
-					}}
-					aria-label="Start Position"
-				>
-					{#if startPosition?.pictograph_data}
-						<!-- Display actual start position pictograph -->
-						<BeatView
-							beat={startPosition}
-							index={-1}
-							isSelected={false}
-							isHovered={false}
-						/>
-					{:else}
-						<!-- Default START label when no start position is set -->
-						<div class="start-label">START</div>
-					{/if}
-				</div>
-			{/if}
+<div
+  class="beat-frame-container"
+  class:scrollable-active={effectiveScrollable}
+  bind:this={containerRef}
+>
+  <div class="beat-frame-scroll">
+    <div
+      class="beat-frame"
+      style:width="{frameDimensions.width}px"
+      style:height="{frameDimensions.height}px"
+    >
+      <!-- Start Position tile at [0,0] when enabled -->
+      {#if config.hasStartTile}
+        <div
+          class="start-tile"
+          class:has-pictograph={startPosition?.pictograph_data}
+          style:width="{config.beatSize}px"
+          style:height="{config.beatSize}px"
+          title="Start Position"
+          role="button"
+          tabindex="0"
+          onclick={() => onStartClick?.()}
+          onkeydown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onStartClick?.();
+            }
+          }}
+          aria-label="Start Position"
+        >
+          {#if startPosition?.pictograph_data}
+            <!-- Display actual start position pictograph -->
+            <BeatView
+              beat={startPosition}
+              index={-1}
+              isSelected={false}
+              isHovered={false}
+            />
+          {:else}
+            <!-- Default START label when no start position is set -->
+            <div class="start-label">START</div>
+          {/if}
+        </div>
+      {/if}
 
-			{#each beats as beat, index}
-			{@const position = beatFrameService.calculateBeatPosition(index, beats.length)}
-				<div
-					class="beat-container"
-					style:left="{position.x}px"
-					style:top="{position.y}px"
-					style:width="{config.beatSize}px"
-					style:height="{config.beatSize}px"
-				>
-					<BeatView
-						{beat}
-						{index}
-						isSelected={index === selectedBeatIndex}
-						isHovered={index === hoveredBeatIndex}
-						onClick={handleBeatClick}
-						onDoubleClick={handleBeatDoubleClick}
-						onHover={handleBeatHover}
-						onLeave={handleBeatLeave}
-					/>
-				</div>
-			{/each}
-		</div>
-	</div>
+      {#each beats as beat, index}
+        {@const position = beatFrameService.calculateBeatPosition(
+          index,
+          beats.length
+        )}
+        <div
+          class="beat-container"
+          style:left="{position.x}px"
+          style:top="{position.y}px"
+          style:width="{config.beatSize}px"
+          style:height="{config.beatSize}px"
+        >
+          <BeatView
+            {beat}
+            {index}
+            isSelected={index === selectedBeatIndex}
+            isHovered={index === hoveredBeatIndex}
+            onClick={handleBeatClick}
+            onDoubleClick={handleBeatDoubleClick}
+            onHover={handleBeatHover}
+            onLeave={handleBeatLeave}
+          />
+        </div>
+      {/each}
+    </div>
+  </div>
 </div>
 
 <style>
-	.beat-frame-container {
-		position: relative;
-		background: transparent;
-		border-radius: 12px;
-		overflow: hidden;
-		width: 100%;
-		height: 100%;
-		flex: 1 1 auto;
-		min-height: 0;
+  .beat-frame-container {
+    position: relative;
+    background: transparent;
+    border-radius: 12px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
 
-		border: 1px solid rgba(0, 0, 0, 0.1);
-	}
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
 
-	.beat-frame-scroll {
-		overflow: auto;
-		background: rgba(255, 255, 255, 0.02);
-		display: flex;
-		justify-content: center; /* center like Qt AlignCenter */
-	}
+  .beat-frame-scroll {
+    overflow: auto;
+    background: rgba(255, 255, 255, 0.02);
+    display: flex;
+    justify-content: center; /* center like Qt AlignCenter */
+  }
 
-	/* Scroll mode parity with legacy */
-	.beat-frame-container.scrollable-active {
-		height: 100%;
-		overflow: hidden; /* inner scroll element handles y-scroll */
-	}
+  /* Scroll mode parity with legacy */
+  .beat-frame-container.scrollable-active {
+    height: 100%;
+    overflow: hidden; /* inner scroll element handles y-scroll */
+  }
 
-	.beat-frame-container.scrollable-active .beat-frame-scroll {
-		overflow-y: auto;
-		overflow-x: hidden;
-		align-items: flex-start;
-		padding-right: 8px; /* space for scrollbar */
-	}
+  .beat-frame-container.scrollable-active .beat-frame-scroll {
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-items: flex-start;
+    padding-right: 8px; /* space for scrollbar */
+  }
 
-	.beat-frame-container.scrollable-active .beat-frame-scroll::-webkit-scrollbar {
-		width: 8px;
-		height: 8px;
-	}
-	.beat-frame-container.scrollable-active .beat-frame-scroll::-webkit-scrollbar-track {
-		background: transparent;
-	}
-	.beat-frame-container.scrollable-active .beat-frame-scroll::-webkit-scrollbar-thumb {
-		background-color: rgba(0, 0, 0, 0.3);
-		border-radius: 4px;
-	}
+  .beat-frame-container.scrollable-active
+    .beat-frame-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .beat-frame-container.scrollable-active
+    .beat-frame-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .beat-frame-container.scrollable-active
+    .beat-frame-scroll::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
 
-	.beat-frame {
-		position: relative;
-		margin: 0; /* legacy parity: no padding/margins on grid area */
-		padding: 0;
-	}
+  .beat-frame {
+    position: relative;
+    margin: 0; /* legacy parity: no padding/margins on grid area */
+    padding: 0;
+  }
 
-	.beat-container,
-	.start-tile {
-		/* zero gaps between cells for parity */
-		margin: 0;
-	}
+  .beat-container,
+  .start-tile {
+    /* zero gaps between cells for parity */
+    margin: 0;
+  }
 
-	.start-tile {
-		position: absolute;
-		left: 0;
-		top: 0;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border-radius: 8px;
-		font-weight: 700;
-		letter-spacing: 0.5px;
-	}
+  .start-tile {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
 
-	/* Empty start tile styling */
-	.start-tile:not(.has-pictograph) {
-		border: 2px dashed #ced4da;
-		background: #f8f9fa;
-		color: #6c757d;
-	}
+  /* Empty start tile styling */
+  .start-tile:not(.has-pictograph) {
+    border: 2px dashed #ced4da;
+    background: #f8f9fa;
+    color: #6c757d;
+  }
 
-	/* Start tile with pictograph - no border, no background */
-	.start-tile.has-pictograph {
-		border: none;
-	}
+  /* Start tile with pictograph - no border, no background */
+  .start-tile.has-pictograph {
+    border: none;
+  }
 
-	.start-label {
-		font-size: 14px;
-	}
+  .start-label {
+    font-size: 14px;
+  }
 
-	.beat-container {
-		position: absolute;
-		transition: all 0.2s ease;
-	}
+  .beat-container {
+    position: absolute;
+    transition: all 0.2s ease;
+  }
 
-	/* Subtle grid pattern for parity feel */
-	.beat-frame::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-		background-image: radial-gradient(
-			circle at 1px 1px,
-			rgba(0, 0, 0, 0.05) 1px,
-			transparent 0
-		);
-		background-size: 20px 20px;
-		pointer-events: none;
-		border-radius: inherit;
-	}
+  /* Subtle grid pattern for parity feel */
+  .beat-frame::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 0
+    );
+    background-size: 20px 20px;
+    pointer-events: none;
+    border-radius: inherit;
+  }
 </style>

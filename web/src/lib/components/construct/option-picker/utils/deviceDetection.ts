@@ -120,7 +120,7 @@ export function detectFoldableDevice(): FoldableDetectionResult {
     ua,
     windowW,
     windowH,
-    finalResult,
+    finalResult
   );
   if (specMatchFound) {
     if (DEBUG_MODE)
@@ -190,7 +190,7 @@ export function detectFoldableDevice(): FoldableDetectionResult {
     // If UA clearly indicates a standard desktop OS, it's not a foldable phone.
     if (DEBUG_MODE)
       console.log(
-        "Foldable Detect: Detected standard desktop platform via UA. Not foldable.",
+        "Foldable Detect: Detected standard desktop platform via UA. Not foldable."
       );
     return finalResult; // Return default (isFoldable: false)
   }
@@ -199,7 +199,7 @@ export function detectFoldableDevice(): FoldableDetectionResult {
   // Only attempt if not identified as desktop and APIs didn't confirm.
   if (DEBUG_MODE)
     console.log(
-      "Foldable Detect: No API/Desktop match, trying generic dimension heuristic...",
+      "Foldable Detect: No API/Desktop match, trying generic dimension heuristic..."
     );
   // Check for somewhat square aspect ratio AND high pixel density
   if (
@@ -210,7 +210,7 @@ export function detectFoldableDevice(): FoldableDetectionResult {
   ) {
     if (DEBUG_MODE)
       console.log(
-        "Foldable Detect: Generic dimension heuristic PASSED (with pixelRatio check).",
+        "Foldable Detect: Generic dimension heuristic PASSED (with pixelRatio check)."
       );
     finalResult.isFoldable = true;
     finalResult.isUnfolded = true; // Assume unfolded if dimensions match this heuristic
@@ -227,7 +227,7 @@ export function detectFoldableDevice(): FoldableDetectionResult {
   if (DEBUG_MODE && finalResult.isFoldable) {
     console.log(
       "Foldable Detect: Result from Dimension Heuristic",
-      finalResult,
+      finalResult
     );
   } else if (DEBUG_MODE && !finalResult.isFoldable) {
     console.log("Foldable Detect: Final Result - Not Foldable");
@@ -308,7 +308,7 @@ function checkAgainstDeviceSpecs(
   ua: string,
   width: number,
   height: number,
-  result: FoldableDetectionResult,
+  result: FoldableDetectionResult
 ): boolean {
   for (const [deviceKey, specs] of Object.entries(FOLDABLE_DEVICE_SPECS)) {
     // Check if UA contains any of the known model strings for this device
@@ -317,7 +317,7 @@ function checkAgainstDeviceSpecs(
     if (isMatchingModel) {
       if (DEBUG_MODE)
         console.log(
-          `Foldable Detect: Spec Match - Found model match for ${deviceKey}`,
+          `Foldable Detect: Spec Match - Found model match for ${deviceKey}`
         );
       result.isFoldable = true;
       result.foldableType = deviceKey.startsWith("zfold") ? "zfold" : "other";
@@ -343,7 +343,7 @@ function checkAgainstDeviceSpecs(
       result.isUnfolded = isUnfoldedMatch;
       if (DEBUG_MODE)
         console.log(
-          `Foldable Detect: Spec Match - Unfolded state: ${result.isUnfolded}`,
+          `Foldable Detect: Spec Match - Unfolded state: ${result.isUnfolded}`
         );
       return true; // Stop checking once a model matches
     }
@@ -372,7 +372,7 @@ export const FoldableDeviceUtils = {
       if (DEBUG_MODE) console.log("Foldable Utils: Set Override", settings);
     } else {
       console.warn(
-        "Foldable Utils: Cannot set override, localStorage not available.",
+        "Foldable Utils: Cannot set override, localStorage not available."
       );
     }
   },
@@ -387,7 +387,7 @@ export const FoldableDeviceUtils = {
       if (DEBUG_MODE) console.log("Foldable Utils: Cleared Override");
     } else {
       console.warn(
-        "Foldable Utils: Cannot clear override, localStorage not available.",
+        "Foldable Utils: Cannot clear override, localStorage not available."
       );
     }
   },

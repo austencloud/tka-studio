@@ -133,14 +133,14 @@
             ? (
                 performanceData.moveEvents.reduce(
                   (sum, e) => sum + e.duration,
-                  0,
+                  0
                 ) / performanceData.moveEvents.length
               ).toFixed(2)
             : 0;
         const worstLag =
           performanceData.lagEvents.length > 0
             ? Math.max(
-                ...performanceData.lagEvents.map((e) => e.duration),
+                ...performanceData.lagEvents.map((e) => e.duration)
               ).toFixed(2)
             : 0;
 
@@ -220,7 +220,7 @@
                 ? (
                     performanceData.moveEvents.reduce(
                       (sum, e) => sum + e.duration,
-                      0,
+                      0
                     ) / performanceData.moveEvents.length
                   ).toFixed(2) + "ms"
                 : "0ms",

@@ -34,7 +34,7 @@ export function createBeatData(data: Partial<BeatData> = {}): BeatData {
 
 export function updateBeatData(
   beat: BeatData,
-  updates: Partial<BeatData>,
+  updates: Partial<BeatData>
 ): BeatData {
   return {
     ...beat,
@@ -75,7 +75,7 @@ export function getRedMotion(beat: BeatData): MotionData | null {
 
 export function createBeatFromPictograph(
   pictograph_data: PictographData,
-  beat_number: number,
+  beat_number: number
 ): BeatData {
   return createBeatData({
     beat_number,

@@ -40,7 +40,7 @@ export interface RunesBackgroundContext {
   initializeCanvas: (canvas: HTMLCanvasElement, onReady?: () => void) => void;
   startAnimation: (
     renderFn: (ctx: CanvasRenderingContext2D, dimensions: Dimensions) => void,
-    reportFn?: (metrics: PerformanceMetrics) => void,
+    reportFn?: (metrics: PerformanceMetrics) => void
   ) => void;
   stopAnimation: () => void;
   setQuality: (quality: QualityLevel) => void;
@@ -121,7 +121,7 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
       } catch (error) {
         console.error(
           "[SYSTEM] Error creating initial background system:",
-          error,
+          error
         );
         // Try fallback
         try {
@@ -132,7 +132,7 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
         } catch (fallbackError) {
           console.error(
             "[SYSTEM] Error creating fallback background system:",
-            fallbackError,
+            fallbackError
           );
         }
       }
@@ -191,7 +191,7 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
   // Function to create and initialize the background system
   function createAndInitializeBackgroundSystem(
     type: BackgroundType,
-    quality: QualityLevel,
+    quality: QualityLevel
   ): void {
     if (backgroundSystem) {
       backgroundSystem.cleanup();
@@ -229,7 +229,7 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
         } catch (fallbackError) {
           console.error(
             "[SYSTEM] Error creating fallback background system:",
-            fallbackError,
+            fallbackError
           );
         }
       }
@@ -245,7 +245,7 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
   // Actions
   function initializeCanvas(
     canvasElement: HTMLCanvasElement,
-    onReady?: () => void,
+    onReady?: () => void
   ): void {
     canvas = canvasElement;
     ctx = canvas.getContext("2d");
@@ -281,7 +281,7 @@ export function createRunesBackgroundContext(): RunesBackgroundContext {
 
   function startAnimation(
     renderFn: (ctx: CanvasRenderingContext2D, dimensions: Dimensions) => void,
-    reportFn?: (metrics: PerformanceMetrics) => void,
+    reportFn?: (metrics: PerformanceMetrics) => void
   ): void {
     if (!ctx || !canvas) {
       return;
@@ -487,7 +487,7 @@ export function getRunesBackgroundContext(): RunesBackgroundContext {
 
   if (!context) {
     throw new Error(
-      "No runes background context found. Make sure to use BackgroundProvider. This can happen during HMR - try refreshing the page.",
+      "No runes background context found. Make sure to use BackgroundProvider. This can happen during HMR - try refreshing the page."
     );
   }
 

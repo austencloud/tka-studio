@@ -148,7 +148,7 @@ export function createOptionPickerRunes() {
       const groupKey = determineGroupKey(
         option,
         uiState.sortMethod,
-        sequenceData,
+        sequenceData
       );
       if (!groups[groupKey]) groups[groupKey] = [];
       groups[groupKey].push(option);
@@ -156,7 +156,7 @@ export function createOptionPickerRunes() {
 
     const sortedKeys = getSortedGroupKeys(
       Object.keys(groups),
-      uiState.sortMethod,
+      uiState.sortMethod
     );
     const sortedGroups: Record<string, PictographData[]> = {};
     sortedKeys.forEach((key) => {
@@ -197,11 +197,11 @@ export function createOptionPickerRunes() {
       const preloadedData = localStorage.getItem("preloaded_options");
       if (preloadedData) {
         console.log(
-          "✨ Using individually preloaded options for seamless transition",
+          "✨ Using individually preloaded options for seamless transition"
         );
         const preloadedOptions = JSON.parse(preloadedData);
         console.log(
-          `🔧 Runes setting optionsData with ${preloadedOptions?.length || 0} preloaded options`,
+          `🔧 Runes setting optionsData with ${preloadedOptions?.length || 0} preloaded options`
         );
         optionsData = preloadedOptions || [];
         uiState.isLoading = false;
@@ -247,11 +247,11 @@ export function createOptionPickerRunes() {
         // If we have preloaded options for this end position, use them
         if (targetEndPosition && allPreloadedOptions[targetEndPosition]) {
           console.log(
-            `✨ Using bulk preloaded options for end position: ${targetEndPosition}`,
+            `✨ Using bulk preloaded options for end position: ${targetEndPosition}`
           );
           const optionsForPosition = allPreloadedOptions[targetEndPosition];
           console.log(
-            `🔧 Runes setting optionsData with ${optionsForPosition?.length || 0} bulk preloaded options`,
+            `🔧 Runes setting optionsData with ${optionsForPosition?.length || 0} bulk preloaded options`
           );
           optionsData = optionsForPosition || [];
           uiState.isLoading = false;
@@ -272,7 +272,7 @@ export function createOptionPickerRunes() {
     } catch (error) {
       console.warn(
         "Failed to load preloaded options, falling back to normal loading:",
-        error,
+        error
       );
     }
 
@@ -292,7 +292,7 @@ export function createOptionPickerRunes() {
 
         if (endPosition && typeof endPosition === "string") {
           console.log(
-            `🎯 Runes loading options for end position: ${endPosition}`,
+            `🎯 Runes loading options for end position: ${endPosition}`
           );
 
           // Create OptionDataService instance
@@ -302,7 +302,7 @@ export function createOptionPickerRunes() {
           nextOptions = await optionDataService.getNextOptionsFromEndPosition(
             endPosition,
             GridMode.DIAMOND,
-            {}, // No filters
+            {} // No filters
           );
         } else {
           console.warn("No end position found in sequence");
@@ -318,7 +318,7 @@ export function createOptionPickerRunes() {
               : null;
           if (endPosition) {
             console.log(
-              `🎯 Runes loading options for start position: ${endPosition}`,
+              `🎯 Runes loading options for start position: ${endPosition}`
             );
 
             const optionDataService = new OptionDataService();
@@ -327,7 +327,7 @@ export function createOptionPickerRunes() {
             nextOptions = await optionDataService.getNextOptionsFromEndPosition(
               endPosition,
               GridMode.DIAMOND,
-              {},
+              {}
             );
           }
         }
@@ -339,11 +339,11 @@ export function createOptionPickerRunes() {
       }
 
       console.log(
-        `🔧 Runes setting optionsData with ${nextOptions?.length || 0} options`,
+        `🔧 Runes setting optionsData with ${nextOptions?.length || 0} options`
       );
       optionsData = nextOptions || [];
       console.log(
-        `🔧 Runes optionsData set, current length: ${optionsData.length}`,
+        `🔧 Runes optionsData set, current length: ${optionsData.length}`
       );
       uiState.isLoading = false;
 
@@ -385,7 +385,7 @@ export function createOptionPickerRunes() {
 
   function setLastSelectedTabForSort(
     sortMethod: SortMethod,
-    tabKey: string | null,
+    tabKey: string | null
   ) {
     // Avoid unnecessary updates if the value hasn't changed
     if (uiState.lastSelectedTab[sortMethod] === tabKey) {
@@ -509,7 +509,7 @@ export function createOptionPickerRunes() {
       optionsData = opts;
       console.log(
         "🔧 setOptions completed, new optionsData length:",
-        optionsData?.length,
+        optionsData?.length
       );
     },
     setSelectedPictograph: (opt: PictographData | null) => {

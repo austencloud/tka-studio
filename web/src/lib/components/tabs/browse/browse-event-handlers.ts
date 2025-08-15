@@ -12,7 +12,7 @@ import type { BrowseState } from "$lib/state/browse-state.svelte";
  */
 export function createBrowseEventHandlers(
   browseState: BrowseState,
-  setPanelIndex: (index: number) => void,
+  setPanelIndex: (index: number) => void
 ) {
   // Filter and navigation handlers
   function handleFilterSelected(data: { type: string; value: unknown }) {
@@ -40,7 +40,7 @@ export function createBrowseEventHandlers(
   // Sequence action handlers
   function handleSequenceAction(
     action: string,
-    sequence: SequenceData | BrowseSequenceMetadata,
+    sequence: SequenceData | BrowseSequenceMetadata
   ) {
     console.log(`🎬 Action: ${action} on sequence:`, sequence.id);
 

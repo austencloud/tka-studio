@@ -38,7 +38,7 @@ interface LayoutRule {
     extraCheck?: (
       width: number,
       height: number,
-      params: GridConfigParams,
+      params: GridConfigParams
     ) => boolean;
   };
   columns?: number | "+1";
@@ -47,7 +47,7 @@ interface LayoutRule {
 
 export function getEnhancedDeviceType(
   width: number,
-  isMobileUserAgent: boolean,
+  isMobileUserAgent: boolean
 ): {
   deviceType: DeviceType;
   isFoldable: boolean;
@@ -92,7 +92,7 @@ export const getResponsiveLayout = memoizeLRU(
     containerWidth: number = 0,
     isMobileDevice: boolean = false,
     isPortraitMode: boolean = false,
-    foldableInfoParam?: FoldableDetectionResult,
+    foldableInfoParam?: FoldableDetectionResult
   ): ResponsiveLayoutConfig => {
     // Provide sensible defaults when dimensions aren't available yet
     // This is common during initial rendering before layout is calculated
@@ -101,7 +101,7 @@ export const getResponsiveLayout = memoizeLRU(
       if (import.meta.env.DEV) {
         // Use debug level instead of warn to reduce noise
         console.debug(
-          "getResponsiveLayout: Using default layout until container dimensions are available.",
+          "getResponsiveLayout: Using default layout until container dimensions are available."
         );
       }
 
@@ -119,7 +119,7 @@ export const getResponsiveLayout = memoizeLRU(
     const foldableInfo = foldableInfoParam || detectFoldableDevice();
     const { deviceType: enhancedDeviceType } = getEnhancedDeviceType(
       containerWidth,
-      isMobileDevice,
+      isMobileDevice
     );
 
     const gridConfig = calculateGridConfiguration({
@@ -157,7 +157,7 @@ export const getResponsiveLayout = memoizeLRU(
       containerWidth,
       containerHeight,
       isPortraitMode,
-      foldableInfo,
+      foldableInfo
     );
 
     const deviceConfig = DEVICE_CONFIG[enhancedDeviceType];
@@ -184,7 +184,7 @@ export const getResponsiveLayout = memoizeLRU(
     containerWidth = 0,
     isMobileDevice,
     isPortraitMode,
-    foldableInfo,
+    foldableInfo
   ) => {
     const roundedWidth = Math.round(containerWidth / 10) * 10;
     const roundedHeight = Math.round(containerHeight / 10) * 10;
@@ -192,12 +192,12 @@ export const getResponsiveLayout = memoizeLRU(
       ? `${foldableInfo.foldableType}-${foldableInfo.isUnfolded ? "unfolded" : "folded"}`
       : "none";
     return `${count}:${roundedHeight}:${roundedWidth}:${isMobileDevice}:${isPortraitMode}:${foldableKey}`;
-  },
+  }
 );
 
 function doesRuleMatch(
   rule: LayoutRule | { when: LayoutRule["when"]; gap: string },
-  params: GridConfigParams,
+  params: GridConfigParams
 ): boolean {
   if (rule.when.count !== undefined && rule.when.count !== params.count)
     return false;
@@ -233,13 +233,13 @@ const calculateGridConfiguration = memoizeLRU(
     const layoutCategory = getLayoutCategory(params.count);
     const containerAspect = getContainerAspect(
       params.containerWidth,
-      params.containerHeight,
+      params.containerHeight
     );
 
     let columns = getBaseColumnCount(
       layoutCategory,
       containerAspect,
-      params.isPortraitMode,
+      params.isPortraitMode
     );
 
     const fullParams = {
@@ -292,7 +292,7 @@ const calculateGridConfiguration = memoizeLRU(
       ? `${foldableInfo.foldableType}-${foldableInfo.isUnfolded ? "unfolded" : "folded"}`
       : "none";
     return `${count}:${roundedHeight}:${roundedWidth}:${isMobileDevice}:${isPortraitMode}:${foldableKey}`;
-  },
+  }
 );
 
 function getGridGap(params: {
@@ -306,11 +306,11 @@ function getGridGap(params: {
   const layoutCategory = getLayoutCategory(params.count);
   const deviceType = getDeviceType(
     params.containerWidth,
-    params.isMobileDevice,
+    params.isMobileDevice
   );
   const containerAspect = getContainerAspect(
     params.containerWidth,
-    params.containerHeight,
+    params.containerHeight
   );
 
   for (const override of GRID_GAP_OVERRIDES) {
@@ -346,7 +346,7 @@ function getGridClasses(
   containerWidth: number,
   containerHeight: number,
   isPortraitMode: boolean,
-  foldableInfo?: FoldableDetectionResult,
+  foldableInfo?: FoldableDetectionResult
 ): { gridClass: string; aspectClass: string } {
   const layoutCategory = getLayoutCategory(count);
   const containerAspect = getContainerAspect(containerWidth, containerHeight);
@@ -405,7 +405,7 @@ const calculateOptionSize = memoizeLRU(
 
     const { deviceType } = getEnhancedDeviceType(
       containerWidth,
-      isMobileDevice,
+      isMobileDevice
     );
     const deviceConfig =
       DEVICE_CONFIG[deviceType as keyof typeof DEVICE_CONFIG] ||
@@ -458,13 +458,13 @@ const calculateOptionSize = memoizeLRU(
       ? `${foldableInfo.foldableType}-${foldableInfo.isUnfolded ? "unfolded" : "folded"}`
       : "none";
     return `${count}:${roundedHeight}:${roundedWidth}:${gridConfig.columns}:${isMobileDevice}:${foldableKey}`;
-  },
+  }
 );
 
 function getBaseColumnCount(
   layoutCategory: LayoutCategory,
   aspect: ContainerAspect,
-  isPortrait: boolean,
+  isPortrait: boolean
 ): number {
   if (layoutCategory === "singleItem") {
     return DEFAULT_COLUMNS.singleItem;

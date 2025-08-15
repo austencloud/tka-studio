@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   let isVisible = $state(false);
 
@@ -16,23 +16,24 @@
       links: [
         {
           title: "Level 1 PDF Book",
-          description: "Comprehensive introduction to The Kinetic Alphabet methodology",
+          description:
+            "Comprehensive introduction to The Kinetic Alphabet methodology",
           url: "https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link",
-          type: "pdf"
+          type: "pdf",
         },
         {
           title: "Vulcan Tech Gospel",
           description: "Advanced technical concepts and methodologies",
           url: "/links/vulcan-tech-gospel",
-          type: "internal"
+          type: "internal",
         },
         {
           title: "Charlie Cushing's 9 Square Theory",
           description: "Foundational movement analysis framework",
           url: "/links/charlie-cushing-9-square-theory",
-          type: "internal"
-        }
-      ]
+          type: "internal",
+        },
+      ],
     },
     {
       title: "Software Tools",
@@ -41,23 +42,25 @@
       links: [
         {
           title: "Desktop Constructor v0.1.2",
-          description: "Full-featured desktop application for sequence creation",
+          description:
+            "Full-featured desktop application for sequence creation",
           url: "https://github.com/austencloud/tka-sequence-constructor/releases/download/v0.1.2/TKA_Setup.exe",
-          type: "download"
+          type: "download",
         },
         {
           title: "Web Constructor",
-          description: "Browser-based sequence constructor with advanced features",
+          description:
+            "Browser-based sequence constructor with advanced features",
           url: "/constructor",
-          type: "internal"
+          type: "internal",
         },
         {
           title: "Sequence Animator",
           description: "View and animate existing sequences",
           url: "/animator",
-          type: "internal"
-        }
-      ]
+          type: "internal",
+        },
+      ],
     },
     {
       title: "Community & Social",
@@ -68,21 +71,21 @@
           title: "Contact Us",
           description: "Get in touch with the TKA team",
           url: "/contact",
-          type: "internal"
+          type: "internal",
         },
         {
           title: "GitHub Repository",
           description: "Source code and development updates",
           url: "https://github.com/austencloud/tka-sequence-constructor",
-          type: "external"
+          type: "external",
         },
         {
           title: "Email",
           description: "Direct communication with the development team",
           url: "mailto:tkaflowarts@gmail.com",
-          type: "email"
-        }
-      ]
+          type: "email",
+        },
+      ],
     },
     {
       title: "Flow Arts Resources",
@@ -93,37 +96,48 @@
           title: "Poi Spinning Community",
           description: "Global community for poi spinners and flow artists",
           url: "https://www.reddit.com/r/poi/",
-          type: "external"
+          type: "external",
         },
         {
           title: "Flow Arts Institute",
           description: "Educational resources and workshops",
           url: "https://flowartsinstitute.com/",
-          type: "external"
+          type: "external",
         },
         {
           title: "Spin More Poi",
           description: "Comprehensive poi spinning tutorials and community",
           url: "https://www.spinmorepoi.com/",
-          type: "external"
-        }
-      ]
-    }
+          type: "external",
+        },
+      ],
+    },
   ];
 
   function getLinkIcon(type: string): string {
     switch (type) {
-      case 'pdf': return '📄';
-      case 'download': return '⬇️';
-      case 'internal': return '🔗';
-      case 'external': return '🌐';
-      case 'email': return '📧';
-      default: return '🔗';
+      case "pdf":
+        return "📄";
+      case "download":
+        return "⬇️";
+      case "internal":
+        return "🔗";
+      case "external":
+        return "🌐";
+      case "email":
+        return "📧";
+      default:
+        return "🔗";
     }
   }
 
   function getLinkTarget(type: string): string {
-    return type === 'external' || type === 'download' || type === 'pdf' || type === 'email' ? '_blank' : '_self';
+    return type === "external" ||
+      type === "download" ||
+      type === "pdf" ||
+      type === "email"
+      ? "_blank"
+      : "_self";
   }
 
   function handleLinkClick(url: string, type: string) {
@@ -134,7 +148,10 @@
 
 <svelte:head>
   <title>Links & Resources - The Kinetic Alphabet</title>
-  <meta name="description" content="Discover resources, tools, and community links for The Kinetic Alphabet and flow arts education." />
+  <meta
+    name="description"
+    content="Discover resources, tools, and community links for The Kinetic Alphabet and flow arts education."
+  />
 </svelte:head>
 
 <main class="links-container">
@@ -142,7 +159,9 @@
   <section class="hero" class:visible={isVisible}>
     <div class="hero-content">
       <h1 class="hero-title">Links & Resources</h1>
-      <p class="hero-subtitle">Tools, documentation, and community connections</p>
+      <p class="hero-subtitle">
+        Tools, documentation, and community connections
+      </p>
     </div>
   </section>
 
@@ -164,7 +183,11 @@
               <a
                 href={link.url}
                 target={getLinkTarget(link.type)}
-                rel={link.type === 'external' || link.type === 'download' || link.type === 'pdf' ? 'noopener noreferrer' : ''}
+                rel={link.type === "external" ||
+                link.type === "download" ||
+                link.type === "pdf"
+                  ? "noopener noreferrer"
+                  : ""}
                 class="link-card"
                 onclick={() => handleLinkClick(link.url, link.type)}
               >
@@ -175,7 +198,7 @@
                 <p class="link-description">{link.description}</p>
                 <div class="link-meta">
                   <span class="link-type">{link.type}</span>
-                  {#if link.type === 'external' || link.type === 'download' || link.type === 'pdf'}
+                  {#if link.type === "external" || link.type === "download" || link.type === "pdf"}
                     <span class="external-indicator">↗</span>
                   {/if}
                 </div>
@@ -200,7 +223,12 @@
           </div>
         </a>
 
-        <a href="https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link" target="_blank" rel="noopener noreferrer" class="quick-link learn">
+        <a
+          href="https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="quick-link learn"
+        >
           <div class="quick-icon">📚</div>
           <div class="quick-content">
             <h3>Learn the Basics</h3>
@@ -246,7 +274,7 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     margin: var(--spacing-lg);
@@ -348,7 +376,7 @@
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-3px);
-    box-shadow: 
+    box-shadow:
       0 12px 24px rgba(0, 0, 0, 0.15),
       0 4px 8px rgba(102, 126, 234, 0.1);
   }

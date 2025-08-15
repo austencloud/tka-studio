@@ -173,7 +173,7 @@ export class BubblesBackgroundSystem implements BackgroundSystem {
 
   private drawUnderwaterBackground(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     // Create underwater gradient
     const gradient = ctx.createLinearGradient(0, 0, 0, dimensions.height);
@@ -190,7 +190,7 @@ export class BubblesBackgroundSystem implements BackgroundSystem {
 
   private drawWavePatterns(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     ctx.save();
     ctx.globalAlpha = 0.1;
@@ -222,7 +222,7 @@ export class BubblesBackgroundSystem implements BackgroundSystem {
 
   private drawBubbles(
     ctx: CanvasRenderingContext2D,
-    _dimensions: Dimensions,
+    _dimensions: Dimensions
   ): void {
     for (const bubble of this.bubbles) {
       ctx.save();
@@ -235,20 +235,20 @@ export class BubblesBackgroundSystem implements BackgroundSystem {
         0,
         bubble.x,
         bubble.y,
-        bubble.size,
+        bubble.size
       );
 
       bubbleGradient.addColorStop(
         0,
-        `rgba(${bubble.color.r}, ${bubble.color.g}, ${bubble.color.b}, 0.8)`,
+        `rgba(${bubble.color.r}, ${bubble.color.g}, ${bubble.color.b}, 0.8)`
       );
       bubbleGradient.addColorStop(
         0.7,
-        `rgba(${bubble.color.r}, ${bubble.color.g}, ${bubble.color.b}, 0.3)`,
+        `rgba(${bubble.color.r}, ${bubble.color.g}, ${bubble.color.b}, 0.3)`
       );
       bubbleGradient.addColorStop(
         1,
-        `rgba(${bubble.color.r}, ${bubble.color.g}, ${bubble.color.b}, 0.1)`,
+        `rgba(${bubble.color.r}, ${bubble.color.g}, ${bubble.color.b}, 0.1)`
       );
 
       // Draw bubble
@@ -265,7 +265,7 @@ export class BubblesBackgroundSystem implements BackgroundSystem {
         bubble.y - bubble.size * 0.3,
         bubble.size * 0.3,
         0,
-        2 * Math.PI,
+        2 * Math.PI
       );
       ctx.fill();
 
@@ -282,7 +282,7 @@ export class BubblesBackgroundSystem implements BackgroundSystem {
 
   private drawLightRays(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     ctx.save();
     ctx.globalAlpha = 0.15;
@@ -297,7 +297,7 @@ export class BubblesBackgroundSystem implements BackgroundSystem {
         rayX - rayWidth / 2,
         0,
         rayX + rayWidth / 2,
-        0,
+        0
       );
       rayGradient.addColorStop(0, `rgba(255, 255, 200, 0)`);
       rayGradient.addColorStop(0.5, `rgba(255, 255, 200, ${rayOpacity})`);

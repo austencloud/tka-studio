@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   let isVisible = $state(false);
 
@@ -9,35 +9,35 @@
 
   // Contact form state
   let formData = $state({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
 
   let isSubmitting = $state(false);
-  let submitStatus = $state<'idle' | 'success' | 'error'>('idle');
+  let submitStatus = $state<"idle" | "success" | "error">("idle");
 
   // Form validation
   let formErrors = $derived.by(() => {
     const errors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      errors.name = 'Name is required';
+      errors.name = "Name is required";
     }
 
     if (!formData.email.trim()) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = "Please enter a valid email address";
     }
 
     if (!formData.subject.trim()) {
-      errors.subject = 'Subject is required';
+      errors.subject = "Subject is required";
     }
 
     if (!formData.message.trim()) {
-      errors.message = 'Message is required';
+      errors.message = "Message is required";
     }
 
     return errors;
@@ -47,29 +47,29 @@
 
   async function handleSubmit(event: Event) {
     event.preventDefault();
-    
+
     if (!isFormValid || isSubmitting) return;
-    
+
     isSubmitting = true;
-    submitStatus = 'idle';
-    
+    submitStatus = "idle";
+
     try {
       // Simulate form submission - replace with actual endpoint
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       // Reset form on success
       formData = {
-        name: '',
-        email: '',
-        subject: '',
-        message: ''
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
       };
-      
-      submitStatus = 'success';
-      console.log('📧 Contact form submitted:', formData);
+
+      submitStatus = "success";
+      console.log("📧 Contact form submitted:", formData);
     } catch (error) {
-      console.error('Form submission error:', error);
-      submitStatus = 'error';
+      console.error("Form submission error:", error);
+      submitStatus = "error";
     } finally {
       isSubmitting = false;
     }
@@ -82,7 +82,10 @@
 
 <svelte:head>
   <title>Contact - The Kinetic Alphabet</title>
-  <meta name="description" content="Get in touch with The Kinetic Alphabet team. We'd love to hear from you about collaborations, questions, or feedback." />
+  <meta
+    name="description"
+    content="Get in touch with The Kinetic Alphabet team. We'd love to hear from you about collaborations, questions, or feedback."
+  />
 </svelte:head>
 
 <main class="contact-container">
@@ -90,7 +93,9 @@
   <section class="hero" class:visible={isVisible}>
     <div class="hero-content">
       <h1 class="hero-title">Get In Touch</h1>
-      <p class="hero-subtitle">We'd love to hear from the flow arts community</p>
+      <p class="hero-subtitle">
+        We'd love to hear from the flow arts community
+      </p>
     </div>
   </section>
 
@@ -101,7 +106,7 @@
         <!-- Contact Information -->
         <div class="contact-info">
           <h2>Connect With Us</h2>
-          
+
           <div class="info-card">
             <div class="info-icon">📧</div>
             <div class="info-content">
@@ -118,9 +123,7 @@
             <div class="info-content">
               <h3>Community</h3>
               <p>Join our growing community of flow artists</p>
-              <a href="/links" class="contact-link">
-                Find community links
-              </a>
+              <a href="/links" class="contact-link"> Find community links </a>
             </div>
           </div>
 
@@ -129,7 +132,10 @@
             <div class="info-content">
               <h3>Technical Support</h3>
               <p>Need help with the Constructor or other tools?</p>
-              <a href="mailto:tkaflowarts@gmail.com?subject=Technical Support" class="contact-link">
+              <a
+                href="mailto:tkaflowarts@gmail.com?subject=Technical Support"
+                class="contact-link"
+              >
                 Get technical help
               </a>
             </div>
@@ -140,7 +146,10 @@
             <div class="info-content">
               <h3>Collaborations</h3>
               <p>Interested in partnerships or contributing?</p>
-              <a href="mailto:tkaflowarts@gmail.com?subject=Collaboration" class="contact-link">
+              <a
+                href="mailto:tkaflowarts@gmail.com?subject=Collaboration"
+                class="contact-link"
+              >
                 Discuss collaboration
               </a>
             </div>
@@ -150,7 +159,7 @@
         <!-- Contact Form -->
         <div class="contact-form-section">
           <h2>Send Us a Message</h2>
-          
+
           <form class="contact-form" onsubmit={handleSubmit}>
             <!-- Name Field -->
             <div class="form-group">
@@ -161,7 +170,7 @@
                 class="form-input"
                 class:error={formErrors.name}
                 value={formData.name}
-                oninput={(e) => updateField('name', e.currentTarget.value)}
+                oninput={(e) => updateField("name", e.currentTarget.value)}
                 placeholder="Your name"
                 required
               />
@@ -179,7 +188,7 @@
                 class="form-input"
                 class:error={formErrors.email}
                 value={formData.email}
-                oninput={(e) => updateField('email', e.currentTarget.value)}
+                oninput={(e) => updateField("email", e.currentTarget.value)}
                 placeholder="your.email@example.com"
                 required
               />
@@ -197,7 +206,7 @@
                 class="form-input"
                 class:error={formErrors.subject}
                 value={formData.subject}
-                oninput={(e) => updateField('subject', e.currentTarget.value)}
+                oninput={(e) => updateField("subject", e.currentTarget.value)}
                 placeholder="What's this about?"
                 required
               />
@@ -214,7 +223,7 @@
                 class="form-textarea"
                 class:error={formErrors.message}
                 value={formData.message}
-                oninput={(e) => updateField('message', e.currentTarget.value)}
+                oninput={(e) => updateField("message", e.currentTarget.value)}
                 placeholder="Tell us what's on your mind..."
                 rows="6"
                 required
@@ -233,9 +242,29 @@
               {#if isSubmitting}
                 <span class="button-spinner">
                   <svg viewBox="0 0 24 24" width="16" height="16">
-                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
-                    <path d="M12,2 A10,10 0 0,1 22,12" stroke="currentColor" stroke-width="2" fill="none">
-                      <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 12 12" to="360 12 12" dur="1s" repeatCount="indefinite"/>
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      fill="none"
+                    />
+                    <path
+                      d="M12,2 A10,10 0 0,1 22,12"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      fill="none"
+                    >
+                      <animateTransform
+                        attributeName="transform"
+                        attributeType="XML"
+                        type="rotate"
+                        from="0 12 12"
+                        to="360 12 12"
+                        dur="1s"
+                        repeatCount="indefinite"
+                      />
                     </path>
                   </svg>
                 </span>
@@ -246,13 +275,14 @@
             </button>
 
             <!-- Status Messages -->
-            {#if submitStatus === 'success'}
+            {#if submitStatus === "success"}
               <div class="status-message success">
                 ✅ Message sent successfully! We'll get back to you soon.
               </div>
-            {:else if submitStatus === 'error'}
+            {:else if submitStatus === "error"}
               <div class="status-message error">
-                ❌ Failed to send message. Please try again or email us directly.
+                ❌ Failed to send message. Please try again or email us
+                directly.
               </div>
             {/if}
           </form>
@@ -288,7 +318,7 @@
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 2rem;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
     margin: var(--spacing-lg);

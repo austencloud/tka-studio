@@ -144,7 +144,7 @@ export class BrowseStatePersistenceService
       }
       if (parsed.selection?.lastSelectedAt) {
         parsed.selection.lastSelectedAt = new Date(
-          parsed.selection.lastSelectedAt,
+          parsed.selection.lastSelectedAt
         );
       }
       if (parsed.lastUpdated) {

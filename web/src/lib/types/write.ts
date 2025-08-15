@@ -123,12 +123,12 @@ export interface SequenceOperations {
   moveSequence: (
     actId: string,
     sequenceId: string,
-    newPosition: number,
+    newPosition: number
   ) => void;
   updateSequence: (
     actId: string,
     sequenceId: string,
-    updates: Partial<SequenceData>,
+    updates: Partial<SequenceData>
   ) => void;
 }
 

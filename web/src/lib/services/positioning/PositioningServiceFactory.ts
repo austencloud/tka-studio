@@ -103,12 +103,12 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
       new SpecialPlacementOriKeyGenerator(),
       new PlacementKeyGenerator(),
       new TurnsTupleKeyGenerator(),
-      new AttributeKeyGenerator(),
+      new AttributeKeyGenerator()
     );
 
     return new ArrowAdjustmentCalculator(
       lookupService, // Use cached placement services
-      this.directionalTupleProcessor,
+      this.directionalTupleProcessor
     );
   }
 
@@ -142,7 +142,7 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
 
       this.directionalTupleProcessor = new DirectionalTupleProcessor(
         directionalTupleCalculator,
-        quadrantIndexCalculator,
+        quadrantIndexCalculator
       );
     }
     return this.directionalTupleProcessor;
@@ -162,7 +162,7 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
       locationCalculator,
       rotationCalculator,
       adjustmentCalculator,
-      coordinateSystemService,
+      coordinateSystemService
     );
   }
 
@@ -220,7 +220,7 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
       try {
         await this.defaultPlacementService.debugAvailableKeys(
           MotionType.PRO,
-          GridMode.DIAMOND,
+          GridMode.DIAMOND
         );
         console.log("✅ Positioning services pre-warmed successfully");
       } catch (error) {

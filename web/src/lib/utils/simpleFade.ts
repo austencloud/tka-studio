@@ -27,7 +27,7 @@ export function fadeOut(
   {
     duration = 250,
     settings,
-  }: { duration?: number; settings?: { animationsEnabled?: boolean } } = {},
+  }: { duration?: number; settings?: { animationsEnabled?: boolean } } = {}
 ) {
   if (!shouldAnimate(settings)) {
     return { duration: 0 };
@@ -49,7 +49,7 @@ export function fadeIn(
     duration?: number;
     outDuration?: number;
     settings?: { animationsEnabled?: boolean };
-  } = {},
+  } = {}
 ) {
   if (!shouldAnimate(settings)) {
     return { duration: 0 };
@@ -67,7 +67,7 @@ export function shouldAnimate(settings?: {
   // Respect user's reduced motion preference
   if (typeof window !== "undefined") {
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      "(prefers-reduced-motion: reduce)"
     ).matches;
     if (prefersReducedMotion) return false;
   }
@@ -84,7 +84,7 @@ export function conditionalFade(
   params: {
     duration?: number;
     settings?: { animationsEnabled?: boolean };
-  } = {},
+  } = {}
 ) {
   const { duration = 300, settings } = params;
 

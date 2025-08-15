@@ -7,7 +7,7 @@ import type { BrowseState } from "$lib/state/browse-state.svelte";
 export function createNavigationEventHandlers(
   browseState: BrowseState,
   setPanelIndex: (index: number) => void,
-  toggleNavigationCollapsed: () => void,
+  toggleNavigationCollapsed: () => void
 ) {
   // Navigation sidebar handlers
   function handleNavigationSectionToggle(sectionId: string) {
@@ -21,28 +21,28 @@ export function createNavigationEventHandlers(
     try {
       const navigationSections = browseState.navigationSections;
       const activeSection = navigationSections.find(
-        (section) => section.id === sectionId,
+        (section) => section.id === sectionId
       );
       const activeItem = activeSection?.items.find(
-        (item) => item.id === itemId,
+        (item) => item.id === itemId
       );
 
       if (activeSection && activeItem) {
         // Use NavigationService to filter sequences
         const filteredSequences = await browseState.filterSequencesByNavigation(
           activeSection.type,
-          activeItem,
+          activeItem
         );
 
         // Switch to browser panel to show results
         if (filteredSequences.length > 0) {
           setPanelIndex(1);
           console.log(
-            `🧭 Navigation filter applied: ${activeSection.title} > ${activeItem.label} (${filteredSequences.length} sequences)`,
+            `🧭 Navigation filter applied: ${activeSection.title} > ${activeItem.label} (${filteredSequences.length} sequences)`
           );
         } else {
           console.warn(
-            `No sequences found for navigation filter: ${activeSection.title} > ${activeItem.label}`,
+            `No sequences found for navigation filter: ${activeSection.title} > ${activeItem.label}`
           );
         }
       }

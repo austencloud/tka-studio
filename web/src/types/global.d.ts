@@ -32,12 +32,12 @@ declare global {
     addEventListener<K extends keyof CustomEventMap>(
       type: K,
       listener: (this: EventTarget, ev: CustomEventMap[K]) => void,
-      options?: boolean | AddEventListenerOptions,
+      options?: boolean | AddEventListenerOptions
     ): void;
     removeEventListener<K extends keyof CustomEventMap>(
       type: K,
       listener: (this: EventTarget, ev: CustomEventMap[K]) => void,
-      options?: boolean | EventListenerOptions,
+      options?: boolean | EventListenerOptions
     ): void;
   }
 

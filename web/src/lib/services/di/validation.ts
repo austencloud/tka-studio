@@ -18,7 +18,7 @@ import type { ServiceInterface } from "./types";
  * Validate that all registered services can be resolved
  */
 export async function validateContainerConfiguration(
-  container: ServiceContainer,
+  container: ServiceContainer
 ): Promise<void> {
   const servicesToValidate = [
     // Core services needed by MainApplication
@@ -34,21 +34,21 @@ export async function validateContainerConfiguration(
     try {
       console.log(`🔍 Validating service: ${serviceInterface.token}`);
       const service = container.resolve(
-        serviceInterface as ServiceInterface<unknown>,
+        serviceInterface as ServiceInterface<unknown>
       );
       if (!service) {
         throw new Error(
-          `Service ${serviceInterface.token} resolved to null/undefined`,
+          `Service ${serviceInterface.token} resolved to null/undefined`
         );
       }
       console.log(`✅ Service validated: ${serviceInterface.token}`);
     } catch (error) {
       console.error(
         `❌ Failed to validate service: ${serviceInterface.token}`,
-        error,
+        error
       );
       throw new Error(
-        `Failed to resolve ${serviceInterface.token}: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Failed to resolve ${serviceInterface.token}: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
   }

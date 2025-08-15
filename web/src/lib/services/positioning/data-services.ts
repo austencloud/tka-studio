@@ -15,12 +15,12 @@ import type { ArrowPosition, GridData, MotionType, Point } from "./types";
 export interface IDirectionalTupleCalculator {
   calculateDirectionalTuple(
     motion: MotionData,
-    location: Location,
+    location: Location
   ): [number, number];
   generateDirectionalTuples(
     motion: MotionData,
     baseX: number,
-    baseY: number,
+    baseY: number
   ): Array<[number, number]>;
 }
 
@@ -32,7 +32,7 @@ export interface IDirectionalTupleProcessor {
   processDirectionalTuples(
     baseAdjustment: Point,
     motion: MotionData,
-    location: Location,
+    location: Location
   ): Point;
 }
 
@@ -42,7 +42,7 @@ export interface IPlacementKeyGenerator {
     motionData: MotionData,
     pictographData: PictographData,
     defaultPlacements: Record<string, unknown>,
-    gridMode?: string,
+    gridMode?: string
   ): string;
 }
 
@@ -53,7 +53,7 @@ export interface IAttributeKeyGenerator {
 export interface ISpecialPlacementOriKeyGenerator {
   generateOrientationKey(
     motionData: MotionData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): string;
 }
 
@@ -67,11 +67,11 @@ export interface IArrowPlacementDataService {
     motionType: MotionType,
     placementKey: string,
     turns: number | string,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<{ x: number; y: number }>;
   getAvailablePlacementKeys(
     motionType: MotionType,
-    gridMode: GridMode,
+    gridMode: GridMode
   ): Promise<string[]>;
   isLoaded(): boolean;
   loadPlacementData(): Promise<void>;
@@ -85,16 +85,16 @@ export interface IArrowPositioningService {
   calculateArrowPosition(
     arrowData: ArrowData,
     pictographData: PictographData,
-    gridData: GridData,
+    gridData: GridData
   ): Promise<ArrowPosition>;
   calculateAllArrowPositions(
     pictographData: PictographData,
-    gridData: GridData,
+    gridData: GridData
   ): Promise<Map<string, ArrowPosition>>;
   calculateRotationAngle(
     motion: MotionData,
     location: Location,
-    isMirrored: boolean,
+    isMirrored: boolean
   ): number;
   shouldMirrorArrow(motion: MotionData): boolean;
 }

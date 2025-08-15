@@ -1,22 +1,26 @@
 <script lang="ts">
-  import { setLandingBackground, getLandingBackground } from '$lib/state/appModeState.svelte';
-  import SettingsModal from './SettingsModal.svelte';
+  import {
+    setLandingBackground,
+    getLandingBackground,
+  } from "$lib/state/appModeState.svelte";
+  import SettingsModal from "./SettingsModal.svelte";
 
   interface Props {
-    currentBackground?: 'deepOcean' | 'snowfall' | 'nightSky';
+    currentBackground?: "deepOcean" | "snowfall" | "nightSky";
     onBackgroundChange?: (background: string) => void;
   }
 
-  let { 
-    currentBackground = 'nightSky', 
-    onBackgroundChange 
-  }: Props = $props();
+  let { currentBackground = "nightSky", onBackgroundChange }: Props = $props();
 
   let showSettingsModal = $state(false);
   let landingBackground = $derived(getLandingBackground());
 
   function handleBackgroundChange(background: string) {
-    if (background === 'deepOcean' || background === 'snowfall' || background === 'nightSky') {
+    if (
+      background === "deepOcean" ||
+      background === "snowfall" ||
+      background === "nightSky"
+    ) {
       setLandingBackground(background);
       onBackgroundChange?.(background);
     }
@@ -32,8 +36,8 @@
 
   // Streamlined navigation links - Constructor as flagship, About for info
   const navLinks = [
-    { href: '/constructor', label: 'Constructor', primary: true },
-    { href: '/about', label: 'About', primary: false }
+    { href: "/constructor", label: "Constructor", primary: true },
+    { href: "/about", label: "About", primary: false },
   ];
 </script>
 
@@ -42,23 +46,19 @@
     <h1 class="logo-text">TKA</h1>
     <span class="logo-subtitle">The Kinetic Alphabet</span>
   </div>
-  
+
   <div class="nav-links">
     {#each navLinks as link}
-      <a 
-        href={link.href} 
-        class="nav-link"
-        class:primary={link.primary}
-      >
+      <a href={link.href} class="nav-link" class:primary={link.primary}>
         {link.label}
       </a>
     {/each}
   </div>
-  
+
   <div class="nav-controls">
-    <button 
-      class="settings-toggle" 
-      onclick={toggleSettingsModal} 
+    <button
+      class="settings-toggle"
+      onclick={toggleSettingsModal}
       title="Settings"
       aria-label="Open Settings"
     >
@@ -90,22 +90,22 @@
     justify-content: space-between;
     align-items: center;
     padding: var(--spacing-lg) var(--spacing-xl);
-    
+
     /* Enhanced glassmorphism */
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    
+
     color: var(--text-color, white);
     position: relative;
     z-index: 100;
-    
+
     /* Enhanced shadows */
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    
+
     transition: all 0.3s ease;
   }
 
@@ -120,7 +120,7 @@
     font-weight: bold;
     margin: 0;
     color: #667eea;
-    font-family: 'Arial Black', Arial, sans-serif;
+    font-family: "Arial Black", Arial, sans-serif;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
@@ -145,27 +145,31 @@
     padding: var(--spacing-md) var(--spacing-lg);
     border-radius: var(--border-radius-lg);
     overflow: hidden;
-    
+
     /* Glassmorphism styling */
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 
+    box-shadow:
       0 4px 16px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    
+
     transition: all 0.3s ease;
     will-change: transform, background, box-shadow;
   }
 
   /* Primary link (Constructor) - more prominent styling */
   .nav-link.primary {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.2) 0%,
+      rgba(118, 75, 162, 0.2) 100%
+    );
     border: 1px solid rgba(102, 126, 234, 0.3);
     color: #667eea;
     font-weight: 700;
-    box-shadow: 
+    box-shadow:
       0 6px 20px rgba(102, 126, 234, 0.15),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
@@ -175,7 +179,7 @@
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px) scale(1.02);
-    box-shadow: 
+    box-shadow:
       0 8px 24px rgba(0, 0, 0, 0.15),
       0 4px 12px rgba(118, 75, 162, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
@@ -183,10 +187,14 @@
   }
 
   .nav-link.primary:hover {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3) 0%, rgba(118, 75, 162, 0.3) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.3) 0%,
+      rgba(118, 75, 162, 0.3) 100%
+    );
     border-color: rgba(102, 126, 234, 0.5);
     color: #667eea;
-    box-shadow: 
+    box-shadow:
       0 10px 30px rgba(102, 126, 234, 0.3),
       0 4px 12px rgba(102, 126, 234, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.4);
@@ -219,10 +227,10 @@
     cursor: pointer;
     font-size: var(--font-size-lg);
     transition: all 0.3s ease;
-    box-shadow: 
+    box-shadow:
       0 4px 16px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    
+
     display: flex;
     align-items: center;
     justify-content: center;
@@ -233,7 +241,7 @@
   .settings-toggle:hover {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-1px);
-    box-shadow: 
+    box-shadow:
       0 6px 20px rgba(0, 0, 0, 0.15),
       0 2px 8px rgba(118, 75, 162, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);

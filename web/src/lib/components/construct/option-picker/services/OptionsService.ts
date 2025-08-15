@@ -13,7 +13,7 @@ import type { ReversalFilter, SortMethod } from "../config";
  */
 export function determineReversalCategory(
   sequence: PictographData[],
-  option: PictographData,
+  option: PictographData
 ): ReversalFilter {
   // Simplified reversal detection
   if (!sequence || sequence.length === 0) {
@@ -50,7 +50,7 @@ export function determineReversalCategory(
 export function determineGroupKey(
   option: PictographData,
   sortMethod: SortMethod,
-  sequence: PictographData[],
+  sequence: PictographData[]
 ): string {
   switch (sortMethod) {
     case "type":
@@ -135,7 +135,7 @@ function getLetterType(letter: string | null): string {
  */
 export function getSortedGroupKeys(
   keys: string[],
-  sortMethod: SortMethod,
+  sortMethod: SortMethod
 ): string[] {
   switch (sortMethod) {
     case "type":
@@ -185,7 +185,7 @@ export function getSortedGroupKeys(
  */
 export function getSorter(
   sortMethod: SortMethod,
-  sequence: PictographData[],
+  sequence: PictographData[]
 ): (a: PictographData, b: PictographData) => number {
   switch (sortMethod) {
     case "type":
@@ -244,7 +244,7 @@ export function getSorter(
 export function filterByReversals(
   options: PictographData[],
   sequence: PictographData[],
-  filter: ReversalFilter,
+  filter: ReversalFilter
 ): PictographData[] {
   if (filter === "all") {
     return options;
@@ -261,7 +261,7 @@ export function filterByReversals(
  */
 export function getGroupDisplayName(
   groupKey: string,
-  sortMethod: SortMethod,
+  sortMethod: SortMethod
 ): string {
   switch (sortMethod) {
     case "type":

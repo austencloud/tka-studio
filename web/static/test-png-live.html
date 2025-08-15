@@ -98,7 +98,7 @@
             data[offset],
             data[offset + 1],
             data[offset + 2],
-            data[offset + 3],
+            data[offset + 3]
           );
           offset += 4;
 
@@ -136,11 +136,11 @@
 
           // Fetch the PNG file
           const response = await fetch(
-            `/dictionary/${sequenceName}/${sequenceName}_ver1.png`,
+            `/dictionary/${sequenceName}/${sequenceName}_ver1.png`
           );
           if (!response.ok) {
             throw new Error(
-              `Failed to fetch PNG: ${response.status} ${response.statusText}`,
+              `Failed to fetch PNG: ${response.status} ${response.statusText}`
             );
           }
 
@@ -159,7 +159,7 @@
           // Extract key information
           const firstStep = sequence[0];
           const realBeats = sequence.filter(
-            (step) => step.beat && step.beat > 0,
+            (step) => step.beat && step.beat > 0
           );
 
           log(`✅ ${sequenceName} Real Metadata:`, "success");
@@ -178,7 +178,7 @@
             const redMotion = step.red_attributes?.motion_type || "unknown";
             log(
               `     Beat ${step.beat} (${step.letter}): blue=${blueMotion}, red=${redMotion}`,
-              "success",
+              "success"
             );
           });
 
@@ -186,7 +186,7 @@
         } catch (error) {
           log(
             `❌ Failed to extract ${sequenceName}: ${error.message}`,
-            "error",
+            "error"
           );
         }
       }
@@ -205,7 +205,7 @@
 
         log(
           "🎯 Test Complete! This proves I can extract real PNG metadata.",
-          "success",
+          "success"
         );
       }
 
@@ -214,7 +214,7 @@
         setTimeout(() => {
           log(
             "🔧 Page loaded. Click buttons above to test PNG extraction.",
-            "info",
+            "info"
           );
         }, 500);
       });

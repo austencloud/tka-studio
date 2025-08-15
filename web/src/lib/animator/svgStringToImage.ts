@@ -9,7 +9,7 @@
 export function svgStringToImage(
   svgString: string,
   width: number,
-  height: number,
+  height: number
 ): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();

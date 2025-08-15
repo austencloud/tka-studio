@@ -50,16 +50,16 @@ export const ISequenceServiceInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as ISequenceDomainService,
-          args[1] as IPersistenceService,
+          args[1] as IPersistenceService
         );
       }
-    },
+    }
   );
 
 export const ISequenceDomainServiceInterface =
   createServiceInterface<ISequenceDomainService>(
     "ISequenceDomainService",
-    SequenceDomainService,
+    SequenceDomainService
   );
 
 export const IPictographServiceInterface =
@@ -69,7 +69,7 @@ export const IPictographServiceInterface =
       constructor(...args: unknown[]) {
         super(args[0] as IPictographRenderingService);
       }
-    },
+    }
   );
 
 export const IPictographRenderingServiceInterface =
@@ -79,23 +79,23 @@ export const IPictographRenderingServiceInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as IArrowPositioningService,
-          args[1] as IPropRenderingService,
+          args[1] as IPropRenderingService
         );
       }
-    },
+    }
   );
 
 export const IPropRenderingServiceInterface =
   createServiceInterface<IPropRenderingService>(
     "IPropRenderingService",
-    PropRenderingService,
+    PropRenderingService
   );
 
 // Infrastructure services
 export const IPersistenceServiceInterface =
   createServiceInterface<IPersistenceService>(
     "IPersistenceService",
-    LocalStoragePersistenceService,
+    LocalStoragePersistenceService
   );
 
 export const ISettingsServiceInterface =
@@ -104,13 +104,13 @@ export const ISettingsServiceInterface =
 export const IDeviceDetectionServiceInterface =
   createServiceInterface<IDeviceDetectionService>(
     "IDeviceDetectionService",
-    DeviceDetectionService,
+    DeviceDetectionService
   );
 
 export const IPanelManagementServiceInterface =
   createServiceInterface<IPanelManagementService>(
     "IPanelManagementService",
-    PanelManagementService,
+    PanelManagementService
   );
 
 // Application services
@@ -121,7 +121,7 @@ export const IApplicationInitializationServiceInterface =
       constructor(...args: unknown[]) {
         super(args[0] as ISettingsService, args[1] as IPersistenceService);
       }
-    },
+    }
   );
 
 export const IExportServiceInterface = createServiceInterface<IExportService>(
@@ -130,14 +130,14 @@ export const IExportServiceInterface = createServiceInterface<IExportService>(
     constructor(...args: unknown[]) {
       super(args[0] as IPictographService);
     }
-  },
+  }
 );
 
 // Generation services
 export const IMotionGenerationServiceInterface =
   createServiceInterface<IMotionGenerationService>(
     "IMotionGenerationService",
-    MotionGenerationService,
+    MotionGenerationService
   );
 
 export const ISequenceGenerationServiceInterface =
@@ -147,7 +147,7 @@ export const ISequenceGenerationServiceInterface =
       constructor(...args: unknown[]) {
         super(args[0] as IMotionGenerationService);
       }
-    },
+    }
   );
 
 // Construct tab services
@@ -158,17 +158,17 @@ export const IConstructTabCoordinationServiceInterface =
       constructor(...args: unknown[]) {
         super(args[0] as ISequenceService, args[1] as IStartPositionService);
       }
-    },
+    }
   );
 
 export const IOptionDataServiceInterface =
   createServiceInterface<IOptionDataService>(
     "IOptionDataService",
-    OptionDataService,
+    OptionDataService
   );
 
 export const IStartPositionServiceInterface =
   createServiceInterface<IStartPositionService>(
     "IStartPositionService",
-    StartPositionService,
+    StartPositionService
   );

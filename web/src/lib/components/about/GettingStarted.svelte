@@ -6,25 +6,37 @@
       <div class="step">
         <div class="step-number">1</div>
         <h3>Download the PDF</h3>
-        <p>The comprehensive Level 1 guide introduces core concepts and foundational principles.</p>
+        <p>
+          The comprehensive Level 1 guide introduces core concepts and
+          foundational principles.
+        </p>
       </div>
 
       <div class="step">
         <div class="step-number">2</div>
         <h3>Practice the Basics</h3>
-        <p>Fundamental movements and notation system can be learned through guided exercises.</p>
+        <p>
+          Fundamental movements and notation system can be learned through
+          guided exercises.
+        </p>
       </div>
 
       <div class="step">
         <div class="step-number">3</div>
         <h3>Use the Constructor</h3>
-        <p>The web-based constructor allows creation and visualization of custom sequences.</p>
+        <p>
+          The web-based constructor allows creation and visualization of custom
+          sequences.
+        </p>
       </div>
 
       <div class="step">
         <div class="step-number">4</div>
         <h3>Join the Community</h3>
-        <p>Connect with flow artists and share creations through our growing community platform.</p>
+        <p>
+          Connect with flow artists and share creations through our growing
+          community platform.
+        </p>
       </div>
     </div>
   </div>

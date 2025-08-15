@@ -53,7 +53,7 @@ export interface ScrollContainerState {
  * Creates reactive state for the option picker scroll container using Svelte 5 runes
  */
 export function createOptionPickerScrollState(
-  initialProps: ScrollContainerProps,
+  initialProps: ScrollContainerProps
 ) {
   // ===== Core State Using Runes =====
   let pictographs = $state<PictographData[]>(initialProps.pictographs);
@@ -78,7 +78,7 @@ export function createOptionPickerScrollState(
     () => containerWidth,
     () => containerHeight,
     () => deviceInfo,
-    () => layoutConfig,
+    () => layoutConfig
   );
 
   // Layout metrics
@@ -90,7 +90,7 @@ export function createOptionPickerScrollState(
   // UI state derived values
   const isEmpty = $derived(() => pictographs.length === 0);
   const hasIndividualSections = $derived(
-    () => organizedPictographs.hasIndividual,
+    () => organizedPictographs.hasIndividual
   );
   const hasGroupedSections = $derived(() => organizedPictographs.hasGrouped);
 
@@ -104,10 +104,10 @@ export function createOptionPickerScrollState(
         isFoldable: foldableInfo.isFoldable,
         organizedSections: {
           individual: Object.keys(organizedPictographs.individual).filter(
-            (key) => (organizedPictographs.individual?.[key]?.length ?? 0) > 0,
+            (key) => (organizedPictographs.individual?.[key]?.length ?? 0) > 0
           ),
           grouped: Object.keys(organizedPictographs.grouped).filter(
-            (key) => (organizedPictographs.grouped?.[key]?.length ?? 0) > 0,
+            (key) => (organizedPictographs.grouped?.[key]?.length ?? 0) > 0
           ),
         },
         layoutMetrics: {
@@ -338,7 +338,7 @@ export function createDefaultScrollState(): OptionPickerScrollState {
  * Validates scroll state props
  */
 export function validateScrollStateProps(
-  props: Partial<ScrollContainerProps>,
+  props: Partial<ScrollContainerProps>
 ): {
   isValid: boolean;
   errors: string[];

@@ -17,7 +17,8 @@ node_modules/
 Thumbs.db
 
 # IDE files
-.vscode/
+.vscode/launch.json
+.vscode/tasks.json
 .idea/
 
 # Package manager lock files (optional - some teams prefer to format these)

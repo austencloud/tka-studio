@@ -36,7 +36,7 @@ export class ThumbnailService implements IThumbnailService {
 
   async preloadThumbnail(
     sequenceId: string,
-    thumbnailPath: string,
+    thumbnailPath: string
   ): Promise<void> {
     const cacheKey = `${sequenceId}-${thumbnailPath}`;
 
@@ -59,7 +59,7 @@ export class ThumbnailService implements IThumbnailService {
   }
 
   async getThumbnailMetadata(
-    sequenceId: string,
+    sequenceId: string
   ): Promise<{ width: number; height: number } | null> {
     const cacheKey = sequenceId;
 
@@ -80,7 +80,7 @@ export class ThumbnailService implements IThumbnailService {
     } catch (error) {
       console.warn(
         `Failed to get thumbnail metadata for ${sequenceId}:`,
-        error,
+        error
       );
       return null;
     }
@@ -94,7 +94,7 @@ export class ThumbnailService implements IThumbnailService {
   // Additional helper methods for thumbnail management
   async validateThumbnailExists(
     sequenceId: string,
-    thumbnailPath: string,
+    thumbnailPath: string
   ): Promise<boolean> {
     try {
       const url = this.getThumbnailUrl(sequenceId, thumbnailPath);
@@ -128,7 +128,7 @@ export class ThumbnailService implements IThumbnailService {
   getOptimizedThumbnailUrl(
     sequenceId: string,
     thumbnailPath: string,
-    targetWidth?: number,
+    targetWidth?: number
   ): string {
     // For now, return the original URL
     // In the future, could implement server-side resizing or WebP conversion
@@ -145,7 +145,7 @@ export class ThumbnailService implements IThumbnailService {
   // Private helper methods
   private async loadThumbnailImage(
     sequenceId: string,
-    thumbnailPath: string,
+    thumbnailPath: string
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -169,7 +169,7 @@ export class ThumbnailService implements IThumbnailService {
   }
 
   private async loadImageMetadata(
-    thumbnailPath: string,
+    thumbnailPath: string
   ): Promise<{ width: number; height: number }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -190,7 +190,7 @@ export class ThumbnailService implements IThumbnailService {
   }
 
   private async getThumbnailPathForSequence(
-    sequenceId: string,
+    sequenceId: string
   ): Promise<string | null> {
     // Try common thumbnail naming patterns
     const patterns = [
@@ -210,17 +210,17 @@ export class ThumbnailService implements IThumbnailService {
 
   // Batch operations for performance
   async preloadThumbnails(
-    thumbnails: Array<{ sequenceId: string; thumbnailPath: string }>,
+    thumbnails: Array<{ sequenceId: string; thumbnailPath: string }>
   ): Promise<void> {
     const preloadPromises = thumbnails.map((thumb) =>
       this.preloadThumbnail(thumb.sequenceId, thumb.thumbnailPath).catch(
         (error) => {
           console.warn(
             `Failed to preload thumbnail ${thumb.sequenceId}/${thumb.thumbnailPath}:`,
-            error,
+            error
           );
-        },
-      ),
+        }
+      )
     );
 
     await Promise.all(preloadPromises);

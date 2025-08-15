@@ -4,13 +4,13 @@ Resource Filters Component
 Handles search and category filtering for the resources list.
 -->
 <script lang="ts">
-  import { categories, levels, resources } from './resourcesData';
+  import { categories, levels, resources } from "./resourcesData";
 
   // Bindable props
   let {
-    searchTerm = $bindable(''),
-    selectedCategory = $bindable('all'), 
-    selectedLevel = $bindable('all')
+    searchTerm = $bindable(""),
+    selectedCategory = $bindable("all"),
+    selectedLevel = $bindable("all"),
   } = $props<{
     searchTerm?: string;
     selectedCategory?: string;
@@ -18,10 +18,11 @@ Handles search and category filtering for the resources list.
   }>();
 
   function getResourceCountForCategory(categoryValue: string): number {
-    if (categoryValue === 'all') {
+    if (categoryValue === "all") {
       return resources.length;
     }
-    return resources.filter(resource => resource.category === categoryValue).length;
+    return resources.filter((resource) => resource.category === categoryValue)
+      .length;
   }
 </script>
 
@@ -56,11 +57,13 @@ Handles search and category filtering for the resources list.
         type="button"
         class="category-tab"
         class:active={selectedCategory === category.value}
-        onclick={() => selectedCategory = category.value}
+        onclick={() => (selectedCategory = category.value)}
         aria-pressed={selectedCategory === category.value}
       >
         <span class="tab-label">{category.label}</span>
-        <span class="tab-count">({getResourceCountForCategory(category.value)})</span>
+        <span class="tab-count"
+          >({getResourceCountForCategory(category.value)})</span
+        >
       </button>
     {/each}
   </nav>
@@ -84,7 +87,8 @@ Handles search and category filtering for the resources list.
 
   .search-input {
     width: 100%;
-    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-lg) var(--spacing-md)
+      var(--spacing-xl);
     border: 2px solid var(--color-border);
     border-radius: var(--radius-lg);
     font-size: var(--font-size-md);

@@ -33,7 +33,7 @@ export class LegacyArrowPositioningOrchestrator
     locationCalculator: IArrowLocationCalculator,
     rotationCalculator: IArrowRotationCalculator,
     _adjustmentCalculator: IArrowAdjustmentCalculator,
-    coordinateSystem: IArrowCoordinateSystemService,
+    coordinateSystem: IArrowCoordinateSystemService
   ) {
     this.locationCalculator = locationCalculator;
     this.rotationCalculator = rotationCalculator;
@@ -43,7 +43,7 @@ export class LegacyArrowPositioningOrchestrator
   calculateArrowPosition(
     arrowData: ArrowData,
     pictographData: PictographData,
-    motionData?: MotionData,
+    motionData?: MotionData
   ): [number, number, number] {
     /**Calculate arrow position using streamlined microservices pipeline.*/
     const motion =
@@ -51,7 +51,7 @@ export class LegacyArrowPositioningOrchestrator
 
     if (!motion) {
       console.warn(
-        `No motion data for ${arrowData.color}, returning center position`,
+        `No motion data for ${arrowData.color}, returning center position`
       );
       const center = this.coordinateSystem.getSceneCenter();
       return [center.x, center.y, 0.0];
@@ -59,24 +59,24 @@ export class LegacyArrowPositioningOrchestrator
 
     const location = this.locationCalculator.calculateLocation(
       motion,
-      pictographData,
+      pictographData
     );
     let initialPosition = this.coordinateSystem.getInitialPosition(
       motion,
-      location,
+      location
     );
     initialPosition = this.ensureValidPosition(initialPosition);
 
     const rotation = this.rotationCalculator.calculateRotation(
       motion,
-      location,
+      location
     );
 
     // PROBLEM: This is hardcoded to (0,0) - ignores the ArrowAdjustmentCalculator!
     const adjustmentX = 0;
     const adjustmentY = 0;
     console.log(
-      `🔧 Extracted adjustment values: [${adjustmentX}, ${adjustmentY}]`,
+      `🔧 Extracted adjustment values: [${adjustmentX}, ${adjustmentY}]`
     );
 
     const finalX = initialPosition.x + adjustmentX;
@@ -90,7 +90,7 @@ export class LegacyArrowPositioningOrchestrator
     let updatedPictograph = pictographData;
 
     for (const [color, arrowData] of Object.entries(
-      pictographData.arrows || {},
+      pictographData.arrows || {}
     )) {
       const motionData = pictographData.motions?.[color];
 
@@ -99,7 +99,7 @@ export class LegacyArrowPositioningOrchestrator
         const [x, y, rotation] = this.calculateArrowPosition(
           arrowData,
           pictographData,
-          motionData,
+          motionData
         );
 
         // Calculate mirror state
@@ -114,7 +114,7 @@ export class LegacyArrowPositioningOrchestrator
             position_y: y,
             rotation_angle: rotation,
             is_mirrored: shouldMirror,
-          },
+          }
         );
       }
     }
@@ -124,7 +124,7 @@ export class LegacyArrowPositioningOrchestrator
 
   shouldMirrorArrow(
     arrowData: ArrowData,
-    pictographData?: PictographData,
+    pictographData?: PictographData
   ): boolean {
     /**Determine if arrow should be mirrored.*/
     let motion: MotionData | undefined;
@@ -149,7 +149,7 @@ export class LegacyArrowPositioningOrchestrator
 
   applyMirrorTransform(
     arrowItem: HTMLElement | SVGElement,
-    shouldMirror: boolean,
+    shouldMirror: boolean
   ): void {
     /**Apply mirror transformation.*/
     try {
@@ -168,7 +168,7 @@ export class LegacyArrowPositioningOrchestrator
 
   private getMotionFromPictograph(
     arrowData: ArrowData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): MotionData | undefined {
     /**Extract motion data from pictograph data.*/
     if (!pictographData?.motions) {
@@ -193,7 +193,7 @@ export class LegacyArrowPositioningOrchestrator
   private updateArrowInPictograph(
     pictographData: PictographData,
     color: string,
-    updates: Partial<ArrowData>,
+    updates: Partial<ArrowData>
   ): PictographData {
     /**Update arrow properties in pictograph data.*/
     // Create a deep copy and update the specific arrow
@@ -210,7 +210,7 @@ export class LegacyArrowPositioningOrchestrator
       console.log(`✅ Updated ${color} arrow with:`, updates);
     } else {
       console.warn(
-        `❌ Could not update ${color} arrow: not found in pictograph data`,
+        `❌ Could not update ${color} arrow: not found in pictograph data`
       );
     }
 

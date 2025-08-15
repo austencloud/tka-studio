@@ -20,7 +20,7 @@ export class AttributeKeyGenerator implements IAttributeKeyGenerator {
 
   getKeyFromArrow(
     arrowData: ArrowData,
-    pictographData: PictographData,
+    pictographData: PictographData
   ): string {
     /**
      * Get attribute key from modern arrow data.
@@ -39,7 +39,7 @@ export class AttributeKeyGenerator implements IAttributeKeyGenerator {
       if (!motionData) {
         // Fallback to color if no motion data
         console.debug(
-          `No motion data for ${arrowData.color}, using color as key`,
+          `No motion data for ${arrowData.color}, using color as key`
         );
         return arrowData.color;
       }
@@ -67,12 +67,12 @@ export class AttributeKeyGenerator implements IAttributeKeyGenerator {
         leadState,
         hasHybridMotions,
         startsFromMixedOrientation,
-        startsFromStandardOrientation,
+        startsFromStandardOrientation
       );
     } catch (error) {
       console.error(
         `Error generating attribute key for ${arrowData.color}:`,
-        error,
+        error
       );
       // Fallback to color
       return arrowData.color;
@@ -87,7 +87,7 @@ export class AttributeKeyGenerator implements IAttributeKeyGenerator {
     leadState?: string,
     hasHybridMotions?: boolean,
     startsFromMixedOrientation?: boolean,
-    _startsFromStandardOrientation?: boolean,
+    _startsFromStandardOrientation?: boolean
   ): string {
     /**
      * Core key generation logic matching legacy implementation.

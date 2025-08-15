@@ -8,7 +8,7 @@
 export function memoizeLRU<T extends (...args: never[]) => unknown>(
   fn: T,
   maxSize: number = 100,
-  keyFn?: (...args: Parameters<T>) => string,
+  keyFn?: (...args: Parameters<T>) => string
 ): T {
   const cache = new Map<string, ReturnType<T>>();
   const keyOrder: string[] = []; // Track key access order for LRU

@@ -126,7 +126,7 @@ export const GAP_ADJUSTMENTS = {
  */
 export function getContainerAspect(
   width: number,
-  height: number,
+  height: number
 ): ContainerAspect {
   if (!width || !height) return "square";
   const ratio = width / height;
@@ -140,7 +140,7 @@ export function getContainerAspect(
  */
 export function getDeviceType(
   width: number,
-  _isMobileUserAgent: boolean,
+  _isMobileUserAgent: boolean
 ): DeviceType {
   // Prioritize User Agent for initial mobile/non-mobile split if needed,
   // but width is generally more reliable for layout.
@@ -160,7 +160,7 @@ export function getDeviceType(
 
 // You might also want a simpler helper if you ONLY care about Mobile vs Tablet vs Desktop categories:
 export function getSimplifiedDeviceCategory(
-  width: number,
+  width: number
 ): "mobile" | "tablet" | "desktop" {
   if (width < BREAKPOINTS.tablet) return "mobile"; // Combines smallMobile and mobile
   if (width < BREAKPOINTS.laptop) return "tablet";

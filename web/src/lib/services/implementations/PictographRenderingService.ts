@@ -35,7 +35,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 
   constructor(
     private arrowPositioning: IArrowPositioningService,
-    _propRendering: IPropRenderingService,
+    _propRendering: IPropRenderingService
   ) {
     // PictographRenderingService initialized
   }
@@ -58,7 +58,7 @@ export class PictographRenderingService implements IPictographRenderingService {
       const arrowPositions =
         await this.arrowPositioning.calculateAllArrowPositions(
           data,
-          gridDataWithMode,
+          gridDataWithMode
         );
 
       // 3. Render arrows with sophisticated calculated positions
@@ -68,7 +68,7 @@ export class PictographRenderingService implements IPictographRenderingService {
           svg,
           color as "blue" | "red",
           position,
-          motionData,
+          motionData
         );
       }
 
@@ -94,7 +94,7 @@ export class PictographRenderingService implements IPictographRenderingService {
   /** Render glyph overlays (letters now; VTG/elemental when data is available) */
   private async renderOverlays(
     svg: SVGElement,
-    data: PictographData,
+    data: PictographData
   ): Promise<void> {
     try {
       if (data.letter) {
@@ -107,7 +107,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 
   private async renderLetterGlyph(
     svg: SVGElement,
-    letter: string,
+    letter: string
   ): Promise<void> {
     // Use comprehensive letter mapping with correct type-based paths
     const path = getLetterImagePath(letter);
@@ -169,7 +169,7 @@ export class PictographRenderingService implements IPictographRenderingService {
     // Add background
     const background = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "rect",
+      "rect"
     );
     background.setAttribute("width", "100%");
     background.setAttribute("height", "100%");
@@ -185,7 +185,7 @@ export class PictographRenderingService implements IPictographRenderingService {
   private adaptGridData(rawGridData: RawGridData, mode: GridMode): GridData {
     // Filter out null coordinates and adapt to interface
     const adaptPoints = (
-      points: Record<string, { coordinates: { x: number; y: number } | null }>,
+      points: Record<string, { coordinates: { x: number; y: number } | null }>
     ) => {
       const adapted: Record<string, { coordinates: { x: number; y: number } }> =
         {};
@@ -200,7 +200,7 @@ export class PictographRenderingService implements IPictographRenderingService {
     return {
       mode,
       allLayer2PointsNormal: adaptPoints(
-        rawGridData.allLayer2PointsNormal || {},
+        rawGridData.allLayer2PointsNormal || {}
       ),
       allHandPointsNormal: adaptPoints(rawGridData.allHandPointsNormal || {}),
     };
@@ -213,7 +213,7 @@ export class PictographRenderingService implements IPictographRenderingService {
     svg: SVGElement,
     color: "blue" | "red",
     position: ArrowPosition,
-    motionData: MotionData | undefined,
+    motionData: MotionData | undefined
   ): Promise<void> {
     try {
       // Get the correct arrow SVG path
@@ -230,11 +230,11 @@ export class PictographRenderingService implements IPictographRenderingService {
       // Create arrow group with metadata
       const arrowGroup = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "g",
+        "g"
       );
       arrowGroup.setAttribute(
         "class",
-        `arrow-${color} sophisticated-positioning`,
+        `arrow-${color} sophisticated-positioning`
       );
       arrowGroup.setAttribute("data-color", color);
       arrowGroup.setAttribute("data-position", `${position.x},${position.y}`);
@@ -292,7 +292,7 @@ export class PictographRenderingService implements IPictographRenderingService {
    */
   private applyArrowColorTransformation(
     svgElement: SVGElement,
-    color: "blue" | "red",
+    color: "blue" | "red"
   ): void {
     // Find all path elements and apply color
     const paths = svgElement.querySelectorAll("path");
@@ -312,17 +312,17 @@ export class PictographRenderingService implements IPictographRenderingService {
   private renderFallbackArrow(
     svg: SVGElement,
     color: "blue" | "red",
-    position: ArrowPosition,
+    position: ArrowPosition
   ): void {
     // Create arrow group
     const arrowGroup = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "g",
+      "g"
     );
     arrowGroup.setAttribute("class", `arrow-${color} fallback`);
     arrowGroup.setAttribute(
       "transform",
-      `translate(${position.x}, ${position.y}) rotate(${position.rotation})`,
+      `translate(${position.x}, ${position.y}) rotate(${position.rotation})`
     );
 
     // Create simple arrow path
@@ -373,14 +373,14 @@ export class PictographRenderingService implements IPictographRenderingService {
   private renderDebugInfo(
     svg: SVGElement,
     data: PictographData,
-    positions: Map<string, ArrowPosition>,
+    positions: Map<string, ArrowPosition>
   ): void {
     let yOffset = 15;
 
     for (const [color, position] of positions.entries()) {
       const debugText = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "text",
+        "text"
       );
       debugText.setAttribute("x", "10");
       debugText.setAttribute("y", yOffset.toString());
@@ -396,7 +396,7 @@ export class PictographRenderingService implements IPictographRenderingService {
     if (data.letter) {
       const letterText = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "text",
+        "text"
       );
       letterText.setAttribute("x", "10");
       letterText.setAttribute("y", yOffset.toString());
@@ -416,7 +416,7 @@ export class PictographRenderingService implements IPictographRenderingService {
    */
   private async renderProps(
     _svg: SVGElement,
-    _data: PictographData,
+    _data: PictographData
   ): Promise<void> {
     // Props are now handled by ModernPictograph.svelte -> Prop.svelte components
     // This service-level rendering is disabled to prevent duplicate CIRCLE_PROP elements
@@ -428,7 +428,7 @@ export class PictographRenderingService implements IPictographRenderingService {
    */
   private async renderGrid(
     svg: SVGElement,
-    gridMode: GridMode = GridMode.DIAMOND,
+    gridMode: GridMode = GridMode.DIAMOND
   ): Promise<void> {
     try {
       // Load the appropriate grid SVG
@@ -437,7 +437,7 @@ export class PictographRenderingService implements IPictographRenderingService {
       // Create image element for the grid
       const gridImage = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "image",
+        "image"
       );
       gridImage.setAttribute("href", gridPath);
       gridImage.setAttribute("x", "0");
@@ -460,7 +460,7 @@ export class PictographRenderingService implements IPictographRenderingService {
   private renderFallbackGrid(svg: SVGElement, gridMode: GridMode): void {
     const gridGroup = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "g",
+      "g"
     );
     gridGroup.setAttribute("class", `fallback-grid-${gridMode}`);
 
@@ -468,7 +468,7 @@ export class PictographRenderingService implements IPictographRenderingService {
       // Create diamond outline
       const diamond = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "polygon",
+        "polygon"
       );
       const size = 143; // Approximate size based on real coordinates
       const points = [
@@ -487,7 +487,7 @@ export class PictographRenderingService implements IPictographRenderingService {
       // Create box outline
       const box = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "rect",
+        "rect"
       );
       const size = 202; // Approximate size based on real coordinates
       box.setAttribute("x", (this.CENTER_X - size / 2).toString());
@@ -539,7 +539,7 @@ export class PictographRenderingService implements IPictographRenderingService {
 
     const errorText = document.createElementNS(
       "http://www.w3.org/2000/svg",
-      "text",
+      "text"
     );
     errorText.setAttribute("x", this.CENTER_X.toString());
     errorText.setAttribute("y", this.CENTER_Y.toString());
@@ -551,7 +551,7 @@ export class PictographRenderingService implements IPictographRenderingService {
     if (errorMessage) {
       const detailText = document.createElementNS(
         "http://www.w3.org/2000/svg",
-        "text",
+        "text"
       );
       detailText.setAttribute("x", this.CENTER_X.toString());
       detailText.setAttribute("y", (this.CENTER_Y + 20).toString());

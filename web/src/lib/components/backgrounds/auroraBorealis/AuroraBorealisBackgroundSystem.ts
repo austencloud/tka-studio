@@ -122,14 +122,14 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
   private drawBaseGradient(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     // Create base gradient from dark to lighter
     const baseGradient = ctx.createLinearGradient(
       0,
       0,
       dimensions.width,
-      dimensions.height,
+      dimensions.height
     );
     baseGradient.addColorStop(0, "rgb(5, 10, 25)"); // Very dark blue
     baseGradient.addColorStop(0.5, "rgb(10, 20, 40)"); // Dark blue
@@ -141,7 +141,7 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
   private drawAuroraWaves(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     // Calculate wave positions for gradient
     const wavePositions: Array<[number, number]> = [];
@@ -162,7 +162,7 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
       0,
       0,
       dimensions.width,
-      dimensions.height,
+      dimensions.height
     );
 
     for (const [pos, waveIndex] of wavePositions) {
@@ -178,7 +178,7 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
           gradient.addColorStop(
             pos,
-            `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`,
+            `rgba(${color.r}, ${color.g}, ${color.b}, ${alpha})`
           );
         }
       }
@@ -196,7 +196,7 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
   private drawAdditionalWaveEffects(
     ctx: CanvasRenderingContext2D,
-    dimensions: Dimensions,
+    dimensions: Dimensions
   ): void {
     // Add subtle vertical wave patterns for enhanced aurora effect
     ctx.save();
@@ -211,7 +211,7 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
           x - width / 2,
           0,
           x + width / 2,
-          0,
+          0
         );
         const color = this.auroraColors[i % this.auroraColors.length];
         if (color) {
@@ -219,15 +219,15 @@ export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
 
           waveGradient.addColorStop(
             0,
-            `rgba(${color.r}, ${color.g}, ${color.b}, 0)`,
+            `rgba(${color.r}, ${color.g}, ${color.b}, 0)`
           );
           waveGradient.addColorStop(
             0.5,
-            `rgba(${color.r}, ${color.g}, ${color.b}, ${intensity})`,
+            `rgba(${color.r}, ${color.g}, ${color.b}, ${intensity})`
           );
           waveGradient.addColorStop(
             1,
-            `rgba(${color.r}, ${color.g}, ${color.b}, 0)`,
+            `rgba(${color.r}, ${color.g}, ${color.b}, 0)`
           );
 
           ctx.fillStyle = waveGradient;

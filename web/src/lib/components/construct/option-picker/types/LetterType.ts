@@ -94,7 +94,7 @@ export class LetterType {
    */
   static isGroupableType(letterType: string): boolean {
     return [LetterType.TYPE4, LetterType.TYPE5, LetterType.TYPE6].includes(
-      letterType,
+      letterType
     );
   }
 
@@ -118,7 +118,7 @@ export class LetterType {
       const regex = new RegExp(`\\b${word}\\b`, "gi");
       coloredText = coloredText.replace(
         regex,
-        `<span style="color: ${color};">${word}</span>`,
+        `<span style="color: ${color};">${word}</span>`
       );
     });
 
