@@ -1,7 +1,7 @@
 <!-- GraphEditor.svelte - Professional Graph Editor ported from desktop -->
 <script lang="ts">
 	import ModernPictograph from '$lib/components/pictograph/Pictograph.svelte';
-	import type { BeatData, Sequence } from '$services/interfaces';
+	import type { BeatData, SequenceData } from '$services/interfaces';
 	import { onMount } from 'svelte';
 	import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
 
@@ -13,7 +13,7 @@
 		onArrowSelected: _onArrowSelected, 
 		onVisibilityChanged: _onVisibilityChanged 
 	} = $props<{
-		currentSequence: Sequence | null;
+		currentSequence: SequenceData | null;
 		selectedBeatIndex: number | null;
 		selectedBeatData: BeatData | null;
 		onBeatModified?: (beatIndex: number, beatData: BeatData) => void;

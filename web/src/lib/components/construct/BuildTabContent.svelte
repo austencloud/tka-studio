@@ -45,6 +45,17 @@
 	// Simple debugging
 	console.log('🎯 constructTabState available:', !!constructTabState);
 
+	// Initialize component coordination using effect instead of onMount
+	$effect(() => {
+		console.log('🎯 BuildTabContent: $effect called - setting up component coordination');
+		try {
+			constructTabEventService.setupComponentCoordination();
+			console.log('✅ BuildTabContent: Component coordination setup complete');
+		} catch (error) {
+			console.error('❌ BuildTabContent: Error setting up component coordination:', error);
+		}
+	});
+
 	// Reactive state from store
 	let shouldShowStartPositionPicker = $derived(constructTabState.shouldShowStartPositionPicker);
 	let currentSequence = $derived(sequenceState.currentSequence);
@@ -184,7 +195,13 @@
 
 	// Event handlers
 	async function handleStartPositionSelected(startPosition: BeatData) {
-		await constructTabEventService.handleStartPositionSelected(startPosition);
+		console.log('🎯 BuildTabContent: handleStartPositionSelected called with:', startPosition.pictograph_data?.id);
+		try {
+			await constructTabEventService.handleStartPositionSelected(startPosition);
+			console.log('✅ BuildTabContent: constructTabEventService.handleStartPositionSelected completed');
+		} catch (error) {
+			console.error('❌ BuildTabContent: Error in handleStartPositionSelected:', error);
+		}
 	}
 
 	async function handleOptionSelected(option: PictographData) {

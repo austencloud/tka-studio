@@ -215,6 +215,10 @@
 		background: transparent;
 		border-radius: 12px;
 		overflow: hidden;
+		width: 100%;
+		height: 100%;
+		flex: 1 1 auto;
+		min-height: 0;
 
 		border: 1px solid rgba(0, 0, 0, 0.1);
 	}

@@ -105,18 +105,26 @@ const SETTINGS_STORAGE_KEY = "tka-modern-web-settings";
 // Default settings
 const DEFAULT_SETTINGS: AppSettings = {
   theme: "dark",
-  gridMode: DomainGridMode.DIAMOND,
+  gridMode: "diamond",
   showBeatNumbers: true,
   autoSave: true,
   exportQuality: "high",
   workbenchColumns: 5,
-  // Background settings
-  backgroundType: "aurora",
+  developerMode: true, // Enable developer mode by default so all tabs are visible
+  animationsEnabled: true,
+  backgroundType: "nightSky",
   backgroundQuality: "medium",
   backgroundEnabled: true,
-  // Animation settings
-  animationsEnabled: true,
-};
+  // Add any other fields from the interface as needed
+  visibility: {
+    TKA: true,
+    Reversals: true,
+    Positions: true,
+    Elemental: true,
+    VTG: true,
+    nonRadialPoints: true,
+  },
+} as AppSettings;
 
 // Load settings from localStorage
 function loadSettingsFromStorage(): AppSettings {
@@ -134,7 +142,20 @@ function loadSettingsFromStorage(): AppSettings {
 
     const parsed = JSON.parse(stored);
     // Merge with defaults to handle new settings
+    // Special handling: if developerMode is not explicitly set, use the new default
     const merged = { ...DEFAULT_SETTINGS, ...parsed };
+
+    // Force developer mode to true if it was previously false or unset
+    // This ensures all tabs are visible after the update
+    if (merged.developerMode === false || merged.developerMode === undefined) {
+      merged.developerMode = true;
+      console.log(
+        "🔧 Upgrading user settings: enabling developer mode to show all tabs"
+      );
+      // Save the updated settings back to localStorage
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(merged));
+    }
+
     console.log("📦 Settings loaded from localStorage:", {
       key: SETTINGS_STORAGE_KEY,
       backgroundType: merged.backgroundType,
@@ -166,6 +187,13 @@ function saveSettingsToStorage(settings: AppSettings): void {
 }
 
 const settingsState = $state<AppSettings>(loadSettingsFromStorage());
+
+// Make debug functions available globally in development
+if (browser && typeof window !== "undefined") {
+  (window as any).enableDeveloperMode = enableDeveloperMode;
+  (window as any).resetSettingsToDefaults = resetSettingsToDefaults;
+  (window as any).debugSettings = debugSettings;
+}
 
 export function getSettings() {
   return settingsState;
@@ -202,7 +230,7 @@ export function setInitializationState(
   initialized: boolean,
   initializing: boolean,
   error: string | null = null,
-  progress: number = 0,
+  progress: number = 0
 ): void {
   initState.isInitialized = initialized;
   initState.isInitializing = initializing;
@@ -245,6 +273,8 @@ export function switchTab(tab: TabId): void {
     return;
   }
 
+  console.log(`🔄 Tab switch initiated: ${currentTab} → ${tab}`);
+
   // Save current tab state before switching
   saveCurrentTabState(currentTab);
 
@@ -253,7 +283,7 @@ export function switchTab(tab: TabId): void {
 
   // Switch tab immediately (transitions handled by components)
   uiState.activeTab = tab;
-  console.log(`🔄 Tab switched: ${currentTab} → ${tab}`);
+  console.log(`✅ Tab switched successfully: ${currentTab} → ${tab}`);
 
   // Save application tab state
   saveApplicationTabState(tab, currentTab);
@@ -322,9 +352,17 @@ export function setTheme(newTheme: "light" | "dark"): void {
 export function updateSettings(newSettings: Partial<AppSettings>): void {
   console.log("🔄 Updating settings:", {
     newSettings,
+    currentDeveloperMode: settingsState.developerMode,
+    newDeveloperMode: newSettings.developerMode,
     backgroundType: newSettings.backgroundType,
     previousBackgroundType: settingsState.backgroundType,
   });
+
+  // Auto-configure background settings when backgroundType changes
+  if (newSettings.backgroundType) {
+    newSettings.backgroundEnabled = true; // Always enable backgrounds
+    newSettings.backgroundQuality = "medium"; // Auto-manage quality
+  }
 
   Object.assign(settingsState, newSettings);
 
@@ -339,6 +377,8 @@ export function updateSettings(newSettings: Partial<AppSettings>): void {
   console.log(
     "💾 Settings updated and saved. Current backgroundType:",
     settingsState.backgroundType,
+    "Current developerMode:",
+    settingsState.developerMode
   );
 }
 
@@ -346,7 +386,7 @@ export function updateSettings(newSettings: Partial<AppSettings>): void {
  * Set performance metrics
  */
 export function setPerformanceMetrics(
-  metrics: Partial<typeof perfState>,
+  metrics: Partial<typeof perfState>
 ): void {
   Object.assign(perfState, metrics);
 }
@@ -356,7 +396,7 @@ export function setPerformanceMetrics(
  */
 export function trackRenderTime(
   componentName: string,
-  renderTime: number,
+  renderTime: number
 ): void {
   perfState.lastRenderTime = renderTime;
 
@@ -441,16 +481,42 @@ export function debugSettings(): void {
   if (!browser) return;
 
   try {
-    const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
     console.log("🔍 Debug Settings:", {
-      storageKey: SETTINGS_STORAGE_KEY,
-      storedValue: stored,
-      parsedValue: stored ? JSON.parse(stored) : null,
-      currentState: settingsState,
-      currentBackground: settingsState.backgroundType,
+      stored: localStorage.getItem(SETTINGS_STORAGE_KEY),
+      parsed: JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) || "{}"),
+      current: settingsState,
+      tabState: localStorage.getItem("tka-browse-app-tab-state"),
     });
   } catch (error) {
-    console.error("❌ Failed to debug settings:", error);
+    console.error("❌ Error debugging settings:", error);
+  }
+}
+
+/**
+ * Force enable developer mode (for debugging)
+ */
+export function enableDeveloperMode(): void {
+  if (!browser) return;
+
+  console.log("🔧 Force enabling developer mode...");
+  settingsState.developerMode = true;
+  saveSettingsToStorage(settingsState);
+  console.log("✅ Developer mode enabled and saved");
+}
+
+/**
+ * Reset localStorage settings to defaults (for debugging)
+ */
+export function resetSettingsToDefaults(): void {
+  if (!browser) return;
+
+  try {
+    localStorage.removeItem(SETTINGS_STORAGE_KEY);
+    Object.assign(settingsState, DEFAULT_SETTINGS);
+    uiState.theme = DEFAULT_SETTINGS.theme;
+    console.log("🔄 Settings reset to defaults:", DEFAULT_SETTINGS);
+  } catch (error) {
+    console.error("❌ Error resetting settings:", error);
   }
 }
 
@@ -464,11 +530,54 @@ export function debugSettings(): void {
 async function saveCurrentTabState(currentTab: TabId): Promise<void> {
   if (!browser) return;
 
-  // For now, we'll focus on Browse tab state
-  // Other tabs can be added later as needed
-  if (currentTab === "browse") {
-    // This will be implemented when we integrate with Browse tab components
-    console.log("💾 Saving Browse tab state...");
+  try {
+    // Save tab-specific state based on the current tab
+    switch (currentTab) {
+      case "browse":
+        console.log("💾 Saving Browse tab state...");
+        // Browse tab state is handled by BrowseTabStateManager
+        break;
+
+      case "construct":
+        console.log("💾 Saving Construct tab state...");
+        // TODO: Save construct tab state (active panels, current sequence, etc.)
+        break;
+
+      case "motion-tester":
+        console.log("💾 Saving Motion Tester tab state...");
+        // TODO: Save motion tester state (current settings, animation state, etc.)
+        break;
+
+      case "arrow-debug":
+        console.log("💾 Saving Arrow Debug tab state...");
+        // TODO: Save arrow debug state
+        break;
+
+      case "sequence_card":
+        console.log("💾 Saving Sequence Card tab state...");
+        // TODO: Save sequence card state
+        break;
+
+      case "write":
+        console.log("💾 Saving Write tab state...");
+        // TODO: Save write tab state (current act, unsaved changes, etc.)
+        break;
+
+      case "learn":
+        console.log("💾 Saving Learn tab state...");
+        // TODO: Save learn tab state
+        break;
+
+      case "about":
+        console.log("💾 Saving About tab state...");
+        // About tab probably doesn't need state persistence
+        break;
+
+      default:
+        console.log(`💾 No specific state saving for tab: ${currentTab}`);
+    }
+  } catch (error) {
+    console.error(`❌ Failed to save state for tab ${currentTab}:`, error);
   }
 }
 
@@ -477,7 +586,7 @@ async function saveCurrentTabState(currentTab: TabId): Promise<void> {
  */
 async function saveApplicationTabState(
   newTab: TabId,
-  previousTab: TabId,
+  previousTab: TabId
 ): Promise<void> {
   if (!browser) return;
 
@@ -490,6 +599,7 @@ async function saveApplicationTabState(
     };
 
     await browseStatePersistence.saveApplicationTabState(tabState);
+    console.log(`💾 Tab state saved: ${newTab} (previous: ${previousTab})`);
   } catch (error) {
     console.error("❌ Failed to save application tab state:", error);
   }
@@ -502,7 +612,9 @@ export async function restoreApplicationState(): Promise<void> {
   if (!browser) return;
 
   try {
+    console.log("🔄 Starting application state restoration...");
     const tabState = await browseStatePersistence.loadApplicationTabState();
+    console.log("📖 Loaded tab state:", tabState);
 
     if (tabState && tabState.activeTab) {
       // TEMPORARILY DISABLED: Don't restore About tab to avoid Svelte error
@@ -512,14 +624,37 @@ export async function restoreApplicationState(): Promise<void> {
         return;
       }
 
+      // Check if the saved tab is a developer tab
+      const developerTabs = [
+        "sequence_card",
+        "write",
+        "motion-tester",
+        "arrow-debug",
+      ];
+      const isDevTab = developerTabs.includes(tabState.activeTab);
+      console.log(
+        `🔍 Tab analysis: ${tabState.activeTab}, isDev: ${isDevTab}, devMode: ${settingsState.developerMode}`
+      );
+
+      // If it's a developer tab but developer mode is disabled, use a main tab instead
+      if (isDevTab && !settingsState.developerMode) {
+        console.log(
+          `🚫 Skipping ${tabState.activeTab} restoration - developer mode disabled`
+        );
+        uiState.activeTab = "browse"; // Use Browse as default instead
+        return;
+      }
+
       // Restore the last active tab
       uiState.activeTab = tabState.activeTab as TabId;
-      console.log(`🔄 Restored last active tab: ${tabState.activeTab}`);
+      console.log(`✅ Successfully restored tab: ${tabState.activeTab}`);
 
       // If the restored tab is Browse, we'll restore its state when the component loads
       if (tabState.activeTab === "browse") {
         console.log("📖 Browse tab will restore its state when loaded");
       }
+    } else {
+      console.log("ℹ️ No saved tab state found, using default");
     }
   } catch (error) {
     console.error("❌ Failed to restore application state:", error);

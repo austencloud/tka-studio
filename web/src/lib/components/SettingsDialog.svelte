@@ -1,6 +1,6 @@
 <!-- SettingsDialog.svelte - Simplified main settings dialog -->
 <script lang="ts">
-	import type { BackgroundType, QualityLevel } from '$lib/components/backgrounds/types/types';
+	import type { BackgroundType } from '$lib/components/backgrounds/types/types';
 	import { getSettings, hideSettingsDialog, updateSettings } from '$lib/state/appState.svelte';
 
 	import SettingsSidebar from './settings/SettingsSidebar.svelte';
@@ -14,36 +14,10 @@
 	let settings = $state(getSettings());
 	let activeTab = $state('General');
 
-	// Derived state for background settings - ensure compatibility
-	const backgroundSettings = $derived(() => {
-		const bgType = settings.backgroundType;
-		// Map unsupported types to supported ones
-		const supportedType: BackgroundType | undefined =
-			bgType === 'auroraBorealis' || bgType === 'starfield'
-				? 'aurora'
-				: bgType === 'snowfall' ||
-					  bgType === 'nightSky' ||
-					  bgType === 'aurora' ||
-					  bgType === 'bubbles'
-					? bgType
-					: bgType
-						? 'aurora'
-						: undefined; // default fallback or undefined if no bgType
-
-		const result: {
-			backgroundType?: BackgroundType;
-			backgroundQuality?: QualityLevel;
-			backgroundEnabled?: boolean;
-		} = {};
-
-		if (supportedType) result.backgroundType = supportedType;
-		if (settings.backgroundQuality)
-			result.backgroundQuality = settings.backgroundQuality as QualityLevel;
-		if (settings.backgroundEnabled !== undefined)
-			result.backgroundEnabled = settings.backgroundEnabled;
-
-		return result;
-	});
+	// Simplified background settings for new BackgroundTab
+	const backgroundSettings = $derived(() => ({
+		backgroundType: settings.backgroundType || 'aurora'
+	}));
 
 	// Simplified tab configuration
 	const tabs = [
@@ -69,9 +43,12 @@
 
 	// Adapter for modern prop-based updates
 	function handlePropUpdate(event: { key: string; value: unknown }) {
+		console.log('🔧 SettingsDialog handlePropUpdate called:', event);
 		const newSettings = { ...settings, [event.key]: event.value };
+		console.log('🔧 About to call updateSettings with:', newSettings);
 		updateSettings(newSettings);
 		settings = newSettings;
+		console.log('🔧 Settings updated locally in dialog:', settings);
 	}
 
 	// Adapter for export handler
@@ -146,7 +123,7 @@
 			<!-- Content Area -->
 			<main class="settings-content">
 				{#if activeTab === 'General'}
-					<GeneralTab {settings} on:update={handleSettingsUpdate} />
+					<GeneralTab {settings} onupdate={handlePropUpdate} />
 				{:else if activeTab === 'PropType'}
 					<PropTypeTab {settings} onUpdate={handlePropUpdate} />
 				{:else if activeTab === 'Visibility'}
@@ -154,7 +131,7 @@
 				{:else if activeTab === 'Background'}
 					<BackgroundTab
 						settings={backgroundSettings()}
-						on:update={handleSettingsUpdate}
+						onupdate={handlePropUpdate}
 					/>
 				{:else if activeTab === 'CodexExporter'}
 					<CodexExporterTab

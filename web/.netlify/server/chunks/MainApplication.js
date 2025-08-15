@@ -8453,14 +8453,6 @@ class AnimatedPictographDataService {
     try {
       const gridMode = this.getGridMode(motionState.gridType);
       const gridData = createGridData$1({ grid_mode: gridMode });
-      console.log(
-        "🔍 Motion Tester Debug - Blue Motion Params:",
-        JSON.parse(JSON.stringify(motionState.blueMotionParams))
-      );
-      console.log(
-        "🔍 Motion Tester Debug - Red Motion Params:",
-        JSON.parse(JSON.stringify(motionState.redMotionParams))
-      );
       const blueMotionData = this.createCompleteMotionData(
         motionState.blueMotionParams
       );
@@ -8483,12 +8475,6 @@ class AnimatedPictographDataService {
         motionState.redMotionParams,
         "red"
       );
-      console.log("🔍 Motion Tester Debug - Blue Motion Data:", blueMotionData);
-      console.log("🔍 Motion Tester Debug - Red Motion Data:", redMotionData);
-      console.log("🔍 Motion Tester Debug - Blue Props:", blueProps);
-      console.log("🔍 Motion Tester Debug - Red Props:", redProps);
-      console.log("🔍 Motion Tester Debug - Blue Arrows:", blueArrows);
-      console.log("🔍 Motion Tester Debug - Red Arrows:", redArrows);
       const pictographData = createPictographData({
         id: "motion-tester-animated-pictograph",
         grid_data: gridData,
@@ -8515,10 +8501,6 @@ class AnimatedPictographDataService {
           progress: motionState.animationState.progress
         }
       });
-      console.log(
-        "🔍 Motion Tester Debug - Final Pictograph Data:",
-        pictographData
-      );
       return pictographData;
     } catch (error) {
       console.error("Error creating animated pictograph data:", error);
@@ -8528,17 +8510,122 @@ class AnimatedPictographDataService {
   getGridMode(gridType) {
     return gridType === "diamond" ? GridMode.DIAMOND : GridMode.BOX;
   }
-  createMotionData(motionParams) {
-    return {
-      motion_type: motionParams.motionType,
-      start_loc: motionParams.startLoc,
-      end_loc: motionParams.endLoc,
-      start_ori: motionParams.startOri,
-      end_ori: motionParams.endOri,
-      prop_rot_dir: motionParams.propRotDir,
+  /**
+   * Creates complete motion data using the domain factory function
+   */
+  createCompleteMotionData(motionParams) {
+    return createMotionData({
+      motion_type: this.mapMotionType(motionParams.motionType),
+      start_loc: this.mapLocation(motionParams.startLoc),
+      end_loc: this.mapLocation(motionParams.endLoc),
+      start_ori: this.mapOrientation(motionParams.startOri),
+      end_ori: this.mapOrientation(motionParams.endOri),
+      prop_rot_dir: this.mapRotationDirection(motionParams.propRotDir),
       turns: motionParams.turns,
       is_visible: true
-    };
+    });
+  }
+  /**
+   * Creates prop data based on motion parameters
+   */
+  createPropDataFromMotion(motionParams, color) {
+    return createPropData({
+      prop_type: PropType.STAFF,
+      // Default to staff for motion tester
+      color,
+      location: this.mapLocation(motionParams.startLoc),
+      orientation: this.mapOrientation(motionParams.startOri),
+      rotation_direction: this.mapRotationDirection(motionParams.propRotDir),
+      is_visible: true
+    });
+  }
+  /**
+   * Creates arrow data based on motion parameters
+   */
+  createArrowDataFromMotion(motionParams, color) {
+    return createArrowData({
+      arrow_type: color === "blue" ? ArrowType.BLUE : ArrowType.RED,
+      color,
+      motion_type: motionParams.motionType,
+      start_orientation: motionParams.startOri,
+      end_orientation: motionParams.endOri,
+      rotation_direction: motionParams.propRotDir,
+      turns: motionParams.turns,
+      location: this.mapLocation(motionParams.startLoc),
+      is_visible: true
+    });
+  }
+  // Mapping methods to convert motion tester parameters to domain enums
+  mapMotionType(motionType) {
+    if (!motionType) return MotionType.STATIC;
+    switch (motionType.toLowerCase()) {
+      case "pro":
+        return MotionType.PRO;
+      case "anti":
+        return MotionType.ANTI;
+      case "float":
+        return MotionType.FLOAT;
+      case "dash":
+        return MotionType.DASH;
+      case "static":
+        return MotionType.STATIC;
+      default:
+        return MotionType.STATIC;
+    }
+  }
+  mapLocation(location) {
+    if (!location) return Location.NORTH;
+    switch (location.toLowerCase()) {
+      case "n":
+        return Location.NORTH;
+      case "e":
+        return Location.EAST;
+      case "s":
+        return Location.SOUTH;
+      case "w":
+        return Location.WEST;
+      case "ne":
+        return Location.NORTHEAST;
+      case "se":
+        return Location.SOUTHEAST;
+      case "sw":
+        return Location.SOUTHWEST;
+      case "nw":
+        return Location.NORTHWEST;
+      default:
+        return Location.NORTH;
+    }
+  }
+  mapOrientation(orientation) {
+    if (!orientation) return Orientation.IN;
+    switch (orientation.toLowerCase()) {
+      case "in":
+        return Orientation.IN;
+      case "out":
+        return Orientation.OUT;
+      case "clock":
+        return Orientation.CLOCK;
+      case "counter":
+        return Orientation.COUNTER;
+      default:
+        return Orientation.IN;
+    }
+  }
+  mapRotationDirection(rotationDir) {
+    if (!rotationDir) return RotationDirection.NO_ROTATION;
+    switch (rotationDir.toLowerCase()) {
+      case "cw":
+      case "clockwise":
+        return RotationDirection.CLOCKWISE;
+      case "ccw":
+      case "counter_clockwise":
+        return RotationDirection.COUNTER_CLOCKWISE;
+      case "no_rot":
+      case "no_rotation":
+        return RotationDirection.NO_ROTATION;
+      default:
+        return RotationDirection.NO_ROTATION;
+    }
   }
 }
 const IAnimatedPictographDataServiceInterface = createServiceInterface(

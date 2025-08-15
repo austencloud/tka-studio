@@ -32,6 +32,9 @@ export class ConstructTabEventService {
    * Handle start position selection in the Build tab
    */
   async handleStartPositionSelected(startPosition: BeatData): Promise<void> {
+    console.log(
+      "🎭 ConstructTabEventService.handleStartPositionSelected ENTRY"
+    );
     try {
       console.log(
         "🎭 Start position selected in ConstructTabEventService:",
@@ -57,6 +60,8 @@ export class ConstructTabEventService {
           );
           throw new Error("Coordination service not available");
         }
+      } else {
+        console.log("✅ Coordination service already available");
       }
 
       // Use coordination service to handle the selection

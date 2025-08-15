@@ -25,9 +25,10 @@
 		isSubTabTransitionActive: constructTabState.isSubTabTransitionActive,
 		setActiveRightPanel: constructTabState.setActiveRightPanel,
 		// Sequence state for GraphEditor
-		currentSequence: sequenceState.getCurrentSequence(),
-		selectedBeatIndex: sequenceState.getSelectedBeatIndex(),
-		selectedBeatData: sequenceState.getSelectedBeatData()
+		currentSequence: sequenceState.currentSequence,
+		selectedBeatIndex: sequenceState.selectedBeatIndex,
+		selectedBeatData: sequenceState.selectedBeatIndex !== null ?
+			sequenceState.currentSequence?.beats[sequenceState.selectedBeatIndex] ?? null : null
 	});
 
 	// Setup component coordination and reactive state updates on mount
@@ -38,7 +39,7 @@
 
 	// Handle reactive state updates for shouldShowStartPositionPicker
 	$effect(() => {
-		constructTabState.updateShouldShowStartPositionPicker();
+		constructTabState?.updateShouldShowStartPositionPicker();
 	});
 </script>
 

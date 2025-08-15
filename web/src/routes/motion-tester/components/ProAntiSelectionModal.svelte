@@ -7,6 +7,7 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { MotionType } from '$lib/domain/enums';
+	import '$lib/styles/modal-animations.css';
 
 	interface Props {
 		onMotionTypeSelect: (motionType: MotionType) => void;
@@ -127,8 +128,9 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 		content.querySelector('.close-btn')?.addEventListener('click', onClose);
 
 		content.querySelectorAll('.motion-option').forEach(button => {
-			button.addEventListener('click', () => {
-				const motionType = button.getAttribute('data-motion');
+			const htmlButton = button as HTMLElement;
+			htmlButton.addEventListener('click', () => {
+				const motionType = htmlButton.getAttribute('data-motion');
 				if (motionType === 'pro') {
 					onMotionTypeSelect(MotionType.PRO);
 				} else if (motionType === 'anti') {
@@ -138,16 +140,16 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 			});
 
 			// Add hover effects
-			button.addEventListener('mouseenter', () => {
-				button.style.background = `rgba(${color}, 0.2)`;
-				button.style.borderColor = `rgba(${color}, 0.4)`;
-				button.style.color = 'white';
+			htmlButton.addEventListener('mouseenter', () => {
+				htmlButton.style.background = `rgba(${color}, 0.2)`;
+				htmlButton.style.borderColor = `rgba(${color}, 0.4)`;
+				htmlButton.style.color = 'white';
 			});
 
-			button.addEventListener('mouseleave', () => {
-				button.style.background = 'rgba(255, 255, 255, 0.05)';
-				button.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-				button.style.color = 'rgba(255, 255, 255, 0.7)';
+			htmlButton.addEventListener('mouseleave', () => {
+				htmlButton.style.background = 'rgba(255, 255, 255, 0.05)';
+				htmlButton.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+				htmlButton.style.color = 'rgba(255, 255, 255, 0.7)';
 			});
 		});
 
@@ -165,21 +167,3 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 <svelte:window onkeydown={handleKeyDown} />
 
 <!-- Modal is rendered via DOM manipulation into prop panel -->
-
-<style>
-	/* Add keyframes for modal animation */
-	:global(body) {
-		--modal-appear: modalAppear;
-	}
-
-	@keyframes modalAppear {
-		from {
-			opacity: 0;
-			transform: scale(0.9);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1);
-		}
-	}
-</style>

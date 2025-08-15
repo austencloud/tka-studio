@@ -14,6 +14,7 @@ This is the right 1/3 section of the motion tester layout.
 	import type { MotionTesterState } from '../state/motion-tester-state.svelte';
 	import { resolve } from '$lib/services/bootstrap';
 	import { IAnimatedPictographDataServiceInterface } from '$lib/services/di/interfaces/motion-tester-interfaces';
+	import type { PictographData } from '$lib/domain';
 
 	// Import focused components
 	import AnimatedPictographDisplay from './display/AnimatedPictographDisplay.svelte';
@@ -34,8 +35,49 @@ This is the right 1/3 section of the motion tester layout.
 	// Resolve service from DI container
 	const pictographDataService = resolve(IAnimatedPictographDataServiceInterface);
 
-	// Create pictograph data using service
-	let pictographData = $derived(pictographDataService.createAnimatedPictographData(motionState));
+	// Create pictograph data using service (async)
+	let pictographData = $state<PictographData | null>(null);
+	let isLoadingPictograph = $state(false);
+
+	// Effect to load pictograph data when motion state changes
+	$effect(() => {
+		// Explicitly access nested motion state properties to establish dependency tracking
+		const blueStartLoc = motionState.blueMotionParams.startLoc;
+		const blueEndLoc = motionState.blueMotionParams.endLoc;
+		const blueMotionType = motionState.blueMotionParams.motionType;
+		const blueTurns = motionState.blueMotionParams.turns;
+
+		const redStartLoc = motionState.redMotionParams.startLoc;
+		const redEndLoc = motionState.redMotionParams.endLoc;
+		const redMotionType = motionState.redMotionParams.motionType;
+		const redTurns = motionState.redMotionParams.turns;
+
+		const gridType = motionState.gridType;
+
+		console.log("🔄 Motion state changed, triggering CSV lookup...", {
+			blue: { startLoc: blueStartLoc, endLoc: blueEndLoc, motionType: blueMotionType, turns: blueTurns },
+			red: { startLoc: redStartLoc, endLoc: redEndLoc, motionType: redMotionType, turns: redTurns },
+			gridType
+		});
+
+		// Trigger async load when motion state changes
+		loadPictographData();
+	});
+
+	async function loadPictographData() {
+		console.log("🎯 loadPictographData() called - starting CSV lookup...");
+		isLoadingPictograph = true;
+		try {
+			const data = await pictographDataService.createAnimatedPictographData(motionState);
+			pictographData = data;
+			console.log("✅ Pictograph data loaded successfully:", data?.letter || "null");
+		} catch (error) {
+			console.error("❌ Error loading pictograph data:", error);
+			pictographData = null;
+		} finally {
+			isLoadingPictograph = false;
+		}
+	}
 
 	// Event handlers - delegate to motion state
 	function handlePlayToggle() {

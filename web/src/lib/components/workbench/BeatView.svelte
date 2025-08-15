@@ -82,8 +82,8 @@
 			<div class="pictograph-container">
 				<ModernPictograph
 					beatData={beat}
-					width={config.beatSize - 8}
-					height={config.beatSize - 8}
+					width={config.beatSize - 2}
+					height={config.beatSize - 2}
 					onClick={handleClick}
 					debug={false}
 				/>

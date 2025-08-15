@@ -448,3 +448,98 @@ export function createSequenceState(sequenceService: ISequenceService) {
     updateSequenceBeats,
   };
 }
+
+// ============================================================================
+// DIRECT EXPORTS FOR BACKWARD COMPATIBILITY
+// ============================================================================
+
+// Create a default instance for direct function exports
+// This maintains compatibility with files that import functions directly
+import { resolve } from "$services/bootstrap";
+import { browser } from "$app/environment";
+
+// Lazy initialization - only create when first accessed
+let defaultSequenceState: ReturnType<typeof createSequenceState> | null = null;
+
+function getDefaultSequenceState() {
+  if (!browser) return null;
+
+  if (!defaultSequenceState) {
+    defaultSequenceState = createSequenceState(resolve("ISequenceService"));
+  }
+
+  return defaultSequenceState;
+}
+
+// Export individual functions for backward compatibility
+// Provide fallback functions for SSR environment
+const noOp = () => {};
+const noOpReturn = () => null;
+
+export const getSequences = () => getDefaultSequenceState()?.sequences || [];
+export const addSequence = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.addSequence ? (state.addSequence as any)(...args) : undefined;
+};
+export const clearError = () => {
+  const state = getDefaultSequenceState();
+  return state?.clearError ? state.clearError() : undefined;
+};
+export const removeSequence = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.removeSequence
+    ? (state.removeSequence as any)(...args)
+    : undefined;
+};
+export const setCurrentSequence = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.setCurrentSequence
+    ? (state.setCurrentSequence as any)(...args)
+    : undefined;
+};
+export const setError = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.setError ? (state.setError as any)(...args) : undefined;
+};
+export const setLoading = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.setLoading ? (state.setLoading as any)(...args) : undefined;
+};
+export const setSequences = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.setSequences ? (state.setSequences as any)(...args) : undefined;
+};
+export const updateCurrentBeat = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.updateCurrentBeat
+    ? (state.updateCurrentBeat as any)(...args)
+    : undefined;
+};
+export const updateSequence = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.updateSequence
+    ? (state.updateSequence as any)(...args)
+    : undefined;
+};
+export const clearArrowPositions = () => {
+  const state = getDefaultSequenceState();
+  return state?.clearArrowPositions ? state.clearArrowPositions() : undefined;
+};
+export const setArrowPositioningError = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.setArrowPositioningError
+    ? (state.setArrowPositioningError as any)(...args)
+    : undefined;
+};
+export const setArrowPositioningInProgress = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.setArrowPositioningInProgress
+    ? (state.setArrowPositioningInProgress as any)(...args)
+    : undefined;
+};
+export const setArrowPositions = (...args: any[]) => {
+  const state = getDefaultSequenceState();
+  return state?.setArrowPositions
+    ? (state.setArrowPositions as any)(...args)
+    : undefined;
+};

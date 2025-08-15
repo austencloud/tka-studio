@@ -304,13 +304,6 @@
 		gap: 16px;
 	}
 
-	.codex-main-panel h3 {
-		color: #fbbf24;
-		margin: 0 0 16px 0;
-		font-size: 1.1rem;
-		text-align: center;
-	}
-
 	.visualization-panel {
 		display: flex;
 		flex-direction: column;
@@ -367,13 +360,6 @@
 		font-size: 0.9rem;
 	}
 
-	.debug-overlay p {
-		color: #c7d2fe;
-		margin: 4px 0;
-		font-size: 0.85rem;
-		font-family: 'Courier New', monospace;
-	}
-
 	.debug-overlay ul {
 		margin: 0;
 		padding-left: 16px;
@@ -392,87 +378,6 @@
 		height: 200px;
 		color: rgba(255, 255, 255, 0.5);
 		font-style: italic;
-	}
-
-	/* Codex styles */
-	.codex-toggle-btn {
-		width: 100%;
-		padding: 12px;
-		background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-		border: none;
-		border-radius: 6px;
-		color: white;
-		font-weight: 600;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		margin-top: 8px;
-	}
-
-	.codex-toggle-btn:hover {
-		transform: translateY(-1px);
-		box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-	}
-
-	.codex-toggle-btn:active {
-		transform: translateY(0);
-	}
-
-	.codex-panel {
-		margin-top: 16px;
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 8px;
-		background: rgba(0, 0, 0, 0.3);
-		overflow: hidden;
-		max-height: 400px;
-	}
-
-	/* Step indicator styles */
-	.step-indicator {
-		background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-		border-radius: 8px;
-		padding: 12px;
-		margin-bottom: 16px;
-		text-align: center;
-	}
-
-	.step-indicator h3 {
-		color: white;
-		margin: 0 0 4px 0;
-		font-size: 1rem;
-		font-weight: 600;
-	}
-
-	.step-indicator .step-name {
-		color: rgba(255, 255, 255, 0.9);
-		margin: 0;
-		font-size: 0.9rem;
-		font-weight: 500;
-	}
-
-	.step-controls {
-		display: flex;
-		gap: 8px;
-		margin-top: 8px;
-		justify-content: center;
-	}
-
-	.step-controls button {
-		padding: 6px 12px;
-		background: rgba(255, 255, 255, 0.1);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		border-radius: 4px;
-		color: white;
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	.step-controls button:hover:not(:disabled) {
-		background: rgba(255, 255, 255, 0.2);
-	}
-
-	.step-controls button:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
 	}
 
 	/* Visualization controls */

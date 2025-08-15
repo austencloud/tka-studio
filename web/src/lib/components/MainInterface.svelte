@@ -47,16 +47,58 @@
 	};
 
 	// App tab configuration
-	const appTabs = [
-		{ id: 'construct', label: 'Construct', icon: '🔧' },
-		{ id: 'browse', label: 'Browse', icon: '🔍' },
-		{ id: 'sequence_card', label: 'Sequence Card', icon: '🎴' },
-		{ id: 'write', label: 'Write', icon: '✍️' },
-		{ id: 'learn', label: 'Learn', icon: '🧠' },
-		{ id: 'motion-tester', label: 'Motion Tester', icon: '🎯' },
-		{ id: 'arrow-debug', label: 'Arrow Debug', icon: '🏹' },
-		{ id: 'about', label: 'About', icon: 'ℹ️' },
+	const allTabs = [
+		{ id: 'construct', label: 'Construct', icon: '🔧', isMain: true },
+		{ id: 'browse', label: 'Browse', icon: '🔍', isMain: true },
+		{ id: 'learn', label: 'Learn', icon: '🧠', isMain: true },
+		{ id: 'about', label: 'About', icon: 'ℹ️', isMain: true },
+		{ id: 'sequence_card', label: 'Sequence Card', icon: '🎴', isMain: false },
+		{ id: 'write', label: 'Write', icon: '✍️', isMain: false },
+		{ id: 'motion-tester', label: 'Motion Tester', icon: '🎯', isMain: false },
+		{ id: 'arrow-debug', label: 'Arrow Debug', icon: '🏹', isMain: false },
 	] as const;
+
+	// Filter tabs based on developer mode
+	const appTabs = $derived(() => {
+		console.log('🔄 AppTabs derived function called, developerMode:', settings.developerMode);
+		console.log('🔄 All available tabs:', allTabs.map(t => ({ id: t.id, label: t.label, isMain: t.isMain })));
+		
+		if (settings.developerMode) {
+			// In developer mode, show main tabs first, then developer tabs
+			const mainTabs = allTabs.filter(tab => tab.isMain);
+			const devTabs = allTabs.filter(tab => !tab.isMain);
+			const result = [...mainTabs, ...devTabs];
+			console.log('🔧 Developer mode ON - showing tabs:', result.map(t => t.label));
+			return result;
+		} else {
+			// In consumer mode, only show main tabs
+			const result = allTabs.filter(tab => tab.isMain);
+			console.log('👤 Consumer mode ON - showing tabs:', result.map(t => t.label));
+			return result;
+		}
+	});
+
+	// Handle developer mode changes - if user is on a dev tab and switches to consumer mode,
+	// redirect them to a main tab (but not during initial app load/restoration)
+	let hasInitialRestoreCompleted = false;
+	
+	$effect(() => {
+		// Skip the first run to allow tab restoration to complete
+		if (!hasInitialRestoreCompleted) {
+			hasInitialRestoreCompleted = true;
+			return;
+		}
+
+		if (!settings.developerMode) {
+			const currentTabIsMain = allTabs.find(tab => tab.id === activeTab)?.isMain;
+			if (currentTabIsMain === false) {
+				// User is on a developer tab but developer mode is disabled
+				// Switch to the default main tab (construct)
+				console.log(`🔄 Developer mode disabled, switching from ${activeTab} to construct`);
+				switchTab('construct');
+			}
+		}
+	});
 
 	function handleTabSelect(tabId: string) {
 		switchTab(tabId as 'construct' | 'browse' | 'sequence_card' | 'write' | 'learn' | 'about' | 'motion-tester' | 'arrow-debug');
@@ -82,7 +124,7 @@ settings.backgroundType === 'starfield'
 
 <!-- Navigation Bar -->
 <NavigationBar 
-tabs={appTabs} 
+tabs={appTabs()}
 activeTab={activeTab} 
 onTabSelect={handleTabSelect}
 onBackgroundChange={handleBackgroundChange}
@@ -113,13 +155,14 @@ onBackgroundChange={handleBackgroundChange}
 </div>
 {/key}
 </main>
-</div>
-</BackgroundProvider>
 
-<!-- Settings Dialog -->
+<!-- Settings Dialog - moved inside BackgroundProvider -->
 {#if showSettings}
 <SettingsDialog />
 {/if}
+
+</div>
+</BackgroundProvider>
 
 <style>
 	.main-interface {

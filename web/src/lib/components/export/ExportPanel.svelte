@@ -1,5 +1,6 @@
 <!-- ExportPanel.svelte - Export panel matching desktop app exactly -->
 <script lang="ts">
+	import { browser } from '$app/environment';
 	import { resolve } from '$services/bootstrap';
 	import { createSequenceState } from '$lib/state/sequenceState.svelte';
 	import ExportActionsCard from './ExportActionsCard.svelte';
@@ -14,12 +15,12 @@
 
 	let { onsettingchanged, onpreviewupdaterequested, onexportrequested }: Props = $props();
 
-	// Create component-scoped state using factory function
-	const sequenceService = resolve('ISequenceService') as any; // TODO: Fix typing
-	const sequenceState = createSequenceState(sequenceService);
+	// Create component-scoped state using factory function (browser only)
+	const sequenceService = browser ? resolve('ISequenceService') as any : null; // TODO: Fix typing
+	const sequenceState = browser && sequenceService ? createSequenceState(sequenceService) : null;
 
 	// Current sequence for export
-	let currentSequence = $derived(sequenceState.getCurrentSequence());
+	let currentSequence = $derived(sequenceState?.getCurrentSequence() || null);
 
 	// Export settings state - matching desktop app defaults
 	let exportSettings = $state({

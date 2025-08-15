@@ -2,13 +2,41 @@
 	import PropPanel from './components/PropPanel.svelte';
 	import { getMotionDescription } from './utils/motion-helpers.js';
 	import type { MotionTesterState } from './state/motion-tester-state.svelte';
-	import type { Orientation, MotionType } from './utils/motion-helpers.js';
+	import type { Orientation as OrientationLocal, MotionType as MotionTypeLocal } from './utils/motion-helpers.js';
+	import { Orientation, MotionType } from '$lib/domain/enums';
 
 	interface Props {
 		state: MotionTesterState;
 	}
 
 	let { state }: Props = $props();
+
+	// Helper function to convert turns for display
+	function getTurnsForDisplay(turns: number | "fl"): number {
+		return typeof turns === "number" ? turns : 0; // Convert "fl" to 0 for display
+	}
+
+	// Helper functions to convert string values to enum types
+	function convertStringToOrientation(orientationStr: string): Orientation {
+		switch (orientationStr.toLowerCase()) {
+			case 'in': return Orientation.IN;
+			case 'out': return Orientation.OUT;
+			case 'clock': return Orientation.CLOCK;
+			case 'counter': return Orientation.COUNTER;
+			default: return Orientation.IN;
+		}
+	}
+
+	function convertStringToMotionType(motionTypeStr: string): MotionType {
+		switch (motionTypeStr.toLowerCase()) {
+			case 'pro': return MotionType.PRO;
+			case 'anti': return MotionType.ANTI;
+			case 'static': return MotionType.STATIC;
+			case 'dash': return MotionType.DASH;
+			case 'float': return MotionType.FLOAT;
+			default: return MotionType.STATIC;
+		}
+	}
 
 	// Quick test functions
 	function setQuickTest(testName: string) {
@@ -52,7 +80,7 @@
 					state.blueMotionParams.startLoc,
 					state.blueMotionParams.endLoc,
 					state.blueMotionParams.motionType,
-					state.blueMotionParams.turns
+					getTurnsForDisplay(state.blueMotionParams.turns)
 				)}
 			</div>
 			
@@ -61,10 +89,10 @@
 				propColor="#60a5fa"
 				startLocation={state.blueMotionParams.startLoc}
 				endLocation={state.blueMotionParams.endLoc}
-				startOrientation={state.blueMotionParams.startOri as Orientation}
-				endOrientation={state.blueMotionParams.endOri as Orientation}
+				startOrientation={convertStringToOrientation(state.blueMotionParams.startOri)}
+				endOrientation={convertStringToOrientation(state.blueMotionParams.endOri)}
 				turns={state.blueMotionParams.turns}
-				motionType={state.blueMotionParams.motionType as MotionType}
+				motionType={convertStringToMotionType(state.blueMotionParams.motionType)}
 				onStartLocationChange={(location) => state.updateBlueMotionParam('startLoc', location)}
 				onEndLocationChange={(location) => state.updateBlueMotionParam('endLoc', location)}
 				onStartOrientationChange={(orientation) => state.updateBlueMotionParam('startOri', orientation)}
@@ -81,7 +109,7 @@
 					state.redMotionParams.startLoc,
 					state.redMotionParams.endLoc,
 					state.redMotionParams.motionType,
-					state.redMotionParams.turns
+					getTurnsForDisplay(state.redMotionParams.turns)
 				)}
 			</div>
 			
@@ -90,10 +118,10 @@
 				propColor="#f87171"
 				startLocation={state.redMotionParams.startLoc}
 				endLocation={state.redMotionParams.endLoc}
-				startOrientation={state.redMotionParams.startOri as Orientation}
-				endOrientation={state.redMotionParams.endOri as Orientation}
+				startOrientation={convertStringToOrientation(state.redMotionParams.startOri)}
+				endOrientation={convertStringToOrientation(state.redMotionParams.endOri)}
 				turns={state.redMotionParams.turns}
-				motionType={state.redMotionParams.motionType as MotionType}
+				motionType={convertStringToMotionType(state.redMotionParams.motionType)}
 				onStartLocationChange={(location) => state.updateRedMotionParam('startLoc', location)}
 				onEndLocationChange={(location) => state.updateRedMotionParam('endLoc', location)}
 				onStartOrientationChange={(orientation) => state.updateRedMotionParam('startOri', orientation)}

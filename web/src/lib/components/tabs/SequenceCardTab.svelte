@@ -12,6 +12,13 @@
 	const sequenceService = resolve('ISequenceService') as any; // TODO: Fix typing
 	const sequenceState = createSequenceState(sequenceService);
 
+	onMount(async () => {
+		console.log('🎴 SequenceCardTab mounted');
+
+		// Load sequences after component mounts
+		await sequenceState.loadSequences();
+	});
+
 	// State matching desktop app functionality
 	let selectedLength = $state(16); // Default to 16 like desktop
 	let columnCount = $state(2); // Default to 2 columns
@@ -22,8 +29,8 @@
 	let filteredSequences = $state<SequenceData[]>([]);
 
 	// Reactive sequences from store
-	let allSequences = $derived(sequenceState.getSequences());
-	let isLoading = $derived(sequenceState.getIsLoading());
+	let allSequences = $derived(sequenceState.sequences);
+	let isLoading = $derived(sequenceState.isLoading);
 
 	// Filter sequences based on selected length
 	$effect(() => {
@@ -31,7 +38,7 @@
 			// "All" selected
 			filteredSequences = allSequences;
 		} else {
-			filteredSequences = allSequences.filter((seq) => seq.beats?.length === selectedLength);
+			filteredSequences = allSequences.filter((seq: SequenceData) => seq.beats?.length === selectedLength);
 		}
 	});
 
@@ -243,4 +250,6 @@
 			flex: 1;
 		}
 	}
+
+
 </style>

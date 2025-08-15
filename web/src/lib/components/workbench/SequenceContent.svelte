@@ -77,8 +77,10 @@
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
+		height: 100%;
 		gap: 0;
-		flex: 0 0 auto;
+		flex: 1 1 auto; /* Changed from 0 0 auto to allow growth */
+		min-height: 0; /* Allow shrinking */
 		transition: all 0.3s ease-out;
 	}
 
@@ -86,5 +88,21 @@
 		width: 100%;
 		flex: 1 1 auto;
 		min-height: 0;
+	}
+
+	.beat-frame-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		height: 100%;
+		flex: 1 1 auto;
+		min-height: 0;
+	}
+
+	.beat-frame-wrapper.scroll-mode-active {
+		justify-content: flex-start;
+		align-items: stretch;
 	}
 </style>

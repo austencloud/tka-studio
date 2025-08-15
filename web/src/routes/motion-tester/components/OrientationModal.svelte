@@ -7,6 +7,7 @@ positioned over the specific prop panel that triggered it.
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import type { Orientation } from '$lib/domain/enums';
+	import '$lib/styles/modal-animations.css';
 
 	interface Props {
 		selectedOrientation: Orientation;
@@ -149,21 +150,3 @@ positioned over the specific prop panel that triggered it.
 <svelte:window onkeydown={handleKeyDown} />
 
 <!-- Modal is rendered via DOM manipulation into document.body -->
-
-<style>
-	/* Add keyframes for modal animation */
-	:global(body) {
-		--modal-appear: modalAppear;
-	}
-
-	@keyframes modalAppear {
-		from {
-			opacity: 0;
-			transform: scale(0.9);
-		}
-		to {
-			opacity: 1;
-			transform: scale(1);
-		}
-	}
-</style>

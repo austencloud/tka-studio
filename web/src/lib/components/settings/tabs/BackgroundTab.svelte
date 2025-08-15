@@ -1,118 +1,138 @@
-<!-- BackgroundTab.svelte - Background settings tab for the settings dialog -->
+<!-- BackgroundTab.svelte - Redesigned with CSS-animated thumbnail selection -->
 <script lang="ts">
-	import type { BackgroundType, QualityLevel } from '$lib/components/backgrounds/types/types';
-	import SelectInput from '../SelectInput.svelte';
+	import type { BackgroundType } from '$lib/components/backgrounds/types/types';
 	import SettingCard from '../SettingCard.svelte';
-	import ToggleSetting from '../ToggleSetting.svelte';
 
 	interface Props {
 		settings: {
 			backgroundType?: BackgroundType;
-			backgroundQuality?: QualityLevel;
-			backgroundEnabled?: boolean;
 		};
-		onupdate?: (data: { key: string; value: any }) => void;
 	}
 
-	let { settings, onupdate }: Props = $props();
+	let { settings, ...events } = $props();
 
-	// Local state for form values - FIXED: Use app's default ('aurora') not component default
-	let backgroundType = $state<BackgroundType>(settings.backgroundType || 'aurora');
-	let backgroundQuality = $state<QualityLevel>(settings.backgroundQuality || 'medium');
-	let backgroundEnabled = $state(settings.backgroundEnabled ?? true);
+	// Current selection state
+	let selectedBackground = $state<BackgroundType>(settings.backgroundType || 'aurora');
 
-	// Background type options (removed starfield and auroraBorealis as requested)
-	const backgroundOptions = [
-		{ value: 'snowfall', label: 'Snowfall' },
-		{ value: 'nightSky', label: 'Night Sky' },
-		{ value: 'aurora', label: 'Aurora' },
-		{ value: 'bubbles', label: 'Bubbles' },
+	// Available backgrounds with metadata
+	const backgrounds = [
+		{
+			type: 'aurora' as BackgroundType,
+			name: 'Aurora',
+			description: 'Colorful flowing aurora with animated blobs',
+			icon: '🌌',
+			gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
+			animation: 'aurora-flow'
+		},
+		{
+			type: 'snowfall' as BackgroundType,
+			name: 'Snowfall',
+			description: 'Gentle falling snowflakes with shooting stars',
+			icon: '❄️',
+			gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
+			animation: 'snow-fall'
+		},
+		{
+			type: 'nightSky' as BackgroundType,
+			name: 'Night Sky',
+			description: 'Starry night with twinkling celestial bodies',
+			icon: '🌙',
+			gradient: 'linear-gradient(135deg, #0a0e2c 0%, #1a2040 50%, #2a3060 100%)',
+			animation: 'star-twinkle'
+		},
+		{
+			type: 'bubbles' as BackgroundType,
+			name: 'Bubbles',
+			description: 'Underwater scene with floating bubbles',
+			icon: '🫧',
+			gradient: 'linear-gradient(135deg, #143250 0%, #0a1e3c 50%, #050f28 100%)',
+			animation: 'bubble-float'
+		}
 	];
 
-	// Quality options
-	const qualityOptions = [
-		{ value: 'minimal', label: 'Minimal' },
-		{ value: 'low', label: 'Low' },
-		{ value: 'medium', label: 'Medium' },
-		{ value: 'high', label: 'High' },
-	];
-
-	// Update handlers removed - now using inline functions
-
-	function handleEnabledChange(checked: boolean) {
-		backgroundEnabled = checked;
-		onupdate?.({ key: 'backgroundEnabled', value: backgroundEnabled });
+	// Handle thumbnail selection
+	function selectBackground(backgroundType: BackgroundType) {
+		selectedBackground = backgroundType;
+		
+		// Update settings - backgrounds are always enabled, quality is auto-managed
+		if (events.onupdate) {
+			events.onupdate({ key: 'backgroundType', value: backgroundType });
+		}
+		
+		console.log(`🌌 Background changed to: ${backgroundType}`);
 	}
-
-	// Background descriptions for user guidance
-	const backgroundDescriptions: Record<BackgroundType, string> = {
-		snowfall: 'Gentle falling snowflakes with shooting stars',
-		nightSky: 'Starry night with celestial bodies and shooting stars',
-		aurora: 'Colorful aurora with animated blobs and sparkles',
-		bubbles: 'Underwater scene with floating bubbles and light rays',
-		deepOcean: 'Deep ocean depths with mysterious creatures and bioluminescence',
-	};
-
-	// Get current background description
-	let currentDescription = $derived(
-		backgroundDescriptions[backgroundType] || 'Beautiful animated background'
-	);
 </script>
 
 <div class="tab-content">
-	<SettingCard title="Background Settings">
-		<ToggleSetting
-			label="Enable Background"
-			checked={backgroundEnabled}
-			helpText="Show animated background behind the interface"
-			onchange={handleEnabledChange}
-		/>
-
-		{#if backgroundEnabled}
-			<SelectInput
-				label="Background Type"
-				value={backgroundType}
-				options={backgroundOptions}
-				helpText={currentDescription}
-				onchange={(value) => {
-					backgroundType = value as BackgroundType;
-					onupdate?.({ key: 'backgroundType', value: backgroundType });
-				}}
-			/>
-
-			<SelectInput
-				label="Quality Level"
-				value={backgroundQuality}
-				options={qualityOptions}
-				helpText="Higher quality shows more particles and effects"
-				onchange={(value) => {
-					backgroundQuality = value as QualityLevel;
-					onupdate?.({ key: 'backgroundQuality', value: backgroundQuality });
-				}}
-			/>
-		{/if}
-	</SettingCard>
-
-	{#if backgroundEnabled}
-		<SettingCard title="Background Preview">
-			<div class="preview-container">
-				<div class="preview-box" data-background={backgroundType}>
-					<div class="preview-content">
-						<h4>
-							{backgroundOptions.find((opt) => opt.value === backgroundType)?.label}
-						</h4>
-						<p class="preview-description">{currentDescription}</p>
-						<div class="quality-indicator">
-							Quality: <span class="quality-badge" data-quality={backgroundQuality}>
-								{qualityOptions.find((opt) => opt.value === backgroundQuality)
-									?.label}
-							</span>
+	<SettingCard 
+		title="Background Selection" 
+		description="Choose your preferred animated background"
+	>
+		<div class="background-grid">
+			{#each backgrounds as background}
+				<div 
+					class="background-thumbnail {background.animation}"
+					class:selected={selectedBackground === background.type}
+					style="--bg-gradient: {background.gradient}"
+					onclick={() => selectBackground(background.type)}
+					role="button"
+					tabindex="0"
+					onkeydown={(e) => {
+						if (e.key === 'Enter' || e.key === ' ') {
+							e.preventDefault();
+							selectBackground(background.type);
+						}
+					}}
+					aria-label={`Select ${background.name} background`}
+				>
+					<!-- Animated background preview -->
+					<div class="thumbnail-background"></div>
+					
+					<!-- Overlay with background info -->
+					<div class="thumbnail-overlay">
+						<div class="thumbnail-icon">{background.icon}</div>
+						<div class="thumbnail-info">
+							<h4 class="thumbnail-name">{background.name}</h4>
+							<p class="thumbnail-description">{background.description}</p>
 						</div>
+						
+						<!-- Selection indicator -->
+						{#if selectedBackground === background.type}
+							<div class="selection-indicator">
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+									<circle cx="12" cy="12" r="10" fill="rgba(99, 102, 241, 0.2)" stroke="#6366f1" stroke-width="2"/>
+									<path d="M8 12l2 2 4-4" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								</svg>
+							</div>
+						{/if}
 					</div>
 				</div>
+			{/each}
+		</div>
+	</SettingCard>
+
+	<!-- Current Selection Info -->
+	<SettingCard title="Selected Background">
+		<div class="current-selection">
+			<div class="selection-preview" style="--bg-gradient: {backgrounds.find(bg => bg.type === selectedBackground)?.gradient}">
+				<div class="preview-background {backgrounds.find(bg => bg.type === selectedBackground)?.animation}"></div>
+				<div class="preview-overlay">
+					<div class="preview-icon">{backgrounds.find(bg => bg.type === selectedBackground)?.icon}</div>
+				</div>
 			</div>
-		</SettingCard>
-	{/if}
+			<div class="selection-info">
+				<h3>{backgrounds.find(bg => bg.type === selectedBackground)?.name}</h3>
+				<p>{backgrounds.find(bg => bg.type === selectedBackground)?.description}</p>
+				<div class="selection-note">
+					<svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+						<circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+						<path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					</svg>
+					<span>Background quality automatically optimizes for performance</span>
+				</div>
+			</div>
+		</div>
+	</SettingCard>
 </div>
 
 <style>
@@ -122,150 +142,433 @@
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
-		gap: clamp(16px, 2vw, 32px);
+		gap: clamp(20px, 3vw, 32px);
 		container-type: inline-size;
 	}
 
-	.preview-container {
-		margin-top: clamp(12px, 1.5vw, 24px);
+	.background-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		gap: clamp(16px, 2vw, 24px);
+		margin-top: clamp(12px, 1.5vw, 20px);
 	}
 
-	.preview-box {
+	.background-thumbnail {
 		position: relative;
-		height: clamp(100px, 15vw, 180px);
+		height: 180px;
 		border-radius: 12px;
 		overflow: hidden;
-		border: 2px solid rgba(255, 255, 255, 0.1);
-		background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+		cursor: pointer;
 		transition: all 0.3s ease;
+		border: 2px solid rgba(255, 255, 255, 0.1);
+		background: rgba(0, 0, 0, 0.2);
 	}
 
-	/* Container queries for background tab layout */
-	@container (min-width: 400px) {
-		.tab-content {
-			gap: clamp(20px, 2.5vw, 40px);
-		}
+	.background-thumbnail:hover {
+		transform: translateY(-4px);
+		border-color: rgba(255, 255, 255, 0.3);
+		box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 	}
 
-	@container (min-width: 600px) {
-		.tab-content {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			gap: clamp(24px, 3vw, 48px);
-			align-items: start;
-		}
+	.background-thumbnail.selected {
+		border-color: #6366f1;
+		box-shadow: 0 0 0 1px #6366f1, 0 4px 20px rgba(99, 102, 241, 0.3);
 	}
 
-	.preview-box[data-background='snowfall'] {
-		background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+	.background-thumbnail:focus-visible {
+		outline: 2px solid #6366f1;
+		outline-offset: 2px;
 	}
 
-	.preview-box[data-background='nightSky'] {
-		background: linear-gradient(135deg, #0a0e2c 0%, #1a2040 50%, #2a3060 100%);
-	}
-
-	.preview-box[data-background='aurora'] {
-		background: linear-gradient(135deg, #ff00ff 0%, #00ffff 50%, #ffff00 100%);
-		opacity: 0.8;
-	}
-
-	.preview-box[data-background='auroraBorealis'] {
-		background: linear-gradient(135deg, #051932 0%, #0a2850 50%, #0f3c78 100%);
-	}
-
-	.preview-box[data-background='starfield'] {
-		background: radial-gradient(circle, #050f15 0%, #020208 50%, #000003 100%);
-	}
-
-	.preview-box[data-background='bubbles'] {
-		background: linear-gradient(135deg, #143250 0%, #0a1e3c 50%, #050f28 100%);
-	}
-
-	.preview-content {
+	.thumbnail-background {
 		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		text-align: center;
-		color: white;
-		z-index: 2;
-	}
-
-	.preview-content h4 {
-		margin: 0 0 0.5rem 0;
-		font-size: 1.1rem;
-		font-weight: 600;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-	}
-
-	.preview-description {
-		margin: 0 0 0.75rem 0;
-		font-size: 0.85rem;
-		opacity: 0.9;
-		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-		max-width: 200px;
-	}
-
-	.quality-indicator {
-		font-size: 0.8rem;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: var(--bg-gradient);
 		opacity: 0.8;
 	}
 
-	.quality-badge {
-		display: inline-block;
-		padding: 0.2rem 0.5rem;
-		border-radius: 4px;
-		font-weight: 500;
-		text-transform: uppercase;
-		font-size: 0.7rem;
-		letter-spacing: 0.5px;
+	/* Animated CSS backgrounds */
+	.aurora-flow .thumbnail-background {
+		background: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+		background-size: 400% 400%;
+		animation: aurora-animation 8s ease-in-out infinite;
 	}
 
-	.quality-badge[data-quality='minimal'] {
-		background: rgba(255, 100, 100, 0.3);
-		color: #ffaaaa;
+	.snow-fall .thumbnail-background {
+		background: var(--bg-gradient);
+		position: relative;
 	}
 
-	.quality-badge[data-quality='low'] {
-		background: rgba(255, 200, 100, 0.3);
-		color: #ffddaa;
-	}
-
-	.quality-badge[data-quality='medium'] {
-		background: rgba(100, 200, 255, 0.3);
-		color: #aaddff;
-	}
-
-	.quality-badge[data-quality='high'] {
-		background: rgba(100, 255, 100, 0.3);
-		color: #aaffaa;
-	}
-
-	/* Add subtle animation to preview */
-	.preview-box::before {
+	.snow-fall .thumbnail-background::before {
 		content: '';
 		position: absolute;
 		top: 0;
-		left: -100%;
-		width: 100%;
-		height: 100%;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-		animation: shimmer 3s infinite;
-		z-index: 1;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: 
+			radial-gradient(2px 2px at 20px 30px, white, transparent),
+			radial-gradient(2px 2px at 40px 70px, white, transparent),
+			radial-gradient(1px 1px at 90px 40px, white, transparent),
+			radial-gradient(1px 1px at 130px 80px, white, transparent),
+			radial-gradient(2px 2px at 160px 30px, white, transparent),
+			radial-gradient(1px 1px at 200px 60px, white, transparent),
+			radial-gradient(2px 2px at 240px 90px, white, transparent),
+			radial-gradient(1px 1px at 280px 40px, white, transparent);
+		background-repeat: repeat;
+		background-size: 300px 150px;
+		animation: snowfall 12s linear infinite;
+		opacity: 0.8;
 	}
 
-	@keyframes shimmer {
-		0% {
-			left: -100%;
+	.snow-fall .thumbnail-background::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+		background-size: 400px 400px;
+		animation: shooting-star 15s ease-in-out infinite;
+		opacity: 0.4;
+	}
+
+	.star-twinkle .thumbnail-background {
+		background: var(--bg-gradient);
+		position: relative;
+	}
+
+	.star-twinkle .thumbnail-background::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: 
+			radial-gradient(1px 1px at 25px 25px, #ffffff, transparent),
+			radial-gradient(2px 2px at 75px 50px, #ffeb3b, transparent),
+			radial-gradient(1px 1px at 125px 75px, #ffffff, transparent),
+			radial-gradient(1px 1px at 175px 25px, #81c784, transparent),
+			radial-gradient(2px 2px at 200px 100px, #ffffff, transparent),
+			radial-gradient(1px 1px at 50px 120px, #ffcdd2, transparent),
+			radial-gradient(1px 1px at 150px 140px, #ffffff, transparent),
+			radial-gradient(2px 2px at 250px 60px, #e1bee7, transparent);
+		background-repeat: repeat;
+		background-size: 280px 180px;
+		animation: star-twinkle-animation 3s ease-in-out infinite;
+		opacity: 0.9;
+	}
+
+	.star-twinkle .thumbnail-background::after {
+		content: '';
+		position: absolute;
+		top: 20px;
+		right: 30px;
+		width: 40px;
+		height: 40px;
+		background: radial-gradient(circle, #ffd54f 30%, rgba(255, 213, 79, 0.3) 70%, transparent);
+		border-radius: 50%;
+		animation: moon-glow 6s ease-in-out infinite;
+		opacity: 0.8;
+	}
+
+	.bubble-float .thumbnail-background {
+		background: var(--bg-gradient);
+		position: relative;
+		overflow: hidden;
+	}
+
+	.bubble-float .thumbnail-background::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: 
+			radial-gradient(circle at 30px 140px, rgba(255,255,255,0.4) 3px, transparent 4px),
+			radial-gradient(circle at 80px 160px, rgba(255,255,255,0.3) 5px, transparent 6px),
+			radial-gradient(circle at 120px 120px, rgba(255,255,255,0.35) 2px, transparent 3px),
+			radial-gradient(circle at 170px 180px, rgba(255,255,255,0.4) 4px, transparent 5px),
+			radial-gradient(circle at 220px 140px, rgba(255,255,255,0.25) 3px, transparent 4px),
+			radial-gradient(circle at 60px 100px, rgba(255,255,255,0.3) 2px, transparent 3px),
+			radial-gradient(circle at 200px 60px, rgba(255,255,255,0.4) 6px, transparent 7px);
+		background-size: 250px 200px;
+		animation: bubble-rise 8s ease-in-out infinite;
+		opacity: 0.8;
+	}
+
+	.bubble-float .thumbnail-background::after {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: 
+			linear-gradient(120deg, transparent 0%, rgba(64, 224, 208, 0.1) 30%, transparent 50%),
+			linear-gradient(60deg, transparent 20%, rgba(135, 206, 250, 0.15) 60%, transparent 80%);
+		background-size: 200px 100%, 300px 100%;
+		animation: underwater-light 10s ease-in-out infinite;
+		opacity: 0.6;
+	}
+
+	.thumbnail-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: linear-gradient(
+			135deg,
+			rgba(0, 0, 0, 0.3) 0%,
+			rgba(0, 0, 0, 0.1) 50%,
+			rgba(0, 0, 0, 0.4) 100%
+		);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		padding: 16px;
+		color: white;
+		backdrop-filter: blur(1px);
+	}
+
+	.thumbnail-icon {
+		font-size: 32px;
+		line-height: 1;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+	}
+
+	.thumbnail-info {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+		gap: 8px;
+	}
+
+	.thumbnail-name {
+		margin: 0;
+		font-size: 18px;
+		font-weight: 600;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+		letter-spacing: 0.5px;
+	}
+
+	.thumbnail-description {
+		margin: 0;
+		font-size: 13px;
+		opacity: 0.9;
+		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+		line-height: 1.3;
+		max-width: 220px;
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	.selection-indicator {
+		position: absolute;
+		top: 12px;
+		right: 12px;
+		background: rgba(0, 0, 0, 0.5);
+		border-radius: 50%;
+		padding: 4px;
+		backdrop-filter: blur(10px);
+	}
+
+	/* Current Selection Styles */
+	.current-selection {
+		display: flex;
+		gap: clamp(16px, 2vw, 24px);
+		align-items: center;
+		margin-top: clamp(12px, 1.5vw, 20px);
+	}
+
+	.selection-preview {
+		position: relative;
+		width: 120px;
+		height: 80px;
+		border-radius: 8px;
+		overflow: hidden;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		flex-shrink: 0;
+	}
+
+	.preview-background {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: var(--bg-gradient);
+		opacity: 0.8;
+	}
+
+	.preview-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: rgba(0, 0, 0, 0.2);
+	}
+
+	.preview-icon {
+		font-size: 24px;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+	}
+
+	.selection-info {
+		flex: 1;
+		min-width: 0;
+	}
+
+	.selection-info h3 {
+		margin: 0 0 8px 0;
+		font-size: 18px;
+		font-weight: 600;
+		color: white;
+	}
+
+	.selection-info p {
+		margin: 0 0 12px 0;
+		font-size: 14px;
+		color: rgba(255, 255, 255, 0.8);
+		line-height: 1.4;
+	}
+
+	.selection-note {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		font-size: 12px;
+		color: rgba(255, 255, 255, 0.6);
+		font-style: italic;
+	}
+
+	.selection-note svg {
+		flex-shrink: 0;
+		opacity: 0.7;
+	}
+
+	/* Animations */
+	@keyframes aurora-animation {
+		0%, 100% { background-position: 0% 50%; }
+		50% { background-position: 100% 50%; }
+	}
+
+	@keyframes snowfall {
+		0% { transform: translateY(-20px); }
+		100% { transform: translateY(200px); }
+	}
+
+	@keyframes shooting-star {
+		0% { transform: translateX(-400px) translateY(-100px); opacity: 0; }
+		10% { opacity: 1; }
+		90% { opacity: 1; }
+		100% { transform: translateX(400px) translateY(100px); opacity: 0; }
+	}
+
+	@keyframes star-twinkle-animation {
+		0%, 100% { opacity: 0.9; }
+		25% { opacity: 0.4; }
+		50% { opacity: 0.9; }
+		75% { opacity: 0.6; }
+	}
+
+	@keyframes moon-glow {
+		0%, 100% { 
+			box-shadow: 0 0 20px rgba(255, 213, 79, 0.3);
+			transform: scale(1);
 		}
-		100% {
-			left: 100%;
+		50% { 
+			box-shadow: 0 0 30px rgba(255, 213, 79, 0.6);
+			transform: scale(1.1);
 		}
 	}
 
-	.preview-box:hover {
-		border-color: rgba(255, 255, 255, 0.3);
-		transform: translateY(-2px);
-		box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+	@keyframes bubble-rise {
+		0% { transform: translateY(30px); }
+		25% { transform: translateY(-5px) translateX(5px); }
+		50% { transform: translateY(-15px) translateX(-3px); }
+		75% { transform: translateY(-8px) translateX(8px); }
+		100% { transform: translateY(30px); }
+	}
+
+	@keyframes underwater-light {
+		0% { transform: translateX(-200px) rotate(0deg); }
+		50% { transform: translateX(200px) rotate(180deg); }
+		100% { transform: translateX(-200px) rotate(360deg); }
+	}
+
+	/* Container Queries for Responsive Layout */
+	@container (max-width: 600px) {
+		.background-grid {
+			grid-template-columns: 1fr;
+		}
+		
+		.current-selection {
+			flex-direction: column;
+			text-align: center;
+		}
+		
+		.selection-preview {
+			width: 100%;
+			max-width: 300px;
+			height: 120px;
+		}
+	}
+
+	@container (min-width: 900px) {
+		.background-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@container (min-width: 1200px) {
+		.background-grid {
+			grid-template-columns: repeat(2, 1fr);
+			max-width: 800px;
+			margin: 0 auto;
+		}
+	}
+
+	/* Accessibility */
+	@media (prefers-reduced-motion: reduce) {
+		.background-thumbnail,
+		.thumbnail-background,
+		.preview-background {
+			animation: none !important;
+			transition: none;
+		}
+		
+		.background-thumbnail:hover {
+			transform: none;
+		}
+	}
+
+	/* High contrast mode */
+	@media (prefers-contrast: high) {
+		.background-thumbnail {
+			border-color: white;
+		}
+		
+		.background-thumbnail.selected {
+			border-color: #6366f1;
+			background: rgba(99, 102, 241, 0.1);
+		}
+		
+		.thumbnail-overlay {
+			background: rgba(0, 0, 0, 0.8);
+		}
 	}
 </style>

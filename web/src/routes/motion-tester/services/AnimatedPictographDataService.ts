@@ -10,7 +10,7 @@ import type {
   ArrowData,
   PropData,
   MotionData,
-} from "$lib/domain/types";
+} from "$lib/domain";
 import {
   createPictographData,
   createGridData,
@@ -28,36 +28,66 @@ import {
   PropType,
 } from "$lib/domain/enums";
 import type { MotionTesterState } from "../state/motion-tester-state.svelte";
+import type { IMotionTesterCsvLookupService } from "$lib/services/di/interfaces/motion-tester-interfaces";
 
 export interface IAnimatedPictographDataService {
   createAnimatedPictographData(
     motionState: MotionTesterState
-  ): PictographData | null;
+  ): Promise<PictographData | null>;
 }
 
 export class AnimatedPictographDataService
   implements IAnimatedPictographDataService
 {
+  constructor(private csvLookupService?: IMotionTesterCsvLookupService) {}
   /**
    * Creates complete pictograph data for animated display using current motion parameters.
-   * Generates proper props, arrows, and motion data for realistic visualization.
+   * Uses CSV lookup service to find the correct letter and pictograph data.
    */
-  createAnimatedPictographData(
+  async createAnimatedPictographData(
     motionState: MotionTesterState
-  ): PictographData | null {
+  ): Promise<PictographData | null> {
     try {
       const gridMode = this.getGridMode(motionState.gridType);
-      const gridData = createGridData({ grid_mode: gridMode });
 
-      // Debug: Log motion parameters (using snapshot to avoid Svelte warnings)
-      console.log(
-        "🔍 Motion Tester Debug - Blue Motion Params:",
-        JSON.parse(JSON.stringify(motionState.blueMotionParams))
-      );
-      console.log(
-        "🔍 Motion Tester Debug - Red Motion Params:",
-        JSON.parse(JSON.stringify(motionState.redMotionParams))
-      );
+      // Try to use CSV lookup service first for accurate letter detection
+      if (this.csvLookupService) {
+        console.log("🔍 Using CSV lookup service for pictograph generation...");
+
+        const csvPictograph =
+          await this.csvLookupService.findMatchingPictograph(
+            motionState.blueMotionParams,
+            motionState.redMotionParams,
+            gridMode
+          );
+
+        if (csvPictograph) {
+          console.log(
+            `✅ CSV lookup successful! Found letter: ${csvPictograph.letter}`
+          );
+
+          // Update metadata to include animation progress
+          csvPictograph.metadata = {
+            ...csvPictograph.metadata,
+            source: "motion_tester_csv_lookup",
+            grid_type: motionState.gridType,
+            progress: motionState.animationState.progress,
+          };
+
+          return csvPictograph;
+        } else {
+          console.warn(
+            "⚠️ CSV lookup failed, falling back to manual generation..."
+          );
+        }
+      } else {
+        console.warn(
+          "⚠️ CSV lookup service not available, using manual generation..."
+        );
+      }
+
+      // Fallback: Create pictograph manually (original logic)
+      const gridData = createGridData({ grid_mode: gridMode });
 
       // Create complete motion data
       const blueMotionData = this.createCompleteMotionData(
@@ -87,16 +117,8 @@ export class AnimatedPictographDataService
         "red"
       );
 
-      // Debug: Log created data
-      console.log("🔍 Motion Tester Debug - Blue Motion Data:", blueMotionData);
-      console.log("🔍 Motion Tester Debug - Red Motion Data:", redMotionData);
-      console.log("🔍 Motion Tester Debug - Blue Props:", blueProps);
-      console.log("🔍 Motion Tester Debug - Red Props:", redProps);
-      console.log("🔍 Motion Tester Debug - Blue Arrows:", blueArrows);
-      console.log("🔍 Motion Tester Debug - Red Arrows:", redArrows);
-
       const pictographData = createPictographData({
-        id: "motion-tester-animated-pictograph",
+        id: "motion-tester-fallback-pictograph",
         grid_data: gridData,
         arrows: {
           blue: blueArrows,
@@ -110,22 +132,16 @@ export class AnimatedPictographDataService
           blue: blueMotionData,
           red: redMotionData,
         },
-        letter: "T", // T for "Tester"
+        letter: "?", // Unknown letter when CSV lookup fails
         beat: 1,
         is_blank: false,
         is_mirrored: false,
         metadata: {
-          source: "motion_tester_animated",
+          source: "motion_tester_fallback",
           grid_type: motionState.gridType,
           progress: motionState.animationState.progress,
         },
       });
-
-      // Debug: Log final pictograph data
-      console.log(
-        "🔍 Motion Tester Debug - Final Pictograph Data:",
-        pictographData
-      );
 
       return pictographData;
     } catch (error) {
@@ -193,6 +209,7 @@ export class AnimatedPictographDataService
 
   // Mapping methods to convert motion tester parameters to domain enums
   private mapMotionType(motionType: string): MotionType {
+    if (!motionType) return MotionType.STATIC;
     switch (motionType.toLowerCase()) {
       case "pro":
         return MotionType.PRO;
@@ -210,6 +227,7 @@ export class AnimatedPictographDataService
   }
 
   private mapLocation(location: string): Location {
+    if (!location) return Location.NORTH;
     switch (location.toLowerCase()) {
       case "n":
         return Location.NORTH;
@@ -233,6 +251,7 @@ export class AnimatedPictographDataService
   }
 
   private mapOrientation(orientation: string): Orientation {
+    if (!orientation) return Orientation.IN;
     switch (orientation.toLowerCase()) {
       case "in":
         return Orientation.IN;
@@ -248,6 +267,7 @@ export class AnimatedPictographDataService
   }
 
   private mapRotationDirection(rotationDir: string): RotationDirection {
+    if (!rotationDir) return RotationDirection.NO_ROTATION;
     switch (rotationDir.toLowerCase()) {
       case "cw":
       case "clockwise":

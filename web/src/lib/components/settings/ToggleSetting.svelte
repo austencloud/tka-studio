@@ -12,13 +12,17 @@
 
 	function handleToggle() {
 		if (disabled) return;
-		onchange?.(!checked);
+		const newValue = !checked;
+		console.log('🔧 ToggleSetting handleToggle called, newValue:', newValue);
+		console.log('🔧 ToggleSetting onchange function available:', typeof onchange, onchange);
+		onchange?.(newValue);
+		console.log('🔧 ToggleSetting onchange called with:', newValue);
 	}
 </script>
 
 <div class="setting-card">
 	<label class="toggle-setting" class:disabled>
-		<input type="checkbox" {checked} {disabled} onchange={handleToggle} />
+		<input type="checkbox" {checked} {disabled} onclick={handleToggle} />
 		<span class="toggle-slider"></span>
 		<span class="setting-label">{label}</span>
 	</label>

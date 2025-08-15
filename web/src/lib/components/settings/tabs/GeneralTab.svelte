@@ -13,6 +13,7 @@
 		gridMode?: 'diamond' | 'box';
 		workbenchColumns?: number;
 		animationsEnabled?: boolean;
+		developerMode?: boolean;
 	}
 
 	interface Props {
@@ -22,6 +23,9 @@
 
 	let { settings, onupdate }: Props = $props();
 
+	// Debug: Check if onupdate is available
+	console.log('🔍 GeneralTab initialized, onupdate function:', typeof onupdate, onupdate);
+
 	// Local state for form values
 	let userName = $state(settings.userName || '');
 	let autoSave = $state(settings.autoSave ?? true);
@@ -30,6 +34,9 @@
 
 	// Animation settings (simplified)
 	let animationsEnabled = $state(settings.animationsEnabled ?? true);
+	
+	// Developer settings
+	let developerMode = $state(settings.developerMode ?? false);
 
 	// Options
 	const gridModeOptions = [
@@ -43,6 +50,27 @@
 		onupdate?.({ key: 'animationsEnabled', value: animationsEnabled });
 		console.log(`🎨 Animations ${animationsEnabled ? 'enabled' : 'disabled'}`);
 	}
+	
+	function handleDeveloperModeChange(checked: boolean) {
+		console.log('🔧 Developer mode toggle clicked, new value:', checked);
+		console.log('🔧 onupdate function available:', typeof onupdate);
+		developerMode = checked;
+		
+		// Update global state directly
+		import('$lib/state/appState.svelte').then(({ updateSettings, getSettings }) => {
+			const currentSettings = getSettings();
+			const newSettings = { ...currentSettings, developerMode: checked };
+			console.log('🔧 Direct updateSettings call with:', newSettings);
+			updateSettings(newSettings);
+		});
+		
+		// Also try the normal prop way
+		const updateData = { key: 'developerMode', value: developerMode };
+		console.log('🔧 About to call onupdate with:', updateData);
+		onupdate?.(updateData);
+		console.log(`🔧 Developer mode ${developerMode ? 'enabled' : 'disabled'} - onupdate called`);
+	}
+	
 	function handleUserNameChange(value: string) {
 		userName = value;
 		onupdate?.({ key: 'userName', value: userName });
@@ -93,6 +121,13 @@
 			checked={autoSave}
 			helpText="Save changes automatically"
 			onchange={handleAutoSaveChange}
+		/>
+
+		<ToggleSetting
+			label="Developer Mode"
+			checked={developerMode}
+			helpText="Show developer tools and experimental features in navigation"
+			onchange={handleDeveloperModeChange}
 		/>
 
 		<SelectInput

@@ -75,9 +75,14 @@
 
 	// Handle start position selection (modernized from legacy with proper data format)
 	async function handleSelect(startPosPictograph: PictographData) {
+		console.log('🚀 StartPositionPicker: handleSelect called with parameter:', startPosPictograph);
+		console.log('🚀 StartPositionPicker: Parameter type:', typeof startPosPictograph);
+		console.log('🚀 StartPositionPicker: Parameter is null/undefined?', startPosPictograph == null);
+
 		try {
-			console.log('🚀 StartPositionPicker: User clicked start position:', startPosPictograph.id);
-			
+			console.log('🚀 StartPositionPicker: User clicked start position:', startPosPictograph?.id);
+			console.log('🚀 StartPositionPicker: Full pictograph data:', startPosPictograph);
+
 			// Show transition state
 			isTransitioning = true;
 			console.log('🚀 StartPositionPicker: Setting isTransitioning = true');
@@ -88,6 +93,7 @@
 			// 2. Proper pictograph data structure
 
 			// Extract end position from the pictograph data
+			console.log('🚀 StartPositionPicker: About to extract end position from:', startPosPictograph);
 			const endPosition = extractEndPosition(startPosPictograph);
 			console.log('🚀 StartPositionPicker: Extracted end position:', endPosition);
 
@@ -154,15 +160,19 @@
 			// **NEW: Preload options BEFORE triggering the transition**
 			// This ensures options are ready when the option picker fades in
 			try {
-				console.log('🚀 Preloading options for seamless transition...');
+				console.log('🚀 StartPositionPicker: Starting preload options for seamless transition...');
 
 				// Import and use the OptionDataService to preload options
+				console.log('🚀 StartPositionPicker: Importing OptionDataService...');
 				const { OptionDataService } = await import(
 					'$services/implementations/OptionDataService'
 				);
+				console.log('🚀 StartPositionPicker: Creating OptionDataService instance...');
 				const optionDataService = new OptionDataService();
+				console.log('🚀 StartPositionPicker: Initializing OptionDataService...');
 				await optionDataService.initialize();
 
+				console.log('🚀 StartPositionPicker: Getting next options from end position:', endPosition);
 				const preloadedOptions = await optionDataService.getNextOptionsFromEndPosition(
 					endPosition,
 					gridMode === 'diamond' ? GridMode.DIAMOND : GridMode.BOX,
@@ -170,13 +180,14 @@
 				);
 
 				console.log(
-					`✅ Preloaded ${preloadedOptions?.length || 0} options for seamless transition`
+					`✅ StartPositionPicker: Preloaded ${preloadedOptions?.length || 0} options for seamless transition`
 				);
 
 				// Store the preloaded options so OptionPicker can use them immediately
 				localStorage.setItem('preloaded_options', JSON.stringify(preloadedOptions || []));
+				console.log('🚀 StartPositionPicker: Preloaded options stored in localStorage');
 			} catch (preloadError) {
-				console.warn('Failed to preload options, will load normally:', preloadError);
+				console.warn('🚨 StartPositionPicker: Failed to preload options, will load normally:', preloadError);
 				// Continue with normal flow even if preload fails
 			}
 
@@ -210,7 +221,15 @@
 			// The BuildTabContent fade transitions will manage the loading state
 			
 		} catch (error) {
-			console.error('❌ Error selecting start position:', error);
+			console.error('🚨 StartPositionPicker: Error selecting start position:', error);
+			if (error instanceof Error) {
+				console.error('🚨 StartPositionPicker: Error stack:', error.stack);
+				console.error('🚨 StartPositionPicker: Error details:', {
+					message: error.message,
+					name: error.name,
+					startPosPictograph: startPosPictograph
+				});
+			}
 			isTransitioning = false;
 			// Consider showing an error message to the user
 			alert(`Failed to select start position: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -310,7 +329,12 @@
 					role="button"
 					tabindex="0"
 					style:--letter-border-color={getLetterBorderColor(pictograph.letter || null)}
-					onclick={() => handleSelect(pictograph)}
+					onclick={() => {
+						console.log('🚀 StartPositionPicker: Click handler called with pictograph:', pictograph);
+						console.log('🚀 StartPositionPicker: About to call handleSelect...');
+						handleSelect(pictograph);
+						console.log('🚀 StartPositionPicker: handleSelect call completed');
+					}}
 					onkeydown={(e) => {
 						if (e.key === 'Enter' || e.key === ' ') {
 							e.preventDefault();

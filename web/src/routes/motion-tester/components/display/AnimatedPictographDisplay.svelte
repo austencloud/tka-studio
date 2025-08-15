@@ -6,7 +6,7 @@ No animation controls, no data creation - just pure display logic.
 -->
 <script lang="ts">
 	import Pictograph from '$lib/components/pictograph/Pictograph.svelte';
-	import type { PictographData } from '$lib/domain/types';
+	import type { PictographData } from '$lib/domain';
 
 	interface Props {
 		pictographData: PictographData | null;

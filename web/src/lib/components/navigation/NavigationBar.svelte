@@ -8,6 +8,7 @@
 		id: TabID;
 		label: string;
 		icon: string;
+		isMain?: boolean;
 	}
 	interface Props {
 		tabs?: readonly TabDef[];
@@ -17,6 +18,26 @@
 	}
 
 	let { tabs = [], activeTab = '', onTabSelect, onBackgroundChange }: Props = $props();
+
+	// Separate main and developer tabs for display
+	const mainTabs = $derived(() => {
+		const filtered = tabs.filter(tab => tab.isMain !== false);
+		console.log('🔍 NavigationBar mainTabs:', filtered);
+		return filtered;
+	});
+	const devTabs = $derived(() => {
+		const filtered = tabs.filter(tab => tab.isMain === false);
+		console.log('🔍 NavigationBar devTabs:', filtered);
+		return filtered;
+	});
+	const showDeveloperSection = $derived(() => devTabs().length > 0);
+
+	// Debug the tabs prop
+	$effect(() => {
+		console.log('🔍 NavigationBar received tabs:', tabs);
+		console.log('🔍 NavigationBar tabs length:', tabs.length);
+		console.log('🔍 NavigationBar activeTab:', activeTab);
+	});
 
 	// Handle logo click - go to About tab
 	async function handleLogoClick() {
@@ -59,7 +80,8 @@
 
 		<!-- App Tab Navigation -->
 		<div class="nav-tabs">
-			{#each tabs as tab}
+			<!-- Main tabs -->
+			{#each mainTabs() as tab}
 				<button
 					class="nav-tab"
 					class:active={activeTab === tab.id}
@@ -70,6 +92,23 @@
 					<span class="tab-label">{tab.label}</span>
 				</button>
 			{/each}
+
+			<!-- Developer tabs separator and tabs -->
+			{#if showDeveloperSection()}
+				<div class="tab-separator"></div>
+				{#each devTabs() as tab}
+					<button
+						class="nav-tab developer-tab"
+						class:active={activeTab === tab.id}
+						onclick={() => handleTabClick(tab)}
+						aria-pressed={activeTab === tab.id}
+						title="Developer Tool: {tab.label}"
+					>
+						<span class="tab-icon">{tab.icon}</span>
+						<span class="tab-label">{tab.label}</span>
+					</button>
+				{/each}
+			{/if}
 		</div>
 
 		<!-- App Actions -->
@@ -81,11 +120,19 @@
 				aria-label="Open Settings"
 			>
 				<svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-					<circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
 					<path
-						d="m12 1 2.09.87.87 2.09-2.09.87-.87-2.09L12 1zM12 23l-2.09-.87-.87-2.09 2.09-.87.87 2.09L12 23zM1 12l.87-2.09L3.96 9l.87 2.09L5.7 12l-.87 2.09L3.96 15l-.87-2.09L1 12zM23 12l-.87 2.09L20.04 15l-.87-2.09L18.3 12l.87-2.09L20.04 9l.87 2.09L23 12z"
+						d="M12 15a3 3 0 100-6 3 3 0 000 6z"
 						stroke="currentColor"
 						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+					/>
+					<path
+						d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"
+						stroke="currentColor"
+						stroke-width="2"
+						stroke-linecap="round"
+						stroke-linejoin="round"
 					/>
 				</svg>
 			</button>
@@ -237,6 +284,32 @@
 	.nav-action:focus-visible {
 		outline: 2px solid #667eea;
 		outline-offset: 2px;
+	}
+
+	/* Tab separator for developer mode */
+	.tab-separator {
+		width: 1px;
+		height: 24px;
+		background: rgba(255, 255, 255, 0.2);
+		margin: 0 var(--spacing-sm);
+		align-self: center;
+	}
+
+	/* Developer tab styling */
+	.developer-tab {
+		border: 1px solid rgba(255, 165, 0, 0.3);
+		background: rgba(255, 165, 0, 0.05);
+	}
+
+	.developer-tab:hover {
+		background: rgba(255, 165, 0, 0.1);
+		border-color: rgba(255, 165, 0, 0.5);
+	}
+
+	.developer-tab.active {
+		background: rgba(255, 165, 0, 0.2);
+		color: #ffa500;
+		border-color: #ffa500;
 	}
 
 	/* Mobile responsive */

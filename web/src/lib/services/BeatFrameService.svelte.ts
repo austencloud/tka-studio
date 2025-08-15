@@ -37,7 +37,7 @@ class BeatFrameService {
   // Configuration state
   #config = $state<BeatFrameConfig>({
     columns: 4, // columns for beats only
-    beatSize: 120, // Default fallback size
+    beatSize: 160, // Increased default fallback size from 120 to 160
     gap: 0, // Desktop parity: zero spacing between cells
     gridMode: GridMode.DIAMOND,
     hasStartTile: true,
@@ -176,9 +176,9 @@ class BeatFrameService {
     totalCols: number,
     gap: number
   ): number {
-    // Minimum cell size thresholds - pictographs won't shrink below these values
-    const MIN_CELL_SIZE_FULLSCREEN = 100; // Minimum size in fullscreen mode
-    const MIN_CELL_SIZE_NORMAL = 70; // Minimum size in normal mode
+    // Increased minimum cell size thresholds for better visibility
+    const MIN_CELL_SIZE_FULLSCREEN = 140; // Increased from 100px
+    const MIN_CELL_SIZE_NORMAL = 120; // Increased from 70px
 
     // Ensure we have valid dimensions
     if (
@@ -187,7 +187,7 @@ class BeatFrameService {
       totalRows <= 0 ||
       totalCols <= 0
     ) {
-      return 80; // Default fallback size
+      return 140; // Increased default fallback size
     }
 
     // Detect if we're in fullscreen mode by checking container dimensions
@@ -204,9 +204,9 @@ class BeatFrameService {
     const totalGapWidth = gap * (totalCols - 1);
     const totalGapHeight = gap * (totalRows - 1);
 
-    // Calculate available space after accounting for gaps and padding
-    const horizontalPadding = beatCount === 0 ? containerWidth * 0.05 : 10;
-    const verticalPadding = 24;
+    // Reduced padding for more space utilization
+    const horizontalPadding = beatCount === 0 ? containerWidth * 0.02 : 8; // Reduced from 0.05 and 10
+    const verticalPadding = 16; // Reduced from 24
     const availableWidth = Math.max(
       0,
       containerWidth - totalGapWidth - horizontalPadding * 2
@@ -223,8 +223,8 @@ class BeatFrameService {
     // Use the smaller dimension to maintain square cells and preserve aspect ratio
     const baseSize = Math.min(cellWidthByContainer, cellHeightByContainer);
 
-    // Apply a scaling factor to ensure pictographs fit within cells
-    const scalingFactor = 0.92; // Reduce size by only 8%
+    // Reduced scaling factor to preserve more size
+    const scalingFactor = 0.98; // Reduced scaling from 0.92 to 0.98 (only 2% reduction)
     const scaledBaseSize = Math.floor(baseSize * scalingFactor);
 
     // For start position only, make it proportionally larger
@@ -246,19 +246,19 @@ class BeatFrameService {
 
       // Apply different constraints based on mode
       if (isLikelyFullscreen) {
-        return Math.min(Math.max(minCellSize, MIN_CELL_SIZE_FULLSCREEN), 200); // Min 100px, Max 200px for fullscreen
+        return Math.min(Math.max(minCellSize, MIN_CELL_SIZE_FULLSCREEN), 300); // Increased max from 200px to 300px
       } else {
-        return Math.min(Math.max(minCellSize, MIN_CELL_SIZE_NORMAL), 160); // Min 70px, Max 160px for normal view
+        return Math.min(Math.max(minCellSize, MIN_CELL_SIZE_NORMAL), 250); // Increased max from 160px to 250px
       }
     }
 
-    // Apply different constraints based on mode
+    // Apply different constraints based on mode with increased maximums
     if (isLikelyFullscreen) {
-      // In fullscreen, allow larger cells but ensure they're not too large
-      return Math.min(Math.max(cellSize, MIN_CELL_SIZE_FULLSCREEN), 200); // Min 100px, Max 200px for fullscreen
+      // In fullscreen, allow larger cells
+      return Math.min(Math.max(cellSize, MIN_CELL_SIZE_FULLSCREEN), 300); // Increased max from 200px to 300px
     } else {
-      // In normal mode, use more conservative constraints but allow larger cells
-      return Math.min(Math.max(cellSize, MIN_CELL_SIZE_NORMAL), 160); // Min 70px, Max 160px for normal view
+      // In normal mode, allow larger cells
+      return Math.min(Math.max(cellSize, MIN_CELL_SIZE_NORMAL), 250); // Increased max from 160px to 250px
     }
   }
 
@@ -360,7 +360,7 @@ class BeatFrameService {
       (containerWidth > 0 && totalWidth > containerWidth) ||
       (containerHeight > 0 && totalHeight > containerHeight) ||
       optimalCellSize <=
-        (this.#containerDimensions.isFullscreen ? 100 : 70) * 1.1;
+        (this.#containerDimensions.isFullscreen ? 140 : 120) * 1.1; // Updated thresholds to match new minimums
 
     return {
       rows,

@@ -1,7 +1,7 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
+
 	import { switchTab } from '$lib/state/appState.svelte';
 	import MainApplication from '$components/MainApplication.svelte';
 
@@ -12,8 +12,11 @@
 		const sectionParam = urlParams.get('section');
 
 		if (tabParam) {
-			// Switch to the specified tab
-			switchTab(tabParam);
+			// Switch to the specified tab - validate it's a valid tab ID
+			const validTabs = ["construct", "browse", "sequence_card", "write", "learn"];
+			if (validTabs.includes(tabParam)) {
+				switchTab(tabParam as "construct" | "browse" | "sequence_card" | "write" | "learn");
+			}
 			
 			// If there's a section parameter, scroll to it after a delay
 			if (sectionParam) {

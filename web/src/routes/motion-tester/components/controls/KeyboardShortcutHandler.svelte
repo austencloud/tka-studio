@@ -32,7 +32,7 @@ No visual controls, no animation logic - just keyboard event handling.
 </script>
 
 <!-- Invisible keyboard handler -->
-<div 
+<button 
 	class="keyboard-handler"
 	tabindex="-1"
 	onkeydown={handleKeyDown}
@@ -45,7 +45,7 @@ No visual controls, no animation logic - just keyboard event handling.
 			<span>R: Reset</span>
 		</div>
 	{/if}
-</div>
+</button>
 
 <style>
 	.keyboard-handler {

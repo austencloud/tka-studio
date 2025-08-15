@@ -176,7 +176,7 @@
 
 <svelte:head>
 	<title>TKA Constructor - The Kinetic Alphabet</title>
-	<meta name="description" content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Create, learn, and share movement sequences." />
+	<meta name="description" content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for staffs, fans, and other flow arts. Create, learn, and share movement sequences." />
 </svelte:head>
 
 <!-- Application Container -->
