@@ -3,6 +3,7 @@ Simplified pictograph scene using modular renderers.
 
 This scene coordinates multiple specialized renderers to create the complete pictograph.
 """
+
 from __future__ import annotations
 
 import logging
@@ -102,9 +103,7 @@ class PictographScene(QGraphicsScene):
 
             # Get or create global service instance
             try:
-                from desktop.modern.src.core.dependency_injection.di_container import (
-                    get_container,
-                )
+                from desktop.modern.src.core.dependency_injection import get_container
 
                 container = get_container()
                 if container:
@@ -320,7 +319,6 @@ class PictographScene(QGraphicsScene):
                 self.prop_renderer.render_prop("red", red_motion)
 
         if blue_motion and red_motion:
-
             self.prop_renderer.apply_beta_positioning(pictograph_data)
 
         # Use the existing pictograph data for arrow rendering

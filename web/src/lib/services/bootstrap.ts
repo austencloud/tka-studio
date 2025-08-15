@@ -15,6 +15,7 @@ import { validateContainerConfiguration } from "./di/validation";
 import { registerBrowseServices } from "./di/registration/browse-services";
 import { registerCoreServices } from "./di/registration/core-services";
 import { registerPositioningServices } from "./di/registration/positioning-services";
+import { registerMotionTesterServices } from "./di/registration/motion-tester-services";
 
 /**
  * Create and configure the web application DI container
@@ -27,6 +28,7 @@ export async function createWebApplication(): Promise<ServiceContainer> {
     await registerCoreServices(container);
     await registerPositioningServices(container);
     await registerBrowseServices(container);
+    await registerMotionTesterServices(container);
 
     // Validate all registrations can be resolved
     await validateContainerConfiguration(container);
@@ -35,13 +37,13 @@ export async function createWebApplication(): Promise<ServiceContainer> {
     setGlobalContainer(container);
 
     console.log(
-      "✅ TKA V2 Modern application container initialized successfully",
+      "✅ TKA V2 Modern application container initialized successfully"
     );
     return container;
   } catch (error) {
     console.error("❌ Failed to initialize application container:", error);
     throw new Error(
-      `Application initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      `Application initialization failed: ${error instanceof Error ? error.message : "Unknown error"}`
     );
   }
 }
@@ -57,7 +59,7 @@ let globalContainer: ServiceContainer | null = null;
 export function getContainer(): ServiceContainer {
   if (!globalContainer) {
     throw new Error(
-      "Application container not initialized. Call createWebApplication() first.",
+      "Application container not initialized. Call createWebApplication() first."
     );
   }
   return globalContainer;
@@ -81,7 +83,7 @@ export function resolve<T>(serviceInterface: ServiceInterface<T> | string): T {
     const mappedInterface = serviceInterfaceMap.get(serviceInterface);
     if (!mappedInterface) {
       throw new Error(
-        `Service interface not found for key: ${serviceInterface}`,
+        `Service interface not found for key: ${serviceInterface}`
       );
     }
     return container.resolve(mappedInterface) as T;

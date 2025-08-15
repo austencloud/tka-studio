@@ -10,6 +10,7 @@ PROVIDES:
 - Clean separation of concerns
 - Progress tracking and error handling
 """
+
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -121,9 +122,7 @@ class ApplicationOrchestrator(IApplicationOrchestrator):
         )
 
         # Step 2: Configure services
-        from desktop.modern.src.core.dependency_injection.di_container import (
-            get_container,
-        )
+        from desktop.modern.src.core.dependency_injection import get_container
 
         if progress_callback:
             progress_callback(45, "Configuring dependency injection...")

@@ -6,6 +6,7 @@ Dependency Injection Container
 Simple dependency injection container for TKA application.
 Provides service registration and resolution with lifecycle management.
 """
+
 from __future__ import annotations
 
 import logging
@@ -14,7 +15,7 @@ from typing import Any, Callable, TypeVar
 
 logger = logging.getLogger(__name__)
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class DIContainer:
@@ -33,7 +34,9 @@ class DIContainer:
 
         logger.debug("DIContainer initialized")
 
-    def register_singleton(self, interface: str | type, implementation: type | Any) -> None:
+    def register_singleton(
+        self, interface: str | type, implementation: type | Any
+    ) -> None:
         """
         Register a singleton service.
 
@@ -63,6 +66,30 @@ class DIContainer:
         key = self._get_key(interface)
         self._services[key] = implementation
         logger.debug(f"Registered transient: {key}")
+
+    def register_instance(self, interface: str | type, instance: Any) -> None:
+        """
+        Register a specific instance.
+
+        Args:
+            interface: Service interface (string key or type)
+            instance: Service instance to register
+        """
+        key = self._get_key(interface)
+        self._singletons[key] = instance
+        logger.debug(f"Registered instance: {key}")
+
+    def register_factory(self, interface: str | type, factory: callable) -> None:
+        """
+        Register a factory function for creating service instances.
+
+        Args:
+            interface: Service interface (string key or type)
+            factory: Factory function that creates service instances
+        """
+        key = self._get_key(interface)
+        self._factories[key] = factory
+        logger.debug(f"Registered factory: {key}")
 
     def resolve(self, interface: str | type) -> Any:
         """
@@ -98,9 +125,9 @@ class DIContainer:
     def is_registered(self, interface: str | type) -> bool:
         """Check if a service is registered."""
         key = self._get_key(interface)
-        return (key in self._services or
-                key in self._factories or
-                key in self._singletons)
+        return (
+            key in self._services or key in self._factories or key in self._singletons
+        )
 
     def clear(self) -> None:
         """Clear all registered services."""
@@ -113,7 +140,7 @@ class DIContainer:
         """Get string key for interface."""
         if isinstance(interface, str):
             return interface
-        if hasattr(interface, '__name__'):
+        if hasattr(interface, "__name__"):
             return interface.__name__
         return str(interface)
 

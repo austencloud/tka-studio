@@ -49,6 +49,7 @@ import {
   ISequenceIndexServiceInterface,
   IThumbnailServiceInterface,
 } from "./interfaces/browse-interfaces";
+import { IAnimatedPictographDataServiceInterface } from "./interfaces/motion-tester-interfaces";
 
 /**
  * Service interface mapping for string-based resolution
@@ -101,4 +102,7 @@ export const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
   ["ISectionService", ISectionServiceInterface],
   ["IFilterPersistenceService", IFilterPersistenceServiceInterface],
   ["IDeleteService", IDeleteServiceInterface],
+
+  // Motion Tester services
+  ["IAnimatedPictographDataService", IAnimatedPictographDataServiceInterface],
 ]);

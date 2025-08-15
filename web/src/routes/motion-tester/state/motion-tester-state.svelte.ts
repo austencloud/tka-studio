@@ -8,7 +8,8 @@ import {
   type PropVisibility,
   type PropStates,
 } from "../services/AnimationControlService";
-import { OrientationAutoCalculationService } from "../services/OrientationAutoCalculationService";
+import { OrientationCalculationService } from "$lib/services/implementations/OrientationCalculationService";
+import type { MotionData } from "$lib/domain/MotionData";
 
 export interface MotionTesterState {
   // Reactive state getters
@@ -44,11 +45,42 @@ export function createMotionTesterState(): MotionTesterState {
   // Services
   const motionService = new MotionParameterService();
   const animationService = new AnimationControlService();
-  const orientationService = new OrientationAutoCalculationService();
+  const orientationService = new OrientationCalculationService();
+
+  // Conversion utility using existing MotionParameterService methods
+  const convertToMotionData = (params: MotionTestParams): MotionData => ({
+    motion_type: motionService.mapMotionTypeToEnum(params.motionType),
+    prop_rot_dir: motionService.mapRotationDirectionToEnum(params.propRotDir),
+    start_loc: motionService.mapLocationToEnum(params.startLoc),
+    end_loc: motionService.mapLocationToEnum(params.endLoc),
+    turns: params.turns,
+    start_ori: motionService.mapOrientationToEnum(params.startOri),
+    end_ori: motionService.mapOrientationToEnum(params.endOri),
+    is_visible: true,
+    prefloat_motion_type: null,
+    prefloat_prop_rot_dir: null,
+  });
+
+  const mapOrientationFromEnum = (
+    orientation: import("$lib/domain/enums").Orientation
+  ): string => {
+    switch (orientation) {
+      case "in":
+        return "in";
+      case "out":
+        return "out";
+      case "clock":
+        return "clock";
+      case "counter":
+        return "counter";
+      default:
+        return "in";
+    }
+  };
 
   // Reactive state
   let blueMotionParams = $state<MotionTestParams>(
-    motionService.createDefaultParams(),
+    motionService.createDefaultParams()
   );
   let redMotionParams = $state<MotionTestParams>({
     ...motionService.createDefaultParams(),
@@ -77,7 +109,7 @@ export function createMotionTesterState(): MotionTesterState {
     const newRotDir = motionService.calculateRotationDirection(
       blueMotionParams.motionType,
       blueMotionParams.startLoc,
-      blueMotionParams.endLoc,
+      blueMotionParams.endLoc
     );
     if (newRotDir !== blueMotionParams.propRotDir) {
       blueMotionParams.propRotDir = newRotDir;
@@ -86,8 +118,10 @@ export function createMotionTesterState(): MotionTesterState {
 
   // Auto-calculate end orientation for blue prop
   $effect(() => {
-    const newEndOri =
-      orientationService.calculateEndOrientation(blueMotionParams);
+    const motionData = convertToMotionData(blueMotionParams);
+    const newEndOri = mapOrientationFromEnum(
+      orientationService.calculateEndOrientation(motionData)
+    );
     if (newEndOri !== blueMotionParams.endOri) {
       blueMotionParams.endOri = newEndOri;
     }
@@ -98,7 +132,7 @@ export function createMotionTesterState(): MotionTesterState {
     const newRotDir = motionService.calculateRotationDirection(
       redMotionParams.motionType,
       redMotionParams.startLoc,
-      redMotionParams.endLoc,
+      redMotionParams.endLoc
     );
     if (newRotDir !== redMotionParams.propRotDir) {
       redMotionParams.propRotDir = newRotDir;
@@ -107,8 +141,10 @@ export function createMotionTesterState(): MotionTesterState {
 
   // Auto-calculate end orientation for red prop
   $effect(() => {
-    const newEndOri =
-      orientationService.calculateEndOrientation(redMotionParams);
+    const motionData = convertToMotionData(redMotionParams);
+    const newEndOri = mapOrientationFromEnum(
+      orientationService.calculateEndOrientation(motionData)
+    );
     if (newEndOri !== redMotionParams.endOri) {
       redMotionParams.endOri = newEndOri;
     }
@@ -119,7 +155,7 @@ export function createMotionTesterState(): MotionTesterState {
     const initEngine = async () => {
       const success = await animationService.initializeEngine(
         blueMotionParams,
-        redMotionParams,
+        redMotionParams
       );
       isEngineInitialized = success;
     };

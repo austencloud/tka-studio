@@ -8,7 +8,7 @@ No headers or labels, clean minimal design as requested.
 	import type { MotionTesterState } from './state/motion-tester-state.svelte';
 
 	// Import the new restructured components
-	import StaticSectionWithControls from './components/StaticSectionWithControls.svelte';
+	import StaticSection from './components/StaticSection.svelte';
 	import AnimatedSection from './components/AnimatedSection.svelte';
 
 	interface Props {
@@ -21,7 +21,7 @@ No headers or labels, clean minimal design as requested.
 <div class="pictograph-visualization-panel">
 	<!-- Static Section with Controls (2fr) -->
 	<div class="static-section">
-		<StaticSectionWithControls motionState={motionState} />
+		<StaticSection motionState={motionState} />
 	</div>
 
 	<!-- Animated Section (1fr) -->

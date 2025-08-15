@@ -4,6 +4,7 @@ Arrow renderer for pictograph components.
 Handles Qt-specific arrow rendering while delegating business logic
 to ArrowRenderingService.
 """
+
 from __future__ import annotations
 
 import logging
@@ -14,7 +15,7 @@ from PyQt6.QtSvg import QSvgRenderer
 from desktop.modern.src.application.services.pictograph.arrow_rendering_service import (
     ArrowRenderingService,
 )
-from desktop.modern.src.core.dependency_injection.di_container import get_container
+from desktop.modern.src.core.dependency_injection import get_container
 from desktop.modern.src.core.interfaces.positioning_services import (
     IArrowCoordinateSystemService,
     IArrowPositioningOrchestrator,

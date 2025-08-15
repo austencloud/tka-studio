@@ -1,5 +1,5 @@
 <!--
-StaticSectionWithControls.svelte - Static pictograph with motion controls
+StaticSection.svelte - Static pictograph with motion controls
 
 Combines static pictograph display (no card wrapper) with motion designer controls
 (blue/red prop panels) below. Grid toggle positioned as overlay on pictograph.
