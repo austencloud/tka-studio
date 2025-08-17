@@ -10,7 +10,11 @@ import type {
   FilterValue,
   SortMethod,
 } from "../interfaces/domain-types";
-import type { BrowseState } from "../interfaces/browse-interfaces";
+import type {
+  BrowseState,
+  FilterState as BrowseFilterState,
+} from "../interfaces/browse-interfaces";
+import { SortMethod as SortMethodEnum } from "../../domain/browse/SortMethod";
 
 export interface FilterState {
   type: FilterType;
@@ -231,12 +235,12 @@ export class FilterPersistenceService implements IFilterPersistenceService {
           contains_letters: "",
           length: "",
           difficulty: "",
+          starting_position: "",
           author: "",
-          date_created: "",
-          date_modified: "",
+          grid_mode: "",
+          all_sequences: "",
           favorites: "",
-          tags: "",
-          prop_type: "",
+          recent: "",
         },
         sortMethod: "alphabetical" as SortMethod,
         searchQuery: "",
@@ -245,14 +249,46 @@ export class FilterPersistenceService implements IFilterPersistenceService {
   }
 
   // Additional methods required by browse-interfaces.ts
-  async saveFilterState(state: any): Promise<void> {
-    // Use the existing saveBrowseState method
-    await this.saveBrowseState(state);
+  async saveFilterState(state: BrowseFilterState): Promise<void> {
+    // Create a BrowseState with the filter state
+    const browseState: BrowseState = {
+      displayState: {
+        currentView: "filter_selection",
+        selectedSequence: null,
+        isSequenceDetailOpen: false,
+      },
+      loadingState: {
+        isLoading: false,
+        hasError: false,
+        errorMessage: null,
+      },
+      filterState: state,
+    };
+    await this.saveBrowseState(browseState);
   }
 
-  async loadFilterState(): Promise<any> {
+  async loadFilterState(): Promise<BrowseFilterState> {
     // Use the existing loadBrowseState method
     const browseState = await this.loadBrowseState();
-    return browseState?.filterState || null;
+
+    // Return the filter state or a default one with proper FilterType keys
+    return (
+      browseState?.filterState || {
+        activeFilters: {
+          starting_letter: null,
+          contains_letters: null,
+          length: null,
+          difficulty: null,
+          starting_position: null,
+          author: null,
+          grid_mode: null,
+          all_sequences: null,
+          favorites: null,
+          recent: null,
+        },
+        sortMethod: SortMethodEnum.ALPHABETICAL,
+        searchQuery: "",
+      }
+    );
   }
 }

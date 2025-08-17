@@ -25,10 +25,8 @@ import type {
   ISvgConfiguration,
   ISvgUtilityService,
 } from "../../interfaces/pictograph-interfaces";
-import type {
-  IArrowPositioningService,
-  IPropRenderingService,
-} from "../../interfaces/positioning-interfaces";
+import type { IPropRenderingService } from "../../interfaces/positioning-interfaces";
+import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
 import type {
   IMotionGenerationService,
   ISequenceGenerationService,
@@ -98,7 +96,7 @@ export const IPictographRenderingServiceInterface =
     class extends PictographRenderingService {
       constructor(...args: unknown[]) {
         super(
-          args[0] as IArrowPositioningService,
+          args[0] as IArrowPositioningOrchestrator,
           args[1] as IPropRenderingService,
           args[2] as ISvgUtilityService,
           args[3] as IGridRenderingService,

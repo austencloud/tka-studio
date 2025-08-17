@@ -1,8 +1,9 @@
 /**
  * Arrow Positioning Service for Svelte Components
  *
- * Provides a simple interface for arrow positioning that uses the sophisticated
- * positioning pipeline we've built and tested.
+ * SINGLE SOURCE OF TRUTH: Thin wrapper around ArrowPositioningOrchestrator.
+ * All positioning logic handled by the sophisticated positioning pipeline.
+ * NO duplicate positioning logic allowed!
  */
 
 import type { ArrowData, MotionData, PictographData } from "$lib/domain";
@@ -82,8 +83,9 @@ export class ArrowPositioningService {
       );
       return { x, y, rotation };
     } catch (error) {
-      console.error("Sophisticated positioning failed, using fallback:", error);
-      return this.getFallbackPosition(motionData);
+      console.error("🚨 CRITICAL: Orchestrator positioning failed:", error);
+      console.error("This should never happen in production!");
+      throw error; // Don't hide orchestrator failures
     }
   }
 
@@ -114,8 +116,9 @@ export class ArrowPositioningService {
 
       return { x, y, rotation };
     } catch (error) {
-      console.error("Synchronous positioning failed, using fallback:", error);
-      return this.getFallbackPosition(motionData);
+      console.error("🚨 CRITICAL: Sync positioning failed:", error);
+      console.error("This should never happen in production!");
+      throw error; // Don't hide orchestrator failures
     }
   }
 
@@ -130,8 +133,8 @@ export class ArrowPositioningService {
     try {
       return this.orchestrator.shouldMirrorArrow(arrowData, pictographData);
     } catch (error) {
-      console.warn("Failed to determine mirror state, using default:", error);
-      return false;
+      console.error("🚨 CRITICAL: Mirror determination failed:", error);
+      throw error; // Don't hide orchestrator failures
     }
   }
 
@@ -174,50 +177,20 @@ export class ArrowPositioningService {
   }
 
   /**
-   * Fallback position calculation using basic coordinates
+   * Emergency fallback - should never be used in normal operation
    */
   private getFallbackPosition(motionData: MotionData): ArrowPositionResult {
-    const coordinates = this.calculateLocationCoordinates(
-      motionData.start_loc || "center"
+    console.error(
+      "🚨 CRITICAL: Using emergency fallback positioning! This indicates orchestrator failure!"
     );
-    console.log(
-      `🔄 Using fallback position: (${coordinates.x}, ${coordinates.y})`
-    );
+    console.error("Motion data:", motionData);
 
+    // Use center position as emergency fallback
     return {
-      x: coordinates.x,
-      y: coordinates.y,
+      x: 475.0,
+      y: 475.0,
       rotation: 0,
     };
-  }
-
-  /**
-   * Basic coordinate calculation as fallback
-   */
-  private calculateLocationCoordinates(location: string): {
-    x: number;
-    y: number;
-  } {
-    // Diamond grid coordinates from legacy desktop circle_coords.json
-    const diamondCoordinates: Record<string, { x: number; y: number }> = {
-      // Cardinal directions (hand_points)
-      n: { x: 475.0, y: 331.9 },
-      e: { x: 618.1, y: 475.0 },
-      s: { x: 475.0, y: 618.1 },
-      w: { x: 331.9, y: 475.0 },
-
-      // Diagonal directions (layer2_points) - used for arrows
-      ne: { x: 618.1, y: 331.9 },
-      se: { x: 618.1, y: 618.1 },
-      sw: { x: 331.9, y: 618.1 },
-      nw: { x: 331.9, y: 331.9 },
-
-      // Center point
-      center: { x: 475.0, y: 475.0 },
-    };
-
-    const coords = diamondCoordinates[location.toLowerCase()];
-    return coords || { x: 475.0, y: 475.0 };
   }
 }
 

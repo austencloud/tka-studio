@@ -40,42 +40,43 @@
         label="TKA Notation"
         checked={visibilitySettings.TKA}
         helpText="Movement notation letters"
-        on:change={(e) => updateVisibilitySetting("TKA", e.detail)}
+        onchange={(checked) => updateVisibilitySetting("TKA", checked)}
       />
 
       <ToggleSetting
         label="Reversals"
         checked={visibilitySettings.Reversals}
         helpText="Reversal direction indicators"
-        on:change={(e) => updateVisibilitySetting("Reversals", e.detail)}
+        onchange={(checked) => updateVisibilitySetting("Reversals", checked)}
       />
 
       <ToggleSetting
         label="Positions"
         checked={visibilitySettings.Positions}
         helpText="Position markers and dots"
-        on:change={(e) => updateVisibilitySetting("Positions", e.detail)}
+        onchange={(checked) => updateVisibilitySetting("Positions", checked)}
       />
 
       <ToggleSetting
         label="Elemental"
         checked={visibilitySettings.Elemental}
         helpText="Elemental movement notation"
-        on:change={(e) => updateVisibilitySetting("Elemental", e.detail)}
+        onchange={(checked) => updateVisibilitySetting("Elemental", checked)}
       />
 
       <ToggleSetting
         label="VTG"
         checked={visibilitySettings.VTG}
         helpText="Vulcan Tech Guild notation"
-        on:change={(e) => updateVisibilitySetting("VTG", e.detail)}
+        onchange={(checked) => updateVisibilitySetting("VTG", checked)}
       />
 
       <ToggleSetting
         label="Non-Radial Points"
         checked={visibilitySettings.nonRadialPoints}
         helpText="Additional position points"
-        on:change={(e) => updateVisibilitySetting("nonRadialPoints", e.detail)}
+        onchange={(checked) =>
+          updateVisibilitySetting("nonRadialPoints", checked)}
       />
     </div>
   </SettingCard>

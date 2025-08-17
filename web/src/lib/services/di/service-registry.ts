@@ -32,7 +32,6 @@ import {
   IArrowPlacementDataServiceInterface,
   IArrowPlacementKeyServiceInterface,
   IArrowPositioningOrchestratorInterface,
-  IArrowPositioningServiceInterface,
   IArrowRotationCalculatorInterface,
   IDashLocationCalculatorInterface,
   IDirectionalTupleProcessorInterface,
@@ -88,7 +87,7 @@ export const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
   ["IPanelManagementService", IPanelManagementServiceInterface],
 
   // Positioning services
-  ["IArrowPositioningService", IArrowPositioningServiceInterface],
+  ["IArrowPositioningOrchestrator", IArrowPositioningOrchestratorInterface],
   ["IArrowPlacementDataService", IArrowPlacementDataServiceInterface],
   ["IArrowPlacementKeyService", IArrowPlacementKeyServiceInterface],
   ["IArrowLocationCalculator", IArrowLocationCalculatorInterface],

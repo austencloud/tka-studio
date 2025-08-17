@@ -11,6 +11,18 @@
 
 import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
 
+// Define BeatData interface for metadata structure
+interface BeatData {
+  beat_number?: number;
+  letter?: string;
+  author?: string;
+  level?: number;
+  sequence_start_position?: string;
+  blue_attributes?: { motion_type?: string; [key: string]: unknown };
+  red_attributes?: { motion_type?: string; [key: string]: unknown };
+  [key: string]: unknown;
+}
+
 // BatchSummary type for proper typing
 interface BatchSummary {
   sequencesAnalyzed: number;
@@ -25,6 +37,16 @@ interface BatchSummary {
   bestSequences: Array<{ sequence: string; healthScore: number }>;
 }
 
+// Sequence result type for batch analysis
+interface SequenceResult {
+  healthScore: number;
+  errorCount: number;
+  warningCount: number;
+  isHealthy: boolean;
+  errors: string[];
+  warnings: string[];
+}
+
 export interface ThumbnailFile {
   name: string;
   path: string;
@@ -37,7 +59,7 @@ export interface MetadataTesterState {
   selectedThumbnail: ThumbnailFile | null;
 
   // Metadata extraction
-  extractedMetadata: Record<string, unknown> | null;
+  extractedMetadata: BeatData[] | null;
   rawMetadata: string | null;
 
   // UI state
@@ -267,11 +289,15 @@ export function createMetadataTesterState() {
       const metadata = await PngMetadataExtractor.extractMetadata(
         thumbnail.path
       );
-      state.extractedMetadata = metadata;
+      // Ensure metadata is an array for proper typing
+      const metadataArray = Array.isArray(metadata)
+        ? (metadata as BeatData[])
+        : [];
+      state.extractedMetadata = metadataArray;
       state.rawMetadata = JSON.stringify(metadata, null, 2);
 
       // Analyze the metadata
-      analyzeMetadata(metadata);
+      analyzeMetadata(metadataArray);
     } catch (error) {
       state.error = `Failed to extract metadata: ${error}`;
       state.extractedMetadata = null;
@@ -284,7 +310,7 @@ export function createMetadataTesterState() {
   }
 
   // Analyze extracted metadata for useful information
-  function analyzeMetadata(metadata: Record<string, unknown>[]) {
+  function analyzeMetadata(metadata: BeatData[]) {
     if (!metadata || !Array.isArray(metadata)) {
       state.metadataStats = null;
       return;
@@ -308,29 +334,27 @@ export function createMetadataTesterState() {
     const startPositionCount = startPositionEntries.length;
 
     // Author analysis
-    const firstStep = metadata[0] || {};
+    const firstStep = (metadata[0] as BeatData) || {};
     const hasAuthor = !!firstStep.author;
-    const authorName = firstStep.author || null;
+    const authorName = (firstStep.author as string) || null;
     const authorMissing = !hasAuthor;
 
     // Check for author inconsistency across beats
     const authorsFound = new Set(
-      metadata
-        .map((step: Record<string, unknown>) => step.author)
-        .filter(Boolean)
+      metadata.map((step: BeatData) => step.author).filter(Boolean)
     );
     const authorInconsistent = authorsFound.size > 1;
 
     // Level analysis
     const hasLevel = !!firstStep.level;
-    const level = firstStep.level || null;
+    const level = (firstStep.level as number) || null;
     const levelMissing = !hasLevel;
     const levelZero = level === 0;
 
     // Check for level inconsistency
     const levelsFound = new Set(
       metadata
-        .map((step: Record<string, unknown>) => step.level)
+        .map((step: BeatData) => step.level)
         .filter((l) => l !== undefined && l !== null)
     );
     const levelInconsistent = levelsFound.size > 1;
@@ -339,13 +363,12 @@ export function createMetadataTesterState() {
     const hasStartPosition = startPositionCount > 0;
     const startPositionMissing = !hasStartPosition;
     const startPositionValue =
-      startPositionEntries[0]?.sequence_start_position || null;
+      ((startPositionEntries[0] as BeatData)
+        ?.sequence_start_position as string) || null;
 
     // Check for start position inconsistency
     const startPositionsFound = new Set(
-      startPositionEntries.map(
-        (step: Record<string, unknown>) => step.sequence_start_position
-      )
+      startPositionEntries.map((step: BeatData) => step.sequence_start_position)
     );
     const startPositionInconsistent = startPositionsFound.size > 1;
 
@@ -376,7 +399,7 @@ export function createMetadataTesterState() {
 
     // Check each real beat for issues
     const seenBeatNumbers = new Set<number>();
-    realBeats.forEach((beat: Record<string, unknown>, index: number) => {
+    realBeats.forEach((beat: BeatData, index: number) => {
       const beatNumber = index + 1;
 
       // Check for missing letter
@@ -593,7 +616,7 @@ export function createMetadataTesterState() {
       let totalWarnings = 0;
       let healthySequences = 0;
       let totalHealthScore = 0;
-      const sequenceResults: { [key: string]: Record<string, unknown> } = {};
+      const sequenceResults: { [key: string]: SequenceResult } = {};
       const errorPatterns: { [key: string]: number } = {};
       const warningPatterns: { [key: string]: number } = {};
 
@@ -604,7 +627,7 @@ export function createMetadataTesterState() {
         await extractMetadata(thumbnail);
 
         // Ensure we analyze the metadata to get errors/warnings
-        if (state.metadataStats) {
+        if (state.extractedMetadata) {
           analyzeMetadata(state.extractedMetadata);
         }
 

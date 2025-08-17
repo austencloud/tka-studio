@@ -11,14 +11,11 @@ import {
   IArrowPlacementDataServiceInterface,
   IArrowPlacementKeyServiceInterface,
   IArrowPositioningOrchestratorInterface,
-  IArrowPositioningServiceInterface,
   IArrowRotationCalculatorInterface,
   IDashLocationCalculatorInterface,
   IDirectionalTupleProcessorInterface,
   IPositioningServiceFactoryInterface,
 } from "../interfaces/positioning-interfaces";
-
-import { ArrowPositioningService } from "../../implementations/ArrowPositioningService";
 
 /**
  * Register all positioning services with their dependencies
@@ -60,17 +57,6 @@ export async function registerPositioningServices(
     return factory.createPositioningOrchestrator();
   });
 
-  // Register ArrowPositioningService with dependencies
-  container.registerFactory(IArrowPositioningServiceInterface, () => {
-    const placementDataService = container.resolve(
-      IArrowPlacementDataServiceInterface
-    );
-    const placementKeyService = container.resolve(
-      IArrowPlacementKeyServiceInterface
-    );
-    return new ArrowPositioningService(
-      placementDataService,
-      placementKeyService
-    );
-  });
+  // Note: ArrowPositioningService removed - use ArrowPositioningOrchestrator directly
+  // for all arrow positioning needs through the factory pattern
 }

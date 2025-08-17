@@ -58,8 +58,8 @@ export class MetadataTestingStateManager {
   private analysisService: MetadataAnalysisService;
   private batchService: BatchAnalysisService;
 
-  // State using Svelte 5 runes
-  private _state = $state<MetadataTestingState>({
+  // State using plain objects (compatible with tests)
+  private _state: MetadataTestingState = {
     thumbnails: [],
     filteredThumbnails: [],
     selectedThumbnails: [],
@@ -79,13 +79,16 @@ export class MetadataTestingStateManager {
     showOnlyErrors: false,
     showOnlyWarnings: false,
     healthScoreFilter: { min: 0, max: 100 },
-  });
+  };
 
-  // Derived state using Svelte 5 runes
-  public readonly filteredResults = $derived(this.filterResults(this._state));
-  public readonly summaryStats = $derived(
-    this.calculateSummaryStats(this._state)
-  );
+  // Derived state using getters (compatible with tests)
+  public get filteredResults(): MetadataAnalysisResult[] {
+    return this.filterResults(this._state);
+  }
+
+  public get summaryStats(): SummaryStats {
+    return this.calculateSummaryStats(this._state);
+  }
 
   // Getter for the state (for external access)
   public get state(): MetadataTestingState {

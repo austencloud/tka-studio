@@ -34,7 +34,8 @@ import { ConstructTabCoordinationService } from "../../implementations/Construct
 import { PictographRenderingService } from "../../implementations/PictographRenderingService";
 import { SequenceService } from "../../implementations/SequenceService";
 
-import { IArrowPositioningServiceInterface } from "../interfaces/positioning-interfaces";
+import { IArrowPositioningOrchestratorInterface } from "../interfaces/positioning-interfaces";
+import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
 
 /**
  * Register all core services with their dependencies
@@ -89,8 +90,8 @@ export async function registerCoreServices(
   // Register pictograph rendering service (depends on positioning and microservices)
   container.registerFactory(IPictographRenderingServiceInterface, () => {
     const arrowPositioning = container.resolve(
-      IArrowPositioningServiceInterface
-    );
+      IArrowPositioningOrchestratorInterface
+    ) as IArrowPositioningOrchestrator;
     const propRendering = container.resolve(IPropRenderingServiceInterface);
     const svgUtility = container.resolve(ISvgUtilityServiceInterface);
     const gridRendering = container.resolve(IGridRenderingServiceInterface);

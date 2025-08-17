@@ -13,6 +13,7 @@ import type {
 } from "./domain-types";
 import type { GridMode, DifficultyLevel, OptionFilters } from "./core-types";
 import type { MotionType } from "./domain-types";
+import type { ParsedCsvRow } from "../implementations/CsvDataService";
 
 // ============================================================================
 // APPLICATION SETTINGS
@@ -130,8 +131,8 @@ export interface IOptionDataService {
   ): ValidationResult;
   getAvailableMotionTypes(): MotionType[];
   convertCsvRowToPictographData(
-    row: any,
-    gridMode: any,
+    row: ParsedCsvRow,
+    gridMode: GridMode,
     index?: number
   ): PictographData | null;
 }

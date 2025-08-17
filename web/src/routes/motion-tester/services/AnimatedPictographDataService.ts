@@ -18,7 +18,7 @@ import {
   createMotionData,
   createGridData as createDomainGridData,
 } from "$lib/domain";
-import { createGridData } from "$lib/data/gridCoordinates.js";
+// import { createGridData } from "$lib/data/gridCoordinates.js";
 import {
   GridMode,
   MotionType,
@@ -34,7 +34,7 @@ import type {
   CsvDataService,
   ParsedCsvRow,
 } from "$lib/services/implementations/CsvDataService";
-import type { IArrowPositioningService } from "$lib/services/interfaces/positioning-interfaces";
+import type { IArrowPositioningOrchestrator } from "$lib/services/positioning/core-services";
 import type { MotionTestParams } from "./MotionParameterService";
 
 // Interface for motion parameters - matches MotionTestParams
@@ -62,7 +62,7 @@ export class AnimatedPictographDataService
   constructor(
     private csvDataService: CsvDataService,
     private optionDataService: IOptionDataService,
-    private arrowPositioningService: IArrowPositioningService
+    private arrowPositioningService: IArrowPositioningOrchestrator
   ) {}
   /**
    * Creates complete pictograph data for animated display using current motion parameters.
@@ -139,8 +139,8 @@ export class AnimatedPictographDataService
       }
 
       // Fallback: Create pictograph manually (original logic)
-      const gridModeString = gridMode === GridMode.DIAMOND ? "diamond" : "box";
-      const coordinatesGridData = createGridData(gridModeString);
+      // const gridModeString = gridMode === GridMode.DIAMOND ? "diamond" : "box";
+      // const coordinatesGridData = createGridData(gridModeString);
       const domainGridData = createDomainGridData({ grid_mode: gridMode });
 
       // Create complete motion data
@@ -465,27 +465,20 @@ export class AnimatedPictographDataService
           );
 
           // Update arrow data to match motion data using positioning pipeline
-          const gridModeString =
-            GridMode.DIAMOND === GridMode.DIAMOND ? "diamond" : "box";
-          const coordinatesGridData = createGridData(gridModeString);
-          const arrowPositions =
-            await this.arrowPositioningService.calculateAllArrowPositions(
-              pictographData,
-              coordinatesGridData as any // Type compatibility fix
+          // const gridModeString =
+          //   GridMode.DIAMOND === GridMode.DIAMOND ? "diamond" : "box";
+          // const coordinatesGridData = createGridData(gridModeString);
+          const updatedPictographWithPositions =
+            this.arrowPositioningService.calculateAllArrowPositions(
+              pictographData
             );
-
-          // Apply arrow positions to pictograph data
-          const updatedPictographData = {
-            ...pictographData,
-            // Apply arrow positions to the pictograph data
-          };
 
           console.log(
             "✅ CSV lookup successful! Found letter:",
             matchingRow.letter
           );
           console.log("🎯 Arrow data updated to match motion data");
-          return updatedPictographData;
+          return updatedPictographWithPositions;
         } else {
           console.error("❌ Failed to convert CSV row to pictograph data");
           return null;

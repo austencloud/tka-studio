@@ -23,7 +23,7 @@ export interface SectionConfiguration {
   groupBy: "letter" | "length" | "difficulty" | "author" | "date" | "none";
   sortMethod: SortMethod;
   showEmptySections: boolean;
-  expandedSections: Set<string>;
+  expandedSections?: Set<string>;
 }
 
 export interface ISectionService {
@@ -199,7 +199,7 @@ export class SectionService implements ISectionService {
         title: this.createSectionTitle(key, config.groupBy, sequences.length),
         count: sequences.length,
         sequences: this.sortSequencesInSection(sequences, config.sortMethod),
-        isExpanded: config.expandedSections.has(key),
+        isExpanded: config.expandedSections?.has(key) ?? false,
         sortOrder: this.getSectionSortOrder(key, config.groupBy),
       };
 
@@ -379,18 +379,21 @@ export class SectionService implements ISectionService {
   // Additional methods required by browse-interfaces.ts
   async organizeIntoSections(
     sequences: BrowseSequenceMetadata[],
-    config: any // Using any for now to match the interface
-  ): Promise<any[]> {
+    config: SectionConfiguration
+  ): Promise<SequenceSection[]> {
     // Use the existing organizeSections method
-    return this.organizeSections(sequences, config as SectionConfiguration);
+    return this.organizeSections(sequences, config);
   }
 
-  async getSectionConfiguration(sortMethod: SortMethod): Promise<any> {
+  async getSectionConfiguration(
+    sortMethod: SortMethod
+  ): Promise<SectionConfiguration> {
     // Return a basic configuration based on sort method
     return {
       groupBy: "letter" as const,
-      sortWithinSection: sortMethod,
+      sortMethod: sortMethod,
       showEmptySections: false,
+      expandedSections: new Set<string>(),
     };
   }
 }

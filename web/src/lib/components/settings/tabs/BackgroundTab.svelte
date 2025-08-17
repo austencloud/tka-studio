@@ -7,12 +7,6 @@
     settings: {
       backgroundType?: BackgroundType;
     };
-  }
-
-  interface Props {
-    settings: {
-      backgroundType?: BackgroundType;
-    };
     onupdate?: (update: { key: string; value: any }) => void;
   }
 

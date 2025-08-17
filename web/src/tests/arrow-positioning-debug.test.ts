@@ -5,6 +5,8 @@
 
 import { describe, it } from "vitest";
 import { resolve } from "$lib/services/bootstrap";
+import type { IArrowPositioningOrchestrator } from "$lib/services/interfaces/positioning-interfaces";
+// import type { GridData as ServiceGridData } from "$lib/services/interfaces/core-types";
 
 import {
   createPictographData,
@@ -21,11 +23,21 @@ import {
   ArrowType,
 } from "$lib/domain/enums";
 
+// Helper function to convert domain GridData to service GridData
+// function convertGridData(domainGridData: unknown): ServiceGridData {
+//   return {
+//     mode: (domainGridData as { grid_mode: string }).grid_mode,
+//     allLayer2PointsNormal: {},
+//     allHandPointsNormal: {},
+//   };
+// }
+
 describe("Arrow Positioning Debug Tests", () => {
   it("should test pro arrow rotation calculation - N to E motion", async () => {
-    // Resolve services for this test
-    const orchestrator = resolve("IArrowPositioningOrchestrator");
-    const arrowService = resolve("IArrowPositioningService");
+    // Resolve orchestrator for this test
+    const orchestrator = resolve(
+      "IArrowPositioningOrchestrator"
+    ) as IArrowPositioningOrchestrator;
 
     console.log(
       "\n🧪 Testing Pro Arrow: N → E (should be clockwise, expect ~90° rotation)"
@@ -70,7 +82,7 @@ describe("Arrow Positioning Debug Tests", () => {
 
     const pictographData = createPictographData({
       letter: "TEST",
-      grid_data: createGridData({ mode: GridMode.DIAMOND }),
+      grid_data: createGridData({ grid_mode: GridMode.DIAMOND }),
       arrows: {
         blue: blueArrowData,
         red: redArrowData,
@@ -106,21 +118,9 @@ describe("Arrow Positioning Debug Tests", () => {
       "    Position:",
       `(${orchestratorBlueArrow?.position_x}, ${orchestratorBlueArrow?.position_y})`
     );
-    console.log("    Rotation:", `${orchestratorBlueArrow?.rotation}°`);
+    console.log("    Rotation:", `${orchestratorBlueArrow?.rotation_angle}°`);
 
-    // Test 2: Individual ArrowPositioningService.calculateArrowPosition
-    console.log("\n🎯 Test 2: ArrowPositioningService.calculateArrowPosition");
-    const serviceResult = await arrowService.calculateArrowPosition(
-      blueArrowData,
-      pictographData,
-      pictographData.grid_data
-    );
-
-    console.log("  Service Result:");
-    console.log("    Position:", `(${serviceResult.x}, ${serviceResult.y})`);
-    console.log("    Rotation:", `${serviceResult.rotation}°`);
-
-    // Test 3: Direct orchestrator.calculateArrowPosition call
+    // Test 2: Direct orchestrator.calculateArrowPosition call
     console.log("\n🎯 Test 3: Direct orchestrator.calculateArrowPosition");
     const [x, y, rotation] = orchestrator.calculateArrowPosition(
       blueArrowData,
@@ -141,33 +141,28 @@ describe("Arrow Positioning Debug Tests", () => {
     );
 
     // Compare results
-    const orchestratorRotation = orchestratorBlueArrow?.rotation || 0;
-    const serviceRotation = serviceResult.rotation;
+    const orchestratorRotation = orchestratorBlueArrow?.rotation_angle || 0;
     const directRotation = rotation;
 
     console.log("\n🔍 Rotation Comparison:");
     console.log(
       `  Orchestrator (calculateAllArrowPositions): ${orchestratorRotation}°`
     );
-    console.log(`  Service (calculatePosition): ${serviceRotation}°`);
     console.log(`  Direct (calculateArrowPosition): ${directRotation}°`);
 
-    if (
-      orchestratorRotation === serviceRotation &&
-      serviceRotation === directRotation
-    ) {
+    if (orchestratorRotation === directRotation) {
       console.log(
-        "  ✅ All methods return same rotation - issue is in core calculation"
+        "  ✅ Both methods return same rotation - consistent calculation"
       );
     } else {
       console.log(
-        "  ❌ Methods return different rotations - architectural inconsistency"
+        "  ❌ Methods return different rotations - needs investigation"
       );
     }
 
     // Expected vs Actual
     const expectedRotation = 90; // N→E should point east (90°)
-    const actualRotation = serviceRotation;
+    const actualRotation = directRotation;
     const rotationDiff = actualRotation - expectedRotation;
 
     console.log("\n🎯 Rotation Analysis:");
@@ -183,8 +178,10 @@ describe("Arrow Positioning Debug Tests", () => {
   });
 
   it("should test multiple pro arrow directions", async () => {
-    // Resolve services for this test
-    const arrowService = resolve("IArrowPositioningService");
+    // Resolve orchestrator for this test
+    const orchestrator = resolve(
+      "IArrowPositioningOrchestrator"
+    ) as IArrowPositioningOrchestrator;
 
     console.log("\n🧪 Testing Multiple Pro Arrow Directions");
 
@@ -216,21 +213,21 @@ describe("Arrow Positioning Debug Tests", () => {
 
       const pictographData = createPictographData({
         letter: "TEST",
-        grid_data: createGridData({ mode: GridMode.DIAMOND }),
+        grid_data: createGridData({ grid_mode: GridMode.DIAMOND }),
         arrows: { blue: arrowData },
         motions: { blue: motionData },
       });
 
-      const result = await arrowService.calculateArrowPosition(
+      const [, , rotation] = orchestrator.calculateArrowPosition(
         arrowData,
         pictographData,
-        pictographData.grid_data
+        motionData
       );
 
       console.log(`  Motion: ${testCase.start} → ${testCase.end}`);
       console.log(`  Expected rotation: ${testCase.expected}°`);
-      console.log(`  Actual rotation: ${result.rotation}°`);
-      console.log(`  Difference: ${result.rotation - testCase.expected}°`);
+      console.log(`  Actual rotation: ${rotation}°`);
+      console.log(`  Difference: ${rotation - testCase.expected}°`);
     }
   });
 });

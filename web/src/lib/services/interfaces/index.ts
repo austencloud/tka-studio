@@ -101,11 +101,13 @@ export type {
 // ============================================================================
 
 export type {
-  IArrowPositioningService,
   IArrowPlacementDataService,
   IArrowPlacementKeyService,
   IPropRenderingService,
 } from "./positioning-interfaces";
+
+// Export orchestrator from positioning services
+export type { IArrowPositioningOrchestrator } from "../positioning/core-services";
 
 // ============================================================================
 // GENERATION INTERFACES
