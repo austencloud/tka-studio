@@ -1,7 +1,7 @@
 <!-- FullscreenImageViewer.svelte - Image display and navigation for fullscreen viewer -->
 <script lang="ts">
   import type { BrowseSequenceMetadata } from "$lib/domain/browse";
-  import type { IThumbnailService } from "$services/interfaces";
+  import type { IThumbnailService } from "$services/interfaces/browse-interfaces";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   let {

@@ -15,26 +15,29 @@ import type {
   BrowseDisplayState,
   BrowseLoadingState,
   BrowseSequenceMetadata,
-  DeleteConfirmationData,
   FilterType,
   FilterValue,
+  SortMethod,
+} from "$lib/services/interfaces/domain-types";
+import type {
+  DeleteConfirmationData,
+  NavigationItem,
+  NavigationSection,
+  SectionConfiguration,
+  SequenceSection,
+} from "$lib/services/interfaces/browse-interfaces";
+import type {
   IBrowseService,
   IDeleteService,
-  // Advanced browse services
   IFavoritesService,
   IFilterPersistenceService,
   INavigationService,
   ISectionService,
   ISequenceIndexService,
   IThumbnailService,
-  NavigationItem,
-  NavigationSection,
-  SectionConfiguration,
-  SequenceSection,
-  SortMethod,
-} from "$lib/services/interfaces";
-import { getBrowseStatePersistence } from "./appState.svelte";
-import { getBrowseTabStateManager } from "./browseTabStateManager.svelte";
+} from "$lib/services/interfaces/browse-interfaces";
+import { getBrowseStatePersistence } from "./app-state.svelte";
+import { getBrowseTabStateManager } from "./browse-tab-state-manager.svelte";
 
 export function createBrowseState(
   browseService: IBrowseService,
@@ -171,6 +174,7 @@ export function createBrowseState(
             value: filterValue as string | number,
             count: 0, // Will be updated when navigation sections are generated
             isActive: true,
+            sequences: [], // Will be populated by getSequencesForNavigationItem
           };
 
           // Apply the navigation filter
@@ -583,7 +587,7 @@ export function createBrowseState(
 
     try {
       const result = await deleteService.deleteSequence(
-        deleteConfirmation.sequence.id,
+        deleteConfirmation.sequence,
         allSequences
       );
 

@@ -1,6 +1,6 @@
 <!-- TurnAdjustmentControls.svelte - Blue and red turn amount grid controls -->
 <script lang="ts">
-  import type { BeatData } from "$services/interfaces";
+  import type { BeatData } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
 
   interface Props {

@@ -381,7 +381,7 @@ export function createArrowDebugState(): ArrowDebugState {
       motionType: motion.motion_type || "",
       gridMode: pictograph.grid_mode || "diamond",
       adjustmentSource: "default_placement",
-      rawPlacementData: null,
+      rawPlacementData: {},
     };
 
     debugData.specialAdjustmentDebugInfo = {
@@ -390,7 +390,7 @@ export function createArrowDebugState(): ArrowDebugState {
       turnsTuple: "placeholder",
       arrowColor: selectedArrowColor,
       specialPlacementFound: false,
-      specialPlacementData: null,
+      specialPlacementData: {},
       adjustmentSource: "none",
     };
   }

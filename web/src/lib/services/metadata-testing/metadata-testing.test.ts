@@ -6,7 +6,6 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { get } from "svelte/store";
 import {
   SequenceDiscoveryService,
   MetadataExtractionService,
@@ -297,7 +296,7 @@ describe("MetadataTestingStateManager", () => {
   });
 
   it("should have initial state", () => {
-    const state = get(stateManager.state);
+    const state = stateManager.state;
 
     expect(state.thumbnails).toEqual([]);
     expect(state.filteredThumbnails).toEqual([]);
@@ -315,17 +314,17 @@ describe("MetadataTestingStateManager", () => {
     const mockThumbnail = mockThumbnailFile;
 
     stateManager.selectThumbnail(mockThumbnail);
-    let state = get(stateManager.state);
+    let state = stateManager.state;
     expect(state.selectedThumbnails).toContain(mockThumbnail);
 
     stateManager.selectThumbnail(mockThumbnail); // Deselect
-    state = get(stateManager.state);
+    state = stateManager.state;
     expect(state.selectedThumbnails).not.toContain(mockThumbnail);
   });
 
   it("should handle search filtering", () => {
     stateManager.setSearchQuery("ABC");
-    const state = get(stateManager.state);
+    const state = stateManager.state;
     expect(state.searchQuery).toBe("ABC");
   });
 
@@ -334,7 +333,7 @@ describe("MetadataTestingStateManager", () => {
     stateManager.setWarningFilter(true);
     stateManager.setHealthScoreFilter(50, 90);
 
-    const state = get(stateManager.state);
+    const state = stateManager.state;
     expect(state.showOnlyErrors).toBe(true);
     expect(state.showOnlyWarnings).toBe(true);
     expect(state.healthScoreFilter).toEqual({ min: 50, max: 90 });
@@ -342,12 +341,12 @@ describe("MetadataTestingStateManager", () => {
 
   it("should clear data appropriately", () => {
     stateManager.clearResults();
-    let state = get(stateManager.state);
+    let state = stateManager.state;
     expect(state.analysisResults).toEqual([]);
     expect(state.batchResults).toBeNull();
 
     stateManager.clearAll();
-    state = get(stateManager.state);
+    state = stateManager.state;
     expect(state.thumbnails).toEqual([]);
     expect(state.selectedThumbnails).toEqual([]);
     expect(state.searchQuery).toBe("");

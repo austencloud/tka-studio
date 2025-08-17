@@ -15,7 +15,7 @@
  */
 
 import type { BeatData, SequenceData } from "$lib/domain";
-import type { ISequenceService } from "$services/interfaces";
+import type { ISequenceService } from "$services/interfaces/sequence-interfaces";
 
 /**
  * Creates component-scoped sequence state

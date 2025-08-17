@@ -3,12 +3,10 @@
   import type { BeatData } from "$domain/BeatData";
   import type { PictographData } from "$domain/PictographData";
   import { GridMode, Location, MotionType } from "$domain/enums";
-  import { getLetterBorderColor } from "$lib/utils/letterTypeUtils";
+  import { getLetterBorderColor } from "$lib/utils/letter-type-utils";
   import { resolve } from "$services/bootstrap";
-  import type {
-    IPictographRenderingService,
-    IStartPositionService,
-  } from "$services/interfaces";
+  import type { IPictographRenderingService } from "$services/interfaces/pictograph-interfaces";
+  import type { IStartPositionService } from "$services/interfaces/application-interfaces";
   import { onMount } from "svelte";
   import ModernPictograph from "../pictograph/Pictograph.svelte";
 

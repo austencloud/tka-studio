@@ -12,7 +12,7 @@ export type {
   MotionData,
   PictographData,
   SequenceData,
-} from "$lib/domain";
+} from "../../domain";
 
 // Re-export browse domain types
 export type {
@@ -22,7 +22,7 @@ export type {
   FilterType,
   FilterValue,
   SortMethod,
-} from "$lib/domain/browse";
+} from "../../domain/browse";
 
 // Re-export sequence card domain types
 export type {
@@ -36,7 +36,7 @@ export type {
   ProgressInfo,
   ValidationResult,
   ExportResult,
-} from "$lib/domain/sequenceCard";
+} from "../../domain/sequenceCard";
 
 // Re-export enums for convenience
 export type {
@@ -44,4 +44,4 @@ export type {
   Location,
   Orientation,
   RotationDirection,
-} from "$lib/domain/enums";
+} from "../../domain/enums";

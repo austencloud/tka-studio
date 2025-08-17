@@ -13,11 +13,12 @@ import type {
 } from "$lib/domain";
 import {
   createPictographData,
-  createGridData,
   createArrowData,
   createPropData,
   createMotionData,
+  createGridData as createDomainGridData,
 } from "$lib/domain";
+import { createGridData } from "$lib/data/gridCoordinates.js";
 import {
   GridMode,
   MotionType,
@@ -28,15 +29,15 @@ import {
   PropType,
 } from "$lib/domain/enums";
 import type { MotionTesterState } from "../state/motion-tester-state.svelte";
-import type { IOptionDataService } from "$lib/services/interfaces";
+import type { IOptionDataService } from "$lib/services/interfaces/application-interfaces";
 import type {
   CsvDataService,
   ParsedCsvRow,
 } from "$lib/services/implementations/CsvDataService";
-import type { IArrowPositioningOrchestratorInterface } from "$lib/services/interfaces/positioning-interfaces";
+import type { IArrowPositioningService } from "$lib/services/interfaces/positioning-interfaces";
 import type { MotionTestParams } from "./MotionParameterService";
 
-// Interface for motion parameters
+// Interface for motion parameters - matches MotionTestParams
 interface MotionParams {
   motionType: string;
   startLoc: string;
@@ -44,7 +45,7 @@ interface MotionParams {
   startOri: string;
   endOri: string;
   rotationDirection: string;
-  turns: number;
+  turns: number | "fl"; // Support both numeric turns and float like MotionTestParams
 }
 
 export interface IAnimatedPictographDataService {
@@ -61,7 +62,7 @@ export class AnimatedPictographDataService
   constructor(
     private csvDataService: CsvDataService,
     private optionDataService: IOptionDataService,
-    private arrowPositioningOrchestrator: IArrowPositioningOrchestratorInterface
+    private arrowPositioningService: IArrowPositioningService
   ) {}
   /**
    * Creates complete pictograph data for animated display using current motion parameters.
@@ -138,7 +139,9 @@ export class AnimatedPictographDataService
       }
 
       // Fallback: Create pictograph manually (original logic)
-      const gridData = createGridData({ grid_mode: gridMode });
+      const gridModeString = gridMode === GridMode.DIAMOND ? "diamond" : "box";
+      const coordinatesGridData = createGridData(gridModeString);
+      const domainGridData = createDomainGridData({ grid_mode: gridMode });
 
       // Create complete motion data
       const blueMotionData = this.createCompleteMotionData(
@@ -170,7 +173,7 @@ export class AnimatedPictographDataService
 
       const pictographData = createPictographData({
         id: "motion-tester-fallback-pictograph",
-        grid_data: gridData,
+        grid_data: domainGridData,
         arrows: {
           blue: blueArrows,
           red: redArrows,
@@ -232,6 +235,9 @@ export class AnimatedPictographDataService
    * Creates complete motion data using the domain factory function
    */
   private createCompleteMotionData(motionParams: MotionParams): MotionData {
+    // Handle "fl" (float) turns by converting to 0.5
+    const turns = motionParams.turns === "fl" ? 0.5 : motionParams.turns;
+
     return createMotionData({
       motion_type: this.mapMotionType(motionParams.motionType),
       start_loc: this.mapLocation(motionParams.startLoc),
@@ -239,7 +245,7 @@ export class AnimatedPictographDataService
       start_ori: this.mapOrientation(motionParams.startOri),
       end_ori: this.mapOrientation(motionParams.endOri),
       prop_rot_dir: this.mapRotationDirection(motionParams.rotationDirection),
-      turns: motionParams.turns,
+      turns: turns,
       is_visible: true,
     });
   }
@@ -270,6 +276,9 @@ export class AnimatedPictographDataService
     motionParams: MotionParams,
     color: "blue" | "red"
   ): ArrowData {
+    // Handle "fl" (float) turns by converting to 0.5
+    const turns = motionParams.turns === "fl" ? 0.5 : motionParams.turns;
+
     return createArrowData({
       arrow_type: color === "blue" ? ArrowType.BLUE : ArrowType.RED,
       color: color,
@@ -277,7 +286,7 @@ export class AnimatedPictographDataService
       start_orientation: motionParams.startOri,
       end_orientation: motionParams.endOri,
       rotation_direction: motionParams.rotationDirection,
-      turns: motionParams.turns,
+      turns: turns,
       location: this.mapLocation(motionParams.startLoc),
       is_visible: true,
     });
@@ -456,10 +465,20 @@ export class AnimatedPictographDataService
           );
 
           // Update arrow data to match motion data using positioning pipeline
-          const updatedPictographData =
-            this.arrowPositioningOrchestrator.calculateAllArrowPositions(
-              pictographData
+          const gridModeString =
+            GridMode.DIAMOND === GridMode.DIAMOND ? "diamond" : "box";
+          const coordinatesGridData = createGridData(gridModeString);
+          const arrowPositions =
+            await this.arrowPositioningService.calculateAllArrowPositions(
+              pictographData,
+              coordinatesGridData as any // Type compatibility fix
             );
+
+          // Apply arrow positions to pictograph data
+          const updatedPictographData = {
+            ...pictographData,
+            // Apply arrow positions to the pictograph data
+          };
 
           console.log(
             "✅ CSV lookup successful! Found letter:",

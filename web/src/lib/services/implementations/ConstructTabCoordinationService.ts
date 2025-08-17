@@ -8,13 +8,12 @@
  */
 
 import { GridMode } from "$lib/domain/enums";
+import type { BeatData, SequenceData } from "../interfaces/domain-types";
 import type {
-  BeatData,
   IConstructTabCoordinationService,
-  ISequenceService,
   IStartPositionService,
-  SequenceData,
-} from "../interfaces";
+} from "../interfaces/application-interfaces";
+import type { ISequenceService } from "../interfaces/sequence-interfaces";
 
 // Import the singleton sequence state service for proper synchronization
 import { sequenceStateService } from "../SequenceStateService.svelte";

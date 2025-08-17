@@ -5,29 +5,37 @@
 
 import type {
   IApplicationInitializationService,
-  IArrowPositioningService,
-  IArrowRenderingService,
   IConstructTabCoordinationService,
-  IDataTransformationService,
-  IDeviceDetectionService,
-  IExportService,
-  IGridRenderingService,
-  IMotionGenerationService,
   IOptionDataService,
-  IOverlayRenderingService,
-  IPanelManagementService,
-  IPersistenceService,
-  IPictographRenderingService,
-  IPictographService,
-  IPropRenderingService,
-  ISequenceDomainService,
-  ISequenceGenerationService,
-  ISequenceService,
   ISettingsService,
   IStartPositionService,
+} from "../../interfaces/application-interfaces";
+import type {
+  ISequenceDomainService,
+  ISequenceService,
+  IPersistenceService,
+} from "../../interfaces/sequence-interfaces";
+import type {
+  IArrowRenderingService,
+  IDataTransformationService,
+  IGridRenderingService,
+  IOverlayRenderingService,
+  IPictographRenderingService,
+  IPictographService,
   ISvgConfiguration,
   ISvgUtilityService,
-} from "../../interfaces";
+} from "../../interfaces/pictograph-interfaces";
+import type {
+  IArrowPositioningService,
+  IPropRenderingService,
+} from "../../interfaces/positioning-interfaces";
+import type {
+  IMotionGenerationService,
+  ISequenceGenerationService,
+} from "../../interfaces/generation-interfaces";
+import type { IDeviceDetectionService } from "../../interfaces/device-interfaces";
+import type { IExportService } from "../../interfaces/export-interfaces";
+import type { IPanelManagementService } from "../../interfaces/panel-interfaces";
 import { createServiceInterface } from "../types";
 
 // Import service implementations
@@ -91,7 +99,12 @@ export const IPictographRenderingServiceInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as IArrowPositioningService,
-          args[1] as IPropRenderingService
+          args[1] as IPropRenderingService,
+          args[2] as ISvgUtilityService,
+          args[3] as IGridRenderingService,
+          args[4] as IArrowRenderingService,
+          args[5] as IOverlayRenderingService,
+          args[6] as IDataTransformationService
         );
       }
     }

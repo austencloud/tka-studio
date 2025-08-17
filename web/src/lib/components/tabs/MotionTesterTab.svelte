@@ -10,14 +10,14 @@
     getContext<() => ServiceContainer | null>("di-container");
 
   // State - resolved lazily when container is available
-  let state: MotionTesterState | null = $state(null);
-  let initializationError: string | null = $state(null);
+  let state: MotionTesterState | null = null;
+  let initializationError: string | null = null;
 
   // Initialize state when container becomes available
-  $effect(() => {
+  $: {
     const container = getContainer?.();
     console.log(
-      "🎯 MotionTesterTab $effect - container:",
+      "🎯 MotionTesterTab reactive - container:",
       container ? "available" : "null"
     );
     if (container && !state) {
@@ -33,7 +33,7 @@
     } else if (!container) {
       console.log("🎯 MotionTesterTab waiting for container...");
     }
-  });
+  }
 
   console.log("🎯 MotionTesterTab rendered!");
 </script>

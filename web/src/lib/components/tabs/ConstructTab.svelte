@@ -6,7 +6,7 @@
   import RightPanel from "$components/construct/RightPanel.svelte";
   import { constructTabEventService } from "$services/implementations/ConstructTabEventService";
   import { resolve } from "$services/bootstrap";
-  import { createSequenceState } from "$lib/state/sequenceState.svelte";
+  import { createSequenceState } from "$lib/state/sequence-state.svelte";
   import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
   import { onMount } from "svelte";
 

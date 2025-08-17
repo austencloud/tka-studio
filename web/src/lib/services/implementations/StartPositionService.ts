@@ -21,11 +21,9 @@ import {
   PropType,
   RotationDirection,
 } from "../../domain";
-import type {
-  GridMode,
-  IStartPositionService,
-  ValidationResult,
-} from "../interfaces";
+import type { ValidationResult } from "../interfaces/domain-types";
+import type { GridMode } from "../interfaces/core-types";
+import type { IStartPositionService } from "../interfaces/application-interfaces";
 import type { ValidationError } from "$lib/domain/sequenceCard";
 export class StartPositionService implements IStartPositionService {
   private readonly DEFAULT_START_POSITIONS = {

@@ -15,7 +15,7 @@ import {
 import type {
   GenerationOptions,
   IMotionGenerationService,
-} from "../interfaces";
+} from "../interfaces/generation-interfaces";
 
 export class MotionGenerationService implements IMotionGenerationService {
   /**

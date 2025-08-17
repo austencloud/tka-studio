@@ -10,12 +10,9 @@
 
 import { GridMode as DomainGridMode, Orientation } from "../../domain/enums";
 import { DefaultPropPositioner } from "../DefaultPropPositioner";
-import type {
-  GridMode,
-  IPropRenderingService,
-  MotionData,
-  PropPosition,
-} from "../interfaces";
+import type { MotionData } from "../interfaces/domain-types";
+import type { GridMode, PropPosition } from "../interfaces/core-types";
+import type { IPropRenderingService } from "../interfaces/positioning-interfaces";
 import { PropRotAngleManager } from "../PropRotAngleManager";
 
 export class PropRenderingService implements IPropRenderingService {

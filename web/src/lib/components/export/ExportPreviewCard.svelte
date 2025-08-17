@@ -1,6 +1,6 @@
 <!-- ExportPreviewCard.svelte - Export preview matching desktop app -->
 <script lang="ts">
-  import type { SequenceData } from "$services/interfaces";
+  import type { SequenceData } from "$services/interfaces/domain-types";
 
   interface Props {
     currentSequence: SequenceData | null;

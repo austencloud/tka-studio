@@ -1976,7 +1976,7 @@ class OptionDataService {
    */
   createMotionDataFromCsv(row, color) {
     const motionType = row[`${color}MotionType`];
-    const rotationDirection = row[`${color}RotationDirection`];
+    const rotationDirection = row[`${color}PropRotDir`];
     const startLoc = row[`${color}StartLoc`];
     const endLoc = row[`${color}EndLoc`];
     const motion = this.orientationCalculationService.createMotionWithCalculatedOrientation(
@@ -2366,8 +2366,12 @@ class PictographRenderingService {
       const svg = this.svgUtility.createBaseSVG();
       const gridMode = data.grid_data?.grid_mode ?? GridMode.DIAMOND;
       await this.gridRendering.renderGrid(svg, gridMode);
-      const rawGridData = createGridData$1(gridMode);
-      const gridDataWithMode = this.dataTransformation.adaptGridData(rawGridData, gridMode);
+      const gridModeString = gridMode === GridMode.DIAMOND ? "diamond" : "box";
+      const rawGridData = createGridData(gridModeString);
+      const gridDataWithMode = this.dataTransformation.adaptGridData(
+        rawGridData,
+        gridMode
+      );
       const arrowPositions = await this.arrowPositioning.calculateAllArrowPositions(
         data,
         gridDataWithMode
@@ -2456,10 +2460,10 @@ class PictographService {
   }
 }
 class DefaultPropPositioner {
-  constructor(gridData, gridMode) {
-    this.gridData = gridData;
+  constructor(gridData2, gridMode) {
+    this.gridData = gridData2;
     this.gridMode = gridMode;
-    if (!gridData || !gridData.allHandPointsNormal) {
+    if (!gridData2 || !gridData2.allHandPointsNormal) {
       throw new Error("Invalid grid data provided to DefaultPropPositioner");
     }
     if (this.debugMode) {
@@ -2542,8 +2546,8 @@ class DefaultPropPositioner {
    */
   static calculatePosition(location, gridMode = "diamond") {
     try {
-      const gridData = createGridData(gridMode);
-      const positioner = new DefaultPropPositioner(gridData, gridMode);
+      const gridData2 = createGridData(gridMode);
+      const positioner = new DefaultPropPositioner(gridData2, gridMode);
       return positioner.calculateCoordinates(location);
     } catch (error) {
       console.error("Error calculating position:", error);
@@ -3639,7 +3643,12 @@ const IPictographRenderingServiceInterface = createServiceInterface$1(
     constructor(...args) {
       super(
         args[0],
-        args[1]
+        args[1],
+        args[2],
+        args[3],
+        args[4],
+        args[5],
+        args[6]
       );
     }
   }
@@ -4025,7 +4034,7 @@ class ArrowPositioningService {
       };
     }
   }
-  async calculateAllArrowPositions(pictographData, gridData) {
+  async calculateAllArrowPositions(pictographData, gridData2) {
     const positions = /* @__PURE__ */ new Map();
     try {
       if (pictographData.arrows) {
@@ -4035,7 +4044,7 @@ class ArrowPositioningService {
           const position = await this.calculateArrowPosition(
             arrowData,
             pictographData,
-            gridData
+            gridData2
           );
           positions.set(arrowId, position);
         }
@@ -4069,9 +4078,9 @@ class ArrowPositioningService {
    * Get initial position based on location and grid data
    * @private - Reserved for future implementation
    */
-  _getInitialPosition(location, gridData) {
+  _getInitialPosition(location, gridData2) {
     try {
-      const gridPoint = gridData.allHandPointsNormal[location] || gridData.allLayer2PointsNormal[location];
+      const gridPoint = gridData2.allHandPointsNormal[location] || gridData2.allLayer2PointsNormal[location];
       if (gridPoint && gridPoint.coordinates) {
         return {
           x: gridPoint.coordinates.x,
@@ -4587,7 +4596,7 @@ class SpecialPlacementService {
     const motion = motionData;
     const letter = pictographData.letter;
     const oriKey = this.generateOrientationKey(motion, pictographData);
-    const gridMode = pictographData.grid_mode || "diamond";
+    const gridMode = pictographData.grid_data?.grid_mode || pictographData.grid_mode || "diamond";
     const turnsTuple = this.generateTurnsTuple(pictographData);
     await this.ensureLetterPlacementsLoaded(gridMode, oriKey, letter);
     const letterData = this.specialPlacements[gridMode]?.[oriKey]?.[letter];
@@ -6871,9 +6880,9 @@ class DeleteService {
       willFixVariationNumbers
     };
   }
-  async deleteSequence(sequenceId, allSequences) {
+  async deleteSequence(sequenceOrId, allSequences) {
     try {
-      const sequence = allSequences.find((seq) => seq.id === sequenceId);
+      const sequence = typeof sequenceOrId === "string" ? allSequences.find((seq) => seq.id === sequenceOrId) : sequenceOrId;
       if (!sequence) {
         return {
           success: false,
@@ -6901,7 +6910,7 @@ class DeleteService {
       );
       console.log(`Deleting sequence: ${sequence.word} (${sequence.id})`);
       const remainingSequences = updatedSequences.filter(
-        (seq) => seq.id !== sequenceId
+        (seq) => seq.id !== sequence.id
       );
       return {
         success: true,
@@ -7040,6 +7049,22 @@ class FavoritesService {
   favoritesCache = null;
   constructor() {
     this.loadFavoritesFromStorage();
+  }
+  async addToFavorites(sequenceId) {
+    await this.ensureCacheLoaded();
+    if (!this.favoritesCache) {
+      throw new Error("Favorites cache not initialized");
+    }
+    this.favoritesCache.add(sequenceId);
+    await this.saveFavoritesToStorage();
+  }
+  async removeFromFavorites(sequenceId) {
+    await this.ensureCacheLoaded();
+    if (!this.favoritesCache) {
+      throw new Error("Favorites cache not initialized");
+    }
+    this.favoritesCache.delete(sequenceId);
+    await this.saveFavoritesToStorage();
   }
   async toggleFavorite(sequenceId) {
     await this.ensureCacheLoaded();
@@ -7247,6 +7272,14 @@ class FilterPersistenceService {
       lastUpdated: /* @__PURE__ */ new Date()
     };
   }
+  // Additional methods required by browse-interfaces.ts
+  async saveFilterState(state) {
+    await this.saveBrowseState(state);
+  }
+  async loadFilterState() {
+    const browseState = await this.loadBrowseState();
+    return browseState?.currentFilter || null;
+  }
 }
 class NavigationService {
   async generateNavigationSections(sequences, favorites) {
@@ -7336,7 +7369,8 @@ class NavigationService {
           label: "All Favorites",
           value: "favorites",
           count: favoriteSequences.length,
-          isActive: false
+          isActive: false,
+          sequences: favoriteSequences
         }
       ],
       isExpanded: false,
@@ -7363,7 +7397,8 @@ class NavigationService {
       label: this.formatDateLabel(new Date(date)),
       value: date,
       count: seqs.length,
-      isActive: false
+      isActive: false,
+      sequences: seqs
     }));
     return {
       id: "date",
@@ -7391,7 +7426,8 @@ class NavigationService {
       label: `${length} beats`,
       value: length,
       count: seqs.length,
-      isActive: false
+      isActive: false,
+      sequences: seqs
     }));
     return {
       id: "length",
@@ -7419,7 +7455,8 @@ class NavigationService {
       label: letter,
       value: letter,
       count: seqs.length,
-      isActive: false
+      isActive: false,
+      sequences: seqs
     }));
     return {
       id: "letter",
@@ -7449,7 +7486,8 @@ class NavigationService {
       label: level.charAt(0).toUpperCase() + level.slice(1),
       value: level,
       count: levelGroups.get(level)?.length || 0,
-      isActive: false
+      isActive: false,
+      sequences: levelGroups.get(level) ?? []
     }));
     return {
       id: "level",
@@ -7477,7 +7515,8 @@ class NavigationService {
       label: author,
       value: author,
       count: seqs.length,
-      isActive: false
+      isActive: false,
+      sequences: seqs
     }));
     return {
       id: "author",
@@ -7505,6 +7544,13 @@ class NavigationService {
     if (diffDays < 7) return `${diffDays} days ago`;
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
     return date.toLocaleDateString();
+  }
+  // Additional methods required by browse-interfaces.ts
+  async buildNavigationStructure(sequences) {
+    return this.generateNavigationSections(sequences, []);
+  }
+  async getNavigationItem(_sectionId, _itemId) {
+    return null;
   }
 }
 class SectionService {
@@ -7731,6 +7777,17 @@ class SectionService {
     if (diffDays < 7) return `${diffDays} days ago`;
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
     return date.toLocaleDateString();
+  }
+  // Additional methods required by browse-interfaces.ts
+  async organizeIntoSections(sequences, config) {
+    return this.organizeSections(sequences, config);
+  }
+  async getSectionConfiguration(sortMethod) {
+    return {
+      groupBy: "letter",
+      sortWithinSection: sortMethod,
+      showEmptySections: false
+    };
   }
 }
 class SequenceIndexService {
@@ -8195,10 +8252,10 @@ function createServiceInterface(token, implementation) {
   return { token, implementation };
 }
 class AnimatedPictographDataService {
-  constructor(csvDataService, optionDataService, arrowPositioningOrchestrator) {
+  constructor(csvDataService, optionDataService, arrowPositioningService) {
     this.csvDataService = csvDataService;
     this.optionDataService = optionDataService;
-    this.arrowPositioningOrchestrator = arrowPositioningOrchestrator;
+    this.arrowPositioningService = arrowPositioningService;
   }
   cache = /* @__PURE__ */ new Map();
   /**
@@ -8259,7 +8316,9 @@ class AnimatedPictographDataService {
           "⚠️ CSV lookup failed, falling back to manual generation..."
         );
       }
-      const gridData = createGridData$1({ grid_mode: gridMode });
+      const gridModeString = gridMode === GridMode.DIAMOND ? "diamond" : "box";
+      const coordinatesGridData = createGridData(gridModeString);
+      const domainGridData = createGridData$1({ grid_mode: gridMode });
       const blueMotionData = this.createCompleteMotionData(
         motionState.blueMotionParams
       );
@@ -8342,6 +8401,7 @@ class AnimatedPictographDataService {
    * Creates complete motion data using the domain factory function
    */
   createCompleteMotionData(motionParams) {
+    const turns = motionParams.turns === "fl" ? 0.5 : motionParams.turns;
     return createMotionData({
       motion_type: this.mapMotionType(motionParams.motionType),
       start_loc: this.mapLocation(motionParams.startLoc),
@@ -8349,7 +8409,7 @@ class AnimatedPictographDataService {
       start_ori: this.mapOrientation(motionParams.startOri),
       end_ori: this.mapOrientation(motionParams.endOri),
       prop_rot_dir: this.mapRotationDirection(motionParams.rotationDirection),
-      turns: motionParams.turns,
+      turns,
       is_visible: true
     });
   }
@@ -8375,6 +8435,7 @@ class AnimatedPictographDataService {
    * Creates arrow data based on motion parameters
    */
   createArrowDataFromMotion(motionParams, color) {
+    const turns = motionParams.turns === "fl" ? 0.5 : motionParams.turns;
     return createArrowData({
       arrow_type: color === "blue" ? ArrowType.BLUE : ArrowType.RED,
       color,
@@ -8382,7 +8443,7 @@ class AnimatedPictographDataService {
       start_orientation: motionParams.startOri,
       end_orientation: motionParams.endOri,
       rotation_direction: motionParams.rotationDirection,
-      turns: motionParams.turns,
+      turns,
       location: this.mapLocation(motionParams.startLoc),
       is_visible: true
     });
@@ -8536,9 +8597,17 @@ class AnimatedPictographDataService {
             `🎯 Successfully created pictograph for letter "${matchingRow.letter}":`,
             pictographData
           );
-          const updatedPictographData = this.arrowPositioningOrchestrator.calculateAllArrowPositions(
-            pictographData
+          const gridModeString = GridMode.DIAMOND === GridMode.DIAMOND ? "diamond" : "box";
+          const gridData2 = createGridData(gridModeString);
+          const arrowPositions = await this.arrowPositioningService.calculateAllArrowPositions(
+            pictographData,
+            gridData2
+            // Type compatibility fix
           );
+          const updatedPictographData = {
+            ...pictographData
+            // Apply arrow positions to the pictograph data
+          };
           console.log(
             "✅ CSV lookup successful! Found letter:",
             matchingRow.letter

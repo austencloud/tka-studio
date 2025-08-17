@@ -11,30 +11,13 @@ import type {
   PictographData,
   MotionData,
 } from "./domain-types";
-import type { GridMode } from "$lib/domain";
+import type { GridMode } from "../../domain";
 import type { GridData as RawGridData } from "../../data/gridCoordinates.js";
+import type { ArrowPosition, GridData } from "./core-types";
 
 // ============================================================================
-// SHARED TYPES
+// SHARED TYPES (imported from core-types to avoid duplication)
 // ============================================================================
-
-export interface ArrowPosition {
-  x: number;
-  y: number;
-  rotation: number;
-}
-
-export interface GridData {
-  mode: GridMode;
-  allLayer2PointsNormal: Record<
-    string,
-    { coordinates: { x: number; y: number } }
-  >;
-  allHandPointsNormal: Record<
-    string,
-    { coordinates: { x: number; y: number } }
-  >;
-}
 
 export interface ISvgConfiguration {
   readonly SVG_SIZE: number;

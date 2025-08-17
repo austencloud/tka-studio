@@ -12,7 +12,7 @@ import type {
   ISectionService,
   ISequenceIndexService,
   IThumbnailService,
-} from "../../interfaces";
+} from "../../interfaces/browse-interfaces";
 import { createServiceInterface } from "../types";
 
 // Import service implementations

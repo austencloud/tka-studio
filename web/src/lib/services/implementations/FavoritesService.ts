@@ -35,6 +35,28 @@ export class FavoritesService implements IFavoritesService {
     this.loadFavoritesFromStorage();
   }
 
+  async addToFavorites(sequenceId: string): Promise<void> {
+    await this.ensureCacheLoaded();
+
+    if (!this.favoritesCache) {
+      throw new Error("Favorites cache not initialized");
+    }
+
+    this.favoritesCache.add(sequenceId);
+    await this.saveFavoritesToStorage();
+  }
+
+  async removeFromFavorites(sequenceId: string): Promise<void> {
+    await this.ensureCacheLoaded();
+
+    if (!this.favoritesCache) {
+      throw new Error("Favorites cache not initialized");
+    }
+
+    this.favoritesCache.delete(sequenceId);
+    await this.saveFavoritesToStorage();
+  }
+
   async toggleFavorite(sequenceId: string): Promise<void> {
     await this.ensureCacheLoaded();
 

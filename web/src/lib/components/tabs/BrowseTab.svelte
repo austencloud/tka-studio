@@ -17,11 +17,11 @@ Integrates panel management service with runes for:
     IFavoritesService,
     IFilterPersistenceService,
     INavigationService,
-    IPanelManagementService,
     ISectionService,
     ISequenceIndexService,
     IThumbnailService,
-  } from "$lib/services/interfaces";
+  } from "$lib/services/interfaces/browse-interfaces";
+  import type { IPanelManagementService } from "$lib/services/interfaces/panel-interfaces";
   import { createBrowseState } from "$lib/state/browse-state.svelte";
   import {
     createPanelState,

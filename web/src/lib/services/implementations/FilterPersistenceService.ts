@@ -5,7 +5,12 @@
  * following the microservices architecture pattern.
  */
 
-import type { FilterType, FilterValue, SortMethod } from "../interfaces";
+import type {
+  FilterType,
+  FilterValue,
+  SortMethod,
+} from "../interfaces/domain-types";
+import type { BrowseState } from "../interfaces/browse-interfaces";
 
 export interface FilterState {
   type: FilterType;
@@ -13,13 +18,14 @@ export interface FilterState {
   appliedAt: Date;
 }
 
-export interface BrowseState {
-  currentFilter: FilterState | null;
-  sortMethod: SortMethod;
-  navigationMode: "filter_selection" | "sequence_browser";
-  searchQuery: string;
-  lastUpdated: Date;
-}
+// Use the BrowseState from the interface instead of defining our own
+// export interface BrowseState {
+//   currentFilter: FilterState | null;
+//   sortMethod: SortMethod;
+//   navigationMode: "filter_selection" | "sequence_browser";
+//   searchQuery: string;
+//   lastUpdated: Date;
+// }
 
 export interface IFilterPersistenceService {
   /** Save current browse state */
@@ -209,11 +215,44 @@ export class FilterPersistenceService implements IFilterPersistenceService {
 
   async getDefaultBrowseState(): Promise<BrowseState> {
     return {
-      currentFilter: null,
-      sortMethod: "alphabetical" as SortMethod,
-      navigationMode: "filter_selection",
-      searchQuery: "",
-      lastUpdated: new Date(),
+      displayState: {
+        currentView: "filter_selection",
+        selectedSequence: null,
+        isSequenceDetailOpen: false,
+      },
+      loadingState: {
+        isLoading: false,
+        hasError: false,
+        errorMessage: null,
+      },
+      filterState: {
+        activeFilters: {
+          starting_letter: "",
+          contains_letters: "",
+          length: "",
+          difficulty: "",
+          author: "",
+          date_created: "",
+          date_modified: "",
+          favorites: "",
+          tags: "",
+          prop_type: "",
+        },
+        sortMethod: "alphabetical" as SortMethod,
+        searchQuery: "",
+      },
     };
+  }
+
+  // Additional methods required by browse-interfaces.ts
+  async saveFilterState(state: any): Promise<void> {
+    // Use the existing saveBrowseState method
+    await this.saveBrowseState(state);
+  }
+
+  async loadFilterState(): Promise<any> {
+    // Use the existing loadBrowseState method
+    const browseState = await this.loadBrowseState();
+    return browseState?.filterState || null;
   }
 }

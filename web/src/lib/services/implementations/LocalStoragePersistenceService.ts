@@ -6,7 +6,7 @@
  */
 
 import type { BeatData, SequenceData } from "$lib/domain";
-import type { IPersistenceService } from "../interfaces";
+import type { IPersistenceService } from "../interfaces/sequence-interfaces";
 
 export class LocalStoragePersistenceService implements IPersistenceService {
   private readonly CACHE_VERSION = "v2.1"; // ✅ ROBUST: Cache versioning

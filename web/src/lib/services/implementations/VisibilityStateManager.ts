@@ -5,7 +5,7 @@
  * Manages complex dependencies between motion visibility and dependent glyphs.
  */
 
-import type { AppSettings } from "../interfaces";
+import type { AppSettings } from "../interfaces/application-interfaces";
 
 type VisibilityObserver = () => void;
 

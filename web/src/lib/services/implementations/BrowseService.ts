@@ -13,9 +13,9 @@ import type {
   BrowseSequenceMetadata,
   FilterType,
   FilterValue,
-  IBrowseService,
   SortMethod,
-} from "$lib/services/interfaces";
+} from "$lib/services/interfaces/domain-types";
+import type { IBrowseService } from "$lib/services/interfaces/browse-interfaces";
 
 export class BrowseService implements IBrowseService {
   private cachedSequences: BrowseSequenceMetadata[] | null = null;

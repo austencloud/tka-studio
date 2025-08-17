@@ -1,8 +1,8 @@
 <!-- SequenceCardTab.svelte - Clone of desktop modern sequence card tab -->
 <script lang="ts">
   import { resolve } from "$services/bootstrap";
-  import { createSequenceState } from "$lib/state/sequenceState.svelte";
-  import type { SequenceData } from "$services/interfaces";
+  import { createSequenceState } from "$lib/state/sequence-state.svelte";
+  import type { SequenceData } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
   import SequenceCardContent from "./sequence_card/SequenceCardContent.svelte";
   import SequenceCardHeader from "./sequence_card/SequenceCardHeader.svelte";

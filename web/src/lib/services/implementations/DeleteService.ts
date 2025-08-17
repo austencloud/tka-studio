@@ -5,7 +5,7 @@
  * and cleanup operations following the microservices architecture pattern.
  */
 
-import type { BrowseSequenceMetadata } from "../interfaces";
+import type { BrowseSequenceMetadata } from "../interfaces/domain-types";
 
 export interface DeleteResult {
   success: boolean;
@@ -71,12 +71,24 @@ export class DeleteService implements IDeleteService {
     };
   }
 
+  // Overload to match interface signature
+  async deleteSequence(
+    sequence: BrowseSequenceMetadata,
+    allSequences: BrowseSequenceMetadata[]
+  ): Promise<DeleteResult>;
   async deleteSequence(
     sequenceId: string,
     allSequences: BrowseSequenceMetadata[]
+  ): Promise<DeleteResult>;
+  async deleteSequence(
+    sequenceOrId: string | BrowseSequenceMetadata,
+    allSequences: BrowseSequenceMetadata[]
   ): Promise<DeleteResult> {
     try {
-      const sequence = allSequences.find((seq) => seq.id === sequenceId);
+      const sequence =
+        typeof sequenceOrId === "string"
+          ? allSequences.find((seq) => seq.id === sequenceOrId)
+          : sequenceOrId;
       if (!sequence) {
         return {
           success: false,
@@ -115,7 +127,7 @@ export class DeleteService implements IDeleteService {
 
       // Remove the sequence from the list
       const remainingSequences = updatedSequences.filter(
-        (seq) => seq.id !== sequenceId
+        (seq) => seq.id !== sequence.id
       );
 
       return {

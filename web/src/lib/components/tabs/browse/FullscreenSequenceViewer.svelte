@@ -1,7 +1,7 @@
 <!-- FullscreenSequenceViewer.svelte - Fullscreen sequence viewer with actions -->
 <script lang="ts">
   import type { BrowseSequenceMetadata } from "$lib/domain/browse";
-  import type { IThumbnailService } from "$services/interfaces";
+  import type { IThumbnailService } from "$services/interfaces/browse-interfaces";
   import { fade } from "svelte/transition";
   // Import subcomponents
   import FullscreenActionButtons from "./fullscreen/FullscreenActionButtons.svelte";

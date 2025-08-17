@@ -17,8 +17,8 @@
   import TabNavigation from "./TabNavigation.svelte";
   // Import Svelte's built-in fade transition for consistency with main tabs
   import type { BeatData } from "$lib/domain";
-  import { getAnimationSettings } from "$lib/utils/animationControl";
-  import { shouldAnimate } from "$lib/utils/simpleFade";
+  import { getAnimationSettings } from "$lib/utils/animation-control";
+  import { shouldAnimate } from "$lib/utils/simple-fade";
   import { fade } from "svelte/transition";
 
   // Props from parent ConstructTab

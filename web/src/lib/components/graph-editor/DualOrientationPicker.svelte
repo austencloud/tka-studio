@@ -1,6 +1,6 @@
 <!-- DualOrientationPicker.svelte - Blue and red orientation controls for start positions -->
 <script lang="ts">
-  import type { BeatData } from "$services/interfaces";
+  import type { BeatData } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
 
   interface Props {

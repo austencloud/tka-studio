@@ -8,14 +8,20 @@
 <script lang="ts">
   import type { PictographData } from "$domain/PictographData";
 
-  // Props
-  export let pictographData: PictographData;
-  export let size: "small" | "medium" | "large" = "medium";
-  export let showDetails = false;
+  // Props using Svelte 5 runes
+  let {
+    pictographData,
+    size = "medium",
+    showDetails = false,
+  }: {
+    pictographData: PictographData;
+    size?: "small" | "medium" | "large";
+    showDetails?: boolean;
+  } = $props();
 
-  // Reactive statements
-  $: gridSize = getGridSize(size);
-  $: positions = getPositions(pictographData);
+  // Derived values using Svelte 5 runes
+  let gridSize = $derived(getGridSize(size));
+  let positions = $derived(getPositions(pictographData));
 
   // Methods
   function getGridSize(size: string): number {

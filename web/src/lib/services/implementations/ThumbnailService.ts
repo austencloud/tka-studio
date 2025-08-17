@@ -5,7 +5,7 @@
  * Manages caching and provides URLs for thumbnail access.
  */
 
-import type { IThumbnailService } from "$lib/services/interfaces";
+import type { IThumbnailService } from "$lib/services/interfaces/browse-interfaces";
 
 export class ThumbnailService implements IThumbnailService {
   private thumbnailCache = new Map<string, Promise<void>>();

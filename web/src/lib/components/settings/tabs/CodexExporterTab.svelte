@@ -1,6 +1,6 @@
 <!-- CodexExporterTab.svelte - Export all pictographs with turn configurations -->
 <script lang="ts">
-  import type { AppSettings } from "$services/interfaces";
+  import type { AppSettings } from "$services/interfaces/application-interfaces";
   import SelectInput from "../SelectInput.svelte";
   import SettingCard from "../SettingCard.svelte";
   import TextInput from "../TextInput.svelte";

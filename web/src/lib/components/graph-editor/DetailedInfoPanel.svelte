@@ -1,6 +1,9 @@
 <!-- DetailedInfoPanel.svelte - Detailed information about selected beat -->
 <script lang="ts">
-  import type { BeatData, SequenceData } from "$services/interfaces";
+  import type {
+    BeatData,
+    SequenceData,
+  } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
 
   // Props

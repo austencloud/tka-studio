@@ -12,7 +12,7 @@ Refactored into smaller section components for better maintainability:
 -->
 <script lang="ts">
   import { resolve } from "$services/bootstrap";
-  import type { IDeviceDetectionService } from "$services/interfaces";
+  import type { IDeviceDetectionService } from "$services/interfaces/device-interfaces";
   import { onMount } from "svelte";
   // Import section components
   import GeneratePanelHeader from "./sections/GeneratePanelHeader.svelte";

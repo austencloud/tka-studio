@@ -2,7 +2,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
-  import { handleSEORedirect } from "$lib/utils/seoUtils";
+  import { handleSEORedirect } from "$lib/utils/seo-utils";
   import AboutTab from "$lib/components/about/AboutTab.svelte";
   import type { PageData } from "./$types";
 

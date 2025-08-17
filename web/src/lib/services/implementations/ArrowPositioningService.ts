@@ -7,15 +7,13 @@
 
 import type { ArrowData } from "$lib/domain";
 import { RotationDirection } from "$lib/domain/enums";
+import type { MotionData, PictographData } from "../interfaces/domain-types";
+import type { ArrowPosition, GridData } from "../interfaces/core-types";
 import type {
-  ArrowPosition,
-  GridData,
+  IArrowPositioningService,
   IArrowPlacementDataService,
   IArrowPlacementKeyService,
-  IArrowPositioningService,
-  MotionData,
-  PictographData,
-} from "../interfaces";
+} from "../interfaces/positioning-interfaces";
 import { Location } from "$lib/domain/enums"; // ✅ Import from centralized enums
 
 export class ArrowPositioningService implements IArrowPositioningService {

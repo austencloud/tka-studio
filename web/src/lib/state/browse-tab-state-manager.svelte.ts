@@ -14,7 +14,7 @@
 import { browser } from "$app/environment";
 // import type { BrowseSequenceMetadata } from "$lib/domain/browse";
 import { SortMethod } from "$lib/domain/browse";
-import { getBrowseStatePersistence } from "./appState.svelte";
+import { getBrowseStatePersistence } from "./app-state.svelte";
 import type {
   BrowseFilterState,
   BrowseScrollState,

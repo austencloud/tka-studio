@@ -10,14 +10,16 @@
  */
 
 import type {
-  ISequenceCardImageService,
-  ISequenceCardCacheService,
-  IPictographRenderingService,
   SequenceData,
   ExportOptions,
   ProgressInfo,
   ExportResult,
-} from "$services/interfaces";
+} from "$services/interfaces/domain-types";
+import type { IPictographRenderingService } from "$services/interfaces/pictograph-interfaces";
+import type {
+  ISequenceCardImageService,
+  ISequenceCardCacheService,
+} from "$services/interfaces/export-interfaces";
 
 export class SequenceCardImageService implements ISequenceCardImageService {
   private cancelRequested = false;

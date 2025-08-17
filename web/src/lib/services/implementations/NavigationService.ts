@@ -5,7 +5,7 @@
  * following the microservices architecture pattern.
  */
 
-import type { BrowseSequenceMetadata } from "../interfaces";
+import type { BrowseSequenceMetadata } from "../interfaces/domain-types";
 
 export interface NavigationSection {
   id: string;
@@ -22,6 +22,7 @@ export interface NavigationItem {
   value: string | number;
   count: number;
   isActive: boolean;
+  sequences: BrowseSequenceMetadata[];
 }
 
 export interface INavigationService {
@@ -190,6 +191,7 @@ export class NavigationService implements INavigationService {
           value: "favorites",
           count: favoriteSequences.length,
           isActive: false,
+          sequences: favoriteSequences,
         },
       ],
       isExpanded: false,
@@ -225,6 +227,7 @@ export class NavigationService implements INavigationService {
         value: date,
         count: seqs.length,
         isActive: false,
+        sequences: seqs,
       }));
 
     return {
@@ -261,6 +264,7 @@ export class NavigationService implements INavigationService {
         value: length,
         count: seqs.length,
         isActive: false,
+        sequences: seqs,
       }));
 
     return {
@@ -297,6 +301,7 @@ export class NavigationService implements INavigationService {
         value: letter,
         count: seqs.length,
         isActive: false,
+        sequences: seqs,
       }));
 
     return {
@@ -334,6 +339,7 @@ export class NavigationService implements INavigationService {
         value: level,
         count: levelGroups.get(level)?.length || 0,
         isActive: false,
+        sequences: levelGroups.get(level) ?? [],
       }));
 
     return {
@@ -370,6 +376,7 @@ export class NavigationService implements INavigationService {
         value: author,
         count: seqs.length,
         isActive: false,
+        sequences: seqs,
       }));
 
     return {
@@ -406,5 +413,22 @@ export class NavigationService implements INavigationService {
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
 
     return date.toLocaleDateString();
+  }
+
+  // Additional methods required by browse-interfaces.ts
+  async buildNavigationStructure(
+    sequences: BrowseSequenceMetadata[]
+  ): Promise<NavigationSection[]> {
+    // Use the existing generateNavigationSections method
+    return this.generateNavigationSections(sequences, []);
+  }
+
+  async getNavigationItem(
+    _sectionId: string,
+    _itemId: string
+  ): Promise<NavigationItem | null> {
+    // This would need to be implemented based on the current navigation state
+    // For now, return null as a placeholder
+    return null;
   }
 }

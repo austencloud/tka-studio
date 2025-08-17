@@ -5,7 +5,6 @@ import {
   Location,
 } from "$lib/domain/enums";
 import type { MotionData } from "$lib/domain/MotionData";
-import type { RotationDirection } from "$lib/services/interfaces";
 import type { IMotionParameterService } from "./interfaces";
 
 export interface MotionTestParams {

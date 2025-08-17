@@ -5,10 +5,8 @@
  * Provides search capabilities across sequence metadata.
  */
 
-import type {
-  BrowseSequenceMetadata,
-  ISequenceIndexService,
-} from "$lib/services/interfaces";
+import type { BrowseSequenceMetadata } from "$lib/services/interfaces/domain-types";
+import type { ISequenceIndexService } from "$lib/services/interfaces/browse-interfaces";
 
 interface SearchIndex {
   wordIndex: Map<string, Set<string>>; // word -> sequence IDs

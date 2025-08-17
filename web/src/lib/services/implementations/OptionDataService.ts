@@ -22,13 +22,12 @@ import {
 import type { MotionData } from "$domain/MotionData";
 import type {
   BeatData,
-  DifficultyLevel,
-  IOptionDataService,
-  OptionFilters,
   PictographData,
   SequenceData,
   ValidationResult,
-} from "../interfaces";
+} from "../interfaces/domain-types";
+import type { DifficultyLevel, OptionFilters } from "../interfaces/core-types";
+import type { IOptionDataService } from "../interfaces/application-interfaces";
 import { MotionType } from "$lib/domain/enums"; // ✅ Import from centralized enums
 import type { ValidationError } from "$lib/domain/sequenceCard";
 import { CsvDataService, type ParsedCsvRow } from "./CsvDataService";
@@ -338,7 +337,7 @@ export class OptionDataService implements IOptionDataService {
     color: "blue" | "red"
   ): MotionData {
     const motionType = row[`${color}MotionType`] as string;
-    const rotationDirection = row[`${color}RotationDirection`] as string;
+    const rotationDirection = row[`${color}PropRotDir`] as string;
     const startLoc = row[`${color}StartLoc`] as string;
     const endLoc = row[`${color}EndLoc`] as string;
 

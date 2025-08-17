@@ -4,8 +4,6 @@
  * This replaces the 765-line metadata-tester-state.svelte.ts monolith with
  * a clean, focused state manager using Svelte 5 runes and dependency injection.
  */
-
-import { writable, derived, type Writable } from "svelte/store";
 import type {
   ThumbnailFile,
   SequenceFile,
@@ -60,13 +58,39 @@ export class MetadataTestingStateManager {
   private analysisService: MetadataAnalysisService;
   private batchService: BatchAnalysisService;
 
-  // State stores
-  private _state: Writable<MetadataTestingState>;
+  // State using Svelte 5 runes
+  private _state = $state<MetadataTestingState>({
+    thumbnails: [],
+    filteredThumbnails: [],
+    selectedThumbnails: [],
+    analysisResults: [],
+    batchResults: null,
+    currentAnalysis: null,
+    isDiscovering: false,
+    isAnalyzing: false,
+    analysisProgress: 0,
+    currentAnalysisFile: "",
+    batchConfig: {
+      batchSize: 10,
+      delayMs: 100,
+      exportFormat: "json",
+    },
+    searchQuery: "",
+    showOnlyErrors: false,
+    showOnlyWarnings: false,
+    healthScoreFilter: { min: 0, max: 100 },
+  });
 
-  // Derived stores
-  public readonly state: Writable<MetadataTestingState>;
-  public readonly filteredResults: ReturnType<typeof derived>;
-  public readonly summaryStats: ReturnType<typeof derived>;
+  // Derived state using Svelte 5 runes
+  public readonly filteredResults = $derived(this.filterResults(this._state));
+  public readonly summaryStats = $derived(
+    this.calculateSummaryStats(this._state)
+  );
+
+  // Getter for the state (for external access)
+  public get state(): MetadataTestingState {
+    return this._state;
+  }
 
   constructor() {
     // Initialize services
@@ -76,40 +100,6 @@ export class MetadataTestingStateManager {
     this.batchService = new BatchAnalysisService(
       this.extractionService,
       this.analysisService
-    );
-
-    // Initialize state
-    this._state = writable<MetadataTestingState>({
-      thumbnails: [],
-      filteredThumbnails: [],
-      selectedThumbnails: [],
-      analysisResults: [],
-      batchResults: null,
-      currentAnalysis: null,
-      isDiscovering: false,
-      isAnalyzing: false,
-      analysisProgress: 0,
-      currentAnalysisFile: "",
-      batchConfig: {
-        batchSize: 10,
-        delayMs: 100,
-        exportFormat: "json",
-      },
-      searchQuery: "",
-      showOnlyErrors: false,
-      showOnlyWarnings: false,
-      healthScoreFilter: { min: 0, max: 100 },
-    });
-
-    this.state = this._state;
-
-    // Create derived stores
-    this.filteredResults = derived(this._state, ($state) =>
-      this.filterResults($state)
-    );
-
-    this.summaryStats = derived(this._state, ($state) =>
-      this.calculateSummaryStats($state)
     );
   }
 
@@ -314,18 +304,11 @@ export class MetadataTestingStateManager {
   private updateState(
     updater: (state: MetadataTestingState) => MetadataTestingState
   ): void {
-    this._state.update(updater);
+    this._state = updater(this._state);
   }
 
   private getCurrentState(): MetadataTestingState {
-    let currentState: MetadataTestingState | undefined;
-    this._state.subscribe((state) => (currentState = state))();
-
-    if (!currentState) {
-      throw new Error("State not initialized");
-    }
-
-    return currentState;
+    return this._state;
   }
 
   private applySearchFilter(

@@ -7,9 +7,9 @@
 
 import type {
   IApplicationInitializationService,
-  IPersistenceService,
   ISettingsService,
-} from "../interfaces";
+} from "../interfaces/application-interfaces";
+import type { IPersistenceService } from "../interfaces/sequence-interfaces";
 
 export class ApplicationInitializationService
   implements IApplicationInitializationService

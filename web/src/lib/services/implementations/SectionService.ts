@@ -5,7 +5,10 @@
  * following the microservices architecture pattern.
  */
 
-import type { BrowseSequenceMetadata, SortMethod } from "../interfaces";
+import type {
+  BrowseSequenceMetadata,
+  SortMethod,
+} from "../interfaces/domain-types";
 
 export interface SequenceSection {
   id: string;
@@ -371,5 +374,23 @@ export class SectionService implements ISectionService {
     if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
 
     return date.toLocaleDateString();
+  }
+
+  // Additional methods required by browse-interfaces.ts
+  async organizeIntoSections(
+    sequences: BrowseSequenceMetadata[],
+    config: any // Using any for now to match the interface
+  ): Promise<any[]> {
+    // Use the existing organizeSections method
+    return this.organizeSections(sequences, config as SectionConfiguration);
+  }
+
+  async getSectionConfiguration(sortMethod: SortMethod): Promise<any> {
+    // Return a basic configuration based on sort method
+    return {
+      groupBy: "letter" as const,
+      sortWithinSection: sortMethod,
+      showEmptySections: false,
+    };
   }
 }

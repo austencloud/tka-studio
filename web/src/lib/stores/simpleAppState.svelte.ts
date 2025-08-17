@@ -3,7 +3,7 @@
  * Replaces the over-engineered appState.svelte.ts
  */
 
-import type { AppSettings } from "$services/interfaces";
+import type { AppSettings } from "$services/interfaces/application-interfaces";
 
 // ============================================================================
 // SIMPLE STATE - No over-engineering!

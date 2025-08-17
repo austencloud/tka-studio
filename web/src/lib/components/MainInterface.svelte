@@ -6,10 +6,10 @@
     getShowSettings,
     isTabActive,
     switchTab,
-  } from "$lib/state/appState.svelte";
+  } from "$lib/state/app-state.svelte";
 
   // Import transition utilities
-  import { fade } from "$lib/utils/simpleFade";
+  import { fade } from "$lib/utils/simple-fade";
 
   // Import components - App Interface
   import BackgroundCanvas from "./backgrounds/BackgroundCanvas.svelte";

@@ -20,7 +20,7 @@ import type {
   ISequenceDomainService,
   ISequenceService,
   SequenceCreateRequest,
-} from "../interfaces";
+} from "../interfaces/sequence-interfaces";
 
 export class SequenceService implements ISequenceService {
   constructor(

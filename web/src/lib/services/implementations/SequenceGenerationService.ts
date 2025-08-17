@@ -12,7 +12,7 @@ import type {
   GenerationOptions,
   IMotionGenerationService,
   ISequenceGenerationService,
-} from "../interfaces";
+} from "../interfaces/generation-interfaces";
 
 export class SequenceGenerationService implements ISequenceGenerationService {
   constructor(private motionGenerationService: IMotionGenerationService) {}

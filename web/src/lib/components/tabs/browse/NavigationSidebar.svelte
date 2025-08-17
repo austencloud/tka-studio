@@ -15,7 +15,7 @@ Follows Svelte 5 runes + microservices architecture.
   import type {
     NavigationItem,
     NavigationSection,
-  } from "$lib/services/interfaces";
+  } from "$lib/services/interfaces/browse-interfaces";
   import { slide } from "svelte/transition";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes

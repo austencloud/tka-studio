@@ -1,13 +1,14 @@
 <!-- SequenceCard.svelte - Individual sequence card component -->
 <script lang="ts">
-  import type { SequenceData } from "$services/interfaces";
+  import type { SequenceData } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
 
   interface Props {
     sequence: SequenceData;
+    onclick?: () => void;
   }
 
-  let { sequence }: Props = $props();
+  let { sequence, onclick }: Props = $props();
 
   // Card element used in bind:this
   let cardElement: HTMLElement;
@@ -55,7 +56,8 @@
 
   function handleCardClick() {
     console.log("Sequence card clicked:", sequenceName);
-    // TODO: Implement card click behavior (show details, edit, etc.)
+    // Call the onclick prop if provided
+    onclick?.();
   }
 
   // Handle keyboard events

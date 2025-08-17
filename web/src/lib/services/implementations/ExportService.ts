@@ -5,11 +5,9 @@
  */
 
 import type { BeatData, SequenceData } from "$lib/domain";
-import type {
-  ExportOptions,
-  IExportService,
-  IPictographService,
-} from "../interfaces";
+import type { ExportOptions } from "../interfaces/domain-types";
+import type { IExportService } from "../interfaces/export-interfaces";
+import type { IPictographService } from "../interfaces/pictograph-interfaces";
 
 export class ExportService implements IExportService {
   // pictographService reserved for future richer rendering; omitted to reduce lint noise

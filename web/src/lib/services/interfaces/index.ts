@@ -6,45 +6,171 @@
  */
 
 // ============================================================================
-// CORE TYPES AND UTILITIES
+// CORE TYPES AND DOMAIN MODELS
 // ============================================================================
 
-export * from "./core-types";
-export * from "./domain-types";
+// Core types
+export type {
+  Coordinates,
+  GridPoint,
+  GridData,
+  ArrowPosition,
+  LegacyArrowData,
+  ArrowPlacementConfig,
+  PropData,
+  PropPosition,
+  HandRotDir,
+  GridMode,
+  DifficultyLevel,
+  OptionFilters,
+  ServiceInterface,
+} from "./core-types";
+
+export { defineService } from "./core-types";
+
+// Domain types
+export type {
+  ArrowData,
+  BeatData,
+  MotionData,
+  PictographData,
+  SequenceData,
+  BrowseDisplayState,
+  BrowseLoadingState,
+  BrowseSequenceMetadata,
+  FilterType,
+  FilterValue,
+  SortMethod,
+  LayoutConfig,
+  ExportOptions,
+  SequenceCardExportSettings,
+  DeviceCapabilities,
+  PrintLayoutOptions,
+  CacheEntry,
+  CacheConfig,
+  ProgressInfo,
+  ValidationResult,
+  ExportResult,
+  MotionType,
+  Location,
+  Orientation,
+  RotationDirection,
+} from "./domain-types";
 
 // ============================================================================
-// SERVICE INTERFACES BY DOMAIN
+// APPLICATION INTERFACES
 // ============================================================================
 
-// Sequence and persistence services
-export * from "./sequence-interfaces";
-
-// Pictograph and rendering services
-export * from "./pictograph-interfaces";
-
-// Positioning and placement services
-export * from "./positioning-interfaces";
-
-// Generation services
-export * from "./generation-interfaces";
-
-// Application services
-export * from "./application-interfaces";
-
-// Browse and navigation services
-export * from "./browse-interfaces";
-
-// Device detection services
-export * from "./device-interfaces";
-
-// Export and sequence card services
-export * from "./export-interfaces";
-
-// Panel management services
-export * from "./panel-interfaces";
+export type {
+  AppSettings,
+  IApplicationInitializationService,
+  ISettingsService,
+  IConstructTabCoordinationService,
+  IOptionDataService,
+  IStartPositionService,
+} from "./application-interfaces";
 
 // ============================================================================
-// SERVICE CONSTANTS
+// SEQUENCE INTERFACES
 // ============================================================================
 
-export * from "./service-constants";
+export type {
+  ISequenceService,
+  ISequenceDomainService,
+  IPersistenceService,
+  SequenceCreateRequest,
+} from "./sequence-interfaces";
+
+// ============================================================================
+// PICTOGRAPH INTERFACES
+// ============================================================================
+
+export type {
+  ISvgConfiguration,
+  IPictographService,
+  IPictographRenderingService,
+  ISvgUtilityService,
+  IGridRenderingService,
+  IArrowRenderingService,
+  IOverlayRenderingService,
+  IDataTransformationService,
+} from "./pictograph-interfaces";
+
+// ============================================================================
+// POSITIONING INTERFACES
+// ============================================================================
+
+export type {
+  IArrowPositioningService,
+  IArrowPlacementDataService,
+  IArrowPlacementKeyService,
+  IPropRenderingService,
+} from "./positioning-interfaces";
+
+// ============================================================================
+// GENERATION INTERFACES
+// ============================================================================
+
+export type {
+  GenerationOptions,
+  ISequenceGenerationService,
+  IMotionGenerationService,
+} from "./generation-interfaces";
+
+// ============================================================================
+// BROWSE INTERFACES
+// ============================================================================
+
+export type {
+  IDeleteService,
+  IFavoritesService,
+  IFilterPersistenceService,
+  INavigationService,
+  ISectionService,
+  IBrowseService,
+  ISequenceIndexService,
+  IThumbnailService,
+  DeleteConfirmationData,
+  DeleteResult,
+  FilterState,
+  BrowseState,
+  NavigationItem,
+  NavigationSection,
+  SectionConfiguration,
+  SequenceSection,
+} from "./browse-interfaces";
+
+// ============================================================================
+// DEVICE INTERFACES
+// ============================================================================
+
+export type {
+  ResponsiveSettings,
+  IDeviceDetectionService,
+} from "./device-interfaces";
+
+// ============================================================================
+// EXPORT INTERFACES
+// ============================================================================
+
+export type {
+  IExportService,
+  ISequenceCardImageService,
+  ISequenceCardLayoutService,
+  ISequenceCardPageService,
+  ISequenceCardBatchService,
+  ISequenceCardCacheService,
+  IEnhancedExportService,
+} from "./export-interfaces";
+
+// ============================================================================
+// PANEL INTERFACES
+// ============================================================================
+
+export type {
+  IPanelManagementService,
+  PanelState,
+  PanelConfiguration,
+  ResizeOperation,
+  ResizeDirection,
+} from "./panel-interfaces";

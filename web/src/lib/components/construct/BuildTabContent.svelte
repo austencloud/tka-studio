@@ -7,15 +7,18 @@
 -->
 <script lang="ts">
   import { constructTabEventService } from "$services/implementations/ConstructTabEventService";
-  import type { BeatData, PictographData } from "$services/interfaces";
+  import type {
+    BeatData,
+    PictographData,
+  } from "$services/interfaces/domain-types";
   import { resolve } from "$services/bootstrap";
-  import { createSequenceState } from "$lib/state/sequenceState.svelte";
+  import { createSequenceState } from "$lib/state/sequence-state.svelte";
   import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
   import OptionPickerContainer from "./OptionPickerContainer.svelte";
   import StartPositionPicker from "./StartPositionPicker.svelte";
   // Import fade transition for smooth switching
   import { GridMode } from "$domain/enums";
-  import { getSettings } from "$lib/state/appState.svelte";
+  import { getSettings } from "$lib/state/app-state.svelte";
   import { OptionDataService } from "$services/implementations/OptionDataService";
   import { fade } from "svelte/transition";
 

@@ -7,7 +7,7 @@
 
 import type { MotionData } from "$lib/domain";
 import { MotionType } from "$lib/domain/enums";
-import type { PictographData } from "../interfaces";
+import type { PictographData } from "../interfaces/domain-types";
 
 export interface IArrowPlacementKeyService {
   generatePlacementKey(

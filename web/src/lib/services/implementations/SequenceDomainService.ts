@@ -6,11 +6,11 @@
  */
 
 import type { BeatData, SequenceData } from "$lib/domain";
+import type { ValidationResult } from "../interfaces/domain-types";
 import type {
   ISequenceDomainService,
   SequenceCreateRequest,
-  ValidationResult,
-} from "../interfaces";
+} from "../interfaces/sequence-interfaces";
 import type { ValidationError } from "$lib/domain/sequenceCard";
 
 export class SequenceDomainService implements ISequenceDomainService {

@@ -8,7 +8,7 @@ Handles data loading, animation engine, and state management.
   import { onDestroy } from "svelte";
   import type { BrowseSequenceMetadata } from "$lib/domain/browse";
   import { resolve } from "$lib/services/bootstrap";
-  import type { ISequenceService } from "$lib/services/interfaces";
+  import type { ISequenceService } from "$lib/services/interfaces/sequence-interfaces";
   import { AnimatorCanvas } from "$lib/animator";
   import type { PropState } from "$lib/animator";
   import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";

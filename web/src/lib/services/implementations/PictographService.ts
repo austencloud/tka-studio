@@ -5,11 +5,11 @@
  */
 
 import type { ArrowData } from "$lib/domain";
+import type { PictographData } from "../interfaces/domain-types";
 import type {
-  IPictographRenderingService,
   IPictographService,
-  PictographData,
-} from "../interfaces";
+  IPictographRenderingService,
+} from "../interfaces/pictograph-interfaces";
 
 export class PictographService implements IPictographService {
   constructor(private renderingService: IPictographRenderingService) {}

@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import DualOrientationPicker from "./DualOrientationPicker.svelte";
   import TurnAdjustmentControls from "./TurnAdjustmentControls.svelte";
-  import type { BeatData } from "$services/interfaces";
+  import type { BeatData } from "$services/interfaces/domain-types";
 
   // Props
   const {

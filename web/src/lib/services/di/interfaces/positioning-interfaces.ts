@@ -7,7 +7,7 @@ import type {
   IArrowPlacementDataService,
   IArrowPlacementKeyService,
   IArrowPositioningService,
-} from "../../interfaces";
+} from "../../interfaces/positioning-interfaces";
 import { createServiceInterface } from "../types";
 
 // Import enhanced positioning service interfaces

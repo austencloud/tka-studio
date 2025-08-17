@@ -6,7 +6,7 @@
  */
 
 import type { PictographData } from "$lib/domain";
-import { getLetterImagePath } from "$lib/utils/letterTypeClassification";
+import { getLetterImagePath } from "$lib/utils/letter-type-classification";
 import type { ISvgConfiguration } from "./SvgConfiguration";
 
 export interface ArrowPosition {

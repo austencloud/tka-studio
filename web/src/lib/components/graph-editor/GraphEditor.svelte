@@ -1,7 +1,10 @@
 <!-- GraphEditor.svelte - Professional Graph Editor ported from desktop -->
 <script lang="ts">
   import ModernPictograph from "$lib/components/pictograph/Pictograph.svelte";
-  import type { BeatData, SequenceData } from "$services/interfaces";
+  import type {
+    BeatData,
+    SequenceData,
+  } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
   import MainAdjustmentPanel from "./MainAdjustmentPanel.svelte";
 

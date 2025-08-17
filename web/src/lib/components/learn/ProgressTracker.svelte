@@ -10,22 +10,31 @@
   import type { LessonProgress, QuizMode } from "$lib/types/learn";
   import { QuizMode as QuizModeEnum } from "$lib/types/learn";
 
-  // Props
-  export let progress: LessonProgress;
-  export let quizMode: QuizMode;
-  export let showDetailed: boolean = true;
-  export let compact: boolean = false;
+  // Props using Svelte 5 runes
+  let {
+    progress,
+    quizMode,
+    showDetailed = true,
+    compact = false,
+  }: {
+    progress: LessonProgress;
+    quizMode: QuizMode;
+    showDetailed?: boolean;
+    compact?: boolean;
+  } = $props();
 
-  // Reactive statements
-  $: accuracyPercentage =
+  // Derived values using Svelte 5 runes
+  let accuracyPercentage = $derived(
     progress.questionsAnswered > 0
       ? Math.round((progress.correctAnswers / progress.questionsAnswered) * 100)
-      : 0;
-  $: progressPercentage =
+      : 0
+  );
+  let progressPercentage = $derived(
     quizMode === QuizModeEnum.FIXED_QUESTION && progress.totalQuestions > 0
       ? Math.round((progress.questionsAnswered / progress.totalQuestions) * 100)
-      : 0;
-  $: formattedTime = formatTime(progress.timeElapsed);
+      : 0
+  );
+  let formattedTime = $derived(formatTime(progress.timeElapsed));
 
   // Methods
   function formatTime(seconds: number): string {

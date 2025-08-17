@@ -3,11 +3,11 @@
  * Uses modern detection methods based on research from W3C, Material Design, and iOS guidelines
  */
 
+import type { DeviceCapabilities } from "../interfaces/domain-types";
 import type {
-  DeviceCapabilities,
   IDeviceDetectionService,
   ResponsiveSettings,
-} from "../interfaces";
+} from "../interfaces/device-interfaces";
 
 export class DeviceDetectionService implements IDeviceDetectionService {
   private capabilities: DeviceCapabilities | null = null;

@@ -1,6 +1,6 @@
 <!-- PropTypeTab.svelte - Prop type selection with actual desktop app files -->
 <script lang="ts">
-  import type { AppSettings } from "$services/interfaces";
+  import type { AppSettings } from "$services/interfaces/application-interfaces";
   import SettingCard from "../SettingCard.svelte";
 
   interface Props {

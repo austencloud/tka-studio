@@ -6,17 +6,20 @@
  */
 
 import type { BeatData, PictographData } from "$lib/domain";
-import { createGridData, GridMode } from "$lib/domain";
+import { GridMode } from "$lib/domain";
+import { createGridData } from "$lib/data/gridCoordinates.js";
 import type {
-  IArrowPositioningService,
   IArrowRenderingService,
   IDataTransformationService,
   IGridRenderingService,
   IOverlayRenderingService,
   IPictographRenderingService,
-  IPropRenderingService,
   ISvgUtilityService,
-} from "../interfaces";
+} from "../interfaces/pictograph-interfaces";
+import type {
+  IArrowPositioningService,
+  IPropRenderingService,
+} from "../interfaces/positioning-interfaces";
 
 export class PictographRenderingService implements IPictographRenderingService {
   constructor(
@@ -44,7 +47,8 @@ export class PictographRenderingService implements IPictographRenderingService {
       await this.gridRendering.renderGrid(svg, gridMode);
 
       // 3. Calculate arrow positions using sophisticated positioning service
-      const rawGridData = createGridData(gridMode);
+      const gridModeString = gridMode === GridMode.DIAMOND ? "diamond" : "box";
+      const rawGridData = createGridData(gridModeString);
       const gridDataWithMode = this.dataTransformation.adaptGridData(
         rawGridData,
         gridMode

@@ -27,7 +27,7 @@
 
 import type { MotionData, PictographData } from "$lib/domain";
 import { GridMode, Location } from "$lib/domain";
-import type { LetterType } from "$lib/utils/letterTypeUtils";
+import type { LetterType } from "$lib/utils/letter-type-utils";
 
 // Arrow color type - using string literals to match usage pattern
 type ArrowColor = "red" | "blue";

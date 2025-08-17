@@ -7,7 +7,7 @@
 
 import { browser } from "$app/environment";
 // import { GridMode as DomainGridMode } from "$lib/domain/enums";
-import type { AppSettings } from "$services/interfaces";
+import type { AppSettings } from "$services/interfaces/application-interfaces";
 import { BrowseStatePersistenceService } from "../services/implementations/BrowseStatePersistenceService";
 
 // ============================================================================

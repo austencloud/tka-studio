@@ -2,7 +2,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import { resolve } from "$services/bootstrap";
-  import { createSequenceState } from "$lib/state/sequenceState.svelte";
+  import { createSequenceState } from "$lib/state/sequence-state.svelte";
   import ExportActionsCard from "./ExportActionsCard.svelte";
   import ExportPreviewCard from "./ExportPreviewCard.svelte";
   import ExportSettingsCard from "./ExportSettingsCard.svelte";

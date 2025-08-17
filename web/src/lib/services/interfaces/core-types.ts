@@ -5,9 +5,9 @@
  * This file contains shared data structures, coordinates, and utility types.
  */
 
-import type { MotionType, Location, Orientation } from "$lib/domain/enums";
-import { GridMode as DomainGridMode } from "$lib/domain";
-import type { PictographData } from "$lib/domain";
+import type { MotionType, Location, Orientation } from "../../domain/enums";
+import { GridMode as DomainGridMode } from "../../domain";
+import type { PictographData } from "../../domain";
 
 // ============================================================================
 // BASIC COORDINATE TYPES

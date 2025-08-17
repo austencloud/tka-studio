@@ -5,7 +5,10 @@
  */
 
 import { GridMode as DomainGridMode } from "$lib/domain/enums";
-import type { AppSettings, ISettingsService } from "../interfaces";
+import type {
+  AppSettings,
+  ISettingsService,
+} from "../interfaces/application-interfaces";
 
 export class SettingsService implements ISettingsService {
   private readonly CACHE_VERSION = "v2.1"; // ✅ ROBUST: Cache versioning

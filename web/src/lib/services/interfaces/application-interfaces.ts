@@ -129,6 +129,11 @@ export interface IOptionDataService {
     sequence: SequenceData
   ): ValidationResult;
   getAvailableMotionTypes(): MotionType[];
+  convertCsvRowToPictographData(
+    row: any,
+    gridMode: any,
+    index?: number
+  ): PictographData | null;
 }
 
 // ============================================================================
