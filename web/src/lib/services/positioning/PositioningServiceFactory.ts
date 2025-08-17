@@ -20,12 +20,7 @@ import { ArrowLocationCalculator } from "$services/positioning/arrows/calculatio
 import { ArrowRotationCalculator } from "$services/positioning/arrows/calculation/ArrowRotationCalculator";
 import { DashLocationCalculator } from "$services/positioning/arrows/calculation/DashLocationCalculator";
 import { ArrowCoordinateSystemService } from "$services/positioning/arrows/coordinate_system/ArrowCoordinateSystemService";
-import { AttributeKeyGenerator } from "$services/positioning/arrows/key_generators/AttributeKeyGenerator";
-import { PlacementKeyGenerator } from "$services/positioning/arrows/key_generators/PlacementKeyGenerator";
-import { SpecialPlacementOriKeyGenerator } from "$services/positioning/arrows/key_generators/SpecialPlacementOriKeyGenerator";
-import { TurnsTupleKeyGenerator } from "$services/positioning/arrows/key_generators/TurnsTupleKeyGenerator";
-import { ArrowAdjustmentLookup as AdvancedLookup } from "$services/positioning/arrows/orchestration/ArrowAdjustmentLookup";
-import { ArrowPositioningOrchestrator } from "$services/positioning/arrows/orchestration/ArrowPositioningOrchestrator";
+import { ArrowPositionCalculator } from "$services/positioning/arrows/orchestration/ArrowPositionCalculator";
 import { DefaultPlacementService } from "$services/positioning/arrows/placement/DefaultPlacementService";
 import { SpecialPlacementService } from "$services/positioning/arrows/placement/SpecialPlacementService";
 import {
@@ -82,6 +77,7 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
   createAdjustmentCalculator(): IArrowAdjustmentCalculator {
     /**
      * Create arrow adjustment calculator with placement services and tuple processor.
+     * Now uses consolidated service that combines lookup and calculation logic.
      */
     if (!this.specialPlacementService) {
       this.specialPlacementService = new SpecialPlacementService();
@@ -95,21 +91,12 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
       this.directionalTupleProcessor = this.createDirectionalTupleProcessor();
     }
 
-    // Import and create ArrowAdjustmentLookup with cached services
-    // This prevents creating new placement services on each instantiation
-    const lookupService = new AdvancedLookup(
-      this.specialPlacementService,
-      this.defaultPlacementService,
-      new SpecialPlacementOriKeyGenerator(),
-      new PlacementKeyGenerator(),
-      new TurnsTupleKeyGenerator(),
-      new AttributeKeyGenerator()
-    );
-
-    return new ArrowAdjustmentCalculator(
-      lookupService, // Use cached placement services
-      this.directionalTupleProcessor
-    );
+    // Create consolidated service with all dependencies
+    return new ArrowAdjustmentCalculator({
+      specialPlacementService: this.specialPlacementService,
+      defaultPlacementService: this.defaultPlacementService,
+      tupleProcessor: this.directionalTupleProcessor,
+    });
   }
 
   createCoordinateSystemService(): IArrowCoordinateSystemService {
@@ -158,7 +145,7 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
     const adjustmentCalculator = this.createAdjustmentCalculator();
     const coordinateSystemService = this.createCoordinateSystemService();
 
-    return new ArrowPositioningOrchestrator(
+    return new ArrowPositionCalculator(
       locationCalculator,
       rotationCalculator,
       adjustmentCalculator,

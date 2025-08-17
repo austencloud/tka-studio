@@ -14,6 +14,9 @@ import type {
   ISequenceDomainService,
   ISequenceService,
   IPersistenceService,
+  IPrintablePageLayoutService,
+  IPageFactoryService,
+  ISequenceCardExportIntegrationService,
 } from "../../interfaces/sequence-interfaces";
 import type {
   IArrowRenderingService,
@@ -32,7 +35,7 @@ import type {
   ISequenceGenerationService,
 } from "../../interfaces/generation-interfaces";
 import type { IDeviceDetectionService } from "../../interfaces/device-interfaces";
-import type { IExportService } from "../../interfaces/export-interfaces";
+import type { IExportService, IPageImageExportService } from "../../interfaces/export-interfaces";
 import type { IPanelManagementService } from "../../interfaces/panel-interfaces";
 import { createServiceInterface } from "../types";
 
@@ -59,6 +62,10 @@ import { SettingsService } from "../../implementations/SettingsService";
 import { StartPositionService } from "../../implementations/StartPositionService";
 import { SvgConfiguration } from "../../implementations/SvgConfiguration";
 import { SvgUtilityService } from "../../implementations/SvgUtilityService";
+import { PrintablePageLayoutService } from "../../implementations/PrintablePageLayoutService";
+import { PageFactoryService } from "../../implementations/PageFactoryService";
+import { PageImageExportService } from "../../implementations/PageImageExportService";
+import { SequenceCardExportIntegrationService } from "../../implementations/SequenceCardExportIntegrationService";
 
 // Core domain services
 export const ISequenceServiceInterface =
@@ -247,4 +254,38 @@ export const IStartPositionServiceInterface =
   createServiceInterface<IStartPositionService>(
     "IStartPositionService",
     StartPositionService
+  );
+
+// Page layout services
+export const IPrintablePageLayoutServiceInterface =
+  createServiceInterface<IPrintablePageLayoutService>(
+    "IPrintablePageLayoutService",
+    PrintablePageLayoutService
+  );
+
+export const IPageFactoryServiceInterface =
+  createServiceInterface<IPageFactoryService>(
+    "IPageFactoryService",
+    class extends PageFactoryService {
+      constructor(...args: unknown[]) {
+        super(args[0] as IPrintablePageLayoutService);
+      }
+    }
+  );
+
+// Export services
+export const IPageImageExportServiceInterface =
+  createServiceInterface<IPageImageExportService>(
+    "IPageImageExportService",
+    PageImageExportService
+  );
+
+export const ISequenceCardExportIntegrationServiceInterface =
+  createServiceInterface<ISequenceCardExportIntegrationService>(
+    "ISequenceCardExportIntegrationService",
+    class extends SequenceCardExportIntegrationService {
+      constructor(...args: unknown[]) {
+        super(args[0] as IPageImageExportService);
+      }
+    }
   );

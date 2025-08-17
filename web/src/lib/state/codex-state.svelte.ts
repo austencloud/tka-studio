@@ -58,10 +58,8 @@ export function createCodexState() {
     return result;
   });
 
-  // Load all pictographs and organize by letter
-  $effect(() => {
-    loadAllPictographs();
-  });
+  // Load all pictographs and organize by letter - REMOVED AUTOMATIC $effect TO PREVENT INFINITE LOOP
+  // Call loadAllPictographs() manually when needed instead of automatically
 
   async function loadAllPictographs() {
     isLoading = true;

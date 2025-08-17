@@ -54,6 +54,7 @@ describe("Simple Arrow Rotation Debug", () => {
       // Test quadrant selection
       const quadCalculator = new QuadrantIndexCalculator();
       const quadIndex = quadCalculator.calculateQuadrantIndex(
+        motionData,
         Location.NORTHEAST
       );
       console.log(`  Quadrant index for NE: ${quadIndex}`);

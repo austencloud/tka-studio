@@ -10,6 +10,7 @@ import {
   ISequenceDomainServiceInterface,
   ISequenceServiceInterface,
   ISettingsServiceInterface,
+  IStartPositionServiceInterface,
 } from "./interfaces/core-interfaces";
 import type { ServiceContainer } from "./ServiceContainer";
 import type { ServiceInterface } from "./types";
@@ -28,6 +29,7 @@ export async function validateContainerConfiguration(
     ISequenceDomainServiceInterface,
     ISequenceServiceInterface,
     IApplicationInitializationServiceInterface,
+    IStartPositionServiceInterface,
   ];
 
   for (const serviceInterface of servicesToValidate) {

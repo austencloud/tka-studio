@@ -268,29 +268,6 @@ function ensure_array_like(array_like_or_iterator) {
   }
   return [];
 }
-function once(get_value) {
-  let value = (
-    /** @type {V} */
-    UNINITIALIZED
-  );
-  return () => {
-    if (value === UNINITIALIZED) {
-      value = get_value();
-    }
-    return value;
-  };
-}
-function derived(fn) {
-  const get_value = once(fn);
-  let updated_value;
-  return function(new_value) {
-    if (arguments.length === 0) {
-      return updated_value ?? get_value();
-    }
-    updated_value = new_value;
-    return updated_value;
-  };
-}
 function maybe_selected(payload, value) {
   return value === payload.select_value ? " selected" : "";
 }
@@ -314,7 +291,6 @@ export {
   render as Q,
   ROOT_EFFECT as R,
   STATE_SYMBOL as S,
-  derived as T,
   UNOWNED as U,
   push as a,
   attr as b,

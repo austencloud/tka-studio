@@ -62,18 +62,8 @@ Follows the same pattern as Prop component for consistent sizing behavior
   });
 
   // SINGLE SOURCE OF TRUTH: Use only the position from the derived function
-  let calculatedPosition = $state({ x: 475.0, y: 475.0, rotation: 0 });
-  let shouldMirror = $state(false);
-
-  // Update position and mirroring when dependencies change - NO MORE REDUNDANT CALCULATIONS
-  $effect(() => {
-    // Get position from the single source of truth
-    const pos = position();
-    calculatedPosition = pos;
-
-    // Use pre-calculated mirroring if available, otherwise default to false
-    shouldMirror = preCalculatedMirroring ?? false;
-  });
+  const calculatedPosition = $derived(() => position());
+  const shouldMirror = $derived(() => preCalculatedMirroring ?? false);
 
   // Get arrow SVG path based on motion type and properties
   const arrowPath = $derived(() => {
@@ -222,13 +212,8 @@ Follows the same pattern as Prop component for consistent sizing behavior
     loadSvg();
   });
 
-  // Reload SVG when arrow path changes
-  $effect(() => {
-    const path = arrowPath();
-    if (path) {
-      loadSvg();
-    }
-  });
+  // Reload SVG when arrow path changes - REMOVED $effect TO PREVENT INFINITE LOOP
+  // SVG will be loaded once on mount, no reactive reloading to avoid loops
 </script>
 
 <!-- Arrow Group -->
@@ -273,9 +258,9 @@ Follows the same pattern as Prop component for consistent sizing behavior
     <image
       href={svgData.imageSrc}
       transform="
-				translate({calculatedPosition.x}, {calculatedPosition.y})
-				rotate({calculatedPosition.rotation || arrowData?.rotation_angle || 0})
-				scale({shouldMirror ? -1 : 1}, 1)
+				translate({calculatedPosition().x}, {calculatedPosition().y})
+				rotate({calculatedPosition().rotation || arrowData?.rotation_angle || 0})
+				scale({shouldMirror() ? -1 : 1}, 1)
 				translate({-svgData.center.x}, {-svgData.center.y})
 			"
       width={svgData.viewBox.width}

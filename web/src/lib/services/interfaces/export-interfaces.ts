@@ -1,78 +1,417 @@
 /**
- * Export and Sequence Card Service Interfaces
+ * Export Service Interfaces
  *
- * Interfaces for exporting sequences, generating sequence cards,
- * and managing print layouts. This includes batch processing and caching.
+ * Service contracts for exporting printable pages as images and PDFs.
+ * Supports both individual page and batch export operations.
  */
 
-import type {
-  SequenceData,
-  ExportOptions,
-  LayoutConfig,
-  DeviceCapabilities,
-  PrintLayoutOptions,
-  SequenceCardExportSettings,
-  CacheConfig,
-  ProgressInfo,
-  ExportResult,
-  ValidationResult,
-} from "./domain-types";
+import type { Page } from "../../domain/pageLayout";
 
 // ============================================================================
-// BASIC EXPORT SERVICE
+// EXPORT CONFIGURATION TYPES
 // ============================================================================
 
-/**
- * Basic export service for sequences
- */
-export interface IExportService {
-  exportSequenceAsImage(
-    sequence: SequenceData,
-    options: ExportOptions
-  ): Promise<Blob>;
-  exportSequenceAsJson(sequence: SequenceData): Promise<string>;
+export interface ImageExportOptions {
+  format: "PNG" | "JPEG" | "WebP";
+  quality: number; // 0-1 for JPEG/WebP
+  width?: number;
+  height?: number;
+  scale: number; // Device pixel ratio multiplier
+  backgroundColor?: string;
+}
+
+export interface PDFExportOptions {
+  orientation: "portrait" | "landscape";
+  paperSize: "A4" | "Letter" | "Legal" | "Tabloid";
+  margin: {
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  enablePageNumbers: boolean;
+  quality: "low" | "medium" | "high";
+}
+
+export interface BatchExportOptions {
+  batchSize: number;
+  enableProgressReporting: boolean;
+  memoryOptimization: boolean;
+  filenameTemplate: string; // e.g., "sequence-cards-{pageNumber}.pdf"
+  outputFormat: "individual" | "combined";
 }
 
 // ============================================================================
-// SEQUENCE CARD SERVICES
+// EXPORT RESULT TYPES
 // ============================================================================
+
+export interface ExportResult {
+  success: boolean;
+  blob?: Blob;
+  filename: string;
+  error?: Error;
+  metadata: {
+    format: string;
+    size: number; // bytes
+    dimensions?: { width: number; height: number };
+    pageCount?: number;
+    processingTime: number; // milliseconds
+  };
+}
+
+export interface BatchExportResult {
+  totalPages: number;
+  successCount: number;
+  failureCount: number;
+  results: ExportResult[];
+  totalProcessingTime: number;
+  errors: Error[];
+}
+
+export interface ExportProgress {
+  current: number;
+  total: number;
+  percentage: number;
+  currentPage?: number;
+  currentOperation: string;
+  estimatedTimeRemaining?: number;
+}
+
+// ============================================================================
+// SERVICE INTERFACES
+// ============================================================================
+
+/**
+ * Main export service for handling different export types
+ */
+export interface IExportService {
+  /**
+   * Export single page as image
+   */
+  exportPageAsImage(
+    pageElement: HTMLElement,
+    options: ImageExportOptions
+  ): Promise<ExportResult>;
+
+  /**
+   * Export pages as PDF
+   */
+  exportAsPDF(pages: Page[], options: PDFExportOptions): Promise<ExportResult>;
+
+  /**
+   * Export batch of pages
+   */
+  exportBatch(
+    pages: Page[],
+    options: BatchExportOptions & (ImageExportOptions | PDFExportOptions)
+  ): Promise<BatchExportResult>;
+}
 
 /**
  * Service for generating sequence card images
  */
 export interface ISequenceCardImageService {
   /**
-   * Generate a high-quality image for a single sequence card
+   * Generate image for a sequence card
    */
   generateSequenceCardImage(
-    sequence: SequenceData,
-    options: ExportOptions
-  ): Promise<Blob>;
-
-  /**
-   * Generate images for multiple sequences in batch
-   */
-  generateBatchImages(
-    sequences: SequenceData[],
-    options: ExportOptions,
-    onProgress?: (progress: ProgressInfo) => void
-  ): Promise<ExportResult[]>;
-
-  /**
-   * Get cached image for a sequence
-   */
-  getCachedImage(
     sequenceId: string,
-    options: ExportOptions
-  ): Promise<Blob | null>;
+    width: number,
+    height: number
+  ): Promise<HTMLCanvasElement>;
 
   /**
-   * Preload images for a set of sequences
+   * Batch generate sequence card images
    */
-  preloadImages(
-    sequences: SequenceData[],
-    options: ExportOptions
+  batchGenerateImages(
+    sequenceIds: string[],
+    dimensions: { width: number; height: number }
+  ): Promise<Map<string, HTMLCanvasElement>>;
+}
+
+/**
+ * Service for managing sequence card layouts
+ */
+export interface ISequenceCardLayoutService {
+  /**
+   * Calculate optimal layout for sequence cards
+   */
+  calculateLayout(
+    cardCount: number,
+    pageSize: { width: number; height: number },
+    margins: Margins
+  ): GridLayout;
+
+  /**
+   * Get layout recommendations
+   */
+  getLayoutRecommendations(cardCount: number): LayoutRecommendation[];
+}
+
+/**
+ * Service for managing sequence card pages
+ */
+export interface ISequenceCardPageService {
+  /**
+   * Create printable page from sequence cards
+   */
+  createPage(
+    sequences: any[],
+    layout: GridLayout,
+    pageNumber: number
+  ): Promise<Page>;
+
+  /**
+   * Generate multiple pages
+   */
+  generatePages(sequences: any[], layout: GridLayout): Promise<Page[]>;
+}
+
+/**
+ * Service for batch processing sequence cards
+ */
+export interface ISequenceCardBatchService {
+  /**
+   * Process batch of sequence cards
+   */
+  processBatch(
+    sequences: any[],
+    batchSize: number,
+    processor: (batch: any[]) => Promise<void>
   ): Promise<void>;
+
+  /**
+   * Get batch processing status
+   */
+  getBatchStatus(): {
+    total: number;
+    processed: number;
+    remaining: number;
+    isProcessing: boolean;
+  };
+}
+
+/**
+ * Service for caching sequence card data
+ */
+export interface ISequenceCardCacheService {
+  /**
+   * Cache sequence card data
+   */
+  cacheSequenceCard(sequenceId: string, data: any): Promise<void>;
+
+  /**
+   * Get cached sequence card
+   */
+  getCachedSequenceCard(sequenceId: string): Promise<any | null>;
+
+  /**
+   * Store image in cache
+   */
+  storeImage(sequenceId: string, imageBlob: Blob, options?: any): Promise<void>;
+
+  /**
+   * Retrieve image from cache
+   */
+  retrieveImage(sequenceId: string, options?: any): Promise<Blob | null>;
+
+  /**
+   * Clear cache
+   */
+  clearCache(): Promise<void>;
+
+  /**
+   * Get cache statistics
+   */
+  getCacheStats(): {
+    entryCount: number;
+    totalSize: number;
+    hitRate: number;
+  };
+}
+
+/**
+ * Enhanced export service with additional features
+ */
+export interface IEnhancedExportService extends IExportService {
+  /**
+   * Export with preview generation
+   */
+  exportWithPreview(
+    pages: Page[],
+    options: any
+  ): Promise<ExportResult & { preview: Blob }>;
+
+  /**
+   * Get export capabilities
+   */
+  getExportCapabilities(): {
+    supportedFormats: string[];
+    maxPageCount: number;
+    maxFileSize: number;
+  };
+}
+
+/**
+ * Service for exporting individual pages as images
+ */
+export interface IPageImageExportService {
+  /**
+   * Export a single page element as an image
+   */
+  exportPageAsImage(
+    pageElement: HTMLElement,
+    options: ImageExportOptions
+  ): Promise<ExportResult>;
+
+  /**
+   * Export multiple page elements as individual images
+   */
+  exportPagesAsImages(
+    pageElements: HTMLElement[],
+    options: ImageExportOptions
+  ): Promise<BatchExportResult>;
+
+  /**
+   * Get supported image formats
+   */
+  getSupportedFormats(): string[];
+
+  /**
+   * Validate export options
+   */
+  validateExportOptions(options: ImageExportOptions): boolean;
+
+  /**
+   * Get recommended settings for different use cases
+   */
+  getRecommendedSettings(
+    useCase: "print" | "web" | "archive"
+  ): ImageExportOptions;
+
+  /**
+   * Cancel ongoing export operation
+   */
+  cancelExport(): void;
+}
+
+/**
+ * Service for exporting pages as PDFs
+ */
+export interface IPDFExportService {
+  /**
+   * Export pages as a single PDF document
+   */
+  exportPagesToPDF(
+    pages: Page[],
+    options: PDFExportOptions
+  ): Promise<ExportResult>;
+
+  /**
+   * Export individual page as PDF
+   */
+  exportPageToPDF(page: Page, options: PDFExportOptions): Promise<ExportResult>;
+
+  /**
+   * Get PDF generation capabilities
+   */
+  getPDFCapabilities(): {
+    maxPageCount: number;
+    supportedPaperSizes: string[];
+    supportedOrientations: string[];
+  };
+
+  /**
+   * Validate PDF export options
+   */
+  validatePDFOptions(options: PDFExportOptions): boolean;
+
+  /**
+   * Get recommended PDF settings
+   */
+  getRecommendedPDFSettings(pageCount: number): PDFExportOptions;
+}
+
+/**
+ * Service for batch export operations
+ */
+export interface IBatchExportService {
+  /**
+   * Export large number of pages in batches
+   */
+  exportInBatches(
+    pages: Page[],
+    options: BatchExportOptions & (ImageExportOptions | PDFExportOptions)
+  ): Promise<BatchExportResult>;
+
+  /**
+   * Monitor batch export progress
+   */
+  onProgress(callback: (progress: ExportProgress) => void): void;
+
+  /**
+   * Cancel ongoing batch export
+   */
+  cancelBatchExport(): Promise<void>;
+
+  /**
+   * Get current batch export status
+   */
+  getBatchStatus(): {
+    isRunning: boolean;
+    progress: ExportProgress;
+    results: ExportResult[];
+  };
+
+  /**
+   * Cleanup batch export resources
+   */
+  cleanup(): Promise<void>;
+}
+
+/**
+ * Service for preparing pages for print
+ */
+export interface IPrintPageService {
+  /**
+   * Prepare page for print output
+   */
+  preparePage(page: Page): HTMLElement;
+
+  /**
+   * Prepare multiple pages for printing
+   */
+  preparePagesForPrint(pageElements: HTMLElement[]): HTMLElement[];
+
+  /**
+   * Clean up after printing
+   */
+  cleanupAfterPrint(): void;
+}
+
+/**
+ * Service for loading and generating sequence images
+ */
+export interface ISequenceImageService {
+  /**
+   * Load sequence image from URL or generate placeholder
+   */
+  loadSequenceImage(sequenceId: string): Promise<HTMLImageElement | null>;
+
+  /**
+   * Generate placeholder image for sequence
+   */
+  generatePlaceholderImage(
+    sequenceName: string,
+    beatCount: number,
+    width: number,
+    height: number
+  ): Promise<HTMLCanvasElement>;
+
+  /**
+   * Cache sequence image
+   */
+  cacheSequenceImage(sequenceId: string, imageBlob: Blob): Promise<void>;
 
   /**
    * Clear image cache
@@ -82,253 +421,35 @@ export interface ISequenceCardImageService {
   /**
    * Get cache statistics
    */
-  getCacheStats(): Promise<{ size: number; count: number; hitRate: number }>;
-}
-
-/**
- * Service for calculating sequence card layouts
- */
-export interface ISequenceCardLayoutService {
-  /**
-   * Calculate optimal grid layout for given constraints
-   */
-  calculateOptimalLayout(
-    containerWidth: number,
-    containerHeight: number,
-    cardCount: number,
-    preferredColumns?: number
-  ): LayoutConfig;
-
-  /**
-   * Calculate responsive layout based on device capabilities
-   */
-  getResponsiveLayout(
-    deviceCapabilities: DeviceCapabilities,
-    cardCount: number
-  ): LayoutConfig;
-
-  /**
-   * Calculate column layout for specific column count
-   */
-  calculateColumnLayout(
-    columnCount: number,
-    containerWidth: number,
-    cardAspectRatio?: number
-  ): { cardWidth: number; cardHeight: number; spacing: number };
-
-  /**
-   * Get layout for printable pages
-   */
-  getPrintableLayout(
-    printOptions: PrintLayoutOptions,
-    cardCount: number
-  ): LayoutConfig;
-
-  /**
-   * Validate layout constraints
-   */
-  validateLayoutConstraints(layout: LayoutConfig): ValidationResult;
-
-  /**
-   * Get optimal column count for container size
-   */
-  getOptimalColumnCount(
-    containerWidth: number,
-    cardAspectRatio?: number
-  ): number;
-}
-
-/**
- * Service for generating complete pages with multiple sequence cards
- */
-export interface ISequenceCardPageService {
-  /**
-   * Generate a complete page with multiple sequence cards
-   */
-  generatePage(
-    sequences: SequenceData[],
-    layout: LayoutConfig,
-    options: ExportOptions
-  ): Promise<HTMLElement>;
-
-  /**
-   * Generate printable page as image
-   */
-  generatePrintablePage(
-    sequences: SequenceData[],
-    printOptions: PrintLayoutOptions
-  ): Promise<Blob>;
-
-  /**
-   * Generate PDF with multiple pages
-   */
-  generatePDF(
-    sequences: SequenceData[],
-    printOptions: PrintLayoutOptions
-  ): Promise<Blob>;
-
-  /**
-   * Calculate pagination for sequences
-   */
-  calculatePagination(
-    sequences: SequenceData[],
-    itemsPerPage: number
-  ): SequenceData[][];
-
-  /**
-   * Generate page preview
-   */
-  generatePagePreview(
-    sequences: SequenceData[],
-    layout: LayoutConfig
-  ): Promise<string>; // Returns data URL
-}
-
-/**
- * Service for batch processing large numbers of sequences
- */
-export interface ISequenceCardBatchService {
-  /**
-   * Process large batch of sequences with memory management
-   */
-  processBatch(
-    sequences: SequenceData[],
-    options: SequenceCardExportSettings,
-    onProgress?: (progress: ProgressInfo) => void
-  ): Promise<ExportResult[]>;
-
-  /**
-   * Estimate processing time for batch
-   */
-  estimateProcessingTime(
-    sequences: SequenceData[],
-    options: ExportOptions
-  ): Promise<number>; // milliseconds
-
-  /**
-   * Check memory requirements for batch
-   */
-  getMemoryRequirements(
-    sequences: SequenceData[],
-    options: ExportOptions
-  ): Promise<number>; // bytes
-
-  /**
-   * Cancel running batch operation
-   */
-  cancelBatch(): void;
-
-  /**
-   * Get optimal batch size for current system
-   */
-  getOptimalBatchSize(): Promise<number>;
-}
-
-/**
- * Service for caching sequence card images
- */
-export interface ISequenceCardCacheService {
-  /**
-   * Store image in cache
-   */
-  storeImage(
-    sequenceId: string,
-    imageBlob: Blob,
-    options: ExportOptions
-  ): Promise<void>;
-
-  /**
-   * Retrieve image from cache
-   */
-  retrieveImage(
-    sequenceId: string,
-    options: ExportOptions
-  ): Promise<Blob | null>;
-
-  /**
-   * Check if image is cached
-   */
-  isImageCached(sequenceId: string, options: ExportOptions): Promise<boolean>;
-
-  /**
-   * Clear all cached images
-   */
-  clearCache(): Promise<void>;
-
-  /**
-   * Clear cache entries older than specified date
-   */
-  clearOldEntries(olderThan: Date): Promise<void>;
-
-  /**
-   * Get cache statistics
-   */
-  getCacheStats(): Promise<{
+  getCacheStats(): {
     entryCount: number;
     totalSize: number;
     hitRate: number;
-    oldestEntry?: Date;
-  }>;
-
-  /**
-   * Optimize cache (remove least recently used items)
-   */
-  optimizeCache(): Promise<void>;
-
-  /**
-   * Set cache configuration
-   */
-  setCacheConfig(config: Partial<CacheConfig>): Promise<void>;
+  };
 }
 
 // ============================================================================
-// ENHANCED EXPORT SERVICE
+// HELPER TYPES
 // ============================================================================
 
-/**
- * Enhanced export service with sequence card support
- */
-export interface IEnhancedExportService extends IExportService {
-  /**
-   * Export multiple sequence cards as individual images
-   */
-  exportSequenceCardsAsImages(
-    sequences: SequenceData[],
-    options: ExportOptions
-  ): Promise<Blob[]>;
+interface GridLayout {
+  rows: number;
+  columns: number;
+  cardWidth: number;
+  cardHeight: number;
+  spacing: { horizontal: number; vertical: number };
+}
 
-  /**
-   * Export sequence cards as printable PDF
-   */
-  exportSequenceCardsAsPDF(
-    sequences: SequenceData[],
-    layoutOptions: PrintLayoutOptions
-  ): Promise<Blob>;
+interface LayoutRecommendation {
+  rows: number;
+  columns: number;
+  efficiency: number;
+  description: string;
+}
 
-  /**
-   * Export single sequence card with advanced options
-   */
-  exportSingleSequenceCard(
-    sequence: SequenceData,
-    options: ExportOptions
-  ): Promise<Blob>;
-
-  /**
-   * Export sequence cards as ZIP archive
-   */
-  exportSequenceCardsAsZip(
-    sequences: SequenceData[],
-    options: ExportOptions,
-    filename?: string
-  ): Promise<Blob>;
-
-  /**
-   * Get available export formats
-   */
-  getAvailableFormats(): string[];
-
-  /**
-   * Get default export options for sequence cards
-   */
-  getDefaultSequenceCardExportOptions(): ExportOptions;
+interface Margins {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
 }

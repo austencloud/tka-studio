@@ -30,9 +30,6 @@
   });
 </script>
 
-/** * Error Screen - Pure Svelte 5 implementation * * Shows error state with
-retry functionality during application initialization. */
-
 <div class="error-screen">
   <div class="error-content glass-surface">
     <div class="error-icon">

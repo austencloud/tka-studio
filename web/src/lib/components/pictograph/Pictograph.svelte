@@ -7,6 +7,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 <script lang="ts">
   import type { BeatData, PictographData } from "$lib/domain";
   import type { IArrowPositioningOrchestrator } from "$lib/services/positioning/core-services";
+  import { onMount } from "svelte";
   import Arrow from "./Arrow.svelte";
   import Grid from "./Grid.svelte";
   import Prop from "./Prop.svelte";
@@ -56,9 +57,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
     "IArrowPositioningOrchestrator"
   ) as IArrowPositioningOrchestrator;
 
-  // State using runes
-  let isLoaded = $state(false);
-  let isLoading = $state(false);
+  // State using runes - isLoading and isLoaded are now derived from allComponentsLoaded()
   let errorMessage = $state<string | null>(null);
   let loadedComponents = $state(new Set<string>());
 
@@ -133,31 +132,25 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
     return required.every((component) => loadedComponents.has(component));
   });
 
-  // Reactively update loading state
-  $effect(() => {
-    if (allComponentsLoaded()) {
-      isLoading = false;
-      isLoaded = true;
-    }
-  });
+  // Reactively update loading state - CONVERTED TO $derived TO PREVENT INFINITE LOOPS
+  const isLoading = $derived(() => !allComponentsLoaded());
+  const isLoaded = $derived(() => allComponentsLoaded());
 
-  // Initialize loading when data changes
+  // Initialize loading when data changes - REMOVED REACTIVE STATE MODIFICATIONS TO PREVENT INFINITE LOOP
   $effect(() => {
     if (hasValidData()) {
-      isLoading = true;
-      isLoaded = false;
+      // isLoading and isLoaded are now derived, don't modify them directly
       errorMessage = null;
       loadedComponents.clear();
 
-      // Reset arrow positioning coordination
-      arrowPositions = {};
-      arrowMirroring = {};
+      // DO NOT reset arrow positioning here - it causes infinite loops!
+      // Arrow positioning will be handled by calculateArrowPositions() function
       showArrows = false;
     }
   });
 
-  // SINGLE SOURCE OF TRUTH: Use ArrowPositioningOrchestrator.calculateAllArrowPositions() ONLY
-  $effect(() => {
+  // MANUAL ARROW POSITIONING: Calculate positions when needed without reactive loops
+  function calculateArrowPositions() {
     const data = effectivePictographData();
     if (!data?.arrows) {
       showArrows = true; // No arrows to position
@@ -202,6 +195,11 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
       // Fallback: show arrows without coordination
       showArrows = true;
     }
+  }
+
+  // Call arrow positioning once when component mounts (no reactive dependencies)
+  onMount(() => {
+    calculateArrowPositions();
   });
 
   // Component event handlers
@@ -246,7 +244,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 
 <!-- Main SVG Container -->
 <div
-  class="modern-pictograph"
+  class="pictograph"
   class:loading={isLoading}
   class:loaded={isLoaded}
   class:has-error={errorMessage}
@@ -369,7 +367,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
 </div>
 
 <style>
-  .modern-pictograph {
+  .pictograph {
     position: relative;
     border-radius: 8px;
     transition: all 0.2s ease;
@@ -378,31 +376,31 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
     /* add a border radius */
   }
 
-  .modern-pictograph.responsive {
+  .pictograph.responsive {
     width: 100% !important;
     height: 100% !important;
     display: block;
   }
 
-  .modern-pictograph.clickable {
+  .pictograph.clickable {
     cursor: pointer;
   }
 
-  .modern-pictograph.clickable:hover {
+  .pictograph.clickable:hover {
     border-color: #3b82f6;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
     transform: translateY(-1px);
   }
 
-  .modern-pictograph.loading {
+  .pictograph.loading {
     opacity: 0.8;
   }
 
-  .modern-pictograph.has-error {
+  .pictograph.has-error {
     border-color: #ef4444;
   }
 
-  .modern-pictograph.debug-mode {
+  .pictograph.debug-mode {
     border-color: #8b5cf6;
     border-width: 2px;
   }
@@ -418,7 +416,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
     height: 100%;
   }
 
-  .modern-pictograph:focus-within {
+  .pictograph:focus-within {
     outline: none;
     border-color: #3b82f6;
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);

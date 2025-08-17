@@ -16,5 +16,17 @@ export * from "./PictographData";
 export * from "./BeatData";
 export * from "./SequenceData";
 
+// Page Layout - explicitly re-export to resolve Orientation ambiguity
+export type {
+  PageDimensions,
+  Margins,
+  Rectangle,
+  PrintConfiguration,
+  PaperSize,
+  GridCalculationOptions,
+  PageLayoutConfig,
+  Orientation as PageOrientation, // Rename to avoid conflict with enum Orientation
+} from "./pageLayout";
+
 // Browse Models
 export * from "./browse";

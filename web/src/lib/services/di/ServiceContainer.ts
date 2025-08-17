@@ -3,19 +3,7 @@
  * Local implementation to replace missing @tka/shared/di/core modules
  */
 
-export interface ServiceInterface<T = unknown> {
-  token: string;
-  implementation: new (...args: unknown[]) => T;
-}
-
-export function createServiceInterface<T>(
-  token: string,
-  implementation: new (...args: unknown[]) => T
-): ServiceInterface<T> {
-  return { token, implementation };
-}
-
-export type Factory<T> = () => T;
+import type { ServiceInterface, Factory } from "./types";
 
 interface ServiceConfig {
   implementation: new (...args: unknown[]) => unknown;
@@ -60,6 +48,21 @@ export class ServiceContainer {
     const instance = new serviceInterface.implementation();
     this.singletons.set(serviceInterface.token, instance);
     console.log(`✅ Singleton registered: ${serviceInterface.token}`);
+  }
+
+  /**
+   * Get debug information about registered services
+   */
+  getDebugInfo(): {
+    singletons: string[];
+    factories: string[];
+    services: string[];
+  } {
+    return {
+      singletons: Array.from(this.singletons.keys()),
+      factories: Array.from(this.factories.keys()),
+      services: Array.from(this.services.keys()),
+    };
   }
 
   resolve<T>(serviceInterface: ServiceInterface<T>): T {

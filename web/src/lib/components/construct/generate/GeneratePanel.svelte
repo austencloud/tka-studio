@@ -35,7 +35,8 @@ Refactored into smaller section components for better maintainability:
         "IDeviceDetectionService"
       );
       return deviceState.initializeDevice(deviceService);
-    } catch {
+    } catch (error) {
+      console.log("GeneratePanel: Device service not ready yet:", error);
       // Fallback handled in deviceState
       return undefined;
     }

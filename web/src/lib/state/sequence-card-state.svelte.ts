@@ -5,6 +5,7 @@
  * - Length filtering and column management
  * - Export progress and settings
  * - Layout calculations and pagination
+ * - Page layout and printable page creation
  * - Cache management
  *
  * Uses pure runes ($state, $derived, $effect) for all reactivity
@@ -17,6 +18,14 @@ import type {
   // SequenceCardExportSettings,
   DeviceCapabilities,
 } from "$lib/domain/sequenceCard";
+import type {
+  IPrintablePageLayoutService,
+  IPageFactoryService,
+} from "$services/interfaces/sequence-interfaces";
+import {
+  createPageLayoutState,
+  type PageLayoutState,
+} from "./page-layout-state.svelte";
 
 // ============================================================================
 // CORE SEQUENCE CARD STATE
@@ -87,15 +96,8 @@ const exportSettingsState = $state({
 
 // Filtered sequences based on selected length
 const filteredSequences = $derived(() => {
-  const allSequences = getAllSequences(); // From existing sequenceState
-
-  if (sequenceCardState.selectedLength === 0) {
-    return allSequences; // "All" selected
-  }
-
-  return allSequences.filter(
-    (seq) => seq.beats && seq.beats.length === sequenceCardState.selectedLength
-  );
+  // This will be replaced by enhancedFilteredSequences in the enhanced state
+  return []; // Placeholder - actual implementation is in createEnhancedSequenceCardState
 });
 
 // Current page sequences for pagination
@@ -406,11 +408,198 @@ export function getCacheStatus() {
 }
 
 // ============================================================================
-// HELPER FUNCTION IMPORTS
+// ENHANCED SEQUENCE CARD STATE FACTORY
 // ============================================================================
 
-// Note: This function should use the factory pattern from sequenceState.svelte.ts
-// For now, return empty array to avoid TypeScript errors
-function getAllSequences(): SequenceData[] {
-  return [];
+export interface EnhancedSequenceCardState {
+  // Original sequence card state
+  sequenceCardState: typeof sequenceCardState;
+  exportSettingsState: typeof exportSettingsState;
+
+  // Page layout state
+  pageLayoutState: PageLayoutState;
+
+  // Derived values
+  filteredSequences: SequenceData[];
+  currentPageSequences: SequenceData[];
+  totalPages: number;
+  currentLayout: LayoutConfig;
+  progressMessage: string;
+  canExport: boolean;
+  cacheStatus: ReturnType<typeof getCacheStatus>;
+
+  // Enhanced actions
+  switchToPageView: () => Promise<void>;
+  switchToGridView: () => void;
+  refreshPages: () => Promise<void>;
+  updateSequences: (sequences: SequenceData[]) => Promise<void>;
+}
+
+export function createEnhancedSequenceCardState(
+  layoutService: IPrintablePageLayoutService,
+  pageFactoryService: IPageFactoryService,
+  initialSequences: SequenceData[] = []
+): EnhancedSequenceCardState {
+  // Create page layout state
+  const pageLayoutState = createPageLayoutState(
+    layoutService,
+    pageFactoryService,
+    initialSequences
+  );
+
+  // Store current sequences for integration
+  let currentSequences = $state<SequenceData[]>(initialSequences);
+
+  // Enhanced filtered sequences that use current sequences
+  const enhancedFilteredSequences = $derived(() => {
+    if (sequenceCardState.selectedLength === 0) {
+      return currentSequences; // "All" selected
+    }
+
+    return currentSequences.filter(
+      (seq) =>
+        seq.beats && seq.beats.length === sequenceCardState.selectedLength
+    );
+  });
+
+  // Enhanced current page sequences
+  const enhancedCurrentPageSequences = $derived(() => {
+    if (sequenceCardState.layoutMode === "printable") {
+      // In printable mode, return sequences from current printable page
+      const currentPage = pageLayoutState.pages[pageLayoutState.currentPage];
+      return currentPage?.sequences || [];
+    }
+
+    // Original pagination logic for grid/list modes
+    const startIndex =
+      (sequenceCardState.currentPage - 1) * sequenceCardState.itemsPerPage;
+    const endIndex = startIndex + sequenceCardState.itemsPerPage;
+    return enhancedFilteredSequences().slice(startIndex, endIndex);
+  });
+
+  // Enhanced total pages calculation
+  const enhancedTotalPages = $derived(() => {
+    if (sequenceCardState.layoutMode === "printable") {
+      return pageLayoutState.totalPages;
+    }
+
+    return Math.ceil(
+      enhancedFilteredSequences().length / sequenceCardState.itemsPerPage
+    );
+  });
+
+  // Enhanced progress message
+  const enhancedProgressMessage = $derived(() => {
+    const {
+      isExporting,
+      isRegenerating,
+      exportProgress,
+      selectedLength,
+      layoutMode,
+    } = sequenceCardState;
+    const sequenceCount = enhancedFilteredSequences().length;
+
+    if (pageLayoutState.isLoading) {
+      return "Creating printable pages...";
+    }
+
+    if (pageLayoutState.error) {
+      return `Error: ${pageLayoutState.error}`;
+    }
+
+    if (isExporting) {
+      return `Exporting sequence cards... ${Math.round(exportProgress)}%`;
+    }
+
+    if (isRegenerating) {
+      return `Regenerating images... ${Math.round(exportProgress)}%`;
+    }
+
+    if (sequenceCount === 0) {
+      return selectedLength === 0
+        ? "No sequences available"
+        : `No sequences found with ${selectedLength} beats`;
+    }
+
+    if (layoutMode === "printable" && pageLayoutState.totalPages > 0) {
+      return `${pageLayoutState.totalPages} printable page${pageLayoutState.totalPages === 1 ? "" : "s"} created`;
+    }
+
+    const lengthText = selectedLength === 0 ? "all" : `${selectedLength}-beat`;
+    return `Displaying ${sequenceCount} ${lengthText} sequence${sequenceCount === 1 ? "" : "s"}`;
+  });
+
+  // Enhanced actions
+  async function switchToPageView(): Promise<void> {
+    sequenceCardState.layoutMode = "printable";
+    await pageLayoutState.createPages(enhancedFilteredSequences());
+  }
+
+  function switchToGridView(): void {
+    sequenceCardState.layoutMode = "grid";
+  }
+
+  async function refreshPages(): Promise<void> {
+    if (sequenceCardState.layoutMode === "printable") {
+      await pageLayoutState.regeneratePages();
+    }
+  }
+
+  async function updateSequences(sequences: SequenceData[]): Promise<void> {
+    currentSequences = [...sequences];
+
+    if (sequenceCardState.layoutMode === "printable") {
+      await pageLayoutState.createPages(enhancedFilteredSequences());
+    }
+  }
+
+  // Auto-update pages when filter changes in printable mode
+  $effect(() => {
+    const filtered = enhancedFilteredSequences();
+    const layoutMode = sequenceCardState.layoutMode;
+
+    if (layoutMode === "printable" && pageLayoutState.pages.length > 0) {
+      // Debounce the page recreation
+      const timeoutId = setTimeout(() => {
+        pageLayoutState.createPages(filtered);
+      }, 300);
+
+      return () => clearTimeout(timeoutId);
+    }
+  });
+
+  return {
+    sequenceCardState,
+    exportSettingsState,
+    pageLayoutState,
+
+    // Enhanced derived values
+    get filteredSequences() {
+      return enhancedFilteredSequences();
+    },
+    get currentPageSequences() {
+      return enhancedCurrentPageSequences();
+    },
+    get totalPages() {
+      return enhancedTotalPages();
+    },
+    get currentLayout() {
+      return getCurrentLayout()();
+    },
+    get progressMessage() {
+      return enhancedProgressMessage();
+    },
+    get canExport() {
+      return getCanExport()();
+    },
+    get cacheStatus() {
+      return getCacheStatus();
+    },
+
+    // Enhanced actions
+    switchToPageView,
+    switchToGridView,
+    refreshPages,
+    updateSequences,
+  };
 }

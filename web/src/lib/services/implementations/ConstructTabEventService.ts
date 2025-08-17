@@ -14,17 +14,36 @@ import type { IConstructTabCoordinationService } from "../interfaces/application
 
 export class ConstructTabEventService {
   private constructCoordinator: IConstructTabCoordinationService | null = null;
+  private initialized = false;
 
   constructor() {
-    this.initializeServices();
+    // Don't initialize services in constructor - wait for lazy initialization
   }
 
   private initializeServices() {
+    if (this.initialized) {
+      return; // Already initialized
+    }
+
     try {
       this.constructCoordinator = resolve("IConstructTabCoordinationService");
-    } catch {
+      this.initialized = true;
+      console.log(
+        "✅ ConstructTabEventService: IConstructTabCoordinationService resolved successfully"
+      );
+    } catch (error) {
+      console.log(
+        "⚠️ ConstructTabEventService: Error during service initialization:",
+        error
+      );
       // This is expected during SSR - services will be resolved once client-side DI container is ready
       // Services will remain null and methods will handle gracefully
+    }
+  }
+
+  private ensureInitialized() {
+    if (!this.initialized) {
+      this.initializeServices();
     }
   }
 
@@ -43,26 +62,8 @@ export class ConstructTabEventService {
       // DON'T set transitioning immediately - let the fade transitions handle the UI
       // setTransitioning(true); // ← REMOVED to prevent flash
 
-      // Ensure coordination service is available - retry resolution if needed
-      if (!this.constructCoordinator) {
-        console.log(
-          "🎭 Coordination service not available, attempting to resolve..."
-        );
-        try {
-          this.constructCoordinator = resolve(
-            "IConstructTabCoordinationService"
-          );
-          console.log("✅ Coordination service resolved successfully");
-        } catch (resolveError) {
-          console.error(
-            "❌ Failed to resolve coordination service:",
-            resolveError
-          );
-          throw new Error("Coordination service not available");
-        }
-      } else {
-        console.log("✅ Coordination service already available");
-      }
+      // Ensure services are initialized
+      this.ensureInitialized();
 
       // Use coordination service to handle the selection
       if (this.constructCoordinator) {
@@ -73,7 +74,7 @@ export class ConstructTabEventService {
         console.log("✅ Coordination service handleStartPositionSet completed");
       } else {
         throw new Error(
-          "Coordination service is null after resolution attempt"
+          "Coordination service not available after initialization"
         );
       }
 
@@ -208,6 +209,9 @@ export class ConstructTabEventService {
   setupComponentCoordination(): void {
     console.log("🎭 ConstructTabEventService setting up coordination");
 
+    // Ensure services are initialized
+    this.ensureInitialized();
+
     // Register this service with the coordination service
     if (this.constructCoordinator) {
       this.constructCoordinator.setupComponentCoordination({
@@ -230,5 +234,19 @@ export class ConstructTabEventService {
   }
 }
 
-// Create and export singleton instance
-export const constructTabEventService = new ConstructTabEventService();
+// Lazy singleton instance
+let _constructTabEventService: ConstructTabEventService | null = null;
+
+/**
+ * Get the singleton instance of ConstructTabEventService
+ * Creates the instance only when first accessed, ensuring DI container is ready
+ */
+export function getConstructTabEventService(): ConstructTabEventService {
+  if (!_constructTabEventService) {
+    _constructTabEventService = new ConstructTabEventService();
+  }
+  return _constructTabEventService;
+}
+
+// Export the getter function directly for backward compatibility
+export const constructTabEventService = getConstructTabEventService;

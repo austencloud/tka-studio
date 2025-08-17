@@ -25,7 +25,7 @@ export interface IDirectionalTupleCalculator {
 }
 
 export interface IQuadrantIndexCalculator {
-  calculateQuadrantIndex(location: Location): number;
+  calculateQuadrantIndex(motion: MotionData, location: Location): number;
 }
 
 export interface IDirectionalTupleProcessor {

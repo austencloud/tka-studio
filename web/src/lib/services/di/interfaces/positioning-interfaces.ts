@@ -20,7 +20,6 @@ import type {
   IDirectionalTupleCalculator,
   IDirectionalTupleProcessor,
   IPositioningServiceFactory,
-  IQuadrantIndexCalculator,
 } from "../../positioning";
 
 // Import service implementations
@@ -29,13 +28,15 @@ import { ArrowPlacementKeyService } from "../../implementations/ArrowPlacementKe
 
 // Import enhanced positioning service implementations
 import { ArrowAdjustmentCalculator } from "../../positioning/arrows/calculation/ArrowAdjustmentCalculator";
-import { ArrowAdjustmentLookup } from "../../positioning/arrows/orchestration/ArrowAdjustmentLookup";
 import { ArrowLocationCalculator } from "../../positioning/arrows/calculation/ArrowLocationCalculator";
 import { ArrowRotationCalculator } from "../../positioning/arrows/calculation/ArrowRotationCalculator";
 import { DashLocationCalculator } from "../../positioning/arrows/calculation/DashLocationCalculator";
 import { ArrowCoordinateSystemService } from "../../positioning/arrows/coordinate_system/ArrowCoordinateSystemService";
-import { ArrowPositioningOrchestrator } from "../../positioning/arrows/orchestration/ArrowPositioningOrchestrator";
-import { DirectionalTupleProcessor } from "../../positioning/arrows/processors/DirectionalTupleProcessor";
+import { ArrowPositionCalculator } from "../../positioning/arrows/orchestration/ArrowPositionCalculator";
+import {
+  DirectionalTupleProcessor,
+  QuadrantIndexCalculator,
+} from "../../positioning/arrows/processors/DirectionalTupleProcessor";
 import { PositioningServiceFactory } from "../../positioning/PositioningServiceFactory";
 
 // Core positioning services
@@ -74,11 +75,8 @@ export const IArrowAdjustmentCalculatorInterface =
   createServiceInterface<IArrowAdjustmentCalculator>(
     "IArrowAdjustmentCalculator",
     class extends ArrowAdjustmentCalculator {
-      constructor(...args: unknown[]) {
-        super(
-          args[0] as ArrowAdjustmentLookup | undefined,
-          args[1] as IDirectionalTupleProcessor | undefined
-        );
+      constructor(..._args: unknown[]) {
+        super();
       }
     }
   );
@@ -102,7 +100,7 @@ export const IDirectionalTupleProcessorInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as IDirectionalTupleCalculator,
-          args[1] as IQuadrantIndexCalculator
+          args[1] as QuadrantIndexCalculator
         );
       }
     }
@@ -111,7 +109,7 @@ export const IDirectionalTupleProcessorInterface =
 export const IArrowPositioningOrchestratorInterface =
   createServiceInterface<IArrowPositioningOrchestrator>(
     "IArrowPositioningOrchestrator",
-    class extends ArrowPositioningOrchestrator {
+    class extends ArrowPositionCalculator {
       constructor(...args: unknown[]) {
         super(
           args[0] as IArrowLocationCalculator,

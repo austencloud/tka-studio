@@ -1,25 +1,20 @@
 /**
- * Directionexport interface IDirectionalTupleService {
-	calculateDirectionalTuple(_motion: MotionData, location: Location): [number, number];
-	generateDirectionalTuples(
-		_motion: MotionData,
-		baseX: number,
-		baseY: number
-	): Array<[number, number]>;
-} Processor
+ * Directional Tuple Processor
  *
  * Handles complex directional tuple processing for arrow positioning adjustments.
  * Direct TypeScript port of the Python DirectionalTupleProcessor.
  *
  * This service handles:
  * - Directional tuple generation based on motion data
- * - Quadrant index calculation for proper tuple selection
  * - Complex adjustment processing for different motion types
+ *
+ * Note: Uses ArrowQuadrantCalculator for quadrant index calculations to avoid duplication.
  */
 
 import type { MotionData } from "$lib/domain";
 import { Location } from "$lib/domain";
 import type { Point } from "../../types";
+import { ArrowQuadrantCalculator } from "../orchestration/ArrowQuadrantCalculator";
 
 export interface IDirectionalTupleCalculator {
   calculateDirectionalTuple(
@@ -33,9 +28,7 @@ export interface IDirectionalTupleCalculator {
   ): Array<[number, number]>;
 }
 
-export interface IQuadrantIndexCalculator {
-  calculateQuadrantIndex(location: Location): number;
-}
+// Using ArrowQuadrantCalculator from orchestration instead of duplicate interface
 
 export interface IDirectionalTupleProcessor {
   processDirectionalTuples(
@@ -82,10 +75,12 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
     const S = Location.SOUTH;
     const W = Location.WEST;
 
-    // Infer grid mode from start/end locations (diagonals => diamond; cardinals => box)
-    const diagonalSet = new Set<Location>([NE, SE, SW, NW]);
+    // Infer grid mode from motion locations (NOT arrow locations)
+    // Diamond mode: motion uses cardinals (N, E, S, W) → arrows placed at diagonals
+    // Box mode: motion uses diagonals (NE, SE, SW, NW) → arrows placed at cardinals
+    const cardinalSet = new Set<Location>([N, E, S, W]);
     const gridIsDiamond =
-      diagonalSet.has(motion.start_loc) || diagonalSet.has(motion.end_loc);
+      cardinalSet.has(motion.start_loc) || cardinalSet.has(motion.end_loc);
 
     // Helper to normalize rotation keys
     const isCW = rot === "clockwise" || rot === "cw";
@@ -331,34 +326,19 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
   }
 }
 
-export class QuadrantIndexCalculator implements IQuadrantIndexCalculator {
+export class QuadrantIndexCalculator {
   /**
-   * Calculator for quadrant indices used in directional tuple selection.
+   * Wrapper around ArrowQuadrantCalculator to maintain interface compatibility.
+   * Delegates to the centralized quadrant calculation logic.
    */
+  private quadrantCalculator: ArrowQuadrantCalculator;
 
-  calculateQuadrantIndex(location: Location): number {
-    /**
-     * Calculate quadrant index for the given location.
-     *
-     * Args:
-     *     location: Arrow location
-     *
-     * Returns:
-     *     Quadrant index (0-3)
-     */
-    const quadrantMap: Record<Location, number> = {
-      [Location.NORTHEAST]: 0,
-      [Location.SOUTHEAST]: 1,
-      [Location.SOUTHWEST]: 2,
-      [Location.NORTHWEST]: 3,
-      // Cardinal directions map to nearest quadrant
-      [Location.NORTH]: 0, // Maps to NE quadrant
-      [Location.EAST]: 1, // Maps to SE quadrant
-      [Location.SOUTH]: 2, // Maps to SW quadrant
-      [Location.WEST]: 3, // Maps to NW quadrant
-    };
+  constructor() {
+    this.quadrantCalculator = new ArrowQuadrantCalculator();
+  }
 
-    return quadrantMap[location] || 0;
+  calculateQuadrantIndex(motion: MotionData, location: Location): number {
+    return this.quadrantCalculator.calculateQuadrantIndex(motion, location);
   }
 }
 
@@ -369,7 +349,7 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
 
   constructor(
     private directionalTupleService: IDirectionalTupleCalculator,
-    private quadrantIndexService: IQuadrantIndexCalculator
+    private quadrantIndexService: QuadrantIndexCalculator
   ) {}
 
   processDirectionalTuples(
@@ -398,8 +378,10 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
         );
 
       // Calculate quadrant index for tuple selection
-      const quadrantIndex =
-        this.quadrantIndexService.calculateQuadrantIndex(location);
+      const quadrantIndex = this.quadrantIndexService.calculateQuadrantIndex(
+        _motion,
+        location
+      );
 
       // Select the appropriate tuple based on quadrant (legacy parity)
       const selectedTuple = directionalTuples[quadrantIndex] || [0, 0];

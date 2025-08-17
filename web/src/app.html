@@ -58,23 +58,37 @@
 
           if (!shouldForwardLog(args)) return;
 
-          const message = args
-            .map((arg) => {
-              if (typeof arg === "object") {
-                try {
-                  return JSON.stringify(arg, null, 2);
-                } catch {
-                  return String(arg);
+          // ULTRA SIMPLE: Just convert everything to string and capture what the browser actually shows
+          let message = "";
+          try {
+            // Capture the exact same output that would appear in browser console
+            const parts = [];
+            for (let i = 0; i < args.length; i++) {
+              const arg = args[i];
+              if (arg && typeof arg === "object" && arg.message) {
+                // This looks like an Error object - get the actual error message
+                parts.push(`${arg.name || "Error"}: ${arg.message}`);
+                if (arg.stack) {
+                  parts.push(`\nStack: ${arg.stack}`);
                 }
+              } else {
+                // For everything else, just use String() which is what console does
+                parts.push(String(arg));
               }
-              return String(arg);
-            })
-            .join(" ");
+            }
+            message = parts.join(" ");
+          } catch (e) {
+            message = `[Console forwarding error: ${e.message}] Raw args: ${args.length} items`;
+          }
 
-          fetch("/api/console-forward", {
+          fetch("/api/console-log", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ level, message }),
+            body: JSON.stringify({
+              level,
+              message,
+              timestamp: new Date().toISOString(),
+            }),
           }).catch(() => {}); // Ignore fetch errors
         }
 

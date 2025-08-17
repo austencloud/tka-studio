@@ -15,6 +15,7 @@
 
 import type { MotionData, PictographData } from "$lib/domain";
 import type { ISpecialPlacementService } from "../../placement-services";
+import { SpecialPlacementOriKeyGenerator } from "../key_generators/SpecialPlacementOriKeyGenerator";
 
 // Define Point interface locally since it might not be in domain
 interface Point {
@@ -29,6 +30,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     Record<string, Record<string, Record<string, unknown>>>
   > = {};
   private loadingCache: Set<string> = new Set();
+  private oriKeyGenerator: SpecialPlacementOriKeyGenerator;
 
   constructor() {
     // Defer loading; we'll lazily load per-letter on demand
@@ -36,6 +38,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
       string,
       Record<string, Record<string, Record<string, unknown>>>
     >;
+    this.oriKeyGenerator = new SpecialPlacementOriKeyGenerator();
   }
 
   /**
@@ -59,7 +62,10 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     const letter = pictographData.letter;
 
     // Generate orientation key using validated logic
-    const oriKey = this.generateOrientationKey(motion, pictographData);
+    const oriKey = this.oriKeyGenerator.generateOrientationKey(
+      motion,
+      pictographData
+    );
 
     // Get grid mode (default to diamond)
     const gridMode =
@@ -191,51 +197,6 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     } catch (error) {
       console.error("Error ensuring special placement data:", error);
     }
-  }
-
-  /**
-   * Generate orientation key matching the ori_key_generator logic.
-   *
-   * This determines which subfolder of special placements to use:
-   * - from_layer1: Basic orientations
-   * - from_layer2: Layer 2 orientations
-   * - from_layer3_blue1_red2: Mixed orientations with blue on layer 1, red on layer 2
-   * - from_layer3_blue2_red1: Mixed orientations with blue on layer 2, red on layer 1
-   */
-  private generateOrientationKey(
-    _motion: MotionData,
-    pictographData: PictographData
-  ): string {
-    try {
-      const blueMotion = pictographData.motions?.blue;
-      const redMotion = pictographData.motions?.red;
-
-      if (blueMotion && redMotion) {
-        const blueEndOri = blueMotion.end_ori || "in";
-        const redEndOri = redMotion.end_ori || "in";
-
-        const blueLayer = ["in", "out"].includes(blueEndOri) ? 1 : 2;
-        const redLayer = ["in", "out"].includes(redEndOri) ? 1 : 2;
-
-        if (blueLayer === 1 && redLayer === 1) {
-          return "from_layer1";
-        }
-        if (blueLayer === 2 && redLayer === 2) {
-          return "from_layer2";
-        }
-        if (blueLayer === 1 && redLayer === 2) {
-          return "from_layer3_blue1_red2";
-        }
-        if (blueLayer === 2 && redLayer === 1) {
-          return "from_layer3_blue2_red1";
-        }
-        return "from_layer1";
-      }
-    } catch (error) {
-      console.debug("Error generating orientation key:", error);
-    }
-
-    return "from_layer1";
   }
 
   /**

@@ -6,8 +6,16 @@
 
 import type { BeatData, SequenceData } from "$lib/domain";
 import type { ExportOptions } from "../interfaces/domain-types";
-import type { IExportService } from "../interfaces/export-interfaces";
+import type {
+  IExportService,
+  ImageExportOptions,
+  PDFExportOptions,
+  BatchExportOptions,
+  ExportResult,
+  BatchExportResult,
+} from "../interfaces/export-interfaces";
 import type { IPictographService } from "../interfaces/pictograph-interfaces";
+import type { Page } from "$lib/domain/pageLayout";
 
 export class ExportService implements IExportService {
   // pictographService reserved for future richer rendering; omitted to reduce lint noise
@@ -181,5 +189,31 @@ export class ExportService implements IExportService {
       pngCompression: 6,
       jpgQuality: 85,
     };
+  }
+
+  // Implementation of IExportService interface methods
+  async exportPageAsImage(
+    _pageElement: HTMLElement,
+    _options: ImageExportOptions
+  ): Promise<ExportResult> {
+    // For now, delegate to existing sequence export logic
+    // This would need proper implementation for page elements
+    throw new Error(
+      "Page export not yet implemented - use exportSequenceAsImage"
+    );
+  }
+
+  async exportAsPDF(
+    _pages: Page[],
+    _options: PDFExportOptions
+  ): Promise<ExportResult> {
+    throw new Error("PDF export not yet implemented");
+  }
+
+  async exportBatch(
+    _pages: Page[],
+    _options: BatchExportOptions & (ImageExportOptions | PDFExportOptions)
+  ): Promise<BatchExportResult> {
+    throw new Error("Batch export not yet implemented");
   }
 }

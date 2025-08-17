@@ -41,16 +41,17 @@
   let settingsService: ISettingsService | null = $state(null);
   let sequenceService: ISequenceService | null = $state(null);
   let deviceService: IDeviceDetectionService | null = $state(null);
+  let servicesResolved = $state(false);
 
   // App state
   let isInitialized = $derived(getIsInitialized());
   let initializationError = $derived(getInitializationError());
   let initializationProgress = $derived(getInitializationProgress());
 
-  // Resolve services when container is available
+  // Resolve services when container is available - ONCE ONLY
   $effect(() => {
     const container = getContainer?.();
-    if (container && !initService) {
+    if (container && !servicesResolved) {
       try {
         console.log(
           "🚀 MainApplication container ready, resolving services..."
@@ -62,6 +63,7 @@
         sequenceService = resolve("ISequenceService");
         deviceService = resolve("IDeviceDetectionService");
 
+        servicesResolved = true;
         console.log("✅ MainApplication services resolved successfully");
       } catch (error) {
         console.error("Failed to resolve services:", error);
@@ -80,18 +82,13 @@
 
     // Wait for services to be resolved
     let attempts = 0;
-    while (
-      (!initService ||
-        !settingsService ||
-        !sequenceService ||
-        !deviceService) &&
-      attempts < 10
-    ) {
+    while (!servicesResolved && attempts < 10) {
       await new Promise((resolve) => setTimeout(resolve, 100));
       attempts++;
     }
 
     if (
+      !servicesResolved ||
       !initService ||
       !settingsService ||
       !sequenceService ||

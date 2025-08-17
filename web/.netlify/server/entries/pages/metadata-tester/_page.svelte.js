@@ -523,9 +523,10 @@ function createMetadataTesterState() {
     state.selectedThumbnail = thumbnail;
     try {
       const metadata = await PngMetadataExtractor.extractMetadata(thumbnail.path);
-      state.extractedMetadata = metadata;
+      const metadataArray = Array.isArray(metadata) ? metadata : [];
+      state.extractedMetadata = metadataArray;
       state.rawMetadata = JSON.stringify(metadata, null, 2);
-      analyzeMetadata(metadata);
+      analyzeMetadata(metadataArray);
     } catch (error) {
       state.error = `Failed to extract metadata: ${error}`;
       state.extractedMetadata = null;
@@ -729,7 +730,7 @@ function createMetadataTesterState() {
       for (const thumbnail of state.thumbnails) {
         console.log(`Analyzing sequence: ${thumbnail.word}`);
         await extractMetadata(thumbnail);
-        if (state.metadataStats) {
+        if (state.extractedMetadata) {
           analyzeMetadata(state.extractedMetadata);
         }
         if (state.metadataStats) {

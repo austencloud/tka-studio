@@ -1,14 +1,15 @@
-<!-- SequenceCard.svelte - Individual sequence card component -->
+<!-- SequenceCard.svelte - Enhanced sequence card supporting multiple display variants -->
 <script lang="ts">
   import type { SequenceData } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
 
   interface Props {
     sequence: SequenceData;
+    variant?: "card" | "list";
     onclick?: () => void;
   }
 
-  let { sequence, onclick }: Props = $props();
+  let { sequence, variant = "card", onclick }: Props = $props();
 
   // Card element used in bind:this
   let cardElement: HTMLElement;
@@ -81,6 +82,8 @@
 
 <div
   class="sequence-card"
+  class:card-variant={variant === "card"}
+  class:list-variant={variant === "list"}
   bind:this={cardElement}
   onclick={handleCardClick}
   onkeydown={handleKeyDown}
@@ -88,95 +91,179 @@
   role="button"
   tabindex="0"
 >
-  <!-- Card Header -->
-  <div class="card-header">
-    <h3 class="sequence-name" title={sequenceName}>
-      {sequenceName}
-    </h3>
-    <div class="card-actions">
-      <button
-        class="action-btn"
-        onclick={(e) => {
-          e.stopPropagation();
-          handleExportCard();
-        }}
-        title="Export this card"
-      >
-        📤
-      </button>
-      <button
-        class="action-btn"
-        onclick={(e) => {
-          e.stopPropagation();
-          handleViewDetails();
-        }}
-        title="View details"
-      >
-        🔍
-      </button>
+  {#if variant === "card"}
+    <!-- Card Variant Layout -->
+    <!-- Card Header -->
+    <div class="card-header">
+      <h3 class="sequence-name" title={sequenceName}>
+        {sequenceName}
+      </h3>
+      <div class="card-actions">
+        <button
+          class="action-btn"
+          onclick={(e) => {
+            e.stopPropagation();
+            handleExportCard();
+          }}
+          title="Export this card"
+        >
+          📤
+        </button>
+        <button
+          class="action-btn"
+          onclick={(e) => {
+            e.stopPropagation();
+            handleViewDetails();
+          }}
+          title="View details"
+        >
+          🔍
+        </button>
+      </div>
     </div>
-  </div>
 
-  <!-- Card Image/Preview -->
-  <div class="card-preview">
-    {#if imageLoaded && !imageError}
-      <!-- Placeholder for actual sequence image -->
-      <div class="sequence-preview" style:background-color={placeholderColor()}>
-        <div class="preview-content">
-          <div class="sequence-visualization">
-            <!-- Simple visualization placeholder -->
-            <div class="grid-indicator {gridMode}">
-              {#each Array(Math.min(beatCount, 8)) as _, i}
-                <div class="beat-dot" style:animation-delay="{i * 0.1}s"></div>
-              {/each}
+    <!-- Card Image/Preview -->
+    <div class="card-preview">
+      {#if imageLoaded && !imageError}
+        <!-- Placeholder for actual sequence image -->
+        <div class="sequence-preview" style:background-color={placeholderColor()}>
+          <div class="preview-content">
+            <div class="sequence-visualization">
+              <!-- Simple visualization placeholder -->
+              <div class="grid-indicator {gridMode}">
+                {#each Array(Math.min(beatCount, 8)) as _, i}
+                  <div class="beat-dot" style:animation-delay="{i * 0.1}s"></div>
+                {/each}
+              </div>
+            </div>
+            <div class="preview-overlay">
+              <span class="beat-count-large">{beatCount}</span>
+              <span class="beat-label">beats</span>
             </div>
           </div>
-          <div class="preview-overlay">
-            <span class="beat-count-large">{beatCount}</span>
-            <span class="beat-label">beats</span>
-          </div>
         </div>
-      </div>
-    {:else if imageError}
-      <!-- Error State -->
-      <div class="image-error">
-        <div class="error-icon">❌</div>
-        <span class="error-text">Failed to load</span>
-      </div>
-    {:else}
-      <!-- Loading State -->
-      <div class="image-loading">
-        <div class="loading-spinner"></div>
-        <span class="loading-text">Loading...</span>
-      </div>
-    {/if}
-  </div>
-
-  <!-- Card Footer -->
-  <div class="card-footer">
-    <div class="card-metadata">
-      <div class="metadata-row">
-        <span class="metadata-label">Beats:</span>
-        <span class="metadata-value">{beatCount}</span>
-      </div>
-      <div class="metadata-row">
-        <span class="metadata-label">Difficulty:</span>
-        <span class="metadata-value difficulty-{difficulty.toLowerCase()}"
-          >{difficulty}</span
-        >
-      </div>
-      <div class="metadata-row">
-        <span class="metadata-label">Grid:</span>
-        <span class="metadata-value">{gridMode}</span>
-      </div>
-      {#if author !== "Unknown"}
-        <div class="metadata-row">
-          <span class="metadata-label">Author:</span>
-          <span class="metadata-value" title={author}>{author}</span>
+      {:else if imageError}
+        <!-- Error State -->
+        <div class="image-error">
+          <div class="error-icon">❌</div>
+          <span class="error-text">Failed to load</span>
+        </div>
+      {:else}
+        <!-- Loading State -->
+        <div class="image-loading">
+          <div class="loading-spinner"></div>
+          <span class="loading-text">Loading...</span>
         </div>
       {/if}
     </div>
-  </div>
+
+    <!-- Card Footer -->
+    <div class="card-footer">
+      <div class="card-metadata">
+        <div class="metadata-row">
+          <span class="metadata-label">Beats:</span>
+          <span class="metadata-value">{beatCount}</span>
+        </div>
+        <div class="metadata-row">
+          <span class="metadata-label">Difficulty:</span>
+          <span class="metadata-value difficulty-{difficulty.toLowerCase()}">
+            {difficulty}
+          </span>
+        </div>
+        <div class="metadata-row">
+          <span class="metadata-label">Grid:</span>
+          <span class="metadata-value">{gridMode}</span>
+        </div>
+        {#if author !== "Unknown"}
+          <div class="metadata-row">
+            <span class="metadata-label">Author:</span>
+            <span class="metadata-value" title={author}>{author}</span>
+          </div>
+        {/if}
+      </div>
+    </div>
+  {:else}
+    <!-- List Variant Layout -->
+    <div class="list-content">
+      <!-- Left side: Preview thumbnail -->
+      <div class="list-preview">
+        {#if imageLoaded && !imageError}
+          <div class="sequence-preview" style:background-color={placeholderColor()}>
+            <div class="preview-content">
+              <div class="beat-count-display">
+                <span class="beat-count-large">{beatCount}</span>
+              </div>
+            </div>
+          </div>
+        {:else if imageError}
+          <div class="image-error">
+            <div class="error-icon">❌</div>
+          </div>
+        {:else}
+          <div class="image-loading">
+            <div class="loading-spinner"></div>
+          </div>
+        {/if}
+      </div>
+
+      <!-- Right side: Metadata -->
+      <div class="list-details">
+        <div class="list-header">
+          <h3 class="sequence-name" title={sequenceName}>
+            {sequenceName}
+          </h3>
+          <div class="card-actions">
+            <button
+              class="action-btn"
+              onclick={(e) => {
+                e.stopPropagation();
+                handleExportCard();
+              }}
+              title="Export this card"
+            >
+              📤
+            </button>
+            <button
+              class="action-btn"
+              onclick={(e) => {
+                e.stopPropagation();
+                handleViewDetails();
+              }}
+              title="View details"
+            >
+              🔍
+            </button>
+          </div>
+        </div>
+        
+        <div class="list-metadata">
+          <span class="metadata-item">
+            <span class="metadata-label">Beats:</span>
+            <span class="metadata-value">{beatCount}</span>
+          </span>
+          <span class="metadata-separator">•</span>
+          <span class="metadata-item">
+            <span class="metadata-label">Difficulty:</span>
+            <span class="metadata-value difficulty-{difficulty.toLowerCase()}">
+              {difficulty}
+            </span>
+          </span>
+          <span class="metadata-separator">•</span>
+          <span class="metadata-item">
+            <span class="metadata-label">Grid:</span>
+            <span class="metadata-value">{gridMode}</span>
+          </span>
+          {#if author !== "Unknown"}
+            <span class="metadata-separator">•</span>
+            <span class="metadata-item">
+              <span class="metadata-label">Author:</span>
+              <span class="metadata-value" title={author}>{author}</span>
+            </span>
+          {/if}
+        </div>
+      </div>
+    </div>
+  {/if}
 </div>
 
 <style>
@@ -189,9 +276,6 @@
     cursor: pointer;
     transition: all var(--transition-normal);
     box-shadow: var(--shadow-glass);
-    display: flex;
-    flex-direction: column;
-    min-height: 320px;
   }
 
   .sequence-card:hover {
@@ -199,6 +283,69 @@
     border: var(--glass-border-hover);
     transform: translateY(-2px);
     box-shadow: var(--shadow-glass-hover);
+  }
+
+  /* Card Variant Styles */
+  .card-variant {
+    display: flex;
+    flex-direction: column;
+    min-height: 320px;
+  }
+
+  /* List Variant Styles */
+  .list-variant {
+    min-height: 80px;
+  }
+
+  .list-content {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px;
+    min-height: 80px;
+  }
+
+  .list-preview {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--surface-glass);
+  }
+
+  .list-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .list-metadata {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+
+  .metadata-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .metadata-separator {
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: bold;
   }
 
   /* Card Header */
@@ -223,6 +370,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .list-variant .sequence-name {
+    font-size: 14px;
   }
 
   .card-actions {
@@ -255,6 +406,12 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   }
 
+  .list-variant .action-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+
   /* Card Preview */
   .card-preview {
     flex: 1;
@@ -274,6 +431,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .list-variant .sequence-preview {
+    border-radius: 8px;
   }
 
   .preview-content {
@@ -329,11 +490,24 @@
     backdrop-filter: blur(4px);
   }
 
+  .beat-count-display {
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-align: center;
+    backdrop-filter: blur(4px);
+  }
+
   .beat-count-large {
     display: block;
     font-size: 24px;
     font-weight: bold;
     line-height: 1;
+  }
+
+  .list-variant .beat-count-large {
+    font-size: 18px;
   }
 
   .beat-label {
@@ -353,6 +527,11 @@
     color: var(--muted-foreground);
   }
 
+  .list-variant .image-loading,
+  .list-variant .image-error {
+    gap: 4px;
+  }
+
   .loading-spinner {
     width: 32px;
     height: 32px;
@@ -362,14 +541,29 @@
     animation: spin 1s linear infinite;
   }
 
+  .list-variant .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border-width: 2px;
+  }
+
   .loading-text,
   .error-text {
     font-size: 14px;
     font-weight: 500;
   }
 
+  .list-variant .loading-text,
+  .list-variant .error-text {
+    font-size: 10px;
+  }
+
   .error-icon {
     font-size: 32px;
+  }
+
+  .list-variant .error-icon {
+    font-size: 20px;
   }
 
   /* Card Footer */
@@ -410,36 +604,25 @@
     text-align: right;
   }
 
+  .list-variant .metadata-value {
+    max-width: none;
+    text-align: left;
+  }
+
   /* Difficulty Colors */
-  .difficulty-beginner {
-    color: #10b981;
-  }
-
-  .difficulty-intermediate {
-    color: #f59e0b;
-  }
-
-  .difficulty-advanced {
-    color: #ef4444;
-  }
-
-  .difficulty-expert {
-    color: #8b5cf6;
-  }
+  .difficulty-beginner { color: #10b981; }
+  .difficulty-intermediate { color: #f59e0b; }
+  .difficulty-advanced { color: #ef4444; }
+  .difficulty-expert { color: #8b5cf6; }
 
   /* Animations */
   @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 
   @keyframes pulse {
-    0%,
-    100% {
+    0%, 100% {
       opacity: 0.6;
       transform: scale(0.8);
     }
@@ -451,7 +634,7 @@
 
   /* Responsive Design */
   @media (max-width: 768px) {
-    .sequence-card {
+    .card-variant {
       min-height: 280px;
     }
 
@@ -469,6 +652,40 @@
 
     .beat-count-large {
       font-size: 20px;
+    }
+
+    .list-content {
+      gap: 12px;
+      padding: 10px;
+    }
+
+    .list-preview {
+      width: 56px;
+      height: 56px;
+    }
+
+    .list-metadata {
+      font-size: 11px;
+      gap: 6px;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sequence-card:hover {
+      transform: none;
+    }
+
+    .action-btn:hover {
+      transform: none;
+    }
+
+    .beat-dot {
+      animation: none;
+    }
+
+    .loading-spinner {
+      animation: none;
     }
   }
 </style>

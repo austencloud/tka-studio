@@ -24,10 +24,31 @@
 
   console.log("🎯 BuildTabContent script is being processed");
 
-  // Create component-scoped state using factory functions
-  const sequenceService = resolve("ISequenceService") as any; // TODO: Fix typing
-  const sequenceState = createSequenceState(sequenceService);
-  const constructTabState = createConstructTabState(sequenceState);
+  // Create component-scoped state using factory functions - lazily
+  let sequenceService: any = $state(null);
+  let sequenceState: any = $state(null);
+  let constructTabState: any = $state(null);
+
+  // Initialize services when container is ready
+  $effect(() => {
+    try {
+      if (!sequenceService) {
+        sequenceService = resolve("ISequenceService");
+
+        // Create state managers once service is available
+        if (sequenceService && !sequenceState) {
+          sequenceState = createSequenceState(sequenceService);
+          constructTabState = createConstructTabState(sequenceState);
+        }
+      }
+    } catch (error) {
+      console.log(
+        "BuildTabContent: Services not ready yet, will retry...",
+        error
+      );
+      // Services will remain null and will be retried on next effect run
+    }
+  });
 
   // CRITICAL FIX: Also watch the singleton sequence state for updates
   // This ensures we react to changes made by the coordination service
@@ -35,6 +56,8 @@
 
   // Sync the component-scoped state with singleton state when it changes
   $effect(() => {
+    if (!sequenceState) return; // Wait for state to be initialized
+
     const singletonSequence = sequenceStateService.currentSequence;
     const componentSequence = sequenceState.currentSequence;
 
@@ -45,16 +68,13 @@
     }
   });
 
-  // Simple debugging
-  console.log("🎯 constructTabState available:", !!constructTabState);
-
   // Initialize component coordination using effect instead of onMount
   $effect(() => {
     console.log(
       "🎯 BuildTabContent: $effect called - setting up component coordination"
     );
     try {
-      constructTabEventService.setupComponentCoordination();
+      constructTabEventService().setupComponentCoordination();
       console.log("✅ BuildTabContent: Component coordination setup complete");
     } catch (error) {
       console.error(
@@ -66,10 +86,10 @@
 
   // Reactive state from store
   let shouldShowStartPositionPicker = $derived(
-    constructTabState.shouldShowStartPositionPicker
+    constructTabState?.shouldShowStartPositionPicker || false
   );
-  let currentSequence = $derived(sequenceState.currentSequence);
-  let gridMode = $derived(constructTabState.gridMode);
+  let currentSequence = $derived(sequenceState?.currentSequence || null);
+  let gridMode = $derived(constructTabState?.gridMode || "radial");
   let settings = $derived(getSettings());
 
   // Add debugging for the reactive values
@@ -237,7 +257,9 @@
       startPosition.pictograph_data?.id
     );
     try {
-      await constructTabEventService.handleStartPositionSelected(startPosition);
+      await constructTabEventService().handleStartPositionSelected(
+        startPosition
+      );
       console.log(
         "✅ BuildTabContent: constructTabEventService.handleStartPositionSelected completed"
       );
@@ -250,7 +272,7 @@
   }
 
   async function handleOptionSelected(option: PictographData) {
-    await constructTabEventService.handleOptionSelected(option);
+    await constructTabEventService().handleOptionSelected(option);
   }
 </script>
 

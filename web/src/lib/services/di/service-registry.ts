@@ -23,6 +23,10 @@ import {
   ISequenceServiceInterface,
   ISettingsServiceInterface,
   IStartPositionServiceInterface,
+  IPrintablePageLayoutServiceInterface,
+  IPageFactoryServiceInterface,
+  IPageImageExportServiceInterface,
+  ISequenceCardExportIntegrationServiceInterface,
 } from "./interfaces/core-interfaces";
 
 import {
@@ -85,6 +89,10 @@ export const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
   ["IOptionDataService", IOptionDataServiceInterface],
   ["IStartPositionService", IStartPositionServiceInterface],
   ["IPanelManagementService", IPanelManagementServiceInterface],
+  ["IPrintablePageLayoutService", IPrintablePageLayoutServiceInterface],
+  ["IPageFactoryService", IPageFactoryServiceInterface],
+  ["IPageImageExportService", IPageImageExportServiceInterface],
+  ["ISequenceCardExportIntegrationService", ISequenceCardExportIntegrationServiceInterface],
 
   // Positioning services
   ["IArrowPositioningOrchestrator", IArrowPositioningOrchestratorInterface],

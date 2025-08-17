@@ -31,9 +31,72 @@ export class SequenceCardImageService implements ISequenceCardImageService {
   ) {}
 
   /**
-   * Generate a high-quality image for a single sequence card
+   * Generate image for a sequence card (matching interface)
    */
   async generateSequenceCardImage(
+    sequenceId: string,
+    width: number,
+    height: number
+  ): Promise<HTMLCanvasElement> {
+    try {
+      console.log(`Generating image for sequence "${sequenceId}"`);
+
+      // For now, create a simple placeholder canvas
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        // Simple placeholder implementation
+        ctx.fillStyle = "#f0f0f0";
+        ctx.fillRect(0, 0, width, height);
+
+        ctx.fillStyle = "#333";
+        ctx.font = "16px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(sequenceId, width / 2, height / 2);
+      }
+
+      return canvas;
+    } catch (error) {
+      console.error("Error generating sequence card image:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * Batch generate sequence card images (matching interface)
+   */
+  async batchGenerateImages(
+    sequenceIds: string[],
+    dimensions: { width: number; height: number }
+  ): Promise<Map<string, HTMLCanvasElement>> {
+    const results = new Map<string, HTMLCanvasElement>();
+
+    for (const sequenceId of sequenceIds) {
+      try {
+        const canvas = await this.generateSequenceCardImage(
+          sequenceId,
+          dimensions.width,
+          dimensions.height
+        );
+        results.set(sequenceId, canvas);
+      } catch (error) {
+        console.error(
+          `Failed to generate image for sequence ${sequenceId}:`,
+          error
+        );
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Generate a high-quality image for a single sequence card (legacy method)
+   */
+  async generateSequenceCardImageBlob(
     sequence: SequenceData,
     options: ExportOptions
   ): Promise<Blob> {
@@ -115,8 +178,11 @@ export class SequenceCardImageService implements ISequenceCardImageService {
             });
           }
 
-          // Generate image
-          const blob = await this.generateSequenceCardImage(sequence, options);
+          // Generate image using the legacy method
+          const blob = await this.generateSequenceCardImageBlob(
+            sequence,
+            options
+          );
           const processingTime = performance.now() - sequenceStartTime;
 
           // Create successful result
@@ -203,7 +269,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
 
     const preloadPromises = sequences.map(async (sequence) => {
       try {
-        await this.generateSequenceCardImage(sequence, options);
+        await this.generateSequenceCardImageBlob(sequence, options);
       } catch (error) {
         console.warn(
           `Failed to preload image for sequence "${sequence.name}":`,

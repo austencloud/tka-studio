@@ -62,7 +62,7 @@
 
   // Event handlers for child components
   function handleBeatModified(beatIndex: number, beatData: BeatData) {
-    constructTabEventService.handleBeatModified(beatIndex, beatData);
+    constructTabEventService().handleBeatModified(beatIndex, beatData);
   }
 
   function handleArrowSelected(arrowData: {
@@ -92,28 +92,28 @@
       is_visible: true,
       is_selected: false,
     };
-    constructTabEventService.handleArrowSelected(fullArrowData);
+    constructTabEventService().handleArrowSelected(fullArrowData);
   }
 
   function handleGraphEditorVisibilityChanged(isVisible: boolean) {
-    constructTabEventService.handleGraphEditorVisibilityChanged(isVisible);
+    constructTabEventService().handleGraphEditorVisibilityChanged(isVisible);
   }
 
   function handleExportSettingChanged(data: { setting: string; value: any }) {
     const event = new CustomEvent("settingChanged", { detail: data });
-    constructTabEventService.handleExportSettingChanged(event);
+    constructTabEventService().handleExportSettingChanged(event);
   }
 
   function handlePreviewUpdateRequested(settings: any) {
     const event = new CustomEvent("previewUpdateRequested", {
       detail: settings,
     });
-    constructTabEventService.handlePreviewUpdateRequested(event);
+    constructTabEventService().handlePreviewUpdateRequested(event);
   }
 
   function handleExportRequested(data: { type: string; config: any }) {
     const event = new CustomEvent("exportRequested", { detail: data });
-    constructTabEventService.handleExportRequested(event);
+    constructTabEventService().handleExportRequested(event);
   }
 </script>
 
