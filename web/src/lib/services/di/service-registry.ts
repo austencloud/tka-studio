@@ -61,6 +61,19 @@ import {
   ISequenceAnimationEngineInterface,
 } from "./interfaces/animator-interfaces";
 
+// TODO: Uncomment when image export interfaces are implemented
+// import {
+//   ITKAImageExportServiceInterface,
+//   ILayoutCalculationServiceInterface,
+//   IDimensionCalculationServiceInterface,
+//   IFileExportServiceInterface,
+//   IBeatRenderingServiceInterface,
+//   ITextRenderingServiceInterface,
+//   IImageCompositionServiceInterface,
+//   IGridOverlayServiceInterface,
+//   ICanvasManagementServiceInterface,
+// } from "./interfaces/image-export-interfaces";
+
 /**
  * Service interface mapping for string-based resolution
  * Maintains backward compatibility for existing code using string tokens
@@ -129,4 +142,15 @@ export const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
   ["IAnimationStateService", IAnimationStateServiceInterface],
   ["ISequenceAnimationOrchestrator", ISequenceAnimationOrchestratorInterface],
   ["ISequenceAnimationEngine", ISequenceAnimationEngineInterface],
+
+  // TODO: Uncomment when TKA Image Export services are implemented
+  // ["ITKAImageExportService", ITKAImageExportServiceInterface],
+  // ["ILayoutCalculationService", ILayoutCalculationServiceInterface],
+  // ["IDimensionCalculationService", IDimensionCalculationServiceInterface],
+  // ["IFileExportService", IFileExportServiceInterface],
+  // ["IBeatRenderingService", IBeatRenderingServiceInterface],
+  // ["ITextRenderingService", ITextRenderingServiceInterface],
+  // ["IImageCompositionService", IImageCompositionServiceInterface],
+  // ["IGridOverlayService", IGridOverlayServiceInterface],
+  // ["ICanvasManagementService", ICanvasManagementServiceInterface],
 ]);

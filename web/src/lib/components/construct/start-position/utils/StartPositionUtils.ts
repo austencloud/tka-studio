@@ -127,9 +127,7 @@ export function storeStartPositionData(data: Record<string, unknown>): void {
 /**
  * Store preloaded options for seamless transition
  */
-export function storePreloadedOptions(
-  options: unknown[]
-): void {
+export function storePreloadedOptions(options: unknown[]): void {
   try {
     localStorage.setItem("preloaded_options", JSON.stringify(options || []));
     console.log(

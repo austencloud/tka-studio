@@ -4,10 +4,10 @@
   import { getLetterBorderColor } from "$lib/utils/letter-type-utils";
   import ModernPictograph from "../../../pictograph/Pictograph.svelte";
 
-  const { 
+  const {
     pictographs,
     selectedPictograph = null,
-    onPictographSelect
+    onPictographSelect,
   } = $props<{
     pictographs: PictographData[];
     selectedPictograph?: PictographData | null;
@@ -22,7 +22,9 @@
       class:selected={selectedPictograph?.id === pictograph.id}
       role="button"
       tabindex="0"
-      style:--letter-border-color={getLetterBorderColor(pictograph.letter || null)}
+      style:--letter-border-color={getLetterBorderColor(
+        pictograph.letter || null
+      )}
       onclick={() => onPictographSelect(pictograph)}
       onkeydown={(e) => {
         if (e.key === "Enter" || e.key === " ") {

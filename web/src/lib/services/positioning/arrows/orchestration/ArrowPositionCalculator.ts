@@ -128,10 +128,14 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
         motionData
       );
 
+      // CRITICAL: Also calculate mirroring for this arrow
+      const shouldMirror = this.shouldMirrorArrow(arrowData, pictographData);
+
       const updates: Partial<ArrowData> = {
         position_x: x,
         position_y: y,
         rotation_angle: rotation,
+        is_mirrored: shouldMirror,
       };
       return this.dataProcessor.updateArrowInPictograph(
         pictographData,
@@ -165,10 +169,17 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
             updatedPictograph
           );
 
+          // CRITICAL: Also calculate mirroring for this arrow
+          const shouldMirror = this.shouldMirrorArrow(
+            arrowData,
+            updatedPictograph
+          );
+
           const updates: Partial<ArrowData> = {
             position_x: x,
             position_y: y,
             rotation_angle: rotation,
+            is_mirrored: shouldMirror,
           };
 
           updatedPictograph = this.dataProcessor.updateArrowInPictograph(
@@ -188,14 +199,60 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
 
   shouldMirrorArrow(
     arrowData: ArrowData,
-    _pictographData?: PictographData
+    pictographData?: PictographData
   ): boolean {
     /**
-     * Determine if arrow should be mirrored based on motion type.
+     * Determine if arrow should be mirrored based on motion type and prop rotation direction.
+     *
+     * Mirror conditions (matching desktop logic):
+     * - Anti motion + clockwise → Mirror = True
+     * - Anti motion + counterclockwise → Mirror = False
+     * - Pro motion + clockwise → Mirror = False
+     * - Pro motion + counterclockwise → Mirror = True
+     * - Other motions follow "pro" rules
      */
-    // For now, use the is_mirrored property from arrow data
-    // This can be enhanced with more sophisticated logic later
-    return arrowData.is_mirrored;
+
+    // Get motion data for this arrow's color
+    if (!pictographData?.motions) {
+      console.warn(
+        "🚫 shouldMirrorArrow: No motion data available, defaulting to no mirror"
+      );
+      return false;
+    }
+
+    const motion = pictographData.motions[arrowData.color];
+    if (!motion) {
+      console.warn(
+        `🚫 shouldMirrorArrow: No motion found for color ${arrowData.color}, defaulting to no mirror`
+      );
+      return false;
+    }
+
+    const motionType = motion.motion_type?.toLowerCase();
+    const propRotDir = motion.prop_rot_dir?.toLowerCase();
+
+    if (!motionType || !propRotDir) {
+      console.warn(
+        `🚫 shouldMirrorArrow: Missing motion_type (${motionType}) or prop_rot_dir (${propRotDir}), defaulting to no mirror`
+      );
+      return false;
+    }
+
+    // Mirror conditions matching desktop implementation
+    const mirrorConditions = {
+      anti: { cw: true, ccw: false },
+      other: { cw: false, ccw: true },
+    };
+
+    // Use "anti" conditions for anti motion, "other" for everything else (pro, static, dash, float)
+    const conditionKey = motionType === "anti" ? "anti" : "other";
+    const shouldMirror = mirrorConditions[conditionKey][propRotDir] ?? false;
+
+    console.log(
+      `🪞 shouldMirrorArrow: ${arrowData.color} arrow - motion: ${motionType}, prop_rot_dir: ${propRotDir} → mirror: ${shouldMirror}`
+    );
+
+    return shouldMirror;
   }
 
   applyMirrorTransform(

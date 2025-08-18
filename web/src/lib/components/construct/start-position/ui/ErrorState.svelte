@@ -1,11 +1,11 @@
 <!-- ErrorState.svelte - Error state component for StartPositionPicker -->
 <script lang="ts">
-  const { 
-    hasRefreshButton = true, 
+  const {
+    hasRefreshButton = true,
     message = "Unable to load start positions. Please try refreshing the page.",
     onRefresh = () => {
       if (typeof window !== "undefined") window.location.reload();
-    }
+    },
   } = $props<{
     hasRefreshButton?: boolean;
     message?: string;
@@ -16,9 +16,7 @@
 <div class="error-container">
   <p>{message}</p>
   {#if hasRefreshButton}
-    <button class="refresh-button" onclick={onRefresh}>
-      Refresh
-    </button>
+    <button class="refresh-button" onclick={onRefresh}> Refresh </button>
   {/if}
 </div>
 

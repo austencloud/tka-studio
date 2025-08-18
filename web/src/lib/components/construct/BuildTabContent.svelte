@@ -66,6 +66,17 @@
       console.log("🔄 Syncing component sequence state with singleton state");
       sequenceState.setCurrentSequence(singletonSequence);
     }
+
+    // IMPORTANT: Also sync when start_position changes
+    if (
+      singletonSequence &&
+      componentSequence &&
+      singletonSequence.id === componentSequence.id &&
+      singletonSequence.start_position !== componentSequence.start_position
+    ) {
+      console.log("🔄 Syncing start position change from singleton state");
+      sequenceState.setCurrentSequence(singletonSequence);
+    }
   });
 
   // Initialize component coordination using effect instead of onMount
@@ -85,35 +96,40 @@
   });
 
   // Reactive state from store
-  let shouldShowStartPositionPicker = $derived(
-    constructTabState?.shouldShowStartPositionPicker || false
-  );
+  let shouldShowStartPositionPicker = $derived.by(() => {
+    // CRITICAL FIX: Use singleton state directly for immediate reactivity
+    const singletonSequence = sequenceStateService.currentSequence;
+    const shouldShow = !singletonSequence || !singletonSequence.start_position;
+
+    console.log(
+      "🎯 [BUILD-TAB-CONTENT] shouldShowStartPositionPicker derived:",
+      {
+        singletonSequenceExists: !!singletonSequence,
+        singletonSequenceId: singletonSequence?.id,
+        hasStartPosition: !!singletonSequence?.start_position,
+        shouldShow,
+      }
+    );
+
+    return shouldShow;
+  });
   let currentSequence = $derived(sequenceState?.currentSequence || null);
   let gridMode = $derived(constructTabState?.gridMode || "radial");
   let settings = $derived(getSettings());
 
   // Add debugging for the reactive values
   $effect(() => {
-    console.log(
-      "🔍 BuildTabContent shouldShowStartPositionPicker:",
-      shouldShowStartPositionPicker
-    );
-    console.log(
-      "🔍 BuildTabContent currentSequence exists:",
-      !!currentSequence
-    );
-    console.log(
-      "🔍 BuildTabContent currentSequence.start_position exists:",
-      !!currentSequence?.start_position
-    );
-    console.log(
-      "🔍 BuildTabContent singleton sequence exists:",
-      !!sequenceStateService.currentSequence
-    );
-    console.log(
-      "🔍 BuildTabContent singleton start_position exists:",
-      !!sequenceStateService.currentSequence?.start_position
-    );
+    console.log("🔍 [BUILD-TAB-CONTENT] State check:", {
+      shouldShowStartPositionPicker,
+      currentSequenceExists: !!currentSequence,
+      currentSequenceId: currentSequence?.id,
+      currentSequenceHasStartPos: !!currentSequence?.start_position,
+      singletonSequenceExists: !!sequenceStateService.currentSequence,
+      singletonSequenceId: sequenceStateService.currentSequence?.id,
+      singletonHasStartPos:
+        !!sequenceStateService.currentSequence?.start_position,
+      constructTabStateExists: !!constructTabState,
+    });
   });
 
   // Preload all options for default start positions when component loads
@@ -252,20 +268,30 @@
 
   // Event handlers
   async function handleStartPositionSelected(startPosition: BeatData) {
-    console.log(
-      "🎯 BuildTabContent: handleStartPositionSelected called with:",
-      startPosition.pictograph_data?.id
-    );
+    console.log("🎯 [BUILD-TAB-CONTENT] handleStartPositionSelected ENTRY:", {
+      startPositionId: startPosition.pictograph_data?.id,
+      startPosition: startPosition,
+      currentShouldShow: shouldShowStartPositionPicker,
+    });
     try {
+      console.log("🎯 [BUILD-TAB-CONTENT] Calling constructTabEventService...");
       await constructTabEventService().handleStartPositionSelected(
         startPosition
       );
       console.log(
-        "✅ BuildTabContent: constructTabEventService.handleStartPositionSelected completed"
+        "✅ [BUILD-TAB-CONTENT] constructTabEventService.handleStartPositionSelected completed"
       );
+
+      // Force a check of the state after the service call
+      console.log("🎯 [BUILD-TAB-CONTENT] Post-service state check:", {
+        shouldShowStartPositionPicker,
+        singletonSequence: sequenceStateService.currentSequence?.id,
+        singletonHasStartPos:
+          !!sequenceStateService.currentSequence?.start_position,
+      });
     } catch (error) {
       console.error(
-        "❌ BuildTabContent: Error in handleStartPositionSelected:",
+        "❌ [BUILD-TAB-CONTENT] Error in handleStartPositionSelected:",
         error
       );
     }

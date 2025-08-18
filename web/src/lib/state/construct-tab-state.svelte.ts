@@ -36,33 +36,40 @@ export function createConstructTabState(sequenceState: SequenceStateType) {
 
     // Error handling
     errorMessage: null as string | null,
-
-    // Build tab conditional logic
-    shouldShowStartPositionPicker: true,
   });
 
   // ============================================================================
   // STATE MANAGEMENT FUNCTIONS
   // ============================================================================
 
-  // Method to update shouldShowStartPositionPicker - called from components
-  function updateShouldShowStartPositionPicker() {
+  // REACTIVE: Automatically update shouldShowStartPositionPicker when sequence changes
+  const shouldShowStartPositionPicker = $derived(() => {
     const sequence = sequenceState.currentSequence;
 
     // Show start position picker if:
     // 1. No sequence exists, OR
     // 2. Sequence exists but has no start position set
-    // FIXED: Check the start_position field directly instead of complex logic
     const shouldShow = !sequence || !sequence.start_position;
 
-    // Only log if the value actually changes to reduce noise
-    if (state.shouldShowStartPositionPicker !== shouldShow) {
-      console.log(
-        `🎯 Start position picker: ${shouldShow ? "show" : "hide"} (sequence exists: ${!!sequence}, has start_position: ${!!sequence?.start_position}, beats: ${sequence?.beats?.length || 0})`
-      );
-    }
+    console.log(
+      `🎯 [CONSTRUCT-TAB-STATE] Start position picker: ${shouldShow ? "SHOW" : "HIDE"}`,
+      {
+        sequenceExists: !!sequence,
+        sequenceId: sequence?.id,
+        hasStartPosition: !!sequence?.start_position,
+        startPositionId: sequence?.start_position?.pictograph_data?.id,
+        beatCount: sequence?.beats?.length || 0,
+        shouldShow,
+      }
+    );
 
-    state.shouldShowStartPositionPicker = shouldShow;
+    return shouldShow;
+  });
+
+  // Method to manually trigger update (for backward compatibility)
+  function updateShouldShowStartPositionPicker() {
+    // This is now handled automatically by the derived state above
+    // But we keep this method for any components that might call it
   }
 
   // State management functions
@@ -122,13 +129,7 @@ export function createConstructTabState(sequenceState: SequenceStateType) {
     return state.activeRightPanel === "export";
   }
 
-  // Initialize shouldShowStartPositionPicker based on current sequence
-  try {
-    updateShouldShowStartPositionPicker();
-  } catch (error) {
-    // Ignore errors during testing when mocks aren't ready
-    console.warn("Failed to initialize shouldShowStartPositionPicker:", error);
-  }
+  // shouldShowStartPositionPicker is now automatically reactive via $derived
 
   // ============================================================================
   // RETURN STATE OBJECT
@@ -155,7 +156,7 @@ export function createConstructTabState(sequenceState: SequenceStateType) {
       return state.errorMessage;
     },
     get shouldShowStartPositionPicker() {
-      return state.shouldShowStartPositionPicker;
+      return shouldShowStartPositionPicker;
     },
 
     // Actions

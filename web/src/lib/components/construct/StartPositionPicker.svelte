@@ -9,15 +9,15 @@
   import type { IStartPositionService } from "$services/interfaces/application-interfaces";
   import { onMount } from "svelte";
   import ModernPictograph from "../pictograph/Pictograph.svelte";
-  
+
   // Extracted utilities (keeping original functionality intact)
-  import { 
-    extractEndPosition, 
-    createStartPositionData, 
-    storeStartPositionData, 
-    storePreloadedOptions 
+  import {
+    extractEndPosition,
+    createStartPositionData,
+    storeStartPositionData,
+    storePreloadedOptions,
   } from "./start-position/utils/StartPositionUtils";
-  
+
   // UI Components
   import LoadingState from "./start-position/ui/LoadingState.svelte";
   import ErrorState from "./start-position/ui/ErrorState.svelte";
@@ -137,7 +137,10 @@
       );
 
       // Create start position data in the format the OptionPicker expects (like legacy)
-      const startPositionData = createStartPositionData(startPosPictograph, endPosition);
+      const startPositionData = createStartPositionData(
+        startPosPictograph,
+        endPosition
+      );
 
       // Create start position beat data for internal use
       const startPositionBeat: BeatData = {
@@ -243,8 +246,11 @@
         "🚀 StartPositionPicker: Event dispatched - coordination service should handle the rest"
       );
 
-      // Note: Don't set isTransitioning = false here - let the UI transition handle it
-      // The BuildTabContent fade transitions will manage the loading state
+      // Clear transition state after a short delay to allow UI to update
+      setTimeout(() => {
+        isTransitioning = false;
+        console.log("🚀 StartPositionPicker: Cleared isTransitioning state");
+      }, 500);
     } catch (error) {
       console.error(
         "🚨 StartPositionPicker: Error selecting start position:",
@@ -277,83 +283,44 @@
       loadStartPositions();
     }
   });
+
+  // CRITICAL FIX: Listen for sequence state changes to clear transition state
+  import { sequenceStateService } from "$lib/services/SequenceStateService.svelte";
+
+  $effect(() => {
+    const currentSequence = sequenceStateService.currentSequence;
+
+    // If a sequence with start_position exists and we're transitioning, clear the transition
+    if (currentSequence && currentSequence.start_position && isTransitioning) {
+      console.log(
+        "🚀 StartPositionPicker: Sequence with start position detected, clearing transition state"
+      );
+      isTransitioning = false;
+    }
+  });
 </script>
 
 <div class="start-pos-picker" data-testid="start-position-picker">
   {#if isLoading}
-    <div class="loading-container">
-      <div class="loading-spinner"></div>
-      <p class="loading-text">Loading Start Positions...</p>
-    </div>
+    <LoadingState />
   {:else if loadingError}
-    <div class="error-container">
-      <p>Unable to load start positions. Please try refreshing the page.</p>
-      <button
-        class="refresh-button"
-        onclick={() => {
-          if (typeof window !== "undefined") window.location.reload();
-        }}
-      >
-        Refresh
-      </button>
-    </div>
+    <ErrorState />
   {:else if startPositionPictographs.length === 0}
-    <div class="error-container">
-      <p>No valid start positions found for the current configuration.</p>
-    </div>
+    <ErrorState
+      message="No valid start positions found for the current configuration."
+      hasRefreshButton={false}
+    />
   {:else}
-    <div class="pictograph-row">
-      {#each startPositionPictographs as pictograph (pictograph.id)}
-        <div
-          class="pictograph-container"
-          class:selected={selectedStartPos?.id === pictograph.id}
-          role="button"
-          tabindex="0"
-          style:--letter-border-color={getLetterBorderColor(
-            pictograph.letter || null
-          )}
-          onclick={() => {
-            console.log(
-              "🚀 StartPositionPicker: Click handler called with pictograph:",
-              pictograph
-            );
-            console.log(
-              "🚀 StartPositionPicker: About to call handleSelect..."
-            );
-            handleSelect(pictograph);
-            console.log("🚀 StartPositionPicker: handleSelect call completed");
-          }}
-          onkeydown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              handleSelect(pictograph);
-            }
-          }}
-        >
-          <!-- Render pictograph using ModernPictograph component -->
-          <div class="pictograph-wrapper">
-            <ModernPictograph
-              pictographData={pictograph}
-              debug={false}
-              showLoadingIndicator={false}
-            />
-          </div>
-
-          <!-- Position label (from legacy) -->
-          <div class="position-label">
-            {pictograph.letter || "Start Position"}
-          </div>
-        </div>
-      {/each}
-    </div>
+    <PictographGrid
+      pictographs={startPositionPictographs}
+      selectedPictograph={selectedStartPos}
+      onPictographSelect={handleSelect}
+    />
   {/if}
 
-  <!-- Loading overlay during transition (from legacy) -->
+  <!-- Loading overlay during transition -->
   {#if isTransitioning}
-    <div class="loading-overlay">
-      <div class="loading-spinner"></div>
-      <p>Loading options...</p>
-    </div>
+    <TransitionOverlay />
   {/if}
 </div>
 
@@ -365,174 +332,8 @@
     align-items: center;
     height: 100%;
     width: 100%;
-    min-height: 300px;
-    padding: 20px 0;
+    padding: var(--spacing-lg);
+    background: transparent;
     position: relative;
-  }
-
-  .loading-container,
-  .error-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    width: 100%;
-    flex: 1;
-  }
-
-  .error-container {
-    background-color: rgba(255, 220, 220, 0.7);
-    padding: 20px;
-    border-radius: var(--border-radius);
-  }
-
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid var(--muted);
-    border-top: 4px solid var(--primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  .loading-text {
-    margin-top: 20px;
-    font-size: 1.2rem;
-    color: var(--muted-foreground);
-    animation: pulse 1.5s infinite ease-in-out;
-  }
-
-  @keyframes pulse {
-    0%,
-    100% {
-      opacity: 0.6;
-    }
-    50% {
-      opacity: 1;
-    }
-  }
-
-  .refresh-button {
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: var(--primary);
-    color: var(--primary-foreground);
-    border: none;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 1rem;
-  }
-
-  .refresh-button:hover {
-    background: var(--primary-hover, var(--primary));
-    opacity: 0.9;
-  }
-
-  .pictograph-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
-    width: 90%;
-    gap: 3%;
-    margin: auto;
-    flex: 0 0 auto;
-    padding: 2rem 0;
-  }
-
-  .pictograph-container {
-    width: 25%;
-    aspect-ratio: 1 / 1;
-    height: auto;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    border: 2px solid transparent;
-    border-radius: var(--border-radius);
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .pictograph-container:hover {
-    transform: scale(1.05);
-    border-color: var(--letter-border-color, var(--primary));
-    box-shadow: var(--shadow-lg);
-  }
-
-  .pictograph-container.selected {
-    border-color: var(--letter-border-color, var(--primary));
-    background: var(--primary) / 10;
-  }
-
-  .pictograph-wrapper {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-
-  .position-label {
-    position: absolute;
-    bottom: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: var(--font-size-sm);
-    font-weight: 500;
-    color: var(--foreground);
-    text-align: center;
-    white-space: nowrap;
-  }
-
-  .loading-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.9);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--border-radius);
-    z-index: 1000;
-  }
-
-  .loading-overlay .loading-spinner {
-    width: 32px;
-    height: 32px;
-    margin-bottom: var(--spacing-md);
-  }
-
-  .loading-overlay p {
-    color: var(--foreground);
-    font-size: 1.1rem;
-    margin: 0;
-  }
-
-  @media (max-width: 768px) {
-    .pictograph-row {
-      flex-direction: column;
-      gap: var(--spacing-lg);
-    }
-
-    .pictograph-container {
-      width: 80%;
-      max-width: 200px;
-    }
   }
 </style>

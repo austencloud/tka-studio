@@ -17,6 +17,8 @@ import { registerCoreServices } from "./di/registration/core-services";
 import { registerPositioningServices } from "./di/registration/positioning-services";
 import { registerMotionTesterServices } from "./di/registration/motion-tester-services";
 import { registerAnimatorServices } from "./di/registration/animator-services";
+// TODO: Uncomment when image export services are implemented
+// import { registerImageExportServices } from "./di/registration/image-export-services";
 
 /**
  * Create and configure the web application DI container
@@ -31,6 +33,8 @@ export async function createWebApplication(): Promise<ServiceContainer> {
     await registerAnimatorServices(container);
     await registerBrowseServices(container);
     await registerMotionTesterServices(container);
+    // TODO: Uncomment when image export services are implemented
+    // await registerImageExportServices(container);
 
     // Validate all registrations can be resolved
     await validateContainerConfiguration(container);
