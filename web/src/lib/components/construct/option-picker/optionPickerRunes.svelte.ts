@@ -11,7 +11,7 @@
 					console.log(`🎯 Runes loading options for start position: ${endPosition}`);
 
 					const optionDataService = new OptionDataService();
-					await optionDataService.initialize();
+					// Note: OptionDataService doesn't need initialization
 
 					nextOptions = await optionDataService.getNextOptionsFromEndPosition(
 						endPosition,
@@ -26,7 +26,7 @@
 
 				// Create OptionDataService instance
 				const optionDataService = new OptionDataService();
-				await optionDataService.initialize();
+				// Note: OptionDataService doesn't need initialization
 
 				nextOptions = await optionDataService.getNextOptionsFromEndPosition(
 					endPosition,
@@ -39,9 +39,9 @@
  * - Complex reactive state derivations
  */
 
-import { GridMode } from "$lib/domain/enums";
 import type { PictographData } from "$lib/domain/PictographData";
-import { OptionDataService } from "$services/implementations/OptionDataService";
+import { resolve } from "$services/bootstrap";
+import { createBeatData } from "$lib/domain/BeatData";
 import type { ReversalFilter, SortMethod } from "./config";
 import {
   determineGroupKey,
@@ -295,15 +295,20 @@ export function createOptionPickerRunes() {
             `🎯 Runes loading options for end position: ${endPosition}`
           );
 
-          // Create OptionDataService instance
-          const optionDataService = new OptionDataService();
-          await optionDataService.initialize();
+          // Get the option data service through DI
+          const optionDataService = resolve("IOptionDataService") as {
+            getNextOptions(sequence: unknown[]): Promise<PictographData[]>;
+          };
 
-          nextOptions = await optionDataService.getNextOptionsFromEndPosition(
-            endPosition,
-            GridMode.DIAMOND,
-            {} // No filters
-          );
+          // Create a minimal sequence with a beat that has the end position
+          const minimalSequence = [
+            createBeatData({
+              beat_number: 1,
+              metadata: { endPosition: endPosition },
+            }),
+          ];
+
+          nextOptions = await optionDataService.getNextOptions(minimalSequence);
         } else {
           console.warn("No end position found in sequence");
         }
@@ -321,14 +326,21 @@ export function createOptionPickerRunes() {
               `🎯 Runes loading options for start position: ${endPosition}`
             );
 
-            const optionDataService = new OptionDataService();
-            await optionDataService.initialize();
+            // Get the option data service through DI
+            const optionDataService = resolve("IOptionDataService") as {
+              getNextOptions(sequence: unknown[]): Promise<PictographData[]>;
+            };
 
-            nextOptions = await optionDataService.getNextOptionsFromEndPosition(
-              endPosition,
-              GridMode.DIAMOND,
-              {}
-            );
+            // Create a minimal sequence with a beat that has the end position
+            const minimalSequence = [
+              createBeatData({
+                beat_number: 1,
+                metadata: { endPosition: endPosition },
+              }),
+            ];
+
+            nextOptions =
+              await optionDataService.getNextOptions(minimalSequence);
           }
         }
       }

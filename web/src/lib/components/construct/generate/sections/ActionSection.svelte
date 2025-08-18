@@ -1,13 +1,20 @@
 <!--
 ActionSection.svelte - Action buttons for generation operations
-Contains Auto-Complete and Generate New buttons
+Updated to convert config format and handle real generation
 -->
 <script lang="ts">
   import type { GenerationConfig } from "../generateConfigState.svelte";
+  import type { GenerationConfig as ActionsGenerationConfig } from "../generateActionsState.svelte";
+  import {
+    GridMode,
+    DifficultyLevel,
+    PropContinuity,
+    GenerationMode,
+  } from "$lib/domain/enums";
 
   interface Props {
     onAutoCompleteClicked: () => void;
-    onGenerateClicked: (config: GenerationConfig) => void;
+    onGenerateClicked: (config: ActionsGenerationConfig) => Promise<void>;
     config: GenerationConfig;
     isGenerating: boolean;
   }
@@ -18,6 +25,81 @@ Contains Auto-Complete and Generate New buttons
     config,
     isGenerating,
   }: Props = $props();
+
+  /**
+   * Convert GenerationConfig to ActionsGenerationConfig format
+   */
+  function convertConfig(config: GenerationConfig): ActionsGenerationConfig {
+    // Convert letter types from Set<LetterType> to string[]
+    const letterTypes: string[] = [];
+    config.letterTypes.forEach((type) => {
+      switch (type) {
+        case "TYPE1":
+          letterTypes.push("Dual-Shift");
+          break;
+        case "TYPE2":
+          letterTypes.push("Shift");
+          break;
+        case "TYPE3":
+          letterTypes.push("Cross-Shift");
+          break;
+        case "TYPE4":
+          letterTypes.push("Dash");
+          break;
+        case "TYPE5":
+          letterTypes.push("Dual-Dash");
+          break;
+        case "TYPE6":
+          letterTypes.push("Static");
+          break;
+      }
+    });
+
+    // Convert difficulty level to string
+    let difficulty: "beginner" | "intermediate" | "advanced";
+    switch (config.level) {
+      case 1:
+        difficulty = "beginner";
+        break;
+      case 2:
+        difficulty = "intermediate";
+        break;
+      case 3:
+        difficulty = "advanced";
+        break;
+      default:
+        difficulty = "intermediate";
+    }
+
+    return {
+      mode: GenerationMode.FREEFORM, // Default to freeform mode
+      length: config.length,
+      gridMode:
+        config.gridMode.toLowerCase() === "diamond"
+          ? GridMode.DIAMOND
+          : GridMode.BOX,
+      propType: "fan", // Default prop type
+      difficulty: difficulty as DifficultyLevel,
+      propContinuity:
+        config.propContinuity.toLowerCase() === "continuous"
+          ? PropContinuity.CONTINUOUS
+          : PropContinuity.RANDOM,
+      turnIntensity: config.turnIntensity,
+      letterTypes,
+    };
+  }
+
+  /**
+   * Handle generate button click with proper config conversion
+   */
+  async function handleGenerateClick() {
+    const convertedConfig = convertConfig(config);
+    console.log("🔄 Converting config:", {
+      original: config,
+      converted: convertedConfig,
+    });
+    await onGenerateClicked(convertedConfig);
+  }
 </script>
 
 <div class="action-section">
@@ -32,13 +114,23 @@ Contains Auto-Complete and Generate New buttons
 
   <button
     class="action-button primary"
-    onclick={() => onGenerateClicked(config)}
+    onclick={handleGenerateClick}
     disabled={isGenerating}
     type="button"
   >
     {isGenerating ? "Generating..." : "Generate New"}
   </button>
 </div>
+
+<!-- Error display if generation fails -->
+{#if config && !isGenerating}
+  <div class="config-summary">
+    <small>
+      {config.length} beats • {config.gridMode.toLowerCase()} • Level {config.level}
+      • {config.letterTypes.size} types selected
+    </small>
+  </div>
+{/if}
 
 <style>
   .action-section {
@@ -47,6 +139,7 @@ Contains Auto-Complete and Generate New buttons
     gap: var(--element-spacing);
     padding-top: var(--element-spacing);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-direction: column;
   }
 
   .action-button {
@@ -86,6 +179,18 @@ Contains Auto-Complete and Generate New buttons
   .action-button.primary:hover:not(:disabled) {
     background: rgba(80, 140, 255, 0.9);
     border-color: rgba(80, 140, 255, 1);
+  }
+
+  .config-summary {
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .config-summary small {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 12px;
   }
 
   /* Responsive layouts */

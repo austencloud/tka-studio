@@ -1,4 +1,4 @@
-<!-- ExportPreviewCard.svelte - Export preview matching desktop app -->
+<!-- ExportPreviewCard.svelte - Real TKA Image Export Preview -->
 <script lang="ts">
   import type { SequenceData } from "$services/interfaces/domain-types";
 
@@ -16,16 +16,23 @@
       user_name: string;
       custom_note: string;
     };
+    // Real preview state from image export service
+    previewImageUrl?: string | null;
+    isGeneratingPreview?: boolean;
+    previewError?: string | null;
+    validationErrors?: string[];
   }
 
-  let { currentSequence, exportSettings }: Props = $props();
+  let {
+    currentSequence,
+    exportSettings,
+    previewImageUrl = null,
+    isGeneratingPreview = false,
+    previewError = null,
+    validationErrors = [],
+  }: Props = $props();
 
-  // Preview state
-  let isGeneratingPreview = $state(false);
-  let previewError = $state<string | null>(null);
-  let previewImageUrl = $state<string | null>(null);
-
-  // Preview info
+  // Preview info derived from current sequence and settings
   let previewInfo = $derived(() => {
     if (!currentSequence) return null;
 
@@ -34,138 +41,72 @@
     ).length;
 
     return {
-      sequenceName: currentSequence.name || "Untitled Sequence",
+      sequenceName:
+        currentSequence.name || currentSequence.word || "Untitled Sequence",
       beatCount: currentSequence.beats?.length || 0,
       format: exportSettings.export_format,
       quality: exportSettings.export_quality,
       enabledOptions,
+      hasStartPosition: !!currentSequence.start_position,
+      isEmpty: (currentSequence.beats?.length || 0) === 0,
     };
   });
 
-  // Status message
+  // Status message based on current state
   let statusMessage = $derived(() => {
     if (isGeneratingPreview) return "Generating preview...";
     if (previewError) return `Error: ${previewError}`;
-    if (
-      !currentSequence ||
-      !currentSequence.beats ||
-      currentSequence.beats.length === 0
-    ) {
+    if (validationErrors && validationErrors.length > 0) {
+      return `Validation errors: ${validationErrors.join(", ")}`;
+    }
+    if (!currentSequence) {
       return "Create a sequence to see preview";
     }
+
     const info = previewInfo();
     if (info) {
+      if (info.isEmpty && !exportSettings.include_start_position) {
+        return "Empty sequence - enable start position to preview";
+      }
+      if (info.isEmpty && exportSettings.include_start_position) {
+        return "Start position only preview";
+      }
       return `Preview: ${info.format} • ${info.quality} • ${info.enabledOptions} options enabled`;
     }
     return "Preview ready";
   });
 
-  // Generate preview when sequence or settings change
-  $effect(() => {
-    if (
-      currentSequence &&
-      currentSequence.beats &&
-      currentSequence.beats.length > 0
-    ) {
-      generatePreview();
-    } else {
-      clearPreview();
-    }
+  // Sequence details for display
+  let sequenceDetails = $derived(() => {
+    const info = previewInfo();
+    if (!info) return null;
+
+    return [
+      { label: "Sequence", value: info.sequenceName },
+      { label: "Beats", value: info.beatCount.toString() },
+      { label: "Format", value: info.format },
+      { label: "Quality", value: info.quality },
+      { label: "Start Position", value: info.hasStartPosition ? "Yes" : "No" },
+    ];
   });
 
-  async function generatePreview() {
-    if (
-      !currentSequence ||
-      !currentSequence.beats ||
-      currentSequence.beats.length === 0
-    ) {
-      clearPreview();
-      return;
-    }
-
-    try {
-      isGeneratingPreview = true;
-      previewError = null;
-
-      // Simulate preview generation (replace with actual preview service)
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      // Create a simple preview image showing sequence info
-      const canvas = createPreviewCanvas();
-      previewImageUrl = canvas.toDataURL();
-    } catch (error) {
-      console.error("Preview generation failed:", error);
-      previewError =
-        error instanceof Error ? error.message : "Preview generation failed";
-      previewImageUrl = null;
-    } finally {
-      isGeneratingPreview = false;
-    }
-  }
-
-  function createPreviewCanvas(): HTMLCanvasElement {
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d")!;
-
-    // Set canvas size
-    canvas.width = 400;
-    canvas.height = 300;
-
-    // Background
-    ctx.fillStyle = "#1a1a2e";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Border
-    ctx.strokeStyle = "#6366f1";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
-
-    // Title
-    ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 18px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("Export Preview", canvas.width / 2, 40);
-
-    const info = previewInfo();
-    if (info) {
-      // Sequence info
-      ctx.font = "14px Arial";
-      ctx.fillText(`Sequence: ${info.sequenceName}`, canvas.width / 2, 70);
-      ctx.fillText(`Beats: ${info.beatCount}`, canvas.width / 2, 95);
-
-      // Format info
-      ctx.fillStyle = "#6366f1";
-      ctx.fillText(`Format: ${info.format}`, canvas.width / 2, 130);
-      ctx.fillText(`Quality: ${info.quality}`, canvas.width / 2, 155);
-
-      // Options info
-      ctx.fillStyle = "#10b981";
-      ctx.fillText(
-        `${info.enabledOptions} export options enabled`,
-        canvas.width / 2,
-        190
-      );
-
-      // Sample pictograph representation
-      ctx.fillStyle = "#374151";
-      ctx.fillRect(150, 210, 100, 60);
-      ctx.fillStyle = "#6b7280";
-      ctx.font = "12px Arial";
-      ctx.fillText("Sample Beat", 200, 245);
-    }
-
-    return canvas;
-  }
-
-  function clearPreview() {
-    previewImageUrl = null;
-    previewError = null;
-    isGeneratingPreview = false;
-  }
-
   function handleRefreshPreview() {
-    generatePreview();
+    // Preview refresh is handled automatically by the parent component
+    // This button exists for user feedback but the actual refresh happens
+    // in ExportPanel when sequence or settings change
+    console.log("🔄 [PREVIEW-CARD] Manual refresh requested");
   }
+
+  // Helper to determine preview display state
+  let previewDisplayState = $derived(() => {
+    if (isGeneratingPreview) return "loading";
+    if (previewError) return "error";
+    if (validationErrors && validationErrors.length > 0)
+      return "validation-error";
+    if (previewImageUrl) return "image";
+    if (!currentSequence) return "no-sequence";
+    return "placeholder";
+  });
 </script>
 
 <div class="export-preview-card">
@@ -182,28 +123,56 @@
   </div>
 
   <div class="preview-content">
-    {#if isGeneratingPreview}
+    {#if previewDisplayState() === "loading"}
       <div class="preview-loading">
         <div class="loading-spinner"></div>
         <p>Generating preview...</p>
+        <span class="loading-hint">Creating image from sequence...</span>
       </div>
-    {:else if previewError}
+    {:else if previewDisplayState() === "error"}
       <div class="preview-error">
         <div class="error-icon">❌</div>
         <p>Preview generation failed</p>
         <span class="error-details">{previewError}</span>
       </div>
-    {:else if previewImageUrl}
+    {:else if previewDisplayState() === "validation-error"}
+      <div class="preview-error">
+        <div class="error-icon">⚠️</div>
+        <p>Validation errors</p>
+        <div class="validation-errors">
+          {#each validationErrors as error}
+            <span class="validation-error">{error}</span>
+          {/each}
+        </div>
+      </div>
+    {:else if previewDisplayState() === "image"}
       <div class="preview-image-container">
         <img src={previewImageUrl} alt="Export preview" class="preview-image" />
+        <div class="image-overlay">
+          <div class="image-info">
+            {#if previewInfo()}
+              {@const info = previewInfo()}
+              <span class="image-size">{info?.format}</span>
+              <span class="image-beats">{info?.beatCount} beats</span>
+            {/if}
+          </div>
+        </div>
+      </div>
+    {:else if previewDisplayState() === "no-sequence"}
+      <div class="preview-placeholder">
+        <div class="placeholder-icon">📄</div>
+        <p>No sequence selected</p>
+        <span class="placeholder-hint">
+          Create or select a sequence in the Construct tab to see preview
+        </span>
       </div>
     {:else}
       <div class="preview-placeholder">
-        <div class="placeholder-icon">📄</div>
-        <p>Create a sequence to see preview</p>
-        <span class="placeholder-hint"
-          >Preview will update automatically when settings change</span
-        >
+        <div class="placeholder-icon">📝</div>
+        <p>Ready to preview</p>
+        <span class="placeholder-hint">
+          Preview will update automatically when settings change
+        </span>
       </div>
     {/if}
   </div>
@@ -213,22 +182,18 @@
       <span class="status-text">{statusMessage}</span>
     </div>
 
-    {#if previewInfo()}
-      {@const info = previewInfo()}
-      <div class="preview-details">
-        <div class="detail-item">
-          <span class="detail-label">Sequence:</span>
-          <span class="detail-value">{info?.sequenceName}</span>
+    {#if sequenceDetails()}
+      {@const details = sequenceDetails()}
+      {#if details}
+        <div class="preview-details">
+          {#each details as detail}
+            <div class="detail-item">
+              <span class="detail-label">{detail.label}:</span>
+              <span class="detail-value">{detail.value}</span>
+            </div>
+          {/each}
         </div>
-        <div class="detail-item">
-          <span class="detail-label">Beats:</span>
-          <span class="detail-value">{info?.beatCount}</span>
-        </div>
-        <div class="detail-item">
-          <span class="detail-label">Format:</span>
-          <span class="detail-value">{info?.format}</span>
-        </div>
-      </div>
+      {/if}
     {/if}
   </div>
 </div>
@@ -296,6 +261,7 @@
     justify-content: center;
     padding: var(--spacing-lg);
     min-height: 200px;
+    position: relative;
   }
 
   .preview-loading,
@@ -307,6 +273,7 @@
     gap: var(--spacing-md);
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
+    max-width: 300px;
   }
 
   .loading-spinner {
@@ -325,10 +292,28 @@
   }
 
   .error-details,
-  .placeholder-hint {
+  .placeholder-hint,
+  .loading-hint {
     font-size: var(--font-size-xs);
     color: rgba(255, 255, 255, 0.5);
-    max-width: 200px;
+    max-width: 250px;
+    line-height: 1.4;
+  }
+
+  .validation-errors {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    max-width: 250px;
+  }
+
+  .validation-error {
+    font-size: var(--font-size-xs);
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    padding: var(--spacing-xs);
+    border-radius: 4px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
   }
 
   .preview-image-container {
@@ -337,6 +322,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
   }
 
   .preview-image {
@@ -344,6 +330,30 @@
     max-height: 100%;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: white;
+  }
+
+  .image-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 6px;
+    padding: var(--spacing-xs);
+    backdrop-filter: blur(4px);
+  }
+
+  .image-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: var(--font-size-xs);
+    color: white;
+  }
+
+  .image-size,
+  .image-beats {
+    font-weight: 500;
   }
 
   .preview-footer {
@@ -407,6 +417,18 @@
     .preview-details {
       flex-direction: column;
       gap: var(--spacing-xs);
+    }
+
+    .image-overlay {
+      position: static;
+      margin-top: var(--spacing-sm);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .image-info {
+      flex-direction: row;
+      gap: var(--spacing-sm);
+      justify-content: center;
     }
   }
 </style>

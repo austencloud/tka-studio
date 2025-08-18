@@ -81,7 +81,8 @@ from the TKA system, showing real pictographs with proper motion calculations.
           "RH_SD",
           gridMode === GridMode.DIAMOND
             ? DomainGridMode.DIAMOND
-            : DomainGridMode.BOX
+            : DomainGridMode.BOX,
+          {}
         );
 
       // Just take the first few and rename them for demo purposes
@@ -147,7 +148,8 @@ from the TKA system, showing real pictographs with proper motion calculations.
           "LH_SD",
           gridMode === GridMode.DIAMOND
             ? DomainGridMode.DIAMOND
-            : DomainGridMode.BOX
+            : DomainGridMode.BOX,
+          {}
         );
 
       if (randomOptions.length > 0) {

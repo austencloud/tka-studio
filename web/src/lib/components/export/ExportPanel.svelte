@@ -1,96 +1,214 @@
-<!-- ExportPanel.svelte - Export panel matching desktop app exactly -->
+<!-- ExportPanel.svelte - Construct Tab Export Panel with Real TKA Image Export -->
 <script lang="ts">
   import { browser } from "$app/environment";
   import { resolve } from "$services/bootstrap";
-  import { createSequenceState } from "$lib/state/sequence-state.svelte";
+  import { createImageExportState } from "$lib/state/image-export-state.svelte";
+  import type { SequenceData } from "$lib/domain";
+  import type { ITKAImageExportService } from "$services/interfaces/image-export-interfaces";
   import ExportActionsCard from "./ExportActionsCard.svelte";
   import ExportPreviewCard from "./ExportPreviewCard.svelte";
   import ExportSettingsCard from "./ExportSettingsCard.svelte";
 
   interface Props {
+    // Current sequence from construct tab
+    currentSequence?: SequenceData | null;
+    // Legacy event handlers for backward compatibility
     onsettingchanged?: (data: { setting: string; value: any }) => void;
     onpreviewupdaterequested?: (settings: any) => void;
     onexportrequested?: (data: { type: string; config: any }) => void;
   }
 
-  let { onsettingchanged, onpreviewupdaterequested, onexportrequested }: Props =
-    $props();
+  let {
+    currentSequence = null,
+    onsettingchanged,
+    onpreviewupdaterequested,
+    onexportrequested,
+  }: Props = $props();
 
-  // Create component-scoped state using factory function (browser only)
-  const sequenceService = browser ? (resolve("ISequenceService") as any) : null; // TODO: Fix typing
-  const sequenceState =
-    browser && sequenceService ? createSequenceState(sequenceService) : null;
+  // Get the real TKA image export service
+  const imageExportService = browser
+    ? (resolve("ITKAImageExportService") as ITKAImageExportService | null)
+    : null;
 
-  // Current sequence for export
-  let currentSequence = $derived(sequenceState?.getCurrentSequence() || null);
+  // Create image export state with real service
+  const exportState =
+    browser && imageExportService
+      ? createImageExportState(imageExportService)
+      : null;
 
-  // Export settings state - matching desktop app defaults
-  let exportSettings = $state({
-    // Export options
-    include_start_position: true,
-    add_beat_numbers: true,
-    add_reversal_symbols: true,
-    add_user_info: true,
-    add_word: true,
-    use_last_save_directory: true,
-
-    // Format settings
-    export_format: "PNG",
-    export_quality: "300 DPI",
-
-    // User settings
-    user_name: "Default User",
-    custom_note: "",
+  // Auto-generate preview when current sequence changes
+  $effect(() => {
+    if (exportState && currentSequence) {
+      console.log(
+        "🖼️ [EXPORT-PANEL] Current sequence changed, generating preview...",
+        {
+          sequenceId: currentSequence.id,
+          beatCount: currentSequence.beats.length,
+          word: currentSequence.word,
+        }
+      );
+      exportState.generatePreview(currentSequence);
+    } else if (exportState && !currentSequence) {
+      console.log("🖼️ [EXPORT-PANEL] No current sequence, clearing preview");
+      exportState.clearPreview();
+    }
   });
 
-  // Handle setting changes
+  // Auto-regenerate preview when export options change
+  $effect(() => {
+    if (exportState && currentSequence && exportState.exportOptions) {
+      // Debounce to avoid excessive regeneration
+      const timeoutId = setTimeout(() => {
+        console.log(
+          "🖼️ [EXPORT-PANEL] Export options changed, regenerating preview..."
+        );
+        exportState.generatePreview(currentSequence);
+      }, 300);
+
+      return () => clearTimeout(timeoutId);
+    }
+  });
+
+  // Convert TKA export options to legacy format for settings card
+  let legacyExportSettings = $derived(() => {
+    if (!exportState) {
+      return {
+        include_start_position: true,
+        add_beat_numbers: true,
+        add_reversal_symbols: true,
+        add_user_info: true,
+        add_word: true,
+        use_last_save_directory: true,
+        export_format: "PNG",
+        export_quality: "300 DPI",
+        user_name: "Default User",
+        custom_note: "",
+      };
+    }
+
+    const options = exportState.exportOptions;
+    return {
+      include_start_position: options.includeStartPosition,
+      add_beat_numbers: options.addBeatNumbers,
+      add_reversal_symbols: options.addReversalSymbols,
+      add_user_info: options.addUserInfo,
+      add_word: options.addWord,
+      use_last_save_directory: true, // Not in TKA options, legacy setting
+      export_format: options.format,
+      export_quality: "300 DPI", // Simplified for UI
+      user_name: options.userName,
+      custom_note: options.notes,
+    };
+  });
+
+  // Handle setting changes from legacy components
   function handleSettingChanged(data: { setting: string; value: any }) {
+    if (!exportState) return;
+
     const { setting, value } = data;
-    exportSettings = { ...exportSettings, [setting]: value };
+    console.log("🔧 [EXPORT-PANEL] Setting changed:", setting, "=", value);
 
-    // Emit to parent for persistence
+    // Convert legacy setting names to TKA option names
+    const settingMap: Record<string, string> = {
+      include_start_position: "includeStartPosition",
+      add_beat_numbers: "addBeatNumbers",
+      add_reversal_symbols: "addReversalSymbols",
+      add_user_info: "addUserInfo",
+      add_word: "addWord",
+      export_format: "format",
+      user_name: "userName",
+      custom_note: "notes",
+    };
+
+    const tkaSettingName = settingMap[setting] || setting;
+
+    // Update TKA export options
+    exportState.updateOptions({ [tkaSettingName]: value });
+
+    // Emit to parent for backward compatibility
     onsettingchanged?.({ setting, value });
-
-    // Trigger preview update
-    onpreviewupdaterequested?.(exportSettings);
+    onpreviewupdaterequested?.(legacyExportSettings());
   }
 
-  // Handle export current sequence
-  function handleExportCurrent() {
-    if (
-      !currentSequence ||
-      !currentSequence.beats ||
-      currentSequence.beats.length === 0
-    ) {
-      console.warn("No sequence to export");
+  // Handle export current sequence using real service
+  async function handleExportCurrent() {
+    if (!exportState || !currentSequence) {
+      console.warn("🚫 [EXPORT-PANEL] Cannot export: no service or sequence");
       return;
     }
 
+    if (!currentSequence.beats || currentSequence.beats.length === 0) {
+      console.warn("🚫 [EXPORT-PANEL] Cannot export: sequence has no beats");
+      return;
+    }
+
+    console.log("📤 [EXPORT-PANEL] Exporting current sequence...", {
+      sequenceId: currentSequence.id,
+      word: currentSequence.word,
+      beatCount: currentSequence.beats.length,
+    });
+
+    try {
+      await exportState.exportSequence(currentSequence);
+      console.log("✅ [EXPORT-PANEL] Export completed successfully");
+    } catch (error) {
+      console.error("❌ [EXPORT-PANEL] Export failed:", error);
+    }
+
+    // Legacy event emission
     const exportConfig = {
       sequence: currentSequence,
-      settings: exportSettings,
+      settings: legacyExportSettings(),
     };
-
     onexportrequested?.({ type: "current", config: exportConfig });
   }
 
-  // Handle export all sequences
+  // Handle export all sequences (legacy handler)
   function handleExportAll() {
-    const exportConfig = {
-      settings: exportSettings,
-    };
+    console.log("📤 [EXPORT-PANEL] Export all requested (legacy handler)");
 
+    const exportConfig = {
+      settings: legacyExportSettings(),
+    };
     onexportrequested?.({ type: "all", config: exportConfig });
   }
+
+  let sequenceInfo = $derived(() => {
+    if (!currentSequence) {
+      return "No sequence selected";
+    }
+
+    const beatCount = currentSequence.beats?.length || 0;
+    const word = currentSequence.word || "Untitled";
+
+    if (beatCount === 0) {
+      return `Sequence "${word}" is empty`;
+    }
+
+    return `Sequence "${word}" (${beatCount} beats)`;
+  });
 </script>
 
 <div class="export-panel">
-  <!-- Header -->
+  <!-- Header with current sequence info -->
   <div class="export-header">
     <h2 class="export-title">Export</h2>
     <p class="export-description">
-      Configure settings and export current sequence
+      {sequenceInfo}
     </p>
+    {#if !browser}
+      <p class="export-status">⚠️ Export requires JavaScript</p>
+    {:else if !exportState}
+      <p class="export-status">⚠️ Export service not available</p>
+    {:else if exportState.isExporting}
+      <p class="export-status">📤 Exporting...</p>
+    {:else if exportState.exportError}
+      <p class="export-status error">❌ {exportState.exportError}</p>
+    {:else if exportState.lastExportedFile}
+      <p class="export-status success">
+        ✅ Exported: {exportState.lastExportedFile}
+      </p>
+    {/if}
   </div>
 
   <!-- Main content: Settings and Preview side by side -->
@@ -100,6 +218,8 @@
       <!-- Actions should always be visible; place first and keep out of scroll -->
       <ExportActionsCard
         {currentSequence}
+        canExport={exportState?.canExport || false}
+        isExporting={exportState?.isExporting || false}
         onexportcurrent={handleExportCurrent}
         onexportall={handleExportAll}
       />
@@ -107,7 +227,7 @@
       <!-- Scroll only the settings, not the actions -->
       <div class="settings-scroll">
         <ExportSettingsCard
-          {exportSettings}
+          exportSettings={legacyExportSettings()}
           onsettingchanged={handleSettingChanged}
         />
       </div>
@@ -115,10 +235,18 @@
 
     <!-- Right: Preview column -->
     <div class="preview-column">
-      <ExportPreviewCard {currentSequence} {exportSettings} />
+      <ExportPreviewCard
+        {currentSequence}
+        exportSettings={legacyExportSettings()}
+        previewImageUrl={exportState?.previewImageUrl || null}
+        isGeneratingPreview={exportState?.isGeneratingPreview || false}
+        previewError={exportState?.previewError || null}
+        validationErrors={exportState?.validationErrors || []}
+      />
     </div>
   </div>
 </div>
+"
 
 <style>
   .export-panel {
@@ -143,9 +271,24 @@
   }
 
   .export-description {
-    margin: 0;
+    margin: 0 0 4px 0;
     font-size: var(--font-size-xs);
     color: rgba(255, 255, 255, 0.7);
+  }
+
+  .export-status {
+    margin: 0;
+    font-size: var(--font-size-xs);
+    font-weight: 500;
+    padding: 2px 0;
+  }
+
+  .export-status.error {
+    color: #ef4444;
+  }
+
+  .export-status.success {
+    color: #10b981;
   }
 
   .export-content {

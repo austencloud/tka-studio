@@ -37,6 +37,11 @@ export enum HandPath {
   STATIC = "static",
 }
 
+export enum MotionColor {
+  BLUE = "blue",
+  RED = "red",
+}
+
 export enum RotationDirection {
   CLOCKWISE = "cw",
   COUNTER_CLOCKWISE = "ccw",
@@ -62,7 +67,6 @@ export enum Location {
 }
 
 export enum GridPosition {
-  // Alpha positions (radial)
   ALPHA1 = "alpha1",
   ALPHA2 = "alpha2",
   ALPHA3 = "alpha3",
@@ -72,7 +76,6 @@ export enum GridPosition {
   ALPHA7 = "alpha7",
   ALPHA8 = "alpha8",
 
-  // Beta positions (box)
   BETA1 = "beta1",
   BETA2 = "beta2",
   BETA3 = "beta3",
@@ -82,7 +85,6 @@ export enum GridPosition {
   BETA7 = "beta7",
   BETA8 = "beta8",
 
-  // Gamma positions (diamond)
   GAMMA1 = "gamma1",
   GAMMA2 = "gamma2",
   GAMMA3 = "gamma3",
@@ -104,6 +106,22 @@ export enum GridPosition {
 export enum GridMode {
   DIAMOND = "diamond",
   BOX = "box",
+}
+
+export enum DifficultyLevel {
+  BEGINNER = "beginner",
+  INTERMEDIATE = "intermediate",
+  ADVANCED = "advanced",
+}
+
+export enum PropContinuity {
+  CONTINUOUS = "continuous",
+  RANDOM = "random",
+}
+
+export enum GenerationMode {
+  FREEFORM = "freeform",
+  CIRCULAR = "circular",
 }
 
 export enum ArrowType {

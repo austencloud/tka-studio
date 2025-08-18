@@ -8,6 +8,7 @@ Prop Component - Renders SVG props with proper positioning
     MotionType,
     Orientation,
     RotationDirection,
+    MotionColor,
   } from "$lib/domain/enums";
   import { DefaultPropPositioner } from "$lib/services/DefaultPropPositioner";
   import { PropRotAngleManager } from "$lib/services/PropRotAngleManager";
@@ -84,8 +85,8 @@ Prop Component - Renders SVG props with proper positioning
     // Use legacy direction calculator logic for proper beta positioning
     try {
       // Get motion data for both props - use the motionData prop passed to component
-      const redProp = allProps.find((p) => p.color === "red");
-      const blueProp = allProps.find((p) => p.color === "blue");
+      const redProp = allProps.find((p) => p.color === MotionColor.RED);
+      const blueProp = allProps.find((p) => p.color === MotionColor.BLUE);
 
       // For start positions, we need to construct motion data from prop data
       // Since start positions are static, we can use the prop location as both start and end
@@ -216,11 +217,11 @@ Prop Component - Renders SVG props with proper positioning
   };
 
   // Apply color transformation to SVG content
-  const applyColorToSvg = (svgText: string, color: "blue" | "red"): string => {
+  const applyColorToSvg = (svgText: string, color: MotionColor): string => {
     // Avoid CSS parser conflicts by using a different approach
     const colorMap = new Map([
-      ["blue", "#2E3192"],
-      ["red", "#ED1C24"],
+      [MotionColor.BLUE, "#2E3192"],
+      [MotionColor.RED, "#ED1C24"],
     ]);
 
     const targetColor = colorMap.get(color) || "#2E3192";
@@ -258,7 +259,7 @@ Prop Component - Renders SVG props with proper positioning
       // Apply color transformation to the SVG
       const coloredSvgText = applyColorToSvg(
         originalSvgText,
-        propData.color as "blue" | "red"
+        propData.color as MotionColor
       );
 
       svgData = {

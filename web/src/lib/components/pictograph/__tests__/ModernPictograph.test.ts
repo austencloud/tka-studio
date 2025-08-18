@@ -232,7 +232,7 @@ describe("ModernPictograph", () => {
       });
 
       // Should have debug-mode class
-      const container = screen.getByRole("img").closest(".modern-pictograph");
+      const container = screen.getByRole("img").closest(".pictograph");
       expect(container).toHaveClass("debug-mode");
     });
 
@@ -309,7 +309,7 @@ describe("ModernPictograph", () => {
         },
       });
 
-      const pictographContainer = container.querySelector(".modern-pictograph");
+      const pictographContainer = container.querySelector(".pictograph");
       expect(pictographContainer).toHaveClass("loading");
     });
 
@@ -328,7 +328,7 @@ describe("ModernPictograph", () => {
         },
       });
 
-      const pictographContainer = container.querySelector(".modern-pictograph");
+      const pictographContainer = container.querySelector(".pictograph");
       expect(pictographContainer).toHaveClass("clickable");
     });
 
@@ -346,7 +346,7 @@ describe("ModernPictograph", () => {
         },
       });
 
-      const pictographContainer = container.querySelector(".modern-pictograph");
+      const pictographContainer = container.querySelector(".pictograph");
       expect(pictographContainer).toHaveClass("debug-mode");
     });
   });

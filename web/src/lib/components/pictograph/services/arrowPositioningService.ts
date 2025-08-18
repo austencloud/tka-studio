@@ -8,6 +8,7 @@
 
 import type { ArrowData, MotionData, PictographData } from "$lib/domain";
 import { ArrowType } from "$lib/domain";
+import { MotionColor } from "$lib/domain/enums";
 import type { IArrowPositioningOrchestrator } from "$lib/services/positioning";
 import { getPositioningServiceFactory } from "$lib/services/positioning/PositioningServiceFactory";
 
@@ -18,7 +19,7 @@ export interface ArrowPositionResult {
 }
 
 export interface ArrowPositioningInput {
-  arrow_type: "blue" | "red";
+  arrow_type: MotionColor;
   motion_type: string;
   location: string;
   grid_mode: string;

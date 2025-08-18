@@ -8,7 +8,11 @@
  * - Rendering props as SVG elements
  */
 
-import { GridMode as DomainGridMode, Orientation } from "../../domain/enums";
+import {
+  GridMode as DomainGridMode,
+  Orientation,
+  MotionColor,
+} from "../../domain/enums";
 import { DefaultPropPositioner } from "../DefaultPropPositioner";
 import type { MotionData } from "../interfaces/domain-types";
 import type { GridMode, PropPosition } from "../interfaces/core-types";
@@ -35,7 +39,7 @@ export class PropRenderingService implements IPropRenderingService {
    */
   async renderProp(
     _propType: string,
-    _color: "blue" | "red",
+    _color: MotionColor,
     _motionData: MotionData,
     _gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<SVGElement> {
@@ -53,7 +57,7 @@ export class PropRenderingService implements IPropRenderingService {
    */
   async calculatePropPosition(
     motionData: MotionData,
-    color: "blue" | "red",
+    color: MotionColor,
     gridMode: GridMode = DomainGridMode.DIAMOND
   ): Promise<PropPosition> {
     try {
@@ -87,7 +91,7 @@ export class PropRenderingService implements IPropRenderingService {
   /**
    * Load prop SVG with color transformation
    */
-  async loadPropSVG(propType: string, color: "blue" | "red"): Promise<string> {
+  async loadPropSVG(propType: string, color: MotionColor): Promise<string> {
     const cacheKey = `${propType}_${color}`;
 
     if (this.svgCache.has(cacheKey)) {
@@ -130,7 +134,7 @@ export class PropRenderingService implements IPropRenderingService {
    */
   private applyColorTransformation(
     svgContent: string,
-    color: "blue" | "red"
+    color: MotionColor
   ): string {
     const targetColor = this.COLOR_TRANSFORMATIONS[color];
 
@@ -189,7 +193,7 @@ export class PropRenderingService implements IPropRenderingService {
     return PropRotAngleManager.calculateRotation(endLocation, orientation);
   }
 
-  private getColorOffset(color: "blue" | "red"): { x: number; y: number } {
+  private getColorOffset(color: MotionColor): { x: number; y: number } {
     // Small offset to prevent props from overlapping
     return color === "blue" ? { x: -8, y: -8 } : { x: 8, y: 8 };
   }
@@ -197,7 +201,7 @@ export class PropRenderingService implements IPropRenderingService {
   /**
    * Create fallback SVG for missing props
    */
-  private createFallbackSVG(propType: string, color: "blue" | "red"): string {
+  private createFallbackSVG(propType: string, color: MotionColor): string {
     const fillColor = this.COLOR_TRANSFORMATIONS[color];
     return `
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">

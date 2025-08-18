@@ -6,7 +6,7 @@
  */
 
 import type { BeatData, PictographData } from "$lib/domain";
-import { GridMode } from "$lib/domain";
+import { GridMode, MotionColor } from "$lib/domain";
 
 import type {
   IArrowRenderingService,
@@ -58,10 +58,10 @@ export class PictographRenderingService implements IPictographRenderingService {
             y: arrowData.position_y,
             rotation: arrowData.rotation_angle,
           };
-          const motionData = data.motions?.[color as "blue" | "red"];
+          const motionData = data.motions?.[color as MotionColor];
           await this.arrowRendering.renderArrowAtPosition(
             svg,
-            color as "blue" | "red",
+            color as MotionColor,
             position,
             motionData
           );

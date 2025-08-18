@@ -1,11 +1,11 @@
 /**
  * TKA Image Export Service
- * 
+ *
  * Main orchestrator for TKA sequence image export. This service provides the
  * top-level API for exporting sequences as images, coordinating all the
  * specialized services to create pixel-perfect images matching the desktop
  * application's output.
- * 
+ *
  * Equivalent to desktop ImageExportManager.
  */
 
@@ -15,9 +15,9 @@ import type {
   IFileExportService,
   ILayoutCalculationService,
   IDimensionCalculationService,
-  TKAImageExportOptions
-} from '../../interfaces/image-export-interfaces';
-import type { SequenceData } from '../../interfaces/domain-types';
+  TKAImageExportOptions,
+} from "../../interfaces/image-export-interfaces";
+import type { SequenceData } from "../../interfaces/domain-types";
 
 export class TKAImageExportService implements ITKAImageExportService {
   constructor(
@@ -36,32 +36,39 @@ export class TKAImageExportService implements ITKAImageExportService {
     options: Partial<TKAImageExportOptions> = {}
   ): Promise<Blob> {
     if (!sequence) {
-      throw new Error('Sequence data is required for export');
+      throw new Error("Sequence data is required for export");
     }
 
     // Merge with defaults to get complete options
     const fullOptions = this.mergeWithDefaults(options);
-    
+
     // Validate export parameters
     const validation = this.validateExport(sequence, fullOptions);
     if (!validation.valid) {
-      throw new Error(`Export validation failed: ${validation.errors.join(', ')}`);
+      throw new Error(
+        `Export validation failed: ${validation.errors.join(", ")}`
+      );
     }
 
     try {
       // Compose the image
-      const canvas = await this.compositionService.composeSequenceImage(sequence, fullOptions);
-      
+      const canvas = await this.compositionService.composeSequenceImage(
+        sequence,
+        fullOptions
+      );
+
       // Convert to blob
       const blob = await this.fileService.canvasToBlob(
         canvas,
         fullOptions.format,
         fullOptions.quality
       );
-      
+
       return blob;
     } catch (error) {
-      throw new Error(`Image export failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Image export failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 
@@ -74,20 +81,29 @@ export class TKAImageExportService implements ITKAImageExportService {
     options: Partial<TKAImageExportOptions> = {}
   ): Promise<string> {
     if (!sequence) {
-      throw new Error('Sequence data is required for preview');
+      throw new Error("Sequence data is required for preview");
     }
 
     try {
       // Create preview options with smaller scale
       const previewOptions = this.createPreviewOptions(options);
-      
+
       // Compose preview image
-      const canvas = await this.compositionService.composeSequenceImage(sequence, previewOptions);
-      
+      const canvas = await this.compositionService.composeSequenceImage(
+        sequence,
+        previewOptions
+      );
+
       // Convert to data URL for immediate display
-      return this.fileService.canvasToDataURL(canvas, previewOptions.format, previewOptions.quality);
+      return this.fileService.canvasToDataURL(
+        canvas,
+        previewOptions.format,
+        previewOptions.quality
+      );
     } catch (error) {
-      throw new Error(`Preview generation failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Preview generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 
@@ -101,20 +117,23 @@ export class TKAImageExportService implements ITKAImageExportService {
     options: Partial<TKAImageExportOptions> = {}
   ): Promise<void> {
     if (!sequence) {
-      throw new Error('Sequence data is required for export and download');
+      throw new Error("Sequence data is required for export and download");
     }
 
     try {
       // Generate the image blob
       const blob = await this.exportSequenceImage(sequence, options);
-      
+
       // Generate filename if not provided
-      const finalFilename = filename || this.generateDefaultFilename(sequence, options);
-      
+      const finalFilename =
+        filename || this.generateDefaultFilename(sequence, options);
+
       // Download the file
       await this.fileService.downloadBlob(blob, finalFilename);
     } catch (error) {
-      throw new Error(`Export and download failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      throw new Error(
+        `Export and download failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
     }
   }
 
@@ -129,45 +148,48 @@ export class TKAImageExportService implements ITKAImageExportService {
 
     // Validate sequence
     if (!sequence) {
-      errors.push('Sequence data is required');
+      errors.push("Sequence data is required");
     } else {
       if (!sequence.beats) {
-        errors.push('Sequence must have beats array');
+        errors.push("Sequence must have beats array");
       } else if (sequence.beats.length === 0 && !options.includeStartPosition) {
-        errors.push('Empty sequence requires start position to be included');
+        errors.push("Empty sequence requires start position to be included");
       } else if (sequence.beats.length > 64) {
-        errors.push('Sequence has too many beats (maximum 64)');
+        errors.push("Sequence has too many beats (maximum 64)");
       }
-      
-      if (options.addWord && (!sequence.word || sequence.word.trim().length === 0)) {
+
+      if (
+        options.addWord &&
+        (!sequence.word || sequence.word.trim().length === 0)
+      ) {
         errors.push('Sequence word is required when "add word" is enabled');
       }
     }
 
     // Validate options
     if (!options) {
-      errors.push('Export options are required');
+      errors.push("Export options are required");
     } else {
       if (options.beatScale <= 0 || options.beatScale > 5) {
-        errors.push('Beat scale must be between 0.1 and 5');
+        errors.push("Beat scale must be between 0.1 and 5");
       }
-      
+
       if (options.beatSize <= 0 || options.beatSize > 1000) {
-        errors.push('Beat size must be between 1 and 1000 pixels');
+        errors.push("Beat size must be between 1 and 1000 pixels");
       }
-      
+
       if (options.margin < 0 || options.margin > 200) {
-        errors.push('Margin must be between 0 and 200 pixels');
+        errors.push("Margin must be between 0 and 200 pixels");
       }
-      
+
       if (options.quality < 0 || options.quality > 1) {
-        errors.push('Quality must be between 0 and 1');
+        errors.push("Quality must be between 0 and 1");
       }
-      
-      if (!['PNG', 'JPEG'].includes(options.format)) {
-        errors.push('Format must be PNG or JPEG');
+
+      if (!["PNG", "JPEG"].includes(options.format)) {
+        errors.push("Format must be PNG or JPEG");
       }
-      
+
       if (options.addUserInfo && !options.userName) {
         errors.push('User name is required when "add user info" is enabled');
       }
@@ -177,13 +199,15 @@ export class TKAImageExportService implements ITKAImageExportService {
     if (sequence && options) {
       const memoryEstimate = this.estimateMemoryUsage(sequence, options);
       if (memoryEstimate.estimatedMB > 200) {
-        errors.push(`Image would require ${Math.round(memoryEstimate.estimatedMB)}MB memory (limit: 200MB)`);
+        errors.push(
+          `Image would require ${Math.round(memoryEstimate.estimatedMB)}MB memory (limit: 200MB)`
+        );
       }
     }
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -200,38 +224,42 @@ export class TKAImageExportService implements ITKAImageExportService {
       addUserInfo: true,
       addWord: true,
       combinedGrids: false,
-      
+
       // Scaling and sizing
       beatScale: 1.0,
       beatSize: 144, // Match desktop base beat size
-      margin: 50,    // Match desktop base margin
-      
+      margin: 50, // Match desktop base margin
+
       // Visibility settings
       redVisible: true,
       blueVisible: true,
-      
+
       // User information
-      userName: 'TKA User',
-      exportDate: new Date().toLocaleDateString('en-US', { 
-        year: 'numeric', 
-        month: 'numeric', 
-        day: 'numeric' 
-      }).replace(/\//g, '-'),
-      notes: 'Created using The Kinetic Alphabet',
-      
+      userName: "TKA User",
+      exportDate: new Date()
+        .toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        })
+        .replace(/\//g, "-"),
+      notes: "Created using The Kinetic Alphabet",
+
       // Output format
-      format: 'PNG',
+      format: "PNG",
       quality: 1.0, // Maximum quality
-      
+
       // Additional features
-      addDifficultyLevel: false
+      addDifficultyLevel: false,
     };
   }
 
   /**
    * Merge provided options with defaults
    */
-  private mergeWithDefaults(options: Partial<TKAImageExportOptions>): TKAImageExportOptions {
+  private mergeWithDefaults(
+    options: Partial<TKAImageExportOptions>
+  ): TKAImageExportOptions {
     const defaults = this.getDefaultOptions();
     return { ...defaults, ...options };
   }
@@ -239,16 +267,18 @@ export class TKAImageExportService implements ITKAImageExportService {
   /**
    * Create preview-optimized options
    */
-  private createPreviewOptions(options: Partial<TKAImageExportOptions>): TKAImageExportOptions {
+  private createPreviewOptions(
+    options: Partial<TKAImageExportOptions>
+  ): TKAImageExportOptions {
     const baseOptions = this.mergeWithDefaults(options);
-    
+
     return {
       ...baseOptions,
       beatScale: baseOptions.beatScale * 0.5, // Smaller scale for preview
       quality: 0.8, // Lower quality for faster generation
       // Disable expensive features for preview
       addReversalSymbols: false,
-      combinedGrids: false
+      combinedGrids: false,
     };
   }
 
@@ -259,9 +289,9 @@ export class TKAImageExportService implements ITKAImageExportService {
     sequence: SequenceData,
     options: Partial<TKAImageExportOptions>
   ): string {
-    const word = sequence.word || 'sequence';
-    const format = options.format || 'PNG';
-    
+    const word = sequence.word || "sequence";
+    const format = options.format || "PNG";
+
     return this.fileService.generateVersionedFilename(word, format);
   }
 
@@ -273,33 +303,35 @@ export class TKAImageExportService implements ITKAImageExportService {
     options: TKAImageExportOptions
   ): { estimatedMB: number; safe: boolean } {
     const beatCount = sequence.beats.length;
-    
+
     // Calculate layout and dimensions
     const [columns, rows] = this.layoutService.calculateLayout(
       beatCount,
       options.includeStartPosition
     );
-    
-    const [additionalTop, additionalBottom] = this.dimensionService.determineAdditionalHeights(
-      options,
-      beatCount,
-      options.beatScale
-    );
-    
+
+    const [additionalTop, additionalBottom] =
+      this.dimensionService.determineAdditionalHeights(
+        options,
+        beatCount,
+        options.beatScale
+      );
+
     const [width, height] = this.layoutService.calculateImageDimensions(
       [columns, rows],
       additionalTop + additionalBottom,
       options.beatScale
     );
-    
+
     // Estimate memory usage
     const mainCanvasBytes = width * height * 4; // RGBA
-    const beatCanvasBytes = beatCount * (options.beatSize * options.beatScale) ** 2 * 4;
+    const beatCanvasBytes =
+      beatCount * (options.beatSize * options.beatScale) ** 2 * 4;
     const totalBytes = mainCanvasBytes + beatCanvasBytes * 2; // 2x for processing overhead
-    
+
     const estimatedMB = totalBytes / (1024 * 1024);
     const safe = estimatedMB < 200; // 200MB conservative limit
-    
+
     return { estimatedMB, safe };
   }
 
@@ -315,20 +347,20 @@ export class TKAImageExportService implements ITKAImageExportService {
   } {
     return {
       maxSequenceLength: 64,
-      supportedFormats: ['PNG', 'JPEG'],
+      supportedFormats: ["PNG", "JPEG"],
       maxImageDimensions: { width: 16384, height: 16384 },
       maxMemoryMB: 200,
       supportedFeatures: [
-        'includeStartPosition',
-        'addBeatNumbers',
-        'addReversalSymbols',
-        'addUserInfo',
-        'addWord',
-        'addDifficultyLevel',
-        'combinedGrids',
-        'customScaling',
-        'visibilityControl'
-      ]
+        "includeStartPosition",
+        "addBeatNumbers",
+        "addReversalSymbols",
+        "addUserInfo",
+        "addWord",
+        "addDifficultyLevel",
+        "combinedGrids",
+        "customScaling",
+        "visibilityControl",
+      ],
     };
   }
 
@@ -338,28 +370,32 @@ export class TKAImageExportService implements ITKAImageExportService {
   async batchExport(
     sequences: SequenceData[],
     options: Partial<TKAImageExportOptions> = {},
-    onProgress?: (current: number, total: number) => void
-  ): Promise<Array<{ sequence: SequenceData; blob: Blob | null; error?: string }>> {
-    const results: Array<{ sequence: SequenceData; blob: Blob | null; error?: string }> = [];
-    
+    progressCallback?: (current: number, total: number) => void
+  ): Promise<void> {
+    const results: Array<{
+      sequence: SequenceData;
+      blob: Blob | null;
+      error?: string;
+    }> = [];
+
     for (let i = 0; i < sequences.length; i++) {
       const sequence = sequences[i];
-      
+
       try {
         const blob = await this.exportSequenceImage(sequence, options);
         results.push({ sequence, blob });
       } catch (error) {
-        results.push({ 
-          sequence, 
-          blob: null, 
-          error: error instanceof Error ? error.message : 'Unknown error' 
+        results.push({
+          sequence,
+          blob: null,
+          error: error instanceof Error ? error.message : "Unknown error",
         });
       }
-      
-      onProgress?.(i + 1, sequences.length);
+
+      progressCallback?.(i + 1, sequences.length);
     }
-    
-    return results;
+
+    // Method returns void - results are handled through downloads
   }
 
   /**
@@ -377,31 +413,32 @@ export class TKAImageExportService implements ITKAImageExportService {
       beatCount,
       options.includeStartPosition ?? true
     );
-    
+
     const baseOptions = this.mergeWithDefaults(options);
-    const [additionalTop, additionalBottom] = this.dimensionService.determineAdditionalHeights(
-      baseOptions,
-      beatCount,
-      1.0 // Use scale 1.0 for calculation
-    );
-    
+    const [additionalTop, additionalBottom] =
+      this.dimensionService.determineAdditionalHeights(
+        baseOptions,
+        beatCount,
+        1.0 // Use scale 1.0 for calculation
+      );
+
     const [baseWidth, baseHeight] = this.layoutService.calculateImageDimensions(
       [columns, rows],
       additionalTop + additionalBottom,
       1.0 // Use scale 1.0 for calculation
     );
-    
+
     // Calculate scale to fit target dimensions
     const scaleX = targetWidth / baseWidth;
     const scaleY = targetHeight / baseHeight;
     const scale = Math.min(scaleX, scaleY);
-    
+
     // Export with calculated scale
     const customOptions = {
       ...baseOptions,
-      beatScale: scale
+      beatScale: scale,
     };
-    
+
     return await this.exportSequenceImage(sequence, customOptions);
   }
 
@@ -418,45 +455,45 @@ export class TKAImageExportService implements ITKAImageExportService {
     let validationTest = false;
     let previewTest = false;
     let exportTest = false;
-    
+
     try {
       // Test default options
       const defaults = this.getDefaultOptions();
-      defaultOptionsTest = defaults.beatScale === 1.0 && defaults.format === 'PNG';
-      
+      defaultOptionsTest =
+        defaults.beatScale === 1.0 && defaults.format === "PNG";
+
       // Test validation
       const testSequence: SequenceData = {
-        id: 'test',
-        name: 'Test',
-        word: 'TEST',
+        id: "test",
+        name: "Test",
+        word: "TEST",
         beats: [],
         thumbnails: [],
         is_favorite: false,
         is_circular: false,
         tags: [],
-        metadata: {}
+        metadata: {},
       };
-      
+
       const validation = this.validateExport(testSequence, defaults);
       validationTest = validation.valid;
-      
+
       // Test preview generation
       const preview = await this.generatePreview(testSequence);
-      previewTest = preview.startsWith('data:image/');
-      
+      previewTest = preview.startsWith("data:image/");
+
       // Test export
       const blob = await this.exportSequenceImage(testSequence);
       exportTest = blob.size > 0;
-      
     } catch (error) {
-      console.error('Export debug failed:', error);
+      console.error("Export debug failed:", error);
     }
-    
+
     return {
       defaultOptionsTest,
       validationTest,
       previewTest,
-      exportTest
+      exportTest,
     };
   }
 }

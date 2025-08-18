@@ -10,6 +10,7 @@ import type {
   MotionType,
   Location,
   RotationDirection,
+  MotionColor,
 } from "$lib/domain/enums";
 import type { MotionTestParams } from "./MotionParameterService";
 import type {
@@ -74,8 +75,8 @@ export interface IAnimationControlService {
   getTotalBeats(): number;
 
   // Prop visibility
-  setPropVisibility(prop: "blue" | "red", visible: boolean): void;
-  getPropVisibility(prop: "blue" | "red"): boolean;
+  setPropVisibility(prop: MotionColor, visible: boolean): void;
+  getPropVisibility(prop: MotionColor): boolean;
 }
 
 /**

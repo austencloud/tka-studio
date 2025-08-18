@@ -6,6 +6,7 @@
  */
 
 import type { MotionData } from "$lib/domain";
+import { MotionColor } from "$lib/domain/enums";
 import type { ISvgConfiguration } from "./SvgConfiguration";
 
 export interface ArrowPosition {
@@ -17,7 +18,7 @@ export interface ArrowPosition {
 export interface IArrowRenderingService {
   renderArrowAtPosition(
     svg: SVGElement,
-    color: "blue" | "red",
+    color: MotionColor,
     position: ArrowPosition,
     motionData: MotionData | undefined
   ): Promise<void>;
@@ -31,7 +32,7 @@ export class ArrowRenderingService implements IArrowRenderingService {
    */
   async renderArrowAtPosition(
     svg: SVGElement,
-    color: "blue" | "red",
+    color: MotionColor,
     position: ArrowPosition,
     motionData: MotionData | undefined
   ): Promise<void> {
@@ -112,12 +113,12 @@ export class ArrowRenderingService implements IArrowRenderingService {
    */
   private applyArrowColorTransformation(
     svgElement: SVGElement,
-    color: "blue" | "red"
+    color: MotionColor
   ): void {
     // Find all path elements and apply color
     const paths = svgElement.querySelectorAll("path");
-    const fillColor = color === "blue" ? "#3b82f6" : "#ef4444";
-    const strokeColor = color === "blue" ? "#1d4ed8" : "#dc2626";
+    const fillColor = color === MotionColor.BLUE ? "#3b82f6" : "#ef4444";
+    const strokeColor = color === MotionColor.BLUE ? "#1d4ed8" : "#dc2626";
 
     paths.forEach((path) => {
       path.setAttribute("fill", fillColor);
@@ -131,7 +132,7 @@ export class ArrowRenderingService implements IArrowRenderingService {
    */
   private renderFallbackArrow(
     svg: SVGElement,
-    color: "blue" | "red",
+    color: MotionColor,
     position: ArrowPosition
   ): void {
     // Create arrow group
@@ -155,7 +156,7 @@ export class ArrowRenderingService implements IArrowRenderingService {
   /**
    * Create enhanced arrow SVG path with sophisticated styling
    */
-  private createEnhancedArrowPath(color: "blue" | "red"): SVGElement {
+  private createEnhancedArrowPath(color: MotionColor): SVGElement {
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
     // More sophisticated arrow shape

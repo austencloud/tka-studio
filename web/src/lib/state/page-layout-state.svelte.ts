@@ -127,15 +127,15 @@ export function createPageLayoutState(
       // Calculate layout if optimization is enabled
       if (enableOptimization && sequences.length > 0) {
         const cardAspectRatio = 0.7; // Default card aspect ratio
-        const pageDimensions = layoutService.calculatePageDimensions(
-          paperSize,
-          orientation
-        );
+        // const pageDimensions = layoutService.calculatePageDimensions(
+        //   paperSize,
+        //   orientation
+        // ); // For future use
         const margins = layoutService.calculateMargins(paperSize);
-        const contentArea = layoutService.calculateContentArea(
-          pageDimensions,
-          margins
-        );
+        // const contentArea = layoutService.calculateContentArea(
+        //   pageDimensions,
+        //   margins
+        // ); // For future use
 
         const calculationRequest = {
           paperSize,
@@ -246,10 +246,10 @@ export function createPageLayoutState(
 
     try {
       const cardAspectRatio = 0.7; // Default card aspect ratio
-      const pageDimensions = layoutService.calculatePageDimensions(
-        paperSize,
-        orientation
-      );
+      // const pageDimensions = layoutService.calculatePageDimensions(
+      //   paperSize,
+      //   orientation
+      // ); // For future use
       const margins = layoutService.calculateMargins(paperSize);
 
       const calculationRequest = {

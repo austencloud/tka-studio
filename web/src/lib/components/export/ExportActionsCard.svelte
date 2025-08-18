@@ -1,21 +1,33 @@
-<!-- ExportActionsCard.svelte - Export action buttons matching desktop app -->
+<!-- ExportActionsCard.svelte - Real TKA Image Export Actions -->
 <script lang="ts">
   import type { SequenceData } from "$services/interfaces/domain-types";
 
   interface Props {
     currentSequence: SequenceData | null;
+    canExport?: boolean;
+    isExporting?: boolean;
     onexportcurrent?: () => void;
     onexportall?: () => void;
   }
 
-  let { currentSequence, onexportcurrent, onexportall }: Props = $props();
+  let {
+    currentSequence,
+    canExport = false,
+    isExporting = false,
+    onexportcurrent,
+    onexportall,
+  }: Props = $props();
 
-  // Loading states
-  let isExportingCurrent = $state(false);
+  // Loading states for batch operations
   let isExportingAll = $state(false);
 
   // Derived state for button availability
   let canExportCurrent = $derived(() => {
+    // Use the provided canExport prop if available, otherwise fall back to sequence check
+    if (canExport !== undefined) {
+      return canExport && currentSequence !== null;
+    }
+
     return (
       currentSequence &&
       currentSequence.beats &&
@@ -25,19 +37,10 @@
 
   // Handle export current sequence
   async function handleExportCurrent() {
-    if (!canExportCurrent || isExportingCurrent) return;
+    if (!canExportCurrent || isExporting) return;
 
-    try {
-      isExportingCurrent = true;
-      onexportcurrent?.();
-
-      // Simulate export process (replace with actual export logic)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-    } catch (error) {
-      console.error("Export current failed:", error);
-    } finally {
-      isExportingCurrent = false;
-    }
+    console.log("📤 [ACTIONS-CARD] Triggering current sequence export");
+    onexportcurrent?.();
   }
 
   // Handle export all sequences
@@ -46,24 +49,71 @@
 
     try {
       isExportingAll = true;
+      console.log("📤 [ACTIONS-CARD] Triggering batch export");
       onexportall?.();
-
-      // Simulate export process (replace with actual export logic)
-      await new Promise((resolve) => setTimeout(resolve, 1500));
     } catch (error) {
       console.error("Export all failed:", error);
     } finally {
-      isExportingAll = false;
+      // Allow manual reset, actual state managed by parent
+      setTimeout(() => {
+        isExportingAll = false;
+      }, 1000);
     }
   }
 
   // Get current sequence info for display
   let sequenceInfo = $derived(() => {
     if (!currentSequence) return null;
+
+    const beatCount = currentSequence.beats?.length || 0;
+    const word = currentSequence.word || currentSequence.name || "Untitled";
+
     return {
-      name: currentSequence.name || "Untitled Sequence",
-      beatCount: currentSequence.beats?.length || 0,
+      name: word,
+      beatCount,
+      isEmpty: beatCount === 0,
+      hasStartPosition: !!currentSequence.start_position,
     };
+  });
+
+  // Export button text based on current state
+  let exportButtonText = $derived(() => {
+    if (isExporting) {
+      return "Exporting...";
+    }
+
+    const info = sequenceInfo();
+    if (!info) {
+      return "No Sequence to Export";
+    }
+
+    if (info.isEmpty && !info.hasStartPosition) {
+      return "Empty Sequence";
+    }
+
+    if (info.isEmpty && info.hasStartPosition) {
+      return "Export Start Position";
+    }
+
+    return "Export Current Sequence";
+  });
+
+  // Status message for user feedback
+  let sequenceStatus = $derived(() => {
+    const info = sequenceInfo();
+    if (!info) {
+      return "Create a sequence in the Construct tab";
+    }
+
+    if (info.isEmpty && !info.hasStartPosition) {
+      return "Add beats or set start position to export";
+    }
+
+    if (info.isEmpty && info.hasStartPosition) {
+      return "Start position only";
+    }
+
+    return `${info.beatCount} beats ready to export`;
   });
 </script>
 
@@ -75,30 +125,46 @@
     <div class="action-header">
       <h4 class="action-title">Current Sequence</h4>
       {#if sequenceInfo()}
-        <div class="sequence-info">
-          <span class="sequence-name">{sequenceInfo()?.name}</span>
-          <span class="beat-count">{sequenceInfo()?.beatCount} beats</span>
+        {@const info = sequenceInfo()}
+        {#if info}
+          <div class="sequence-info">
+            <span class="sequence-name">{info.name}</span>
+            <div class="sequence-metadata">
+              {#if info.beatCount > 0}
+                <span class="beat-count">{info.beatCount} beats</span>
+              {/if}
+              {#if info.hasStartPosition}
+                <span class="start-pos-indicator">📍 Start Position</span>
+              {/if}
+              {#if info.isEmpty && !info.hasStartPosition}
+                <span class="empty-indicator">⚠️ Empty</span>
+              {/if}
+            </div>
+          </div>
+        {/if}
+        <div class="sequence-status">
+          <span class="status-text">{sequenceStatus}</span>
         </div>
       {:else}
         <div class="no-sequence">
           <span class="no-sequence-text">No sequence loaded</span>
+          <span class="status-text">{sequenceStatus}</span>
         </div>
       {/if}
     </div>
 
     <button
       class="export-button primary"
-      class:disabled={!canExportCurrent || isExportingCurrent}
+      class:disabled={!canExportCurrent || isExporting}
       onclick={handleExportCurrent}
-      disabled={!canExportCurrent || isExportingCurrent}
+      disabled={!canExportCurrent || isExporting}
     >
-      {#if isExportingCurrent}
+      {#if isExporting}
         <span class="loading-spinner"></span>
-        Exporting...
-      {:else if !canExportCurrent}
-        🔤 No Sequence to Export
+        {exportButtonText}
       {:else}
-        🔤 Export Current Sequence
+        <span class="button-icon">🔤</span>
+        {exportButtonText}
       {/if}
     </button>
   </div>
@@ -106,9 +172,10 @@
   <!-- All Sequences Export -->
   <div class="action-section">
     <div class="action-header">
-      <h4 class="action-title">All Sequences</h4>
+      <h4 class="action-title">Batch Export</h4>
       <div class="all-sequences-info">
         <span class="info-text">Export all sequences in your library</span>
+        <span class="status-text">(Feature coming soon)</span>
       </div>
     </div>
 
@@ -120,25 +187,27 @@
     >
       {#if isExportingAll}
         <span class="loading-spinner"></span>
-        Exporting All...
+        Preparing Batch...
       {:else}
-        📚 Export All Sequences
+        <span class="button-icon">📚</span>
+        Export All Sequences
       {/if}
     </button>
   </div>
 
-  <!-- Export Tips (collapsed by default to keep actions visible) -->
-  <details class="tips">
-    <summary class="tips-summary" aria-label="Toggle export tips"
-      >💡 Export Tips</summary
-    >
-    <ul class="tips-list">
-      <li>PNG format is best for sharing online</li>
-      <li>PDF format preserves vector quality</li>
-      <li>300 DPI is recommended for printing</li>
-      <li>Include beat numbers for reference</li>
-    </ul>
-  </details>
+  <!-- Quick Export Tips -->
+  <div class="quick-tips">
+    <div class="tip-item">
+      <span class="tip-icon">💡</span>
+      <span class="tip-text"
+        >Preview updates automatically when sequence changes</span
+      >
+    </div>
+    <div class="tip-item">
+      <span class="tip-icon">⚡</span>
+      <span class="tip-text">PNG format provides best quality for sharing</span>
+    </div>
+  </div>
 </div>
 
 <style>
@@ -166,12 +235,16 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   .action-header {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 4px;
   }
 
   .action-title {
@@ -183,9 +256,8 @@
 
   .sequence-info {
     display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    flex-wrap: wrap;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .sequence-name {
@@ -194,29 +266,64 @@
     font-weight: 500;
   }
 
+  .sequence-metadata {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-wrap: wrap;
+  }
+
   .beat-count {
     font-size: var(--font-size-xs);
-    color: rgba(255, 255, 255, 0.6);
-    padding: 1px 4px;
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1px 6px;
     background: rgba(99, 102, 241, 0.3);
     border-radius: 8px;
     white-space: nowrap;
   }
 
+  .start-pos-indicator {
+    font-size: var(--font-size-xs);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1px 6px;
+    background: rgba(16, 185, 129, 0.3);
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .empty-indicator {
+    font-size: var(--font-size-xs);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 1px 6px;
+    background: rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .sequence-status,
   .no-sequence {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .no-sequence-text {
     font-size: var(--font-size-xs);
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+  }
+
+  .status-text {
+    font-size: var(--font-size-xs);
     color: rgba(255, 255, 255, 0.5);
     font-style: italic;
+    line-height: 1.2;
   }
 
   .all-sequences-info {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .info-text {
@@ -225,7 +332,7 @@
   }
 
   .export-button {
-    padding: var(--spacing-xs) var(--spacing-sm);
+    padding: var(--spacing-sm);
     border-radius: 6px;
     font-size: var(--font-size-xs);
     font-weight: 600;
@@ -236,7 +343,7 @@
     align-items: center;
     justify-content: center;
     gap: var(--spacing-xs);
-    min-height: 32px;
+    min-height: 36px;
   }
 
   .export-button.primary {
@@ -271,6 +378,10 @@
     box-shadow: none !important;
   }
 
+  .button-icon {
+    font-size: var(--font-size-sm);
+  }
+
   .loading-spinner {
     width: 12px;
     height: 12px;
@@ -280,43 +391,32 @@
     animation: spin 1s linear infinite;
   }
 
-  /* Collapsible tips */
-  .tips {
-    margin-top: var(--spacing-xs);
+  .quick-tips {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-xs);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
-  .tips-summary {
-    cursor: pointer;
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-xs);
+  }
+
+  .tip-icon {
     font-size: var(--font-size-xs);
-    color: rgba(255, 255, 255, 0.7);
-    padding: 2px 0;
-    list-style: none;
+    flex-shrink: 0;
+    margin-top: 1px;
   }
 
-  .tips-summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .tips-list {
-    margin: var(--spacing-xs) 0 0 0;
-    padding-left: var(--spacing-md);
-    list-style: none;
-    position: relative;
-  }
-
-  .tips-list li {
+  .tip-text {
     font-size: var(--font-size-xs);
     color: rgba(255, 255, 255, 0.6);
-    line-height: 1.2;
-    margin-bottom: 2px;
-    position: relative;
-  }
-
-  .tips-list li::before {
-    content: "•";
-    color: #6366f1;
-    position: absolute;
-    left: -var(--spacing-sm);
+    line-height: 1.3;
   }
 
   @keyframes spin {
@@ -337,6 +437,11 @@
     .export-button {
       padding: var(--spacing-sm) var(--spacing-md);
       font-size: var(--font-size-xs);
+    }
+
+    .sequence-metadata {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 </style>

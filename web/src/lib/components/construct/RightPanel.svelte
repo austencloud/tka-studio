@@ -153,6 +153,7 @@
           </div>
         {:else if activeRightPanel === "export"}
           <ExportPanel
+            currentSequence={constructTabState.currentSequence}
             onsettingchanged={handleExportSettingChanged}
             onpreviewupdaterequested={handlePreviewUpdateRequested}
             onexportrequested={handleExportRequested}

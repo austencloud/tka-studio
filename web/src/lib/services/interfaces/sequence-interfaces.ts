@@ -17,7 +17,7 @@ import type {
   GridConfig,
   PaperSize,
   Orientation,
-  PrintConfiguration,
+  // PrintConfiguration, // Currently unused
   PageLayoutConfig,
   PageCreationOptions,
   LayoutCalculationRequest,

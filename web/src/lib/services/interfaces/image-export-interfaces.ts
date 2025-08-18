@@ -1,14 +1,14 @@
 /**
  * TKA Image Export Service Interfaces
- * 
+ *
  * Service contracts for the TKA image export system, providing pixel-perfect
  * compatibility with the desktop application's image export functionality.
- * 
+ *
  * This system converts TKA sequences into high-quality images for sharing,
  * printing, and archival purposes.
  */
 
-import type { BeatData, SequenceData } from '../domain-types';
+import type { BeatData, SequenceData } from "./domain-types";
 
 // ============================================================================
 // EXPORT OPTIONS AND CONFIGURATION
@@ -22,23 +22,24 @@ export interface TKAImageExportOptions {
   addUserInfo: boolean;
   addWord: boolean;
   combinedGrids: boolean;
-  
+  addDifficultyLevel: boolean;
+
   // Scaling and sizing
   beatScale: number;
   beatSize: number;
   margin: number;
-  
+
   // Visibility settings
   redVisible: boolean;
   blueVisible: boolean;
-  
+
   // User information
   userName: string;
   exportDate: string;
   notes: string;
-  
+
   // Output format
-  format: 'PNG' | 'JPEG';
+  format: "PNG" | "JPEG";
   quality: number; // 0-1 for JPEG
 }
 
@@ -110,6 +111,15 @@ export interface ITKAImageExportService {
     sequence: SequenceData,
     filename?: string,
     options?: Partial<TKAImageExportOptions>
+  ): Promise<void>;
+
+  /**
+   * Export multiple sequences as a batch
+   */
+  batchExport(
+    sequences: SequenceData[],
+    options?: Partial<TKAImageExportOptions>,
+    progressCallback?: (current: number, total: number) => void
   ): Promise<void>;
 
   /**
@@ -304,9 +314,18 @@ export interface IFileExportService {
    */
   canvasToBlob(
     canvas: HTMLCanvasElement,
-    format: 'PNG' | 'JPEG',
+    format: "PNG" | "JPEG",
     quality?: number
   ): Promise<Blob>;
+
+  /**
+   * Convert canvas to data URL for immediate display
+   */
+  canvasToDataURL(
+    canvas: HTMLCanvasElement,
+    format: "PNG" | "JPEG",
+    quality?: number
+  ): string;
 
   /**
    * Download blob as file
@@ -414,10 +433,7 @@ export interface IReversalDetectionService {
   /**
    * Process reversals for sequence
    */
-  processReversals(
-    sequence: SequenceData,
-    beats: BeatData[]
-  ): BeatData[];
+  processReversals(sequence: SequenceData, beats: BeatData[]): BeatData[];
 
   /**
    * Detect reversal for single beat
@@ -459,7 +475,7 @@ export interface IFontManagementService {
   /**
    * Get font family for element type
    */
-  getFontFamily(elementType: 'word' | 'userInfo' | 'difficulty'): string;
+  getFontFamily(elementType: "word" | "userInfo" | "difficulty"): string;
 
   /**
    * Calculate font scaling for responsive text
@@ -551,7 +567,7 @@ export interface IExportSettingsService {
 // ============================================================================
 
 export interface ExportProgress {
-  stage: 'validation' | 'rendering' | 'composition' | 'export' | 'complete';
+  stage: "validation" | "rendering" | "composition" | "export" | "complete";
   progress: number; // 0-100
   message: string;
   currentBeat?: number;
@@ -560,7 +576,7 @@ export interface ExportProgress {
 
 export interface ExportError extends Error {
   stage: string;
-  details?: any;
+  details?: unknown;
 }
 
 export interface ExportResult {
@@ -581,7 +597,7 @@ export interface RenderQualitySettings {
   antialiasing: boolean;
   smoothScaling: boolean;
   highResolution: boolean;
-  textQuality: 'low' | 'medium' | 'high';
+  textQuality: "low" | "medium" | "high";
 }
 
 export interface LayoutConstraints {
@@ -597,15 +613,35 @@ export interface LayoutConstraints {
 // ============================================================================
 
 // Define unique symbols for DI container registration
-export const ITKAImageExportServiceInterface = Symbol.for('ITKAImageExportService');
-export const ILayoutCalculationServiceInterface = Symbol.for('ILayoutCalculationService');
-export const IBeatRenderingServiceInterface = Symbol.for('IBeatRenderingService');
-export const ITextRenderingServiceInterface = Symbol.for('ITextRenderingService');
-export const IImageCompositionServiceInterface = Symbol.for('IImageCompositionService');
-export const IFileExportServiceInterface = Symbol.for('IFileExportService');
-export const IDimensionCalculationServiceInterface = Symbol.for('IDimensionCalculationService');
-export const IGridOverlayServiceInterface = Symbol.for('IGridOverlayService');
-export const IReversalDetectionServiceInterface = Symbol.for('IReversalDetectionService');
-export const IFontManagementServiceInterface = Symbol.for('IFontManagementService');
-export const ICanvasManagementServiceInterface = Symbol.for('ICanvasManagementService');
-export const IExportSettingsServiceInterface = Symbol.for('IExportSettingsService');
+export const ITKAImageExportServiceInterface = Symbol.for(
+  "ITKAImageExportService"
+);
+export const ILayoutCalculationServiceInterface = Symbol.for(
+  "ILayoutCalculationService"
+);
+export const IBeatRenderingServiceInterface = Symbol.for(
+  "IBeatRenderingService"
+);
+export const ITextRenderingServiceInterface = Symbol.for(
+  "ITextRenderingService"
+);
+export const IImageCompositionServiceInterface = Symbol.for(
+  "IImageCompositionService"
+);
+export const IFileExportServiceInterface = Symbol.for("IFileExportService");
+export const IDimensionCalculationServiceInterface = Symbol.for(
+  "IDimensionCalculationService"
+);
+export const IGridOverlayServiceInterface = Symbol.for("IGridOverlayService");
+export const IReversalDetectionServiceInterface = Symbol.for(
+  "IReversalDetectionService"
+);
+export const IFontManagementServiceInterface = Symbol.for(
+  "IFontManagementService"
+);
+export const ICanvasManagementServiceInterface = Symbol.for(
+  "ICanvasManagementService"
+);
+export const IExportSettingsServiceInterface = Symbol.for(
+  "IExportSettingsService"
+);

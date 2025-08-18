@@ -6,6 +6,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#1a1a1a" />
 
+    <!-- CACHE MANAGEMENT - Clear stale cache on startup -->
+    <script>
+      (function () {
+        try {
+          // Always clear cache-related items on startup to prevent quota issues
+          console.log(`🧹 Aggressively clearing all cache data on startup...`);
+
+          const keysToRemove = [];
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (
+              key &&
+              (key.includes("preload") ||
+                key.includes("options") ||
+                key.includes("cache") ||
+                key.includes("all_preloaded_options") ||
+                key.includes("preloaded_options_meta"))
+            ) {
+              keysToRemove.push(key);
+            }
+          }
+
+          keysToRemove.forEach((key) => {
+            localStorage.removeItem(key);
+          });
+
+          console.log(
+            `🗑️ Cleared ${keysToRemove.length} cache entries on startup`
+          );
+
+          // Double-check total size after clearing
+          let totalSize = 0;
+          for (let key in localStorage) {
+            if (localStorage.hasOwnProperty(key)) {
+              totalSize += localStorage[key].length + key.length;
+            }
+          }
+
+          const sizeInMB = totalSize / (1024 * 1024);
+          console.log(
+            `📊 localStorage size after clearing: ${sizeInMB.toFixed(2)}MB`
+          );
+        } catch (error) {
+          console.warn("Failed to check/clear cache on startup:", error);
+        }
+      })();
+    </script>
+
     <!-- SMART CONSOLE FORWARDER - DEVELOPMENT ONLY -->
     <script>
       (function () {

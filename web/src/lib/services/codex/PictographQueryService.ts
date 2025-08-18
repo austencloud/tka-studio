@@ -155,11 +155,7 @@ export class PictographQueryService implements IPictographQueryService {
     index: number
   ): PictographData | null {
     try {
-      return this.optionDataService.convertCsvRowToPictographData(
-        row,
-        gridMode,
-        index
-      );
+      return this.optionDataService.convertCsvRowToPictographData(row, index);
     } catch (error) {
       console.error(
         "❌ Error converting CSV row to PictographData:",

@@ -11,6 +11,7 @@ import {
   MotionType,
   Orientation,
   RotationDirection,
+  MotionColor,
 } from "$lib/domain/enums";
 import type {
   GenerationOptions,
@@ -22,7 +23,7 @@ export class MotionGenerationService implements IMotionGenerationService {
    * Generate a motion for a specific color
    */
   async generateMotion(
-    color: "blue" | "red",
+    color: MotionColor,
     _options: GenerationOptions,
     _previousBeats: BeatData[]
   ): Promise<MotionData> {
@@ -129,7 +130,7 @@ export class MotionGenerationService implements IMotionGenerationService {
    * Generate motion with constraints
    */
   async generateConstrainedMotion(
-    color: "blue" | "red",
+    color: MotionColor,
     options: GenerationOptions,
     previousBeats: BeatData[],
     _constraints: {
@@ -148,7 +149,7 @@ export class MotionGenerationService implements IMotionGenerationService {
    */
   validateMotion(
     motion: MotionData,
-    _color: "blue" | "red",
+    _color: MotionColor,
     _previousBeats: BeatData[]
   ): { isValid: boolean; reasons: string[] } {
     const reasons: string[] = [];

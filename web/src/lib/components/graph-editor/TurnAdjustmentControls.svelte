@@ -1,12 +1,13 @@
 <!-- TurnAdjustmentControls.svelte - Blue and red turn amount grid controls -->
 <script lang="ts">
+  import { MotionColor } from "$lib/domain";
   import type { BeatData } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
 
   interface Props {
     currentBeatData?: BeatData | null;
     onturnamountchanged?: (data: {
-      color: "blue" | "red";
+      color: MotionColor;
       turnAmount: number;
     }) => void;
   }
@@ -17,15 +18,15 @@
   // State variables
   let blueTurnAmount = $state(0);
   let redTurnAmount = $state(0);
-  let selectedColor = $state<"blue" | "red" | null>(null);
+  let selectedColor = $state<MotionColor | null>(null);
   let selectedArrow = $state<string | null>(null);
 
   // Turn amount options
   const turnAmountOptions = [0, 0.5, 1, 1.5, 2, 2.5, 3];
 
   // Handle turn amount clicks
-  function handleTurnAmountClick(color: "blue" | "red", turnAmount: number) {
-    if (color === "blue") {
+  function handleTurnAmountClick(color: MotionColor, turnAmount: number) {
+    if (color === MotionColor.BLUE) {
       blueTurnAmount = turnAmount;
     } else {
       redTurnAmount = turnAmount;
@@ -114,9 +115,9 @@
         <button
           class="turn-btn blue-btn"
           class:active={blueTurnAmount === turnValue &&
-            selectedColor === "blue"}
+            selectedColor === MotionColor.BLUE}
           class:selected={blueTurnAmount === turnValue}
-          onclick={() => handleTurnAmountClick("blue", turnValue)}
+          onclick={() => handleTurnAmountClick(MotionColor.BLUE, turnValue)}
         >
           {formatTurnDisplay(turnValue)}
         </button>
@@ -153,9 +154,10 @@
       {#each turnAmountOptions as turnValue}
         <button
           class="turn-btn red-btn"
-          class:active={redTurnAmount === turnValue && selectedColor === "red"}
+          class:active={redTurnAmount === turnValue &&
+            selectedColor === MotionColor.RED}
           class:selected={redTurnAmount === turnValue}
-          onclick={() => handleTurnAmountClick("red", turnValue)}
+          onclick={() => handleTurnAmountClick(MotionColor.RED, turnValue)}
         >
           {formatTurnDisplay(turnValue)}
         </button>

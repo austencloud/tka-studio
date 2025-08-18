@@ -12,6 +12,7 @@ import {
   Location,
   Orientation,
   RotationDirection,
+  MotionColor,
 } from "$lib/domain/enums";
 import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";
 
@@ -170,12 +171,12 @@ export class AnimationControlService implements IAnimationControlService {
   }
 
   // Set prop visibility
-  setPropVisibility(prop: "blue" | "red", visible: boolean): void {
+  setPropVisibility(prop: MotionColor, visible: boolean): void {
     this.propVisibility[prop] = visible;
   }
 
   // Get prop visibility
-  getPropVisibility(prop: "blue" | "red"): boolean {
+  getPropVisibility(prop: MotionColor): boolean {
     return this.propVisibility[prop];
   }
 

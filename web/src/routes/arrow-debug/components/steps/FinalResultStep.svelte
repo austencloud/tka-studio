@@ -84,8 +84,7 @@
 {/if}
 
 <style>
-  .tuple-processing-info h4,
-  .calculation-breakdown h4 {
+  .tuple-processing-info h4 {
     margin: 0 0 10px 0;
     color: #a78bfa;
     font-size: 0.9rem;
@@ -156,41 +155,6 @@
 
   .result-box.final .result-value {
     color: #4ade80;
-  }
-
-  .calculation-breakdown {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    padding: 12px;
-    margin-top: 12px;
-  }
-
-  .breakdown-step {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 6px;
-    font-size: 0.85rem;
-  }
-
-  .breakdown-step.final-calc {
-    border-top: 1px solid rgba(251, 191, 36, 0.3);
-    padding-top: 6px;
-    margin-top: 8px;
-    font-weight: 600;
-  }
-
-  .breakdown-label {
-    color: #c7d2fe;
-  }
-
-  .breakdown-value {
-    color: #60a5fa;
-    font-family: "Courier New", monospace;
-  }
-
-  .breakdown-step.final-calc .breakdown-value {
-    color: #fbbf24;
   }
 
   .timing-info {

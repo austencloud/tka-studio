@@ -1,26 +1,29 @@
 /**
  * Layout Calculation Service
- * 
+ *
  * Provides pixel-perfect layout calculations matching the desktop application.
  * This service implements the exact same layout tables and algorithms used in
  * the desktop ImageExportLayoutHandler.
- * 
+ *
  * Critical: All layout tables are copied exactly from the desktop version to
  * ensure identical image dimensions and beat positioning.
  */
 
-import type { ILayoutCalculationService } from '../../interfaces/image-export-interfaces';
+import type { ILayoutCalculationService } from "../../interfaces/image-export-interfaces";
 
 export class LayoutCalculationService implements ILayoutCalculationService {
   // Base constants matching desktop application
   private static readonly BASE_BEAT_SIZE = 144; // Match desktop beat.width()
-  
+
   /**
    * Layout table for sequences WITH start position
    * Copied exactly from desktop get_layout_options_with_start()
    * Format: beatCount -> [columns, rows]
    */
-  private readonly LAYOUT_WITH_START_POSITION: Record<number, [number, number]> = {
+  private readonly LAYOUT_WITH_START_POSITION: Record<
+    number,
+    [number, number]
+  > = {
     0: [1, 1],
     1: [2, 1],
     2: [3, 1],
@@ -93,7 +96,10 @@ export class LayoutCalculationService implements ILayoutCalculationService {
    * Copied exactly from desktop get_layout_options_without_start()
    * Format: beatCount -> [columns, rows]
    */
-  private readonly LAYOUT_WITHOUT_START_POSITION: Record<number, [number, number]> = {
+  private readonly LAYOUT_WITHOUT_START_POSITION: Record<
+    number,
+    [number, number]
+  > = {
     0: [1, 1],
     1: [1, 1],
     2: [2, 1],
@@ -165,20 +171,25 @@ export class LayoutCalculationService implements ILayoutCalculationService {
    * Calculate optimal layout for given beat count
    * Matches desktop calculate_layout() method exactly
    */
-  calculateLayout(beatCount: number, includeStartPosition: boolean): [number, number] {
+  calculateLayout(
+    beatCount: number,
+    includeStartPosition: boolean
+  ): [number, number] {
     if (!this.validateLayout(beatCount, includeStartPosition)) {
-      throw new Error(`Invalid layout parameters: beatCount=${beatCount}, includeStartPosition=${includeStartPosition}`);
+      throw new Error(
+        `Invalid layout parameters: beatCount=${beatCount}, includeStartPosition=${includeStartPosition}`
+      );
     }
 
-    const layoutTable = includeStartPosition 
-      ? this.LAYOUT_WITH_START_POSITION 
+    const layoutTable = includeStartPosition
+      ? this.LAYOUT_WITH_START_POSITION
       : this.LAYOUT_WITHOUT_START_POSITION;
-    
+
     // Check if we have a predefined layout for this beat count
     if (beatCount in layoutTable) {
       return layoutTable[beatCount];
     }
-    
+
     // Fallback for beat counts beyond our tables
     return this.getFallbackLayout(beatCount, includeStartPosition);
   }
@@ -188,16 +199,16 @@ export class LayoutCalculationService implements ILayoutCalculationService {
    * Matches desktop _create_image() method
    */
   calculateImageDimensions(
-    layout: [number, number], 
-    additionalHeight: number, 
+    layout: [number, number],
+    additionalHeight: number,
     beatScale: number = 1
   ): [number, number] {
     const [columns, rows] = layout;
     const beatSize = LayoutCalculationService.BASE_BEAT_SIZE * beatScale;
-    
+
     const width = Math.floor(columns * beatSize);
     const height = Math.floor(rows * beatSize + additionalHeight);
-    
+
     return [width, height];
   }
 
@@ -219,17 +230,17 @@ export class LayoutCalculationService implements ILayoutCalculationService {
     if (beatCount < 0) {
       return false;
     }
-    
+
     // Beat count must be reasonable (prevent memory issues)
     if (beatCount > 1000) {
       return false;
     }
-    
+
     // includeStartPosition must be boolean
-    if (typeof includeStartPosition !== 'boolean') {
+    if (typeof includeStartPosition !== "boolean") {
       return false;
     }
-    
+
     return true;
   }
 
@@ -237,20 +248,23 @@ export class LayoutCalculationService implements ILayoutCalculationService {
    * Generate fallback layout for beat counts beyond predefined tables
    * Matches desktop fallback behavior
    */
-  private getFallbackLayout(beatCount: number, includeStartPosition: boolean): [number, number] {
+  private getFallbackLayout(
+    beatCount: number,
+    includeStartPosition: boolean
+  ): [number, number] {
     if (beatCount === 0) {
       return [1, 1];
     }
-    
+
     // For large beat counts, prefer roughly square layouts
     const totalCells = includeStartPosition ? beatCount + 1 : beatCount;
     const aspectRatio = 1.2; // Slightly wider than square
-    
+
     // Calculate ideal dimensions
     const idealHeight = Math.sqrt(totalCells / aspectRatio);
     const rows = Math.max(1, Math.round(idealHeight));
     const columns = Math.max(1, Math.ceil(totalCells / rows));
-    
+
     return [columns, rows];
   }
 
@@ -265,27 +279,34 @@ export class LayoutCalculationService implements ILayoutCalculationService {
    * Calculate total image area for layout
    */
   calculateImageArea(
-    beatCount: number, 
-    includeStartPosition: boolean, 
+    beatCount: number,
+    includeStartPosition: boolean,
     additionalHeight: number,
     beatScale: number = 1
   ): number {
     const layout = this.calculateLayout(beatCount, includeStartPosition);
-    const [width, height] = this.calculateImageDimensions(layout, additionalHeight, beatScale);
+    const [width, height] = this.calculateImageDimensions(
+      layout,
+      additionalHeight,
+      beatScale
+    );
     return width * height;
   }
 
   /**
    * Get layout efficiency (how well beats fill the grid)
    */
-  getLayoutEfficiency(beatCount: number, includeStartPosition: boolean): number {
+  getLayoutEfficiency(
+    beatCount: number,
+    includeStartPosition: boolean
+  ): number {
     if (beatCount === 0) return 1.0;
-    
+
     const layout = this.calculateLayout(beatCount, includeStartPosition);
     const [columns, rows] = layout;
     const totalCells = columns * rows;
     const usedCells = includeStartPosition ? beatCount + 1 : beatCount;
-    
+
     return usedCells / totalCells;
   }
 
@@ -293,25 +314,32 @@ export class LayoutCalculationService implements ILayoutCalculationService {
    * Get all available layouts within a beat count range
    */
   getLayoutsInRange(
-    minBeats: number, 
-    maxBeats: number, 
+    minBeats: number,
+    maxBeats: number,
     includeStartPosition: boolean
-  ): Array<{ beatCount: number; layout: [number, number]; efficiency: number }> {
+  ): Array<{
+    beatCount: number;
+    layout: [number, number];
+    efficiency: number;
+  }> {
     const results = [];
-    
+
     for (let beatCount = minBeats; beatCount <= maxBeats; beatCount++) {
       if (this.validateLayout(beatCount, includeStartPosition)) {
         const layout = this.calculateLayout(beatCount, includeStartPosition);
-        const efficiency = this.getLayoutEfficiency(beatCount, includeStartPosition);
-        
+        const efficiency = this.getLayoutEfficiency(
+          beatCount,
+          includeStartPosition
+        );
+
         results.push({
           beatCount,
           layout,
-          efficiency
+          efficiency,
         });
       }
     }
-    
+
     return results;
   }
 
@@ -320,32 +348,40 @@ export class LayoutCalculationService implements ILayoutCalculationService {
    */
   validateLayoutTables(): { valid: boolean; errors: string[] } {
     const errors: string[] = [];
-    
+
     // Check that all entries in WITH_START table are valid
-    for (const [beatCount, layout] of Object.entries(this.LAYOUT_WITH_START_POSITION)) {
+    for (const [beatCount, layout] of Object.entries(
+      this.LAYOUT_WITH_START_POSITION
+    )) {
       const [columns, rows] = layout;
       const totalCells = columns * rows;
       const requiredCells = parseInt(beatCount) + 1; // +1 for start position
-      
+
       if (totalCells < requiredCells) {
-        errors.push(`WITH_START[${beatCount}]: ${columns}×${rows} = ${totalCells} cells < ${requiredCells} required`);
+        errors.push(
+          `WITH_START[${beatCount}]: ${columns}×${rows} = ${totalCells} cells < ${requiredCells} required`
+        );
       }
     }
-    
+
     // Check that all entries in WITHOUT_START table are valid
-    for (const [beatCount, layout] of Object.entries(this.LAYOUT_WITHOUT_START_POSITION)) {
+    for (const [beatCount, layout] of Object.entries(
+      this.LAYOUT_WITHOUT_START_POSITION
+    )) {
       const [columns, rows] = layout;
       const totalCells = columns * rows;
       const requiredCells = parseInt(beatCount);
-      
+
       if (totalCells < requiredCells) {
-        errors.push(`WITHOUT_START[${beatCount}]: ${columns}×${rows} = ${totalCells} cells < ${requiredCells} required`);
+        errors.push(
+          `WITHOUT_START[${beatCount}]: ${columns}×${rows} = ${totalCells} cells < ${requiredCells} required`
+        );
       }
     }
-    
+
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 }

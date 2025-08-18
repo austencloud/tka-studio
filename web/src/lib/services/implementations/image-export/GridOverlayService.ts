@@ -1,19 +1,19 @@
 /**
  * Grid Overlay Service
- * 
+ *
  * Handles combined grid overlays for TKA image export. This service implements
  * the functionality equivalent to desktop CombinedGridHandler, allowing both
  * diamond and box grids to be displayed simultaneously.
- * 
+ *
  * Critical: Must match desktop overlay opacity and positioning exactly.
  */
 
-import type { IGridOverlayService } from '../../interfaces/image-export-interfaces';
+import type { IGridOverlayService } from "../../interfaces/image-export-interfaces";
 
 export class GridOverlayService implements IGridOverlayService {
   // Grid constants
   private static readonly GRID_OPACITY = 1.0; // Desktop uses 100% opacity
-  private static readonly GRID_COLOR = '#e5e7eb'; // Light gray
+  private static readonly GRID_COLOR = "#e5e7eb"; // Light gray
   private static readonly GRID_LINE_WIDTH = 1;
 
   /**
@@ -29,19 +29,24 @@ export class GridOverlayService implements IGridOverlayService {
     }
 
     // Create new canvas for combined result
-    const combinedCanvas = document.createElement('canvas');
+    const combinedCanvas = document.createElement("canvas");
     combinedCanvas.width = canvas.width;
     combinedCanvas.height = canvas.height;
-    
-    const ctx = combinedCanvas.getContext('2d')!;
-    
+
+    const ctx = combinedCanvas.getContext("2d")!;
+
     // Step 1: Draw original canvas
     ctx.drawImage(canvas, 0, 0);
-    
+
     // Step 2: Add opposite grid with full opacity (match desktop)
     const oppositeGridMode = this.getOppositeGridMode(currentGridMode);
-    this.drawGridOverlay(ctx, oppositeGridMode, canvas.width, GridOverlayService.GRID_OPACITY);
-    
+    this.drawGridOverlay(
+      ctx,
+      oppositeGridMode,
+      canvas.width,
+      GridOverlayService.GRID_OPACITY
+    );
+
     return combinedCanvas;
   }
 
@@ -61,17 +66,17 @@ export class GridOverlayService implements IGridOverlayService {
 
     // Save current context state
     ctx.save();
-    
+
     // Set grid drawing properties
     ctx.globalAlpha = opacity;
     ctx.strokeStyle = GridOverlayService.GRID_COLOR;
     ctx.lineWidth = GridOverlayService.GRID_LINE_WIDTH;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
 
-    if (gridMode === 'diamond') {
+    if (gridMode === "diamond") {
       this.drawDiamondGrid(ctx, size);
-    } else if (gridMode === 'box') {
+    } else if (gridMode === "box") {
       this.drawBoxGrid(ctx, size);
     }
 
@@ -85,10 +90,10 @@ export class GridOverlayService implements IGridOverlayService {
    */
   getOppositeGridMode(currentMode: string): string {
     switch (currentMode.toLowerCase()) {
-      case 'diamond':
-        return 'box';
-      case 'box':
-        return 'diamond';
+      case "diamond":
+        return "box";
+      case "box":
+        return "diamond";
       default:
         throw new Error(`Unknown grid mode: ${currentMode}`);
     }
@@ -98,7 +103,7 @@ export class GridOverlayService implements IGridOverlayService {
    * Validate grid modes
    */
   validateGridMode(gridMode: string): boolean {
-    const validModes = ['diamond', 'box'];
+    const validModes = ["diamond", "box"];
     return validModes.includes(gridMode.toLowerCase());
   }
 
@@ -110,18 +115,18 @@ export class GridOverlayService implements IGridOverlayService {
     const centerX = size / 2;
     const centerY = size / 2;
     const radius = size * 0.4; // Standard diamond size
-    
+
     ctx.beginPath();
-    
+
     // Draw diamond shape
     ctx.moveTo(centerX, centerY - radius); // Top point
     ctx.lineTo(centerX + radius, centerY); // Right point
     ctx.lineTo(centerX, centerY + radius); // Bottom point
     ctx.lineTo(centerX - radius, centerY); // Left point
     ctx.closePath();
-    
+
     ctx.stroke();
-    
+
     // Add grid lines inside diamond (optional enhancement)
     this.drawDiamondGridLines(ctx, centerX, centerY, radius);
   }
@@ -133,10 +138,10 @@ export class GridOverlayService implements IGridOverlayService {
   private drawBoxGrid(ctx: CanvasRenderingContext2D, size: number): void {
     const margin = size * 0.1; // Standard box margin
     const boxSize = size - 2 * margin;
-    
+
     // Draw main box
     ctx.strokeRect(margin, margin, boxSize, boxSize);
-    
+
     // Add grid lines inside box (optional enhancement)
     this.drawBoxGridLines(ctx, margin, margin, boxSize);
   }
@@ -153,20 +158,20 @@ export class GridOverlayService implements IGridOverlayService {
     // Lighter opacity for internal lines
     const originalAlpha = ctx.globalAlpha;
     ctx.globalAlpha = originalAlpha * 0.5;
-    
+
     // Draw horizontal and vertical center lines
     ctx.beginPath();
-    
+
     // Horizontal line
     ctx.moveTo(centerX - radius * 0.7, centerY);
     ctx.lineTo(centerX + radius * 0.7, centerY);
-    
+
     // Vertical line
     ctx.moveTo(centerX, centerY - radius * 0.7);
     ctx.lineTo(centerX, centerY + radius * 0.7);
-    
+
     ctx.stroke();
-    
+
     // Restore original alpha
     ctx.globalAlpha = originalAlpha;
   }
@@ -183,23 +188,23 @@ export class GridOverlayService implements IGridOverlayService {
     // Lighter opacity for internal lines
     const originalAlpha = ctx.globalAlpha;
     ctx.globalAlpha = originalAlpha * 0.5;
-    
+
     ctx.beginPath();
-    
+
     // Draw center cross
     const centerX = x + size / 2;
     const centerY = y + size / 2;
-    
+
     // Horizontal line
     ctx.moveTo(x, centerY);
     ctx.lineTo(x + size, centerY);
-    
+
     // Vertical line
     ctx.moveTo(centerX, y);
     ctx.lineTo(centerX, y + size);
-    
+
     ctx.stroke();
-    
+
     // Restore original alpha
     ctx.globalAlpha = originalAlpha;
   }
@@ -209,18 +214,18 @@ export class GridOverlayService implements IGridOverlayService {
    * Useful for caching grid patterns
    */
   createGridCanvas(gridMode: string, size: number): HTMLCanvasElement {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = size;
     canvas.height = size;
-    
-    const ctx = canvas.getContext('2d')!;
-    
+
+    const ctx = canvas.getContext("2d")!;
+
     // Fill with transparent background
     ctx.clearRect(0, 0, size, size);
-    
+
     // Draw grid
     this.drawGridOverlay(ctx, gridMode, size);
-    
+
     return canvas;
   }
 
@@ -230,24 +235,24 @@ export class GridOverlayService implements IGridOverlayService {
   applyGridWithBlendMode(
     canvas: HTMLCanvasElement,
     gridMode: string,
-    blendMode: GlobalCompositeOperation = 'source-over'
+    blendMode: GlobalCompositeOperation = "source-over"
   ): HTMLCanvasElement {
-    const result = document.createElement('canvas');
+    const result = document.createElement("canvas");
     result.width = canvas.width;
     result.height = canvas.height;
-    
-    const ctx = result.getContext('2d')!;
-    
+
+    const ctx = result.getContext("2d")!;
+
     // Draw original canvas
     ctx.drawImage(canvas, 0, 0);
-    
+
     // Set blend mode and draw grid
     ctx.globalCompositeOperation = blendMode;
     this.drawGridOverlay(ctx, gridMode, canvas.width);
-    
+
     // Reset blend mode
-    ctx.globalCompositeOperation = 'source-over';
-    
+    ctx.globalCompositeOperation = "source-over";
+
     return result;
   }
 
@@ -255,21 +260,21 @@ export class GridOverlayService implements IGridOverlayService {
    * Create combined grid overlay (both grids at once)
    */
   createCombinedGridOverlay(size: number): HTMLCanvasElement {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     canvas.width = size;
     canvas.height = size;
-    
-    const ctx = canvas.getContext('2d')!;
-    
+
+    const ctx = canvas.getContext("2d")!;
+
     // Clear background
     ctx.clearRect(0, 0, size, size);
-    
+
     // Draw both grids with reduced opacity
     ctx.globalAlpha = 0.7;
-    this.drawGridOverlay(ctx, 'diamond', size);
-    this.drawGridOverlay(ctx, 'box', size);
+    this.drawGridOverlay(ctx, "diamond", size);
+    this.drawGridOverlay(ctx, "box", size);
     ctx.globalAlpha = 1.0;
-    
+
     return canvas;
   }
 
@@ -278,7 +283,7 @@ export class GridOverlayService implements IGridOverlayService {
    */
   getRecommendedSettings(
     baseGridMode: string,
-    purpose: 'export' | 'preview' | 'print'
+    purpose: "export" | "preview" | "print"
   ): {
     overlayMode: string;
     opacity: number;
@@ -286,32 +291,32 @@ export class GridOverlayService implements IGridOverlayService {
     color: string;
   } {
     const overlayMode = this.getOppositeGridMode(baseGridMode);
-    
+
     switch (purpose) {
-      case 'export':
+      case "export":
         return {
           overlayMode,
           opacity: 1.0, // Full opacity for export (match desktop)
           lineWidth: 1,
-          color: '#e5e7eb'
+          color: "#e5e7eb",
         };
-      
-      case 'preview':
+
+      case "preview":
         return {
           overlayMode,
           opacity: 0.8, // Slightly transparent for preview
           lineWidth: 1,
-          color: '#d1d5db'
+          color: "#d1d5db",
         };
-      
-      case 'print':
+
+      case "print":
         return {
           overlayMode,
           opacity: 1.0, // Full opacity for print
           lineWidth: 2, // Thicker lines for print
-          color: '#9ca3af'
+          color: "#9ca3af",
         };
-      
+
       default:
         throw new Error(`Unknown purpose: ${purpose}`);
     }
@@ -321,28 +326,28 @@ export class GridOverlayService implements IGridOverlayService {
    * Analyze grid contrast against background
    */
   analyzeGridContrast(
-    canvas: HTMLCanvasElement,
-    gridMode: string
+    _canvas: HTMLCanvasElement,
+    _gridMode: string
   ): {
     averageContrast: number;
     minContrast: number;
     maxContrast: number;
-    recommendation: 'increase' | 'decrease' | 'optimal';
+    recommendation: "increase" | "decrease" | "optimal";
   } {
     // Create a test grid overlay
-    const testCanvas = this.createGridCanvas(gridMode, 100);
-    const ctx = testCanvas.getContext('2d')!;
-    const imageData = ctx.getImageData(0, 0, 100, 100);
-    
+    // const testCanvas = this.createGridCanvas(gridMode, 100); // For future contrast analysis
+    // const ctx = testCanvas.getContext("2d")!; // For future contrast analysis
+    // const imageData = ctx.getImageData(0, 0, 100, 100); // For future contrast analysis
+
     // Simplified contrast analysis
     // In a full implementation, this would analyze actual pixel values
     const mockContrast = 0.7; // Placeholder value
-    
+
     return {
       averageContrast: mockContrast,
       minContrast: mockContrast - 0.1,
       maxContrast: mockContrast + 0.1,
-      recommendation: mockContrast > 0.6 ? 'optimal' : 'increase'
+      recommendation: mockContrast > 0.6 ? "optimal" : "increase",
     };
   }
 
@@ -355,9 +360,9 @@ export class GridOverlayService implements IGridOverlayService {
     combinedGrid: HTMLCanvasElement;
   } {
     return {
-      diamondGrid: this.createGridCanvas('diamond', size),
-      boxGrid: this.createGridCanvas('box', size),
-      combinedGrid: this.createCombinedGridOverlay(size)
+      diamondGrid: this.createGridCanvas("diamond", size),
+      boxGrid: this.createGridCanvas("box", size),
+      combinedGrid: this.createCombinedGridOverlay(size),
     };
   }
 
@@ -369,9 +374,9 @@ export class GridOverlayService implements IGridOverlayService {
     gridModes: string[]
   ): HTMLCanvasElement[] {
     if (canvases.length !== gridModes.length) {
-      throw new Error('Canvas count must match grid mode count');
+      throw new Error("Canvas count must match grid mode count");
     }
-    
+
     return canvases.map((canvas, index) => {
       const gridMode = gridModes[index];
       return this.applyCombinedGrids(canvas, gridMode);
@@ -382,7 +387,7 @@ export class GridOverlayService implements IGridOverlayService {
    * Get supported grid modes
    */
   getSupportedGridModes(): string[] {
-    return ['diamond', 'box'];
+    return ["diamond", "box"];
   }
 
   /**
@@ -390,11 +395,13 @@ export class GridOverlayService implements IGridOverlayService {
    */
   normalizeGridMode(gridMode: string): string {
     const normalized = gridMode.toLowerCase().trim();
-    
+
     if (!this.validateGridMode(normalized)) {
-      throw new Error(`Unsupported grid mode: ${gridMode}. Supported modes: ${this.getSupportedGridModes().join(', ')}`);
+      throw new Error(
+        `Unsupported grid mode: ${gridMode}. Supported modes: ${this.getSupportedGridModes().join(", ")}`
+      );
     }
-    
+
     return normalized;
   }
 }

@@ -5,7 +5,7 @@
  * Based on modern desktop app's arrow_data.py
  */
 
-import { ArrowType } from "./enums";
+import { ArrowType, MotionType, Orientation, RotationDirection } from "./enums";
 
 export interface ArrowData {
   readonly id: string;
@@ -41,10 +41,10 @@ export function createArrowData(data: Partial<ArrowData> = {}): ArrowData {
     color: data.color ?? "blue",
     turns: data.turns ?? 0.0,
     is_mirrored: data.is_mirrored ?? false,
-    motion_type: data.motion_type ?? "static",
-    start_orientation: data.start_orientation ?? "in",
-    end_orientation: data.end_orientation ?? "in",
-    rotation_direction: data.rotation_direction ?? "clockwise",
+    motion_type: data.motion_type ?? MotionType.STATIC,
+    start_orientation: data.start_orientation ?? Orientation.IN,
+    end_orientation: data.end_orientation ?? Orientation.IN,
+    rotation_direction: data.rotation_direction ?? RotationDirection.CLOCKWISE,
     location: data.location ?? null,
     position_x: data.position_x ?? 0.0,
     position_y: data.position_y ?? 0.0,

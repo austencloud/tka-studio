@@ -14,6 +14,7 @@ import {
   IGridRenderingServiceInterface,
   IMotionGenerationServiceInterface,
   IOptionDataServiceInterface,
+  IOrientationCalculationServiceInterface,
   IOverlayRenderingServiceInterface,
   IPanelManagementServiceInterface,
   IPersistenceServiceInterface,
@@ -37,6 +38,7 @@ import { ApplicationInitializationService } from "../../implementations/Applicat
 import { ConstructTabCoordinationService } from "../../implementations/ConstructTabCoordinationService";
 import { PictographRenderingService } from "../../implementations/PictographRenderingService";
 import { SequenceService } from "../../implementations/SequenceService";
+import { SequenceGenerationService } from "../../implementations/SequenceGenerationService";
 
 import { IArrowPositioningOrchestratorInterface } from "../interfaces/positioning-interfaces";
 import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
@@ -125,7 +127,19 @@ export async function registerCoreServices(
 
   // Register generation services
   container.registerSingletonClass(IMotionGenerationServiceInterface);
-  container.registerSingletonClass(ISequenceGenerationServiceInterface);
+  container.registerSingletonClass(IOrientationCalculationServiceInterface);
+
+  // Register sequence generation service with dependencies
+  container.registerFactory(ISequenceGenerationServiceInterface, () => {
+    const optionDataService = container.resolve(IOptionDataServiceInterface);
+    const orientationCalculationService = container.resolve(
+      IOrientationCalculationServiceInterface
+    );
+    return new SequenceGenerationService(
+      optionDataService,
+      orientationCalculationService
+    );
+  });
 
   // Register page layout and export services
   container.registerSingletonClass(IPrintablePageLayoutServiceInterface);

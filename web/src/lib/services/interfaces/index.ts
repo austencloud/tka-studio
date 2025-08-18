@@ -50,7 +50,6 @@ export type {
   CacheConfig,
   ProgressInfo,
   ValidationResult,
-  ExportResult,
   MotionType,
   Location,
   Orientation,

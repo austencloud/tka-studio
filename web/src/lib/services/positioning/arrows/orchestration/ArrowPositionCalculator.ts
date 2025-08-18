@@ -246,7 +246,10 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
 
     // Use "anti" conditions for anti motion, "other" for everything else (pro, static, dash, float)
     const conditionKey = motionType === "anti" ? "anti" : "other";
-    const shouldMirror = mirrorConditions[conditionKey][propRotDir] ?? false;
+    const shouldMirror =
+      mirrorConditions[conditionKey][
+        propRotDir as keyof typeof mirrorConditions.anti
+      ] ?? false;
 
     console.log(
       `🪞 shouldMirrorArrow: ${arrowData.color} arrow - motion: ${motionType}, prop_rot_dir: ${propRotDir} → mirror: ${shouldMirror}`

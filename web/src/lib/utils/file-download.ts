@@ -28,7 +28,7 @@ export interface DownloadResult {
 export function downloadBlob(
   blob: Blob,
   filename: string,
-  options: DownloadOptions = {}
+  _options: DownloadOptions = {}
 ): Promise<DownloadResult> {
   return new Promise((resolve) => {
     try {
@@ -96,7 +96,7 @@ export async function downloadBlobBatch(
  */
 export function sanitizeFilename(filename: string): string {
   return filename
-    .replace(/[^a-z0-9\-_\.]/gi, "_") // Replace invalid characters with underscore
+    .replace(/[^a-z0-9\-_.]/gi, "_") // Replace invalid characters with underscore
     .replace(/_{2,}/g, "_") // Replace multiple underscores with single
     .replace(/^_+|_+$/g, "") // Remove leading/trailing underscores
     .substring(0, 255); // Limit length

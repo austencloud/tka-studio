@@ -27,6 +27,7 @@ import {
   RotationDirection,
   ArrowType,
   PropType,
+  MotionColor,
 } from "$lib/domain/enums";
 import type { MotionTesterState } from "../state/motion-tester-state.svelte";
 import type { IOptionDataService } from "$lib/services/interfaces/application-interfaces";
@@ -154,21 +155,21 @@ export class AnimatedPictographDataService
       // Create proper prop data with locations
       const blueProps = this.createPropDataFromMotion(
         motionState.blueMotionParams,
-        "blue"
+        MotionColor.BLUE
       );
       const redProps = this.createPropDataFromMotion(
         motionState.redMotionParams,
-        "red"
+        MotionColor.RED
       );
 
       // Create arrow data based on motion parameters
       const blueArrows = this.createArrowDataFromMotion(
         motionState.blueMotionParams,
-        "blue"
+        MotionColor.BLUE
       );
       const redArrows = this.createArrowDataFromMotion(
         motionState.redMotionParams,
-        "red"
+        MotionColor.RED
       );
 
       const pictographData = createPictographData({
@@ -255,7 +256,7 @@ export class AnimatedPictographDataService
    */
   private createPropDataFromMotion(
     motionParams: MotionParams,
-    color: "blue" | "red"
+    color: MotionColor
   ): PropData {
     return createPropData({
       prop_type: PropType.STAFF, // Default to staff for motion tester
@@ -274,13 +275,13 @@ export class AnimatedPictographDataService
    */
   private createArrowDataFromMotion(
     motionParams: MotionParams,
-    color: "blue" | "red"
+    color: MotionColor
   ): ArrowData {
     // Handle "fl" (float) turns by converting to 0.5
     const turns = motionParams.turns === "fl" ? 0.5 : motionParams.turns;
 
     return createArrowData({
-      arrow_type: color === "blue" ? ArrowType.BLUE : ArrowType.RED,
+      arrow_type: color === MotionColor.BLUE ? ArrowType.BLUE : ArrowType.RED,
       color: color,
       motion_type: motionParams.motionType,
       start_orientation: motionParams.startOri,
@@ -439,8 +440,16 @@ export class AnimatedPictographDataService
 
       // Find exact match based on motion parameters (excluding rotationDirection)
       const matchingRow = csvRows.find((row: ParsedCsvRow) => {
-        const blueMatch = this.matchesMotionParams(row, "blue", blueParams);
-        const redMatch = this.matchesMotionParams(row, "red", redParams);
+        const blueMatch = this.matchesMotionParams(
+          row,
+          MotionColor.BLUE,
+          blueParams
+        );
+        const redMatch = this.matchesMotionParams(
+          row,
+          MotionColor.RED,
+          redParams
+        );
         return blueMatch && redMatch;
       });
 
@@ -454,7 +463,6 @@ export class AnimatedPictographDataService
         const pictographData =
           this.optionDataService.convertCsvRowToPictographData(
             matchingRow,
-            gridMode,
             0 // index
           );
 
@@ -498,7 +506,7 @@ export class AnimatedPictographDataService
    */
   private matchesMotionParams(
     row: ParsedCsvRow,
-    color: "blue" | "red",
+    color: MotionColor,
     params: MotionTestParams
   ): boolean {
     const csvMotionType = row[`${color}MotionType`];

@@ -1,12 +1,13 @@
 <!-- DualOrientationPicker.svelte - Blue and red orientation controls for start positions -->
 <script lang="ts">
+  import { MotionColor } from "$lib/domain";
   import type { BeatData } from "$services/interfaces/domain-types";
   import { onMount } from "svelte";
 
   interface Props {
     currentBeatData?: BeatData | null;
     onorientationchanged?: (data: {
-      color: "blue" | "red";
+      color: MotionColor;
       orientation: string;
     }) => void;
   }
@@ -17,15 +18,15 @@
   // State variables
   let blueOrientation = $state("in");
   let redOrientation = $state("in");
-  let selectedColor = $state<"blue" | "red" | null>(null);
+  let selectedColor = $state<MotionColor | null>(null);
   let selectedArrow = $state<string | null>(null);
 
   // Orientation options
   const orientationOptions = ["in", "out", "clock", "counter"];
 
   // Handle orientation button clicks
-  function handleOrientationClick(color: "blue" | "red", orientation: string) {
-    if (color === "blue") {
+  function handleOrientationClick(color: MotionColor, orientation: string) {
+    if (color === MotionColor.BLUE) {
       blueOrientation = orientation;
     } else {
       redOrientation = orientation;
@@ -92,9 +93,9 @@
         <button
           class="orientation-btn blue-btn"
           class:active={blueOrientation === orientation &&
-            selectedColor === "blue"}
+            selectedColor === MotionColor.BLUE}
           class:selected={blueOrientation === orientation}
-          onclick={() => handleOrientationClick("blue", orientation)}
+          onclick={() => handleOrientationClick(MotionColor.BLUE, orientation)}
         >
           {orientation}
         </button>
@@ -113,9 +114,9 @@
         <button
           class="orientation-btn red-btn"
           class:active={redOrientation === orientation &&
-            selectedColor === "red"}
+            selectedColor === MotionColor.RED}
           class:selected={redOrientation === orientation}
-          onclick={() => handleOrientationClick("red", orientation)}
+          onclick={() => handleOrientationClick(MotionColor.RED, orientation)}
         >
           {orientation}
         </button>

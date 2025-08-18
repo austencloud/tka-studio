@@ -12,6 +12,7 @@ import type {
   MotionData,
 } from "./domain-types";
 import type { GridMode } from "../../domain";
+import { MotionColor } from "../../domain/enums";
 import type { GridData as RawGridData } from "../../data/gridCoordinates.js";
 import type { ArrowPosition, GridData } from "./core-types";
 
@@ -73,7 +74,7 @@ export interface IGridRenderingService {
 export interface IArrowRenderingService {
   renderArrowAtPosition(
     svg: SVGElement,
-    color: "blue" | "red",
+    color: MotionColor,
     position: ArrowPosition,
     motionData: MotionData | undefined
   ): Promise<void>;

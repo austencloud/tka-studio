@@ -19,7 +19,6 @@
   // Import fade transition for smooth switching
   import { GridMode } from "$domain/enums";
   import { getSettings } from "$lib/state/app-state.svelte";
-  import { OptionDataService } from "$services/implementations/OptionDataService";
   import { fade } from "svelte/transition";
 
   console.log("🎯 BuildTabContent script is being processed");
@@ -53,6 +52,7 @@
   // CRITICAL FIX: Also watch the singleton sequence state for updates
   // This ensures we react to changes made by the coordination service
   import { sequenceStateService } from "$lib/services/SequenceStateService.svelte";
+  import type { IOptionDataService } from "$services/interfaces/generation-interfaces";
 
   // Sync the component-scoped state with singleton state when it changes
   $effect(() => {
@@ -161,8 +161,10 @@
           gridMode === "diamond" ? GridMode.DIAMOND : GridMode.BOX
         );
 
-      // Create and initialize option data service
-      const optionDataService = new OptionDataService();
+      // Get option data service from DI container
+      const optionDataService = resolve(
+        "IOptionDataService"
+      ) as IOptionDataService;
       await optionDataService.initialize();
 
       // Preload options for all default start positions

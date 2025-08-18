@@ -113,14 +113,6 @@
     font-size: 0.9rem;
   }
 
-  .value.applied {
-    color: #22c55e;
-  }
-
-  .value.not-applied {
-    color: #94a3b8;
-  }
-
   .result-box {
     background: rgba(168, 85, 247, 0.1);
     border: 1px solid rgba(168, 85, 247, 0.3);

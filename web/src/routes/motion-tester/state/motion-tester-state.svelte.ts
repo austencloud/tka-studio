@@ -11,7 +11,8 @@ import {
 import { resolve } from "$lib/services/bootstrap";
 import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";
 import { OrientationCalculationService } from "$lib/services/implementations/OrientationCalculationService";
-import { EnumConversionService } from "../services/EnumConversionService";
+
+import { MotionType, MotionColor } from "$lib/domain/enums";
 
 export interface MotionTesterState {
   // Reactive state getters
@@ -58,9 +59,6 @@ export function createMotionTesterState(): MotionTesterState {
   const animationService = new AnimationControlService(animationEngine);
   const orientationService = new OrientationCalculationService();
 
-  // Create enum conversion service for cleaner conversions
-  const enumService = new EnumConversionService();
-
   // Reactive state
   let blueMotionParams = $state<MotionTestParams>(
     motionService.createDefaultParams()
@@ -69,7 +67,7 @@ export function createMotionTesterState(): MotionTesterState {
     ...motionService.createDefaultParams(),
     startLoc: "e",
     endLoc: "w",
-    motionType: "dash",
+    motionType: MotionType.DASH,
   });
 
   // Props are always visible - no user controls needed
@@ -105,8 +103,10 @@ export function createMotionTesterState(): MotionTesterState {
   // Auto-calculate end orientation for blue prop
   $effect(() => {
     const motionData = motionService.convertToMotionData(blueMotionParams);
-    const endOriEnum = orientationService.calculateEndOrientation(motionData);
-    const newEndOri = enumService.orientationToString(endOriEnum);
+    const newEndOri = orientationService.calculateEndOrientation(
+      motionData,
+      MotionColor.BLUE
+    );
     if (newEndOri !== blueMotionParams.endOri) {
       blueMotionParams.endOri = newEndOri;
     }
@@ -138,8 +138,10 @@ export function createMotionTesterState(): MotionTesterState {
   // Auto-calculate end orientation for red prop
   $effect(() => {
     const motionData = motionService.convertToMotionData(redMotionParams);
-    const endOriEnum = orientationService.calculateEndOrientation(motionData);
-    const newEndOri = enumService.orientationToString(endOriEnum);
+    const newEndOri = orientationService.calculateEndOrientation(
+      motionData,
+      MotionColor.RED
+    );
     if (newEndOri !== redMotionParams.endOri) {
       redMotionParams.endOri = newEndOri;
     }

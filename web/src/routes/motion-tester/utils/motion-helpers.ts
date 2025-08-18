@@ -2,6 +2,8 @@
  * Motion parameter utilities and helper functions
  */
 
+import { MotionType, Location, Orientation } from "$lib/domain/enums";
+
 // Helper function to determine motion type based on start/end locations
 export function getMotionType(startLoc: string, endLoc: string): string {
   // Normalize to lowercase for case-insensitive comparison
@@ -9,7 +11,7 @@ export function getMotionType(startLoc: string, endLoc: string): string {
   const end = endLoc.toLowerCase();
 
   if (start === end) {
-    return "static"; // Same location = static
+    return MotionType.STATIC; // Same location = static
   }
 
   // Check if it's a dash motion (opposite locations)
@@ -22,12 +24,12 @@ export function getMotionType(startLoc: string, endLoc: string): string {
 
   for (const [startOpp, endOpp] of opposites) {
     if (start === startOpp && end === endOpp) {
-      return "dash";
+      return MotionType.DASH;
     }
   }
 
   // Adjacent locations = shift motion (pro/anti/float)
-  return "pro"; // Default to pro for shift motions
+  return MotionType.PRO; // Default to pro for shift motions
 }
 
 // Helper function to get available motion types for a start/end pair
@@ -37,13 +39,13 @@ export function getAvailableMotionTypes(
 ): string[] {
   const motionType = getMotionType(startLoc, endLoc);
 
-  if (motionType === "static") {
-    return ["static"];
-  } else if (motionType === "dash") {
-    return ["dash"];
+  if (motionType === MotionType.STATIC) {
+    return [MotionType.STATIC];
+  } else if (motionType === MotionType.DASH) {
+    return [MotionType.DASH];
   } else {
     // Shift motions can be pro, anti, or float
-    return ["pro", "anti", "float"];
+    return [MotionType.PRO, MotionType.ANTI, MotionType.FLOAT];
   }
 }
 
@@ -70,7 +72,7 @@ export function getRotationDirection(
   turns: number
 ): string {
   if (startLoc === endLoc) return "NO_ROT";
-  if (motionType === "dash") return "NO_ROT";
+  if (motionType === MotionType.DASH) return "NO_ROT";
   if (turns === 0) return "NO_ROT";
 
   // Simplified rotation logic for display
@@ -84,17 +86,33 @@ export function getRotationDirection(
     ([start, end]) => start === startLoc && end === endLoc
   );
 
-  if (motionType === "pro") {
+  if (motionType === MotionType.PRO) {
     return isClockwise ? "CW" : "CCW";
   } else {
     return isClockwise ? "CCW" : "CW";
   }
 }
 
-// Constants for motion parameters
-export const LOCATIONS = ["n", "e", "s", "w"] as const;
-export const MOTION_TYPES = ["pro", "anti", "float", "dash", "static"] as const;
-export const ORIENTATIONS = ["in", "out", "clock", "counter"] as const;
+// Constants for motion parameters - using proper enums
+export const LOCATIONS = [
+  Location.NORTH,
+  Location.EAST,
+  Location.SOUTH,
+  Location.WEST,
+] as const;
+export const MOTION_TYPES = [
+  MotionType.PRO,
+  MotionType.ANTI,
+  MotionType.FLOAT,
+  MotionType.DASH,
+  MotionType.STATIC,
+] as const;
+export const ORIENTATIONS = [
+  Orientation.IN,
+  Orientation.OUT,
+  Orientation.CLOCK,
+  Orientation.COUNTER,
+] as const;
 
 // Visual position mapping for location display in the path grid
 export const LOCATION_POSITIONS: Record<string, Record<string, string>> = {
@@ -104,6 +122,6 @@ export const LOCATION_POSITIONS: Record<string, Record<string, string>> = {
   w: { top: "50%", left: "15%", transform: "translateY(-50%)" },
 };
 
-export type Location = (typeof LOCATIONS)[number];
-export type MotionType = (typeof MOTION_TYPES)[number];
-export type Orientation = (typeof ORIENTATIONS)[number];
+export type LocationType = (typeof LOCATIONS)[number];
+export type MotionTypeType = (typeof MOTION_TYPES)[number];
+export type OrientationType = (typeof ORIENTATIONS)[number];

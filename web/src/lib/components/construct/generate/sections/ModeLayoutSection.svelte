@@ -7,6 +7,7 @@ Contains Grid Mode, Generation Mode, and Prop Continuity selectors
   import GenerationModeToggle from "../../../tabs/generate/selectors/GenerationModeToggle.svelte";
   import PropContinuityToggle from "../../../tabs/generate/selectors/PropContinuityToggle.svelte";
   import type { GenerationConfig } from "../generateConfigState.svelte";
+  import { GenerationMode } from "$lib/domain";
 
   interface Props {
     config: GenerationConfig;
@@ -22,7 +23,11 @@ Contains Grid Mode, Generation Mode, and Prop Continuity selectors
       <GridModeSelector initialMode={config.gridMode} />
     </div>
     <div class="setting-item">
-      <GenerationModeToggle initialMode={config.mode} />
+      <GenerationModeToggle
+        initialMode={config.mode === "FREEFORM"
+          ? GenerationMode.FREEFORM
+          : GenerationMode.CIRCULAR}
+      />
     </div>
     <div class="setting-item">
       <PropContinuityToggle initialValue={config.propContinuity} />

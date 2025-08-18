@@ -8,6 +8,7 @@
 import type { MotionData, PictographData } from "./domain-types";
 import type { GridMode } from "./core-types";
 import type { MotionType } from "./domain-types";
+import { MotionColor } from "../../domain/enums";
 
 // Import orchestrator interface from positioning services
 export type { IArrowPositioningOrchestrator } from "../positioning/core-services";
@@ -70,18 +71,18 @@ export interface IArrowPlacementKeyService {
 export interface IPropRenderingService {
   renderProp(
     propType: string,
-    color: "blue" | "red",
+    color: MotionColor,
     motionData: MotionData,
     gridMode: GridMode
   ): Promise<SVGElement>;
 
   calculatePropPosition(
     motionData: MotionData,
-    color: "blue" | "red",
+    color: MotionColor,
     gridMode: GridMode
   ): Promise<{ x: number; y: number; rotation: number }>;
 
-  loadPropSVG(propType: string, color: "blue" | "red"): Promise<string>;
+  loadPropSVG(propType: string, color: MotionColor): Promise<string>;
 
   getSupportedPropTypes(): string[];
 }

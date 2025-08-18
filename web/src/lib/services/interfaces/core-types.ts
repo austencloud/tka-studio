@@ -5,7 +5,13 @@
  * This file contains shared data structures, coordinates, and utility types.
  */
 
-import type { MotionType, Location, Orientation } from "../../domain/enums";
+import type {
+  MotionType,
+  Location,
+  Orientation,
+  DifficultyLevel,
+  MotionColor,
+} from "../../domain/enums";
 import { GridMode as DomainGridMode } from "../../domain";
 import type { PictographData } from "../../domain";
 
@@ -40,7 +46,7 @@ export interface ArrowPosition {
 
 export interface LegacyArrowData {
   id: string;
-  color: "blue" | "red";
+  color: MotionColor;
   motionType: MotionType;
   location: Location;
   startOrientation: Orientation;
@@ -67,7 +73,7 @@ export interface ArrowPlacementConfig {
 export interface PropData {
   id: string;
   propType: string;
-  color: "blue" | "red";
+  color: MotionColor;
   location: Location;
   position: Coordinates;
   rotation: number;
@@ -86,7 +92,13 @@ export interface PropPosition {
 // Use centralized enum types - no duplicates!
 export type HandRotDir = "cw_shift" | "ccw_shift";
 export type GridMode = DomainGridMode;
-export type DifficultyLevel = "beginner" | "intermediate" | "advanced";
+
+// Re-export types from domain
+export type {
+  DifficultyLevel,
+  PropContinuity,
+  MotionColor,
+} from "../../domain/enums";
 
 // ============================================================================
 // OPTION FILTER TYPES

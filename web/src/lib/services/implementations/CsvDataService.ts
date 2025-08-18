@@ -32,6 +32,8 @@ export interface ParsedCsvRow {
   redPropRotDir: string;
   redStartLoc: string;
   redEndLoc: string;
+  // Add index signature to make it compatible with Record<string, string>
+  [key: string]: string;
 }
 
 export class CsvDataService {

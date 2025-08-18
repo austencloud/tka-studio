@@ -3,7 +3,7 @@ Arrow Component - Renders SVG arrows with proper positioning and natural sizing
 Follows the same pattern as Prop component for consistent sizing behavior
 -->
 <script lang="ts">
-  import type { ArrowData, MotionData } from "$lib/domain";
+  import { MotionColor, type ArrowData, type MotionData } from "$lib/domain";
   import { onMount } from "svelte";
 
   interface Props {
@@ -144,10 +144,10 @@ Follows the same pattern as Prop component for consistent sizing behavior
   };
 
   // Apply color transformation to SVG content (same as Prop component)
-  const applyColorToSvg = (svgText: string, color: "blue" | "red"): string => {
+  const applyColorToSvg = (svgText: string, color: MotionColor): string => {
     const colorMap = new Map([
-      ["blue", "#2E3192"],
-      ["red", "#ED1C24"],
+      [MotionColor.BLUE, "#2E3192"],
+      [MotionColor.RED, "#ED1C24"],
     ]);
 
     const targetColor = colorMap.get(color) || "#2E3192";
@@ -189,7 +189,7 @@ Follows the same pattern as Prop component for consistent sizing behavior
       // Apply color transformation to the SVG
       const coloredSvgText = applyColorToSvg(
         originalSvgText,
-        arrowData.color as "blue" | "red"
+        arrowData.color as MotionColor
       );
 
       svgData = {

@@ -3,11 +3,12 @@
  */
 
 import type { Location, MotionData } from "$lib/domain";
+import { MotionColor } from "$lib/domain/enums";
 
 // Enhanced type definitions with comprehensive coverage
 export type { Location } from "$lib/domain";
 export type { MotionType, RotationDirection } from "$lib/domain";
-export type ArrowColor = "blue" | "red";
+export type ArrowColor = MotionColor;
 
 // Basic types
 export interface Point {

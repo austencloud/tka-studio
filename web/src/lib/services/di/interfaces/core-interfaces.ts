@@ -6,7 +6,6 @@
 import type {
   IApplicationInitializationService,
   IConstructTabCoordinationService,
-  IOptionDataService,
   ISettingsService,
   IStartPositionService,
 } from "../../interfaces/application-interfaces";
@@ -33,6 +32,8 @@ import type { IArrowPositioningOrchestrator } from "../../positioning/core-servi
 import type {
   IMotionGenerationService,
   ISequenceGenerationService,
+  IOrientationCalculationService,
+  IOptionDataService as IGenerationOptionDataService,
 } from "../../interfaces/generation-interfaces";
 import type { IDeviceDetectionService } from "../../interfaces/device-interfaces";
 import type {
@@ -69,6 +70,7 @@ import { PrintablePageLayoutService } from "../../implementations/PrintablePageL
 import { PageFactoryService } from "../../implementations/PageFactoryService";
 import { PageImageExportService } from "../../implementations/PageImageExportService";
 import { SequenceCardExportIntegrationService } from "../../implementations/SequenceCardExportIntegrationService";
+import { OrientationCalculationService } from "../../implementations/OrientationCalculationService";
 
 // Core domain services
 export const ISequenceServiceInterface =
@@ -231,7 +233,10 @@ export const ISequenceGenerationServiceInterface =
     "ISequenceGenerationService",
     class extends SequenceGenerationService {
       constructor(...args: unknown[]) {
-        super(args[0] as IMotionGenerationService);
+        super(
+          args[0] as IGenerationOptionDataService,
+          args[1] as IOrientationCalculationService
+        );
       }
     }
   );
@@ -248,7 +253,7 @@ export const IConstructTabCoordinationServiceInterface =
   );
 
 export const IOptionDataServiceInterface =
-  createServiceInterface<IOptionDataService>(
+  createServiceInterface<IGenerationOptionDataService>(
     "IOptionDataService",
     OptionDataService
   );
@@ -291,4 +296,10 @@ export const ISequenceCardExportIntegrationServiceInterface =
         super(args[0] as IPageImageExportService);
       }
     }
+  );
+
+export const IOrientationCalculationServiceInterface =
+  createServiceInterface<IOrientationCalculationService>(
+    "IOrientationCalculationService",
+    OrientationCalculationService
   );

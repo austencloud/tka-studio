@@ -502,11 +502,7 @@ export class CodexService implements ICodexService {
   ): PictographData | null {
     try {
       // Use the public conversion method from OptionDataService
-      return this.optionDataService.convertCsvRowToPictographData(
-        row,
-        gridMode,
-        index
-      );
+      return this.optionDataService.convertCsvRowToPictographData(row, index);
     } catch (error) {
       console.error(
         "❌ Error converting CSV row to PictographData:",
