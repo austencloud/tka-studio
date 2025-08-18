@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass
 
 from styles.button_state import ButtonState

@@ -8,7 +8,11 @@ from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import QWidget
 
 # Import the new coordinator and components
-from .styling.glassmorphism_coordinator import GlassmorphismCoordinator
+try:
+    from .styling.glassmorphism_coordinator import GlassmorphismCoordinator
+except ImportError:
+    # Fallback for when module is imported directly
+    from styling.glassmorphism_coordinator import GlassmorphismCoordinator
 
 
 class GlassmorphismStyler:

@@ -1,8 +1,11 @@
+from __future__ import annotations
 from typing import TYPE_CHECKING
+
 from utils.path_helpers import get_data_path
+
+from ....svg_manager.svg_color_manager import SvgColorManager
 from .arrow_svg_manager import ArrowSvgManager
 from .prop_svg_manager import PropSvgManager
-from ....svg_manager.svg_color_manager import SvgColorManager
 
 if TYPE_CHECKING:
     from main_window.main_widget.main_widget import MainWidget
@@ -17,6 +20,6 @@ class SvgManager:
         self.prop_manager = PropSvgManager(self)
 
     def load_svg_file(self, svg_path: str) -> str:
-        with open(get_data_path(svg_path), "r") as file:
+        with open(get_data_path(svg_path)) as file:
             svg_data = file.read()
         return svg_data

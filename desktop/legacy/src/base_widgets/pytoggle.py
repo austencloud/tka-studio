@@ -1,6 +1,7 @@
-from PyQt6.QtWidgets import QCheckBox
-from PyQt6.QtCore import QPropertyAnimation, QRect, Qt, QEasingCurve, pyqtProperty
+from __future__ import annotations
+from PyQt6.QtCore import QEasingCurve, QPropertyAnimation, QRect, Qt, pyqtProperty
 from PyQt6.QtGui import QColor, QPainter
+from PyQt6.QtWidgets import QCheckBox
 
 
 class PyToggle(QCheckBox):

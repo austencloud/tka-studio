@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 """
 Modern application context that replaces the global singleton AppContext.
 
@@ -6,7 +7,7 @@ This module provides a clean, dependency-injected way to access application serv
 without the tight coupling and testing issues of the original singleton pattern.
 """
 
-from typing import TYPE_CHECKING, Optional,Optional
+from typing import TYPE_CHECKING
 
 from .dependency_container import DependencyContainer, get_container
 

@@ -18,7 +18,7 @@ desktop_dir = legacy_dir.parent
 # This allows imports like 'from src.profiler import Profiler' to work
 
 src_module = types.ModuleType("src")
-src_module.__path__ = [str(legacy_dir)]
+src_module.__path__ = [str(legacy_dir / "src")]
 sys.modules["src"] = src_module
 
 # Also add paths for modern imports (used in TYPE_CHECKING)
@@ -176,6 +176,7 @@ def create_main_window(profiler, splash_screen, app_context):
 
 def install_handlers():
     from PyQt6.QtCore import QtMsgType, qInstallMessageHandler
+
     from src.utils.paint_event_supressor import PaintEventSuppressor
 
     # Install paint event suppressor
@@ -229,8 +230,9 @@ def detect_parallel_testing_mode():
 def main():
     configure_import_paths()
 
-    from legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
     from PyQt6.QtCore import QTimer
+
+    from legacy_settings_manager.legacy_settings_manager import LegacySettingsManager
     from src.profiler import Profiler
     from src.splash_screen.splash_screen import SplashScreen
     from src.utils.logging_config import get_logger

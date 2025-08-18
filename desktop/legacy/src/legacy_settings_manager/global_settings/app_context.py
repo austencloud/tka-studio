@@ -1,26 +1,27 @@
 from typing import TYPE_CHECKING, Optional
+
 from PyQt6.QtWidgets import QApplication
 
 if TYPE_CHECKING:
+    from legacy_settings_manager.legacy_settings_manager import (
+        LegacySettingsManager,
+    )
     from main_window.main_widget.browse_tab.sequence_picker.dictionary_data_manager import (
         DictionaryDataManager,
     )
-    from main_window.main_widget.special_placement_loader import SpecialPlacementLoader
     from main_window.main_widget.construct_tab.option_picker.widgets.legacy_option_picker import (
         LegacyOptionPicker,
     )
-    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
-        LegacyBeatFrame,
-    )
-    from main_window.main_window import MainWindow
-    from objects.arrow.arrow import Arrow
     from main_window.main_widget.json_manager.json_manager import JsonManager
     from main_window.main_widget.json_manager.special_placement_saver import (
         SpecialPlacementSaver,
     )
-    from legacy_settings_manager.legacy_settings_manager import (
-        LegacySettingsManager,
+    from main_window.main_widget.sequence_workbench.legacy_beat_frame.legacy_beat_frame import (
+        LegacyBeatFrame,
     )
+    from main_window.main_widget.special_placement_loader import SpecialPlacementLoader
+    from main_window.main_window import MainWindow
+    from objects.arrow.arrow import Arrow
 
 
 class AppContext:
@@ -216,6 +217,7 @@ class AppContext:
         """Set the sequence beat frame after initialization."""
         cls._sequence_beat_frame = sequence_beat_frame @ classmethod
 
+    @classmethod
     def dictionary_data_manager(cls) -> "DictionaryDataManager":
         if cls._dict_data_manager is None:
             from main_window.main_widget.browse_tab.sequence_picker.dictionary_data_manager import (

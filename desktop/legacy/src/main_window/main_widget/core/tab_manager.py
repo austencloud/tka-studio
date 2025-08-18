@@ -4,10 +4,11 @@ Tab manager responsible for managing all application tabs.
 This component follows SRP by focusing solely on tab-related functionality.
 """
 
-from typing import TYPE_CHECKING, Dict, Optional
-from PyQt6.QtWidgets import QWidget
-from PyQt6.QtCore import QObject, pyqtSignal
 import logging
+from typing import TYPE_CHECKING, Dict, Optional
+
+from PyQt6.QtCore import QObject, pyqtSignal
+from PyQt6.QtWidgets import QWidget
 
 from core.application_context import ApplicationContext
 
@@ -53,23 +54,23 @@ class TabManager(QObject):
         """Register factories for creating different tab types."""
         # Import tab factories
         try:
+            from main_window.main_widget.browse_tab.browse_tab_factory import (
+                BrowseTabFactory,
+            )
             from main_window.main_widget.construct_tab.construct_tab_factory import (
                 ConstructTabFactory,
             )
             from main_window.main_widget.generate_tab.generate_tab_factory import (
                 GenerateTabFactory,
             )
-            from main_window.main_widget.browse_tab.browse_tab_factory import (
-                BrowseTabFactory,
-            )
             from main_window.main_widget.learn_tab.learn_tab_factory import (
                 LearnTabFactory,
             )
-            from main_window.main_widget.write_tab.write_tab_factory import (
-                WriteTabFactory,
-            )
             from main_window.main_widget.sequence_card_tab.utils.tab_factory import (
                 SequenceCardTabFactory,
+            )
+            from main_window.main_widget.write_tab.write_tab_factory import (
+                WriteTabFactory,
             )
 
             self._tab_factories = {
@@ -105,7 +106,7 @@ class TabManager(QObject):
 
             # Create the default tab first
             logger.info(f"Creating default tab: {default_tab}")
-            tab_widget = self._create_tab(default_tab)
+            tab_widget = self.create_tab(default_tab)
             if tab_widget:
                 logger.info(
                     f"Default tab created successfully: {type(tab_widget).__name__}"
@@ -154,7 +155,9 @@ class TabManager(QObject):
                 print("DEBUG: ✅ Added sequence_workbench to left stack")
                 logger.info("✅ Added sequence_workbench to left stack")
             else:
-                print("DEBUG: ❌ sequence_workbench widget is None - not added to stack")
+                print(
+                    "DEBUG: ❌ sequence_workbench widget is None - not added to stack"
+                )
                 logger.warning(
                     "❌ sequence_workbench widget is None - not added to stack"
                 )
@@ -187,7 +190,7 @@ class TabManager(QObject):
 
             traceback.print_exc()
 
-    def _create_tab(self, tab_name: str) -> Optional[QWidget]:
+    def create_tab(self, tab_name: str) -> Optional[QWidget]:
         """
         Create a tab instance if it doesn't exist.
 
@@ -291,7 +294,7 @@ class TabManager(QObject):
             True if successful, False otherwise
         """
         # Create tab if it doesn't exist
-        tab_widget = self._create_tab(tab_name)
+        tab_widget = self.create_tab(tab_name)
         if not tab_widget:
             return False
 

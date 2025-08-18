@@ -1,5 +1,7 @@
+from __future__ import annotations
 # strategies/placement_strategy.py
 from abc import ABC, abstractmethod
+
 from PyQt6.QtCore import QPointF
 
 from ...arrow_placement_manager.arrow_placement_context import ArrowPlacementContext

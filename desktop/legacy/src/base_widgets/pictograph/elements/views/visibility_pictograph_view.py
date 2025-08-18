@@ -1,12 +1,15 @@
-from PyQt6.QtCore import QEvent
+from __future__ import annotations
 from typing import TYPE_CHECKING
+
 from base_widgets.pictograph.elements.views.base_pictograph_view import (
     BasePictographView,
 )
-from data.constants import BLUE, RED
 from main_window.main_widget.settings_dialog.ui.visibility.pictograph.visibility_pictograph_interaction_manager import (
     VisibilityPictographInteractionManager,
 )
+from PyQt6.QtCore import QEvent
+
+from data.constants import BLUE, RED
 
 if TYPE_CHECKING:
     from main_window.main_widget.settings_dialog.ui.visibility.pictograph.visibility_pictograph import (

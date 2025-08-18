@@ -1,21 +1,24 @@
+from __future__ import annotations
 from typing import TYPE_CHECKING, Literal
+
 from objects.arrow.arrow import Arrow
+
 from data.constants import (
+    ANTI,
     BOX,
+    DASH,
     DIAMOND,
+    EAST,
     FLOAT,
+    NORTH,
     NORTHEAST,
+    NORTHWEST,
+    PRO,
+    SOUTH,
     SOUTHEAST,
     SOUTHWEST,
-    NORTHWEST,
-    NORTH,
-    EAST,
-    SOUTH,
-    WEST,
-    PRO,
-    ANTI,
     STATIC,
-    DASH,
+    WEST,
 )
 
 if TYPE_CHECKING:

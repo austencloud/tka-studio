@@ -1,6 +1,9 @@
+from __future__ import annotations
 from typing import TYPE_CHECKING
-from data.constants import LEFT, RIGHT
+
 from objects.prop.prop import Prop
+
+from data.constants import LEFT, RIGHT
 
 if TYPE_CHECKING:
     from placement_managers.prop_placement_manager.handlers.beta_prop_positioner import (

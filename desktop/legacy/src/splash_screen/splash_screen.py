@@ -1,15 +1,15 @@
 import sys
 from typing import TYPE_CHECKING
-from PyQt6.QtWidgets import QWidget, QLabel, QApplication
+
 from PyQt6.QtGui import QPainter
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget
 
-from splash_screen.splash_geometry_manager import SplashGeometryManager
-from splash_screen.splash_background_handler import SplashBackgroundHandler
-from splash_screen.splash_font_color_updater import SplashFontColorUpdater
-
-from .splash_properties import SplashProperties
+from .splash_background_handler import SplashBackgroundHandler
 from .splash_components import SplashComponents
+from .splash_font_color_updater import SplashFontColorUpdater
+from .splash_geometry_manager import SplashGeometryManager
 from .splash_layout_manager import SplashLayoutManager
+from .splash_properties import SplashProperties
 from .splash_updater import SplashUpdater
 
 if TYPE_CHECKING:

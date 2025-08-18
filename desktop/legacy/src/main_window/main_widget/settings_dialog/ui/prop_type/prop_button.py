@@ -1,9 +1,13 @@
 from typing import TYPE_CHECKING
+
+from PyQt6.QtCore import QSize, Qt
+from PyQt6.QtGui import QCursor, QIcon
 from PyQt6.QtWidgets import QPushButton
-from PyQt6.QtGui import QIcon, QCursor
-from PyQt6.QtCore import Qt, QSize
+
 from enums.prop_type import PropType
-from core.glassmorphism_styler import GlassmorphismStyler
+from main_window.main_widget.settings_dialog.core.glassmorphism_styler import (
+    GlassmorphismStyler,
+)
 
 if TYPE_CHECKING:
     from .prop_type_tab import PropTypeTab
@@ -44,10 +48,10 @@ class PropButton(QPushButton):
                 f"""
                 QPushButton {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('primary', 0.8)},
-                        stop:1 {GlassmorphismStyler.get_color('primary_dark', 0.9)});
-                    border: 2px solid {GlassmorphismStyler.get_color('primary', 1.0)};
-                    border-radius: {GlassmorphismStyler.RADIUS['lg']}px;
+                        stop:0 {GlassmorphismStyler.get_color("primary", 0.8)},
+                        stop:1 {GlassmorphismStyler.get_color("primary_dark", 0.9)});
+                    border: 2px solid {GlassmorphismStyler.get_color("primary", 1.0)};
+                    border-radius: {GlassmorphismStyler.RADIUS["lg"]}px;
                     color: white;
                     font-weight: bold;
                     padding: 8px;
@@ -73,24 +77,24 @@ class PropButton(QPushButton):
                 f"""
                 QPushButton {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('surface', 0.6)},
-                        stop:1 {GlassmorphismStyler.get_color('surface_light', 0.4)});
-                    border: 1px solid {GlassmorphismStyler.get_color('border', 0.4)};
-                    border-radius: {GlassmorphismStyler.RADIUS['lg']}px;
-                    color: {GlassmorphismStyler.get_color('text_secondary')};
+                        stop:0 {GlassmorphismStyler.get_color("surface", 0.6)},
+                        stop:1 {GlassmorphismStyler.get_color("surface_light", 0.4)});
+                    border: 1px solid {GlassmorphismStyler.get_color("border", 0.4)};
+                    border-radius: {GlassmorphismStyler.RADIUS["lg"]}px;
+                    color: {GlassmorphismStyler.get_color("text_secondary")};
                     padding: 8px;
                 }}
                 QPushButton:hover {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('surface_light', 0.7)},
-                        stop:1 {GlassmorphismStyler.get_color('surface_lighter', 0.5)});
-                    border: 1px solid {GlassmorphismStyler.get_color('border_light', 0.6)};
-                    color: {GlassmorphismStyler.get_color('text_primary')};
+                        stop:0 {GlassmorphismStyler.get_color("surface_light", 0.7)},
+                        stop:1 {GlassmorphismStyler.get_color("surface_lighter", 0.5)});
+                    border: 1px solid {GlassmorphismStyler.get_color("border_light", 0.6)};
+                    color: {GlassmorphismStyler.get_color("text_primary")};
                 }}
                 QPushButton:pressed {{
                     background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                        stop:0 {GlassmorphismStyler.get_color('surface', 0.8)},
-                        stop:1 {GlassmorphismStyler.get_color('surface_light', 0.6)});
+                        stop:0 {GlassmorphismStyler.get_color("surface", 0.8)},
+                        stop:1 {GlassmorphismStyler.get_color("surface_light", 0.6)});
                 }}
             """
             )

@@ -1,3 +1,4 @@
+from __future__ import annotations
 # domain/arrow_placement_context.py
 from dataclasses import dataclass
 

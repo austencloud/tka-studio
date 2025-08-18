@@ -1,11 +1,12 @@
-from PyQt6.QtCore import QPointF
+from __future__ import annotations
+from objects.arrow.arrow import Arrow
 from placement_managers.arrow_placement_manager.directional_tuple_generator import (
     DirectionalTupleGenerator,
 )
-from objects.arrow.arrow import Arrow
 from placement_managers.arrow_placement_manager.quadrant_index_handler import (
     QuadrantIndexHandler,
 )
+from PyQt6.QtCore import QPointF
 
 
 class QuadrantAdjustmentStrategy:

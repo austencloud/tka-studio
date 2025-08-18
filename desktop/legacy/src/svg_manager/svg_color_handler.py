@@ -1,5 +1,7 @@
-from typing import TYPE_CHECKING
+from __future__ import annotations
 import re
+from typing import TYPE_CHECKING
+
 from data.constants import BLUE, HEX_BLUE, HEX_RED, RED
 
 if TYPE_CHECKING:
@@ -23,7 +25,7 @@ class SvgColorHandler:
             new_hex_color = new_color
         else:
             # 2) Maybe "BLUE", "RED", or something else
-            new_hex_color = COLOR_MAP.get(new_color, None)
+            new_hex_color = COLOR_MAP.get(new_color)
 
         if not new_hex_color:
             # If we still don't have a color, nothing to replace.
@@ -34,10 +36,13 @@ class SvgColorHandler:
         )
         fill_pattern = re.compile(r'(fill=")(#[a-fA-F0-9]{6})(")')
 
-        def replace_color(match):
+        def replace_class_color(match):
             return match.group(1) + new_hex_color + match.group(4)
 
-        svg_data = class_color_pattern.sub(replace_color, svg_data)
-        svg_data = fill_pattern.sub(replace_color, svg_data)
+        def replace_fill_color(match):
+            return match.group(1) + new_hex_color + match.group(3)
+
+        svg_data = class_color_pattern.sub(replace_class_color, svg_data)
+        svg_data = fill_pattern.sub(replace_fill_color, svg_data)
 
         return svg_data

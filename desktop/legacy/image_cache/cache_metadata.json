@@ -6698,5 +6698,1605 @@
     "target_height": 342,
     "scale_factor": 0.8484848484848485,
     "file_size": 8926
+  },
+  "5843efb6927ec69e970f7e1be8cd3a26": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\AAKE\\AAKE_ver1.png",
+    "source_mtime": 1750484677.449,
+    "cache_time": 1755478534.0953534,
+    "last_access": 1755478534.0953538,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8520499108734403,
+    "file_size": 26953
+  },
+  "1b881d2dd481d69ceb081b0e4f67af09": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\AJE\u03a6-\\AJE\u03a6-_ver1.png",
+    "source_mtime": 1750484677.473,
+    "cache_time": 1755478534.1889124,
+    "last_access": 1755478534.1889129,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8520499108734403,
+    "file_size": 26224
+  },
+  "f75722010e7a77e1b818eb73638aa1b3": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\AKI\u03a6\\AKI\u03a6_ver1.png",
+    "source_mtime": 1750484677.497,
+    "cache_time": 1755478534.2810514,
+    "last_access": 1755478534.2810519,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8520499108734403,
+    "file_size": 25290
+  },
+  "c24f52e3f9d06b69b799101b0e25c3ff": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\AKI\u03a6\\AKI\u03a6_ver2.png",
+    "source_mtime": 1750484677.502,
+    "cache_time": 1755478534.3830683,
+    "last_access": 1755478534.3830686,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8520499108734403,
+    "file_size": 25757
+  },
+  "99ff0b79d372cbe6ba91d749828cf9e5": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\ALFALGGF\\ALFALGGF_ver1.png",
+    "source_mtime": 1750484677.511,
+    "cache_time": 1755478534.4734943,
+    "last_access": 1755478534.4734948,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8520499108734403,
+    "file_size": 27333
+  },
+  "23c0216099d88acf0eb20cb518de12fd": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\ALFALGGF\\ALFALGGF_ver2.png",
+    "source_mtime": 1750484677.515,
+    "cache_time": 1755478534.5717409,
+    "last_access": 1755478534.571741,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8520499108734403,
+    "file_size": 28198
+  },
+  "1ab0586f0f3f39a2c576d26731440116": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\ALFALGGF\\ALFALGGF_ver3.png",
+    "source_mtime": 1750484677.52,
+    "cache_time": 1755478534.6659307,
+    "last_access": 1755478534.665931,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8520499108734403,
+    "file_size": 27330
+  },
+  "96bcd713f70470ad5a52410e74594700": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\AL\u03a3-X\\AL\u03a3-X_ver2.png",
+    "source_mtime": 1750484677.546,
+    "cache_time": 1755478534.7632327,
+    "last_access": 1755478534.7632332,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26890
+  },
+  "823dfac2d43765acad90f92941032311": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\A\u0394SX\\A\u0394SX_ver1.png",
+    "source_mtime": 1750484677.554,
+    "cache_time": 1755478534.9602172,
+    "last_access": 1755478534.9602177,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 22973
+  },
+  "e042f96145c0fb2aa0314eaa8cbc7856": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\A\u03a3SW\\A\u03a3SW_ver1.png",
+    "source_mtime": 1750484677.572,
+    "cache_time": 1755478535.0520072,
+    "last_access": 1755478535.0520074,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23644
+  },
+  "82512ecfd8a0202537a3005825d9bf49": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\BJFA\\BJFA_ver1.png",
+    "source_mtime": 1750484677.621,
+    "cache_time": 1755478535.1843123,
+    "last_access": 1755478535.1843128,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25977
+  },
+  "d52e836e774072eca84a74d43c711d6e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\BKE\u03a6-\\BKE\u03a6-_ver1.png",
+    "source_mtime": 1750484677.629,
+    "cache_time": 1755478535.278029,
+    "last_access": 1755478535.2780297,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24399
+  },
+  "0146d577046739ffea3b7ff7ae9c66f3": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\B\u0394TW-\\B\u0394TW-_ver1.png",
+    "source_mtime": 1750484677.644,
+    "cache_time": 1755478535.3829277,
+    "last_access": 1755478535.3829284,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25520
+  },
+  "ba2108b1031309621e6767cedecabf43": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\B\u0394TX\\B\u0394TX_ver1.png",
+    "source_mtime": 1750484677.652,
+    "cache_time": 1755478535.4783301,
+    "last_access": 1755478535.4783313,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 22234
+  },
+  "6a5bee5ef7feb9871468e98347d6604f": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\B\u0394TX\\B\u0394TX_ver3.png",
+    "source_mtime": 1750484677.657,
+    "cache_time": 1755478535.571791,
+    "last_access": 1755478535.5717914,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25183
+  },
+  "7677719def60a6fab971dd4669d8b2a5": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\B\u03b8-Z-\u03b8WL\u03a6B\\B\u03b8-Z-\u03b8WL\u03a6B_ver1.png",
+    "source_mtime": 1750484677.709,
+    "cache_time": 1755478535.666687,
+    "last_access": 1755478535.6666875,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24400
+  },
+  "d5efc35edc5456b4cf6cbcdd9e350117": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\B\u03b8-Z-\u03b8WL\u03a6BA\u03a9-Y-\u03a9XL\u03a6A\\B\u03b8-Z-\u03b8WL\u03a6BA\u03a9-Y-\u03a9XL\u03a6A_ver1.png",
+    "source_mtime": 1750484677.718,
+    "cache_time": 1755478535.7569926,
+    "last_access": 1755478535.756993,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26122
+  },
+  "460d7c0a7108c281612a17b05a96e1ae": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\B\u03a3TW\\B\u03a3TW_ver1.png",
+    "source_mtime": 1750484677.665,
+    "cache_time": 1755478535.8518271,
+    "last_access": 1755478535.8518274,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 22459
+  },
+  "ab31b848866a9ba60c49c9841479dcab": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\CAKE\\CAKE_ver1.png",
+    "source_mtime": 1750484677.74,
+    "cache_time": 1755478536.0394497,
+    "last_access": 1755478536.0394502,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26274
+  },
+  "b2baba9d2bcb67eb3c62b5de55862673": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\CCC\u03a6-\\CCC\u03a6-_ver1.png",
+    "source_mtime": 1750484677.749,
+    "cache_time": 1755478536.136174,
+    "last_access": 1755478536.1361747,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26128
+  },
+  "eaceaf40cfeba33b832648f483fc1db5": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\CCK\u03a6\\CCK\u03a6_ver1.png",
+    "source_mtime": 1750484677.765,
+    "cache_time": 1755478536.273077,
+    "last_access": 1755478536.2730775,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26292
+  },
+  "82a76db52ab6a4ae4c06e9d1e4e7fb39": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\CCK\u03a6\\CCK\u03a6_ver2.png",
+    "source_mtime": 1750484677.77,
+    "cache_time": 1755478536.3798432,
+    "last_access": 1755478536.379844,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26618
+  },
+  "d00c64d412d0dbe607ba1f75a7453ac6": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u0394UW\\C\u0394UW_ver1.png",
+    "source_mtime": 1750484677.779,
+    "cache_time": 1755478536.4716866,
+    "last_access": 1755478536.471687,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23153
+  },
+  "46e7cd7bd3e8db016cd4db1a1696183c": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u0394\u039b-X-\\C\u0394\u039b-X-_ver1.png",
+    "source_mtime": 1750484677.787,
+    "cache_time": 1755478536.5637667,
+    "last_access": 1755478536.5637672,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26869
+  },
+  "c5561afa67944f4d4768ad81d5210f33": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u03b8-ZE\\C\u03b8-ZE_ver1.png",
+    "source_mtime": 1750484677.845,
+    "cache_time": 1755478536.6575172,
+    "last_access": 1755478536.657518,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26808
+  },
+  "0aebd09f936e07c607385c5ff3c28423": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u03a3NZI\u03b8UW\\C\u03a3NZI\u03b8UW_ver1.png",
+    "source_mtime": 1750484677.799,
+    "cache_time": 1755478536.7497435,
+    "last_access": 1755478536.749744,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24175
+  },
+  "4f7f5f0044b82dde3ee78bc2dc951f97": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u03a3VX\\C\u03a3VX_ver1.png",
+    "source_mtime": 1750484677.808,
+    "cache_time": 1755478536.8442345,
+    "last_access": 1755478536.844235,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 22965
+  },
+  "dbec1c860cb5d2d71e3735c953c3133e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u03a8\u03b8X-\\C\u03a8\u03b8X-_ver4.png",
+    "source_mtime": 1750484677.818,
+    "cache_time": 1755478536.9386318,
+    "last_access": 1755478536.938632,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24654
+  },
+  "5b91094a1707727913d41865dcc2f915": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u03a8\u03b8X-\\C\u03a8\u03b8X-_ver5.png",
+    "source_mtime": 1750484677.823,
+    "cache_time": 1755478537.1258688,
+    "last_access": 1755478537.1258693,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25740
+  },
+  "b35900adcf4c3478efe72f789737a7c9": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\C\u03a8\u03b8X-\\C\u03a8\u03b8X-_ver6.png",
+    "source_mtime": 1750484677.827,
+    "cache_time": 1755478537.2207758,
+    "last_access": 1755478537.220776,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26729
+  },
+  "b2e7f487c2000a2ae25087ce40283190": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\DCK\u03a8-\\DCK\u03a8-_ver1.png",
+    "source_mtime": 1750484677.854,
+    "cache_time": 1755478537.3651252,
+    "last_access": 1755478537.365126,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27396
+  },
+  "4ffb1c7cf019c1fe296bc8348834063b": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\D\u03b8-QY\\D\u03b8-QY_ver1.png",
+    "source_mtime": 1750484677.932,
+    "cache_time": 1755478537.4673672,
+    "last_access": 1755478537.4673676,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26686
+  },
+  "bb6896c538b35c427af637c0651dd5d0": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\D\u03b8-UY-\\D\u03b8-UY-_ver1.png",
+    "source_mtime": 1750484677.94,
+    "cache_time": 1755478537.5601869,
+    "last_access": 1755478537.560187,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26316
+  },
+  "2af2dd84aafbdd084f719139f2c14b45": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\D\u03a6-CJ\\D\u03a6-CJ_ver1.png",
+    "source_mtime": 1750484677.909,
+    "cache_time": 1755478537.653445,
+    "last_access": 1755478537.6534457,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 30844
+  },
+  "55f6455b788211377a9e4b537f3b360f": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\D\u03a9-UY-\\D\u03a9-UY-_ver1.png",
+    "source_mtime": 1750484677.924,
+    "cache_time": 1755478537.7470183,
+    "last_access": 1755478537.747019,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25747
+  },
+  "23c1d0255cee314d228f1a21e18a4c0b": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\ECJ\u03a8-\\ECJ\u03a8-_ver1.png",
+    "source_mtime": 1750484677.957,
+    "cache_time": 1755478537.8418815,
+    "last_access": 1755478537.8418818,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26742
+  },
+  "7bda00288cfd881e6162f32b95dfacc6": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\ECK\u03a8-\\ECK\u03a8-_ver1.png",
+    "source_mtime": 1750484677.966,
+    "cache_time": 1755478537.9371185,
+    "last_access": 1755478537.9371188,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26636
+  },
+  "231314bd05988695b9d0533009f3efa6": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\EC\u03a9-Y-\\EC\u03a9-Y-_ver1.png",
+    "source_mtime": 1750484677.975,
+    "cache_time": 1755478538.0389142,
+    "last_access": 1755478538.0389152,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28206
+  },
+  "2a3c236ec4e6d1214a15d750489d99f1": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\EJH\u03a8-\\EJH\u03a8-_ver1.png",
+    "source_mtime": 1750484677.99,
+    "cache_time": 1755478538.2189808,
+    "last_access": 1755478538.218981,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24799
+  },
+  "23284c67db1fbf47e857a8174e60a69e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\EJ\u03a6K\\EJ\u03a6K_ver1.png",
+    "source_mtime": 1750484677.998,
+    "cache_time": 1755478538.3172848,
+    "last_access": 1755478538.3172853,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24231
+  },
+  "f01b06164323c58286df974a9bc76add": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\EJ\u03a8-I\\EJ\u03a8-I_ver1.png",
+    "source_mtime": 1750484678.008,
+    "cache_time": 1755478538.4504943,
+    "last_access": 1755478538.4504945,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28697
+  },
+  "ba08f4ec96a6d1f83229093ddc730914": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03b8-NW-B\u03b8-TY-\\E\u03b8-NW-B\u03b8-TY-_ver1.png",
+    "source_mtime": 1750484678.15,
+    "cache_time": 1755478538.5404708,
+    "last_access": 1755478538.540471,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27206
+  },
+  "9b6188f3a8c8b09d129e1231da27f80a": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03b8-NW-B\u03b8-TY-\\E\u03b8-NW-B\u03b8-TY-_ver2.png",
+    "source_mtime": 1750484678.154,
+    "cache_time": 1755478538.6310437,
+    "last_access": 1755478538.6310441,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27081
+  },
+  "32b1e65bf11c1be961bb37da9596e453": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03b8-NW-K\u03a3-QY-\\E\u03b8-NW-K\u03a3-QY-_ver1.png",
+    "source_mtime": 1750484678.163,
+    "cache_time": 1755478538.7247639,
+    "last_access": 1755478538.7247643,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27781
+  },
+  "81bb7edb67b33b4fb11fe86015fac337": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a3QY\\E\u03a3QY_ver1.png",
+    "source_mtime": 1750484678.046,
+    "cache_time": 1755478538.816643,
+    "last_access": 1755478538.8166435,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23155
+  },
+  "6150654bb84acf18d9d5c4983873ab63": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a3QY\\E\u03a3QY_ver2.png",
+    "source_mtime": 1750484678.05,
+    "cache_time": 1755478538.9100943,
+    "last_access": 1755478538.9100947,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23755
+  },
+  "fc447e6f1ed77b815d282ac9769060b4": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a3QY\\E\u03a3QY_ver3.png",
+    "source_mtime": 1750484678.055,
+    "cache_time": 1755478539.0048068,
+    "last_access": 1755478539.004807,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23782
+  },
+  "f90ddafcada1b2932e43f26dfcaa3f5a": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a3QY\\E\u03a3QY_ver4.png",
+    "source_mtime": 1750484678.059,
+    "cache_time": 1755478539.0984097,
+    "last_access": 1755478539.0984101,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24017
+  },
+  "9cc1a284396506c3e42881fb996d8804": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a3QY\\E\u03a3QY_ver5.png",
+    "source_mtime": 1750484678.065,
+    "cache_time": 1755478539.2790601,
+    "last_access": 1755478539.2790601,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23872
+  },
+  "945a2a60d5f315a29b8e005c17d7143e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a8I\u03a6J\u03a6C\u03a8\\E\u03a8I\u03a6J\u03a6C\u03a8_ver1.png",
+    "source_mtime": 1750484678.107,
+    "cache_time": 1755478539.3859231,
+    "last_access": 1755478539.3859236,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23724
+  },
+  "acd599b8011aae59eb4cdf6b963dc2e5": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a8I\u03a6J\u03a6C\u03a8D\u03a8I\u03a6K\u03a6C\u03a8\\E\u03a8I\u03a6J\u03a6C\u03a8D\u03a8I\u03a6K\u03a6C\u03a8_ver1.png",
+    "source_mtime": 1750484678.116,
+    "cache_time": 1755478539.5218647,
+    "last_access": 1755478539.521865,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25300
+  },
+  "48504f2c027854b49d7a641e28057355": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a8I\u03a6J\u03a6C\u03a8D\u03a8I\u03a6K\u03a6C\u03a8\\E\u03a8I\u03a6J\u03a6C\u03a8D\u03a8I\u03a6K\u03a6C\u03a8_ver2.png",
+    "source_mtime": 1750484678.12,
+    "cache_time": 1755478539.6180916,
+    "last_access": 1755478539.6180918,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25300
+  },
+  "9e4a57ac098946bdf0219076f1fb6a53": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a9-VY\\E\u03a9-VY_ver2.png",
+    "source_mtime": 1750484678.132,
+    "cache_time": 1755478539.7104342,
+    "last_access": 1755478539.710435,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25057
+  },
+  "0e0cf4e9fadee7df0ed011be48bb6383": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\E\u03a9-Z-\u03b8Y-D\u03b8-Z\\E\u03a9-Z-\u03b8Y-D\u03b8-Z_ver1.png",
+    "source_mtime": 1750484678.141,
+    "cache_time": 1755478539.8038142,
+    "last_access": 1755478539.8038146,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26615
+  },
+  "463e1adede856d1afc2557ae60357e28": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\FAL\u03a8-\\FAL\u03a8-_ver1.png",
+    "source_mtime": 1750484678.179,
+    "cache_time": 1755478539.897098,
+    "last_access": 1755478539.8970985,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26588
+  },
+  "871970dcc1133de1508dbb7c1c8a6bc7": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\FBL\u03a8-\\FBL\u03a8-_ver1.png",
+    "source_mtime": 1750484678.188,
+    "cache_time": 1755478540.0000622,
+    "last_access": 1755478540.0000625,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26296
+  },
+  "f043c8c771df1e45ddb89462d091cef9": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\F\u03a6-BJ\\F\u03a6-BJ_ver1.png",
+    "source_mtime": 1750484678.218,
+    "cache_time": 1755478540.097916,
+    "last_access": 1755478540.0979164,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25576
+  },
+  "a122cea8d18dd96c53660bf152928f0a": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\F\u03a9-OX-L\u0394-RY\\F\u03a9-OX-L\u0394-RY_ver1.png",
+    "source_mtime": 1750484678.227,
+    "cache_time": 1755478540.2017179,
+    "last_access": 1755478540.201718,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27900
+  },
+  "1b17504886785d40fb7b13989639fbc2": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\F\u03a9-OX-L\u0394-RZ-\\F\u03a9-OX-L\u0394-RZ-_ver1.png",
+    "source_mtime": 1750484678.236,
+    "cache_time": 1755478540.3883076,
+    "last_access": 1755478540.3883078,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28620
+  },
+  "25471fa2e2bcfd1a2220545a638fdbc3": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\GE\u03b8-Y-\\GE\u03b8-Y-_ver1.png",
+    "source_mtime": 1750484678.26,
+    "cache_time": 1755478540.4795837,
+    "last_access": 1755478540.4795842,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25255
+  },
+  "456785448c455906cad82e92d9a7621a": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\GFC\u03a8\\GFC\u03a8_ver1.png",
+    "source_mtime": 1750484678.27,
+    "cache_time": 1755478540.6104605,
+    "last_access": 1755478540.6104608,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24209
+  },
+  "150056c3ded4d89fd5a97de35992933c": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\G\u03b8OZ\\G\u03b8OZ_ver1.png",
+    "source_mtime": 1750484678.304,
+    "cache_time": 1755478540.7043996,
+    "last_access": 1755478540.7044,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23428
+  },
+  "ee25ca0ae7e6c6c263bf9912a8265525": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\G\u03b8UZ\\G\u03b8UZ_ver1.png",
+    "source_mtime": 1750484678.312,
+    "cache_time": 1755478540.7952368,
+    "last_access": 1755478540.7952373,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23771
+  },
+  "2f118f0e7034119482f1d2f271e1e8e5": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\G\u03a3-RY\\G\u03a3-RY_ver1.png",
+    "source_mtime": 1750484678.279,
+    "cache_time": 1755478540.8912325,
+    "last_access": 1755478540.891233,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26538
+  },
+  "c7941a0ce71d41b87b399ed2ffd95d25": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\G\u03a9WL\\G\u03a9WL_ver1.png",
+    "source_mtime": 1750484678.287,
+    "cache_time": 1755478540.9844623,
+    "last_access": 1755478540.9844625,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24609
+  },
+  "b6dde047b26bb809bec011a9af7c6ff6": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\G\u03a9\u039b-Y\\G\u03a9\u039b-Y_ver1.png",
+    "source_mtime": 1750484678.296,
+    "cache_time": 1755478541.0757995,
+    "last_access": 1755478541.0758002,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26032
+  },
+  "3aeebe4f97b74a15d85a0235256af613": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\H\u0394-TX-B\u03a9-TZ-\\H\u0394-TX-B\u03a9-TZ-_ver1.png",
+    "source_mtime": 1750484678.326,
+    "cache_time": 1755478541.1695588,
+    "last_access": 1755478541.1695592,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27682
+  },
+  "4925bf1c5e1f0007493f7a3eacb39403": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\H\u03b8OY\\H\u03b8OY_ver1.png",
+    "source_mtime": 1750484678.36,
+    "cache_time": 1755478541.2607565,
+    "last_access": 1755478541.260757,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23259
+  },
+  "3543ebbdd73da37e46af8cd4204510f7": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\H\u03b8\u039b-Z\\H\u03b8\u039b-Z_ver1.png",
+    "source_mtime": 1750484678.368,
+    "cache_time": 1755478541.4651694,
+    "last_access": 1755478541.4651701,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26351
+  },
+  "f38b387a43d655e966f063110b092996": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\H\u03a8-H\u03a8-\u03b2\u03b2\u03b2\u03b2\\H\u03a8-H\u03a8-\u03b2\u03b2\u03b2\u03b2_ver1.png",
+    "source_mtime": 1750484678.352,
+    "cache_time": 1755478541.5560184,
+    "last_access": 1755478541.5560186,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 22753
+  },
+  "ce78c92bd170235f9adf848938a0504e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\II\u0394-\u039b\u039b-NX-\u03a8\\II\u0394-\u039b\u039b-NX-\u03a8_ver1.png",
+    "source_mtime": 1750484678.404,
+    "cache_time": 1755478541.6832664,
+    "last_access": 1755478541.6832669,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24695
+  },
+  "8dae69971567ec67e43952a96c351b83": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\II\u03a9XKE\u03a3Y\\II\u03a9XKE\u03a3Y_ver1.png",
+    "source_mtime": 1750484678.411,
+    "cache_time": 1755478541.7753372,
+    "last_access": 1755478541.7753377,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23369
+  },
+  "831205eebf2bc6723e77d2feb04614d7": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\II\u03a9XKE\u03a3Y\\II\u03a9XKE\u03a3Y_ver2.png",
+    "source_mtime": 1750484678.417,
+    "cache_time": 1755478541.8693047,
+    "last_access": 1755478541.8693051,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23348
+  },
+  "5bf9437319dfca9cb5aa7625388219eb": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\I\u03a6AJ\\I\u03a6AJ_ver1.png",
+    "source_mtime": 1750484678.426,
+    "cache_time": 1755478541.9723938,
+    "last_access": 1755478541.972394,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26779
+  },
+  "b0e5e8343d96e3dc9326fa34c15dd5c3": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\I\u03a6\u03a8\u03b2\\I\u03a6\u03a8\u03b2_ver1.png",
+    "source_mtime": 1750484678.442,
+    "cache_time": 1755478542.063261,
+    "last_access": 1755478542.0632613,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 21640
+  },
+  "c85a4b4436713bae473b29fee48a595e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\I\u03a8-EK\\I\u03a8-EK_ver1.png",
+    "source_mtime": 1750484678.45,
+    "cache_time": 1755478542.1626227,
+    "last_access": 1755478542.1626232,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26575
+  },
+  "2ba0b2aa3efcf6ea51edff63593665a9": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\I\u03a8-\u03a9Y\\I\u03a8-\u03a9Y_ver1.png",
+    "source_mtime": 1750484678.459,
+    "cache_time": 1755478542.2569637,
+    "last_access": 1755478542.2569642,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25608
+  },
+  "06bea96bbf507373654cbc51b358c5df": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\I\u03a9PY-\\I\u03a9PY-_ver1.png",
+    "source_mtime": 1750484678.467,
+    "cache_time": 1755478542.3518298,
+    "last_access": 1755478542.3518305,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23558
+  },
+  "2fb5704a425dadf70da7cdd47a846b71": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\JIDCKIEC\\JIDCKIEC_ver1.png",
+    "source_mtime": 1750484678.489,
+    "cache_time": 1755478542.5487227,
+    "last_access": 1755478542.5487232,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25944
+  },
+  "1f7460830fe0a54b4ef695a80fd1d37c": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\JIEC\\JIEC_ver1.png",
+    "source_mtime": 1750484678.498,
+    "cache_time": 1755478542.6425061,
+    "last_access": 1755478542.6425066,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26128
+  },
+  "1b09d7b722577b894de3e1182b88f6f0": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\J\u03a8-IE\\J\u03a8-IE_ver1.png",
+    "source_mtime": 1750484678.53,
+    "cache_time": 1755478542.7762043,
+    "last_access": 1755478542.7762048,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 29278
+  },
+  "6570b49e764a297bb4540e4014795391": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\J\u03a9\u039b-X\\J\u03a9\u039b-X_ver1.png",
+    "source_mtime": 1750484678.547,
+    "cache_time": 1755478542.8690581,
+    "last_access": 1755478542.8690584,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25187
+  },
+  "c3ae0ca410fc865f1b08a5edc3af3861": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\KDC\u03a6-\\KDC\u03a6-_ver1.png",
+    "source_mtime": 1750484678.555,
+    "cache_time": 1755478542.9674811,
+    "last_access": 1755478542.9674816,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24492
+  },
+  "88466f4773dba6b8d188db6a78a2864f": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\KD\u03a8\u03a6KD\u03a8\u03a6JE\u03a8\u03a6JE\u03a8\u03a6\\KD\u03a8\u03a6KD\u03a8\u03a6JE\u03a8\u03a6JE\u03a8\u03a6_ver1.png",
+    "source_mtime": 1750484678.563,
+    "cache_time": 1755478543.0612383,
+    "last_access": 1755478543.0612388,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28766
+  },
+  "e0ad786907395b601e53c0f88c3d5198": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\KI\u03b8X-\\KI\u03b8X-_ver1.png",
+    "source_mtime": 1750484678.596,
+    "cache_time": 1755478543.1542175,
+    "last_access": 1755478543.154218,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26205
+  },
+  "2191754bd1803c3d642935b513b8812e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\KI\u03a6C\\KI\u03a6C_ver1.png",
+    "source_mtime": 1750484678.588,
+    "cache_time": 1755478543.248232,
+    "last_access": 1755478543.2482324,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25505
+  },
+  "025a4af223bbee8172d7140f934f882d": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\K\u03b8Y-\u03a6\\K\u03b8Y-\u03a6_ver1.png",
+    "source_mtime": 1750484678.647,
+    "cache_time": 1755478543.3395894,
+    "last_access": 1755478543.3395898,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 21800
+  },
+  "e44bc225a1e611eaaffab82d2c418780": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\K\u03b8\u039b-W\\K\u03b8\u039b-W_ver1.png",
+    "source_mtime": 1750484678.657,
+    "cache_time": 1755478543.4365945,
+    "last_access": 1755478543.4365947,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25805
+  },
+  "9a1fa707cd24db49d8553ca1408b94ac": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\K\u03a3-XC\\K\u03a3-XC_ver1.png",
+    "source_mtime": 1750484678.604,
+    "cache_time": 1755478543.6147323,
+    "last_access": 1755478543.6147327,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23855
+  },
+  "6b60a556436cc4e3514fbfd4766313c4": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\K\u03a3-XC\\K\u03a3-XC_ver2.png",
+    "source_mtime": 1750484678.609,
+    "cache_time": 1755478543.7335806,
+    "last_access": 1755478543.7335808,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25940
+  },
+  "9b8dd3c4c80e056cb3c7958014c50027": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\K\u03a8-ID\\K\u03a8-ID_ver1.png",
+    "source_mtime": 1750484678.625,
+    "cache_time": 1755478543.8638575,
+    "last_access": 1755478543.8638582,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26518
+  },
+  "ebce6bdac1008cb6e5f68fa6c1a1c537": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\K\u03a8-ID\\K\u03a8-ID_ver2.png",
+    "source_mtime": 1750484678.631,
+    "cache_time": 1755478543.9656315,
+    "last_access": 1755478543.965632,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26703
+  },
+  "2449ce4770dd38ddf4329eaafac81d96": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\K\u03a9NX-\\K\u03a9NX-_ver1.png",
+    "source_mtime": 1750484678.639,
+    "cache_time": 1755478544.0561962,
+    "last_access": 1755478544.0561967,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25314
+  },
+  "d9eedbabe491aecca7217c4a9601a6e1": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\LGHFLHGF\\LGHFLHGF_ver1.png",
+    "source_mtime": 1750484678.697,
+    "cache_time": 1755478544.1539476,
+    "last_access": 1755478544.1539478,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25117
+  },
+  "bb488215aa8bd98aeb08a309815e5c0c": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\LHFALGFA\\LHFALGFA_ver1.png",
+    "source_mtime": 1750484678.706,
+    "cache_time": 1755478544.2434275,
+    "last_access": 1755478544.2434278,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25811
+  },
+  "834b7c373242127d24f51d5c35ef687a": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\L\u0394-SW-\\L\u0394-SW-_ver1.png",
+    "source_mtime": 1750484678.715,
+    "cache_time": 1755478544.3354273,
+    "last_access": 1755478544.3354278,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 30960
+  },
+  "38321d04ab2374ead64db84fa3816362": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\L\u03a9\u039b-X\\L\u03a9\u039b-X_ver1.png",
+    "source_mtime": 1750484678.753,
+    "cache_time": 1755478544.4301763,
+    "last_access": 1755478544.4301767,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24484
+  },
+  "6e675be3ecc5fd02a53e46256d8c5561": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\MROV\\MROV_ver1.png",
+    "source_mtime": 1750484678.785,
+    "cache_time": 1755478544.5217402,
+    "last_access": 1755478544.521741,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26112
+  },
+  "4df350a2b9c2598a1ba324a068ada7b5": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\MROV\\MROV_ver2.png",
+    "source_mtime": 1750484678.79,
+    "cache_time": 1755478544.6974447,
+    "last_access": 1755478544.6974452,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27197
+  },
+  "aa8b6758e5d1be90ee32b2d5f9df1a96": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\MX\u03a3N\\MX\u03a3N_ver1.png",
+    "source_mtime": 1750484678.822,
+    "cache_time": 1755478544.789661,
+    "last_access": 1755478544.7896612,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26193
+  },
+  "6d3f43e1e97ec88a1a9c26e97b9a2274": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\M\u039bW\u0394\\M\u039bW\u0394_ver1.png",
+    "source_mtime": 1750484678.83,
+    "cache_time": 1755478544.9211814,
+    "last_access": 1755478544.921182,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 21816
+  },
+  "0564feaa101785050f58920d7897f0ca": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\M\u039bW\u0394\\M\u039bW\u0394_ver2.png",
+    "source_mtime": 1750484678.837,
+    "cache_time": 1755478545.0164137,
+    "last_access": 1755478545.0164142,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28012
+  },
+  "3ccf3974c11f44e423737f49ed15066a": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\M\u039bW\u0394\\M\u039bW\u0394_ver3.png",
+    "source_mtime": 1750484678.842,
+    "cache_time": 1755478545.1103325,
+    "last_access": 1755478545.110333,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27711
+  },
+  "6ce796d3e12f514964e6134a1adf2a59": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\NROT\\NROT_ver1.png",
+    "source_mtime": 1750484678.857,
+    "cache_time": 1755478545.201061,
+    "last_access": 1755478545.2010617,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25437
+  },
+  "42ef8bdc3d9947c208752620712754a3": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\OTNS\\OTNS_ver1.png",
+    "source_mtime": 1750484678.941,
+    "cache_time": 1755478545.442524,
+    "last_access": 1755478545.4425244,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25903
+  },
+  "fdce90e12f488acecca40a417d87ba7c": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\OTR\u039b-\\OTR\u039b-_ver1.png",
+    "source_mtime": 1750484678.95,
+    "cache_time": 1755478545.6714666,
+    "last_access": 1755478545.6714668,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25622
+  },
+  "ef5deaa8308178e780801be48cacd3ca": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\OVX\u0394\\OVX\u0394_ver1.png",
+    "source_mtime": 1750484678.96,
+    "cache_time": 1755478545.8990195,
+    "last_access": 1755478545.8990202,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23963
+  },
+  "cb772d16088819c96893d394695da2f1": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\O\u0393\u039b-T\\O\u0393\u039b-T_ver1.png",
+    "source_mtime": 1750484678.977,
+    "cache_time": 1755478546.1293685,
+    "last_access": 1755478546.129369,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24228
+  },
+  "918d41dd23101430760f9f1669f5ccb7": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\O\u039b-T\u039b-\\O\u039b-T\u039b-_ver1.png",
+    "source_mtime": 1750484678.986,
+    "cache_time": 1755478546.4716132,
+    "last_access": 1755478546.471614,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23208
+  },
+  "6fd10e4571be258f2c8c48796cea5fde": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\QN\u039bP\\QN\u039bP_ver1.png",
+    "source_mtime": 1750484679.03,
+    "cache_time": 1755478546.704976,
+    "last_access": 1755478546.7049766,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25369
+  },
+  "a59864fad6ae953935e6d0f735fe8963": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Q\u039b-Z-\u03b8\\Q\u039b-Z-\u03b8_ver1.png",
+    "source_mtime": 1750484679.048,
+    "cache_time": 1755478546.9867249,
+    "last_access": 1755478546.9867253,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26373
+  },
+  "3f667359ab253c5533bd17d6baaa355b": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\RRRS\\RRRS_ver1.png",
+    "source_mtime": 1750484679.064,
+    "cache_time": 1755478547.2120476,
+    "last_access": 1755478547.2120478,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25373
+  },
+  "b2b4404d3c042e1a090246f36a1f1d88": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\RRRS\\RRRS_ver2.png",
+    "source_mtime": 1750484679.069,
+    "cache_time": 1755478547.4567142,
+    "last_access": 1755478547.4567149,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25568
+  },
+  "7a6503c6b439023aebf3b0dba4acce5f": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\RX-L\u0394-\\RX-L\u0394-_ver1.png",
+    "source_mtime": 1750484679.087,
+    "cache_time": 1755478547.6963778,
+    "last_access": 1755478547.6963782,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26322
+  },
+  "e4aca7ba9be44c8e17c259ada46e622d": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\RY\u03a9\u039b\\RY\u03a9\u039b_ver1.png",
+    "source_mtime": 1750484679.095,
+    "cache_time": 1755478547.9228027,
+    "last_access": 1755478547.9228032,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24535
+  },
+  "cc31cf309602568b89e5fd3748935c6b": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\RZ-H\u03a3-\\RZ-H\u03a3-_ver1.png",
+    "source_mtime": 1750484679.117,
+    "cache_time": 1755478548.1780682,
+    "last_access": 1755478548.1780686,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27395
+  },
+  "131494c2d2b7f27010bdb45d0c383ae3": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\RZ-H\u03a3-\\RZ-H\u03a3-_ver2.png",
+    "source_mtime": 1750484679.122,
+    "cache_time": 1755478548.4385865,
+    "last_access": 1755478548.438587,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24942
+  },
+  "e998c2b00c299756e7da99f5ad971b26": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\R\u039bT\u039b\\R\u039bT\u039b_ver1.png",
+    "source_mtime": 1750484679.16,
+    "cache_time": 1755478548.668886,
+    "last_access": 1755478548.6688864,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23973
+  },
+  "9630322687cb77f9cb83bf2c29ff4a30": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\SZ-\u03b8\u039b\\SZ-\u03b8\u039b_ver1.png",
+    "source_mtime": 1750484679.202,
+    "cache_time": 1755478548.991699,
+    "last_access": 1755478548.9916992,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26074
+  },
+  "b7db13d35d42ce511816c772007dbdc8": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\SZE\u03b8-\\SZE\u03b8-_ver1.png",
+    "source_mtime": 1750484679.211,
+    "cache_time": 1755478549.2169585,
+    "last_access": 1755478549.2169588,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24534
+  },
+  "398594e9ca5bc8f41748a4a579086b6e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\S\u039bTO\\S\u039bTO_ver1.png",
+    "source_mtime": 1750484679.221,
+    "cache_time": 1755478549.494392,
+    "last_access": 1755478549.4943922,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26726
+  },
+  "187211f4a110d5b8627266bb1ba8f173": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\TW-\u03a8\u03a9\\TW-\u03a8\u03a9_ver1.png",
+    "source_mtime": 1750484679.24,
+    "cache_time": 1755478549.72396,
+    "last_access": 1755478549.7239602,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24268
+  },
+  "7ca8db1a5d0dc7a5a6f44b47fc55dba6": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\TYH\u03b8\\TYH\u03b8_ver1.png",
+    "source_mtime": 1750484679.257,
+    "cache_time": 1755478549.95126,
+    "last_access": 1755478549.9512606,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28471
+  },
+  "a259ed38c8f90a4a2c4df0287e8439cf": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\UQV\u039b\\UQV\u039b_ver1.png",
+    "source_mtime": 1750484679.281,
+    "cache_time": 1755478550.1824114,
+    "last_access": 1755478550.1824117,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26731
+  },
+  "5a4de843d6ecab3a7d76ffed241935fc": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\USS\u039b-\\USS\u039b-_ver2.png",
+    "source_mtime": 1750484679.291,
+    "cache_time": 1755478550.4592695,
+    "last_access": 1755478550.45927,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28987
+  },
+  "dcc9abf6a2cbe0d339ed2c7cdce4e097": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\VNR\u039b-\\VNR\u039b-_ver1.png",
+    "source_mtime": 1750484679.311,
+    "cache_time": 1755478550.6953466,
+    "last_access": 1755478550.6953473,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25880
+  },
+  "f24d96f15f5cfe3e9cbb55194af7b34e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\VPY-\u03a9\\VPY-\u03a9_ver1.png",
+    "source_mtime": 1750484679.33,
+    "cache_time": 1755478550.9249659,
+    "last_access": 1755478550.9249663,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 30167
+  },
+  "9369b3c849a54d6915781594b6c07f2e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\VPZ\u03a3-\\VPZ\u03a3-_ver1.png",
+    "source_mtime": 1750484679.34,
+    "cache_time": 1755478551.163685,
+    "last_access": 1755478551.1636853,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28117
+  },
+  "3d47b7ea5bcfb567ebd8787ca708de2d": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\W-CB\u03b8-\\W-CB\u03b8-_ver1.png",
+    "source_mtime": 1750484679.349,
+    "cache_time": 1755478551.4982677,
+    "last_access": 1755478551.4982681,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25642
+  },
+  "85265576ce98979964406815f3912448": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\W-C\u03a3\u039b-\\W-C\u03a3\u039b-_ver2.png",
+    "source_mtime": 1750484679.358,
+    "cache_time": 1755478551.740915,
+    "last_access": 1755478551.7409153,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27273
+  },
+  "75cdeeb4a0fad1988c88aff1e8d3cfa8": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\W-K\u03a9\u039b-\\W-K\u03a9\u039b-_ver1.png",
+    "source_mtime": 1750484679.369,
+    "cache_time": 1755478552.0197659,
+    "last_access": 1755478552.0197663,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28513
+  },
+  "ba2084ad0f0f16b693145460f10f1a49": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\WAL\u03a3-\\WAL\u03a3-_ver1.png",
+    "source_mtime": 1750484679.394,
+    "cache_time": 1755478552.256005,
+    "last_access": 1755478552.2560055,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27092
+  },
+  "92018c24072bbecc9bc2d5f44c2ec22d": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\W\u03a9-W-\u03a9-\\W\u03a9-W-\u03a9-_ver2.png",
+    "source_mtime": 1750484679.403,
+    "cache_time": 1755478552.4904246,
+    "last_access": 1755478552.490425,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27544
+  },
+  "bbc4ce46fbfa7e59534b9775f02e8ae5": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\W\u03a9-Z-\u03b8\\W\u03a9-Z-\u03b8_ver1.png",
+    "source_mtime": 1750484679.413,
+    "cache_time": 1755478552.7245836,
+    "last_access": 1755478552.7245839,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25954
+  },
+  "c74823cd83d927f55c8c9bbc646d44a8": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X-AA\u03a9-\\X-AA\u03a9-_ver1.png",
+    "source_mtime": 1750484679.422,
+    "cache_time": 1755478552.959496,
+    "last_access": 1755478552.9594963,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26527
+  },
+  "b27f508258a5d992ae1226ba3f19ac60": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X-B\u03a6-\u03b8-\\X-B\u03a6-\u03b8-_ver1.png",
+    "source_mtime": 1750484679.431,
+    "cache_time": 1755478553.2025638,
+    "last_access": 1755478553.2025642,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26664
+  },
+  "815fa0eb975bdba4af7c494baca47391": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X-\u03b8-QN\\X-\u03b8-QN_ver1.png",
+    "source_mtime": 1750484679.441,
+    "cache_time": 1755478553.458215,
+    "last_access": 1755478553.4582155,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26395
+  },
+  "b068f13bd2256a7a7e931b3e5bdcec6f": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X-\u03b8-V\u039b\\X-\u03b8-V\u039b_ver1.png",
+    "source_mtime": 1750484679.45,
+    "cache_time": 1755478553.695955,
+    "last_access": 1755478553.6959555,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27381
+  },
+  "35a46962b1ab2467c95c69abf9504163": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X-\u03b8-V\u039b\\X-\u03b8-V\u039b_ver2.png",
+    "source_mtime": 1750484679.457,
+    "cache_time": 1755478554.0500586,
+    "last_access": 1755478554.0500588,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27657
+  },
+  "bd1858ed6fd607d104e3f816e328c57f": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X-\u03b8-V\u039b\\X-\u03b8-V\u039b_ver3.png",
+    "source_mtime": 1750484679.463,
+    "cache_time": 1755478554.2914288,
+    "last_access": 1755478554.2914293,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27285
+  },
+  "b592ebe25af5720e3060500f91ac318c": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X-\u03b8-V\u039b\\X-\u03b8-V\u039b_ver4.png",
+    "source_mtime": 1750484679.469,
+    "cache_time": 1755478554.5759327,
+    "last_access": 1755478554.575933,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27657
+  },
+  "7a4b88fed6316385ba07ad398599ae90": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\XCK\u03a9\\XCK\u03a9_ver1.png",
+    "source_mtime": 1750484679.487,
+    "cache_time": 1755478554.8178158,
+    "last_access": 1755478554.8178163,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26795
+  },
+  "5c5423ea9535262eb06f1a8b98af4520": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X\u03a9-\\X\u03a9-_ver1.png",
+    "source_mtime": 1750484679.542,
+    "cache_time": 1755478555.0546288,
+    "last_access": 1755478555.054629,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25950
+  },
+  "7e734925bd6ee347eeff574cdf921a77": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X\u03a9-\\X\u03a9-_ver2.png",
+    "source_mtime": 1750484679.547,
+    "cache_time": 1755478555.2943916,
+    "last_access": 1755478555.294392,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25982
+  },
+  "804476787157c90fb167f4fbd2af0994": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\X\u03a9-\u039b-\u039b\\X\u03a9-\u039b-\u039b_ver1.png",
+    "source_mtime": 1750484679.557,
+    "cache_time": 1755478555.5327926,
+    "last_access": 1755478555.532793,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26777
+  },
+  "4a7899274ef73aaefda1b6e355a9b636": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Y-FA\u03a9-\\Y-FA\u03a9-_ver1.png",
+    "source_mtime": 1750484679.567,
+    "cache_time": 1755478555.7624512,
+    "last_access": 1755478555.7624514,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 30703
+  },
+  "c62500b083193d521ec58edfa09beefd": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Y-\u03b2\u03a6\u03a9-\\Y-\u03b2\u03a6\u03a9-_ver1.png",
+    "source_mtime": 1750484679.603,
+    "cache_time": 1755478556.0049634,
+    "last_access": 1755478556.0049636,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24958
+  },
+  "be788a847d446993ace4fbcfbf573f32": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Y-\u03a3-\u039b-\u0393\\Y-\u03a3-\u039b-\u0393_ver1.png",
+    "source_mtime": 1750484679.584,
+    "cache_time": 1755478556.253353,
+    "last_access": 1755478556.2533538,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26194
+  },
+  "701997835d10f8e85153e02a5b80d421": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Y\u03a8-\u03b2\u03a3-\\Y\u03a8-\u03b2\u03a3-_ver1.png",
+    "source_mtime": 1750484679.63,
+    "cache_time": 1755478556.599796,
+    "last_access": 1755478556.5997963,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 23175
+  },
+  "252b81449e42812eba528e3e1a8a5d12": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Y\u03a8-\u03a6\u0394X-\u03a8GF\u03a6-\u03b8-TO\u039b-Y-\u03a3-\u039b\\Y\u03a8-\u03a6\u0394X-\u03a8GF\u03a6-\u03b8-TO\u039b-Y-\u03a3-\u039b_ver1.png",
+    "source_mtime": 1750484679.62,
+    "cache_time": 1755478556.839221,
+    "last_access": 1755478556.8392215,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 28256
+  },
+  "73312f0b53d8504c4b052320ec813b51": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Z\u0394-Y-\u0394-\\Z\u0394-Y-\u0394-_ver2.png",
+    "source_mtime": 1750484679.66,
+    "cache_time": 1755478557.1242263,
+    "last_access": 1755478557.1242268,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 26211
+  },
+  "60b2691623edea9bdbcaff5a2521f25e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\Z\u03a8-\u0394-Z-\u03b8RY\u03a3-Y\u03a8-\u03a3-Y-\u03a9RZ\u0394-\\Z\u03a8-\u0394-Z-\u03b8RY\u03a3-Y\u03a8-\u03a3-Y-\u03a9RZ\u0394-_ver1.png",
+    "source_mtime": 1750484679.67,
+    "cache_time": 1755478557.3965678,
+    "last_access": 1755478557.396568,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 29637
+  },
+  "712bec83ebdd9dbece1a87986e3f66ff": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u03b1C\u03a9-X\\\u03b1C\u03a9-X_ver1.png",
+    "source_mtime": 1750484679.754,
+    "cache_time": 1755478557.6369617,
+    "last_access": 1755478557.6369624,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24391
+  },
+  "e8b45f356cd5945464aecb159f6c9328": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u03b1L\u03b2\u03b2\u03b2\u03a8-\u03b2F\u03b1\u03b1\u03b1\u03b1\u03b1\u03b1\u03b1\u03b1\\\u03b1L\u03b2\u03b2\u03b2\u03a8-\u03b2F\u03b1\u03b1\u03b1\u03b1\u03b1\u03b1\u03b1\u03b1_ver1.png",
+    "source_mtime": 1750484679.763,
+    "cache_time": 1755478557.8652396,
+    "last_access": 1755478557.8652403,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24817
+  },
+  "a8bf09086dc0f6bff6598560a3e1c60d": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u03b1\u03a3\u039bW-\\\u03b1\u03a3\u039bW-_ver1.png",
+    "source_mtime": 1750484679.772,
+    "cache_time": 1755478558.1058295,
+    "last_access": 1755478558.1058297,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25814
+  },
+  "2dadb82bb6e78f941bd7ce81252760ba": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u03b2F\u03b1LHHHH\u03b2F\u03b1LGGGG\\\u03b2F\u03b1LHHHH\u03b2F\u03b1LGGGG_ver1.png",
+    "source_mtime": 1750484679.781,
+    "cache_time": 1755478558.368048,
+    "last_access": 1755478558.3680482,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 27959
+  },
+  "1179d7fb4ae5b4b4b04e068d6b3ce40d": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u03b2\u03a6\u03b1\u03a8\u03a6\u03a8\u03b2\u03b2\\\u03b2\u03a6\u03b1\u03a8\u03a6\u03a8\u03b2\u03b2_ver1.png",
+    "source_mtime": 1750484679.79,
+    "cache_time": 1755478558.6050644,
+    "last_access": 1755478558.6050649,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25289
+  },
+  "ca563385cc0d02f2f1f10d6d71dde7c1": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u03b2\u03a9OY-\\\u03b2\u03a9OY-_ver1.png",
+    "source_mtime": 1750484679.801,
+    "cache_time": 1755478558.8366537,
+    "last_access": 1755478558.8366542,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 24197
+  },
+  "070744f741e67ded14fc829ce5f8f750": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u0394-OW-B\u03b8-TX-L\\\u0394-OW-B\u03b8-TX-L_ver1.png",
+    "source_mtime": 1750484679.697,
+    "cache_time": 1755478559.1680977,
+    "last_access": 1755478559.1680982,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25778
+  },
+  "a680fe1837c1da9e9540a7df626daf7e": {
+    "source_path": "F:\\CODE\\TKA\\desktop\\legacy\\images\\sequence_card_images\\\u0394-RSY-\\\u0394-RSY-_ver1.png",
+    "source_mtime": 1750484679.707,
+    "cache_time": 1755478559.4221797,
+    "last_access": 1755478559.4221802,
+    "target_width": 372,
+    "target_height": 342,
+    "scale_factor": 0.8484848484848485,
+    "file_size": 25090
   }
 }

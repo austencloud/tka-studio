@@ -1,25 +1,28 @@
+from __future__ import annotations
+from typing import Union,Optional
 from copy import deepcopy
 from dataclasses import dataclass, field
-from typing import Optional, Union
+from typing import Optional,Optional
 
 from enums.letter.letter import Letter
 from enums.letter.letter_type import LetterType
-from data.constants import BLUE_ATTRS, LETTER, RED_ATTRS
 from enums.prop_type import PropType
+
+from data.constants import BLUE_ATTRS, LETTER, RED_ATTRS
 
 
 @dataclass
 class PictographState:
-    pictograph_data: dict[str, Union[str, dict[str, str]]] = field(default_factory=dict)
+    pictograph_data: dict[str, str | dict[str, str]] = field(default_factory=dict)
     is_blank: bool = False
     disable_gold_overlay: bool = False
     disable_borders: bool = False  # Added flag to disable borders
     blue_reversal: bool = False
     red_reversal: bool = False
     hide_tka_glyph: bool = False
-    letter: Optional[Letter] = None
-    letter_type: Optional[LetterType] = None
-    prop_type_enum: Optional[PropType] = None
+    letter: Letter | None = None
+    letter_type: LetterType | None = None
+    prop_type_enum: PropType | None = None
     open_close_state: str = ""
     vtg_mode: str = ""
     direction: str = ""
@@ -30,7 +33,7 @@ class PictographState:
     grid_mode: str = ""
 
     def update_pictograph_state(
-        self, pictograph_data: dict[str, Union[str, dict[str, str]]]
+        self, pictograph_data: dict[str, str | dict[str, str]]
     ) -> None:
         copied_data = deepcopy(pictograph_data)  # Deep copy the entire structure
 
