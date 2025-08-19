@@ -431,8 +431,8 @@ export class AnimatedPictographDataService
       case "ccw":
       case "counter_clockwise":
         return RotationDirection.COUNTER_CLOCKWISE;
-      case "no_rot":
-      case "no_rotation":
+      case "noRotation":
+      case "noRotation":
         return RotationDirection.NO_ROTATION;
       default:
         return RotationDirection.NO_ROTATION;

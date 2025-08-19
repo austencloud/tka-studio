@@ -12,12 +12,14 @@ import type { ServiceInterface } from "./di/types";
 import { validateContainerConfiguration } from "./di/validation";
 
 // Import registration functions
+import { registerSharedServices } from "./di/registration/shared-services";
 import { registerBrowseServices } from "./di/registration/browse-services";
 import { registerCoreServices } from "./di/registration/core-services";
 import { registerPositioningServices } from "./di/registration/positioning-services";
 import { registerMotionTesterServices } from "./di/registration/motion-tester-services";
 import { registerAnimatorServices } from "./di/registration/animator-services";
 import { registerCodexServices } from "./di/registration/codex-services";
+import { registerMovementServices } from "./di/registration/movement-services";
 // TODO: Uncomment when image export services are implemented
 // import { registerImageExportServices } from "./di/registration/image-export-services";
 
@@ -29,12 +31,15 @@ export async function createWebApplication(): Promise<ServiceContainer> {
 
   try {
     // Register services in the correct dependency order
+    // Shared services must be registered first as they have no dependencies
+    await registerSharedServices(container);
     await registerCoreServices(container);
     await registerCodexServices(container);
     await registerPositioningServices(container);
     await registerAnimatorServices(container);
     await registerBrowseServices(container);
     await registerMotionTesterServices(container);
+    await registerMovementServices(container);
     // TODO: Uncomment when image export services are implemented
     // await registerImageExportServices(container);
 

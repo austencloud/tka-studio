@@ -28,12 +28,20 @@
   // Create codex state using runes
   const codexState = createCodexState();
 
+  // Initialize pictographs when component mounts
+  $effect(() => {
+    if (isVisible) {
+      codexState.refreshPictographs();
+    }
+  });
+
   // Reactive values
   let filteredPictographsByLetter = $derived(
     codexState.filteredPictographsByLetter()
   );
   let letterRows = $derived(codexState.letterRows);
   let isLoading = $derived(codexState.isLoading);
+  let isInitialized = $derived(codexState.isInitialized);
   let currentOrientation = $derived(codexState.currentOrientation);
   let error = $derived(codexState.error);
   let isProcessingOperation = $derived(codexState.isProcessingOperation);
@@ -119,6 +127,11 @@
           <div class="loading-state">
             <div class="loading-spinner"></div>
             <p>Processing operation...</p>
+          </div>
+        {:else if !isInitialized}
+          <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Initializing codex...</p>
           </div>
         {:else if Object.keys(filteredPictographsByLetter).length === 0}
           <div class="empty-state">

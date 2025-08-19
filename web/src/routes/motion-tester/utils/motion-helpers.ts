@@ -79,9 +79,9 @@ export function getRotationDirection(
   motionType: string,
   turns: number
 ): string {
-  if (startLocation === endLocation) return "NO_ROT";
-  if (motionType === MotionType.DASH) return "NO_ROT";
-  if (turns === 0) return "NO_ROT";
+  if (startLocation === endLocation) return "noRotation";
+  if (motionType === MotionType.DASH) return "noRotation";
+  if (turns === 0) return "noRotation";
 
   // Simplified rotation logic for display
   const clockwisePairs = [

@@ -75,8 +75,8 @@ export class EnumConversionService implements IEnumConversionService {
       ccw: RotationDirection.COUNTER_CLOCKWISE,
       counter_clockwise: RotationDirection.COUNTER_CLOCKWISE,
       counterclockwise: RotationDirection.COUNTER_CLOCKWISE,
-      no_rot: RotationDirection.NO_ROTATION,
-      no_rotation: RotationDirection.NO_ROTATION,
+      noRotation: RotationDirection.NO_ROTATION,
+      noRotation: RotationDirection.NO_ROTATION,
     };
 
     const normalized = str.toLowerCase().trim();
@@ -141,14 +141,14 @@ export class EnumConversionService implements IEnumConversionService {
     }
   }
 
-  rotationDirectionToString(rotDir: RotationDirection): string {
-    switch (rotDir) {
+  rotationDirectionToString(rotationDirection: RotationDirection): string {
+    switch (rotationDirection) {
       case RotationDirection.CLOCKWISE:
         return "cw";
       case RotationDirection.COUNTER_CLOCKWISE:
         return "ccw";
       case RotationDirection.NO_ROTATION:
-        return "no_rot";
+        return "noRotation";
       default:
         return "cw";
     }

@@ -3,7 +3,7 @@ import { GridMode } from "$lib/domain";
 declare global {
   // Extend window typing for csvData injection
   interface Window {
-    csvData?: CsvDataSet;
+    csvData?: CsvDataSet; 
   }
 }
 /**

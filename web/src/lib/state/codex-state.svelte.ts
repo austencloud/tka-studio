@@ -7,25 +7,23 @@
  */
 
 import type { PictographData } from "$lib/domain/PictographData";
-import { CodexService } from "$lib/services/codex/CodexService";
+import { getContext } from "svelte";
+import type { ServiceContainer } from "$lib/services/di/ServiceContainer";
+import { ICodexServiceInterface } from "$lib/services/di/interfaces/codex-interfaces";
+import type { ICodexService } from "$lib/services/codex/ICodexService";
 
 export function createCodexState() {
-  // TODO: Use DI container to resolve CodexService instead of direct instantiation
-  // const codexService = new CodexService();
-
-  // Temporary placeholder until DI integration is complete
-  const codexService = {
-    getLettersByRow: () => [
-      ["A", "B", "C"],
-      ["D", "E", "F"],
-    ], // Placeholder
-    loadAllPictographs: async () => [],
-    getAllPictographData: async () => ({}),
-    rotateAllPictographs: async (pictographs: any[]) => pictographs,
-    mirrorAllPictographs: async (pictographs: any[]) => pictographs,
-    colorSwapAllPictographs: async (pictographs: any[]) => pictographs,
-    getPictographByLetter: async (letter: string) => null,
-  };
+  // Get the DI container from context (provided by layout)
+  const getContainer = getContext<() => ServiceContainer | null>("di-container");
+  
+  function getCodexService(): ICodexService {
+    const container = getContainer?.();
+    if (!container) {
+      throw new Error("DI container not yet available - this should not happen after layout initialization");
+    }
+    
+    return container.resolve(ICodexServiceInterface);
+  }
 
   // Core reactive state using Svelte 5 runes
   let searchTerm = $state<string>("");
@@ -36,8 +34,9 @@ export function createCodexState() {
   let error = $state<string | null>(null);
   let isProcessingOperation = $state<boolean>(false);
 
-  // Get letter rows from service
-  const letterRows = codexService.getLettersByRow();
+  // Get letter rows from service - initialized as empty and loaded when needed
+  let letterRows = $state<string[][]>([]);
+  let isInitialized = $state<boolean>(false);
 
   // Derived reactive values
   const filteredPictographs = $derived(
@@ -72,20 +71,30 @@ export function createCodexState() {
     return result;
   });
 
-  // Load all pictographs and organize by letter - REMOVED AUTOMATIC $effect TO PREVENT INFINITE LOOP
-  // Call loadAllPictographs() manually when needed instead of automatically
-
+  // Load all pictographs and organize by letter
   async function loadAllPictographs() {
+    if (isLoading) return; // Prevent multiple simultaneous loads
+    
     isLoading = true;
     error = null;
 
     try {
+      const codexService = getCodexService();
+      
       // Load pictographs from service
       const allPictographs = await codexService.loadAllPictographs();
       pictographs = allPictographs;
 
       // Also load organized by letter
       pictographsByLetter = await codexService.getAllPictographData();
+      
+      // Load letter rows if not already loaded
+      if (letterRows.length === 0) {
+        letterRows = codexService.getLettersByRow();
+      }
+      
+      isInitialized = true;
+      console.log("✅ Codex data loaded successfully");
     } catch (err) {
       console.error("Failed to load pictographs:", err);
       error = "Failed to load pictographs. Please try again.";
@@ -102,6 +111,7 @@ export function createCodexState() {
 
     isProcessingOperation = true;
     try {
+      const codexService = getCodexService();
       console.log("🔄 Performing rotate operation...");
       const rotatedPictographs =
         await codexService.rotateAllPictographs(pictographs);
@@ -122,6 +132,7 @@ export function createCodexState() {
 
     isProcessingOperation = true;
     try {
+      const codexService = getCodexService();
       console.log("🪞 Performing mirror operation...");
       const mirroredPictographs =
         await codexService.mirrorAllPictographs(pictographs);
@@ -142,6 +153,7 @@ export function createCodexState() {
 
     isProcessingOperation = true;
     try {
+      const codexService = getCodexService();
       console.log("⚫⚪ Performing color swap operation...");
       const swappedPictographs =
         await codexService.colorSwapAllPictographs(pictographs);
@@ -165,6 +177,9 @@ export function createCodexState() {
     },
     get isLoading() {
       return isLoading;
+    },
+    get isInitialized() {
+      return isInitialized;
     },
     get pictographs() {
       return pictographs;
@@ -211,6 +226,7 @@ export function createCodexState() {
     },
 
     async getPictographByLetter(letter: string) {
+      const codexService = getCodexService();
       return await codexService.getPictographByLetter(letter);
     },
 

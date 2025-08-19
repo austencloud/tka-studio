@@ -69,19 +69,7 @@ function getStoredState(): UIState {
   }
 }
 
-function saveStateToLocalStorage(state: UIState) {
-  if (typeof window === "undefined") return;
 
-  try {
-    const saveData = {
-      sortMethod: state.sortMethod,
-      lastSelectedTab: state.lastSelectedTab,
-    };
-    localStorage.setItem("optionPickerUIState", JSON.stringify(saveData));
-  } catch (e) {
-    console.error("Error writing to localStorage:", e);
-  }
-}
 
 /**
  * Create sophisticated option picker state using ONLY Svelte 5 runes

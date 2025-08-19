@@ -39,7 +39,7 @@ export interface IMotionParameterService {
   // Enum mapping
   mapMotionTypeToEnum(motionType: string): MotionType;
   mapOrientationToEnum(orientation: string): Orientation;
-  mapRotationDirectionToEnum(rotDir: string): RotationDirection;
+  mapRotationDirectionToEnum(rotationDirection: string): RotationDirection;
   mapLocationToEnum(location: string): Location;
 
   // Data conversion
@@ -93,5 +93,5 @@ export interface IEnumConversionService {
   orientationToString(orientation: Orientation): string;
   motionTypeToString(motionType: MotionType): string;
   locationToString(location: Location): string;
-  rotationDirectionToString(rotDir: RotationDirection): string;
+  rotationDirectionToString(rotationDirection: RotationDirection): string;
 }

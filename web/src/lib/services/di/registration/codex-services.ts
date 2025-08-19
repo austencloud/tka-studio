@@ -5,26 +5,11 @@
  */
 
 import type { ServiceContainer } from "../ServiceContainer";
-import {
-  LetterMappingRepository,
-  type ILetterMappingRepository,
-} from "$lib/repositories/LetterMappingRepository";
-import {
-  LessonRepository,
-  type ILessonRepository,
-} from "$lib/repositories/LessonRepository";
-import {
-  PictographQueryService,
-  type IPictographQueryService,
-} from "$lib/services/codex/PictographQueryService";
-import {
-  PictographOperationsService,
-  type IPictographOperationsService,
-} from "$lib/services/codex/PictographOperationsService";
-import {
-  CodexService,
-  type ICodexService,
-} from "$lib/services/codex/CodexService";
+import { LetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
+import { LessonRepository } from "$lib/repositories/LessonRepository";
+import { PictographQueryService } from "$lib/services/codex/PictographQueryService";
+import { PictographOperationsService } from "$lib/services/codex/PictographOperationsService";
+import { CodexService } from "$lib/services/codex/CodexService";
 import {
   ICodexServiceInterface,
   ILetterMappingRepositoryInterface,
@@ -35,6 +20,7 @@ import {
 } from "../interfaces/codex-interfaces";
 import { CsvDataService } from "../../implementations/CsvDataService";
 import { IOptionDataServiceInterface } from "../interfaces/core-interfaces";
+import { OptionDataService } from "../../implementations/OptionDataService";
 
 /**
  * Register all codex services with their dependencies
@@ -69,7 +55,7 @@ export async function registerCodexServices(
     return new PictographQueryService(
       letterMappingRepo,
       csvDataService,
-      optionDataService as any // Type assertion to handle interface/implementation mismatch
+      optionDataService as OptionDataService // Type assertion to handle interface/implementation mismatch
     );
   });
 

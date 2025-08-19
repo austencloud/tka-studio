@@ -140,8 +140,8 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
 
   private calculateProRotation(motion: MotionData, location: Location): number {
     /**Calculate rotation for PRO arrows based on rotation direction.*/
-    const rotDir = motion.rotationDirection?.toLowerCase();
-    if (rotDir === "clockwise" || rotDir === "cw") {
+    const rotationDirection = motion.rotationDirection?.toLowerCase();
+    if (rotationDirection === "clockwise" || rotationDirection === "cw") {
       return this.proClockwiseMap[location] || 0.0;
     } else {
       return this.proCounterClockwiseMap[location] || 0.0;
@@ -153,8 +153,8 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     location: Location
   ): number {
     /**Calculate rotation for ANTI arrows based on rotation direction.*/
-    const rotDir = motion.rotationDirection?.toLowerCase();
-    if (rotDir === "clockwise" || rotDir === "cw") {
+    const rotationDirection = motion.rotationDirection?.toLowerCase();
+    if (rotationDirection === "clockwise" || rotationDirection === "cw") {
       return this.antiClockwiseMap[location] || 0.0;
     } else {
       return this.antiCounterClockwiseMap[location] || 0.0;
@@ -166,14 +166,14 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     location: Location
   ): number {
     /**Calculate rotation for DASH arrows with special NO_ROTATION handling.*/
-    const rotDir = motion.rotationDirection?.toLowerCase();
+    const rotationDirection = motion.rotationDirection?.toLowerCase();
 
-    if (rotDir === "no_rotation" || rotDir === "none") {
+    if (rotationDirection === "noRotation" || rotationDirection === "none") {
       const key = `${motion.startLocation},${motion.endLocation}`;
       return this.dashNoRotationMap[key] || 0.0;
     }
 
-    if (rotDir === "clockwise" || rotDir === "cw") {
+    if (rotationDirection === "clockwise" || rotationDirection === "cw") {
       return this.dashClockwiseMap[location] || 0.0;
     } else {
       return this.dashCounterClockwiseMap[location] || 0.0;

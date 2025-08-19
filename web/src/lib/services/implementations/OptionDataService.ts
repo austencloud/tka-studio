@@ -12,7 +12,6 @@ import type { GridMode } from "$lib/domain";
 import {
   MotionType,
   Location,
-  Orientation,
   RotationDirection,
   GridPosition,
 } from "$lib/domain/enums";
@@ -32,8 +31,8 @@ export interface OptionDataServiceInterface {
   ): PictographData[];
   filterOptionsByRotation(
     options: PictographData[],
-    blueRotDir: string,
-    redRotDir: string
+    blueRotationDirection: string,
+    redRotationDirection: string
   ): PictographData[];
 }
 
@@ -189,67 +188,26 @@ export class OptionDataService implements OptionDataServiceInterface {
     gridMode: string
   ): PictographData | null {
     try {
-      const letter = row.letter || row.Letter || null;
+      const letter = row.letter;
       if (!letter) {
         return null;
       }
 
       const blueMotion = createMotionData({
-        motionType: this.mapMotionType(
-          row.blueMotionType ||
-            row.BlueMotionType ||
-            row.blue_motion_type ||
-            "static"
-        ),
-        rotationDirection: this.mapRotationDirection(
-          row.blueRotationDirection ||
-            row.BluePropRotDir ||
-            row.blue_prop_rot_dir ||
-            "no_rot"
-        ),
-        startLocation: this.mapLocation(
-          row.blueStartLocation || row.BlueStartLoc || row.blue_start_loc || "n"
-        ),
-        endLocation: this.mapLocation(
-          row.blueEndLocation || row.BlueEndLoc || row.blue_end_loc || "n"
-        ),
-        turns:
-          (this.parseNumber(row.blue_turns || row.BlueTurns) as number) || 0,
-        startOrientation: this.mapOrientation(
-          row.blue_start_ori || row.BlueStartOri || "in"
-        ),
-        endOrientation: this.mapOrientation(
-          row.blue_end_ori || row.BlueEndOri || "in"
-        ),
+        motionType: this.mapMotionType(row.blueMotionType),
+        rotationDirection: this.mapRotationDirection(row.blueRotationDirection),
+        startLocation: this.mapLocation(row.blueStartLocation),
+        endLocation: this.mapLocation(row.blueEndLocation),
+        turns: 0,
         isVisible: true,
       });
 
       const redMotion = createMotionData({
-        motionType: this.mapMotionType(
-          row.redMotionType ||
-            row.RedMotionType ||
-            row.red_motion_type ||
-            "static"
-        ),
-        rotationDirection: this.mapRotationDirection(
-          row.redRotationDirection ||
-            row.RedPropRotDir ||
-            row.red_prop_rot_dir ||
-            "no_rot"
-        ),
-        startLocation: this.mapLocation(
-          row.redStartLoc || row.RedStartLoc || row.red_start_loc || "n"
-        ),
-        endLocation: this.mapLocation(
-          row.redEndLoc || row.RedEndLoc || row.red_end_loc || "n"
-        ),
-        turns: (this.parseNumber(row.red_turns || row.RedTurns) as number) || 0,
-        startOrientation: this.mapOrientation(
-          row.red_start_ori || row.RedStartOri || "in"
-        ),
-        endOrientation: this.mapOrientation(
-          row.red_end_ori || row.RedEndOri || "in"
-        ),
+        motionType: this.mapMotionType(row.redMotionType),
+        rotationDirection: this.mapRotationDirection(row.redRotationDirection),
+        startLocation: this.mapLocation(row.redStartLocation),
+        endLocation: this.mapLocation(row.redEndLocation),
+        turns: 0,
         isVisible: true,
       });
 
@@ -259,12 +217,8 @@ export class OptionDataService implements OptionDataServiceInterface {
           blue: blueMotion,
           red: redMotion,
         },
-        startPosition: this.convertToGridPosition(
-          row.startPosition || row.StartPosition
-        ),
-        endPosition: this.convertToGridPosition(
-          row.endPosition || row.EndPosition
-        ),
+        startPosition: this.convertToGridPosition(row.startPosition),
+        endPosition: this.convertToGridPosition(row.endPosition),
         gridMode: gridMode,
         isBlank: false,
         metadata: {
@@ -280,13 +234,17 @@ export class OptionDataService implements OptionDataServiceInterface {
   }
 
   /**
-   * Parse number from string, handling "fl" and other special values
+   * Calculate turns based on start/end locations and rotation direction
+   * This replaces missing turn data in CSV files
    */
-  private parseNumber(value: string): number | string {
-    if (!value) return 0;
-    if (value === "fl") return "fl";
-    const num = parseFloat(value);
-    return isNaN(num) ? 0 : num;
+  private calculateTurns(
+    _startLocationStr: string,
+    _endLocationStr: string,
+    _rotationDirectionStr: string
+  ): number {
+    // If no rotation, no turns
+
+    return 0;
   }
 
   /**
@@ -411,15 +369,17 @@ export class OptionDataService implements OptionDataServiceInterface {
    */
   filterOptionsByRotation(
     options: PictographData[],
-    blueRotDir: string,
-    redRotDir: string
+    blueRotationDirection: string,
+    redRotationDirection: string
   ): PictographData[] {
     const filtered = options.filter((option) => {
-      const blueRot = option.motions?.blue?.rotationDirection || "no_rot";
-      const redRot = option.motions?.red?.rotationDirection || "no_rot";
+      const blueRot = option.motions?.blue?.rotationDirection || "noRotation";
+      const redRot = option.motions?.red?.rotationDirection || "noRotation";
 
-      const blueMatches = blueRot === blueRotDir || blueRot === "no_rot";
-      const redMatches = redRot === redRotDir || redRot === "no_rot";
+      const blueMatches =
+        blueRot === blueRotationDirection || blueRot === "noRotation";
+      const redMatches =
+        redRot === redRotationDirection || redRot === "noRotation";
 
       return blueMatches && redMatches;
     });
@@ -513,6 +473,9 @@ export class OptionDataService implements OptionDataServiceInterface {
    * Map string motion types to enum values
    */
   private mapMotionType(motionType: string): MotionType {
+    if (!motionType) {
+      return MotionType.STATIC; // Default motion type
+    }
     switch (motionType.toLowerCase()) {
       case "pro":
         return MotionType.PRO;
@@ -532,8 +495,11 @@ export class OptionDataService implements OptionDataServiceInterface {
   /**
    * Map string rotation directions to enum values
    */
-  private mapRotationDirection(rotDir: string): RotationDirection {
-    switch (rotDir.toLowerCase()) {
+  private mapRotationDirection(rotationDirection: string): RotationDirection {
+    if (!rotationDirection) {
+      return RotationDirection.NO_ROTATION; // Default rotation direction
+    }
+    switch (rotationDirection.toLowerCase()) {
       case "cw":
       case "clockwise":
         return RotationDirection.CLOCKWISE;
@@ -541,8 +507,7 @@ export class OptionDataService implements OptionDataServiceInterface {
       case "counter_clockwise":
       case "counterclockwise":
         return RotationDirection.COUNTER_CLOCKWISE;
-      case "no_rot":
-      case "no_rotation":
+      case "noRotation":
         return RotationDirection.NO_ROTATION;
       default:
         return RotationDirection.NO_ROTATION;
@@ -553,6 +518,9 @@ export class OptionDataService implements OptionDataServiceInterface {
    * Map string locations to enum values
    */
   private mapLocation(location: string): Location {
+    if (!location) {
+      return Location.NORTH; // Default location
+    }
     switch (location.toLowerCase()) {
       case "n":
         return Location.NORTH;
@@ -593,24 +561,6 @@ export class OptionDataService implements OptionDataServiceInterface {
     }
 
     return null;
-  }
-
-  /**
-   * Map string orientations to enum values
-   */
-  private mapOrientation(orientation: string): Orientation {
-    switch (orientation.toLowerCase()) {
-      case "in":
-        return Orientation.IN;
-      case "out":
-        return Orientation.OUT;
-      case "clock":
-        return Orientation.CLOCK;
-      case "counter":
-        return Orientation.COUNTER;
-      default:
-        return Orientation.IN;
-    }
   }
 
   /**

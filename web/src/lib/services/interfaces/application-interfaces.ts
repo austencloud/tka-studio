@@ -14,6 +14,82 @@ import type {
 import type { GridMode, DifficultyLevel, OptionFilters } from "./core-types";
 import type { MotionType } from "./domain-types";
 import { BackgroundType } from "$lib/components/backgrounds/types/types";
+import type {
+  MotionType as DomainMotionType,
+  Location,
+  Orientation,
+  RotationDirection,
+  GridPosition,
+} from "$lib/domain/enums";
+
+// ============================================================================
+// SHARED UTILITY SERVICES
+// ============================================================================
+
+/**
+ * Service for centralized enum mapping utilities
+ */
+export interface IEnumMappingService {
+  mapMotionType(motionType: string): DomainMotionType;
+  mapLocation(location: string): Location;
+  mapOrientation(orientation: string): Orientation;
+  mapRotationDirection(rotationDirection: string): RotationDirection;
+  convertToGridPosition(
+    positionString: string | null | undefined
+  ): GridPosition | null;
+  getLetterType(letter: string): string;
+  normalizeMotionType(motionType: string): string;
+  normalizeLocation(location: string): string;
+  normalizeTurns(turns: number | string): number;
+}
+
+/**
+ * Service for CSV parsing utilities
+ */
+export interface ICSVParserService {
+  parseCSV(csvText: string): {
+    headers: string[];
+    rows: Array<Record<string, string>>;
+    totalRows: number;
+    successfulRows: number;
+    errors: Array<{ rowIndex: number; error: string; rawRow: string }>;
+  };
+  parseCSVToRows(csvText: string): Array<Record<string, string>>;
+  validateCSVStructure(csvText: string): { isValid: boolean; errors: string[] };
+  createRowFromValues(
+    headers: string[],
+    values: string[]
+  ): Record<string, string>;
+}
+
+/**
+ * Service for CSV loading utilities
+ */
+export interface ICSVLoaderService {
+  loadCSVFile(filename: string): Promise<{
+    success: boolean;
+    data?: string;
+    error?: string;
+    source: "fetch" | "window" | "cache";
+  }>;
+  loadCSVDataSet(): Promise<{
+    success: boolean;
+    data?: { diamondData: string; boxData: string };
+    error?: string;
+    sources: {
+      diamond: "fetch" | "window" | "cache";
+      box: "fetch" | "window" | "cache";
+    };
+  }>;
+  loadCSVForGridMode(gridMode: GridMode): Promise<{
+    success: boolean;
+    data?: string;
+    error?: string;
+    source: "fetch" | "window" | "cache";
+  }>;
+  clearCache(): void;
+  isDataCached(): boolean;
+}
 
 // ============================================================================
 // APPLICATION SETTINGS

@@ -86,7 +86,7 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
     // Helper to normalize rotation keys
     const isCW = rot === "clockwise" || rot === "cw";
     const isCCW = rot === "counter_clockwise" || rot === "ccw";
-    const isNoRot = rot === "no_rot";
+    const isNoRot = rot === "noRotation";
 
     // Mapping builders
     const tuple = (a: number, b: number) => [a, b] as [number, number];

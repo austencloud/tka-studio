@@ -379,14 +379,14 @@ export class DashLocationCalculator implements IDashLocationCalculator {
 
   private dashLocationNonZeroTurns(motion: MotionData): Location {
     /**Calculate dash location for non-zero turns.*/
-    const rotDir = motion.rotationDirection?.toLowerCase();
-    if (rotDir === "no_rotation" || rotDir === "none") {
+    const rotationDirection = motion.rotationDirection?.toLowerCase();
+    if (rotationDirection === "noRotation" || rotationDirection === "none") {
       // Fallback for no rotation
       return motion.startLocation;
     }
 
     const directionMap =
-      this.NON_ZERO_TURNS_DASH_LOCATION_MAP[rotDir] ||
+      this.NON_ZERO_TURNS_DASH_LOCATION_MAP[rotationDirection] ||
       this.NON_ZERO_TURNS_DASH_LOCATION_MAP["clockwise"];
     return directionMap?.[motion.startLocation] || motion.startLocation;
   }

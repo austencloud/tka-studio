@@ -80,12 +80,12 @@ export class MotionParameterService implements IMotionParameterService {
 
     // For static motions, no rotation
     if (motionType === "static") {
-      return "no_rot";
+      return "noRotation";
     }
 
     // For dash motions, typically no rotation unless specified
     if (motionType === "dash") {
-      return "no_rot";
+      return "noRotation";
     }
 
     // Calculate the hand path direction (clockwise or counterclockwise)
@@ -158,8 +158,8 @@ export class MotionParameterService implements IMotionParameterService {
     }
   }
 
-  mapRotationDirectionToEnum(rotDir: string): RotationDirection {
-    switch (rotDir.toLowerCase()) {
+  mapRotationDirectionToEnum(rotationDirection: string): RotationDirection {
+    switch (rotationDirection.toLowerCase()) {
       case "cw":
       case "clockwise":
         return RotationDirection.CLOCKWISE;

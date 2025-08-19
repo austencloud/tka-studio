@@ -48,7 +48,7 @@ export enum MotionColor {
 export enum RotationDirection {
   CLOCKWISE = "cw",
   COUNTER_CLOCKWISE = "ccw",
-  NO_ROTATION = "no_rot",
+  NO_ROTATION = "noRotation",
 }
 
 export enum Orientation {

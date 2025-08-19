@@ -30,7 +30,7 @@ import {
 const ROTATION_DIRS = {
   CLOCKWISE: RotationDirection.CLOCKWISE,
   COUNTER_CLOCKWISE: RotationDirection.COUNTER_CLOCKWISE,
-  NO_ROT: RotationDirection.NO_ROTATION,
+  noRotation: RotationDirection.NO_ROTATION,
 } as const;
 
 const MOTION_TYPES = {
@@ -60,27 +60,27 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       const sequence: BeatData[] = [];
 
       // Step 2: Set rotation directions based on prop continuity (legacy lines 31-35)
-      let blueRotDir: string;
-      let redRotDir: string;
+      let blueRotationDirection: string;
+      let redRotationDirection: string;
 
       if (options.propContinuity === PropContinuity.CONTINUOUS) {
-        blueRotDir = this.randomChoice([
+        blueRotationDirection = this.randomChoice([
           ROTATION_DIRS.CLOCKWISE,
           ROTATION_DIRS.COUNTER_CLOCKWISE,
         ]);
-        redRotDir = this.randomChoice([
+        redRotationDirection = this.randomChoice([
           ROTATION_DIRS.CLOCKWISE,
           ROTATION_DIRS.COUNTER_CLOCKWISE,
         ]);
       } else {
         // Random prop continuity - these will be set per motion
-        blueRotDir = "";
-        redRotDir = "";
+        blueRotationDirection = "";
+        redRotationDirection = "";
       }
 
       console.log("🔄 Rotation directions:", {
-        blueRotDir,
-        redRotDir,
+        blueRotationDirection,
+        redRotationDirection,
         propContinuity: options.propContinuity,
       });
 
@@ -127,8 +127,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
             turnAllocation.blue[i],
             turnAllocation.red[i],
             options.propContinuity || PropContinuity.CONTINUOUS,
-            blueRotDir,
-            redRotDir,
+            blueRotationDirection,
+            redRotationDirection,
             options.letterTypes || ["Dual-Shift"] // Default to Type1 if not specified
           );
 
@@ -164,8 +164,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
           algorithm: "freeform",
           beatsGenerated: generatedBeats.length,
           propContinuity: options.propContinuity,
-          blueRotDir,
-          redRotDir,
+          blueRotationDirection,
+          redRotationDirection,
           turnIntensity,
           level,
         },
@@ -195,8 +195,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
     turnBlue: number | "fl",
     turnRed: number | "fl",
     propContinuity: PropContinuity,
-    blueRotDir: string,
-    redRotDir: string,
+    blueRotationDirection: string,
+    redRotationDirection: string,
     letterTypes: string[]
   ): Promise<BeatData> {
     try {
@@ -218,13 +218,13 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       // Step 3: Filter by rotation if continuous prop continuity
       if (
         propContinuity === PropContinuity.CONTINUOUS &&
-        blueRotDir &&
-        redRotDir
+        blueRotationDirection &&
+        redRotationDirection
       ) {
         optionDicts = this.optionDataService.filterOptionsByRotation(
           optionDicts,
-          blueRotDir,
-          redRotDir
+          blueRotationDirection,
+          redRotationDirection
         );
         console.log(`🔄 After rotation filter: ${optionDicts.length} options`);
       }
@@ -260,8 +260,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       this.updateDashStaticRotationDirections(
         nextBeat,
         propContinuity,
-        blueRotDir,
-        redRotDir
+        blueRotationDirection,
+        redRotationDirection
       );
       nextBeat =
         this.orientationCalculationService.updateEndOrientations(nextBeat);
@@ -415,8 +415,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
   private updateDashStaticRotationDirections(
     beat: BeatData,
     propContinuity: string,
-    blueRotDir: string,
-    redRotDir: string
+    blueRotationDirection: string,
+    redRotationDirection: string
   ): void {
     if (!beat.pictographData) return;
 
@@ -429,8 +429,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       if (propContinuity === PropContinuity.CONTINUOUS) {
         const newRotationDirection =
           typeof turns === "number" && turns > 0
-            ? blueRotDir
-            : ROTATION_DIRS.NO_ROT;
+            ? blueRotationDirection
+            : ROTATION_DIRS.noRotation;
         beat.pictographData.motions.blue = {
           ...beat.pictographData.motions.blue,
           rotationDirection: newRotationDirection as RotationDirection,
@@ -447,7 +447,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       } else {
         beat.pictographData.motions.blue = {
           ...beat.pictographData.motions.blue,
-          rotationDirection: ROTATION_DIRS.NO_ROT,
+          rotationDirection: ROTATION_DIRS.noRotation,
         };
       }
     }
@@ -461,8 +461,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       if (propContinuity === PropContinuity.CONTINUOUS) {
         const newRotationDirection =
           typeof turns === "number" && turns > 0
-            ? redRotDir
-            : ROTATION_DIRS.NO_ROT;
+            ? redRotationDirection
+            : ROTATION_DIRS.noRotation;
         beat.pictographData.motions.red = {
           ...beat.pictographData.motions.red,
           rotationDirection: newRotationDirection as RotationDirection,
@@ -479,7 +479,7 @@ export class SequenceGenerationService implements ISequenceGenerationService {
       } else {
         beat.pictographData.motions.red = {
           ...beat.pictographData.motions.red,
-          rotationDirection: ROTATION_DIRS.NO_ROT,
+          rotationDirection: ROTATION_DIRS.noRotation,
         };
       }
     }

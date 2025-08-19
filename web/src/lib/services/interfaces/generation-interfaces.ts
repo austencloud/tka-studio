@@ -100,8 +100,8 @@ export interface IOptionDataService {
   ): import("$lib/domain/PictographData").PictographData[];
   filterOptionsByRotation(
     options: import("$lib/domain/PictographData").PictographData[],
-    blueRotDir: string,
-    redRotDir: string
+    blueRotationDirection: string,
+    redRotationDirection: string
   ): import("$lib/domain/PictographData").PictographData[];
 }
 
