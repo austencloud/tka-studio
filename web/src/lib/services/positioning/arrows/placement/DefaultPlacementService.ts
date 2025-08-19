@@ -5,7 +5,7 @@
  * Mirrors the exact functionality from desktop DefaultPlacementService.
  */
 
-import { ArrowPlacementDataService } from "../../../implementations/ArrowPlacementDataService";
+import { ArrowPlacementDataService } from "../../../implementations/data/ArrowPlacementDataService";
 import type { GridMode } from "../../../interfaces/core-types";
 import { MotionType } from "$lib/domain/enums"; // ✅ Import from centralized enums
 

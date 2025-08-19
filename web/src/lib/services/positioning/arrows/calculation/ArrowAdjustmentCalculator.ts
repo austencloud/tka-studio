@@ -33,7 +33,7 @@ import { SpecialPlacementOriKeyGenerator } from "../key_generators/SpecialPlacem
 import { TurnsTupleKeyGenerator } from "../key_generators/TurnsTupleKeyGenerator";
 import { DefaultPlacementService } from "../placement/DefaultPlacementService";
 import { SpecialPlacementService } from "../placement/SpecialPlacementService";
-import { ArrowPlacementKeyService } from "../../../implementations/ArrowPlacementKeyService";
+import { ArrowPlacementKeyService } from "../../../implementations/positioning/ArrowPlacementKeyService";
 import {
   DirectionalTupleCalculator,
   DirectionalTupleProcessor,
