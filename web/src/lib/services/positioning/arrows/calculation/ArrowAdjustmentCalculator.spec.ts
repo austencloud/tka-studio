@@ -47,7 +47,7 @@ describe("ArrowAdjustmentCalculator (end-to-end positioning)", () => {
 
     const pictograph = createPictographData({
       letter: "A",
-      grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
       motions: { blue: motion, red: motion },
     });
 

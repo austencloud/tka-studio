@@ -37,8 +37,8 @@ describe("ModernPictograph", () => {
     it("should render with pictograph data", () => {
       const pictographData = createPictographData({
         letter: "A",
-        // Provide full grid_data shape matching domain (tests previously used legacy 'mode')
-        grid_data: {
+        // Provide full gridData shape matching domain (tests previously used legacy 'mode')
+        gridData: {
           gridMode: GridMode.DIAMOND,
           center_x: 0,
           center_y: 0,
@@ -64,7 +64,7 @@ describe("ModernPictograph", () => {
     it("should render with beat data", () => {
       const pictographData = createPictographData({
         letter: "B",
-        grid_data: {
+        gridData: {
           gridMode: GridMode.BOX,
           center_x: 0,
           center_y: 0,
@@ -213,7 +213,7 @@ describe("ModernPictograph", () => {
       const pictographData = createPictographData({
         id: "debug-test-id",
         letter: "H",
-        grid_data: {
+        gridData: {
           gridMode: GridMode.DIAMOND,
           center_x: 0,
           center_y: 0,

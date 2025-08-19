@@ -10,11 +10,20 @@ import { expect, test } from "@playwright/test";
 test.describe("SEO Hybrid System", () => {
   test.describe("Bot Behavior (No Redirects)", () => {
     test("Googlebot sees static about page", async ({ page }) => {
-      // Simulate Googlebot
+      // Simulate Googlebot both in headers and navigator.userAgent
+      const botUserAgent =
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+
       await page.setExtraHTTPHeaders({
-        "User-Agent":
-          "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+        "User-Agent": botUserAgent,
       });
+
+      // Override navigator.userAgent in the browser context
+      await page.addInitScript((ua) => {
+        Object.defineProperty(navigator, "userAgent", {
+          get: () => ua,
+        });
+      }, botUserAgent);
 
       await page.goto("/about");
 
@@ -38,10 +47,20 @@ test.describe("SEO Hybrid System", () => {
     });
 
     test("Bingbot sees static features page", async ({ page }) => {
+      // Simulate Bingbot both in headers and navigator.userAgent
+      const botUserAgent =
+        "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)";
+
       await page.setExtraHTTPHeaders({
-        "User-Agent":
-          "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)",
+        "User-Agent": botUserAgent,
       });
+
+      // Override navigator.userAgent in the browser context
+      await page.addInitScript((ua) => {
+        Object.defineProperty(navigator, "userAgent", {
+          get: () => ua,
+        });
+      }, botUserAgent);
 
       await page.goto("/features");
 
@@ -52,10 +71,20 @@ test.describe("SEO Hybrid System", () => {
     });
 
     test("Facebook crawler sees static browse page", async ({ page }) => {
+      // Simulate Facebook crawler both in headers and navigator.userAgent
+      const botUserAgent =
+        "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)";
+
       await page.setExtraHTTPHeaders({
-        "User-Agent":
-          "facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)",
+        "User-Agent": botUserAgent,
       });
+
+      // Override navigator.userAgent in the browser context
+      await page.addInitScript((ua) => {
+        Object.defineProperty(navigator, "userAgent", {
+          get: () => ua,
+        });
+      }, botUserAgent);
 
       await page.goto("/browse");
 
@@ -117,7 +146,7 @@ test.describe("SEO Hybrid System", () => {
     test("Logo click switches to about tab", async ({ page }) => {
       await page.goto("/");
 
-      // Start on a different tab  
+      // Start on a different tab
       await page.click('.nav-tab:has-text("Construct")');
 
       // Click logo

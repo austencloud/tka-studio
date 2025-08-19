@@ -83,7 +83,7 @@ describe("Arrow Positioning Debug Tests", () => {
 
     const pictographData = createPictographData({
       letter: "TEST",
-      grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
       arrows: {
         blue: blueArrowData,
         red: redArrowData,
@@ -214,7 +214,7 @@ describe("Arrow Positioning Debug Tests", () => {
 
       const pictographData = createPictographData({
         letter: "TEST",
-        grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+        gridData: createGridData({ gridMode: GridMode.DIAMOND }),
         arrows: { blue: arrowData },
         motions: { blue: motionData },
       });

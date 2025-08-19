@@ -49,7 +49,7 @@ describe("SpecialPlacementService", () => {
     // force layer2 by using non in/out end orientations
     const pictograph = createPictographData({
       letter: "C",
-      grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
       motions: {
         blue: createMotionData({ endOrientation: Orientation.CLOCK, turns: 0 }),
         red: createMotionData({ endOrientation: Orientation.CLOCK, turns: 0 }),
@@ -88,7 +88,7 @@ describe("SpecialPlacementService", () => {
 
     const pictograph = createPictographData({
       letter: "A",
-      grid_data: createGridData({ gridMode: GridMode.BOX }),
+      gridData: createGridData({ gridMode: GridMode.BOX }),
       motions: {
         blue: createMotionData({ endOrientation: Orientation.IN, turns: 0.5 }),
         red: createMotionData({ endOrientation: Orientation.IN, turns: 0.5 }),

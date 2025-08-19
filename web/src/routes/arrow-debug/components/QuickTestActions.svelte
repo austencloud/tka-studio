@@ -81,7 +81,7 @@
       beat: 1,
       isBlank: false,
       isMirrored: false,
-      grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
       props: {},
       metadata: {},
       motions: {

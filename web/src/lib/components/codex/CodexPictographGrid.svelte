@@ -41,7 +41,7 @@
       beat: 0,
       isBlank: true,
       isMirrored: false,
-      grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
       arrows: {},
       motions: {},
       props: {},

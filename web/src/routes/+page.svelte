@@ -17,6 +17,7 @@
         "sequence_card",
         "write",
         "learn",
+        "about",
       ];
       if (validTabs.includes(tabParam)) {
         switchTab(
@@ -26,6 +27,7 @@
             | "sequence_card"
             | "write"
             | "learn"
+            | "about"
         );
       }
 

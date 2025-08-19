@@ -284,7 +284,7 @@ export class SequenceService implements ISequenceService {
         isBlank: false,
         pictograph_data: {
           id: `pictograph-${step.beat}`,
-          grid_data: {
+          gridData: {
             gridMode: (meta.gridMode as GridMode) || GridMode.DIAMOND,
             center_x: 0,
             center_y: 0,

@@ -278,7 +278,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
     {#if hasValidData()}
       <!-- Grid (always rendered first) -->
       <Grid
-        gridMode={effectivePictographData()?.grid_data?.gridMode || "diamond"}
+        gridMode={effectivePictographData()?.gridData?.gridMode || "diamond"}
         onLoaded={() => handleComponentLoaded("grid")}
         onError={(error) => handleComponentError("grid", error)}
         {debug}
@@ -290,7 +290,7 @@ instead of stores. It orchestrates the rendering of Grid, Props, Arrows, and Gly
         <Prop
           {propData}
           {...motionData && { motionData }}
-          gridMode={effectivePictographData()?.grid_data?.gridMode || "diamond"}
+          gridMode={effectivePictographData()?.gridData?.gridMode || "diamond"}
           allProps={Object.values(effectivePictographData()?.props || {})}
           onLoaded={() => handleComponentLoaded(`${color}-prop`)}
           onError={(error) => handleComponentError(`${color}-prop`, error)}

@@ -329,7 +329,7 @@ export class BeatRenderingService implements IBeatRenderingService {
     }
 
     // Draw grid background
-    this.drawGrid(ctx, pictograph.grid_data?.gridMode || "diamond", size);
+    this.drawGrid(ctx, pictograph.gridData?.gridMode || "diamond", size);
 
     // Draw props if visible
     if (pictograph.props) {

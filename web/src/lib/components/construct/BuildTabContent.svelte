@@ -7,17 +7,13 @@
 -->
 <script lang="ts">
   import { constructTabEventService } from "$services/implementations/ConstructTabEventService";
-  import type {
-    BeatData,
-    PictographData,
-  } from "$services/interfaces/domain-types";
+  import type { PictographData } from "$services/interfaces/domain-types";
   import { resolve } from "$services/bootstrap";
   import { createSequenceState } from "$lib/state/sequence-state.svelte";
   import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
   import OptionPickerContainer from "./OptionPickerContainer.svelte";
   import StartPositionPicker from "./StartPositionPicker.svelte";
   // Import fade transition for smooth switching
-  import { GridMode } from "$domain/enums";
   import { getSettings } from "$lib/state/appState.svelte";
   import { fade } from "svelte/transition";
 
@@ -46,7 +42,6 @@
   // CRITICAL FIX: Also watch the singleton sequence state for updates
   // This ensures we react to changes made by the coordination service
   import { sequenceStateService } from "$lib/services/SequenceStateService.svelte";
-  import type { IOptionDataService } from "$services/interfaces/generation-interfaces";
 
   // Sync the component-scoped state with singleton state when it changes
   $effect(() => {
@@ -91,40 +86,8 @@
 
     return shouldShow;
   });
-  let currentSequence = $derived(sequenceState?.currentSequence || null);
   let gridMode = $derived(constructTabState?.gridMode || "radial");
   let settings = $derived(getSettings());
-
-  // Helper function to extract end position from pictograph (same logic as StartPositionPicker)
-  function extractEndPosition(pictograph: PictographData): string {
-    try {
-      // Extract end position based on motion data
-      const blueMotion = pictograph.motions?.blue;
-      const redMotion = pictograph.motions?.red;
-
-      if (blueMotion && redMotion) {
-        const blueEndLocation = blueMotion.end_loc || blueMotion.start_loc;
-        const blueEndOri =
-          blueMotion.endOrientation || blueMotion.startOrientation;
-        const redEndLocation = redMotion.end_loc || redMotion.start_loc;
-        const redEndOri =
-          redMotion.endOrientation || redMotion.startOrientation;
-
-        return `${blueEndLocation}_${blueEndOri}-${redEndLocation}_${redEndOri}`;
-      }
-
-      // Fallback to ID-based extraction
-      if (pictograph.id) {
-        const match = pictograph.id.match(/start-pos-(.+)/);
-        return match?.[1] ?? "alpha1_alpha1-0";
-      }
-
-      return "alpha1_alpha1-0";
-    } catch (error) {
-      console.warn("Failed to extract end position:", error);
-      return "alpha1_alpha1-0";
-    }
-  }
 
   // Transition functions that respect animation settings - same as main interface
   const contentOut = (node: Element) => {
@@ -143,19 +106,6 @@
   };
 
   // Event handlers
-  async function handleStartPositionSelected(startPosition: BeatData) {
-    try {
-      await constructTabEventService().handleStartPositionSelected(
-        startPosition
-      );
-    } catch (error) {
-      console.error(
-        "BuildTabContent: Error in handleStartPositionSelected:",
-        error
-      );
-    }
-  }
-
   async function handleOptionSelected(option: PictographData) {
     await constructTabEventService().handleOptionSelected(option);
   }
@@ -166,10 +116,7 @@
   {#if shouldShowStartPositionPicker}
     <div class="content-container" in:contentIn out:contentOut>
       <div class="panel-content">
-        <StartPositionPicker
-          {gridMode}
-          onStartPositionSelected={handleStartPositionSelected}
-        />
+        <StartPositionPicker {gridMode} />
       </div>
     </div>
   {/if}

@@ -152,7 +152,7 @@ export function createDebugState() {
       const newGridMode = mode === "diamond" ? GridMode.DIAMOND : GridMode.BOX;
       selectedPictograph = createPictographData({
         ...selectedPictograph,
-        grid_data: createGridData({ gridMode: newGridMode }),
+        gridData: createGridData({ gridMode: newGridMode }),
       });
 
       // Trigger recalculation if auto-update is enabled

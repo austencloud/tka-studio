@@ -99,14 +99,24 @@
       <SequenceViewerHeader {sequence} onBackToBrowser={handleBackToBrowser} />
 
       <SequenceImageViewer
-        {sequence}
+        sequence={{
+          ...sequence,
+          startPosition:
+            sequence.startingPosition || sequence.starting_position,
+        } as any}
         {currentVariation}
         {currentVariationIndex}
         onNextVariation={nextVariation}
         onPrevVariation={prevVariation}
       />
 
-      <SequenceDetails {sequence} />
+      <SequenceDetails
+        sequence={{
+          ...sequence,
+          startPosition:
+            sequence.startingPosition || sequence.starting_position,
+        } as any}
+      />
 
       <SequenceActions onAction={handleSequenceAction} />
     </div>

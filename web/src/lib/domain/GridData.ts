@@ -2,7 +2,7 @@
  * Grid Domain Model
  *
  * Immutable data for the pictograph grid system.
- * Based on modern desktop app's grid_data.py
+ * Based on modern desktop app's gridData.py
  */
 
 import { GridMode } from "./enums";

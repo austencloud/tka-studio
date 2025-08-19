@@ -37,7 +37,7 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
         letter: "A",
         startPosition: GridPosition.ALPHA1,
         endPosition: GridPosition.ALPHA7,
-        grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+        gridData: createGridData({ gridMode: GridMode.DIAMOND }),
         arrows: {
           blue: createArrowData({
             color: MotionColor.BLUE,
@@ -81,7 +81,7 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
         letter: "A",
         startPosition: GridPosition.ALPHA1,
         endPosition: GridPosition.ALPHA3,
-        grid_data: createGridData({ gridMode: GridMode.DIAMOND }),
+        gridData: createGridData({ gridMode: GridMode.DIAMOND }),
         arrows: {
           blue: createArrowData({
             color: MotionColor.BLUE,

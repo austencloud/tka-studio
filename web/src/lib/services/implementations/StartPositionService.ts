@@ -304,7 +304,7 @@ export class StartPositionService implements IStartPositionService {
 
     const pictograph = createPictographData({
       id: `start-pos-${key}-${index}`,
-      grid_data: createGridData({
+      gridData: createGridData({
         gridMode:
           gridMode === "diamond" ? DomainGridMode.DIAMOND : DomainGridMode.BOX,
       }),

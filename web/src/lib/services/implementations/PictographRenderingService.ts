@@ -41,7 +41,7 @@ export class PictographRenderingService implements IPictographRenderingService {
       const svg = this.svgUtility.createBaseSVG();
 
       // 2. Render grid
-      const gridMode: GridMode = data.grid_data?.gridMode ?? GridMode.DIAMOND;
+      const gridMode: GridMode = data.gridData?.gridMode ?? GridMode.DIAMOND;
       await this.gridRendering.renderGrid(svg, gridMode);
 
       // 3. Calculate arrow positions using sophisticated positioning orchestrator

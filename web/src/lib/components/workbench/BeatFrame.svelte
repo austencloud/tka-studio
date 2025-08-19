@@ -239,15 +239,15 @@
     >
       <!-- Start Position tile at [0,0] when enabled -->
       {#if config.hasStartTile}
-        {@const startPosition = beatFrameService.calculateStartPosition(
+        {@const startPositionCoords = beatFrameService.calculateStartPosition(
           beats.length
         )}
         <div
           class="start-tile"
           bind:this={startTileRef}
           class:has-pictograph={startPosition?.pictograph_data}
-          style:left="{startPosition.x}px"
-          style:top="{startPosition.y}px"
+          style:left="{startPositionCoords.x}px"
+          style:top="{startPositionCoords.y}px"
           style:width="{config.beatSize}px"
           style:height="{config.beatSize}px"
           title="Start Position"

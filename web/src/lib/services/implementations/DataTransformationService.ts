@@ -46,7 +46,7 @@ export class DataTransformationService implements IDataTransformationService {
       motions.red = beat.pictograph_data.motions.red;
     return createPictographData({
       id: `beat-${beat.beat_number}`,
-      grid_data: createDomainGridData(),
+      gridData: createDomainGridData(),
       arrows: {
         blue: createArrowData({
           arrowType: ArrowType.BLUE,

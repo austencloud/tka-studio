@@ -23,9 +23,8 @@
   import TransitionOverlay from "./start-position/ui/TransitionOverlay.svelte";
 
   // Props using runes
-  const { gridMode = "diamond", onStartPositionSelected = () => {} } = $props<{
+  const { gridMode = "diamond" } = $props<{
     gridMode?: "diamond" | "box";
-    onStartPositionSelected?: (position: BeatData) => void;
   }>();
 
   // Runes-based reactive state (replacing legacy stores)
@@ -217,16 +216,8 @@
         );
       }
 
-      // Call callback to notify parent component
-      console.log(
-        "🚀 StartPositionPicker: Calling onStartPositionSelected callback"
-      );
-      onStartPositionSelected(startPositionBeat);
-      console.log(
-        "🚀 StartPositionPicker: onStartPositionSelected callback completed"
-      );
-
       // **CRITICAL: Emit event that coordination service is listening for**
+      // NOTE: We only use event dispatching, not callback, to avoid duplicate handling
       console.log(
         "🚀 StartPositionPicker: Dispatching start-position-selected event"
       );

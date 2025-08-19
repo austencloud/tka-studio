@@ -226,7 +226,7 @@ export class AnimatedPictographDataService
 
       const pictographData = createPictographData({
         id: "motion-tester-fallback-pictograph",
-        grid_data: domainGridData,
+        gridData: domainGridData,
         arrows: {
           blue: blueArrows,
           red: redArrows,

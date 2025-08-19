@@ -55,7 +55,7 @@ with real-time opacity changes based on visibility settings.
   // Example pictograph data (matching desktop app's example)
   const exampleData: PictographData = createPictographData({
     letter: "A",
-    grid_data: {
+    gridData: {
       gridMode: GridMode.DIAMOND,
       center_x: 400,
       center_y: 400,
