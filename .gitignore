@@ -217,6 +217,7 @@ clean*.sh
 eliminate*.bat
 vscode-*-settings.json
 scripts-annihilation.bat
+web/.vscode/chrome-debug-profile/
 
 # Prevent scripts directory bloat
 scripts/testing/
