@@ -4,14 +4,13 @@ Follows the same pattern as Prop component for consistent sizing behavior
 REFACTORED: Now purely presentational, uses ArrowRenderingService for business logic
 -->
 <script lang="ts">
-  import { MotionColor, type ArrowData, type MotionData } from "$lib/domain";
-  import { onMount } from "svelte";
-  import type { IArrowRenderingService } from "$lib/services/interfaces/pictograph-interfaces";
+  import { MotionColor, type MotionData } from "$lib/domain";
   import { resolve } from "$lib/services/bootstrap";
+  import type { IArrowRenderingService } from "$lib/services/interfaces/pictograph-interfaces";
+  import { onMount } from "svelte";
 
   interface Props {
-    arrowData: ArrowData;
-    motionData?: MotionData; // MotionData from pictograph
+    motionData: MotionData; // Single source of truth - contains embedded arrow placement data
     preCalculatedPosition?:
       | { x: number; y: number; rotation: number }
       | undefined; // Pre-calculated position from parent
@@ -22,7 +21,6 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
   }
 
   let {
-    arrowData,
     motionData,
     preCalculatedPosition,
     preCalculatedMirroring,
@@ -46,19 +44,20 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
 
   // SINGLE SOURCE OF TRUTH: Use ONLY pre-calculated positions from ArrowPositioningOrchestrator
   const position = $derived(() => {
-    if (!arrowData) return { x: 475.0, y: 475.0, rotation: 0 };
+    if (!motionData) return { x: 475.0, y: 475.0, rotation: 0 };
 
     // ONLY use preCalculatedPosition - no more redundant calculations!
     if (preCalculatedPosition) {
       return preCalculatedPosition;
     }
 
-    // Fallback: use position data from arrowData if available (for legacy compatibility)
-    if (arrowData.positionX !== 0 || arrowData.positionY !== 0) {
+    // Fallback: use position data from embedded arrow placement data
+    const arrowPlacement = motionData.arrowPlacementData;
+    if (arrowPlacement.positionX !== 0 || arrowPlacement.positionY !== 0) {
       return {
-        x: arrowData.positionX,
-        y: arrowData.positionY,
-        rotation: arrowData.rotationAngle || 0,
+        x: arrowPlacement.positionX,
+        y: arrowPlacement.positionY,
+        rotation: arrowPlacement.rotationAngle || 0,
       };
     }
 
@@ -72,14 +71,17 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
   // Load SVG data using ArrowRenderingService (business logic now in service)
   const loadSvg = async () => {
     try {
-      if (!arrowData) throw new Error("No arrow data available");
       if (!motionData) throw new Error("No motion data available");
 
-      // Use ArrowRenderingService for all business logic
-      const svgDataResult = await arrowRenderingService.loadArrowSvgData(
-        arrowData,
-        motionData
-      );
+      // TODO: Update ArrowRenderingService to work with embedded placement data
+      // const svgDataResult = await arrowRenderingService.loadArrowPlacementData(motionData);
+
+      // Temporary: Create mock SVG data until service is updated
+      const svgDataResult = {
+        imageSrc: `<svg viewBox="0 0 100 100"><path d="M50,10 L90,90 L50,70 L10,90 Z" fill="${motionData.color === "blue" ? "#2E3192" : "#ED1C24"}"/></svg>`,
+        viewBox: { width: 100, height: 100 },
+        center: { x: 50, y: 50 },
+      };
 
       svgData = svgDataResult;
       loaded = true;
@@ -106,7 +108,7 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
   class:loaded
   data-arrow-color={motionData?.color}
   data-motion-type={motionData?.motionType}
-  data-location={arrowData?.arrowLocation}
+  data-location={motionData?.arrowLocation}
 >
   {#if error}
     <!-- Error state -->
@@ -143,7 +145,9 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
     <g
       transform="
         translate({calculatedPosition().x}, {calculatedPosition().y})
-        rotate({calculatedPosition().rotation || arrowData?.rotationAngle || 0})
+        rotate({calculatedPosition().rotation ||
+        motionData?.arrowPlacementData?.rotationAngle ||
+        0})
         scale({shouldMirror() ? -1 : 1}, 1)
         translate({-svgData.center.x}, {-svgData.center.y})
       "
@@ -168,7 +172,7 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
     {#if import.meta.env.DEV}
       <circle r="2" fill="red" opacity="0.5" />
       <text x="0" y="-25" text-anchor="middle" font-size="6" fill="black">
-        {arrowData?.arrowLocation}
+        {motionData?.arrowLocation}
       </text>
     {/if}
   {/if}

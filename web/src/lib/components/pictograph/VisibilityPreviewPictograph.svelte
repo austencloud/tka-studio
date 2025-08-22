@@ -7,19 +7,19 @@ with real-time opacity changes based on visibility settings.
 <script lang="ts">
   import type { PictographData } from "$lib/domain";
   import {
-    createPictographData,
-    createArrowData,
-    createPropData,
-    createMotionData,
+    createArrowPlacementData,
     createGridData,
+    createMotionData,
+    createPictographData,
+    createPropPlacementData,
     GridMode,
     GridPosition,
+    Letter,
+    Location,
     MotionColor,
     MotionType,
-    Location,
     Orientation,
     RotationDirection,
-    GlyphType,
   } from "$lib/domain";
   import { getVisibilityStateManager } from "$lib/services/implementations/ui/VisibilityStateManager";
   import { onMount } from "svelte";
@@ -55,24 +55,20 @@ with real-time opacity changes based on visibility settings.
 
   // Example pictograph data (matching desktop app's example)
   const exampleData: PictographData = createPictographData({
-    letter: "A",
+    letter: Letter.A,
     gridData: createGridData({
       gridMode: GridMode.DIAMOND,
-      center_x: 400,
-      center_y: 400,
+      centerX: 400,
+      centerY: 400,
       radius: 200,
     }),
     arrows: {
-      blue: createArrowData({
-        isVisible: true,
-      }),
-      red: createArrowData({
-        isVisible: true,
-      }),
+      blue: createArrowPlacementData({}),
+      red: createArrowPlacementData({}),
     },
     props: {
-      blue: createPropData({ isVisible: true }),
-      red: createPropData({ isVisible: true }),
+      blue: createPropPlacementData({}),
+      red: createPropPlacementData({}),
     },
     motions: {
       blue: createMotionData({
@@ -100,7 +96,6 @@ with real-time opacity changes based on visibility settings.
     startPosition: GridPosition.ALPHA5, // South-North starting position
     endPosition: GridPosition.ALPHA7, // West-East ending position (different locations = alpha)
     isBlank: false,
-    isMirrored: false,
   });
 
   // Derived state - create preview data with opacity effects

@@ -6,87 +6,98 @@ import {
   MotionColor,
 } from "$lib/domain/enums";
 import type { MotionData } from "$lib/domain/MotionData";
+import { createMotionData } from "$lib/domain/MotionData";
 import type { IMotionParameterService } from "./interfaces";
 
+/**
+ * Motion Test Parameters - Using proper enums for type safety
+ * No more string-based parameters that cause type issues
+ */
 export interface MotionTestParams {
-  startLocation: string;
-  endLocation: string;
-  motionType: string;
+  startLocation: Location;
+  endLocation: Location;
+  motionType: MotionType;
   turns: number | "fl"; // Support both numeric turns and float
-  rotationDirection: string;
-  startOrientation: string;
-  endOrientation: string;
+  rotationDirection: RotationDirection;
+  startOrientation: Orientation;
+  endOrientation: Orientation;
 }
 
 export class MotionParameterService implements IMotionParameterService {
   // Helper function to determine motion type based on start/end locations
-  getMotionType(startLocation: string, endLocation: string): string {
-    // Normalize to lowercase for case-insensitive comparison
-    const start = startLocation.toLowerCase();
-    const end = endLocation.toLowerCase();
-
-    if (start === end) {
+  getMotionType(startLocation: Location, endLocation: Location): MotionType {
+    if (startLocation === endLocation) {
       return MotionType.STATIC; // Same location = static
     }
 
     // Check if it's a dash motion (opposite locations)
     const opposites = [
-      ["n", "s"],
-      ["s", "n"],
-      ["e", "w"],
-      ["w", "e"],
+      [Location.NORTH, Location.SOUTH],
+      [Location.SOUTH, Location.NORTH],
+      [Location.EAST, Location.WEST],
+      [Location.WEST, Location.EAST],
+      [Location.NORTHEAST, Location.SOUTHWEST],
+      [Location.SOUTHWEST, Location.NORTHEAST],
+      [Location.NORTHWEST, Location.SOUTHEAST],
+      [Location.SOUTHEAST, Location.NORTHWEST],
     ];
 
     for (const [startOpp, endOpp] of opposites) {
-      if (start === startOpp && end === endOpp) {
+      if (startLocation === startOpp && endLocation === endOpp) {
         return MotionType.DASH;
       }
     }
 
-    // Adjacent locations = shift motion (pro/anti/float)
-    return "pro"; // TODO - fix this so it actually receives the real info required to get the motion type, pro as default is bad
+    // Adjacent locations = shift motion (default to PRO)
+    return MotionType.PRO;
   }
 
   // Helper function to get available motion types for a start/end pair
   getAvailableMotionTypes(
-    startLocation: string,
-    endLocation: string
-  ): string[] {
+    startLocation: Location,
+    endLocation: Location
+  ): MotionType[] {
     const motionType = this.getMotionType(startLocation, endLocation);
 
-    if (motionType === "static") {
-      return ["static"];
-    } else if (motionType === "dash") {
-      return ["dash"];
+    if (motionType === MotionType.STATIC) {
+      return [MotionType.STATIC];
+    } else if (motionType === MotionType.DASH) {
+      return [MotionType.DASH];
     } else {
       // Shift motions can be pro, anti, or float
-      return ["pro", "anti", "float"];
+      return [MotionType.PRO, MotionType.ANTI, MotionType.FLOAT];
     }
   }
 
   // Helper function to calculate rotation direction based on motion type and locations
   calculateRotationDirection(
-    motionType: string,
-    startLocation: string,
-    endLocation: string
-  ): string {
-    // Location order for clockwise movement: n -> e -> s -> w -> n
-    const locationOrder = ["n", "e", "s", "w"];
-    const startIndex = locationOrder.indexOf(startLocation.toLowerCase());
-    const endIndex = locationOrder.indexOf(endLocation.toLowerCase());
-
-    if (startIndex === -1 || endIndex === -1) {
-      return "cw"; // Default to clockwise for unknown locations
-    }
+    motionType: MotionType,
+    startLocation: Location,
+    endLocation: Location
+  ): RotationDirection {
+    // Location order for clockwise movement: N -> E -> S -> W -> N
+    const locationOrder = [
+      Location.NORTH,
+      Location.EAST,
+      Location.SOUTH,
+      Location.WEST,
+    ];
+    const startIndex = locationOrder.indexOf(startLocation);
+    const endIndex = locationOrder.indexOf(endLocation);
 
     // For static motions, no rotation
-    if (motionType === "static") {
-      return "noRotation";
+    if (motionType === MotionType.STATIC) {
+      return RotationDirection.NO_ROTATION;
     }
 
     // For dash motions, typically no rotation unless specified
-    if (motionType === "dash") {
-      return "noRotation";
+    if (motionType === MotionType.DASH) {
+      return RotationDirection.NO_ROTATION;
+    }
+
+    // Handle diagonal locations - default to clockwise
+    if (startIndex === -1 || endIndex === -1) {
+      return RotationDirection.CLOCKWISE;
     }
 
     // Calculate the hand path direction (clockwise or counterclockwise)
@@ -98,103 +109,27 @@ export class MotionParameterService implements IMotionParameterService {
 
     // For PRO: prop rotation matches hand path direction
     // For ANTI: prop rotation opposes hand path direction
-    let result;
-    if (motionType === "pro") {
-      result = handPathIsClockwise ? "cw" : "ccw";
-    } else if (motionType === "anti") {
-      result = handPathIsClockwise ? "ccw" : "cw";
+    let result: RotationDirection;
+    if (motionType === MotionType.PRO) {
+      result = handPathIsClockwise
+        ? RotationDirection.CLOCKWISE
+        : RotationDirection.COUNTER_CLOCKWISE;
+    } else if (motionType === MotionType.ANTI) {
+      result = handPathIsClockwise
+        ? RotationDirection.COUNTER_CLOCKWISE
+        : RotationDirection.CLOCKWISE;
     } else {
-      result = "cw"; // Default for other motion types
+      result = RotationDirection.CLOCKWISE; // Default for other motion types
     }
 
     console.log(
       `🔄 Rotation direction for ${startLocation}→${endLocation} (${motionType}): ${result}`
     );
-    console.log(
-      `   handPathIsClockwise: ${handPathIsClockwise}, clockwiseDistance: ${clockwiseDistance}, counterClockwiseDistance: ${counterClockwiseDistance}`
-    );
 
     return result;
   }
 
-  // Helper function to map string values to enum values
-  mapMotionTypeToEnum(motionType: string): MotionType {
-    switch (motionType.toLowerCase()) {
-      case "pro":
-        return MotionType.PRO;
-      case "anti":
-        return MotionType.ANTI;
-      case "static":
-        return MotionType.STATIC;
-      case "dash":
-        return MotionType.DASH;
-      case "fl":
-      case "float":
-        return MotionType.FLOAT;
-      default:
-        return MotionType.PRO;
-    }
-  }
-
-  mapOrientationToEnum(orientation: string): Orientation {
-    switch (orientation.toLowerCase()) {
-      case "in":
-        return Orientation.IN;
-      case "out":
-        return Orientation.OUT;
-      case "clock":
-        return Orientation.CLOCK;
-      case "counter":
-        return Orientation.COUNTER;
-      case "n":
-        return Orientation.IN; // Map cardinal directions to in/out for now
-      case "e":
-        return Orientation.IN;
-      case "s":
-        return Orientation.IN;
-      case "w":
-        return Orientation.IN;
-      default:
-        return Orientation.IN;
-    }
-  }
-
-  mapRotationDirectionToEnum(rotationDirection: string): RotationDirection {
-    switch (rotationDirection.toLowerCase()) {
-      case "cw":
-      case "clockwise":
-        return RotationDirection.CLOCKWISE;
-      case "ccw":
-      case "counter_clockwise":
-      case "counterclockwise":
-        return RotationDirection.COUNTER_CLOCKWISE;
-      default:
-        return RotationDirection.CLOCKWISE;
-    }
-  }
-
-  mapLocationToEnum(location: string): Location {
-    switch (location.toLowerCase()) {
-      case "n":
-        return Location.NORTH;
-      case "e":
-        return Location.EAST;
-      case "s":
-        return Location.SOUTH;
-      case "w":
-        return Location.WEST;
-      case "ne":
-        return Location.NORTHEAST;
-      case "se":
-        return Location.SOUTHEAST;
-      case "sw":
-        return Location.SOUTHWEST;
-      case "nw":
-        return Location.NORTHWEST;
-      default:
-        return Location.NORTH;
-    }
-  }
+  // No more string-to-enum mapping needed - we use enums directly!
 
   // Helper function to convert MotionTestParams to PropAttributes
   convertMotionTestParamsToPropAttributes(params: MotionTestParams) {
@@ -240,22 +175,21 @@ export class MotionParameterService implements IMotionParameterService {
     return params;
   }
 
-  // Convert MotionTestParams to MotionData (moved from state layer)
-  convertToMotionData(params: MotionTestParams): MotionData {
-    return {
-      motionType: this.mapMotionTypeToEnum(params.motionType),
-      rotationDirection: this.mapRotationDirectionToEnum(
-        params.rotationDirection
-      ),
-      startLocation: this.mapLocationToEnum(params.startLocation),
-      endLocation: this.mapLocationToEnum(params.endLocation),
-      turns: params.turns,
-      startOrientation: this.mapOrientationToEnum(params.startOrientation),
-      endOrientation: this.mapOrientationToEnum(params.endOrientation),
+  // Convert MotionTestParams to MotionData - no mapping needed, already enums!
+  convertToMotionData(
+    params: MotionTestParams,
+    color: MotionColor
+  ): MotionData {
+    return createMotionData({
+      motionType: params.motionType,
+      rotationDirection: params.rotationDirection,
+      startLocation: params.startLocation,
+      endLocation: params.endLocation,
+      turns: typeof params.turns === "string" ? -0.5 : params.turns, // Handle "fl" float turns
+      startOrientation: params.startOrientation,
+      endOrientation: params.endOrientation,
       isVisible: true,
-      color: MotionColor.BLUE, // Default color for motion tester
-      prefloatMotionType: null,
-      prefloatRotationDirection: null,
-    };
+      color,
+    });
   }
 }

@@ -5,15 +5,10 @@
  * Extracted from PictographRenderingService.
  */
 
-import type { PictographData } from "$lib/domain";
-import { getLetterImagePath } from "$lib/utils/letter-type-classification";
+import type { Letter, PictographData } from "$lib/domain";
+import type { ArrowPosition } from "$lib/services/positioning/types";
+import { getLetterImagePath } from "$lib/utils/letter-image-getter";
 import type { ISvgConfiguration } from "./SvgConfiguration";
-
-export interface ArrowPosition {
-  x: number;
-  y: number;
-  rotation: number;
-}
 
 export interface IOverlayRenderingService {
   renderOverlays(svg: SVGElement, data: PictographData): Promise<void>;
@@ -46,7 +41,7 @@ export class OverlayRenderingService implements IOverlayRenderingService {
    */
   private async renderLetterGlyph(
     svg: SVGElement,
-    letter: string
+    letter: Letter
   ): Promise<void> {
     // Use comprehensive letter mapping with correct type-based paths
     const path = getLetterImagePath(letter);

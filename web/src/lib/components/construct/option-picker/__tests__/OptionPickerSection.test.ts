@@ -21,8 +21,8 @@ describe("OptionPickerSection", () => {
       endPosition: "beta1",
       gridData: {
         gridMode: GridMode.DIAMOND,
-        center_x: 475,
-        center_y: 475,
+        centerX: 475,
+        centerY: 475,
         radius: 400,
         gridPointData: {
           allHandPointsStrict: {},
@@ -47,8 +47,8 @@ describe("OptionPickerSection", () => {
       endPosition: "beta2",
       gridData: {
         gridMode: GridMode.DIAMOND,
-        center_x: 475,
-        center_y: 475,
+        centerX: 475,
+        centerY: 475,
         radius: 400,
         gridPointData: {
           allHandPointsStrict: {},

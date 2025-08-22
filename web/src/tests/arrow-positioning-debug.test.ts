@@ -3,24 +3,23 @@
  * Tests both positioning systems to identify rotation calculation problems
  */
 
-import { describe, it } from "vitest";
 import { resolve } from "$lib/services/bootstrap";
 import type { IArrowPositioningOrchestrator } from "$lib/services/interfaces/positioning-interfaces";
+import { describe, it } from "vitest";
 // import type { GridData as ServiceGridData } from "$lib/services/interfaces/core-types";
 
 import {
-  createPictographData,
-  createGridData,
-  createArrowData,
-  createPropData,
+  createArrowPlacementData,
   createMotionData,
+  createPictographData,
 } from "$lib/domain";
 import {
   GridMode,
+  Location,
   MotionColor,
   MotionType,
-  Location,
   Orientation,
+  PropType,
   RotationDirection,
 } from "$lib/domain/enums";
 
@@ -44,11 +43,14 @@ describe("Arrow Positioning Debug Tests", () => {
       "\n🧪 Testing Pro Arrow: N → E (should be clockwise, expect ~90° rotation)"
     );
 
-    // ✅ FIXED: ArrowData now only contains arrow-specific properties
-    const blueArrowData = createArrowData({
-      arrowLocation: null, // Will be calculated by positioning system
+    // ✅ FIXED: ArrowPlacementData now only contains arrow-specific properties
+    const blueArrowData = createArrowPlacementData({
       positionX: 0,
       positionY: 0,
+      rotationAngle: 0,
+      coordinates: null,
+      svgCenter: null,
+      svgMirrored: false,
     });
 
     const blueMotionData = createMotionData({
@@ -60,12 +62,8 @@ describe("Arrow Positioning Debug Tests", () => {
       rotationDirection: RotationDirection.CLOCKWISE,
       turns: 0,
       color: MotionColor.BLUE,
-    });
-
-    const redArrowData = createArrowData({
-      arrowLocation: null, // Will be calculated by positioning system
-      positionX: 0,
-      positionY: 0,
+      propType: PropType.STAFF,
+      arrowLocation: Location.NORTH, // Will be calculated by positioning system
     });
 
     const redMotionData = createMotionData({
@@ -77,19 +75,13 @@ describe("Arrow Positioning Debug Tests", () => {
       rotationDirection: RotationDirection.NO_ROTATION,
       turns: 0,
       color: MotionColor.RED,
+      propType: PropType.STAFF,
+      arrowLocation: Location.SOUTH, // Will be calculated by positioning system
     });
 
     const pictographData = createPictographData({
-      letter: "TEST",
-      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
-      arrows: {
-        blue: blueArrowData,
-        red: redArrowData,
-      },
-      props: {
-        blue: createPropData({}), // ✅ FIXED: Color is not part of PropData
-        red: createPropData({}), // ✅ FIXED: Color is not part of PropData
-      },
+      letter: null, // Test letter
+      gridMode: GridMode.DIAMOND,
       motions: {
         blue: blueMotionData,
         red: redMotionData,
@@ -110,7 +102,8 @@ describe("Arrow Positioning Debug Tests", () => {
     );
     const orchestratorResult =
       await orchestrator.calculateAllArrowPositions(pictographData);
-    const orchestratorBlueArrow = orchestratorResult.arrows?.blue;
+    const orchestratorBlueArrow =
+      orchestratorResult.motions?.blue?.arrowPlacementData;
 
     console.log("  Orchestrator Result:");
     console.log(
@@ -201,22 +194,14 @@ describe("Arrow Positioning Debug Tests", () => {
         turns: 0,
       });
 
-      const arrowData = createArrowData({
-        // ✅ FIXED: ArrowData no longer contains motion properties
-        arrowLocation: null,
-        positionX: 0,
-        positionY: 0,
-      });
-
       const pictographData = createPictographData({
-        letter: "TEST",
-        gridData: createGridData({ gridMode: GridMode.DIAMOND }),
-        arrows: { blue: arrowData },
+        letter: null, // Test letter
+        gridMode: GridMode.DIAMOND,
         motions: { blue: motionData },
       });
 
       const [, , rotation] = await orchestrator.calculateArrowPosition(
-        arrowData,
+        motionData.arrowPlacementData,
         pictographData,
         motionData
       );

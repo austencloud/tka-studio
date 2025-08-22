@@ -5,7 +5,7 @@
  * following the microservices architecture pattern.
  */
 
-import type { BrowseSequenceMetadata } from "../../interfaces/domain-types";
+import type { SequenceData } from "../../interfaces/domain-types";
 
 export interface NavigationSection {
   id: string;
@@ -22,13 +22,13 @@ export interface NavigationItem {
   value: string | number;
   count: number;
   isActive: boolean;
-  sequences: BrowseSequenceMetadata[];
+  sequences: SequenceData[];
 }
 
 export interface INavigationService {
   /** Generate navigation sections from sequences */
   generateNavigationSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     favorites: string[]
   ): Promise<NavigationSection[]>;
 
@@ -52,20 +52,20 @@ export interface INavigationService {
   getSequencesForNavigationItem(
     item: NavigationItem,
     sectionType: NavigationSection["type"],
-    allSequences: BrowseSequenceMetadata[]
-  ): BrowseSequenceMetadata[];
+    allSequences: SequenceData[]
+  ): SequenceData[];
 
   /** Update section counts based on current sequences */
   updateSectionCounts(
     sections: NavigationSection[],
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     favorites: string[]
   ): NavigationSection[];
 }
 
 export class NavigationService implements INavigationService {
   async generateNavigationSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     favorites: string[]
   ): Promise<NavigationSection[]> {
     const sections: NavigationSection[] = [
@@ -118,8 +118,8 @@ export class NavigationService implements INavigationService {
   getSequencesForNavigationItem(
     item: NavigationItem,
     sectionType: NavigationSection["type"],
-    allSequences: BrowseSequenceMetadata[]
-  ): BrowseSequenceMetadata[] {
+    allSequences: SequenceData[]
+  ): SequenceData[] {
     switch (sectionType) {
       case "length": {
         const length = parseInt(item.value as string);
@@ -157,7 +157,7 @@ export class NavigationService implements INavigationService {
 
   updateSectionCounts(
     sections: NavigationSection[],
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     favorites: string[]
   ): NavigationSection[] {
     return sections.map((section) => ({
@@ -173,7 +173,7 @@ export class NavigationService implements INavigationService {
 
   // Private helper methods
   private async generateFavoritesSection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     favorites: string[]
   ): Promise<NavigationSection> {
     const favoriteSequences = sequences.filter((seq) =>
@@ -200,9 +200,9 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateDateSection(
-    sequences: BrowseSequenceMetadata[]
+    sequences: SequenceData[]
   ): Promise<NavigationSection> {
-    const dateGroups = new Map<string, BrowseSequenceMetadata[]>();
+    const dateGroups = new Map<string, SequenceData[]>();
 
     sequences.forEach((seq) => {
       if (seq.dateAdded) {
@@ -241,9 +241,9 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateLengthSection(
-    sequences: BrowseSequenceMetadata[]
+    sequences: SequenceData[]
   ): Promise<NavigationSection> {
-    const lengthGroups = new Map<number, BrowseSequenceMetadata[]>();
+    const lengthGroups = new Map<number, SequenceData[]>();
 
     sequences.forEach((seq) => {
       const length = seq.sequenceLength || seq.word.length;
@@ -278,9 +278,9 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateLetterSection(
-    sequences: BrowseSequenceMetadata[]
+    sequences: SequenceData[]
   ): Promise<NavigationSection> {
-    const letterGroups = new Map<string, BrowseSequenceMetadata[]>();
+    const letterGroups = new Map<string, SequenceData[]>();
 
     sequences.forEach((seq) => {
       const firstLetter = seq.word.charAt(0).toUpperCase();
@@ -315,9 +315,9 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateLevelSection(
-    sequences: BrowseSequenceMetadata[]
+    sequences: SequenceData[]
   ): Promise<NavigationSection> {
-    const levelGroups = new Map<string, BrowseSequenceMetadata[]>();
+    const levelGroups = new Map<string, SequenceData[]>();
 
     sequences.forEach((seq) => {
       const level = seq.difficultyLevel || "unknown";
@@ -353,9 +353,9 @@ export class NavigationService implements INavigationService {
   }
 
   private async generateAuthorSection(
-    sequences: BrowseSequenceMetadata[]
+    sequences: SequenceData[]
   ): Promise<NavigationSection> {
-    const authorGroups = new Map<string, BrowseSequenceMetadata[]>();
+    const authorGroups = new Map<string, SequenceData[]>();
 
     sequences.forEach((seq) => {
       const author = seq.author || "Unknown";
@@ -391,7 +391,7 @@ export class NavigationService implements INavigationService {
 
   private calculateSectionCount(
     section: NavigationSection,
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     favorites: string[]
   ): number {
     switch (section.type) {
@@ -417,7 +417,7 @@ export class NavigationService implements INavigationService {
 
   // Additional methods required by browse-interfaces.ts
   async buildNavigationStructure(
-    sequences: BrowseSequenceMetadata[]
+    sequences: SequenceData[]
   ): Promise<NavigationSection[]> {
     // Use the existing generateNavigationSections method
     return this.generateNavigationSections(sequences, []);

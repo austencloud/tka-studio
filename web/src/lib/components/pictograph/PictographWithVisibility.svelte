@@ -92,14 +92,16 @@ matching the legacy desktop app's behavior.
     if (filteredData.props) {
       const newProps: Record<string, any> = {};
 
-      Object.entries(filteredData.props).forEach(([color, propData]) => {
-        if (
-          propData &&
-          visibilityManager.getMotionVisibility(color as MotionColor)
-        ) {
-          newProps[color] = propData;
+      Object.entries(filteredData.props).forEach(
+        ([color, PropPlacementData]) => {
+          if (
+            PropPlacementData &&
+            visibilityManager.getMotionVisibility(color as MotionColor)
+          ) {
+            newProps[color] = PropPlacementData;
+          }
         }
-      });
+      );
 
       filteredData.props = newProps;
     }

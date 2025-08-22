@@ -2,12 +2,11 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "🚀 Debug TKA App (VS Code Optimized)",
+      "name": "Debug TKA Web App",
       "type": "chrome",
       "request": "launch",
       "url": "http://localhost:5173",
       "webRoot": "${workspaceFolder}",
-      "preLaunchTask": "Start Dev Server",
       "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-profile",
       "sourceMaps": true,
       "smartStep": true,
@@ -15,63 +14,9 @@
         "<node_internals>/**",
         "**/node_modules/**",
         "**/vite/**",
-        "**/@vite/**"
+        "**/@vite/**",
+        "**/dist/**"
       ],
-      "trace": true,
-      "pathMapping": {
-        "/": "${workspaceFolder}/",
-        "/@fs/": "/",
-        "/src/": "${workspaceFolder}/src/"
-      },
-      "sourceMapPathOverrides": {
-        "/@fs/*": "/*",
-        "/src/*": "${workspaceFolder}/src/*",
-        "/*": "${workspaceFolder}/*"
-      },
-      "disableNetworkCache": true,
-      "showAsyncStacks": true
-    },
-    {
-      "name": "🔗 Debug TKA App (Attach to Running Server)",
-      "type": "chrome",
-      "request": "attach",
-      "port": 9222,
-      "webRoot": "${workspaceFolder}",
-      "sourceMaps": true,
-      "smartStep": true,
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**"
-      ],
-      "trace": true,
-      "pathMapping": {
-        "/": "${workspaceFolder}/",
-        "/@fs/": "/",
-        "/src/": "${workspaceFolder}/src/"
-      },
-      "sourceMapPathOverrides": {
-        "/@fs/*": "/*",
-        "/src/*": "${workspaceFolder}/src/*",
-        "/*": "${workspaceFolder}/*"
-      }
-    },
-    {
-      "name": "🔄 Debug TKA App (Port 5174 - VS Code Optimized)",
-      "type": "chrome",
-      "request": "launch",
-      "url": "http://localhost:5174",
-      "webRoot": "${workspaceFolder}",
-      "preLaunchTask": "Start Dev Server (Port 5174)",
-      "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-profile-alt",
-      "sourceMaps": true,
-      "smartStep": true,
-      "skipFiles": [
-        "<node_internals>/**",
-        "**/node_modules/**",
-        "**/vite/**",
-        "**/@vite/**"
-      ],
-      "trace": true,
       "pathMapping": {
         "/": "${workspaceFolder}/",
         "/@fs/": "/",

@@ -2,10 +2,10 @@
  * StartPositionUtils.ts - Utility functions for start position handling
  */
 
-import type { PictographData } from "$domain/PictographData";
 import type { BeatData } from "$domain/BeatData";
-import { MotionType } from "$domain/enums";
 import { createBeatData } from "$domain/BeatData";
+import { MotionType } from "$domain/enums";
+import type { PictographData } from "$domain/PictographData";
 
 /**
  * Extract end position from pictograph data
@@ -44,27 +44,29 @@ export function createStartPositionData(
     // Include the full pictograph data
     pictographData: {
       ...pictographData,
-      // Ensure static motion types for start positions
-      motions: {
-        blue: pictographData.motions?.blue
-          ? {
-              ...pictographData.motions.blue,
-              motionType: MotionType.STATIC,
-              endLocation: pictographData.motions.blue.startLocation,
-              endOrientation: pictographData.motions.blue.startOrientation,
-              turns: 0,
-            }
-          : null,
-        red: pictographData.motions?.red
-          ? {
-              ...pictographData.motions.red,
-              motionType: MotionType.STATIC,
-              endLocation: pictographData.motions.red.startLocation,
-              endOrientation: pictographData.motions.red.startOrientation,
-              turns: 0,
-            }
-          : null,
-      },
+      // Ensure static motion types for start positions - filter out null values
+      motions: Object.fromEntries(
+        Object.entries({
+          blue: pictographData.motions?.blue
+            ? {
+                ...pictographData.motions.blue,
+                motionType: MotionType.STATIC,
+                endLocation: pictographData.motions.blue.startLocation,
+                endOrientation: pictographData.motions.blue.startOrientation,
+                turns: 0,
+              }
+            : null,
+          red: pictographData.motions?.red
+            ? {
+                ...pictographData.motions.red,
+                motionType: MotionType.STATIC,
+                endLocation: pictographData.motions.red.startLocation,
+                endOrientation: pictographData.motions.red.startOrientation,
+                turns: 0,
+              }
+            : null,
+        }).filter(([_, value]) => value !== null)
+      ),
     },
   };
 }

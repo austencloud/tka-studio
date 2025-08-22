@@ -6,10 +6,12 @@
  */
 
 import type { BeatData, MotionData } from "$lib/domain";
+import { createMotionData } from "$lib/domain";
 import {
   Location,
   MotionType,
   Orientation,
+  PropType,
   RotationDirection,
   MotionColor,
 } from "$lib/domain/enums";
@@ -71,7 +73,7 @@ export class MotionGenerationService implements IMotionGenerationService {
       // Calculate turns based on motion type and locations
       const turns = this.calculateTurns(motionType, startLocation, endLocation);
 
-      const motion: MotionData = {
+      const motion: MotionData = createMotionData({
         motionType: motionType,
         rotationDirection: rotationDirection,
         startLocation: startLocation,
@@ -81,7 +83,9 @@ export class MotionGenerationService implements IMotionGenerationService {
         endOrientation: endOrientation,
         color: color,
         isVisible: true,
-      };
+        propType: PropType.STAFF, // Default prop type
+        arrowLocation: startLocation, // Will be calculated by ArrowLocationCalculator
+      });
 
       console.log(`Generated ${color} motion:`, motion);
       return motion;

@@ -1,8 +1,8 @@
 <!-- StartPositionGrid.svelte - Display grid of start position options -->
 <script lang="ts">
   import type { PictographData } from "$domain/PictographData";
-  import { getLetterBorderColor } from "$lib/utils/letter-type-utils";
-  import Pictograph from "../../../pictograph/Pictograph.svelte";
+  import Pictograph from "$lib/components/pictograph/Pictograph.svelte";
+  import { getLetterBorderColorSafe } from "$lib/domain";
 
   // Props
   const {
@@ -38,7 +38,7 @@
    * Get the border color for a position based on its letter
    */
   function getBorderColor(position: PictographData): string {
-    return getLetterBorderColor(position.letter || "");
+    return getLetterBorderColorSafe(position.letter);
   }
 </script>
 

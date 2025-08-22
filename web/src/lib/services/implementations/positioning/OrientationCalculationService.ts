@@ -10,10 +10,12 @@
 
 import type { BeatData } from "$lib/domain/BeatData";
 import type { MotionData } from "$lib/domain/MotionData";
+import { createMotionData } from "$lib/domain/MotionData";
 import {
   Orientation,
   MotionType,
   Location,
+  PropType,
   RotationDirection,
   HandPath,
   MotionColor,
@@ -297,7 +299,7 @@ export class OrientationCalculationService
     // Calculate blue end orientation
     const blueMotion = beat.pictographData.motions?.["blue"];
     if (blueMotion) {
-      const blueMotionData: MotionData = {
+      const blueMotionData: MotionData = createMotionData({
         motionType: blueMotion.motionType || MotionType.STATIC,
         rotationDirection:
           blueMotion.rotationDirection || RotationDirection.NO_ROTATION,
@@ -308,7 +310,9 @@ export class OrientationCalculationService
         endOrientation: blueMotion.endOrientation || Orientation.IN,
         isVisible: blueMotion.isVisible ?? true,
         color: MotionColor.BLUE,
-      };
+        propType: PropType.STAFF, // Default prop type
+        arrowLocation: blueMotion.startLocation || Location.NORTH, // Will be calculated
+      });
 
       const calculatedEndOri = this.calculateEndOrientation(
         blueMotionData,
@@ -324,7 +328,7 @@ export class OrientationCalculationService
     // Calculate red end orientation
     const redMotion = beat.pictographData.motions?.["red"];
     if (redMotion) {
-      const redMotionData: MotionData = {
+      const redMotionData: MotionData = createMotionData({
         motionType: redMotion.motionType || MotionType.STATIC,
         rotationDirection:
           redMotion.rotationDirection || RotationDirection.NO_ROTATION,
@@ -335,7 +339,9 @@ export class OrientationCalculationService
         endOrientation: redMotion.endOrientation || Orientation.IN,
         isVisible: redMotion.isVisible ?? true,
         color: MotionColor.RED,
-      };
+        propType: PropType.STAFF, // Default prop type
+        arrowLocation: redMotion.startLocation || Location.NORTH, // Will be calculated
+      });
 
       const calculatedEndOri = this.calculateEndOrientation(
         redMotionData,

@@ -1,5 +1,6 @@
 <!-- CodexExporterTab.svelte - Export all pictographs with turn configurations -->
 <script lang="ts">
+  import { GridMode } from "$lib/domain";
   import type { AppSettings } from "$services/interfaces/application-interfaces";
   import SelectInput from "../SelectInput.svelte";
   import SettingCard from "../SettingCard.svelte";

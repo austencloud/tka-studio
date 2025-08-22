@@ -9,6 +9,7 @@ import {
   IMovementPatternServiceInterface,
   IPositionCalculatorServiceInterface,
   IMovementValidatorServiceInterface,
+  IPositionMappingServiceInterface,
 } from "../interfaces/movement-interfaces";
 import { MovementGeneratorService } from "../../implementations/generation/MovementGeneratorService";
 
@@ -22,6 +23,7 @@ export async function registerMovementServices(
   container.registerSingletonClass(IMovementPatternServiceInterface);
   // container.registerSingletonClass(IPositionCalculatorServiceInterface);
   container.registerSingletonClass(IMovementValidatorServiceInterface);
+  container.registerSingletonClass(IPositionMappingServiceInterface);
 
   // Register movement generator service with dependencies
   container.registerFactory(IMovementGeneratorServiceInterface, () => {

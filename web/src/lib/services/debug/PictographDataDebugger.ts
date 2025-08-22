@@ -1,7 +1,7 @@
 /**
  * PictographDataDebugger - Comprehensive debugging for pictograph data flow
  *
- * This service helps trace data from CSV → PictographData → PropData to identify
+ * This service helps trace data from CSV → PictographData → PropPlacementData to identify
  * where data corruption or missing information occurs.
  */
 
@@ -21,7 +21,7 @@ export interface PictographDebugInfo {
   gridMode: string;
   endsWithBeta: boolean;
   hasValidMotionData: boolean;
-  hasValidPropData: boolean;
+  hasValidPropPlacementData: boolean;
   propLocations: Record<string, string>;
   motionEndLocations: Record<string, string>;
   dataFlowTrace: DataFlowTrace[];
@@ -82,16 +82,18 @@ export class PictographDataDebugger {
     // Analyze the pictograph data using the new beta detection
     const endsWithBetaPosition = endsWithBeta(pictographData);
     const hasValidMotionData = this.validateMotionData(pictographData);
-    const hasValidPropData = this.validatePropData(pictographData);
+    const hasValidPropPlacementData =
+      this.validatePropPlacementData(pictographData);
 
     // Extract location information
     const propLocations: Record<string, string> = {};
     const motionEndLocations: Record<string, string> = {};
 
-    if (pictographData.props) {
-      Object.entries(pictographData.props).forEach(([color, _prop]) => {
-        propLocations[color] =
-          pictographData.motions?.[color]?.endLocation || "unknown";
+    if (pictographData.motions) {
+      Object.entries(pictographData.motions).forEach(([color, motionData]) => {
+        if (motionData) {
+          propLocations[color] = motionData.endLocation || "unknown";
+        }
       });
     }
 
@@ -106,7 +108,7 @@ export class PictographDataDebugger {
       gridMode: pictographData.gridMode || "unknown",
       endsWithBeta: endsWithBetaPosition,
       hasValidMotionData,
-      hasValidPropData,
+      hasValidPropPlacementData,
       propLocations,
       motionEndLocations,
       dataFlowTrace: this.traces.get(identifier) || [],
@@ -135,16 +137,12 @@ export class PictographDataDebugger {
   /**
    * Validate prop data completeness
    */
-  private validatePropData(pictographData: PictographData): boolean {
-    if (!pictographData.props) return false;
+  private validatePropPlacementData(pictographData: PictographData): boolean {
+    if (!pictographData.motions) return false;
 
-    return (
-      Object.values(pictographData.props).every(
-        (prop) => prop.propType && prop.orientation !== undefined
-      ) &&
-      Object.values(pictographData.motions || {}).every(
-        (motion) => motion.endLocation && motion.color
-      )
+    return Object.values(pictographData.motions).every(
+      (motion) =>
+        motion && motion.propType && motion.endLocation && motion.color
     );
   }
 
@@ -161,7 +159,7 @@ export class PictographDataDebugger {
       gridMode: debugInfo.gridMode,
       endsWithBeta: debugInfo.endsWithBeta,
       hasValidMotionData: debugInfo.hasValidMotionData,
-      hasValidPropData: debugInfo.hasValidPropData,
+      hasValidPropPlacementData: debugInfo.hasValidPropPlacementData,
     });
 
     console.log("📍 Prop Locations:", debugInfo.propLocations);

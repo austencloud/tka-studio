@@ -4,7 +4,7 @@
  * Coordinates pictograph rendering and manipulation operations.
  */
 
-import type { ArrowData } from "$lib/domain";
+import type { ArrowPlacementData } from "$lib/domain";
 import type { PictographData } from "../../interfaces/domain-types";
 import type {
   IPictographService,
@@ -32,7 +32,7 @@ export class PictographService implements IPictographService {
    */
   async updateArrow(
     _pictographId: string,
-    _arrowData: ArrowData
+    _arrowData: ArrowPlacementData
   ): Promise<PictographData> {
     // TODO: Implement pictograph data management
     throw new Error("updateArrow not yet implemented");

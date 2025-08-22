@@ -469,8 +469,8 @@ export class TKAImageExportService implements ITKAImageExportService {
         word: "TEST",
         beats: [],
         thumbnails: [],
-        is_favorite: false,
-        is_circular: false,
+        isFavorite: false,
+        isCircular: false,
         tags: [],
         metadata: {},
       };

@@ -7,7 +7,7 @@
 
 import type { BeatData, SequenceData } from "$lib/domain";
 import { GridMode } from "$lib/domain/enums";
-import type { ArrowPosition } from "$services/interfaces/core-types";
+import type { ArrowPosition } from "$lib/services/positioning/types";
 import type { ISequenceService } from "$services/interfaces/sequence-interfaces";
 
 // ============================================================================

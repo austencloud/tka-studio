@@ -1,11 +1,7 @@
+import { createMotionData, createPictographData, Letter } from "$lib/domain";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  createMotionData,
-  createPictographData,
-  createGridData,
-} from "$lib/domain";
 
-import { MotionType, Orientation, GridMode } from "$lib/domain/enums";
+import { GridMode, MotionType, Orientation } from "$lib/domain/enums";
 import { SpecialPlacementService } from "./SpecialPlacementService";
 
 describe("SpecialPlacementService", () => {
@@ -48,8 +44,8 @@ describe("SpecialPlacementService", () => {
 
     // force layer2 by using non in/out end orientations
     const pictograph = createPictographData({
-      letter: "C",
-      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
+      letter: Letter.C,
+      gridMode: GridMode.DIAMOND,
       motions: {
         blue: createMotionData({ endOrientation: Orientation.CLOCK, turns: 0 }),
         red: createMotionData({ endOrientation: Orientation.CLOCK, turns: 0 }),
@@ -87,8 +83,8 @@ describe("SpecialPlacementService", () => {
     }) as unknown as typeof fetch;
 
     const pictograph = createPictographData({
-      letter: "A",
-      gridData: createGridData({ gridMode: GridMode.BOX }),
+      letter: Letter.A,
+      gridMode: GridMode.BOX,
       motions: {
         blue: createMotionData({ endOrientation: Orientation.IN, turns: 0.5 }),
         red: createMotionData({ endOrientation: Orientation.IN, turns: 0.5 }),

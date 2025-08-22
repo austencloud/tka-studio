@@ -3,19 +3,19 @@
  * Handles registration of shared utility services used across multiple domains
  */
 
-import type { ServiceContainer } from "../ServiceContainer";
 import type { IEnumMappingService } from "../../interfaces/application-interfaces";
+import type { ServiceContainer } from "../ServiceContainer";
 
-import { EnumMappingService } from "../../implementations/data/EnumMappingService";
 import {
   CSVParserService,
   type ICSVParserService,
 } from "../../implementations/data/CSVParserService";
+import { EnumMappingService } from "../../implementations/data/EnumMappingService";
 
-import { PictographTransformationService } from "../../implementations/data/PictographTransformationService";
+import type { IOptionFilteringService } from "../../implementations/data/OptionFilteringService";
 import { OptionFilteringService } from "../../implementations/data/OptionFilteringService";
 import type { IPictographTransformationService } from "../../implementations/data/PictographTransformationService";
-import type { IOptionFilteringService } from "../../implementations/data/OptionFilteringService";
+import { PictographTransformationService } from "../../implementations/data/PictographTransformationService";
 
 // Import ServiceInterface type
 import type { ServiceInterface } from "../types";

@@ -5,11 +5,8 @@
 
 import type { PictographData } from "$lib/domain/PictographData";
 import { createPictographData } from "$lib/domain/PictographData";
-import { createArrowData } from "$lib/domain/ArrowData";
-import { createPropData } from "$lib/domain/PropData";
 import { createMotionData } from "$lib/domain/MotionData";
-import { createGridData } from "$lib/domain/GridData";
-import { Letter, getLetterType } from "$lib/domain/Letter";
+import { Letter, getLetterType } from "$lib/domain";
 import {
   GridPosition,
   Timing,
@@ -528,33 +525,14 @@ export class FlexiblePictographGenerator {
   private createPictographFromMovement(params: MovementParams): PictographData {
     return createPictographData({
       id: crypto.randomUUID(),
-      letter: params.letter, // Use letter string directly
+      letter: params.letter as Letter, // Use letter string directly - TODO: fix Letter type
       startPosition: params.startPosition,
       endPosition: params.endPosition,
       timing: params.timing,
       direction: params.direction,
-      letterType: getLetterType(params.letter), // Get type from letter string
-      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
-      arrows: {
-        blue: createArrowData({
-          // ✅ FIXED: ArrowData no longer contains motion properties
-          arrowLocation: null,
-          isVisible: true,
-        }),
-        red: createArrowData({
-          // ✅ FIXED: ArrowData no longer contains motion properties
-          arrowLocation: null,
-          isVisible: true,
-        }),
-      },
-      props: {
-        blue: createPropData({
-          rotationDirection: params.blueRotation,
-        }),
-        red: createPropData({
-          rotationDirection: params.redRotation,
-        }),
-      },
+      letterType: getLetterType(params.letter as Letter), // Get type from letter string
+      gridMode: GridMode.DIAMOND,
+      // Arrows and props are now embedded in motions
       motions: {
         blue: createMotionData({
           motionType: params.blueMotion,
@@ -572,7 +550,6 @@ export class FlexiblePictographGenerator {
         }),
       },
       isBlank: false,
-      isMirrored: false,
       metadata: {},
     });
   }

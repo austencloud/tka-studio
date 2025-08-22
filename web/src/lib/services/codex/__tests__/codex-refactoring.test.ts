@@ -25,14 +25,15 @@ describe("Codex Service Refactoring", () => {
 
   describe("Repository Layer", () => {
     it("should load letter mappings from configuration", () => {
-      const allMappings = letterMappingRepo.getAllLetterMappings();
+      const allLetters = letterMappingRepo.getAllLetters();
+      expect(allLetters.length).toBeGreaterThan(0);
 
-      expect(Object.keys(allMappings).length).toBeGreaterThan(0);
-      expect(allMappings.A).toBeDefined();
-      expect(allMappings.A.startPosition).toBe("alpha1");
-      expect(allMappings.A.endPosition).toBe("alpha3");
-      expect(allMappings.A.blueMotionType).toBe("pro");
-      expect(allMappings.A.redMotionType).toBe("pro");
+      const letterA = letterMappingRepo.getLetterMapping("A");
+      expect(letterA).toBeDefined();
+      expect(letterA?.startPosition).toBe("alpha1");
+      expect(letterA?.endPosition).toBe("alpha3");
+      expect(letterA?.blueMotionType).toBe("pro");
+      expect(letterA?.redMotionType).toBe("pro");
     });
 
     it("should organize letters by rows correctly", () => {

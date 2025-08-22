@@ -8,7 +8,11 @@
  * REFACTORED: Removed singleton pattern, now uses DI container.
  */
 
-import type { ArrowData, MotionData, PictographData } from "$lib/domain";
+import type {
+  ArrowPlacementData as ArrowPlacementData,
+  MotionData,
+  PictographData,
+} from "$lib/domain";
 import {
   MotionColor,
   MotionType,
@@ -44,12 +48,12 @@ export interface Position {
 
 export interface IArrowPositioningService {
   calculatePosition(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     motionData: MotionData,
     pictographData: PictographData
   ): Promise<ArrowPositionResult>;
   shouldMirror(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     motionData: MotionData,
     pictographData: PictographData
   ): boolean;
@@ -69,7 +73,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
    * Calculate arrow position using the sophisticated positioning pipeline
    */
   async calculatePosition(
-    arrowData: ArrowData,
+    arrowPlacementData: ArrowPlacementData,
     motionData: MotionData,
     pictographData: PictographData
   ): Promise<ArrowPositionResult> {
@@ -78,7 +82,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
     try {
       // Use the sophisticated positioning pipeline
       const [x, y, rotation] = await this.orchestrator.calculateArrowPosition(
-        arrowData,
+        arrowPlacementData,
         pictographData,
         motionData
       );
@@ -94,7 +98,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
    * Determine if arrow should be mirrored based on motion data
    */
   shouldMirror(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     _motionData: MotionData,
     pictographData: PictographData
   ): boolean {

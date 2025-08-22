@@ -1,0 +1,308 @@
+/* background-thumbnail-animations.css - Shared background animation styles */
+
+/* ===== ANIMATION KEYFRAMES ===== */
+
+@keyframes aurora-animation {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(200px);
+  }
+}
+
+@keyframes shooting-star {
+  0% {
+    transform: translateX(-400px) translateY(-100px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(400px) translateY(100px);
+    opacity: 0;
+  }
+}
+
+@keyframes star-twinkle-animation {
+  0%,
+  100% {
+    opacity: 0.9;
+  }
+  25% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  75% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes moon-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(255, 213, 79, 0.3);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 213, 79, 0.6);
+    transform: scale(1.1);
+  }
+}
+
+@keyframes bubble-rise {
+  0% {
+    transform: translateY(30px);
+  }
+  25% {
+    transform: translateY(-5px) translateX(5px);
+  }
+  50% {
+    transform: translateY(-15px) translateX(-3px);
+  }
+  75% {
+    transform: translateY(-8px) translateX(8px);
+  }
+  100% {
+    transform: translateY(30px);
+  }
+}
+
+@keyframes underwater-light {
+  0% {
+    transform: translateX(-200px) rotate(0deg);
+  }
+  50% {
+    transform: translateX(200px) rotate(180deg);
+  }
+  100% {
+    transform: translateX(-200px) rotate(360deg);
+  }
+}
+
+/* ===== BACKGROUND ANIMATION CLASSES ===== */
+
+/* Aurora Flow Animation */
+.aurora-flow .background-preview {
+  background: linear-gradient(
+    45deg,
+    #667eea,
+    #764ba2,
+    #f093fb,
+    #f5576c,
+    #4facfe,
+    #00f2fe
+  );
+  background-size: 400% 400%;
+  animation: aurora-animation 8s ease-in-out infinite;
+}
+
+/* Snowfall Animation */
+.snow-fall .background-preview {
+  background: var(--bg-gradient);
+  position: relative;
+}
+
+.snow-fall .background-preview::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 40px 70px, white, transparent),
+    radial-gradient(1px 1px at 90px 40px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(2px 2px at 160px 30px, white, transparent),
+    radial-gradient(1px 1px at 200px 60px, white, transparent),
+    radial-gradient(2px 2px at 240px 90px, white, transparent),
+    radial-gradient(1px 1px at 280px 40px, white, transparent);
+  background-repeat: repeat;
+  background-size: 300px 150px;
+  animation: snowfall 12s linear infinite;
+  opacity: 0.8;
+}
+
+.snow-fall .background-preview::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  background-size: 400px 400px;
+  animation: shooting-star 15s ease-in-out infinite;
+  opacity: 0.4;
+}
+
+/* Star Twinkle Animation */
+.star-twinkle .background-preview {
+  background: var(--bg-gradient);
+  position: relative;
+}
+
+.star-twinkle .background-preview::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(1px 1px at 25px 25px, #ffffff, transparent),
+    radial-gradient(2px 2px at 75px 50px, #ffeb3b, transparent),
+    radial-gradient(1px 1px at 125px 75px, #ffffff, transparent),
+    radial-gradient(1px 1px at 175px 25px, #81c784, transparent),
+    radial-gradient(2px 2px at 200px 100px, #ffffff, transparent),
+    radial-gradient(1px 1px at 50px 120px, #ffcdd2, transparent),
+    radial-gradient(1px 1px at 150px 140px, #ffffff, transparent),
+    radial-gradient(2px 2px at 250px 60px, #e1bee7, transparent);
+  background-repeat: repeat;
+  background-size: 280px 180px;
+  animation: star-twinkle-animation 3s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+.star-twinkle .background-preview::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(
+    circle,
+    #ffd54f 30%,
+    rgba(255, 213, 79, 0.3) 70%,
+    transparent
+  );
+  border-radius: 50%;
+  animation: moon-glow 6s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+/* Bubble Float Animation */
+.bubble-float .background-preview {
+  background: var(--bg-gradient);
+  position: relative;
+  overflow: hidden;
+}
+
+.bubble-float .background-preview::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(
+      circle at 30px 140px,
+      rgba(255, 255, 255, 0.4) 3px,
+      transparent 4px
+    ),
+    radial-gradient(
+      circle at 80px 160px,
+      rgba(255, 255, 255, 0.3) 5px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 120px 120px,
+      rgba(255, 255, 255, 0.35) 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 170px 180px,
+      rgba(255, 255, 255, 0.4) 4px,
+      transparent 5px
+    ),
+    radial-gradient(
+      circle at 220px 140px,
+      rgba(255, 255, 255, 0.25) 3px,
+      transparent 4px
+    ),
+    radial-gradient(
+      circle at 60px 100px,
+      rgba(255, 255, 255, 0.3) 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 200px 60px,
+      rgba(255, 255, 255, 0.4) 6px,
+      transparent 7px
+    );
+  background-size: 250px 200px;
+  animation: bubble-rise 8s ease-in-out infinite;
+  opacity: 0.8;
+}
+
+.bubble-float .background-preview::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(64, 224, 208, 0.1) 30%,
+      transparent 50%
+    ),
+    linear-gradient(
+      60deg,
+      transparent 20%,
+      rgba(135, 206, 250, 0.15) 60%,
+      transparent 80%
+    );
+  background-size:
+    200px 100%,
+    300px 100%;
+  animation: underwater-light 10s ease-in-out infinite;
+  opacity: 0.6;
+}
+
+/* ===== ACCESSIBILITY ===== */
+
+/* Disable animations when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .aurora-flow .background-preview,
+  .snow-fall .background-preview,
+  .star-twinkle .background-preview,
+  .bubble-float .background-preview,
+  .aurora-flow .background-preview::before,
+  .aurora-flow .background-preview::after,
+  .snow-fall .background-preview::before,
+  .snow-fall .background-preview::after,
+  .star-twinkle .background-preview::before,
+  .star-twinkle .background-preview::after,
+  .bubble-float .background-preview::before,
+  .bubble-float .background-preview::after {
+    animation: none !important;
+  }
+}

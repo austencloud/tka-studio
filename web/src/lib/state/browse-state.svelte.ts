@@ -14,7 +14,7 @@ import {
 import type {
   BrowseDisplayState,
   BrowseLoadingState,
-  BrowseSequenceMetadata,
+  SequenceData,
   FilterType,
   FilterValue,
   SortMethod,
@@ -53,10 +53,10 @@ export function createBrowseState(
   const stateManager = getBrowseTabStateManager();
 
   // ✅ PURE RUNES: Reactive state for UI
-  let allSequences = $state<BrowseSequenceMetadata[]>([]);
-  let filteredSequences = $state<BrowseSequenceMetadata[]>([]);
-  let displayedSequences = $state<BrowseSequenceMetadata[]>([]);
-  let selectedSequence = $state<BrowseSequenceMetadata | null>(null);
+  let allSequences = $state<SequenceData[]>([]);
+  let filteredSequences = $state<SequenceData[]>([]);
+  let displayedSequences = $state<SequenceData[]>([]);
+  let selectedSequence = $state<SequenceData | null>(null);
 
   // Advanced browse state
   let favorites = $state<Set<string>>(new Set());
@@ -343,7 +343,7 @@ export function createBrowseState(
     }
   }
 
-  async function selectSequence(sequence: BrowseSequenceMetadata) {
+  async function selectSequence(sequence: SequenceData) {
     selectedSequence = sequence;
 
     // 💾 SAVE SELECTION STATE: Persist selected sequence for cross-session memory
@@ -370,7 +370,7 @@ export function createBrowseState(
     console.log("🗑️ Filter state cleared");
   }
 
-  async function preloadThumbnails(sequences: BrowseSequenceMetadata[]) {
+  async function preloadThumbnails(sequences: SequenceData[]) {
     try {
       const thumbnailsToPreload = sequences
         .slice(0, 20) // Preload first 20 thumbnails
@@ -414,10 +414,10 @@ export function createBrowseState(
 
   // Helper function for derived sections
   function groupSequencesBySection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     sortMethod: SortMethod
-  ): Record<string, BrowseSequenceMetadata[]> {
-    const sections: Record<string, BrowseSequenceMetadata[]> = {};
+  ): Record<string, SequenceData[]> {
+    const sections: Record<string, SequenceData[]> = {};
 
     for (const sequence of sequences) {
       const sectionKey = getSectionKey(sequence, sortMethod);
@@ -431,17 +431,17 @@ export function createBrowseState(
   }
 
   function getSectionKey(
-    sequence: BrowseSequenceMetadata,
+    sequence: SequenceData,
     sortMethod: SortMethod
   ): string {
     switch (sortMethod) {
       case SortMethodEnum.ALPHABETICAL:
         return sequence.word[0]?.toUpperCase() || "#";
-      case SortMethodEnum.DIFFICULTY_LEVEL:
+      case SortMethodEnum.difficultyLevel:
         return sequence.difficultyLevel || "Unknown";
       case SortMethodEnum.AUTHOR:
         return sequence.author || "Unknown";
-      case SortMethodEnum.SEQUENCE_LENGTH: {
+      case SortMethodEnum.sequenceLength: {
         const length = sequence.sequenceLength || 0;
         if (length <= 4) return "3-4 beats";
         if (length <= 6) return "5-6 beats";
@@ -520,7 +520,7 @@ export function createBrowseState(
   async function filterSequencesByNavigation(
     sectionType: NavigationSection["type"],
     item: NavigationItem
-  ): Promise<BrowseSequenceMetadata[]> {
+  ): Promise<SequenceData[]> {
     try {
       const filtered = navigationService.getSequencesForNavigationItem(
         item,
@@ -569,7 +569,7 @@ export function createBrowseState(
     await generateSequenceSections();
   }
 
-  async function prepareDeleteSequence(sequence: BrowseSequenceMetadata) {
+  async function prepareDeleteSequence(sequence: SequenceData) {
     try {
       const confirmationData = await deleteService.prepareDeleteConfirmation(
         sequence,

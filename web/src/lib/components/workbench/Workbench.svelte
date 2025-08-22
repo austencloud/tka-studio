@@ -15,7 +15,11 @@
 
   function handleDeleteBeat() {
     const idx = sequenceStateService.selectedBeatIndex;
-    if (idx >= 0) sequenceStateService.removeBeat(idx);
+    if (idx >= 0) {
+      // TODO: Replace with WorkbenchBeatOperationsService.removeBeat
+      // For now, use the state service directly
+      sequenceStateService.removeBeat(idx);
+    }
   }
 
   function handleClearSequence() {

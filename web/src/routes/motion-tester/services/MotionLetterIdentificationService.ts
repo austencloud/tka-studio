@@ -5,8 +5,9 @@
  * Takes current motion tester parameters and identifies the corresponding TKA letter.
  */
 
-import type { MotionTestParams } from "./MotionParameterService";
+import type { LetterMapping } from "$lib/domain/codex/types";
 import { GridMode } from "$lib/domain/enums";
+import type { MotionTestParams } from "./MotionParameterService";
 
 export interface LetterIdentificationResult {
   letter: string | null;
@@ -27,7 +28,7 @@ export interface IMotionLetterIdentificationService {
 export class MotionLetterIdentificationService
   implements IMotionLetterIdentificationService
 {
-  private letterMappings: Record<string, any> = {};
+  private letterMappings: Record<string, LetterMapping> = {};
   private isInitialized = false;
 
   constructor() {
@@ -187,7 +188,7 @@ export class MotionLetterIdentificationService
   private determineStartPosition(
     blueParams: MotionTestParams,
     redParams: MotionTestParams,
-    gridMode: GridMode
+    _gridMode: GridMode
   ): string {
     // This is a simplified position determination
     // In a full implementation, this would use the same logic as the pictograph generation
@@ -240,7 +241,7 @@ export class MotionLetterIdentificationService
   private determineEndPosition(
     blueParams: MotionTestParams,
     redParams: MotionTestParams,
-    gridMode: GridMode
+    _gridMode: GridMode
   ): string {
     const blueEnd = blueParams.endLocation.toLowerCase();
     const redEnd = redParams.endLocation.toLowerCase();
@@ -305,8 +306,8 @@ export class MotionLetterIdentificationService
    * Compare motion signature with letter mapping
    */
   private compareMotionSignature(
-    signature: any,
-    mapping: any,
+    signature: Record<string, string>,
+    mapping: LetterMapping,
     letter: string
   ): LetterIdentificationResult {
     const matchedParameters: string[] = [];
@@ -314,14 +315,30 @@ export class MotionLetterIdentificationService
 
     // Check core parameters
     const coreParams = [
-      { key: "startPosition", signatureKey: "startPosition" },
-      { key: "endPosition", signatureKey: "endPosition" },
-      { key: "blueMotion", signatureKey: "blueMotion" },
-      { key: "redMotion", signatureKey: "redMotion" },
+      {
+        key: "startPosition",
+        signatureKey: "startPosition",
+        mappingKey: "startPosition" as keyof LetterMapping,
+      },
+      {
+        key: "endPosition",
+        signatureKey: "endPosition",
+        mappingKey: "endPosition" as keyof LetterMapping,
+      },
+      {
+        key: "blueMotion",
+        signatureKey: "blueMotion",
+        mappingKey: "blueMotionType" as keyof LetterMapping,
+      },
+      {
+        key: "redMotion",
+        signatureKey: "redMotion",
+        mappingKey: "redMotionType" as keyof LetterMapping,
+      },
     ];
 
     for (const param of coreParams) {
-      const mappingValue = mapping[param.key];
+      const mappingValue = mapping[param.mappingKey];
       const signatureValue = signature[param.signatureKey];
 
       if (mappingValue && signatureValue) {

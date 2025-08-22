@@ -6,7 +6,6 @@
 
 import type { MotionData } from "$lib/domain/MotionData";
 import type {
-  Orientation,
   MotionType,
   Location,
   RotationDirection,
@@ -21,29 +20,30 @@ import type {
 
 /**
  * Interface for motion parameter calculations and conversions
+ * Now using proper enums throughout - no more string-based parameters!
  */
 export interface IMotionParameterService {
   // Core parameter operations
   createDefaultParams(): MotionTestParams;
   updateMotionTypeForLocations(params: MotionTestParams): MotionTestParams;
 
-  // Motion type calculations
-  getMotionType(startLocation: string, endLocation: string): string;
-  getAvailableMotionTypes(startLocation: string, endLocation: string): string[];
+  // Motion type calculations - now using enums
+  getMotionType(startLocation: Location, endLocation: Location): MotionType;
+  getAvailableMotionTypes(
+    startLocation: Location,
+    endLocation: Location
+  ): MotionType[];
   calculateRotationDirection(
-    motionType: string,
-    startLocation: string,
-    endLocation: string
-  ): string;
+    motionType: MotionType,
+    startLocation: Location,
+    endLocation: Location
+  ): RotationDirection;
 
-  // Enum mapping
-  mapMotionTypeToEnum(motionType: string): MotionType;
-  mapOrientationToEnum(orientation: string): Orientation;
-  mapRotationDirectionToEnum(rotationDirection: string): RotationDirection;
-  mapLocationToEnum(location: string): Location;
-
-  // Data conversion
-  convertToMotionData(params: MotionTestParams): MotionData;
+  // Data conversion - no enum mapping needed anymore
+  convertToMotionData(
+    params: MotionTestParams,
+    color?: MotionColor
+  ): MotionData;
   convertMotionTestParamsToPropAttributes(
     params: MotionTestParams
   ): Record<string, unknown>;
@@ -79,19 +79,5 @@ export interface IAnimationControlService {
   getPropVisibility(prop: MotionColor): boolean;
 }
 
-/**
- * Interface for enum conversion utilities
- */
-export interface IEnumConversionService {
-  // String to enum conversions
-  stringToOrientation(str: string): Orientation;
-  stringToMotionType(str: string): MotionType;
-  stringToLocation(str: string): Location;
-  stringToRotationDirection(str: string): RotationDirection;
-
-  // Enum to string conversions
-  orientationToString(orientation: Orientation): string;
-  motionTypeToString(motionType: MotionType): string;
-  locationToString(location: Location): string;
-  rotationDirectionToString(rotationDirection: RotationDirection): string;
-}
+// YAGNI: Removed unused IEnumConversionService interface
+// We use enums directly now - no string conversion needed!

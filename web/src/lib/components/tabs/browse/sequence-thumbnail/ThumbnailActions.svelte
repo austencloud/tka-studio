@@ -5,7 +5,7 @@ Handles favorite, delete, and edit actions for sequence thumbnails.
 Extracted from SequenceThumbnail.svelte for better separation of concerns.
 -->
 <script lang="ts">
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
@@ -14,10 +14,10 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
     onFavoriteToggle = () => {},
     onAction = () => {},
   } = $props<{
-    sequence: BrowseSequenceMetadata;
+    sequence: SequenceData;
     isFavorite?: boolean;
     onFavoriteToggle?: (sequenceId: string) => void;
-    onAction?: (action: string, sequence: BrowseSequenceMetadata) => void;
+    onAction?: (action: string, sequence: SequenceData) => void;
   }>();
 
   // Event handlers

@@ -9,6 +9,8 @@ import type { BeatData, PictographData } from "../../../domain";
 import {
   MotionColor,
   createBeatData,
+  createMotionData,
+  createPictographData,
   GridMode,
   Location,
   MotionType,
@@ -19,7 +21,6 @@ import {
 import type { ValidationResult } from "../../interfaces/domain-types";
 import type { IStartPositionService } from "../../interfaces/application-interfaces";
 import type { ValidationError } from "$lib/domain/sequenceCard";
-import { PictographDataFactory } from "../../factories/PictographDataFactory";
 import { Letter } from "$lib/domain/Letter";
 
 export class StartPositionService implements IStartPositionService {
@@ -244,13 +245,13 @@ export class StartPositionService implements IStartPositionService {
     const blueLocation = mapping?.blue || Location.SOUTH;
     const redLocation = mapping?.red || Location.NORTH;
 
-    // ✅ CENTRALIZED: Use PictographDataFactory for consistent, complete creation
-    return PictographDataFactory.create({
+    // ✅ DIRECT DOMAIN CONSTRUCTOR: No factory needed - positions auto-derived
+    return createPictographData({
       id: `start-pos-${key}-${index}`,
       letter,
       gridMode,
       motions: {
-        blue: {
+        blue: createMotionData({
           motionType: MotionType.STATIC,
           rotationDirection: RotationDirection.NO_ROTATION,
           startLocation: blueLocation,
@@ -259,8 +260,11 @@ export class StartPositionService implements IStartPositionService {
           startOrientation: Orientation.IN,
           endOrientation: Orientation.IN,
           color: MotionColor.BLUE,
-        },
-        red: {
+          isVisible: true,
+          propType: PropType.STAFF,
+          arrowLocation: blueLocation, // Will be calculated by positioning system
+        }),
+        red: createMotionData({
           motionType: MotionType.STATIC,
           rotationDirection: RotationDirection.NO_ROTATION,
           startLocation: redLocation,
@@ -269,29 +273,12 @@ export class StartPositionService implements IStartPositionService {
           startOrientation: Orientation.IN,
           endOrientation: Orientation.IN,
           color: MotionColor.RED,
-        },
-      },
-      props: {
-        blue: {
+          isVisible: true,
           propType: PropType.STAFF,
-        },
-        red: {
-          propType: PropType.STAFF,
-        },
+          arrowLocation: redLocation, // Will be calculated by positioning system
+        }),
       },
-      arrows: {
-        blue: {
-          // ✅ SIMPLIFIED: Only arrow-specific properties, motion data comes from MotionData
-          arrowLocation: null, // Will be calculated by positioning system from motion data
-        },
-        red: {
-          // ✅ SIMPLIFIED: Only arrow-specific properties, motion data comes from MotionData
-          arrowLocation: null, // Will be calculated by positioning system from motion data
-        },
-      },
-      // ✅ GUARANTEED: Factory will derive endPosition from motion data
       isBlank: false,
-      isMirrored: false,
     });
   }
 }

@@ -3,7 +3,7 @@
  */
 
 import type {
-  ArrowData,
+  ArrowPlacementData,
   GridMode,
   Location,
   MotionData,
@@ -48,7 +48,7 @@ export interface IPlacementKeyGenerator {
 
 export interface IAttributeKeyGenerator {
   getKeyFromArrow(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     pictographData: PictographData,
     color: string
   ): string;
@@ -66,7 +66,7 @@ export interface ITurnsTupleKeyGenerator {
 }
 
 // Data service interfaces
-export interface IArrowPlacementDataService {
+export interface IArrowPlacementService {
   getDefaultAdjustment(
     motionType: MotionType,
     placementKey: string,
@@ -87,7 +87,7 @@ export interface IArrowPlacementKeyService {
 
 export interface IArrowPositioningService {
   calculateArrowPosition(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     pictographData: PictographData,
     gridData: GridData
   ): Promise<ArrowPosition>;

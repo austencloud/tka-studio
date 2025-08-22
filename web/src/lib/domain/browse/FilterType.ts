@@ -10,7 +10,7 @@ export enum FilterType {
   CONTAINS_LETTERS = "contains_letters",
   LENGTH = "length",
   DIFFICULTY = "difficulty",
-  STARTING_POSITION = "starting_position",
+  startPosition = "startPosition",
   AUTHOR = "author",
   GRID_MODE = "gridMode",
   ALL_SEQUENCES = "all_sequences",
@@ -54,7 +54,7 @@ export function formatFilterDisplayName(
       return value === "all" ? "All Lengths" : `${value} beats`;
     case FilterType.DIFFICULTY:
       return value === "all" ? "All Levels" : `${value} level`;
-    case FilterType.STARTING_POSITION:
+    case FilterType.startPosition:
       return value === "all" ? "All Positions" : `Position ${value}`;
     case FilterType.AUTHOR:
       return value === "all" ? "All Authors" : `By ${value}`;

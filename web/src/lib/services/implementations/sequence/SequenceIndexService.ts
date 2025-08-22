@@ -5,9 +5,10 @@
  * Provides search capabilities across sequence metadata.
  */
 
-import type { BrowseSequenceMetadata } from "$lib/services/interfaces/domain-types";
+import type { SequenceData } from "$lib/services/interfaces/domain-types";
+import { createSequenceData } from "$lib/domain";
 import type { ISequenceIndexService } from "$lib/services/interfaces/browse-interfaces";
-import { GridMode } from "$lib/domain/enums";
+import { GridMode, PropType, GridPositionGroup } from "$lib/domain/enums";
 
 interface SearchIndex {
   wordIndex: Map<string, Set<string>>; // word -> sequence IDs
@@ -17,11 +18,11 @@ interface SearchIndex {
 }
 
 export class SequenceIndexService implements ISequenceIndexService {
-  private sequenceIndex: BrowseSequenceMetadata[] | null = null;
+  private sequenceIndex: SequenceData[] | null = null;
   private searchIndex: SearchIndex | null = null;
-  private sequenceMap = new Map<string, BrowseSequenceMetadata>();
+  private sequenceMap = new Map<string, SequenceData>();
 
-  async loadSequenceIndex(): Promise<BrowseSequenceMetadata[]> {
+  async loadSequenceIndex(): Promise<SequenceData[]> {
     if (this.sequenceIndex !== null) {
       return this.sequenceIndex;
     }
@@ -46,7 +47,7 @@ export class SequenceIndexService implements ISequenceIndexService {
     }
   }
 
-  async buildSearchIndex(sequences: BrowseSequenceMetadata[]): Promise<void> {
+  async buildSearchIndex(sequences: SequenceData[]): Promise<void> {
     this.searchIndex = {
       wordIndex: new Map(),
       authorIndex: new Map(),
@@ -104,7 +105,7 @@ export class SequenceIndexService implements ISequenceIndexService {
     }
   }
 
-  async searchSequences(query: string): Promise<BrowseSequenceMetadata[]> {
+  async searchSequences(query: string): Promise<SequenceData[]> {
     if (!this.searchIndex || !query.trim()) {
       return this.sequenceIndex || [];
     }
@@ -135,7 +136,7 @@ export class SequenceIndexService implements ISequenceIndexService {
     // Convert IDs back to sequences and sort by relevance
     const results = Array.from(resultIds)
       .map((id) => this.sequenceMap.get(id))
-      .filter((seq): seq is BrowseSequenceMetadata => seq !== undefined);
+      .filter((seq): seq is SequenceData => seq !== undefined);
 
     return this.sortByRelevance(results, query);
   }
@@ -164,7 +165,7 @@ export class SequenceIndexService implements ISequenceIndexService {
     };
   }
 
-  async getSequenceById(id: string): Promise<BrowseSequenceMetadata | null> {
+  async getSequenceById(id: string): Promise<SequenceData | null> {
     if (!this.sequenceMap.has(id)) {
       await this.loadSequenceIndex();
     }
@@ -250,7 +251,7 @@ export class SequenceIndexService implements ISequenceIndexService {
     return results;
   }
 
-  private buildSearchableText(sequence: BrowseSequenceMetadata): string {
+  private buildSearchableText(sequence: SequenceData): string {
     const parts = [
       sequence.word,
       sequence.name,
@@ -265,9 +266,9 @@ export class SequenceIndexService implements ISequenceIndexService {
   }
 
   private sortByRelevance(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     query: string
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     const queryLower = query.toLowerCase();
 
     return sequences.sort((a, b) => {
@@ -278,7 +279,7 @@ export class SequenceIndexService implements ISequenceIndexService {
   }
 
   private calculateRelevanceScore(
-    sequence: BrowseSequenceMetadata,
+    sequence: SequenceData,
     query: string
   ): number {
     let score = 0;
@@ -323,7 +324,7 @@ export class SequenceIndexService implements ISequenceIndexService {
     return score;
   }
 
-  private async scanSequenceDirectory(): Promise<BrowseSequenceMetadata[]> {
+  private async scanSequenceDirectory(): Promise<SequenceData[]> {
     // This is a fallback method that would scan the static directory
     // In a real implementation, this would require server-side support
     // For now, return a comprehensive set of sample data based on the copied files
@@ -331,7 +332,7 @@ export class SequenceIndexService implements ISequenceIndexService {
     console.warn("Scanning directory - using fallback sample data");
 
     // Generate sequences based on common pattern from the copied dictionary
-    const sequences: BrowseSequenceMetadata[] = [];
+    const sequences: SequenceData[] = [];
 
     // Sample sequences that should exist based on the dictionary copy
     const knownSequences = [
@@ -372,10 +373,11 @@ export class SequenceIndexService implements ISequenceIndexService {
       const gridMode = gridModes[i % gridModes.length];
       const difficulty = difficulties[i % difficulties.length];
 
-      const result: BrowseSequenceMetadata = {
+      const result = createSequenceData({
         id: word, // ✅ FIXED: Keep uppercase to match PNG file names
         name: `${word} Sequence`,
         word,
+        beats: [], // Empty beats for index service
         thumbnails: [`${word}_ver1.png`],
         isFavorite: Math.random() > 0.8,
         isCircular: false,
@@ -384,20 +386,18 @@ export class SequenceIndexService implements ISequenceIndexService {
           Math.floor(Math.random() * 3) + 1
         ),
         metadata: { scanned: true, index: i },
-      };
-
-      // Add optional properties conditionally
-      if (author) result.author = author;
-      if (gridMode) result.gridMode = gridMode;
-      if (difficulty) result.difficultyLevel = difficulty;
-
-      result.sequenceLength = Math.floor(Math.random() * 8) + 3;
-      result.level = Math.floor(Math.random() * 4) + 1;
-      result.dateAdded = new Date(
-        Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
-      );
-      result.propType = "fans";
-      result.startingPosition = "center";
+        // Include all properties in the creation to avoid readonly issues
+        ...(author && { author }),
+        ...(gridMode && { gridMode }),
+        ...(difficulty && { difficultyLevel: difficulty }),
+        sequenceLength: Math.floor(Math.random() * 8) + 3,
+        level: Math.floor(Math.random() * 4) + 1,
+        dateAdded: new Date(
+          Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
+        ),
+        propType: PropType.FAN,
+        startingPositionGroup: GridPositionGroup.ALPHA,
+      });
 
       sequences.push(result);
     }

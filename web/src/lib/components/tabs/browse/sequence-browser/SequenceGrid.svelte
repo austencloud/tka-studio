@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
   import type { IThumbnailService } from "$lib/services/interfaces/browse-interfaces";
   import { slide } from "svelte/transition";
   import SequenceThumbnail from "../sequence-thumbnail/SequenceThumbnail.svelte";
@@ -11,17 +11,14 @@
     thumbnailService,
     onAction = () => {},
   } = $props<{
-    sequences?: BrowseSequenceMetadata[];
+    sequences?: SequenceData[];
     viewMode?: "grid" | "list";
     thumbnailService: IThumbnailService;
-    onAction?: (action: string, sequence: BrowseSequenceMetadata) => void;
+    onAction?: (action: string, sequence: SequenceData) => void;
   }>();
 
   // Handle sequence actions
-  function handleSequenceAction(
-    action: string,
-    sequence: BrowseSequenceMetadata
-  ) {
+  function handleSequenceAction(action: string, sequence: SequenceData) {
     onAction(action, sequence);
   }
 </script>

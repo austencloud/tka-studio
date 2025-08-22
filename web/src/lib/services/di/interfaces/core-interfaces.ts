@@ -16,6 +16,9 @@ import type {
   IPrintablePageLayoutService,
   IPageFactoryService,
   ISequenceCardExportIntegrationService,
+  IWorkbenchBeatOperationsService,
+  ISequenceImportService,
+  ISequenceDeletionService,
 } from "../../interfaces/sequence-interfaces";
 import type {
   IArrowRenderingService,
@@ -66,6 +69,9 @@ import { PropCoordinatorService } from "../../implementations/rendering/PropCoor
 import { SequenceDomainService } from "../../implementations/domain/SequenceDomainService";
 import { SequenceGenerationService } from "../../implementations/generation/SequenceGenerationService";
 import { SequenceService } from "../../implementations/sequence/SequenceService";
+import { WorkbenchBeatOperationsService } from "../../implementations/sequence/WorkbenchBeatOperationsService";
+import { SequenceImportService } from "../../implementations/sequence/SequenceImportService";
+import { SequenceDeletionService } from "../../implementations/sequence/SequenceDeletionService";
 import { SettingsService } from "../../implementations/persistence/SettingsService";
 import { StartPositionService } from "../../implementations/domain/StartPositionService";
 import { SvgConfiguration } from "../../implementations/rendering/SvgConfiguration";
@@ -85,7 +91,8 @@ export const ISequenceServiceInterface =
       constructor(...args: unknown[]) {
         super(
           args[0] as ISequenceDomainService,
-          args[1] as IPersistenceService
+          args[1] as IPersistenceService,
+          args[2] as ISequenceImportService
         );
       }
     }
@@ -95,6 +102,32 @@ export const ISequenceDomainServiceInterface =
   createServiceInterface<ISequenceDomainService>(
     "ISequenceDomainService",
     SequenceDomainService
+  );
+
+export const IWorkbenchBeatOperationsServiceInterface =
+  createServiceInterface<IWorkbenchBeatOperationsService>(
+    "IWorkbenchBeatOperationsService",
+    class extends WorkbenchBeatOperationsService {
+      constructor(...args: unknown[]) {
+        super(args[0] as ISequenceService, args[1] as IPersistenceService);
+      }
+    }
+  );
+
+export const ISequenceImportServiceInterface =
+  createServiceInterface<ISequenceImportService>(
+    "ISequenceImportService",
+    SequenceImportService
+  );
+
+export const ISequenceDeletionServiceInterface =
+  createServiceInterface<ISequenceDeletionService>(
+    "ISequenceDeletionService",
+    class extends SequenceDeletionService {
+      constructor(...args: unknown[]) {
+        super(args[0] as ISequenceService, args[1] as IPersistenceService);
+      }
+    }
   );
 
 export const IPictographServiceInterface =
@@ -255,7 +288,11 @@ export const IConstructTabCoordinationServiceInterface =
     "IConstructTabCoordinationService",
     class extends ConstructTabCoordinationService {
       constructor(...args: unknown[]) {
-        super(args[0] as ISequenceService, args[1] as IStartPositionService);
+        super(
+          args[0] as ISequenceService,
+          args[1] as IStartPositionService,
+          args[2] as IWorkbenchBeatOperationsService
+        );
       }
     }
   );

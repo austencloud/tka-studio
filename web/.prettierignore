@@ -19,6 +19,8 @@ Thumbs.db
 # IDE files
 .vscode/launch.json
 .vscode/tasks.json
+.vscode/chrome-debug-profile/
+.vscode/chrome-debug-profile-alt/
 .idea/
 
 # Package manager lock files (optional - some teams prefer to format these)

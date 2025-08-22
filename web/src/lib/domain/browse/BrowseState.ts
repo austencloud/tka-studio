@@ -23,27 +23,11 @@ export enum NavigationMode {
   SEQUENCE_BROWSER = "sequence_picker",
 }
 
-export interface BrowseSequenceMetadata {
-  id: string;
-  name: string;
-  word: string;
-  thumbnails: string[];
-  sequenceLength?: number;
-  author?: string;
-  level?: number;
-  dateAdded?: Date;
-  gridMode?: string;
-  propType?: string;
-  isFavorite: boolean;
-  isCircular: boolean;
-  startingPosition?: string;
-  difficultyLevel?: string;
-  tags: string[];
-  metadata: Record<string, unknown>;
-}
+// SequenceData eliminated - using SequenceData directly
+// This eliminates 95% duplication and clarifies starting position types
 
 export interface SequenceFilterResult {
-  sequences: BrowseSequenceMetadata[];
+  sequences: SequenceData[];
   totalCount: number;
   filterApplied: {
     type: FilterType;
@@ -60,8 +44,8 @@ export interface BrowseLoadingState {
 }
 
 export interface BrowseDisplayState {
-  sequences: BrowseSequenceMetadata[];
-  sortedSections: Record<string, BrowseSequenceMetadata[]>;
+  sequences: SequenceData[];
+  sortedSections: Record<string, SequenceData[]>;
   currentSection: string | null;
   thumbnailWidth: number;
   gridColumns: number;
@@ -79,36 +63,8 @@ export function createDefaultBrowseState(): BrowseState {
   };
 }
 
-export function createBrowseSequenceMetadata(
-  sequence: SequenceData
-): BrowseSequenceMetadata {
-  return {
-    id: sequence.id,
-    name: sequence.name,
-    word: sequence.word,
-    thumbnails: [...sequence.thumbnails],
-    ...(sequence.sequence_length !== undefined && {
-      sequenceLength: sequence.sequence_length,
-    }),
-    ...(sequence.author !== undefined && { author: sequence.author }),
-    ...(sequence.level !== undefined && { level: sequence.level }),
-    ...(sequence.date_added !== undefined && {
-      dateAdded: sequence.date_added,
-    }),
-    ...(sequence.gridMode !== undefined && { gridMode: sequence.gridMode }),
-    ...(sequence.propType !== undefined && { propType: sequence.propType }),
-    isFavorite: sequence.is_favorite,
-    isCircular: sequence.is_circular,
-    ...(sequence.starting_position !== undefined && {
-      startingPosition: sequence.starting_position,
-    }),
-    ...(sequence.difficulty_level !== undefined && {
-      difficultyLevel: sequence.difficulty_level,
-    }),
-    tags: [...sequence.tags],
-    metadata: { ...sequence.metadata },
-  };
-}
+// createSequenceData function removed - using SequenceData directly
+// No conversion needed since SequenceData was eliminated
 
 export function createDefaultLoadingState(): BrowseLoadingState {
   return {

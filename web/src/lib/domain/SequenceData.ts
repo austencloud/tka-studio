@@ -6,24 +6,29 @@
  */
 
 import type { BeatData } from "./BeatData";
+import type { GridMode, GridPositionGroup, PropType } from "./enums";
 
 export interface SequenceData {
   readonly id: string;
   readonly name: string;
   readonly word: string;
   readonly beats: readonly BeatData[];
-  readonly startPosition?: BeatData;
+
+  // Starting position clarification:
+  readonly startingPositionBeat?: BeatData; // The actual visual beat (beat 0)
+  readonly startingPositionGroup?: GridPositionGroup; // Position group: "alpha", "beta", "gamma"
+  readonly startPosition?: BeatData; // Start position beat data
+
   readonly thumbnails: readonly string[];
-  readonly sequence_length?: number;
+  readonly sequenceLength?: number;
   readonly author?: string;
   readonly level?: number;
-  readonly date_added?: Date;
-  readonly gridMode?: string;
-  readonly propType?: string;
-  readonly is_favorite: boolean;
-  readonly is_circular: boolean;
-  readonly starting_position?: string;
-  readonly difficulty_level?: string;
+  readonly dateAdded?: Date;
+  readonly gridMode?: GridMode;
+  readonly propType?: PropType;
+  readonly isFavorite: boolean;
+  readonly isCircular: boolean;
+  readonly difficultyLevel?: string;
   readonly tags: readonly string[];
   readonly metadata: Record<string, unknown>;
 }
@@ -37,27 +42,27 @@ export function createSequenceData(
     word: data.word ?? "",
     beats: data.beats ?? [],
     thumbnails: data.thumbnails ?? [],
-    is_favorite: data.is_favorite ?? false,
-    is_circular: data.is_circular ?? false,
+    isFavorite: data.isFavorite ?? false,
+    isCircular: data.isCircular ?? false,
     tags: data.tags ?? [],
     metadata: data.metadata ?? {},
     // Optional properties - only include if defined
-    ...(data.sequence_length !== undefined && {
-      sequence_length: data.sequence_length,
+    ...(data.sequenceLength !== undefined && {
+      sequenceLength: data.sequenceLength,
     }),
     ...(data.author !== undefined && { author: data.author }),
     ...(data.level !== undefined && { level: data.level }),
-    ...(data.date_added !== undefined && { date_added: data.date_added }),
+    ...(data.dateAdded !== undefined && { dateAdded: data.dateAdded }),
     ...(data.gridMode !== undefined && { gridMode: data.gridMode }),
     ...(data.propType !== undefined && { propType: data.propType }),
-    ...(data.starting_position !== undefined && {
-      starting_position: data.starting_position,
+    ...(data.startingPositionBeat !== undefined && {
+      startingPositionBeat: data.startingPositionBeat,
     }),
-    ...(data.difficulty_level !== undefined && {
-      difficulty_level: data.difficulty_level,
+    ...(data.startingPositionGroup !== undefined && {
+      startingPositionGroup: data.startingPositionGroup,
     }),
-    ...(data.startPosition !== undefined && {
-      startPosition: data.startPosition,
+    ...(data.difficultyLevel !== undefined && {
+      difficultyLevel: data.difficultyLevel,
     }),
   };
   return result;
@@ -122,5 +127,5 @@ export function isEmptySequence(sequence: SequenceData): boolean {
 }
 
 export function hasStartPosition(sequence: SequenceData): boolean {
-  return sequence.startPosition != null;
+  return sequence.startingPositionBeat != null;
 }

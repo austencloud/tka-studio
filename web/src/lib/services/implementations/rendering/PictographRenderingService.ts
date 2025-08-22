@@ -16,8 +16,8 @@ import type {
   IPictographRenderingService,
   ISvgUtilityService,
 } from "../../interfaces/pictograph-interfaces";
-import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
 import type { IPropRenderingService } from "../../interfaces/positioning-interfaces";
+import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
 
 export class PictographRenderingService implements IPictographRenderingService {
   constructor(
@@ -42,30 +42,31 @@ export class PictographRenderingService implements IPictographRenderingService {
       const svg = this.svgUtility.createBaseSVG();
 
       // 2. Render grid
-      const gridMode: GridMode = data.gridData?.gridMode ?? GridMode.DIAMOND;
+      const gridMode: GridMode = data.gridMode ?? GridMode.DIAMOND;
       await this.gridRendering.renderGrid(svg, gridMode);
 
       // 3. Calculate arrow positions using sophisticated positioning orchestrator
       const updatedPictographData =
         await this.arrowPositioning.calculateAllArrowPositions(data);
 
-      // 4. Render arrows with sophisticated calculated positions
-      for (const [color, arrowData] of Object.entries(
-        updatedPictographData.arrows
-      )) {
-        if (arrowData.isVisible) {
-          const position = {
-            x: arrowData.positionX,
-            y: arrowData.positionY,
-            rotation: arrowData.rotationAngle,
-          };
-          const motionData = data.motions?.[color as MotionColor];
-          await this.arrowRendering.renderArrowAtPosition(
-            svg,
-            color as MotionColor,
-            position,
-            motionData
-          );
+      // 4. Render arrows from embedded motion data
+      if (updatedPictographData.motions) {
+        for (const [color, motionData] of Object.entries(
+          updatedPictographData.motions
+        )) {
+          if (motionData?.isVisible && motionData.arrowPlacementData) {
+            const position = {
+              x: motionData.arrowPlacementData.positionX,
+              y: motionData.arrowPlacementData.positionY,
+              rotation: motionData.arrowPlacementData.rotationAngle,
+            };
+            await this.arrowRendering.renderArrowAtPosition(
+              svg,
+              color as MotionColor,
+              position,
+              motionData
+            );
+          }
         }
       }
 
@@ -77,20 +78,22 @@ export class PictographRenderingService implements IPictographRenderingService {
 
       // 7. Add metadata
       this.overlayRendering.renderIdLabel(svg, data);
-      // Create arrow positions map for debug info
+      // Create arrow positions map for debug info from embedded motion data
       const arrowPositions = new Map<
         string,
         { x: number; y: number; rotation: number }
       >();
-      for (const [color, arrowData] of Object.entries(
-        updatedPictographData.arrows
-      )) {
-        if (arrowData.isVisible) {
-          arrowPositions.set(color, {
-            x: arrowData.positionX,
-            y: arrowData.positionY,
-            rotation: arrowData.rotationAngle,
-          });
+      if (updatedPictographData.motions) {
+        for (const [color, motionData] of Object.entries(
+          updatedPictographData.motions
+        )) {
+          if (motionData?.isVisible && motionData.arrowPlacementData) {
+            arrowPositions.set(color, {
+              x: motionData.arrowPlacementData.positionX,
+              y: motionData.arrowPlacementData.positionY,
+              rotation: motionData.arrowPlacementData.rotationAngle,
+            });
+          }
         }
       }
       this.overlayRendering.renderDebugInfo(svg, data, arrowPositions);

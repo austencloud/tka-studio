@@ -6,12 +6,7 @@ This component is focused solely on rendering the SVG elements
 and leaves state management to the parent component.
 -->
 <script lang="ts">
-  import type {
-    PictographData,
-    ArrowData,
-    PropData,
-    MotionColor,
-  } from "$lib/domain";
+  import type { PictographData, MotionData, MotionColor } from "$lib/domain";
   import { GridMode } from "$lib/domain/enums";
   // ✅ REMOVED: Beta calculation imports - now handled in PropPlacementService
 
@@ -27,10 +22,8 @@ and leaves state management to the parent component.
     hasValidData: boolean;
     /** Display letter for glyph */
     displayLetter: string | null;
-    /** Arrows to render */
-    arrowsToRender: Array<{ color: MotionColor; arrowData: ArrowData }>;
-    /** Props to render */
-    propsToRender: Array<{ color: MotionColor; propData: PropData }>;
+    /** Motions to render (embedded approach) */
+    motionsToRender: Array<{ color: MotionColor; motionData: MotionData }>;
     /** SVG dimensions */
     width: number | string;
     height: number | string;
@@ -51,8 +44,7 @@ and leaves state management to the parent component.
     pictographData,
     hasValidData,
     displayLetter,
-    arrowsToRender,
-    propsToRender,
+    motionsToRender,
     width,
     height,
     viewBox,
@@ -81,25 +73,22 @@ and leaves state management to the parent component.
   {#if hasValidData}
     <!-- Grid (always rendered first) -->
     <Grid
-      gridMode={pictographData?.gridData?.gridMode || GridMode.DIAMOND}
+      gridMode={pictographData?.gridMode || GridMode.DIAMOND}
       onLoaded={() => onComponentLoaded("grid")}
       onError={(error) => onComponentError("grid", error)}
     />
 
     <!-- Props (rendered first so arrows appear on top) -->
-    {#each propsToRender as { color, propData } (color)}
-      {@const motionData = pictographData?.motions?.[color]}
-      {#if motionData}
-        <PropSVG {propData} {motionData} {pictographData} />
+    {#each motionsToRender as { color, motionData } (color)}
+      {#if pictographData}
+        <PropSVG {motionData} {pictographData} />
       {/if}
     {/each}
 
     <!-- Arrows (rendered after props) -->
-    {#each arrowsToRender as { color, arrowData } (color)}
-      {@const motionData = pictographData?.motions?.[color]}
+    {#each motionsToRender as { color, motionData } (color)}
       <Arrow
-        {arrowData}
-        {...motionData && { motionData }}
+        {motionData}
         preCalculatedPosition={arrowPositions[color]}
         preCalculatedMirroring={arrowMirroring[color]}
         showArrow={showArrows}

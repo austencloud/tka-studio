@@ -198,8 +198,8 @@ export class LocalStoragePersistenceService implements IPersistenceService {
       beats,
       word: (data.word as string) || "",
       thumbnails: (data.thumbnails as string[]) || [],
-      is_favorite: Boolean(data.is_favorite),
-      is_circular: Boolean(data.is_circular),
+      isFavorite: Boolean(data.isFavorite),
+      isCircular: Boolean(data.isCircular),
       tags: (data.tags as string[]) || [],
       metadata,
       // **CRITICAL: Include startPosition field if it exists**

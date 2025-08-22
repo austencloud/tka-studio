@@ -1,6 +1,6 @@
 <!-- GeneralTab.svelte - Compact general settings with fade system controls -->
 <script lang="ts">
-  import type { GridMode } from "$lib/domain";
+  import { GridMode } from "$lib/domain";
   import SelectInput from "../SelectInput.svelte";
   import SettingCard from "../SettingCard.svelte";
   import TextInput from "../TextInput.svelte";

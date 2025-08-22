@@ -15,7 +15,6 @@ import type {
 export interface ILetterMappingRepository {
   initialize(): Promise<void>;
   getLetterMapping(letter: string): LetterMapping | null;
-  getAllLetterMappings(): Record<string, LetterMapping>;
   getLettersByCategory(category: LetterCategory): string[];
   getLetterRows(): LetterRow[];
   getAllLetters(): string[];
@@ -56,12 +55,6 @@ export class LetterMappingRepository implements ILetterMappingRepository {
     this.ensureInitialized();
     if (!this.configuration) return null;
     return this.configuration.letters[letter] || null;
-  }
-
-  getAllLetterMappings(): Record<string, LetterMapping> {
-    this.ensureInitialized();
-    if (!this.configuration) return {};
-    return { ...this.configuration.letters };
   }
 
   getLettersByCategory(category: LetterCategory): string[] {

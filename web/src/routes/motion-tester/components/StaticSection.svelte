@@ -6,30 +6,24 @@ Combines static pictograph display (no card wrapper) with motion designer contro
 This is the left 2/3 section of the new layout.
 -->
 <script lang="ts">
-  import type { MotionTesterState } from "../state/motion-tester-state.svelte";
   import Pictograph from "$lib/components/pictograph/Pictograph.svelte";
-  import PropPanel from "./PropPanel.svelte";
-  import SimpleGridToggle from "./SimpleGridToggle.svelte";
-  import { resolve } from "$lib/services/bootstrap";
-  import { ILetterQueryServiceInterface } from "$lib/services/di/interfaces/codex-interfaces";
-  import { untrack } from "svelte";
-  import type { PictographData } from "$lib/domain";
   import {
-    createPictographData,
-    createMotionData,
-    createPropData,
     createGridData,
+    createMotionData,
+    createPictographData,
+    createPropPlacementData,
   } from "$lib/domain";
   import {
+    Location,
+    MotionColor,
     MotionType,
     Orientation,
-    GridMode,
-    MotionColor,
-    Location,
     RotationDirection,
-    GridPosition,
   } from "$lib/domain/enums";
-  import { PositionMappingService } from "$lib/services/implementations/movement/PositionMappingService";
+  import { Letter } from "$lib/domain/Letter";
+  import type { MotionTesterState } from "../state/motion-tester-state.svelte";
+  import PropPanel from "./PropPanel.svelte";
+  import SimpleGridToggle from "./SimpleGridToggle.svelte";
 
   interface Props {
     motionState: MotionTesterState;
@@ -37,237 +31,83 @@ This is the left 2/3 section of the new layout.
 
   let { motionState }: Props = $props();
 
-  // Use CSV lookup service to get real pictograph data
-  let pictographData = $state<PictographData | null>(null);
-
-  // Effect to update pictograph data when motion parameters change
-  $effect(() => {
-    // Access specific properties to establish reactive dependencies
-    // These variables are intentionally unused - they exist only to track changes
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const blueStartLocation = motionState.blueMotionParams.startLocation;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const blueEndLocation = motionState.blueMotionParams.endLocation;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const blueMotionType = motionState.blueMotionParams.motionType;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const redStartLocation = motionState.redMotionParams.startLocation;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const redEndLocation = motionState.redMotionParams.endLocation;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const redMotionType = motionState.redMotionParams.motionType;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const gridMode = motionState.gridMode;
-
-    // ✅ FIXED: Use untrack to prevent infinite loop when updating pictographData
-    untrack(() => {
-      updatePictographData();
-    });
-  });
-
-  async function updatePictographData() {
+  // Reactive pictograph data derived from motion state
+  let pictographData = $derived.by(() => {
     try {
       console.log(
-        "🔍 StaticSection: Creating dynamic pictograph from motion parameters..."
-      );
-      console.log("🔍 StaticSection: Current motion state values:", {
-        blueEndLocation: motionState.blueMotionParams.endLocation,
-        redEndLocation: motionState.redMotionParams.endLocation,
-        blueStartLocation: motionState.blueMotionParams.startLocation,
-        redStartLocation: motionState.redMotionParams.startLocation,
-      });
-
-      // Get the grid mode
-      const gridMode =
-        motionState.gridMode === GridMode.DIAMOND
-          ? GridMode.DIAMOND
-          : GridMode.BOX;
-
-      // Create motion data from current motion parameters
-      const blueMotion = createMotionData({
-        startLocation: motionState.blueMotionParams.startLocation as Location,
-        endLocation: motionState.blueMotionParams.endLocation as Location,
-        startOrientation: motionState.blueMotionParams
-          .startOrientation as Orientation,
-        endOrientation: motionState.blueMotionParams
-          .endOrientation as Orientation,
-        motionType: motionState.blueMotionParams.motionType as MotionType,
-        rotationDirection: motionState.blueMotionParams
-          .rotationDirection as RotationDirection,
-        turns: motionState.blueMotionParams.turns,
-        isVisible: true,
-        color: MotionColor.BLUE, // ✅ Explicitly set blue color
-      });
-
-      const redMotion = createMotionData({
-        startLocation: motionState.redMotionParams.startLocation as Location,
-        endLocation: motionState.redMotionParams.endLocation as Location,
-        startOrientation: motionState.redMotionParams
-          .startOrientation as Orientation,
-        endOrientation: motionState.redMotionParams
-          .endOrientation as Orientation,
-        motionType: motionState.redMotionParams.motionType as MotionType,
-        rotationDirection: motionState.redMotionParams
-          .rotationDirection as RotationDirection,
-        turns: motionState.redMotionParams.turns,
-        isVisible: true,
-        color: MotionColor.RED, // ✅ Explicitly set red color
-      });
-
-      // Create props based on motion end locations
-      const blueProps = createPropData({
-        orientation: motionState.blueMotionParams.endOrientation as Orientation,
-        rotationDirection: motionState.blueMotionParams
-          .rotationDirection as RotationDirection,
-        isVisible: true,
-      });
-
-      const redProps = createPropData({
-        orientation: motionState.redMotionParams.endOrientation as Orientation,
-        rotationDirection: motionState.redMotionParams
-          .rotationDirection as RotationDirection,
-        isVisible: true,
-      });
-
-      // Simple approach: if both props end at the same location, try known beta-ending letters
-      // This is much simpler than complex motion parameter matching
-      let identifiedLetter = "";
-
-      if (blueMotion.endLocation === redMotion.endLocation) {
-        // Both props end at same location - try beta-ending letters
-        const letterQueryService = resolve(ILetterQueryServiceInterface);
-
-        // Try common beta-ending letters that have both props at same end location
-        const betaLetters = ["G", "H", "I", "J", "K", "L"];
-
-        for (const letter of betaLetters) {
-          const pictograph = await letterQueryService.getPictographByLetter(
-            letter,
-            gridMode
-          );
-          if (
-            pictograph &&
-            pictograph.motions?.blue?.endLocation === blueMotion.endLocation &&
-            pictograph.motions?.red?.endLocation === redMotion.endLocation
-          ) {
-            identifiedLetter = letter;
-            console.log(
-              `🔍 StaticSection: Found matching beta letter: ${letter}`
-            );
-            break;
-          }
-        }
-      }
-
-      console.log(
-        "🔍 StaticSection: Using identified letter:",
-        identifiedLetter
+        "🔍 StaticSection: Creating pictograph from motion parameters"
       );
 
-      // Determine end position for beta detection using PositionMappingService
-      let endPosition: GridPosition = GridPosition.ALPHA1; // ✅ FIXED: Always provide a default
+      // Get current motion parameters
+      const blueEndLocation = motionState.blueMotionParams
+        .endLocation as Location;
+      const redEndLocation = motionState.redMotionParams
+        .endLocation as Location;
+      const gridMode = motionState.gridMode;
 
-      if (blueMotion.endLocation === redMotion.endLocation) {
-        // Both props end at same location - this is a beta condition
-        const positionMappingService = new PositionMappingService();
-        const locationPair = `${blueMotion.endLocation},${redMotion.endLocation}`;
-        try {
-          endPosition = positionMappingService.getPositionFromLocations(
-            blueMotion.endLocation as Location,
-            redMotion.endLocation as Location
-          );
-          console.log(
-            `🔍 StaticSection: Mapped location pair ${locationPair} to position ${endPosition}`
-          );
-        } catch (error) {
-          console.warn(
-            `🔍 StaticSection: Could not map location pair ${locationPair} to position:`,
-            error
-          );
-          // For beta positions where both hands are at same location, we can infer the beta position
-          const locationToBeta: Record<string, GridPosition> = {
-            n: GridPosition.BETA1,
-            ne: GridPosition.BETA2,
-            e: GridPosition.BETA3,
-            se: GridPosition.BETA4,
-            s: GridPosition.BETA5,
-            sw: GridPosition.BETA6,
-            w: GridPosition.BETA7,
-            nw: GridPosition.BETA8,
-          };
-          endPosition =
-            locationToBeta[blueMotion.endLocation] || GridPosition.BETA1; // ✅ FIXED: Fallback to BETA1
-        }
-      } else {
-        // ✅ FIXED: Handle case where props end at different locations
-        // For non-beta positions, derive from blue prop end location (primary prop)
-        const locationToAlpha: Record<string, GridPosition> = {
-          n: GridPosition.ALPHA1,
-          ne: GridPosition.ALPHA2,
-          e: GridPosition.ALPHA3,
-          se: GridPosition.ALPHA4,
-          s: GridPosition.ALPHA5,
-          sw: GridPosition.ALPHA6,
-          w: GridPosition.ALPHA7,
-          nw: GridPosition.ALPHA8,
-        };
-        endPosition =
-          locationToAlpha[blueMotion.endLocation] || GridPosition.ALPHA1;
-        console.log(
-          `🔍 StaticSection: Props end at different locations, using alpha position ${endPosition} based on blue prop`
-        );
-      }
+      // TODO: Enhance with letter detection logic
+      let letter: Letter = Letter.A;
 
-      // Create the pictograph data with endPosition for automatic beta detection
-      const dynamicPictograph = createPictographData({
-        id: `motion-tester-${Date.now()}`,
+      // ✅ DIRECT DOMAIN CONSTRUCTOR: No factory needed - positions auto-derived
+      const pictographData = createPictographData({
+        letter,
         gridData: createGridData({
-          gridMode: gridMode,
-          center_x: 0,
-          center_y: 0,
+          gridMode,
+          centerX: 475,
+          centerY: 475,
           radius: 100,
         }),
         motions: {
-          blue: blueMotion,
-          red: redMotion,
+          blue: createMotionData({
+            startLocation: motionState.blueMotionParams
+              .startLocation as Location,
+            endLocation: blueEndLocation,
+            startOrientation: motionState.blueMotionParams
+              .startOrientation as Orientation,
+            endOrientation: motionState.blueMotionParams
+              .endOrientation as Orientation,
+            motionType: motionState.blueMotionParams.motionType as MotionType,
+            rotationDirection: motionState.blueMotionParams
+              .rotationDirection as RotationDirection,
+            turns: motionState.blueMotionParams.turns,
+            color: MotionColor.BLUE,
+            isVisible: true,
+          }),
+          red: createMotionData({
+            startLocation: motionState.redMotionParams
+              .startLocation as Location,
+            endLocation: redEndLocation,
+            startOrientation: motionState.redMotionParams
+              .startOrientation as Orientation,
+            endOrientation: motionState.redMotionParams
+              .endOrientation as Orientation,
+            motionType: motionState.redMotionParams.motionType as MotionType,
+            rotationDirection: motionState.redMotionParams
+              .rotationDirection as RotationDirection,
+            turns: motionState.redMotionParams.turns,
+            color: MotionColor.RED,
+            isVisible: true,
+          }),
         },
         props: {
-          blue: blueProps,
-          red: redProps,
+          blue: createPropPlacementData({}),
+          red: createPropPlacementData({}),
         },
-        letter: identifiedLetter, // ✅ Use the identified letter instead of empty string
-        endPosition: endPosition, // ✅ Add endPosition for automatic beta detection
-        isBlank: false,
-        isMirrored: false,
         metadata: {
-          source: "motion_tester_dynamic",
+          source: "motion_tester",
           created: Date.now(),
         },
       });
 
-      // ✅ Let Pictograph component handle all positioning automatically
-      pictographData = dynamicPictograph;
-      console.log("✅ StaticSection: Dynamic pictograph created successfully!");
       console.log(
-        "🔧 [DEBUG] pictographData is:",
-        pictographData ? "NOT NULL" : "NULL"
+        "✅ StaticSection: Pictograph created successfully using domain constructor"
       );
-      console.log("🔧 [DEBUG] Pictograph data:", {
-        id: pictographData?.id,
-        letter: pictographData?.letter,
-        blueProps: pictographData?.props?.blue,
-        redProps: pictographData?.props?.red,
-        blueMotions: pictographData?.motions?.blue,
-        redMotions: pictographData?.motions?.red,
-      });
+      return pictographData;
     } catch (error) {
-      console.error(
-        "❌ StaticSection: Error creating dynamic pictograph:",
-        error
-      );
-      pictographData = null;
+      console.error("❌ StaticSection: Error creating pictograph:", error);
+      return null;
     }
-  }
+  });
 </script>
 
 <div class="static-section">

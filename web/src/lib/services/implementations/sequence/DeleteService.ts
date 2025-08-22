@@ -5,18 +5,18 @@
  * and cleanup operations following the microservices architecture pattern.
  */
 
-import type { BrowseSequenceMetadata } from "../../interfaces/domain-types";
+import type { SequenceData } from "../../interfaces/domain-types";
 
 export interface DeleteResult {
   success: boolean;
-  deletedSequence: BrowseSequenceMetadata | null;
-  affectedSequences: BrowseSequenceMetadata[];
+  deletedSequence: SequenceData | null;
+  affectedSequences: SequenceData[];
   error?: string;
 }
 
 export interface DeleteConfirmationData {
-  sequence: BrowseSequenceMetadata;
-  relatedSequences: BrowseSequenceMetadata[];
+  sequence: SequenceData;
+  relatedSequences: SequenceData[];
   hasVariations: boolean;
   willFixVariationNumbers: boolean;
 }
@@ -24,39 +24,39 @@ export interface DeleteConfirmationData {
 export interface IDeleteService {
   /** Prepare deletion data for confirmation dialog */
   prepareDeleteConfirmation(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
+    sequence: SequenceData,
+    allSequences: SequenceData[]
   ): Promise<DeleteConfirmationData>;
 
   /** Delete sequence and handle cleanup */
   deleteSequence(
     sequenceId: string,
-    allSequences: BrowseSequenceMetadata[]
+    allSequences: SequenceData[]
   ): Promise<DeleteResult>;
 
   /** Fix variation numbers after deletion */
   fixVariationNumbers(
-    deletedSequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
-  ): Promise<BrowseSequenceMetadata[]>;
+    deletedSequence: SequenceData,
+    allSequences: SequenceData[]
+  ): Promise<SequenceData[]>;
 
   /** Check if sequence can be safely deleted */
   canDeleteSequence(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
+    sequence: SequenceData,
+    allSequences: SequenceData[]
   ): Promise<boolean>;
 
   /** Get sequences that would be affected by deletion */
   getAffectedSequences(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
-  ): Promise<BrowseSequenceMetadata[]>;
+    sequence: SequenceData,
+    allSequences: SequenceData[]
+  ): Promise<SequenceData[]>;
 }
 
 export class DeleteService implements IDeleteService {
   async prepareDeleteConfirmation(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
+    sequence: SequenceData,
+    allSequences: SequenceData[]
   ): Promise<DeleteConfirmationData> {
     const relatedSequences = this.findRelatedSequences(sequence, allSequences);
     const hasVariations = relatedSequences.length > 0;
@@ -73,16 +73,16 @@ export class DeleteService implements IDeleteService {
 
   // Overload to match interface signature
   async deleteSequence(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
+    sequence: SequenceData,
+    allSequences: SequenceData[]
   ): Promise<DeleteResult>;
   async deleteSequence(
     sequenceId: string,
-    allSequences: BrowseSequenceMetadata[]
+    allSequences: SequenceData[]
   ): Promise<DeleteResult>;
   async deleteSequence(
-    sequenceOrId: string | BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
+    sequenceOrId: string | SequenceData,
+    allSequences: SequenceData[]
   ): Promise<DeleteResult> {
     try {
       const sequence =
@@ -149,9 +149,9 @@ export class DeleteService implements IDeleteService {
   }
 
   async fixVariationNumbers(
-    deletedSequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
-  ): Promise<BrowseSequenceMetadata[]> {
+    deletedSequence: SequenceData,
+    allSequences: SequenceData[]
+  ): Promise<SequenceData[]> {
     const baseWord = this.extractBaseWord(deletedSequence.word);
     const deletedVariation = this.extractVariationNumber(deletedSequence.word);
 
@@ -194,8 +194,8 @@ export class DeleteService implements IDeleteService {
   }
 
   async canDeleteSequence(
-    sequence: BrowseSequenceMetadata,
-    _allSequences: BrowseSequenceMetadata[]
+    sequence: SequenceData,
+    _allSequences: SequenceData[]
   ): Promise<boolean> {
     // Check if this is a system or protected sequence (check metadata)
     const isProtected = sequence.metadata?.isProtected as boolean;
@@ -216,10 +216,10 @@ export class DeleteService implements IDeleteService {
   }
 
   async getAffectedSequences(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
-  ): Promise<BrowseSequenceMetadata[]> {
-    const affected: BrowseSequenceMetadata[] = [];
+    sequence: SequenceData,
+    allSequences: SequenceData[]
+  ): Promise<SequenceData[]> {
+    const affected: SequenceData[] = [];
     const baseWord = this.extractBaseWord(sequence.word);
     const deletedVariation = this.extractVariationNumber(sequence.word);
 
@@ -248,9 +248,9 @@ export class DeleteService implements IDeleteService {
 
   // Private helper methods
   private findRelatedSequences(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
-  ): BrowseSequenceMetadata[] {
+    sequence: SequenceData,
+    allSequences: SequenceData[]
+  ): SequenceData[] {
     const baseWord = this.extractBaseWord(sequence.word);
 
     return allSequences.filter((seq) => {
@@ -261,8 +261,8 @@ export class DeleteService implements IDeleteService {
   }
 
   private needsVariationNumberFix(
-    deletedSequence: BrowseSequenceMetadata,
-    relatedSequences: BrowseSequenceMetadata[]
+    deletedSequence: SequenceData,
+    relatedSequences: SequenceData[]
   ): boolean {
     const deletedVariation = this.extractVariationNumber(deletedSequence.word);
     if (!deletedVariation) return false;

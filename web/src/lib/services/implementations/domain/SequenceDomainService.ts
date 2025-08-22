@@ -98,8 +98,8 @@ export class SequenceDomainService implements ISequenceDomainService {
       word: "",
       beats,
       thumbnails: [],
-      is_favorite: false,
-      is_circular: false,
+      isFavorite: false,
+      isCircular: false,
       tags: [],
       metadata: { length: request.length },
     };

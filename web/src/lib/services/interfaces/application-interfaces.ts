@@ -37,7 +37,6 @@ export interface IEnumMappingService {
   convertToGridPosition(
     positionString: string | null | undefined
   ): GridPosition | null;
-  getLetterType(letter: string): string;
   normalizeMotionType(motionType: string): string;
   normalizeLocation(location: string): string;
   normalizeTurns(turns: number | string): number;

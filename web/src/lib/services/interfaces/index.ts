@@ -11,50 +11,51 @@
 
 // Core types
 export type {
-  Coordinates,
-  GridPoint,
-  GridData,
-  ArrowPosition,
-  LegacyArrowData,
   ArrowPlacementConfig,
-  PropData,
-  PropPosition,
-  HandRotDir,
-  GridMode,
+  Coordinates,
   DifficultyLevel,
+  GridData,
+  GridMode,
+  GridPoint,
+  HandRotDir,
+  LegacyArrowData,
   OptionFilters,
+  PropPlacementData,
+  PropPosition,
   ServiceInterface,
 } from "./core-types";
+
+// ArrowPosition is now exported from positioning/types.ts
+export type { ArrowPosition } from "../positioning/types";
 
 export { defineService } from "./core-types";
 
 // Domain types
 export type {
-  ArrowData,
+  ArrowPlacementData,
   BeatData,
-  MotionData,
-  PictographData,
-  SequenceData,
   BrowseDisplayState,
   BrowseLoadingState,
-  BrowseSequenceMetadata,
+  CacheConfig,
+  CacheEntry,
+  DeviceCapabilities,
+  ExportOptions,
+  ExportResult,
   FilterType,
   FilterValue,
-  SortMethod,
   LayoutConfig,
-  ExportOptions,
-  SequenceCardExportSettings,
-  DeviceCapabilities,
-  PrintLayoutOptions,
-  CacheEntry,
-  CacheConfig,
-  ProgressInfo,
-  ValidationResult,
-  ExportResult,
-  MotionType,
   Location,
+  MotionData,
+  MotionType,
   Orientation,
+  PictographData,
+  PrintLayoutOptions,
+  ProgressInfo,
   RotationDirection,
+  SequenceCardExportSettings,
+  SequenceData,
+  SortMethod,
+  ValidationResult,
 } from "./domain-types";
 
 // ============================================================================
@@ -64,9 +65,9 @@ export type {
 export type {
   AppSettings,
   IApplicationInitializationService,
-  ISettingsService,
   IConstructTabCoordinationService,
   IOptionDataService,
+  ISettingsService,
   IStartPositionService,
 } from "./application-interfaces";
 
@@ -75,9 +76,9 @@ export type {
 // ============================================================================
 
 export type {
-  ISequenceService,
-  ISequenceDomainService,
   IPersistenceService,
+  ISequenceDomainService,
+  ISequenceService,
   SequenceCreateRequest,
 } from "./sequence-interfaces";
 
@@ -86,14 +87,22 @@ export type {
 // ============================================================================
 
 export type {
-  ISvgConfiguration,
-  IPictographService,
-  IPictographRenderingService,
-  ISvgUtilityService,
-  IGridRenderingService,
+  ArrowSvgData,
+  IArrowPathResolutionService,
+  IArrowPositioningService,
   IArrowRenderingService,
-  IOverlayRenderingService,
   IDataTransformationService,
+  IFallbackArrowService,
+  IGridRenderingService,
+  IOverlayRenderingService,
+  IPictographRenderingService,
+  IPictographService,
+  ISvgColorTransformationService,
+  ISvgConfiguration,
+  ISvgLoadingService,
+  ISvgParsingService,
+  ISvgUtilityService,
+  SVGDimensions,
 } from "./pictograph-interfaces";
 
 // ============================================================================
@@ -101,8 +110,8 @@ export type {
 // ============================================================================
 
 export type {
-  IArrowPlacementDataService,
   IArrowPlacementKeyService,
+  IArrowPlacementService,
   IPropRenderingService,
 } from "./positioning-interfaces";
 
@@ -115,8 +124,8 @@ export type { IArrowPositioningOrchestrator } from "../positioning/core-services
 
 export type {
   GenerationOptions,
-  ISequenceGenerationService,
   IMotionGenerationService,
+  ISequenceGenerationService,
 } from "./generation-interfaces";
 
 // ============================================================================
@@ -124,18 +133,18 @@ export type {
 // ============================================================================
 
 export type {
+  BrowseState,
+  DeleteConfirmationData,
+  DeleteResult,
+  FilterState,
+  IBrowseService,
   IDeleteService,
   IFavoritesService,
   IFilterPersistenceService,
   INavigationService,
   ISectionService,
-  IBrowseService,
   ISequenceIndexService,
   IThumbnailService,
-  DeleteConfirmationData,
-  DeleteResult,
-  FilterState,
-  BrowseState,
   NavigationItem,
   NavigationSection,
   SectionConfiguration,
@@ -147,8 +156,8 @@ export type {
 // ============================================================================
 
 export type {
-  ResponsiveSettings,
   IDeviceDetectionService,
+  ResponsiveSettings,
 } from "./device-interfaces";
 
 // ============================================================================
@@ -156,13 +165,13 @@ export type {
 // ============================================================================
 
 export type {
+  IEnhancedExportService,
   IExportService,
+  ISequenceCardBatchService,
+  ISequenceCardCacheService,
   ISequenceCardImageService,
   ISequenceCardLayoutService,
   ISequenceCardPageService,
-  ISequenceCardBatchService,
-  ISequenceCardCacheService,
-  IEnhancedExportService,
 } from "./export-interfaces";
 
 // ============================================================================
@@ -170,43 +179,43 @@ export type {
 // ============================================================================
 
 export type {
-  TKAImageExportOptions,
   BeatRenderOptions,
-  TextRenderOptions,
   CompositionOptions,
-  UserInfo,
-  LayoutData,
-  ITKAImageExportService,
-  ILayoutCalculationService,
-  IBeatRenderingService,
-  ITextRenderingService,
-  IImageCompositionService,
-  IFileExportService,
-  IDimensionCalculationService,
-  IGridOverlayService,
-  IReversalDetectionService,
-  IFontManagementService,
-  ICanvasManagementService,
-  IExportSettingsService,
-  ExportProgress,
   ExportError,
-  RenderQualitySettings,
+  ExportProgress,
+  IBeatRenderingService,
+  ICanvasManagementService,
+  IDimensionCalculationService,
+  IExportSettingsService,
+  IFileExportService,
+  IFontManagementService,
+  IGridOverlayService,
+  IImageCompositionService,
+  ILayoutCalculationService,
+  IReversalDetectionService,
+  ITextRenderingService,
+  ITKAImageExportService,
   LayoutConstraints,
+  LayoutData,
+  RenderQualitySettings,
+  TextRenderOptions,
+  TKAImageExportOptions,
+  UserInfo,
 } from "./image-export-interfaces";
 
 export {
-  ITKAImageExportServiceInterface,
-  ILayoutCalculationServiceInterface,
   IBeatRenderingServiceInterface,
-  ITextRenderingServiceInterface,
-  IImageCompositionServiceInterface,
-  IFileExportServiceInterface,
-  IDimensionCalculationServiceInterface,
-  IGridOverlayServiceInterface,
-  IReversalDetectionServiceInterface,
-  IFontManagementServiceInterface,
   ICanvasManagementServiceInterface,
+  IDimensionCalculationServiceInterface,
   IExportSettingsServiceInterface,
+  IFileExportServiceInterface,
+  IFontManagementServiceInterface,
+  IGridOverlayServiceInterface,
+  IImageCompositionServiceInterface,
+  ILayoutCalculationServiceInterface,
+  IReversalDetectionServiceInterface,
+  ITextRenderingServiceInterface,
+  ITKAImageExportServiceInterface,
 } from "./image-export-interfaces";
 
 // ============================================================================
@@ -215,8 +224,8 @@ export {
 
 export type {
   IPanelManagementService,
-  PanelState,
   PanelConfiguration,
-  ResizeOperation,
+  PanelState,
   ResizeDirection,
+  ResizeOperation,
 } from "./panel-interfaces";

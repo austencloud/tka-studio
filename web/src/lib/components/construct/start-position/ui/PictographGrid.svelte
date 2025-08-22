@@ -1,46 +1,46 @@
 <!-- PictographGrid.svelte - Pictograph grid display for StartPositionPicker -->
 <script lang="ts">
   import type { PictographData } from "$domain/PictographData";
-  import { getLetterBorderColor } from "$lib/utils/letter-type-utils";
-  import Pictograph from "../../../pictograph/Pictograph.svelte";
+  import Pictograph from "$lib/components/pictograph/Pictograph.svelte";
+  import { getLetterBorderColorSafe } from "$lib/domain";
 
   const {
-    pictographs,
+    pictographs: pictographDataSet,
     selectedPictograph = null,
     onPictographSelect,
   } = $props<{
-    pictographs: PictographData[];
+    pictographDataSet: PictographData[];
     selectedPictograph?: PictographData | null;
     onPictographSelect: (pictograph: PictographData) => void;
   }>();
 </script>
 
 <div class="pictograph-row">
-  {#each pictographs as pictograph (pictograph.id)}
+  {#each pictographDataSet as pictographData (pictographData.id)}
     <div
       class="pictograph-container"
-      class:selected={selectedPictograph?.id === pictograph.id}
+      class:selected={selectedPictograph?.id === pictographData.id}
       role="button"
       tabindex="0"
-      style:--letter-border-color={getLetterBorderColor(
-        pictograph.letter || null
+      style:--letter-border-color={getLetterBorderColorSafe(
+        pictographData.letter
       )}
-      onclick={() => onPictographSelect(pictograph)}
+      onclick={() => onPictographSelect(pictographData)}
       onkeydown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          onPictographSelect(pictograph);
+          onPictographSelect(pictographData);
         }
       }}
     >
       <!-- Render pictograph using Pictograph component -->
       <div class="pictograph-wrapper">
-        <Pictograph pictographData={pictograph} />
+        <Pictograph {pictographData} />
       </div>
 
       <!-- Position label -->
       <div class="position-label">
-        {pictograph.letter || "Start Position"}
+        {pictographData.letter || "Start Position"}
       </div>
     </div>
   {/each}

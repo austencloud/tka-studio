@@ -1,7 +1,6 @@
 <!-- SequenceViewer.svelte - Main coordinator component using pure Svelte 5 runes -->
 <script lang="ts">
   import type { SequenceData } from "$domain/SequenceData";
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
   import { ThumbnailService } from "$lib/services/implementations/export/ThumbnailService";
   import { slide } from "svelte/transition";
   import SequenceActions from "./SequenceActions.svelte";
@@ -12,7 +11,7 @@
 
   interface Props {
     sequence?:
-      | (SequenceData & BrowseSequenceMetadata & { variations?: unknown[] })
+      | (SequenceData & SequenceData & { variations?: unknown[] })
       | null;
     onBackToBrowser?: () => void;
     onSequenceAction?: (action: string, sequence: SequenceData) => void;
@@ -37,7 +36,7 @@
   let currentVariation = $derived.by(() => {
     if (!sequence) return undefined;
 
-    // Use thumbnails array from BrowseSequenceMetadata (modern format)
+    // Use thumbnails array from SequenceData (modern format)
     if (sequence.thumbnails && sequence.thumbnails.length > 0) {
       const thumbnailPath =
         sequence.thumbnails[currentVariationIndex] || sequence.thumbnails[0];
@@ -101,8 +100,7 @@
       <SequenceImageViewer
         sequence={{
           ...sequence,
-          startPosition:
-            sequence.startingPosition || sequence.starting_position,
+          startPosition: sequence.startPosition,
         } as any}
         {currentVariation}
         {currentVariationIndex}
@@ -113,8 +111,7 @@
       <SequenceDetails
         sequence={{
           ...sequence,
-          startPosition:
-            sequence.startingPosition || sequence.starting_position,
+          startPosition: sequence.startPosition,
         } as any}
       />
 

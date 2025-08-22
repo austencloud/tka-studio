@@ -3,20 +3,22 @@
  * Service interfaces for the movement pattern generation system
  */
 
+import { GridPosition, Location } from "$lib/domain/enums";
 import type {
   IMovementGeneratorService,
   IMovementPatternService,
-  IPositionCalculatorService,
   IMovementValidatorService,
+  IPositionCalculatorService,
 } from "../../interfaces/generation-interfaces";
+import type { IPositionMappingService } from "../../interfaces/movement/IPositionMappingService";
 import { createServiceInterface } from "../types";
-import { Location, GridPosition } from "$lib/domain/enums";
 
 // Import service implementations
-import { MovementGeneratorService } from "../../implementations/generation/MovementGeneratorService";
 import { MovementPatternService } from "../../implementations/domain/MovementPatternService";
+import { MovementGeneratorService } from "../../implementations/generation/MovementGeneratorService";
 // import { PositionCalculatorService } from "../../implementations/positioning/PositionCalculatorService";
 import { MovementValidatorService } from "../../implementations/domain/MovementValidatorService";
+import { PositionMappingService } from "../../implementations/movement/PositionMappingService";
 
 // Movement Pattern Services
 export const IMovementPatternServiceInterface =
@@ -30,25 +32,25 @@ export const IPositionCalculatorServiceInterface =
     "IPositionCalculatorService",
     class {
       getPositionSequence(
-        system: "alpha" | "beta" | "gamma",
-        count: number
+        _system: "alpha" | "beta" | "gamma",
+        _count: number
       ): GridPosition[] {
         // Placeholder implementation
         return [];
       }
-      getNextPosition(current: GridPosition, forward: boolean): GridPosition {
+      getNextPosition(current: GridPosition, _forward: boolean): GridPosition {
         return current;
       }
       getCardinalDirections(
-        startPosition: GridPosition,
-        endPosition: GridPosition,
-        motionType: string
+        _startPosition: GridPosition,
+        _endPosition: GridPosition,
+        _motionType: string
       ): [Location, Location] {
         // Placeholder implementation
         return [Location.NORTH, Location.SOUTH];
       }
       calculatePositionPairs(
-        sequence: GridPosition[]
+        _sequence: GridPosition[]
       ): Array<[GridPosition, GridPosition]> {
         return [];
       }
@@ -73,4 +75,10 @@ export const IMovementGeneratorServiceInterface =
         );
       }
     }
+  );
+
+export const IPositionMappingServiceInterface =
+  createServiceInterface<IPositionMappingService>(
+    "IPositionMappingService",
+    PositionMappingService
   );

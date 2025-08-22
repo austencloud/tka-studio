@@ -4,27 +4,26 @@
  * Registers all codex-related services with the DI container.
  */
 
-import type { ServiceContainer } from "../ServiceContainer";
-import { LetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
 import { LessonRepository } from "$lib/repositories/LessonRepository";
-import { PictographOperationsService } from "$lib/services/codex/PictographOperationsService";
+import { LetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
 import { CodexService } from "$lib/services/codex/CodexService";
-import {
-  ICodexServiceInterface,
-  ILetterMappingRepositoryInterface,
-  ILessonRepositoryInterface,
-  IPictographOperationsServiceInterface,
-  ICsvLoaderServiceInterface,
-  ILetterQueryServiceInterface,
-  IMotionQueryServiceInterface,
-} from "../interfaces/codex-interfaces";
+import { PictographOperationsService } from "$lib/services/codex/PictographOperationsService";
 import { CsvLoaderService } from "../../implementations/data/CsvLoaderService";
 import { LetterQueryService } from "../../implementations/data/LetterQueryService";
 import { MotionQueryService } from "../../implementations/data/MotionQueryService";
 import {
+  ICodexServiceInterface,
+  ICsvLoaderServiceInterface,
+  ILessonRepositoryInterface,
+  ILetterMappingRepositoryInterface,
+  ILetterQueryServiceInterface,
+  IMotionQueryServiceInterface,
+  IPictographOperationsServiceInterface,
+} from "../interfaces/codex-interfaces";
+import type { ServiceContainer } from "../ServiceContainer";
+import {
   ICSVParserServiceInterface,
   IPictographTransformationServiceInterface,
-  IOptionFilteringServiceInterface,
 } from "./shared-services";
 
 /**

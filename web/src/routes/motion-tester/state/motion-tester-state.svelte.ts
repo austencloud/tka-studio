@@ -16,7 +16,7 @@ import {
   type LetterIdentificationResult,
 } from "../services/MotionLetterIdentificationService";
 
-import { MotionType, MotionColor, GridMode } from "$lib/domain/enums";
+import { MotionType, MotionColor, GridMode, Location } from "$lib/domain/enums";
 
 export interface MotionTesterState {
   // Reactive state getters
@@ -30,16 +30,16 @@ export interface MotionTesterState {
   get identifiedLetter(): LetterIdentificationResult;
 
   // Blue prop methods
-  setBlueStartLocation: (location: string) => void;
-  setBlueEndLocation: (location: string) => void;
+  setBlueStartLocation: (location: Location) => void;
+  setBlueEndLocation: (location: Location) => void;
   updateBlueMotionParam: <K extends keyof MotionTestParams>(
     param: K,
     value: MotionTestParams[K]
   ) => void;
 
   // Red prop methods
-  setRedStartLocation: (location: string) => void;
-  setRedEndLocation: (location: string) => void;
+  setRedStartLocation: (location: Location) => void;
+  setRedEndLocation: (location: Location) => void;
   updateRedMotionParam: <K extends keyof MotionTestParams>(
     param: K,
     value: MotionTestParams[K]
@@ -71,8 +71,8 @@ export function createMotionTesterState(): MotionTesterState {
   );
   let redMotionParams = $state<MotionTestParams>({
     ...motionService.createDefaultParams(),
-    startLocation: "e",
-    endLocation: "w",
+    startLocation: Location.EAST,
+    endLocation: Location.WEST,
     motionType: MotionType.DASH,
   });
 
@@ -117,7 +117,10 @@ export function createMotionTesterState(): MotionTesterState {
 
   // Auto-calculate end orientation for blue prop
   $effect(() => {
-    const motionData = motionService.convertToMotionData(blueMotionParams);
+    const motionData = motionService.convertToMotionData(
+      blueMotionParams,
+      MotionColor.BLUE
+    );
     const newEndOri = orientationService.calculateEndOrientation(
       motionData,
       MotionColor.BLUE
@@ -153,7 +156,10 @@ export function createMotionTesterState(): MotionTesterState {
 
   // Auto-calculate end orientation for red prop
   $effect(() => {
-    const motionData = motionService.convertToMotionData(redMotionParams);
+    const motionData = motionService.convertToMotionData(
+      redMotionParams,
+      MotionColor.RED
+    );
     const newEndOri = orientationService.calculateEndOrientation(
       motionData,
       MotionColor.RED
@@ -213,14 +219,14 @@ export function createMotionTesterState(): MotionTesterState {
     },
 
     // Blue prop methods
-    setBlueStartLocation: (location: string) => {
+    setBlueStartLocation: (location: Location) => {
       blueMotionParams.startLocation = location;
       const updatedParams =
         motionService.updateMotionTypeForLocations(blueMotionParams);
       blueMotionParams = updatedParams;
     },
 
-    setBlueEndLocation: (location: string) => {
+    setBlueEndLocation: (location: Location) => {
       console.log(
         `🔵 Blue end location changing from ${blueMotionParams.endLocation} to ${location}`
       );
@@ -239,14 +245,14 @@ export function createMotionTesterState(): MotionTesterState {
     },
 
     // Red prop methods
-    setRedStartLocation: (location: string) => {
+    setRedStartLocation: (location: Location) => {
       redMotionParams.startLocation = location;
       const updatedParams =
         motionService.updateMotionTypeForLocations(redMotionParams);
       redMotionParams = updatedParams;
     },
 
-    setRedEndLocation: (location: string) => {
+    setRedEndLocation: (location: Location) => {
       console.log(
         `🔴 Red end location changing from ${redMotionParams.endLocation} to ${location}`
       );

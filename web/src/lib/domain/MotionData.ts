@@ -1,18 +1,22 @@
 /**
- * Motion Domain Models
+ * Motion Data Domain Model
  *
- * Immutable data structures for motion representation in TKA.
- * Handles prop and arrow motion data with type safety and serialization.
- * Based on modern desktop app's motion_data.py
+ * Immutable motion data for props and arrows with embedded placement data.
+ * Represents complete motion information including positioning and rendering data.
  */
 
+import type { ArrowPlacementData } from "./ArrowPlacementData";
+import { createArrowPlacementData } from "./ArrowPlacementData";
 import {
   Location,
+  MotionColor,
   MotionType,
   Orientation,
+  PropType,
   RotationDirection,
-  MotionColor,
 } from "./enums";
+import type { PropPlacementData } from "./PropPlacementData";
+import { createPropPlacementData } from "./PropPlacementData";
 
 export interface MotionData {
   readonly motionType: MotionType;
@@ -23,14 +27,23 @@ export interface MotionData {
   readonly startOrientation: Orientation;
   readonly endOrientation: Orientation;
   readonly isVisible: boolean;
-
-  // CONSOLIDATION: Color is now the single source of truth
+  readonly propType: PropType;
+  readonly arrowLocation: Location;
   readonly color: MotionColor;
+
+  // EMBEDDED PLACEMENT DATA: Everything accessible through motion data
+  readonly arrowPlacementData: ArrowPlacementData;
+  readonly propPlacementData: PropPlacementData;
 
   // Prefloat attributes for letter determination
   readonly prefloatMotionType?: MotionType | null;
   readonly prefloatRotationDirection?: RotationDirection | null;
 }
+
+// TODO: add derivation functions to get the motion type if you know start to end + rotation direction and vica versa
+// TODO: import derivation functionality (already exists somewhere) To get the end orientation based upon the details of the start orientation, the motion type, and the number of turns
+// TODO: Add a derivation function which automatically updates the arrow location based upon the start and end location and the number of turns and the rotation direction
+// TODO: ensure that the arrow and prop placement data get properly updated with the corresponding functions that already exist
 
 export function createMotionData(data: Partial<MotionData> = {}): MotionData {
   return {
@@ -42,98 +55,14 @@ export function createMotionData(data: Partial<MotionData> = {}): MotionData {
     startOrientation: data.startOrientation ?? Orientation.IN,
     endOrientation: data.endOrientation ?? Orientation.IN,
     isVisible: data.isVisible ?? true,
+    propType: data.propType ?? PropType.STAFF, // Default prop type
+    arrowLocation: data.arrowLocation ?? Location.NORTH, // Must be calculated by ArrowLocationCalculator - NEVER default to startLocation!
     color: data.color ?? MotionColor.BLUE, // Single source of truth for color
+
+    arrowPlacementData: data.arrowPlacementData ?? createArrowPlacementData(),
+    propPlacementData: data.propPlacementData ?? createPropPlacementData(),
+
     prefloatMotionType: data.prefloatMotionType ?? null,
     prefloatRotationDirection: data.prefloatRotationDirection ?? null,
   };
-}
-
-export function updateMotionData(
-  motion: MotionData,
-  updates: Partial<MotionData>
-): MotionData {
-  return {
-    ...motion,
-    ...updates,
-  };
-}
-
-export function isValidMotion(motion: MotionData): boolean {
-  return !!(
-    motion.motionType &&
-    motion.startLocation &&
-    motion.endLocation &&
-    motion.color
-  );
-}
-
-export function isFloatMotion(motion: MotionData): boolean {
-  return motion.motionType === MotionType.FLOAT;
-}
-
-export function hasPrefloatData(motion: MotionData): boolean {
-  return (
-    motion.prefloatMotionType != null ||
-    motion.prefloatRotationDirection != null
-  );
-}
-
-export function motionDataToObject(
-  motion: MotionData
-): Record<string, unknown> {
-  return {
-    motionType: motion.motionType,
-    rotationDirection: motion.rotationDirection,
-    startLocation: motion.startLocation,
-    endLocation: motion.endLocation,
-    turns: motion.turns,
-    startOrientation: motion.startOrientation,
-    endOrientation: motion.endOrientation,
-    isVisible: motion.isVisible,
-    color: motion.color,
-    prefloatMotionType: motion.prefloatMotionType,
-    prefloatRotationDirection: motion.prefloatRotationDirection,
-  };
-}
-
-export function motionDataFromObject(
-  data: Record<string, unknown>
-): MotionData {
-  const partialData: Record<string, unknown> = {};
-
-  if (data.motionType !== undefined) {
-    partialData.motionType = data.motionType;
-  }
-  if (data.rotationDirection !== undefined) {
-    partialData.rotationDirection = data.rotationDirection;
-  }
-  if (data.startLocation !== undefined) {
-    partialData.startLocation = data.startLocation;
-  }
-  if (data.endLocation !== undefined) {
-    partialData.endLocation = data.endLocation;
-  }
-  if (data.turns !== undefined) {
-    partialData.turns = data.turns;
-  }
-  if (data.startOrientation !== undefined) {
-    partialData.startOrientation = data.startOrientation;
-  }
-  if (data.endOrientation !== undefined) {
-    partialData.endOrientation = data.endOrientation;
-  }
-  if (data.isVisible !== undefined) {
-    partialData.isVisible = data.isVisible;
-  }
-  if (data.color !== undefined) {
-    partialData.color = data.color;
-  }
-  if (data.prefloatMotionType !== undefined) {
-    partialData.prefloatMotionType = data.prefloatMotionType;
-  }
-  if (data.prefloatRotationDirection !== undefined) {
-    partialData.prefloatRotationDirection = data.prefloatRotationDirection;
-  }
-
-  return createMotionData(partialData);
 }

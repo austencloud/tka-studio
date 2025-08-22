@@ -8,7 +8,7 @@ import {
   IArrowAdjustmentCalculatorInterface,
   IArrowCoordinateSystemServiceInterface,
   IArrowLocationCalculatorInterface,
-  IArrowPlacementDataServiceInterface,
+  IArrowPlacementServiceInterface,
   IArrowPlacementKeyServiceInterface,
   IArrowPositioningOrchestratorInterface,
   IArrowPositioningServiceInterface,
@@ -26,7 +26,7 @@ export async function registerPositioningServices(
   container: ServiceContainer
 ): Promise<void> {
   // Register placement services (no dependencies)
-  container.registerSingletonClass(IArrowPlacementDataServiceInterface);
+  container.registerSingletonClass(IArrowPlacementServiceInterface);
   container.registerSingletonClass(IArrowPlacementKeyServiceInterface);
 
   // Register enhanced positioning services

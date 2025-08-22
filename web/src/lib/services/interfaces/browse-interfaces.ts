@@ -6,7 +6,7 @@
  */
 
 import type {
-  BrowseSequenceMetadata,
+  SequenceData,
   FilterType,
   FilterValue,
   SortMethod,
@@ -20,21 +20,21 @@ import type {
  * Main browse service for sequence discovery and filtering
  */
 export interface IBrowseService {
-  loadSequenceMetadata(): Promise<BrowseSequenceMetadata[]>;
+  loadSequenceMetadata(): Promise<SequenceData[]>;
   applyFilter(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterType: FilterType,
     filterValue: FilterValue
-  ): Promise<BrowseSequenceMetadata[]>;
+  ): Promise<SequenceData[]>;
   sortSequences(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     sortMethod: SortMethod
-  ): Promise<BrowseSequenceMetadata[]>;
+  ): Promise<SequenceData[]>;
   groupSequencesIntoSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     sortMethod: SortMethod
-  ): Promise<Record<string, BrowseSequenceMetadata[]>>;
-  getUniqueValues(field: keyof BrowseSequenceMetadata): Promise<string[]>;
+  ): Promise<Record<string, SequenceData[]>>;
+  getUniqueValues(field: keyof SequenceData): Promise<string[]>;
   getFilterOptions(filterType: FilterType): Promise<string[]>;
 }
 
@@ -54,9 +54,9 @@ export interface IThumbnailService {
  * Sequence indexing and search service
  */
 export interface ISequenceIndexService {
-  loadSequenceIndex(): Promise<BrowseSequenceMetadata[]>;
-  buildSearchIndex(sequences: BrowseSequenceMetadata[]): Promise<void>;
-  searchSequences(query: string): Promise<BrowseSequenceMetadata[]>;
+  loadSequenceIndex(): Promise<SequenceData[]>;
+  buildSearchIndex(sequences: SequenceData[]): Promise<void>;
+  searchSequences(query: string): Promise<SequenceData[]>;
   refreshIndex(): Promise<void>;
 }
 
@@ -69,17 +69,17 @@ export interface ISequenceIndexService {
  */
 export interface IDeleteService {
   prepareDeleteConfirmation(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
+    sequence: SequenceData,
+    allSequences: SequenceData[]
   ): Promise<DeleteConfirmationData>;
   deleteSequence(
-    sequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
+    sequence: SequenceData,
+    allSequences: SequenceData[]
   ): Promise<DeleteResult>;
   fixVariationNumbers(
-    deletedSequence: BrowseSequenceMetadata,
-    allSequences: BrowseSequenceMetadata[]
-  ): Promise<BrowseSequenceMetadata[]>;
+    deletedSequence: SequenceData,
+    allSequences: SequenceData[]
+  ): Promise<SequenceData[]>;
 }
 
 /**
@@ -108,14 +108,14 @@ export interface IFilterPersistenceService {
  */
 export interface INavigationService {
   buildNavigationStructure(
-    sequences: BrowseSequenceMetadata[]
+    sequences: SequenceData[]
   ): Promise<NavigationSection[]>;
   getNavigationItem(
     sectionId: string,
     itemId: string
   ): Promise<NavigationItem | null>;
   generateNavigationSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     favorites: string[]
   ): Promise<NavigationSection[]>;
   getSequencesForNavigationItem(
@@ -127,8 +127,8 @@ export interface INavigationService {
       | "length"
       | "favorites"
       | "date",
-    allSequences: BrowseSequenceMetadata[]
-  ): BrowseSequenceMetadata[];
+    allSequences: SequenceData[]
+  ): SequenceData[];
   toggleSectionExpansion(
     sectionId: string,
     sections: NavigationSection[]
@@ -145,14 +145,14 @@ export interface INavigationService {
  */
 export interface ISectionService {
   organizeIntoSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     config: SectionConfiguration
   ): Promise<SequenceSection[]>;
   getSectionConfiguration(
     sortMethod: SortMethod
   ): Promise<SectionConfiguration>;
   organizeSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     config: SectionConfiguration
   ): Promise<SequenceSection[]>;
   toggleSectionExpansion(
@@ -170,22 +170,22 @@ export interface ISectionService {
 // ============================================================================
 
 export interface DeleteConfirmationData {
-  sequence: BrowseSequenceMetadata;
-  relatedSequences: BrowseSequenceMetadata[];
+  sequence: SequenceData;
+  relatedSequences: SequenceData[];
   hasVariations: boolean;
   willFixVariationNumbers: boolean;
 }
 
 export interface DeleteResult {
   success: boolean;
-  deletedSequence: BrowseSequenceMetadata | null;
-  affectedSequences: BrowseSequenceMetadata[];
+  deletedSequence: SequenceData | null;
+  affectedSequences: SequenceData[];
   error?: string;
 }
 
 export interface BrowseDisplayState {
   currentView: "filter_selection" | "sequence_browser";
-  selectedSequence: BrowseSequenceMetadata | null;
+  selectedSequence: SequenceData | null;
   isSequenceDetailOpen: boolean;
 }
 
@@ -213,7 +213,7 @@ export interface NavigationItem {
   value: string | number;
   count: number;
   isActive: boolean;
-  sequences: BrowseSequenceMetadata[];
+  sequences: SequenceData[];
 }
 
 export interface NavigationSection {
@@ -227,7 +227,7 @@ export interface NavigationSection {
 
 export interface SectionConfiguration {
   groupBy:
-    | keyof BrowseSequenceMetadata
+    | keyof SequenceData
     | "letter"
     | "length"
     | "difficulty"
@@ -242,7 +242,7 @@ export interface SequenceSection {
   id: string;
   title: string;
   count: number;
-  sequences: BrowseSequenceMetadata[];
+  sequences: SequenceData[];
   isExpanded: boolean;
   metadata?: Record<string, unknown>;
 }

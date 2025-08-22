@@ -221,7 +221,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
       const turnsTuple =
         this.turnsTupleService.generateTurnsTuple(pictographData);
 
-      // ✅ FIXED: Create proper ArrowData and pass color separately
+      // ✅ FIXED: Create proper ArrowPlacementData and pass color separately
       const color = MotionColor.BLUE;
       const tempArrow = {
         id: "temp",

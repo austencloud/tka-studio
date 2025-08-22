@@ -1,6 +1,6 @@
 <!-- FullscreenImageViewer.svelte - Image display and navigation for fullscreen viewer -->
 <script lang="ts">
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
   import type { IThumbnailService } from "$services/interfaces/browse-interfaces";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
@@ -9,7 +9,7 @@
     thumbnailService,
     currentVariationIndex = $bindable(0),
   } = $props<{
-    sequence?: BrowseSequenceMetadata;
+    sequence?: SequenceData;
     thumbnailService?: IThumbnailService;
     currentVariationIndex?: number;
   }>();

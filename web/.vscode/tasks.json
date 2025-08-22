@@ -2,40 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Start Dev Server",
+      "label": "Start TKA Dev Server",
       "type": "shell",
       "command": "npm",
       "args": ["run", "dev"],
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": {
-          "regexp": "."
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "Local:",
-          "endsPattern": "ready in \\d+ms"
-        }
-      }
-    },
-    {
-      "label": "Start Dev Server (Port 5174)",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "dev", "--", "--port", "5174"],
-      "isBackground": true,
-      "problemMatcher": {
-        "owner": "vite",
-        "pattern": {
-          "regexp": "."
-        },
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": "Local:",
-          "endsPattern": "ready in \\d+ms"
-        }
-      }
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "new"
+      },
+      "problemMatcher": []
     }
   ]
 }

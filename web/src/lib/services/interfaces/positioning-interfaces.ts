@@ -5,7 +5,11 @@
  * This handles all spatial calculations and arrow placement logic.
  */
 
-import type { ArrowData, MotionData, PictographData } from "./domain-types";
+import type {
+  ArrowPlacementData,
+  MotionData,
+  PictographData,
+} from "./domain-types";
 import type { GridMode } from "./core-types";
 import type { MotionType } from "./domain-types";
 import { MotionColor } from "../../domain/enums";
@@ -22,12 +26,12 @@ export type { IArrowPositioningOrchestrator } from "../positioning/core-services
  */
 export interface IArrowPositioningService {
   calculatePosition(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     motionData: MotionData,
     pictographData: PictographData
   ): Promise<{ x: number; y: number; rotation: number }>;
   shouldMirror(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     motionData: MotionData,
     pictographData: PictographData
   ): boolean;
@@ -53,7 +57,7 @@ export interface IArrowLocationService {
 /**
  * Service for managing arrow placement data and adjustments
  */
-export interface IArrowPlacementDataService {
+export interface IArrowPlacementService {
   getDefaultAdjustment(
     motionType: MotionType,
     placementKey: string,

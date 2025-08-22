@@ -5,7 +5,11 @@
  * Responsible for working with pictograph data and arrow data structures.
  */
 
-import type { ArrowData, MotionData, PictographData } from "$lib/domain";
+import type {
+  ArrowPlacementData,
+  MotionData,
+  PictographData,
+} from "$lib/domain";
 import type { IArrowCoordinateSystemService } from "../../core-services";
 import type { Point } from "../../types";
 
@@ -17,7 +21,7 @@ export class ArrowDataProcessor {
   }
 
   getMotionFromPictograph(
-    arrowColor: string, // ✅ FIXED: Pass color directly since ArrowData no longer has color
+    arrowColor: string, // ✅ FIXED: Pass color directly since ArrowPlacementData no longer has color
     pictographData: PictographData
   ): MotionData | undefined {
     /**
@@ -26,7 +30,9 @@ export class ArrowDataProcessor {
     if (!pictographData?.motions) {
       return undefined;
     }
-    return pictographData.motions[arrowColor];
+    return pictographData.motions?.[
+      arrowColor as keyof typeof pictographData.motions
+    ];
   }
 
   ensureValidPosition(initialPosition: Point): Point {
@@ -65,24 +71,34 @@ export class ArrowDataProcessor {
   updateArrowInPictograph(
     pictographData: PictographData,
     color: string,
-    updates: Partial<ArrowData>
+    updates: Partial<ArrowPlacementData>
   ): PictographData {
     /**
-     * Update arrow properties in pictograph data.
+     * Update arrow properties in pictograph data (now embedded in motions).
      */
     const updatedPictograph = { ...pictographData };
 
-    if (updatedPictograph.arrows && updatedPictograph.arrows[color]) {
-      updatedPictograph.arrows[color] = {
-        ...updatedPictograph.arrows[color],
-        ...updates,
+    // Update embedded arrow placement data in motion
+    const motionKey = color as keyof typeof updatedPictograph.motions;
+    const motion = updatedPictograph.motions?.[motionKey];
+
+    if (motion) {
+      updatedPictograph.motions = {
+        ...updatedPictograph.motions,
+        [motionKey]: {
+          ...motion,
+          arrowPlacement: {
+            ...motion.arrowPlacementData,
+            ...updates,
+          },
+        },
       };
     }
 
     return updatedPictograph;
   }
 
-  validateArrowData(arrowData: ArrowData): boolean {
+  validateArrowData(arrowData: ArrowPlacementData): boolean {
     /**
      * Validate arrow data structure.
      */
@@ -91,7 +107,7 @@ export class ArrowDataProcessor {
     }
 
     // Check required properties
-    // ✅ FIXED: Color is no longer part of ArrowData
+    // ✅ FIXED: Color is no longer part of ArrowPlacementData
     const hasValidCoordinates =
       typeof arrowData.positionX === "number" &&
       typeof arrowData.positionY === "number";
@@ -123,21 +139,22 @@ export class ArrowDataProcessor {
       return false;
     }
 
-    // Check for arrows object
-    if (!pictographData.arrows || typeof pictographData.arrows !== "object") {
+    // Check for motions object (arrows are now embedded)
+    if (!pictographData.motions || typeof pictographData.motions !== "object") {
       return false;
     }
 
-    // Validate at least one arrow exists
-    const arrowColors = Object.keys(pictographData.arrows);
-    if (arrowColors.length === 0) {
+    // Validate at least one motion exists
+    const motionColors = Object.keys(pictographData.motions);
+    if (motionColors.length === 0) {
       return false;
     }
 
-    // Validate each arrow
-    for (const color of arrowColors) {
-      const arrow = pictographData.arrows[color];
-      if (!this.validateArrowData(arrow)) {
+    // Validate each motion has embedded arrow placement
+    for (const color of motionColors) {
+      const motion =
+        pictographData.motions[color as keyof typeof pictographData.motions];
+      if (!motion || typeof motion !== "object" || !motion.arrowPlacementData) {
         return false;
       }
     }
@@ -147,27 +164,29 @@ export class ArrowDataProcessor {
 
   extractArrowColors(pictographData: PictographData): string[] {
     /**
-     * Extract all arrow colors from pictograph data.
+     * Extract all arrow colors from pictograph data (now from motions).
      */
-    if (!pictographData?.arrows) {
+    if (!pictographData?.motions) {
       return [];
     }
 
-    return Object.keys(pictographData.arrows);
+    return Object.keys(pictographData.motions);
   }
 
   getArrowByColor(
     pictographData: PictographData,
     color: string
-  ): ArrowData | undefined {
+  ): ArrowPlacementData | undefined {
     /**
-     * Get arrow data by color.
+     * Get arrow data by color (now from embedded motion data).
      */
-    if (!pictographData?.arrows) {
+    if (!pictographData?.motions) {
       return undefined;
     }
 
-    return pictographData.arrows[color];
+    const motion =
+      pictographData.motions[color as keyof typeof pictographData.motions];
+    return motion?.arrowPlacementData;
   }
 
   hasMotionData(pictographData: PictographData, color: string): boolean {

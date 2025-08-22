@@ -1,11 +1,11 @@
 <!-- FullscreenActionButtons.svelte - Action buttons for fullscreen viewer -->
 <script lang="ts">
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const { sequence, onAction = () => {} } = $props<{
-    sequence?: BrowseSequenceMetadata;
-    onAction?: (action: string, sequence: BrowseSequenceMetadata) => void;
+    sequence?: SequenceData;
+    onAction?: (action: string, sequence: SequenceData) => void;
   }>();
 
   function handleAction(action: string) {

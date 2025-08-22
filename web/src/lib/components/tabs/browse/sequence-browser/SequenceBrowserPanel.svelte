@@ -1,9 +1,6 @@
 <script lang="ts">
-  import type {
-    BrowseSequenceMetadata,
-    FilterType,
-    FilterValue,
-  } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
+  import type { FilterType, FilterValue } from "$lib/domain/browse";
   import { SortMethod } from "$lib/domain/browse";
   import { resolve } from "$lib/services/bootstrap";
   import type { IThumbnailService } from "$lib/services/interfaces/browse-interfaces";
@@ -22,10 +19,10 @@
     onAction = () => {},
   } = $props<{
     filter?: { type: FilterType; value: FilterValue } | null;
-    sequences?: BrowseSequenceMetadata[];
+    sequences?: SequenceData[];
     isLoading?: boolean;
     onBackToFilters?: () => void;
-    onAction?: (action: string, sequence: BrowseSequenceMetadata) => void;
+    onAction?: (action: string, sequence: SequenceData) => void;
   }>();
 
   // ✅ RESOLVE SERVICES: Get services from DI container
@@ -56,7 +53,7 @@
       switch (sortBy) {
         case SortMethod.ALPHABETICAL:
           return a.word.localeCompare(b.word);
-        case SortMethod.DIFFICULTY_LEVEL: {
+        case SortMethod.difficultyLevel: {
           // Fix: Use difficultyLevel instead of difficulty
           const getDifficultyOrder = (level?: string) => {
             switch (level) {
@@ -75,10 +72,10 @@
             getDifficultyOrder(b.difficultyLevel)
           );
         }
-        case SortMethod.SEQUENCE_LENGTH:
+        case SortMethod.sequenceLength:
           // Fix: Use sequenceLength instead of length
           return (a.sequenceLength || 0) - (b.sequenceLength || 0);
-        case SortMethod.DATE_ADDED:
+        case SortMethod.dateAdded:
           return (b.dateAdded?.getTime() || 0) - (a.dateAdded?.getTime() || 0);
         case SortMethod.AUTHOR:
           return (a.author || "").localeCompare(b.author || "");

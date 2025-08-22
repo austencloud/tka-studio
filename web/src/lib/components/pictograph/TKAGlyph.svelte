@@ -5,8 +5,9 @@ Renders letters, turn indicators, and other TKA notation elements.
 Uses pure runes instead of stores for reactivity.
 -->
 <script lang="ts">
-  import { getLetterImagePath } from "$lib/utils/letter-type-classification";
   import { MotionColor } from "$lib/domain/enums";
+  import { Letter } from "$lib/domain/Letter";
+  import { getLetterImagePath } from "$lib/utils/letter-image-getter";
 
   interface Props {
     /** The letter to display */
@@ -43,7 +44,7 @@ Uses pure runes instead of stores for reactivity.
   const dimensionsCache = new Map<string, { width: number; height: number }>();
 
   // Load letter dimensions using SVG viewBox like legacy version
-  async function loadLetterDimensions(currentLetter: string) {
+  async function loadLetterDimensions(currentLetter: Letter) {
     if (!currentLetter) return;
 
     // Check cache first
@@ -56,7 +57,7 @@ Uses pure runes instead of stores for reactivity.
 
     try {
       // Use correct path based on letter type and safe filename
-      const svgPath = getLetterImagePath(currentLetter);
+      const svgPath = getLetterImagePath(currentLetter as Letter);
       const response = await fetch(svgPath);
       if (!response.ok)
         throw new Error(`Failed to fetch ${svgPath}: ${response.status}`);
@@ -93,7 +94,7 @@ Uses pure runes instead of stores for reactivity.
   $effect(() => {
     if (letter) {
       isLetterLoaded = false;
-      loadLetterDimensions(letter);
+      loadLetterDimensions(letter as Letter);
     }
   });
 
@@ -202,7 +203,7 @@ Uses pure runes instead of stores for reactivity.
     <image
       x="0"
       y="0"
-      href={letter ? getLetterImagePath(letter) : ""}
+      href={letter ? getLetterImagePath(letter as Letter) : ""}
       width={letterDimensions.width}
       height={letterDimensions.height}
       preserveAspectRatio="xMinYMin meet"

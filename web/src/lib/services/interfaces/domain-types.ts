@@ -7,18 +7,18 @@
 
 // Re-export core domain models
 export type {
-  ArrowData,
+  ArrowPlacementData,
+  PropPlacementData,
   BeatData,
+  SequenceData,
   MotionData,
   PictographData,
-  SequenceData,
 } from "../../domain";
 
 // Re-export browse domain types
 export type {
   BrowseDisplayState,
   BrowseLoadingState,
-  BrowseSequenceMetadata,
   FilterType,
   FilterValue,
   SortMethod,

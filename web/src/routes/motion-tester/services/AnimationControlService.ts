@@ -1,20 +1,22 @@
 import type { PropState } from "$lib/components/animator";
-import type { MotionTestParams } from "./MotionParameterService";
-import type { IAnimationControlService } from "./interfaces";
+import type { MotionData, SequenceData } from "$lib/domain";
 import {
   createBeatData,
+  createMotionData,
   createPictographData,
   createSequenceData,
 } from "$lib/domain";
-import type { SequenceData, MotionData } from "$lib/domain";
 import {
-  MotionType,
   Location,
-  Orientation,
-  RotationDirection,
   MotionColor,
+  MotionType,
+  Orientation,
+  PropType,
+  RotationDirection,
 } from "$lib/domain/enums";
 import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";
+import type { MotionTestParams } from "./MotionParameterService";
+import type { IAnimationControlService } from "./interfaces";
 
 export interface AnimationState {
   isPlaying: boolean;
@@ -69,7 +71,7 @@ export class AnimationControlService implements IAnimationControlService {
       duration: 1,
       pictographData: createPictographData({
         id: "test-pictograph-1",
-        letter: "TEST",
+        letter: null, // Test pictograph doesn't need a specific letter
         motions: {
           blue: this.convertToMotionData(blueParams),
           red: this.convertToMotionData(redParams),
@@ -91,7 +93,7 @@ export class AnimationControlService implements IAnimationControlService {
   }
 
   private convertToMotionData(params: MotionTestParams): MotionData {
-    return {
+    return createMotionData({
       startLocation: params.startLocation as Location,
       endLocation: params.endLocation as Location,
       startOrientation: params.startOrientation as Orientation,
@@ -99,9 +101,11 @@ export class AnimationControlService implements IAnimationControlService {
       motionType: params.motionType as MotionType,
       rotationDirection: params.rotationDirection as RotationDirection,
       turns: params.turns,
-      isVisible: true, // ✅ Add required field for MotionData
-      color: MotionColor.BLUE, // Default color for motion tester
-    };
+      isVisible: true,
+      color: MotionColor.BLUE,
+      propType: PropType.STAFF, // Default prop type
+      arrowLocation: params.startLocation as Location, // Will be calculated later
+    });
   }
 
   // Get current prop states

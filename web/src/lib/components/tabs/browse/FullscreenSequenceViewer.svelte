@@ -1,6 +1,6 @@
 <!-- FullscreenSequenceViewer.svelte - Fullscreen sequence viewer with actions -->
 <script lang="ts">
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
   import type { IThumbnailService } from "$services/interfaces/browse-interfaces";
   import { fade } from "svelte/transition";
   // Import subcomponents
@@ -16,10 +16,10 @@
     onAction = () => {},
   } = $props<{
     show?: boolean;
-    sequence?: BrowseSequenceMetadata;
+    sequence?: SequenceData;
     thumbnailService?: IThumbnailService;
     onClose?: () => void;
-    onAction?: (action: string, sequence: BrowseSequenceMetadata) => void;
+    onAction?: (action: string, sequence: SequenceData) => void;
   }>();
 
   // State for current variation (shared with image viewer)

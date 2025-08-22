@@ -21,6 +21,9 @@ import {
   ISequenceDomainServiceInterface,
   ISequenceGenerationServiceInterface,
   ISequenceServiceInterface,
+  IWorkbenchBeatOperationsServiceInterface,
+  ISequenceImportServiceInterface,
+  ISequenceDeletionServiceInterface,
   ISettingsServiceInterface,
   IStartPositionServiceInterface,
   IPrintablePageLayoutServiceInterface,
@@ -34,7 +37,7 @@ import {
   IArrowAdjustmentCalculatorInterface,
   IArrowCoordinateSystemServiceInterface,
   IArrowLocationCalculatorInterface,
-  IArrowPlacementDataServiceInterface,
+  IArrowPlacementServiceInterface,
   IArrowPlacementKeyServiceInterface,
   IArrowPositioningOrchestratorInterface,
   IArrowRotationCalculatorInterface,
@@ -91,6 +94,9 @@ import { IOptionFilteringServiceInterface } from "./registration/shared-services
 export const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
   // Core services
   ["ISequenceService", ISequenceServiceInterface],
+  ["IWorkbenchBeatOperationsService", IWorkbenchBeatOperationsServiceInterface],
+  ["ISequenceImportService", ISequenceImportServiceInterface],
+  ["ISequenceDeletionService", ISequenceDeletionServiceInterface],
   ["ISequenceDomainService", ISequenceDomainServiceInterface],
   ["IPictographService", IPictographServiceInterface],
   ["IPictographRenderingService", IPictographRenderingServiceInterface],
@@ -124,7 +130,7 @@ export const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
 
   // Positioning services
   ["IArrowPositioningOrchestrator", IArrowPositioningOrchestratorInterface],
-  ["IArrowPlacementDataService", IArrowPlacementDataServiceInterface],
+  ["IArrowPlacementService", IArrowPlacementServiceInterface],
   ["IArrowPlacementKeyService", IArrowPlacementKeyServiceInterface],
   ["IArrowLocationCalculator", IArrowLocationCalculatorInterface],
   ["IArrowRotationCalculator", IArrowRotationCalculatorInterface],

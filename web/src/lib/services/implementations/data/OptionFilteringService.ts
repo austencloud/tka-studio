@@ -8,6 +8,7 @@
 import type { PictographData } from "$lib/domain/PictographData";
 import type { BeatData } from "$lib/domain/BeatData";
 import type { IEnumMappingService } from "./EnumMappingService";
+import { getLetterType } from "$lib/domain";
 
 export interface FilterCriteria {
   startPosition?: string;
@@ -99,7 +100,7 @@ export class OptionFilteringService implements IOptionFilteringService {
     return options.filter((option) => {
       if (!option.letter) return false;
 
-      const letterType = this.enumMappingService.getLetterType(option.letter);
+      const letterType = getLetterType(option.letter);
       return letterTypes.includes(letterType);
     });
   }

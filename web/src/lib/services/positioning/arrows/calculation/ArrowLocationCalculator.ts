@@ -228,7 +228,7 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
 
   extractBeatDataFromPictograph(pictograph: PictographData): BeatData | null {
     /**Extract beat data from pictograph for dash location calculation.*/
-    if (!pictograph.arrows) {
+    if (!pictograph.motions) {
       return null;
     }
 

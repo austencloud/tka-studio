@@ -1,11 +1,10 @@
 <script lang="ts">
-  import type { MotionData, PropData, PictographData } from "$lib/domain";
-  import type { IPropCoordinatorService } from "$lib/services/implementations/rendering/PropCoordinatorService";
-  import { IPropCoordinatorServiceInterface } from "$lib/services/di/interfaces/core-interfaces";
+  import type { MotionData, PictographData } from "$lib/domain";
   import { resolve } from "$lib/services/bootstrap";
+  import { IPropCoordinatorServiceInterface } from "$lib/services/di/interfaces/core-interfaces";
+  import type { IPropCoordinatorService } from "$lib/services/implementations/rendering/PropCoordinatorService";
   interface Props {
-    propData: PropData;
-    motionData: MotionData; // Required - source of truth for motion properties
+    motionData: MotionData; // Single source of truth - contains embedded prop placement data
     pictographData: PictographData; // ✅ SIMPLIFIED: Complete pictograph data contains gridMode
   }
 
@@ -20,7 +19,7 @@
     loaded: boolean;
   }
 
-  let { propData, motionData, pictographData }: Props = $props();
+  let { motionData, pictographData }: Props = $props();
 
   // Derive color from motionData (single source of truth)
   const color = $derived(motionData.color);
@@ -42,20 +41,35 @@
   });
 
   $effect(() => {
-    if (!propData) return;
+    if (!motionData) return;
 
-    propCoordinator
-      .calculatePropRenderData(propData, motionData, pictographData)
-      .then((data) => {
-        renderData = data;
-      });
+    // TODO: Update PropCoordinatorService to work with embedded placement data
+    // propCoordinator.calculatePropRenderData(motionData, pictographData)
+
+    // Temporary: Create mock render data until service is updated
+    const mockRenderData = {
+      position: {
+        x: motionData.propPlacementData.positionX || 475,
+        y: motionData.propPlacementData.positionY || 475,
+      },
+      rotation: motionData.propPlacementData.rotationAngle || 0,
+      svgData: {
+        svgContent: `<svg viewBox="0 0 100 100"><rect x="25" y="10" width="50" height="80" fill="${motionData.color === "blue" ? "#2E3192" : "#ED1C24"}"/></svg>`,
+        viewBox: { width: 100, height: 100 },
+        center: { x: 50, y: 50 },
+      },
+      loaded: true,
+      error: null,
+    };
+
+    renderData = mockRenderData;
   });
 </script>
 
 <g
   class="prop-group {color}-prop"
   data-prop-color={color}
-  data-prop-type={propData?.propType}
+  data-prop-type={motionData?.propType}
   data-location={motionData?.endLocation}
 >
   {#if renderData.svgData}

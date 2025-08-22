@@ -7,14 +7,13 @@
 <script lang="ts">
   import ExportPanel from "$components/export/ExportPanel.svelte";
   import GraphEditor from "$components/graph-editor/GraphEditor.svelte";
-  import type { ArrowData } from "$lib/domain/ArrowData";
-  import { MotionColor } from "$lib/domain/enums";
-  import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
-  import type { ActiveRightPanel } from "$lib/state/construct-tab-state.svelte";
   import type { SequenceData } from "$lib/domain";
+  import type { ArrowPlacementData } from "$lib/domain/ArrowPlacementData";
+  import type { ActiveRightPanel } from "$lib/state/construct-tab-state.svelte";
+  import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
   import BuildTabContent from "./BuildTabContent.svelte";
-  import GeneratePanel from "./generate/GeneratePanel.svelte";
   import ConstructTabNavigation from "./ConstructTabNavigation.svelte";
+  import GeneratePanel from "./generate/GeneratePanel.svelte";
   // Import Svelte's built-in fade transition for consistency with main tabs
   import type { BeatData } from "$lib/domain";
   import { getAnimationSettings } from "$lib/utils/animation-control";
@@ -71,19 +70,14 @@
     turn_amount?: number;
     type: string;
   }) {
-    // ✅ FIXED: ArrowData now only contains arrow-specific properties
-    const fullArrowData: ArrowData = {
-      id: `arrow_${Date.now()}`,
-      // Only arrow-specific properties - motion data should be handled separately
-      arrowLocation: null, // Will be calculated by positioning system
+    // ✅ FIXED: ArrowPlacementData now only contains placement properties
+    const fullArrowData: ArrowPlacementData = {
       positionX: 0,
       positionY: 0,
       rotationAngle: 0,
       coordinates: null,
       svgCenter: null,
       svgMirrored: false,
-      isVisible: true,
-      isSelected: false,
     };
     constructTabEventService().handleArrowSelected(fullArrowData);
   }

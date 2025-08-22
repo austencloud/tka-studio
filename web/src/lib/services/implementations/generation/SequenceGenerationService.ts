@@ -7,7 +7,7 @@
 
 import type { BeatData, SequenceData } from "$lib/domain";
 import { createSequenceData } from "$lib/domain";
-import { GridMode } from "$lib/domain";
+import { GridMode, PropType } from "$lib/domain";
 import type {
   GenerationOptions,
   ISequenceGenerationService,
@@ -154,10 +154,10 @@ export class SequenceGenerationService implements ISequenceGenerationService {
         word: "", // Will be calculated from beats
         beats: generatedBeats,
         gridMode: options.gridMode,
-        propType: options.propType,
-        difficulty_level: options.difficulty,
-        is_favorite: false,
-        is_circular: false,
+        propType: options.propType as PropType,
+        difficultyLevel: options.difficulty,
+        isFavorite: false,
+        isCircular: false,
         tags: [],
         metadata: {
           generated: true,

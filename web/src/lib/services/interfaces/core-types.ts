@@ -5,15 +5,15 @@
  * This file contains shared data structures, coordinates, and utility types.
  */
 
-import type {
-  MotionType,
-  Location,
-  Orientation,
-  DifficultyLevel,
-  MotionColor,
-} from "../../domain/enums";
-import { GridMode as DomainGridMode } from "../../domain";
 import type { PictographData } from "../../domain";
+import { GridMode as DomainGridMode } from "../../domain";
+import type {
+  DifficultyLevel,
+  Location,
+  MotionColor,
+  MotionType,
+  Orientation,
+} from "../../domain/enums";
 
 // ============================================================================
 // BASIC COORDINATE TYPES
@@ -38,11 +38,7 @@ export interface GridData {
 // ARROW POSITIONING TYPES
 // ============================================================================
 
-export interface ArrowPosition {
-  x: number;
-  y: number;
-  rotation: number;
-}
+// ArrowPosition moved to $lib/services/positioning/types.ts
 
 export interface LegacyArrowData {
   id: string;
@@ -70,7 +66,7 @@ export interface ArrowPlacementConfig {
 // PROP TYPES
 // ============================================================================
 
-export interface PropData {
+export interface PropPlacementData {
   id: string;
   propType: string;
   color: MotionColor;
@@ -96,8 +92,8 @@ export type GridMode = DomainGridMode;
 // Re-export types from domain
 export type {
   DifficultyLevel,
-  PropContinuity,
   MotionColor,
+  PropContinuity,
 } from "../../domain/enums";
 
 // ============================================================================

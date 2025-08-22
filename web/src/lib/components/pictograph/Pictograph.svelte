@@ -12,20 +12,18 @@ ARCHITECTURE:
 - Main component: Focuses on state management and layout
 -->
 <script lang="ts">
-  import type { BeatData, PictographData } from "$lib/domain";
+  import type { PictographData } from "$lib/domain";
   import { onMount } from "svelte";
   import PictographSvg from "./PictographSvg.svelte";
-
   // Import our focused hooks
   import {
-    usePictographData,
-    useComponentLoading,
     useArrowPositioning,
+    useComponentLoading,
+    usePictographData,
   } from "./hooks";
 
   // Simplified Props interface - removed beat-specific properties
   interface Props {
-    /** Pictograph data to render */
     pictographData?: PictographData | null;
   }
 
@@ -41,9 +39,7 @@ ARCHITECTURE:
   });
 
   // Component loading management factory
-  const loadingFactory = useComponentLoading({
-    pictographData: dataState.effectivePictographData,
-  });
+  const loadingFactory = useComponentLoading();
 
   // Arrow positioning factory
   const arrowFactory = useArrowPositioning({
@@ -139,8 +135,7 @@ ARCHITECTURE:
     pictographData={dataState.effectivePictographData}
     hasValidData={dataState.hasValidData}
     displayLetter={dataState.displayLetter}
-    arrowsToRender={dataState.arrowsToRender}
-    propsToRender={dataState.propsToRender}
+    motionsToRender={dataState.motionsToRender}
     width="100%"
     height="100%"
     {viewBox}
@@ -176,7 +171,6 @@ ARCHITECTURE:
     border-color: #ef4444;
   }
 
-  /* Animation classes for component loading */
   :global(.component-loading) {
     opacity: 0.5;
     animation: pulse 1s infinite;

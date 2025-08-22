@@ -1,10 +1,10 @@
 <!-- DetailedInfoPanel.svelte - Detailed information about selected beat -->
 <script lang="ts">
+  import { GridMode, MotionColor } from "$lib/domain/enums";
   import type {
     BeatData,
     SequenceData,
   } from "$services/interfaces/domain-types";
-  import { MotionColor } from "$lib/domain/enums";
   import { onMount } from "svelte";
 
   // Props

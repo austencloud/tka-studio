@@ -1,15 +1,7 @@
-/**
- * Simple Letter System
- *
- * Letter enum for type safety and IDE highlighting, plus utilities for type identification.
- * No bundled objects - just clean, simple access.
- */
-
 import { LetterType } from "./enums";
 
 /**
- * Letter Enum - all 47 TKA kinetic alphabet letters
- * Shows green in VS Code, provides autocomplete and type safety
+ * Letter Enum - all TKA letters
  */
 export enum Letter {
   // Type1: Dual-Shift (A-V, 22 letters)
@@ -71,61 +63,86 @@ export enum Letter {
   BETA = "β",
   GAMMA = "Γ",
 }
-
 /**
- * Get the LetterType for any letter string
+ * Get the LetterType for any letter enum value
  */
-export function getLetterType(letter: string): LetterType {
+export function getLetterType(letter: Letter): LetterType {
   // Type1: Dual-Shift (A-V)
-  if ("ABCDEFGHIJKLMNOPQRSTUV".includes(letter)) {
+  if (
+    [
+      Letter.A,
+      Letter.B,
+      Letter.C,
+      Letter.D,
+      Letter.E,
+      Letter.F,
+      Letter.G,
+      Letter.H,
+      Letter.I,
+      Letter.J,
+      Letter.K,
+      Letter.L,
+      Letter.M,
+      Letter.N,
+      Letter.O,
+      Letter.P,
+      Letter.Q,
+      Letter.R,
+      Letter.S,
+      Letter.T,
+      Letter.U,
+      Letter.V,
+    ].includes(letter)
+  ) {
     return LetterType.TYPE1;
   }
 
   // Type2: Shift
-  if (["W", "X", "Y", "Z", "Σ", "Δ", "θ", "Ω"].includes(letter)) {
+  if (
+    [
+      Letter.W,
+      Letter.X,
+      Letter.Y,
+      Letter.Z,
+      Letter.SIGMA,
+      Letter.DELTA,
+      Letter.THETA,
+      Letter.OMEGA,
+    ].includes(letter)
+  ) {
     return LetterType.TYPE2;
   }
 
   // Type3: Cross-Shift
-  if (["W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"].includes(letter)) {
+  if (
+    [
+      Letter.W_DASH,
+      Letter.X_DASH,
+      Letter.Y_DASH,
+      Letter.Z_DASH,
+      Letter.SIGMA_DASH,
+      Letter.DELTA_DASH,
+      Letter.THETA_DASH,
+      Letter.OMEGA_DASH,
+    ].includes(letter)
+  ) {
     return LetterType.TYPE3;
   }
 
   // Type4: Dash
-  if (["Φ", "Ψ", "Λ"].includes(letter)) {
+  if ([Letter.PHI, Letter.PSI, Letter.LAMBDA].includes(letter)) {
     return LetterType.TYPE4;
   }
 
   // Type5: Dual-Dash
-  if (["Φ-", "Ψ-", "Λ-"].includes(letter)) {
+  if ([Letter.PHI_DASH, Letter.PSI_DASH, Letter.LAMBDA_DASH].includes(letter)) {
     return LetterType.TYPE5;
   }
 
   // Type6: Static
-  if (["α", "β", "Γ"].includes(letter)) {
+  if ([Letter.ALPHA, Letter.BETA, Letter.GAMMA].includes(letter)) {
     return LetterType.TYPE6;
   }
 
   throw new Error(`Unknown letter: ${letter}`);
-}
-
-/**
- * Check if a letter is valid
- */
-export function isValidLetter(letter: string): boolean {
-  try {
-    getLetterType(letter);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Get all letters of a specific type
- */
-export function getLettersOfType(type: LetterType): string[] {
-  return Object.values(Letter).filter(
-    (letter) => getLetterType(letter) === type
-  );
 }

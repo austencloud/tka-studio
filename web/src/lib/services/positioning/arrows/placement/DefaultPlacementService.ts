@@ -5,7 +5,7 @@
  * Mirrors the exact functionality from desktop DefaultPlacementService.
  */
 
-import { ArrowPlacementDataService } from "../../../implementations/data/ArrowPlacementDataService";
+import { ArrowPlacementService } from "../../../implementations/data/ArrowPlacementService";
 import type { GridMode } from "../../../interfaces/core-types";
 import { MotionType } from "$lib/domain/enums"; // ✅ Import from centralized enums
 
@@ -37,10 +37,10 @@ export interface IDefaultPlacementServiceJson {
 }
 
 export class DefaultPlacementService implements IDefaultPlacementServiceJson {
-  private placementDataService: ArrowPlacementDataService;
+  private placementDataService: ArrowPlacementService;
 
   constructor() {
-    this.placementDataService = new ArrowPlacementDataService();
+    this.placementDataService = new ArrowPlacementService();
   }
 
   /**

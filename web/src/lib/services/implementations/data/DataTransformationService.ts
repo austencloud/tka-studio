@@ -6,14 +6,7 @@
  */
 
 import type { BeatData, MotionData, PictographData } from "$lib/domain";
-import {
-  createArrowData,
-  createGridData as createDomainGridData,
-  createPictographData,
-  createPropData,
-  GridMode,
-  PropType,
-} from "$lib/domain";
+import { createPictographData, GridMode } from "$lib/domain";
 import { type GridPointData as RawGridData } from "../../../data/gridCoordinates.js";
 export interface GridData {
   mode: GridMode;
@@ -44,23 +37,9 @@ export class DataTransformationService implements IDataTransformationService {
       motions.red = beat.pictographData.motions.red;
     return createPictographData({
       id: `beat-${beat.beatNumber}`,
-      gridData: createDomainGridData(),
-      arrows: {
-        blue: createArrowData(),
-        red: createArrowData(),
-      },
-      props: {
-        blue: createPropData({
-          propType: PropType.STAFF,
-        }),
-        red: createPropData({
-          propType: PropType.STAFF,
-        }),
-      },
       motions,
       letter: beat.pictographData?.letter || null,
       isBlank: beat.isBlank,
-      isMirrored: false,
     });
   }
 

@@ -14,7 +14,7 @@
  */
 
 import type { BeatData, SequenceData } from "$lib/domain";
-import { GridMode } from "$lib/domain/enums";
+import { GridMode, PropType } from "$lib/domain/enums";
 
 // ============================================================================
 // INTERFACES (Define contracts)
@@ -88,16 +88,16 @@ export class ExampleSequenceService implements IExampleSequenceService {
       word: name.trim().toUpperCase(),
       beats,
       thumbnails: [],
-      sequence_length: length,
+      sequenceLength: length,
       author: "Unknown",
       level: 1,
-      date_added: new Date(),
+      dateAdded: new Date(),
       gridMode: GridMode.DIAMOND,
-      propType: "poi",
-      is_favorite: false,
-      is_circular: false,
-      starting_position: "beta",
-      difficulty_level: "beginner",
+      propType: PropType.POI,
+      isFavorite: false,
+      isCircular: false,
+      // startingPosition: TODO - needs to be BeatData, not string
+      difficultyLevel: "beginner",
       tags: ["flow", "practice"],
       metadata: {
         created_by: "sequence_service",

@@ -5,13 +5,14 @@
  * Ported and adapted from desktop app's BrowseService.
  */
 
-import { GridMode } from "$lib/domain";
+import { GridMode, GridPositionGroup, PropType } from "$lib/domain";
+import type { SequenceData } from "$lib/domain/SequenceData";
+import { createSequenceData } from "$lib/domain/SequenceData";
 import {
   FilterType as FilterTypeEnum,
   SortMethod as SortMethodEnum,
 } from "$lib/domain/browse";
 import type {
-  BrowseSequenceMetadata,
   FilterType,
   FilterValue,
   SortMethod,
@@ -19,12 +20,12 @@ import type {
 import type { IBrowseService } from "$lib/services/interfaces/browse-interfaces";
 
 export class BrowseService implements IBrowseService {
-  private cachedSequences: BrowseSequenceMetadata[] | null = null;
+  private cachedSequences: SequenceData[] | null = null;
 
   /**
    * ✅ PERMANENT: Validate sequence metadata to prevent malformed data
    */
-  private isValidSequenceMetadata(sequence: BrowseSequenceMetadata): boolean {
+  private isValidSequenceMetadata(sequence: SequenceData): boolean {
     const word = sequence.word || sequence.name || sequence.id || "";
 
     // ✅ CIRCUIT BREAKER: Block specific known problematic sequences
@@ -54,7 +55,7 @@ export class BrowseService implements IBrowseService {
     );
   }
 
-  async loadSequenceMetadata(): Promise<BrowseSequenceMetadata[]> {
+  async loadSequenceMetadata(): Promise<SequenceData[]> {
     console.log("🔍 BrowseService.loadSequenceMetadata() called");
 
     if (this.cachedSequences !== null) {
@@ -115,10 +116,10 @@ export class BrowseService implements IBrowseService {
   }
 
   async applyFilter(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterType: FilterType,
     filterValue: FilterValue
-  ): Promise<BrowseSequenceMetadata[]> {
+  ): Promise<SequenceData[]> {
     console.log("🔍 BrowseService.applyFilter() called with:");
     console.log("  - filterType:", filterType);
     console.log("  - filterValue:", filterValue);
@@ -133,7 +134,7 @@ export class BrowseService implements IBrowseService {
     }
 
     console.log("🔄 Applying specific filter...");
-    let filtered: BrowseSequenceMetadata[];
+    let filtered: SequenceData[];
 
     switch (filterType) {
       case FilterTypeEnum.STARTING_LETTER:
@@ -148,7 +149,7 @@ export class BrowseService implements IBrowseService {
       case FilterTypeEnum.DIFFICULTY:
         filtered = this.filterByDifficulty(sequences, filterValue);
         break;
-      case FilterTypeEnum.STARTING_POSITION:
+      case FilterTypeEnum.startPosition:
         filtered = this.filterByStartingPosition(sequences, filterValue);
         break;
       case FilterTypeEnum.AUTHOR:
@@ -177,27 +178,27 @@ export class BrowseService implements IBrowseService {
   }
 
   async sortSequences(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     sortMethod: SortMethod
-  ): Promise<BrowseSequenceMetadata[]> {
+  ): Promise<SequenceData[]> {
     const sorted = [...sequences];
 
     switch (sortMethod) {
       case SortMethodEnum.ALPHABETICAL:
         return sorted.sort((a, b) => a.word.localeCompare(b.word));
-      case SortMethodEnum.DATE_ADDED:
+      case SortMethodEnum.dateAdded:
         return sorted.sort((a, b) => {
           const dateA = a.dateAdded || new Date(0);
           const dateB = b.dateAdded || new Date(0);
           return dateB.getTime() - dateA.getTime();
         });
-      case SortMethodEnum.DIFFICULTY_LEVEL:
+      case SortMethodEnum.difficultyLevel:
         return sorted.sort((a, b) => {
           const levelA = this.getDifficultyOrder(a.difficultyLevel);
           const levelB = this.getDifficultyOrder(b.difficultyLevel);
           return levelA - levelB;
         });
-      case SortMethodEnum.SEQUENCE_LENGTH:
+      case SortMethodEnum.sequenceLength:
         return sorted.sort(
           (a, b) => (a.sequenceLength || 0) - (b.sequenceLength || 0)
         );
@@ -215,10 +216,10 @@ export class BrowseService implements IBrowseService {
   }
 
   async groupSequencesIntoSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     sortMethod: SortMethod
-  ): Promise<Record<string, BrowseSequenceMetadata[]>> {
-    const sections: Record<string, BrowseSequenceMetadata[]> = {};
+  ): Promise<Record<string, SequenceData[]>> {
+    const sections: Record<string, SequenceData[]> = {};
 
     for (const sequence of sequences) {
       const sectionKey = this.getSectionKey(sequence, sortMethod);
@@ -231,9 +232,7 @@ export class BrowseService implements IBrowseService {
     return sections;
   }
 
-  async getUniqueValues(
-    field: keyof BrowseSequenceMetadata
-  ): Promise<string[]> {
+  async getUniqueValues(field: keyof SequenceData): Promise<string[]> {
     const sequences = await this.loadSequenceMetadata();
     const values = new Set<string>();
 
@@ -265,7 +264,7 @@ export class BrowseService implements IBrowseService {
   }
 
   // Private helper methods
-  private async loadFromSequenceIndex(): Promise<BrowseSequenceMetadata[]> {
+  private async loadFromSequenceIndex(): Promise<SequenceData[]> {
     console.log("🌐 Fetching sequence-index.json...");
     const response = await fetch("/sequence-index.json");
     console.log("🌐 Response status:", response.status, response.statusText);
@@ -313,10 +312,11 @@ export class BrowseService implements IBrowseService {
           dateAdded = new Date(dateAdded);
         }
 
-        const result: BrowseSequenceMetadata = {
+        const result = createSequenceData({
           id: String(seq.id || seq.word || seq.name),
           name: String(seq.name || `${seq.word} Sequence`),
           word: String(seq.word || seq.name || seq.id),
+          beats: [], // BrowseService doesn't load full beat data
           thumbnails: Array.isArray(seq.thumbnails)
             ? (seq.thumbnails as string[])
             : [],
@@ -329,24 +329,37 @@ export class BrowseService implements IBrowseService {
             typeof seq.metadata === "object" && seq.metadata !== null
               ? (seq.metadata as Record<string, unknown>)
               : { source: "tka_dictionary" },
-        };
-
-        // Add optional properties only if they have values
-        if (seq.author && typeof seq.author === "string")
-          result.author = seq.author;
-        if (gridMode && typeof gridMode === "string")
-          result.gridMode = gridMode;
-        if (seq.difficultyLevel && typeof seq.difficultyLevel === "string")
-          result.difficultyLevel = seq.difficultyLevel;
-        if (seq.sequenceLength && typeof seq.sequenceLength === "number")
-          result.sequenceLength = seq.sequenceLength;
-        if (seq.level && typeof seq.level === "number")
-          result.level = seq.level;
-        if (dateAdded instanceof Date) result.dateAdded = dateAdded;
-        if (seq.propType && typeof seq.propType === "string")
-          result.propType = seq.propType;
-        if (seq.startingPosition && typeof seq.startingPosition === "string")
-          result.startingPosition = seq.startingPosition;
+          // Optional properties
+          ...(seq.author && typeof seq.author === "string"
+            ? { author: seq.author }
+            : {}),
+          ...(gridMode && typeof gridMode === "string"
+            ? { gridMode: gridMode as GridMode }
+            : {}),
+          ...(seq.difficultyLevel && typeof seq.difficultyLevel === "string"
+            ? {
+                difficultyLevel: seq.difficultyLevel,
+              }
+            : {}),
+          ...(seq.sequenceLength && typeof seq.sequenceLength === "number"
+            ? {
+                sequenceLength: seq.sequenceLength,
+              }
+            : {}),
+          ...(seq.level && typeof seq.level === "number"
+            ? { level: seq.level }
+            : {}),
+          ...(dateAdded instanceof Date ? { dateAdded } : {}),
+          ...(seq.propType && typeof seq.propType === "string"
+            ? { propType: seq.propType as PropType }
+            : {}),
+          ...(seq.startingPosition && typeof seq.startingPosition === "string"
+            ? {
+                startingPositionGroup:
+                  seq.startingPosition as GridPositionGroup,
+              }
+            : {}),
+        });
 
         return result;
       });
@@ -356,18 +369,18 @@ export class BrowseService implements IBrowseService {
     );
     console.log(
       "📋 Sample sequence IDs:",
-      sequences.slice(0, 10).map((s: BrowseSequenceMetadata) => s.id)
+      sequences.slice(0, 10).map((s: SequenceData) => s.id)
     );
 
     return sequences;
   }
 
-  private async generateSequenceIndex(): Promise<BrowseSequenceMetadata[]> {
+  private async generateSequenceIndex(): Promise<SequenceData[]> {
     console.log("🔧 Scanning dictionary folder to generate sequence index...");
 
     try {
       // Scan the dictionary folder for real sequences
-      const sequences: BrowseSequenceMetadata[] = [];
+      const sequences: SequenceData[] = [];
 
       // This is a fallback method - in production, you should regenerate the sequence-index.json
       // For now, return empty array to force using the real sequence-index.json
@@ -382,9 +395,9 @@ export class BrowseService implements IBrowseService {
   }
 
   private filterByStartingLetter(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterValue: FilterValue
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     if (!filterValue || typeof filterValue !== "string") return sequences;
 
     if (filterValue.includes("-")) {
@@ -407,9 +420,9 @@ export class BrowseService implements IBrowseService {
   }
 
   private filterByContainsLetters(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterValue: FilterValue
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     if (!filterValue || typeof filterValue !== "string") return sequences;
     return sequences.filter((s) =>
       s.word.toLowerCase().includes(filterValue.toLowerCase())
@@ -417,9 +430,9 @@ export class BrowseService implements IBrowseService {
   }
 
   private filterByLength(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterValue: FilterValue
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     if (!filterValue) return sequences;
 
     if (filterValue === "8+") {
@@ -433,40 +446,38 @@ export class BrowseService implements IBrowseService {
   }
 
   private filterByDifficulty(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterValue: FilterValue
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.difficultyLevel === filterValue);
   }
 
   private filterByStartingPosition(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterValue: FilterValue
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     if (!filterValue) return sequences;
-    return sequences.filter((s) => s.startingPosition === filterValue);
+    return sequences.filter((s) => s.startingPositionGroup === filterValue);
   }
 
   private filterByAuthor(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterValue: FilterValue
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.author === filterValue);
   }
 
   private filterByGridMode(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     filterValue: FilterValue
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.gridMode === filterValue);
   }
 
-  private filterByRecent(
-    sequences: BrowseSequenceMetadata[]
-  ): BrowseSequenceMetadata[] {
+  private filterByRecent(sequences: SequenceData[]): SequenceData[] {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     return sequences.filter((s) => {
       const dateAdded = s.dateAdded || new Date(0);
@@ -488,17 +499,17 @@ export class BrowseService implements IBrowseService {
   }
 
   private getSectionKey(
-    sequence: BrowseSequenceMetadata,
+    sequence: SequenceData,
     sortMethod: SortMethod
   ): string {
     switch (sortMethod) {
       case SortMethodEnum.ALPHABETICAL:
         return sequence.word[0]?.toUpperCase() || "#";
-      case SortMethodEnum.DIFFICULTY_LEVEL:
+      case SortMethodEnum.difficultyLevel:
         return sequence.difficultyLevel || "Unknown";
       case SortMethodEnum.AUTHOR:
         return sequence.author || "Unknown";
-      case SortMethodEnum.SEQUENCE_LENGTH: {
+      case SortMethodEnum.sequenceLength: {
         const length = sequence.sequenceLength || 0;
         if (length <= 4) return "3-4 beats";
         if (length <= 6) return "5-6 beats";

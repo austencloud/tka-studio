@@ -157,11 +157,6 @@ export class MockLetterMappingRepository implements ILetterMappingRepository {
     return MOCK_LETTER_MAPPINGS.letters[letter] || null;
   }
 
-  getAllLetterMappings(): Record<string, LetterMapping> {
-    this.ensureInitialized();
-    return { ...MOCK_LETTER_MAPPINGS.letters };
-  }
-
   getLettersByCategory(category: LetterCategory): string[] {
     this.ensureInitialized();
     return [...(MOCK_LETTER_MAPPINGS.categories[category] || [])];

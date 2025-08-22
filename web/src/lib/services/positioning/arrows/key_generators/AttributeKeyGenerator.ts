@@ -2,12 +2,12 @@
  * Modern Attribute Key Generator
  *
  * Generates attribute keys for arrow positioning using modern data structures.
- * Replaces the legacy AttrKeyGenerator to work with ArrowData and PictographData.
+ * Replaces the legacy AttrKeyGenerator to work with ArrowPlacementData and PictographData.
  *
  * Direct TypeScript mirror of reference/modern/application/services/positioning/arrows/key_generators/attribute_key_generator.py
  */
 
-import type { ArrowData, PictographData } from "$lib/domain";
+import type { ArrowPlacementData, PictographData } from "$lib/domain";
 import type { IAttributeKeyGenerator } from "../../data-services";
 
 export class AttributeKeyGenerator implements IAttributeKeyGenerator {
@@ -15,11 +15,11 @@ export class AttributeKeyGenerator implements IAttributeKeyGenerator {
    * Modern implementation of attribute key generation for arrow positioning.
    *
    * Generates keys used for special placement and default placement lookups.
-   * Works with modern ArrowData and PictographData objects.
+   * Works with modern ArrowPlacementData and PictographData objects.
    */
 
   getKeyFromArrow(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     pictographData: PictographData,
     color: string
   ): string {
@@ -35,7 +35,8 @@ export class AttributeKeyGenerator implements IAttributeKeyGenerator {
      */
     try {
       // Extract motion data for this arrow color
-      const motionData = pictographData.motions?.[color];
+      const motionData =
+        pictographData.motions?.[color as keyof typeof pictographData.motions];
 
       if (!motionData) {
         // Fallback to color if no motion data

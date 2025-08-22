@@ -8,13 +8,11 @@
 import type { PictographData } from "$lib/domain/PictographData";
 import { createPictographData } from "$lib/domain/PictographData";
 
-import { createPropData } from "$lib/domain/PropData";
-import { createPropPlacementData } from "$lib/domain/PropPlacementData";
-import type { IEnumMappingService } from "../../interfaces/application-interfaces";
-import { pictographDataDebugger } from "../../debug/PictographDataDebugger";
+import { getLetterType, Letter, type GridMode } from "$lib/domain";
 import { MotionColor } from "$lib/domain/enums";
 import { createMotionData } from "$lib/domain/MotionData";
-import type { MotionData, PropData } from "$lib/domain";
+import { pictographDataDebugger } from "../../debug/PictographDataDebugger";
+import type { IEnumMappingService } from "../../interfaces/application-interfaces";
 
 export interface IPictographTransformationService {
   convertCsvRowToPictographData(
@@ -150,79 +148,33 @@ export class PictographTransformationService
         color: MotionColor.RED, // ✅ Explicitly set red color
       });
 
-      // Create props based on motion data
-      const blueProps = this.createPropFromMotion(blueMotion, MotionColor.BLUE);
-      const redProps = this.createPropFromMotion(redMotion, MotionColor.RED);
-
       // Create pictograph data
       return createPictographData({
-        letter,
+        letter: letter as Letter,
         motions: {
           blue: blueMotion,
           red: redMotion,
         },
-        props: {
-          blue: blueProps,
-          red: redProps,
-        },
+        // Props are now embedded in motions
         startPosition: this.enumMappingService.convertToGridPosition(
           row.startPosition
         ),
         endPosition: this.enumMappingService.convertToGridPosition(
           row.endPosition
         ),
-        gridMode: gridMode,
+        gridMode: gridMode as GridMode, // TODO: fix GridMode type
         isBlank: false,
         metadata: {
           source: "csv_transformation_service",
           gridMode,
           originalRow: row,
-          letterType: this.enumMappingService.getLetterType(letter),
+          letterType: getLetterType(letter as Letter),
         },
       });
     } catch (error) {
       console.warn("⚠️ Failed to create pictograph from CSV row:", error);
       return null;
     }
-  }
-
-  /**
-   * Create PropData from MotionData
-   * This ensures props have the correct location and orientation from motion data
-   */
-  private createPropFromMotion(
-    motion: MotionData,
-    color: MotionColor
-  ): PropData {
-    console.log(`🔧 [DEBUG] Creating prop from motion for ${color}:`, {
-      motionData: {
-        startLocation: motion.startLocation,
-        endLocation: motion.endLocation,
-        endOrientation: motion.endOrientation,
-        rotationDirection: motion.rotationDirection,
-      },
-      willCreatePropWith: {
-        location: motion.endLocation,
-        orientation: motion.endOrientation,
-        rotationDirection: motion.rotationDirection,
-      },
-    });
-
-    const propData = createPropData({
-      orientation: motion.endOrientation,
-      rotationDirection: motion.rotationDirection,
-      placementData: createPropPlacementData(),
-      isVisible: motion.isVisible,
-    });
-
-    console.log(`🔧 [DEBUG] Created prop result:`, {
-      color: color, // ✅ Color from parameter (MotionColor.BLUE or MotionColor.RED)
-      location: motion.endLocation, // Get location from motion.endLocation
-      orientation: propData.orientation,
-      rotationDirection: propData.rotationDirection,
-    });
-
-    return propData;
   }
 
   /**

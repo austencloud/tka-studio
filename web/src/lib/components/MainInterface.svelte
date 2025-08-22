@@ -7,7 +7,6 @@
     isTabActive,
     switchTab,
   } from "$lib/state/appState.svelte";
-
   // Import background types
   import { BackgroundType } from "./backgrounds/types/types";
 
@@ -19,14 +18,13 @@
   import BackgroundProvider from "./backgrounds/BackgroundProvider.svelte";
   import NavigationBar from "./navigation/NavigationBar.svelte";
   import SettingsDialog from "./SettingsDialog.svelte";
+  import AboutTab from "./tabs/AboutTab.svelte";
   import BrowseTab from "./tabs/BrowseTab.svelte";
   import ConstructTab from "./tabs/ConstructTab.svelte";
   import LearnTab from "./tabs/LearnTab.svelte";
+  import MotionTesterTab from "./tabs/MotionTesterTab.svelte";
   import SequenceCardTab from "./tabs/sequence_card/SequenceCardTab.svelte";
   import WriteTab from "./tabs/WriteTab.svelte";
-  import AboutTab from "./tabs/AboutTab.svelte";
-  import MotionTesterTab from "./tabs/MotionTesterTab.svelte";
-  import ArrowDebugTab from "./tabs/ArrowDebugTab.svelte";
 
   // Reactive state for template using proper derived
   let activeTab = $derived(getActiveTab());
@@ -151,8 +149,6 @@
             <LearnTab />
           {:else if isTabActive("motion-tester")}
             <MotionTesterTab />
-          {:else if isTabActive("arrow-debug")}
-            <ArrowDebugTab />
           {:else if isTabActive("about")}
             <AboutTab />
           {/if}

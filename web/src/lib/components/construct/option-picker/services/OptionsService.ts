@@ -5,8 +5,27 @@
  * Complete port from legacy system without any stores - pure runes and functions.
  */
 
+import {
+  getLetterType,
+  GridPosition,
+  GridPositionGroup,
+  Letter,
+  LetterType,
+  OptionPickerReversalFilter,
+  OptionPickerSortMethod,
+} from "$lib/domain";
 import type { PictographData } from "$lib/domain/PictographData";
-import type { ReversalFilter, SortMethod } from "../config";
+
+/**
+ * Union type for all possible group key values returned by determineGroupKey
+ */
+export type OptionPickerGroupKey =
+  | LetterType
+  | GridPosition
+  | GridPositionGroup
+  | OptionPickerReversalFilter
+  | "Unknown"
+  | "all";
 
 /**
  * Determine reversal category for an option
@@ -14,19 +33,19 @@ import type { ReversalFilter, SortMethod } from "../config";
 export function determineReversalCategory(
   sequence: PictographData[],
   option: PictographData
-): ReversalFilter {
+): OptionPickerReversalFilter {
   // Simplified reversal detection
   if (!sequence || sequence.length === 0) {
-    return "all";
+    return OptionPickerReversalFilter.ALL;
   }
 
   const lastBeat = sequence[sequence.length - 1];
   if (!lastBeat?.motions?.red || !lastBeat?.motions?.blue) {
-    return "all";
+    return OptionPickerReversalFilter.ALL;
   }
 
   if (!option?.motions?.red || !option?.motions?.blue) {
-    return "all";
+    return OptionPickerReversalFilter.ALL;
   }
 
   // Check if rotation directions continue or reverse
@@ -38,11 +57,11 @@ export function determineReversalCategory(
     option.motions.blue.rotationDirection;
 
   if (redContinuous && blueContinuous) {
-    return "continuous";
+    return OptionPickerReversalFilter.CONTINUOUS;
   } else if (redContinuous || blueContinuous) {
-    return "oneReversal";
+    return OptionPickerReversalFilter.ONE_REVERSAL;
   } else {
-    return "twoReversals";
+    return OptionPickerReversalFilter.TWO_REVERSALS;
   }
 }
 
@@ -51,24 +70,46 @@ export function determineReversalCategory(
  */
 export function determineGroupKey(
   option: PictographData,
-  sortMethod: SortMethod,
+  sortMethod: OptionPickerSortMethod,
   sequence: PictographData[]
-): string {
+): OptionPickerGroupKey {
   switch (sortMethod) {
-    case "type":
-      return getLetterType(option.letter || null);
-    case "endPosition": {
+    case OptionPickerSortMethod.LETTER_TYPE:
+      if (!option.letter) {
+        throw new Error("Option letter is required for letter type grouping");
+      }
+      return getLetterType(option.letter);
+    case OptionPickerSortMethod.END_POSITION: {
       const endPosition = option.endPosition;
       if (typeof endPosition === "string") {
-        return endPosition;
+        // Try to match to GridPosition enum, fallback to GridPositionGroup
+        const gridPosition = Object.values(GridPosition).find(
+          (pos) => pos === endPosition
+        );
+        if (gridPosition) return gridPosition as GridPosition;
+
+        // Try to match to GridPositionGroup (alpha, beta, gamma)
+        const gridGroup = Object.values(GridPositionGroup).find(
+          (positionGroup) => endPosition.startsWith(positionGroup)
+        );
+        if (gridGroup) return gridGroup as GridPositionGroup;
       }
       const metaEndPos = option.metadata?.endPosition;
       if (typeof metaEndPos === "string") {
-        return metaEndPos;
+        // Try to match to GridPosition enum, fallback to GridPositionGroup
+        const gridPosition = Object.values(GridPosition).find(
+          (pos) => pos === metaEndPos
+        );
+        if (gridPosition) return gridPosition as GridPosition;
+
+        const gridGroup = Object.values(GridPositionGroup).find(
+          (group) => group === metaEndPos
+        );
+        if (gridGroup) return gridGroup as GridPositionGroup;
       }
       return "Unknown";
     }
-    case "reversals":
+    case OptionPickerSortMethod.REVERSALS:
       return determineReversalCategory(sequence, option);
     default:
       return "all";
@@ -76,106 +117,42 @@ export function determineGroupKey(
 }
 
 /**
- * Get letter type for grouping - matches legacy system exactly
- */
-function getLetterType(letter: string | null): string {
-  if (!letter) return "Unknown";
-
-  // Type 1: Dual-Shift letters
-  const type1Letters = [
-    "A",
-    "B",
-    "C",
-    "D",
-    "E",
-    "F",
-    "G",
-    "H",
-    "I",
-    "J",
-    "K",
-    "L",
-    "M",
-    "N",
-    "O",
-    "P",
-    "Q",
-    "R",
-    "S",
-    "T",
-    "U",
-    "V",
-  ];
-
-  // Type 2: Shift letters
-  const type2Letters = ["W", "X", "Y", "Z", "Σ", "Δ", "θ", "Ω"];
-
-  // Type 3: Dash letters
-  const type3Letters = ["W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"];
-
-  // Type 4: Static letters
-  const type4Letters = ["Φ", "Ψ", "Λ"];
-
-  // Type 5: Dash Static letters
-  const type5Letters = ["Φ-", "Ψ-", "Λ-"];
-
-  // Type 6: Flip letters
-  const type6Letters = ["α", "β", "Γ"];
-
-  if (type1Letters.includes(letter)) return "Type1";
-  if (type2Letters.includes(letter)) return "Type2";
-  if (type3Letters.includes(letter)) return "Type3";
-  if (type4Letters.includes(letter)) return "Type4";
-  if (type5Letters.includes(letter)) return "Type5";
-  if (type6Letters.includes(letter)) return "Type6";
-
-  return "Unknown";
-}
-
-/**
  * Get sorted group keys based on sort method
  */
 export function getSortedGroupKeys(
-  keys: string[],
-  sortMethod: SortMethod
-): string[] {
+  keys: OptionPickerGroupKey[],
+  sortMethod: OptionPickerSortMethod
+): OptionPickerGroupKey[] {
   switch (sortMethod) {
-    case "type":
+    case OptionPickerSortMethod.LETTER_TYPE:
       return keys.sort((a, b) => {
         const order = [
-          "Type1",
-          "Type2",
-          "Type3",
-          "Type4",
-          "Type5",
-          "Type6",
-          "Unknown",
+          LetterType.TYPE1,
+          LetterType.TYPE2,
+          LetterType.TYPE3,
+          LetterType.TYPE4,
+          LetterType.TYPE5,
+          LetterType.TYPE6,
         ];
-        return order.indexOf(a) - order.indexOf(b);
+        return order.indexOf(a as LetterType) - order.indexOf(b as LetterType);
       });
-    case "endPosition":
+    case OptionPickerSortMethod.END_POSITION:
       return keys.sort((a, b) => {
-        // Sort positions in TKA order: alpha1-8, beta1-8, gamma1-16
-        const getPositionOrder = (pos: string): number => {
-          if (pos.startsWith("alpha")) {
-            const num = parseInt(pos.replace("alpha", ""), 10);
-            return num || 0;
-          } else if (pos.startsWith("beta")) {
-            const num = parseInt(pos.replace("beta", ""), 10);
-            return 8 + (num || 0);
-          } else if (pos.startsWith("gamma")) {
-            const num = parseInt(pos.replace("gamma", ""), 10);
-            return 16 + (num || 0);
-          }
-          return 999; // Unknown positions last
-        };
-
-        return getPositionOrder(a) - getPositionOrder(b);
+        // Sort grid positions logically
+        return String(a).localeCompare(String(b));
       });
-    case "reversals":
+    case OptionPickerSortMethod.REVERSALS:
       return keys.sort((a, b) => {
-        const order = ["continuous", "oneReversal", "twoReversals", "all"];
-        return order.indexOf(a) - order.indexOf(b);
+        const order = [
+          OptionPickerReversalFilter.CONTINUOUS,
+          OptionPickerReversalFilter.ONE_REVERSAL,
+          OptionPickerReversalFilter.TWO_REVERSALS,
+          OptionPickerReversalFilter.ALL,
+        ];
+        return (
+          order.indexOf(a as OptionPickerReversalFilter) -
+          order.indexOf(b as OptionPickerReversalFilter)
+        );
       });
     default:
       return keys.sort();
@@ -186,14 +163,14 @@ export function getSortedGroupKeys(
  * Get sorter function for options based on sort method
  */
 export function getSorter(
-  sortMethod: SortMethod,
+  sortMethod: OptionPickerSortMethod,
   sequence: PictographData[]
 ): (a: PictographData, b: PictographData) => number {
   switch (sortMethod) {
-    case "type":
+    case OptionPickerSortMethod.LETTER_TYPE:
       return (a, b) => {
-        const typeA = getLetterType(a.letter || null);
-        const typeB = getLetterType(b.letter || null);
+        const typeA = getLetterType(a.letter || Letter.A); // Default to Type1
+        const typeB = getLetterType(b.letter || Letter.A); // Default to Type1
         if (typeA !== typeB) {
           return typeA.localeCompare(typeB);
         }
@@ -202,23 +179,19 @@ export function getSorter(
         const letterB = b.letter || "";
         return letterA.localeCompare(letterB);
       };
-    case "endPosition":
+    case OptionPickerSortMethod.END_POSITION:
       return (a, b) => {
-        const posA =
-          typeof a.endPosition === "string"
-            ? a.endPosition
-            : typeof a.metadata?.endPosition === "string"
-              ? a.metadata.endPosition
-              : "";
-        const posB =
-          typeof b.endPosition === "string"
-            ? b.endPosition
-            : typeof b.metadata?.endPosition === "string"
-              ? b.metadata.endPosition
-              : "";
-        return posA.localeCompare(posB);
+        const endPosA = String(a.endPosition || "");
+        const endPosB = String(b.endPosition || "");
+        if (endPosA !== endPosB) {
+          return endPosA.localeCompare(endPosB);
+        }
+        // Within same end position, sort by letter
+        const letterA = a.letter || "";
+        const letterB = b.letter || "";
+        return letterA.localeCompare(letterB);
       };
-    case "reversals":
+    case OptionPickerSortMethod.REVERSALS:
       return (a, b) => {
         const reversalA = determineReversalCategory(sequence, a);
         const reversalB = determineReversalCategory(sequence, b);
@@ -246,9 +219,9 @@ export function getSorter(
 export function filterByReversals(
   options: PictographData[],
   sequence: PictographData[],
-  filter: ReversalFilter
+  filter: OptionPickerReversalFilter
 ): PictographData[] {
-  if (filter === "all") {
+  if (filter === OptionPickerReversalFilter.ALL) {
     return options;
   }
 
@@ -262,42 +235,42 @@ export function filterByReversals(
  * Get display name for a group key
  */
 export function getGroupDisplayName(
-  groupKey: string,
-  sortMethod: SortMethod
+  groupKey: OptionPickerGroupKey,
+  sortMethod: OptionPickerSortMethod
 ): string {
   switch (sortMethod) {
-    case "type":
+    case OptionPickerSortMethod.LETTER_TYPE:
       switch (groupKey) {
-        case "Type1":
+        case LetterType.TYPE1:
           return "Type 1: Dual-Shift";
-        case "Type2":
+        case LetterType.TYPE2:
           return "Type 2: Shift";
-        case "Type3":
+        case LetterType.TYPE3:
           return "Type 3: Dash";
-        case "Type4":
+        case LetterType.TYPE4:
           return "Type 4: Static";
-        case "Type5":
+        case LetterType.TYPE5:
           return "Type 5: Dash Static";
-        case "Type6":
+        case LetterType.TYPE6:
           return "Type 6: Flip";
         default:
-          return groupKey;
+          return String(groupKey);
       }
-    case "endPosition":
+    case OptionPickerSortMethod.END_POSITION:
       return `End Position: ${groupKey}`;
-    case "reversals":
+    case OptionPickerSortMethod.REVERSALS:
       switch (groupKey) {
-        case "continuous":
+        case OptionPickerReversalFilter.CONTINUOUS:
           return "Continuous";
-        case "oneReversal":
+        case OptionPickerReversalFilter.ONE_REVERSAL:
           return "One Reversal";
-        case "twoReversals":
+        case OptionPickerReversalFilter.TWO_REVERSALS:
           return "Two Reversals";
         default:
-          return groupKey;
+          return String(groupKey);
       }
     default:
-      return groupKey;
+      return String(groupKey);
   }
 }
 
@@ -317,18 +290,12 @@ export function getOptionsSummary(options: PictographData[]): {
 
   options.forEach((option) => {
     // Count by type
-    const type = getLetterType(option.letter || null);
+    const type = getLetterType(option.letter || Letter.A);
     summary.byType[type] = (summary.byType[type] || 0) + 1;
 
     // Count by end position
-    const endPosition =
-      typeof option.endPosition === "string"
-        ? option.endPosition
-        : typeof option.metadata?.endPosition === "string"
-          ? option.metadata.endPosition
-          : "Unknown";
-    summary.byEndPosition[endPosition] =
-      (summary.byEndPosition[endPosition] || 0) + 1;
+    const endPos = String(option.endPosition || "Unknown");
+    summary.byEndPosition[endPos] = (summary.byEndPosition[endPos] || 0) + 1;
   });
 
   return summary;

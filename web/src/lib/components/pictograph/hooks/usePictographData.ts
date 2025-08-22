@@ -7,12 +7,7 @@
  * REFACTORED: Updated to use proper Svelte 5 runes with reactive getters.
  */
 
-import type {
-  ArrowData,
-  MotionColor,
-  PictographData,
-  PropData,
-} from "$lib/domain";
+import type { MotionColor, MotionData, PictographData } from "$lib/domain";
 
 export interface PictographDataProps {
   pictographData?: PictographData | null;
@@ -25,10 +20,12 @@ export interface PictographDataState {
   get hasValidData(): boolean;
   /** Get the display letter for the pictograph */
   get displayLetter(): string | null;
-  /** Get filtered arrows ready for rendering */
-  get arrowsToRender(): Array<{ color: MotionColor; arrowData: ArrowData }>;
-  /** Get filtered props ready for rendering */
-  get propsToRender(): Array<{ color: MotionColor; propData: PropData }>;
+  /** Get motion data ready for rendering (embedded approach) */
+  get motionsToRender(): Array<{ color: MotionColor; motionData: MotionData }>;
+  /** @deprecated Use motionsToRender instead - kept for backward compatibility */
+  get arrowsToRender(): Array<{ color: MotionColor; motionData: MotionData }>;
+  /** @deprecated Use motionsToRender instead - kept for backward compatibility */
+  get propsToRender(): Array<{ color: MotionColor; motionData: MotionData }>;
 }
 
 /**
@@ -58,30 +55,28 @@ export function usePictographData(
       return null;
     },
 
-    // Get arrows to render
-    get arrowsToRender() {
+    // Get motions to render (embedded approach - single source of truth)
+    get motionsToRender() {
       const data = this.effectivePictographData;
-      if (!data?.arrows) return [];
+      if (!data?.motions) return [];
 
-      return Object.entries(data.arrows)
-        .filter(([_, arrowData]) => arrowData != null)
-        .map(([color, arrowData]) => ({
+      return Object.entries(data.motions)
+        .filter(([_, motionData]) => motionData?.isVisible)
+        .filter(([, motionData]) => motionData !== null)
+        .map(([color, motionData]) => ({
           color: color as MotionColor,
-          arrowData: arrowData as ArrowData,
+          motionData: motionData,
         }));
     },
 
-    // Get props to render
-    get propsToRender() {
-      const data = this.effectivePictographData;
-      if (!data?.props) return [];
+    // Backward compatibility - arrows now come from motions
+    get arrowsToRender() {
+      return this.motionsToRender;
+    },
 
-      return Object.entries(data.props)
-        .filter(([_, propData]) => propData != null)
-        .map(([color, propData]) => ({
-          color: color as MotionColor,
-          propData: propData as PropData,
-        }));
+    // Backward compatibility - props now come from motions
+    get propsToRender() {
+      return this.motionsToRender;
     },
   };
 }

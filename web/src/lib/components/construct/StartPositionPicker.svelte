@@ -197,7 +197,7 @@
     />
   {:else}
     <PictographGrid
-      pictographs={startPositions}
+      pictographDataSet={startPositions}
       selectedPictograph={selectedStartPos}
       onPictographSelect={handleSelect}
     />

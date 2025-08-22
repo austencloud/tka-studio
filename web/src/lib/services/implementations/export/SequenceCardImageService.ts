@@ -519,7 +519,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
       containerSVG.appendChild(beatCountText);
 
       // Add difficulty if available
-      if (sequence.difficulty_level && options.includeDifficulty) {
+      if (sequence.difficultyLevel && options.includeDifficulty) {
         const difficultyText = document.createElementNS(
           "http://www.w3.org/2000/svg",
           "text"
@@ -530,7 +530,7 @@ export class SequenceCardImageService implements ISequenceCardImageService {
         difficultyText.setAttribute("font-family", "system-ui, sans-serif");
         difficultyText.setAttribute("font-size", "14");
         difficultyText.setAttribute("fill", "#666");
-        difficultyText.textContent = sequence.difficulty_level;
+        difficultyText.textContent = sequence.difficultyLevel;
         containerSVG.appendChild(difficultyText);
       }
 

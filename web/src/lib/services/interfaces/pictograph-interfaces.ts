@@ -5,16 +5,17 @@
  * of sequences and beats.
  */
 
-import type {
-  ArrowData,
-  BeatData,
-  PictographData,
-  MotionData,
-} from "./domain-types";
+import type { GridPointData as RawGridData } from "../../data/gridCoordinates.js";
 import type { GridMode } from "../../domain";
 import { MotionColor } from "../../domain/enums";
-import type { GridPointData as RawGridData } from "../../data/gridCoordinates.js";
-import type { ArrowPosition, GridData } from "./core-types";
+import type { ArrowPosition } from "../positioning/types";
+import type { GridData } from "./core-types";
+import type {
+  ArrowPlacementData,
+  BeatData,
+  MotionData,
+  PictographData,
+} from "./domain-types";
 
 // ============================================================================
 // SHARED TYPES (imported from core-types to avoid duplication)
@@ -37,7 +38,7 @@ export interface IPictographService {
   renderPictograph(data: PictographData): Promise<SVGElement>;
   updateArrow(
     pictographId: string,
-    arrowData: ArrowData
+    arrowData: ArrowPlacementData
   ): Promise<PictographData>;
 }
 
@@ -80,9 +81,12 @@ export interface IArrowRenderingService {
   ): Promise<void>;
 
   // Methods extracted from Arrow.svelte business logic
-  getArrowPath(arrowData: ArrowData, motionData: MotionData): string | null;
-  loadArrowSvgData(
-    arrowData: ArrowData,
+  getArrowPath(
+    arrowData: ArrowPlacementData,
+    motionData: MotionData
+  ): string | null;
+  loadArrowPlacementData(
+    arrowData: ArrowPlacementData,
     motionData: MotionData
   ): Promise<{
     imageSrc: string;
@@ -115,4 +119,144 @@ export interface IOverlayRenderingService {
 export interface IDataTransformationService {
   beatToPictographData(beat: BeatData): PictographData;
   adaptGridData(rawGridData: RawGridData, mode: GridMode): GridData;
+}
+
+// ============================================================================
+// ARROW RENDERING INTERFACES
+// ============================================================================
+
+/**
+ * Arrow positioning service for rendering arrows in SVG containers
+ */
+export interface IArrowPositioningService {
+  /**
+   * Render arrow at sophisticated calculated position using real SVG assets
+   */
+  renderArrowAtPosition(
+    svg: SVGElement,
+    color: MotionColor,
+    position: ArrowPosition,
+    motionData: MotionData | undefined
+  ): Promise<void>;
+}
+
+/**
+ * Arrow path resolution service for determining correct SVG file paths
+ */
+export interface IArrowPathResolutionService {
+  /**
+   * Get arrow SVG path based on motion type and properties
+   */
+  getArrowPath(
+    arrowData: ArrowPlacementData,
+    motionData: MotionData
+  ): string | null;
+
+  /**
+   * Get the correct arrow SVG path based on motion data (optimized version)
+   */
+  getArrowSvgPath(motionData: MotionData | undefined): string;
+}
+
+/**
+ * SVG color transformation service for applying colors to SVG elements
+ */
+export interface ISvgColorTransformationService {
+  /**
+   * Apply color transformation to SVG text content
+   */
+  applyColorToSvg(svgText: string, color: MotionColor): string;
+
+  /**
+   * Apply color transformation to arrow SVG element
+   */
+  applyArrowColorTransformation(
+    svgElement: SVGElement,
+    color: MotionColor
+  ): void;
+
+  /**
+   * Get fill and stroke colors for a given motion color
+   */
+  getColorsForMotionColor(color: MotionColor): {
+    fill: string;
+    stroke: string;
+  };
+}
+
+/**
+ * Arrow SVG data structure
+ */
+export interface ArrowSvgData {
+  imageSrc: string;
+  viewBox: { width: number; height: number };
+  center: { x: number; y: number };
+}
+
+/**
+ * SVG loading service for fetching and caching arrow SVG files
+ */
+export interface ISvgLoadingService {
+  /**
+   * Load arrow SVG data with color transformation
+   */
+  loadArrowPlacementData(
+    arrowData: ArrowPlacementData,
+    motionData: MotionData
+  ): Promise<ArrowSvgData>;
+
+  /**
+   * Load arrow SVG data (alias method for DI container compatibility)
+   */
+  loadArrowSvgData(
+    arrowData: ArrowPlacementData,
+    motionData: MotionData
+  ): Promise<ArrowSvgData>;
+
+  /**
+   * Fetch SVG content from a given path
+   */
+  fetchSvgContent(path: string): Promise<string>;
+}
+
+/**
+ * Fallback arrow service for rendering when sophisticated positioning fails
+ */
+export interface IFallbackArrowService {
+  /**
+   * Render arrow using fallback positioning when main service fails
+   */
+  renderFallbackArrow(
+    svg: SVGElement,
+    color: MotionColor,
+    position: ArrowPosition
+  ): void;
+
+  /**
+   * Create enhanced arrow SVG path with sophisticated styling
+   */
+  createEnhancedArrowPath(color: MotionColor): SVGElement;
+}
+
+/**
+ * SVG dimensions data structure
+ */
+export interface SVGDimensions {
+  viewBox: { width: number; height: number };
+  center: { x: number; y: number };
+}
+
+/**
+ * SVG parsing service for extracting dimensions and processing SVG content
+ */
+export interface ISvgParsingService {
+  /**
+   * Parse SVG content and extract dimensions and center point
+   */
+  parseArrowSvg(svgText: string): SVGDimensions;
+
+  /**
+   * Extract SVG content (everything inside the <svg> tags)
+   */
+  extractSvgContent(svgText: string): string;
 }

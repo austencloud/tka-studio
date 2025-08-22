@@ -8,7 +8,7 @@ Integrates panel management service with runes for:
 - Reactive UI updates
 -->
 <script lang="ts">
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
   import { NavigationMode } from "$lib/domain/browse";
   import { resolve } from "$lib/services/bootstrap";
   import type {
@@ -24,16 +24,14 @@ Integrates panel management service with runes for:
   import type { IPanelManagementService } from "$lib/services/interfaces/panel-interfaces";
   import { createBrowseState } from "$lib/state/browse-state.svelte";
   import {
-    createPanelState,
     BROWSE_TAB_PANEL_CONFIGS,
+    createPanelState,
   } from "$lib/state/panel-state.svelte";
-  import { onMount, onDestroy } from "svelte";
-
+  import { onDestroy, onMount } from "svelte";
   // Enhanced components
+  import AnimationPanel from "./browse/AnimationPanel.svelte";
   import BrowseLayoutEnhanced from "./browse/BrowseLayout.svelte";
   import NavigationSidebar from "./browse/NavigationSidebar.svelte";
-  import AnimationPanel from "./browse/AnimationPanel.svelte";
-
   // Existing components
   import DeleteConfirmationDialog from "./browse/DeleteConfirmationDialog.svelte";
   import ErrorBanner from "./browse/ErrorBanner.svelte";
@@ -42,7 +40,6 @@ Integrates panel management service with runes for:
   import LoadingOverlay from "./browse/LoadingOverlay.svelte";
   import PanelContainer from "./browse/PanelContainer.svelte";
   import SequenceBrowserPanel from "./browse/sequence-browser/SequenceBrowserPanel.svelte";
-
   // Event handlers
   import { createBrowseEventHandlers } from "./browse/browse-event-handlers";
   import { createNavigationEventHandlers } from "./browse/navigation-event-handlers";
@@ -87,10 +84,8 @@ Integrates panel management service with runes for:
   // ✅ PURE RUNES: Local UI state
   let currentPanelIndex = $state(0); // 0 = filter selection, 1 = sequence browser
   let showFullscreenViewer = $state(false); // Fullscreen sequence viewer state
-  let fullscreenSequence = $state<BrowseSequenceMetadata | undefined>(
-    undefined
-  ); // Current sequence for fullscreen
-  let animationSequence = $state<BrowseSequenceMetadata | null>(null); // Current sequence for animation
+  let fullscreenSequence = $state<SequenceData | undefined>(undefined); // Current sequence for fullscreen
+  let animationSequence = $state<SequenceData | null>(null); // Current sequence for animation
 
   // ✅ DERIVED RUNES: Computed UI state from browse state
   let selectedFilter = $derived(browseState.currentFilter);
@@ -166,10 +161,7 @@ Integrates panel management service with runes for:
   }
 
   // ✅ SEQUENCE ACTION HANDLER: Enhanced with animation panel integration
-  function handleSequenceAction(
-    action: string,
-    sequence: BrowseSequenceMetadata
-  ) {
+  function handleSequenceAction(action: string, sequence: SequenceData) {
     if (action === "animate") {
       // Show animation panel and set sequence
       animationSequence = sequence;

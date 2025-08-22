@@ -5,9 +5,10 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import { GridMode } from "$lib/domain";
+import { GridMode, MotionType } from "$lib/domain";
 import type { PictographData } from "$lib/domain";
-import type { LetterMapping, MotionType } from "$lib/domain/codex/types";
+
+import type { LetterMapping } from "$lib/domain/codex/types";
 import type { ILetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
 import type { ICsvLoaderService } from "./CsvLoaderService";
 import type { ICSVParserService, ParsedCsvRow } from "./CSVParserService";

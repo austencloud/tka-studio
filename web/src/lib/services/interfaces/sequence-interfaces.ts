@@ -52,14 +52,44 @@ export interface ISequenceService {
     beatIndex: number,
     beatData: BeatData
   ): Promise<void>;
-  addBeat(sequenceId: string, beatData?: Partial<BeatData>): Promise<void>;
-  setSequenceStartPosition(
-    sequenceId: string,
-    startPosition: BeatData
-  ): Promise<void>;
-  deleteSequence(id: string): Promise<void>;
   getSequence(id: string): Promise<SequenceData | null>;
   getAllSequences(): Promise<SequenceData[]>;
+}
+
+/**
+ * Sequence deletion operations for all types of deletion activities
+ */
+export interface ISequenceDeletionService {
+  deleteSequence(sequenceId: string): Promise<void>;
+  removeBeat(sequenceId: string, beatIndex: number): Promise<SequenceData>;
+  clearSequenceBeats(sequenceId: string): Promise<SequenceData>;
+  removeBeats(sequenceId: string, beatIndices: number[]): Promise<SequenceData>;
+  removeBeatAndFollowing(
+    sequenceId: string,
+    startIndex: number
+  ): Promise<SequenceData>;
+}
+
+/**
+ * Workbench-specific beat operations for sequence construction
+ */
+export interface IWorkbenchBeatOperationsService {
+  addBeat(
+    sequenceId: string,
+    beatData?: Partial<BeatData>
+  ): Promise<SequenceData>;
+  setConstructionStartPosition(
+    sequenceId: string,
+    startPosition: BeatData
+  ): Promise<SequenceData>;
+}
+
+/**
+ * Sequence import operations for external data sources
+ */
+export interface ISequenceImportService {
+  importFromPNG(id: string): Promise<SequenceData | null>;
+  convertPngMetadata(id: string, metadata: unknown[]): Promise<SequenceData>;
 }
 
 /**

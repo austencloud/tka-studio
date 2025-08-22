@@ -110,7 +110,7 @@ class SequenceStateService {
     if (!this.#currentSequence) return;
 
     this.#currentSequence = updateSequenceData(this.#currentSequence, {
-      startPosition: startPosition,
+      startingPositionBeat: startPosition,
     });
   }
 

@@ -15,46 +15,47 @@ import {
 } from "$lib/domain/enums";
 
 export class PositionMappingService {
-  // Position mapping from (blue_end_loc, red_end_loc) to position key
-  private readonly POSITIONS_MAP: Record<string, GridPosition> = {
+  // Position mapping from (blue_location, red_location) to grid position
+  // Using actual Location enums as keys for type safety
+  private readonly POSITIONS_MAP = new Map<string, GridPosition>([
     // Alpha positions - hands in opposite/complementary directions
-    "s,n": GridPosition.ALPHA1,
-    "sw,ne": GridPosition.ALPHA2,
-    "w,e": GridPosition.ALPHA3,
-    "nw,se": GridPosition.ALPHA4,
-    "n,s": GridPosition.ALPHA5,
-    "ne,sw": GridPosition.ALPHA6,
-    "e,w": GridPosition.ALPHA7,
-    "se,nw": GridPosition.ALPHA8,
+    [`${Location.SOUTH},${Location.NORTH}`, GridPosition.ALPHA1],
+    [`${Location.SOUTHWEST},${Location.NORTHEAST}`, GridPosition.ALPHA2],
+    [`${Location.WEST},${Location.EAST}`, GridPosition.ALPHA3],
+    [`${Location.NORTHWEST},${Location.SOUTHEAST}`, GridPosition.ALPHA4],
+    [`${Location.NORTH},${Location.SOUTH}`, GridPosition.ALPHA5],
+    [`${Location.NORTHEAST},${Location.SOUTHWEST}`, GridPosition.ALPHA6],
+    [`${Location.EAST},${Location.WEST}`, GridPosition.ALPHA7],
+    [`${Location.SOUTHEAST},${Location.NORTHWEST}`, GridPosition.ALPHA8],
 
     // Beta positions - both hands same direction
-    "n,n": GridPosition.BETA1,
-    "ne,ne": GridPosition.BETA2,
-    "e,e": GridPosition.BETA3,
-    "se,se": GridPosition.BETA4,
-    "s,s": GridPosition.BETA5,
-    "sw,sw": GridPosition.BETA6,
-    "w,w": GridPosition.BETA7,
-    "nw,nw": GridPosition.BETA8,
+    [`${Location.NORTH},${Location.NORTH}`, GridPosition.BETA1],
+    [`${Location.NORTHEAST},${Location.NORTHEAST}`, GridPosition.BETA2],
+    [`${Location.EAST},${Location.EAST}`, GridPosition.BETA3],
+    [`${Location.SOUTHEAST},${Location.SOUTHEAST}`, GridPosition.BETA4],
+    [`${Location.SOUTH},${Location.SOUTH}`, GridPosition.BETA5],
+    [`${Location.SOUTHWEST},${Location.SOUTHWEST}`, GridPosition.BETA6],
+    [`${Location.WEST},${Location.WEST}`, GridPosition.BETA7],
+    [`${Location.NORTHWEST},${Location.NORTHWEST}`, GridPosition.BETA8],
 
     // Gamma positions - mixed/varied combinations
-    "w,n": GridPosition.GAMMA1,
-    "nw,ne": GridPosition.GAMMA2,
-    "n,e": GridPosition.GAMMA3,
-    "ne,se": GridPosition.GAMMA4,
-    "e,s": GridPosition.GAMMA5,
-    "se,sw": GridPosition.GAMMA6,
-    "s,w": GridPosition.GAMMA7,
-    "sw,nw": GridPosition.GAMMA8,
-    "e,n": GridPosition.GAMMA9,
-    "se,ne": GridPosition.GAMMA10,
-    "s,e": GridPosition.GAMMA11,
-    "sw,se": GridPosition.GAMMA12,
-    "w,s": GridPosition.GAMMA13,
-    "nw,sw": GridPosition.GAMMA14,
-    "n,w": GridPosition.GAMMA15,
-    "ne,nw": GridPosition.GAMMA16,
-  };
+    [`${Location.WEST},${Location.NORTH}`, GridPosition.GAMMA1],
+    [`${Location.NORTHWEST},${Location.NORTHEAST}`, GridPosition.GAMMA2],
+    [`${Location.NORTH},${Location.EAST}`, GridPosition.GAMMA3],
+    [`${Location.NORTHEAST},${Location.SOUTHEAST}`, GridPosition.GAMMA4],
+    [`${Location.EAST},${Location.SOUTH}`, GridPosition.GAMMA5],
+    [`${Location.SOUTHEAST},${Location.SOUTHWEST}`, GridPosition.GAMMA6],
+    [`${Location.SOUTH},${Location.WEST}`, GridPosition.GAMMA7],
+    [`${Location.SOUTHWEST},${Location.NORTHWEST}`, GridPosition.GAMMA8],
+    [`${Location.EAST},${Location.NORTH}`, GridPosition.GAMMA9],
+    [`${Location.SOUTHEAST},${Location.NORTHEAST}`, GridPosition.GAMMA10],
+    [`${Location.SOUTH},${Location.EAST}`, GridPosition.GAMMA11],
+    [`${Location.SOUTHWEST},${Location.SOUTHEAST}`, GridPosition.GAMMA12],
+    [`${Location.WEST},${Location.SOUTH}`, GridPosition.GAMMA13],
+    [`${Location.NORTHWEST},${Location.SOUTHWEST}`, GridPosition.GAMMA14],
+    [`${Location.NORTH},${Location.WEST}`, GridPosition.GAMMA15],
+    [`${Location.NORTHEAST},${Location.NORTHWEST}`, GridPosition.GAMMA16],
+  ]);
 
   // Reverse mapping from position to hand locations
   private readonly LOCATION_PAIRS_MAP: Record<
@@ -63,13 +64,13 @@ export class PositionMappingService {
   >;
 
   constructor() {
-    // Build reverse mapping
+    // Build reverse mapping from the Map entries
     this.LOCATION_PAIRS_MAP = {} as Record<GridPosition, [Location, Location]>;
 
-    Object.entries(this.POSITIONS_MAP).forEach(([locPair, position]) => {
-      const [blueStr, redStr] = locPair.split(",");
-      const blueLocation = this.stringToLocation(blueStr);
-      const redLocation = this.stringToLocation(redStr);
+    this.POSITIONS_MAP.forEach((position, locationKey) => {
+      const [blueLocationStr, redLocationStr] = locationKey.split(",");
+      const blueLocation = blueLocationStr as Location;
+      const redLocation = redLocationStr as Location;
       this.LOCATION_PAIRS_MAP[position] = [blueLocation, redLocation];
     });
   }
@@ -92,66 +93,14 @@ export class PositionMappingService {
     blueLocation: Location,
     redLocation: Location
   ): GridPosition {
-    const key = `${this.locationToString(blueLocation)},${this.locationToString(redLocation)}`;
-    const position = this.POSITIONS_MAP[key];
+    const key = `${blueLocation},${redLocation}`;
+    const position = this.POSITIONS_MAP.get(key);
     if (!position) {
       throw new Error(
         `No position found for locations: ${blueLocation}, ${redLocation}`
       );
     }
     return position;
-  }
-
-  /**
-   * Convert location enum to CSV string format
-   */
-  private locationToString(location: Location): string {
-    switch (location) {
-      case Location.NORTH:
-        return "n";
-      case Location.NORTHEAST:
-        return "ne";
-      case Location.EAST:
-        return "e";
-      case Location.SOUTHEAST:
-        return "se";
-      case Location.SOUTH:
-        return "s";
-      case Location.SOUTHWEST:
-        return "sw";
-      case Location.WEST:
-        return "w";
-      case Location.NORTHWEST:
-        return "nw";
-      default:
-        throw new Error(`Unknown location: ${location}`);
-    }
-  }
-
-  /**
-   * Convert CSV string format to location enum
-   */
-  stringToLocation(str: string): Location {
-    switch (str) {
-      case "n":
-        return Location.NORTH;
-      case "ne":
-        return Location.NORTHEAST;
-      case "e":
-        return Location.EAST;
-      case "se":
-        return Location.SOUTHEAST;
-      case "s":
-        return Location.SOUTH;
-      case "sw":
-        return Location.SOUTHWEST;
-      case "w":
-        return Location.WEST;
-      case "nw":
-        return Location.NORTHWEST;
-      default:
-        throw new Error(`Unknown location string: ${str}`);
-    }
   }
 
   /**
@@ -231,5 +180,39 @@ export class PositionMappingService {
       throw new Error(`Unknown grid position: ${str}`);
     }
     return position;
+  }
+
+  /**
+   * Convert CSV string format to location enum
+   */
+  stringToLocation(str: string): Location {
+    switch (str.toLowerCase()) {
+      case "n":
+      case "north":
+        return Location.NORTH;
+      case "e":
+      case "east":
+        return Location.EAST;
+      case "s":
+      case "south":
+        return Location.SOUTH;
+      case "w":
+      case "west":
+        return Location.WEST;
+      case "ne":
+      case "northeast":
+        return Location.NORTHEAST;
+      case "se":
+      case "southeast":
+        return Location.SOUTHEAST;
+      case "sw":
+      case "southwest":
+        return Location.SOUTHWEST;
+      case "nw":
+      case "northwest":
+        return Location.NORTHWEST;
+      default:
+        throw new Error(`Unknown location: ${str}`);
+    }
   }
 }

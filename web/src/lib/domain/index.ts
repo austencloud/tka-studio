@@ -8,15 +8,18 @@
 export * from "./enums";
 
 // Core Models
-export * from "./MotionData";
-export * from "./GridData";
-export * from "./ArrowData";
-export * from "./PropData";
-export * from "./PropPlacementData";
-export * from "./PictographData";
+export * from "./ArrowPlacementData";
 export * from "./BeatData";
-export * from "./SequenceData";
+export * from "./GridData";
+export * from "./Letter";
+export * from "./MotionData";
 export * from "./pageLayoutTypes";
+export * from "./PictographData";
+export * from "./PropPlacementData";
+export * from "./SequenceData";
+
+// Domain Utilities
+export * from "./utils/LetterBorderUtils";
 
 // Browse Models
 export * from "./browse";

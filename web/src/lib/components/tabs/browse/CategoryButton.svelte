@@ -52,7 +52,7 @@
     switch (visualType) {
       case "gridMode":
         return `/images/grid/${value.toLowerCase()}_grid.svg`;
-      case "starting_position":
+      case "startPosition":
         return `/images/position_images/${value.toLowerCase()}.png`;
       case "difficulty": {
         // Map difficulty names to levels
@@ -70,7 +70,7 @@
 
   // Check if this visual type should display images
   function shouldShowImage(visualType: string) {
-    return ["gridMode", "starting_position", "difficulty"].includes(visualType);
+    return ["gridMode", "startPosition", "difficulty"].includes(visualType);
   }
 </script>
 
@@ -173,7 +173,7 @@
     min-height: 140px;
   }
 
-  /* Image-based buttons - unified consistent styling for gridMode, starting_position, and difficulty */
+  /* Image-based buttons - unified consistent styling for gridMode, startPosition, and difficulty */
   .category-button.has-image {
     min-height: 280px;
     max-height: 320px;

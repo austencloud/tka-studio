@@ -69,6 +69,12 @@ export enum Location {
   NORTHWEST = "nw",
 }
 
+export enum GridPositionGroup {
+  ALPHA = "alpha",
+  BETA = "beta",
+  GAMMA = "gamma",
+}
+
 export enum GridPosition {
   ALPHA1 = "alpha1",
   ALPHA2 = "alpha2",
@@ -134,10 +140,8 @@ export enum PropType {
   BUUGENG = "buugeng",
   FAN = "fan",
   TRIAD = "triad",
-  FRACTALS = "fractals",
   MINIHOOP = "minihoop",
-  BIGBALL = "bigball",
-  CRYSTAL = "crystal",
+  POI = "poi",
 }
 
 export enum VTGMode {
@@ -165,11 +169,11 @@ export enum LetterType {
 }
 
 export enum GlyphType {
-  TKA = "TKA",
-  REVERSALS = "Reversals",
-  VTG = "VTG",
-  ELEMENTAL = "Elemental",
-  POSITIONS = "Positions",
+  TKA = "tka",
+  REVERSALS = "reversals",
+  VTG = "vtg",
+  ELEMENTAL = "elemental",
+  POSITIONS = "positions",
 }
 
 export enum SliceSize {
@@ -187,15 +191,58 @@ export enum CAPComponent {
 
 // Legacy CAP types for backward compatibility
 export enum CAPType {
-  STRICT_ROTATED = "strict_rotated",
-  STRICT_MIRRORED = "strict_mirrored",
-  STRICT_SWAPPED = "strict_swapped",
-  STRICT_COMPLEMENTARY = "strict_complementary",
-  SWAPPED_COMPLEMENTARY = "swapped_complementary",
-  ROTATED_COMPLEMENTARY = "rotated_complementary",
-  MIRRORED_SWAPPED = "mirrored_swapped",
-  MIRRORED_COMPLEMENTARY = "mirrored_complementary",
-  ROTATED_SWAPPED = "rotated_swapped",
-  MIRRORED_ROTATED = "mirrored_rotated",
-  MIRRORED_COMPLEMENTARY_ROTATED = "mirrored_complementary_rotated",
+  STRICT_ROTATED = "strictRotated",
+  STRICT_MIRRORED = "strictMirrored",
+  STRICT_SWAPPED = "strictSwapped",
+  STRICT_COMPLEMENTARY = "strictComplementary",
+  SWAPPED_COMPLEMENTARY = "swappedComplementary",
+  ROTATED_COMPLEMENTARY = "rotatedComplementary",
+  MIRRORED_SWAPPED = "mirroredSwapped",
+  MIRRORED_COMPLEMENTARY = "mirroredComplementary",
+  ROTATED_SWAPPED = "rotatedSwapped",
+  MIRRORED_ROTATED = "mirroredRotated",
+  MIRRORED_COMPLEMENTARY_ROTATED = "mirroredComplementaryRotated",
+}
+
+export enum OptionPickerReversalFilter {
+  CONTINUOUS = "continuous",
+  ONE_REVERSAL = "oneReversal",
+  TWO_REVERSALS = "twoReversals",
+  ALL = "all",
+}
+
+export enum OptionPickerSortMethod {
+  LETTER_TYPE = "letterType",
+  END_POSITION = "endPosition",
+  REVERSALS = "reversals",
+}
+
+export enum DeviceType {
+  SMALL_MOBILE = "smallMobile",
+  MOBILE = "mobile",
+  TABLET = "tablet",
+  DESKTOP = "desktop",
+  LARGE_DESKTOP = "largeDesktop",
+}
+
+export enum ContainerAspect {
+  TALL = "tall",
+  SQUARE = "square",
+  WIDE = "wide",
+  WIDISH = "widish",
+}
+
+export enum ReversalFilter {
+  ALL = "all",
+  CONTINUOUS = "continuous",
+  ONE_REVERSAL = "oneReversal",
+  TWO_REVERSALS = "twoReversals",
+}
+
+export enum LayoutCategory {
+  SINGLE_ITEM = "singleItem",
+  TWO_ITEMS = "twoItems",
+  FEW_ITEMS = "fewItems",
+  MEDIUM_ITEMS = "mediumItems",
+  MANY_ITEMS = "manyItems",
 }

@@ -7,9 +7,9 @@
 
 export enum SortMethod {
   ALPHABETICAL = "alphabetical",
-  DATE_ADDED = "date_added",
-  DIFFICULTY_LEVEL = "difficulty_level",
-  SEQUENCE_LENGTH = "sequence_length",
+  dateAdded = "dateAdded",
+  difficultyLevel = "difficultyLevel",
+  sequenceLength = "sequenceLength",
   AUTHOR = "author",
   POPULARITY = "popularity",
 }
@@ -27,18 +27,18 @@ export const SORT_CONFIGS: Record<SortMethod, SortConfig> = {
     direction: "asc",
     displayName: "Name A-Z",
   },
-  [SortMethod.DATE_ADDED]: {
-    method: SortMethod.DATE_ADDED,
+  [SortMethod.dateAdded]: {
+    method: SortMethod.dateAdded,
     direction: "desc",
     displayName: "Recently Added",
   },
-  [SortMethod.DIFFICULTY_LEVEL]: {
-    method: SortMethod.DIFFICULTY_LEVEL,
+  [SortMethod.difficultyLevel]: {
+    method: SortMethod.difficultyLevel,
     direction: "asc",
     displayName: "Difficulty",
   },
-  [SortMethod.SEQUENCE_LENGTH]: {
-    method: SortMethod.SEQUENCE_LENGTH,
+  [SortMethod.sequenceLength]: {
+    method: SortMethod.sequenceLength,
     direction: "asc",
     displayName: "Length",
   },

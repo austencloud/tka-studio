@@ -2,25 +2,25 @@
 Arrow Mirroring Test Route - Simple test for arrow positioning
 -->
 <script lang="ts">
-  import { onMount } from "svelte";
   import Pictograph from "$lib/components/pictograph/Pictograph.svelte";
   import type { PictographData } from "$lib/domain";
   import {
-    createPictographData,
-    createArrowData,
-    createMotionData,
+    createArrowPlacementData,
     createGridData,
+    createMotionData,
+    createPictographData,
   } from "$lib/domain";
   import { Letter } from "$lib/domain/Letter";
   import {
     GridMode,
+    GridPosition,
+    Location,
     MotionColor,
     MotionType,
-    Location,
     Orientation,
     RotationDirection,
-    GridPosition,
   } from "$lib/domain/enums";
+  import { onMount } from "svelte";
 
   // Test state
   let ccwPictograph = $state<PictographData | null>(null);
@@ -39,16 +39,8 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
         endPosition: GridPosition.ALPHA7,
         gridData: createGridData({ gridMode: GridMode.DIAMOND }),
         arrows: {
-          blue: createArrowData({
-            // ✅ FIXED: Only arrow-specific properties, motion data comes from MotionData
-            arrowLocation: null, // Will be calculated by positioning system
-            isVisible: true,
-          }),
-          red: createArrowData({
-            // ✅ FIXED: Only arrow-specific properties, motion data comes from MotionData
-            arrowLocation: null, // Will be calculated by positioning system
-            isVisible: true,
-          }),
+          blue: createArrowPlacementData({}),
+          red: createArrowPlacementData({}),
         },
         motions: {
           blue: createMotionData({
@@ -81,16 +73,8 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
         endPosition: GridPosition.ALPHA3,
         gridData: createGridData({ gridMode: GridMode.DIAMOND }),
         arrows: {
-          blue: createArrowData({
-            // ✅ FIXED: Only arrow-specific properties, motion data comes from MotionData
-            arrowLocation: null, // Will be calculated by positioning system
-            isVisible: true,
-          }),
-          red: createArrowData({
-            // ✅ FIXED: Only arrow-specific properties, motion data comes from MotionData
-            arrowLocation: null, // Will be calculated by positioning system
-            isVisible: true,
-          }),
+          blue: createArrowPlacementData({}),
+          red: createArrowPlacementData({}),
         },
         motions: {
           blue: createMotionData({

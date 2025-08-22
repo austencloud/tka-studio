@@ -6,7 +6,11 @@
  * Uses PropPlacementService for placement calculations following separation of concerns.
  */
 
-import type { PropData, MotionData, PictographData } from "$lib/domain";
+import type {
+  PropPlacementData,
+  MotionData,
+  PictographData,
+} from "$lib/domain";
 import { MotionColor } from "$lib/domain/enums";
 import { PropPlacementService } from "../positioning/PropPlacementService";
 import type { IPropPlacementService } from "../positioning/PropPlacementService";
@@ -25,7 +29,7 @@ export interface PropRenderData {
 
 export interface IPropCoordinatorService {
   calculatePropRenderData(
-    propData: PropData,
+    PropPlacementData: PropPlacementData,
     motionData?: MotionData,
     pictographData?: PictographData // ✅ SIMPLIFIED: Complete pictograph data contains gridMode
   ): Promise<PropRenderData>;
@@ -47,7 +51,7 @@ export class PropCoordinatorService implements IPropCoordinatorService {
   }
 
   async calculatePropRenderData(
-    propData: PropData,
+    PropPlacementData: PropPlacementData,
     motionData?: MotionData,
     pictographData?: PictographData
   ): Promise<PropRenderData> {
@@ -74,7 +78,7 @@ export class PropCoordinatorService implements IPropCoordinatorService {
 
       // Load SVG data using motion data for color (single source of truth)
       console.log("✅ About to load SVG data");
-      const svgData = await this.loadSvgData(propData, motionData);
+      const svgData = await this.loadSvgData(PropPlacementData, motionData);
       console.log("✅ SVG data loaded:", svgData);
 
       const result = {
@@ -106,7 +110,7 @@ export class PropCoordinatorService implements IPropCoordinatorService {
   }
 
   private async loadSvgData(
-    propData: PropData,
+    propData: PropPlacementData,
     motionData?: MotionData
   ): Promise<{
     svgContent: string;
@@ -115,7 +119,7 @@ export class PropCoordinatorService implements IPropCoordinatorService {
   }> {
     // Use motionData.color as source of truth, fallback to blue
     const color = motionData?.color || MotionColor.BLUE;
-    const cacheKey = `${propData.propType}_${color}`;
+    const cacheKey = `${motionData?.propType || "staff"}_${color}`;
 
     if (this.svgCache.has(cacheKey)) {
       console.log(
@@ -129,7 +133,9 @@ export class PropCoordinatorService implements IPropCoordinatorService {
 
     console.log(`🔄 PropCoordinatorService: Creating new SVG for ${cacheKey}`);
 
-    const response = await fetch(`/images/props/${propData.propType}.svg`);
+    const response = await fetch(
+      `/images/props/${motionData?.propType || "staff"}.svg`
+    );
     if (!response.ok) throw new Error("Failed to fetch SVG");
 
     const originalSvgText = await response.text();

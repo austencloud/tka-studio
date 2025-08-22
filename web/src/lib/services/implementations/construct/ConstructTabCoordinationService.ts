@@ -13,7 +13,10 @@ import type {
   IConstructTabCoordinationService,
   IStartPositionService,
 } from "../../interfaces/application-interfaces";
-import type { ISequenceService } from "../../interfaces/sequence-interfaces";
+import type {
+  ISequenceService,
+  IWorkbenchBeatOperationsService,
+} from "../../interfaces/sequence-interfaces";
 
 // Import the singleton sequence state service for proper synchronization
 import { sequenceStateService } from "../../SequenceStateService.svelte";
@@ -36,7 +39,8 @@ export class ConstructTabCoordinationService
 
   constructor(
     private sequenceService: ISequenceService,
-    private startPositionService: IStartPositionService
+    private startPositionService: IStartPositionService,
+    private workbenchBeatOperations: IWorkbenchBeatOperationsService
   ) {}
 
   /**
@@ -101,15 +105,11 @@ export class ConstructTabCoordinationService
       });
 
       // **CRITICAL: Set the start position in the sequence's startPosition field, NOT as beat 0**
-      await this.sequenceService.setSequenceStartPosition(
-        newSequence.id,
-        startPosition
-      );
-
-      // **CRITICAL: Reload the sequence to get the updated start position**
-      const updatedSequence = await this.sequenceService.getSequence(
-        newSequence.id
-      );
+      const updatedSequence =
+        await this.workbenchBeatOperations.setConstructionStartPosition(
+          newSequence.id,
+          startPosition
+        );
 
       if (updatedSequence) {
         // **CRITICAL FIX: Update the singleton state that UI components watch**
@@ -163,25 +163,14 @@ export class ConstructTabCoordinationService
         return;
       }
 
-      // **CRITICAL: Use the service to add the beat**
-      if (
-        "addBeat" in this.sequenceService &&
-        typeof this.sequenceService.addBeat === "function"
-      ) {
-        await this.sequenceService.addBeat(currentSequence.id, beatData);
+      // **CRITICAL: Use the workbench service to add the beat**
+      const updatedSequence = await this.workbenchBeatOperations.addBeat(
+        currentSequence.id,
+        beatData
+      );
 
-        // Reload the updated sequence
-        const updatedSequence = await this.sequenceService.getSequence(
-          currentSequence.id
-        );
-        if (updatedSequence) {
-          // **CRITICAL: Update singleton state**
-          sequenceStateService.setCurrentSequence(updatedSequence);
-        }
-      } else {
-        // Fallback: add beat directly to state
-        sequenceStateService.addBeat(beatData);
-      }
+      // **CRITICAL: Update singleton state**
+      sequenceStateService.setCurrentSequence(updatedSequence);
 
       // Notify components
       this.notifyComponents("beat_added", { beatData });
@@ -291,7 +280,7 @@ export class ConstructTabCoordinationService
   private async updateUIBasedOnSequence(sequence: SequenceData): Promise<void> {
     try {
       // Determine which panel to show based on sequence state
-      const hasStartPosition = sequence?.startPosition != null;
+      const hasStartPosition = sequence?.startingPositionBeat != null;
       const hasBeats = sequence && sequence.beats && sequence.beats.length > 0;
 
       let targetPanel: string;
@@ -312,7 +301,7 @@ export class ConstructTabCoordinationService
   private hasStartPosition(sequence: SequenceData): boolean {
     // **FIXED: Check the startPosition field instead of checking beats[0]**
     // This aligns with the modern architecture where start position is separate
-    return sequence?.startPosition != null;
+    return sequence?.startingPositionBeat != null;
   }
 
   private notifyComponents(eventType: string, data: unknown): void {

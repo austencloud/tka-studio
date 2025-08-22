@@ -2,18 +2,18 @@
 <script lang="ts">
   import type { BeatData } from "$domain/BeatData";
   import type { PictographData } from "$domain/PictographData";
+  import { GridMode } from "$lib/domain";
   import { onMount } from "svelte";
-
   // Import our modular components and services
   import StartPositionGrid from "./components/StartPositionGrid.svelte";
-  import { StartPositionServiceResolver } from "./services/StartPositionServiceResolver";
   import { StartPositionLoader } from "./services/StartPositionLoader";
+  import { StartPositionServiceResolver } from "./services/StartPositionServiceResolver";
   import {
-    extractEndPosition,
-    createStartPositionData,
     createStartPositionBeat,
-    storeStartPositionData,
+    createStartPositionData,
+    extractEndPosition,
     storePreloadedOptions,
+    storeStartPositionData,
   } from "./utils/StartPositionUtils";
 
   // Props using runes

@@ -40,17 +40,20 @@ export interface ComponentLoadingState {
  * Factory function for component loading management.
  * Returns reactive state using Svelte 5 runes.
  */
-export function useComponentLoading(props: ComponentLoadingProps) {
+export function useComponentLoading() {
   // Calculate required components based on data
   const getRequiredComponents = (data: PictographData | null): string[] => {
     const components = ["grid"];
 
     if (!data) return components;
 
-    if (data.arrows?.[MotionColor.BLUE]) components.push("blue-arrow");
-    if (data.arrows?.[MotionColor.RED]) components.push("red-arrow");
-    if (data.props?.[MotionColor.BLUE]) components.push("blue-prop");
-    if (data.props?.[MotionColor.RED]) components.push("red-prop");
+    // Check motion data for visible components
+    if (data.motions?.[MotionColor.BLUE]?.isVisible) {
+      components.push("blue-arrow", "blue-prop");
+    }
+    if (data.motions?.[MotionColor.RED]?.isVisible) {
+      components.push("red-arrow", "red-prop");
+    }
 
     return components;
   };

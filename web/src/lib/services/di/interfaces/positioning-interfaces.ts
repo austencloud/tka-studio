@@ -4,7 +4,7 @@
  */
 
 import type {
-  IArrowPlacementDataService,
+  IArrowPlacementService,
   IArrowPlacementKeyService,
   IArrowPositioningService,
   IArrowLocationService,
@@ -25,7 +25,7 @@ import type {
 } from "../../positioning";
 
 // Import service implementations
-import { ArrowPlacementDataService } from "../../implementations/data/ArrowPlacementDataService";
+import { ArrowPlacementService } from "../../implementations/data/ArrowPlacementService";
 import { ArrowPlacementKeyService } from "../../implementations/positioning/ArrowPlacementKeyService";
 import { ArrowPositioningService } from "../../implementations/positioning/ArrowPositioningService";
 import { ArrowLocationService } from "../../implementations/positioning/ArrowLocationService";
@@ -44,10 +44,10 @@ import {
 import { PositioningServiceFactory } from "../../positioning/PositioningServiceFactory";
 
 // Core positioning services
-export const IArrowPlacementDataServiceInterface =
-  createServiceInterface<IArrowPlacementDataService>(
-    "IArrowPlacementDataService",
-    ArrowPlacementDataService
+export const IArrowPlacementServiceInterface =
+  createServiceInterface<IArrowPlacementService>(
+    "IArrowPlacementService",
+    ArrowPlacementService
   );
 
 export const IArrowPlacementKeyServiceInterface =

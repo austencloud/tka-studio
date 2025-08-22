@@ -106,7 +106,7 @@ export class MetadataExtractionService implements IMetadataExtractionService {
       level: firstEntry.level || null,
       sequence_start_position: this.findStartPosition(rawMetadata),
       beat_count: this.countRealBeats(rawMetadata),
-      sequence_length: rawMetadata.length,
+      sequenceLength: rawMetadata.length,
       extracted_at: new Date().toISOString(),
       source: "png_metadata",
     };

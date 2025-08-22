@@ -5,22 +5,21 @@ Refactored into smaller sub-components for better maintainability.
 Handles data loading, animation engine, and state management.
 -->
 <script lang="ts">
-  import { onDestroy } from "svelte";
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
-  import { resolve } from "$lib/services/bootstrap";
-  import type { ISequenceService } from "$lib/services/interfaces/sequence-interfaces";
-  import { AnimatorCanvas } from "$lib/components/animator";
+  import type { SequenceData } from "$domain/SequenceData";
   import type { PropState } from "$lib/components/animator";
+  import { AnimatorCanvas } from "$lib/components/animator";
+  import { resolve } from "$lib/services/bootstrap";
   import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";
+  import type { ISequenceService } from "$lib/services/interfaces/sequence-interfaces";
   import type { PanelStateManager } from "$lib/state/panel-state.svelte";
-
+  import { onDestroy } from "svelte";
   // Sub-components
+  import AnimationControls from "./animation/AnimationControls.svelte";
   import AnimationPanelHeader from "./animation/AnimationPanelHeader.svelte";
   import AnimationStates from "./animation/AnimationStates.svelte";
-  import SequenceInfo from "./animation/SequenceInfo.svelte";
-  import AnimationControls from "./animation/AnimationControls.svelte";
   import BeatSelector from "./animation/BeatSelector.svelte";
   import CurrentBeatDisplay from "./animation/CurrentBeatDisplay.svelte";
+  import SequenceInfo from "./animation/SequenceInfo.svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
@@ -28,7 +27,7 @@ Handles data loading, animation engine, and state management.
     panelState,
     onClose = () => {},
   } = $props<{
-    sequence?: BrowseSequenceMetadata | null;
+    sequence?: SequenceData | null;
     panelState: PanelStateManager;
     onClose?: () => void;
   }>();

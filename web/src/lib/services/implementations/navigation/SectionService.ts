@@ -5,16 +5,13 @@
  * following the microservices architecture pattern.
  */
 
-import type {
-  BrowseSequenceMetadata,
-  SortMethod,
-} from "../../interfaces/domain-types";
+import type { SequenceData, SortMethod } from "../../interfaces/domain-types";
 
 export interface SequenceSection {
   id: string;
   title: string;
   count: number;
-  sequences: BrowseSequenceMetadata[];
+  sequences: SequenceData[];
   isExpanded: boolean;
   sortOrder: number;
 }
@@ -29,7 +26,7 @@ export interface SectionConfiguration {
 export interface ISectionService {
   /** Organize sequences into sections based on configuration */
   organizeSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     config: SectionConfiguration
   ): Promise<SequenceSection[]>;
 
@@ -59,7 +56,7 @@ export interface ISectionService {
 
 export class SectionService implements ISectionService {
   async organizeSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     config: SectionConfiguration
   ): Promise<SequenceSection[]> {
     if (config.groupBy === "none") {
@@ -134,10 +131,10 @@ export class SectionService implements ISectionService {
 
   // Private helper methods
   private groupSequences(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     groupBy: SectionConfiguration["groupBy"]
-  ): Map<string, BrowseSequenceMetadata[]> {
-    const groups = new Map<string, BrowseSequenceMetadata[]>();
+  ): Map<string, SequenceData[]> {
+    const groups = new Map<string, SequenceData[]>();
 
     sequences.forEach((sequence) => {
       const key = this.getGroupKey(sequence, groupBy);
@@ -154,7 +151,7 @@ export class SectionService implements ISectionService {
   }
 
   private getGroupKey(
-    sequence: BrowseSequenceMetadata,
+    sequence: SequenceData,
     groupBy: SectionConfiguration["groupBy"]
   ): string {
     switch (groupBy) {
@@ -184,7 +181,7 @@ export class SectionService implements ISectionService {
   }
 
   private createSections(
-    grouped: Map<string, BrowseSequenceMetadata[]>,
+    grouped: Map<string, SequenceData[]>,
     config: SectionConfiguration
   ): SequenceSection[] {
     const sections: SequenceSection[] = [];
@@ -253,16 +250,16 @@ export class SectionService implements ISectionService {
   }
 
   private sortSequencesInSection(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     sortMethod: SortMethod
-  ): BrowseSequenceMetadata[] {
+  ): SequenceData[] {
     const sorted = [...sequences];
 
     switch (sortMethod) {
       case "alphabetical":
         return sorted.sort((a, b) => a.word.localeCompare(b.word));
 
-      case "difficulty_level":
+      case "difficultyLevel":
         return sorted.sort((a, b) => {
           const getDifficultyOrder = (level?: string) => {
             switch (level) {
@@ -282,14 +279,14 @@ export class SectionService implements ISectionService {
           );
         });
 
-      case "sequence_length":
+      case "sequenceLength":
         return sorted.sort((a, b) => {
           const lengthA = a.sequenceLength || a.word.length;
           const lengthB = b.sequenceLength || b.word.length;
           return lengthA - lengthB;
         });
 
-      case "date_added":
+      case "dateAdded":
         return sorted.sort((a, b) => {
           const dateA = a.dateAdded ? new Date(a.dateAdded).getTime() : 0;
           const dateB = b.dateAdded ? new Date(b.dateAdded).getTime() : 0;
@@ -378,7 +375,7 @@ export class SectionService implements ISectionService {
 
   // Additional methods required by browse-interfaces.ts
   async organizeIntoSections(
-    sequences: BrowseSequenceMetadata[],
+    sequences: SequenceData[],
     config: SectionConfiguration
   ): Promise<SequenceSection[]> {
     // Use the existing organizeSections method

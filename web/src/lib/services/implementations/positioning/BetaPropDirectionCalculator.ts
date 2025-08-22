@@ -5,7 +5,7 @@
  * Ported from legacy_web BetaPropDirectionCalculator.ts
  */
 
-import type { MotionData, PropData } from "$lib/domain";
+import type { MotionData, PropPlacementData } from "$lib/domain";
 import { Location, MotionType, GridMode } from "$lib/domain/enums";
 
 // Direction constants
@@ -141,7 +141,7 @@ export class BetaPropDirectionCalculator {
    * Since we removed prop.color, we need to determine which motion to use
    * This is a transitional approach - ideally services should be passed the specific motion directly
    */
-  private getMotionDataForProp(_prop: PropData): MotionData | null {
+  private getMotionDataForProp(_prop: PropPlacementData): MotionData | null {
     // For now, we'll need to determine this based on how the service is called
     // This is not ideal but maintains functionality during the transition
     // In the future, services should be passed the specific motion data directly
@@ -159,7 +159,7 @@ export class BetaPropDirectionCalculator {
   /**
    * Get direction for a prop based on its motion data
    */
-  getDirection(prop: PropData): Direction | null {
+  getDirection(prop: PropPlacementData): Direction | null {
     // Get the appropriate motion data for this prop
     const motionData = this.getMotionDataForProp(prop);
     if (!motionData) {
@@ -195,7 +195,7 @@ export class BetaPropDirectionCalculator {
    * Handle shift motion direction calculation
    */
   private handleShiftMotion(
-    _prop: PropData,
+    _prop: PropPlacementData,
     motionData: MotionData
   ): Direction | null {
     return this.handleShiftMotionForData(motionData);
@@ -241,7 +241,7 @@ export class BetaPropDirectionCalculator {
    * Handle static/dash motion direction calculation
    */
   private handleStaticDashMotion(
-    _prop: PropData,
+    _prop: PropPlacementData,
     motionData: MotionData
   ): Direction | null {
     return this.handleStaticDashMotionForData(motionData);

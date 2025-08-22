@@ -21,7 +21,6 @@ export interface IEnumMappingService {
   convertToGridPosition(
     positionString: string | null | undefined
   ): GridPosition | null;
-  getLetterType(letter: string): string;
 }
 
 export class EnumMappingService implements IEnumMappingService {
@@ -151,67 +150,6 @@ export class EnumMappingService implements IEnumMappingService {
       `⚠️ convertToGridPosition: unknown position "${positionString}", returning null`
     );
     return null;
-  }
-
-  /**
-   * Get letter type classification for TKA kinetic alphabet
-   * Based on the 47-letter system across 6 types
-   */
-  getLetterType(letter: string): string {
-    if (!letter) return "Unknown";
-
-    // Type 1: Dual-Shift (A-V, 22 letters)
-    const type1Letters = [
-      "A",
-      "B",
-      "C",
-      "D",
-      "E",
-      "F",
-      "G",
-      "H",
-      "I",
-      "J",
-      "K",
-      "L",
-      "M",
-      "N",
-      "O",
-      "P",
-      "Q",
-      "R",
-      "S",
-      "T",
-      "U",
-      "V",
-    ];
-
-    // Type 2: Shift (8 letters including Greek)
-    const type2Letters = ["W", "X", "Y", "Z", "Σ", "Δ", "θ", "Ω"];
-
-    // Type 3: Cross-Shift (8 cross variants)
-    const type3Letters = ["W-", "X-", "Y-", "Z-", "Σ-", "Δ-", "θ-", "Ω-"];
-
-    // Type 4: Dash (3 Greek dash letters)
-    const type4Letters = ["Φ", "Ψ", "Λ"];
-
-    // Type 5: Dual-Dash (3 dual dash variants)
-    const type5Letters = ["Φ-", "Ψ-", "Λ-"];
-
-    // Type 6: Static (3 static Greek letters)
-    const type6Letters = ["α", "β", "Γ"];
-
-    if (type1Letters.includes(letter)) return "Dual-Shift";
-    if (type2Letters.includes(letter)) return "Shift";
-    if (type3Letters.includes(letter)) return "Cross-Shift";
-    if (type4Letters.includes(letter)) return "Dash";
-    if (type5Letters.includes(letter)) return "Dual-Dash";
-    if (type6Letters.includes(letter)) return "Static";
-
-    console.warn(
-      `⚠️ getLetterType: unknown letter "${letter}", returning Unknown`
-    );
-    return "Unknown";
   }
 
   /**

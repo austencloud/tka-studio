@@ -1,9 +1,5 @@
 import type { SequenceData } from "$domain/SequenceData";
-import type {
-  BrowseSequenceMetadata,
-  FilterType,
-  FilterValue,
-} from "$lib/domain/browse";
+import type { FilterType, FilterValue } from "$lib/domain/browse";
 import type { BrowseState } from "$lib/state/browse-state.svelte";
 
 /**
@@ -21,7 +17,7 @@ export function createBrowseEventHandlers(
     setPanelIndex(1);
   }
 
-  function handleSequenceSelected(sequence: BrowseSequenceMetadata) {
+  function handleSequenceSelected(sequence: SequenceData) {
     console.log("📄 Sequence selected:", sequence.word);
     browseState.selectSequence(sequence);
   }
@@ -38,10 +34,7 @@ export function createBrowseEventHandlers(
   }
 
   // Sequence action handlers
-  function handleSequenceAction(
-    action: string,
-    sequence: SequenceData | BrowseSequenceMetadata
-  ) {
+  function handleSequenceAction(action: string, sequence: SequenceData) {
     console.log(`🎬 Action: ${action} on sequence:`, sequence.id);
 
     switch (action) {
@@ -55,18 +48,8 @@ export function createBrowseEventHandlers(
         browseState.toggleFavorite(sequence.id);
         break;
       case "delete": {
-        // Prepare delete confirmation - convert to BrowseSequenceMetadata if needed
-        const browseSequence =
-          "isFavorite" in sequence
-            ? (sequence as BrowseSequenceMetadata)
-            : ({
-                ...sequence,
-                isFavorite: false,
-                isCircular: false,
-                word: sequence.id,
-                thumbnails: [...sequence.thumbnails],
-              } as unknown as BrowseSequenceMetadata);
-        browseState.prepareDeleteSequence(browseSequence);
+        // No conversion needed - already using SequenceData
+        browseState.prepareDeleteSequence(sequence);
         break;
       }
       case "fullscreen":

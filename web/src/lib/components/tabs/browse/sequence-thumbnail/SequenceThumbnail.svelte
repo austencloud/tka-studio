@@ -5,7 +5,7 @@ Displays individual sequence thumbnails using extracted components for better
 separation of concerns and maintainability. Reduced from 537 lines to ~80 lines.
 -->
 <script lang="ts">
-  import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+  import type { SequenceData } from "$domain/SequenceData";
   import type { IThumbnailService } from "$lib/services/interfaces/browse-interfaces";
   import ThumbnailActions from "./ThumbnailActions.svelte";
   import ThumbnailImage from "./ThumbnailImage.svelte";
@@ -20,12 +20,12 @@ separation of concerns and maintainability. Reduced from 537 lines to ~80 lines.
     onFavoriteToggle = () => {},
     onAction = () => {},
   } = $props<{
-    sequence: BrowseSequenceMetadata;
+    sequence: SequenceData;
     thumbnailService: IThumbnailService;
     viewMode?: "grid" | "list";
     isFavorite?: boolean;
     onFavoriteToggle?: (sequenceId: string) => void;
-    onAction?: (action: string, sequence: BrowseSequenceMetadata) => void;
+    onAction?: (action: string, sequence: SequenceData) => void;
   }>();
 
   // Event handlers - Updated for new UX: click to animate

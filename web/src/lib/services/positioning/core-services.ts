@@ -3,7 +3,7 @@
  */
 
 import type {
-  ArrowData,
+  ArrowPlacementData,
   GridMode,
   Location,
   MotionData,
@@ -90,7 +90,7 @@ export interface IArrowPositioningOrchestrator {
    * Calculate complete arrow position using the positioning pipeline.
    */
   calculateArrowPosition(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     pictographData: PictographData,
     motionData?: MotionData
   ): Promise<[number, number, number]>;
@@ -106,7 +106,7 @@ export interface IArrowPositioningOrchestrator {
    * Determine if arrow should be mirrored based on motion type.
    */
   shouldMirrorArrow(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     pictographData?: PictographData,
     motionData?: MotionData
   ): boolean;

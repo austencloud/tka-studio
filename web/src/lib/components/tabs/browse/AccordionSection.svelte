@@ -196,7 +196,7 @@
               </div>
             {/each}
           </div>
-        {:else if type === "starting_position" || type === "difficulty" || type === "gridMode"}
+        {:else if type === "startPosition" || type === "difficulty" || type === "gridMode"}
           <!-- Image-based content for visual filters -->
           <div class="options-grid visual-grid">
             {#each options as option}

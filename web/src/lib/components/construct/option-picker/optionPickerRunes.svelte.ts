@@ -9,16 +9,16 @@
  * - Complex reactive state derivations
  */
 
+import { GridMode, OptionPickerSortMethod } from "$lib/domain";
 import type { PictographData } from "$lib/domain/PictographData";
 import { resolve } from "$services/bootstrap";
-import { createBeatData } from "$lib/domain/BeatData";
 import type { ReversalFilter, SortMethod } from "./config";
 import {
   determineGroupKey,
   getSortedGroupKeys,
   getSorter,
+  type OptionPickerGroupKey,
 } from "./services/OptionsService";
-import { GridMode } from "$lib/domain";
 
 // ===== Types =====
 export type LastSelectedTabState = Partial<Record<SortMethod, string | null>>;
@@ -34,7 +34,7 @@ interface UIState {
 function getStoredState(): UIState {
   if (typeof window === "undefined")
     return {
-      sortMethod: "type",
+      sortMethod: OptionPickerSortMethod.LETTER_TYPE,
       isLoading: false,
       error: null,
       lastSelectedTab: {},
@@ -45,10 +45,10 @@ function getStoredState(): UIState {
 
     if (!stored)
       return {
-        sortMethod: "type",
+        sortMethod: OptionPickerSortMethod.LETTER_TYPE,
         isLoading: false,
         error: null,
-        lastSelectedTab: { type: "all" },
+        lastSelectedTab: { [OptionPickerSortMethod.LETTER_TYPE]: "all" },
       };
 
     const parsed = JSON.parse(stored);
@@ -62,10 +62,10 @@ function getStoredState(): UIState {
   } catch (e) {
     console.error("Error reading from localStorage:", e);
     return {
-      sortMethod: "type",
+      sortMethod: OptionPickerSortMethod.LETTER_TYPE,
       isLoading: false,
       error: null,
-      lastSelectedTab: { type: "all" },
+      lastSelectedTab: { [OptionPickerSortMethod.LETTER_TYPE]: "all" },
     };
   }
 }
@@ -114,7 +114,7 @@ export function createOptionPickerRunes() {
     });
 
     const sortedKeys = getSortedGroupKeys(
-      Object.keys(groups),
+      Object.keys(groups) as OptionPickerGroupKey[],
       uiState.sortMethod
     );
     const sortedGroups: Record<string, PictographData[]> = {};
@@ -237,9 +237,12 @@ export function createOptionPickerRunes() {
             "$lib/services/di/interfaces/codex-interfaces"
           );
           const letterQueryService = resolve(ILetterQueryServiceInterface);
+          const { IOptionFilteringServiceInterface } = await import(
+            "$lib/services/di/registration/shared-services"
+          );
           const optionFilteringService = resolve(
-            "IOptionFilteringService"
-          ) as any;
+            IOptionFilteringServiceInterface
+          );
 
           // Get ALL pictograph variations from CSV (like desktop algorithm) and filter by start position
           const allPictographs =
@@ -276,9 +279,12 @@ export function createOptionPickerRunes() {
               "$lib/services/di/interfaces/codex-interfaces"
             );
             const letterQueryService = resolve(ILetterQueryServiceInterface);
+            const { IOptionFilteringServiceInterface } = await import(
+              "$lib/services/di/registration/shared-services"
+            );
             const optionFilteringService = resolve(
-              "IOptionFilteringService"
-            ) as any;
+              IOptionFilteringServiceInterface
+            );
 
             // Get ALL pictograph variations from CSV (like desktop algorithm) and filter by start position
             const allPictographs =

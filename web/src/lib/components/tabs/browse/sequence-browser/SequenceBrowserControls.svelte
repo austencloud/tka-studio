@@ -17,9 +17,9 @@
   // Sort options
   const sortOptions = [
     { value: SortMethod.ALPHABETICAL, label: "Name A-Z" },
-    { value: SortMethod.DIFFICULTY_LEVEL, label: "Difficulty" },
-    { value: SortMethod.SEQUENCE_LENGTH, label: "Length" },
-    { value: SortMethod.DATE_ADDED, label: "Recently Added" },
+    { value: SortMethod.difficultyLevel, label: "Difficulty" },
+    { value: SortMethod.sequenceLength, label: "Length" },
+    { value: SortMethod.dateAdded, label: "Recently Added" },
     { value: SortMethod.AUTHOR, label: "Author" },
   ];
 

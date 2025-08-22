@@ -4,24 +4,19 @@
  * Tests the new simplified beta positioning architecture
  */
 
-import { PropPlacementService } from "$lib/services/implementations/positioning/PropPlacementService";
+import { createMotionData, createPictographData } from "$lib/domain";
 import {
-  createPictographData,
-  createMotionData,
-  createPropData,
-  createGridData,
-} from "$lib/domain";
-import {
-  MotionType,
-  Orientation,
-  Location,
-  RotationDirection,
   GridMode,
   GridPosition,
+  Location,
   MotionColor,
+  MotionType,
+  Orientation,
   PropType,
+  RotationDirection,
 } from "$lib/domain/enums";
 import { Letter } from "$lib/domain/Letter";
+import { PropPlacementService } from "$lib/services/implementations/positioning/PropPlacementService";
 
 // Test the new simplified beta positioning
 async function testBetaPositioning() {
@@ -30,12 +25,7 @@ async function testBetaPositioning() {
   // Create test pictograph data that should trigger beta positioning
   const pictographData = createPictographData({
     id: "beta-test",
-    gridData: createGridData({
-      gridMode: GridMode.DIAMOND,
-      center_x: 475,
-      center_y: 475,
-      radius: 100,
-    }),
+    gridMode: GridMode.DIAMOND, // Grid mode is now a direct property
     motions: {
       blue: createMotionData({
         motionType: MotionType.STATIC,
@@ -47,6 +37,8 @@ async function testBetaPositioning() {
         turns: 0,
         isVisible: true,
         color: MotionColor.BLUE,
+        propType: PropType.STAFF,
+        arrowLocation: Location.NORTH, // Will be calculated by positioning system
       }),
       red: createMotionData({
         motionType: MotionType.STATIC,
@@ -58,24 +50,13 @@ async function testBetaPositioning() {
         turns: 0,
         isVisible: true,
         color: MotionColor.RED,
-      }),
-    },
-    props: {
-      blue: createPropData({
         propType: PropType.STAFF,
-        orientation: Orientation.IN,
-        rotationDirection: RotationDirection.CLOCKWISE,
-      }),
-      red: createPropData({
-        propType: PropType.STAFF,
-        orientation: Orientation.IN,
-        rotationDirection: RotationDirection.CLOCKWISE,
+        arrowLocation: Location.NORTH, // Will be calculated by positioning system
       }),
     },
     endPosition: GridPosition.BETA5, // This should trigger beta positioning
     letter: Letter.A,
     isBlank: false,
-    isMirrored: false,
     metadata: {
       source: "beta_test",
       created: Date.now(),
@@ -86,6 +67,10 @@ async function testBetaPositioning() {
 
   try {
     console.log("🔍 Testing blue prop placement...");
+    if (!pictographData.motions.blue || !pictographData.motions.red) {
+      throw new Error("Missing motion data for test");
+    }
+
     const bluePlacement = propPlacementService.calculatePlacement(
       pictographData,
       pictographData.motions.blue

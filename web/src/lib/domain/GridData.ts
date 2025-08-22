@@ -10,8 +10,8 @@ import { GridMode } from "./enums";
 
 export interface GridData {
   readonly gridMode: GridMode;
-  readonly center_x: number;
-  readonly center_y: number;
+  readonly centerX: number;
+  readonly centerY: number;
   readonly radius: number;
   readonly gridPointData: GridPointData; //
 }
@@ -19,8 +19,8 @@ export interface GridData {
 export function createGridData(data: Partial<GridData> = {}): GridData {
   return {
     gridMode: data.gridMode ?? GridMode.DIAMOND,
-    center_x: data.center_x ?? 0.0,
-    center_y: data.center_y ?? 0.0,
+    centerX: data.centerX ?? 0.0,
+    centerY: data.centerY ?? 0.0,
     radius: data.radius ?? 100.0,
     gridPointData: data.gridPointData ?? {
       allHandPointsStrict: {},
@@ -28,7 +28,7 @@ export function createGridData(data: Partial<GridData> = {}): GridData {
       allLayer2PointsStrict: {},
       allLayer2PointsNormal: {},
       allOuterPoints: {},
-      centerPoint: { coordinates: { x: 0, y: 0 } }
+      centerPoint: { coordinates: { x: 0, y: 0 } },
     },
   };
 }
@@ -46,8 +46,8 @@ export function updateGridData(
 export function gridDataToObject(grid: GridData): Record<string, unknown> {
   return {
     gridMode: grid.gridMode,
-    center_x: grid.center_x,
-    center_y: grid.center_y,
+    centerX: grid.centerX,
+    centerY: grid.centerY,
     radius: grid.radius,
     gridPoints: grid.gridPointData,
   };
@@ -59,11 +59,11 @@ export function gridDataFromObject(data: Record<string, unknown>): GridData {
   if (data.gridMode !== undefined) {
     gridData.gridMode = data.gridMode;
   }
-  if (data.center_x !== undefined) {
-    gridData.center_x = data.center_x;
+  if (data.centerX !== undefined) {
+    gridData.centerX = data.centerX;
   }
-  if (data.center_y !== undefined) {
-    gridData.center_y = data.center_y;
+  if (data.centerY !== undefined) {
+    gridData.centerY = data.centerY;
   }
   if (data.radius !== undefined) {
     gridData.radius = data.radius;

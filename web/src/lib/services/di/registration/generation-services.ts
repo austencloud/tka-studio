@@ -4,9 +4,8 @@
  * Registers algorithmic pictograph generation services with the DI container.
  */
 
-import type { ServiceContainer } from "../ServiceContainer";
 import { IPictographGeneratorServiceInterface } from "$lib/services/interfaces/pictograph-generator-interfaces";
-import { PictographGeneratorService } from "$lib/services/implementations/generation/PictographGeneratorService";
+import type { ServiceContainer } from "../ServiceContainer";
 
 /**
  * Register all generation services with the DI container

@@ -12,7 +12,7 @@
  */
 
 import { browser } from "$app/environment";
-// import type { BrowseSequenceMetadata } from "$lib/domain/browse";
+// import type { SequenceData } from "$lib/domain/browse";
 import { SortMethod } from "$lib/domain/browse";
 import { getBrowseStatePersistence } from "./appState.svelte";
 import type {
@@ -267,11 +267,11 @@ export class BrowseTabStateManager {
     switch (method) {
       case SortMethod.ALPHABETICAL:
         return "name_asc";
-      case SortMethod.DIFFICULTY_LEVEL:
+      case SortMethod.difficultyLevel:
         return "difficulty";
-      case SortMethod.SEQUENCE_LENGTH:
+      case SortMethod.sequenceLength:
         return "length";
-      case SortMethod.DATE_ADDED:
+      case SortMethod.dateAdded:
         return "recent";
       case SortMethod.AUTHOR:
         return "author";
@@ -289,11 +289,11 @@ export class BrowseTabStateManager {
       case "name_desc":
         return SortMethod.ALPHABETICAL;
       case "difficulty":
-        return SortMethod.DIFFICULTY_LEVEL;
+        return SortMethod.difficultyLevel;
       case "length":
-        return SortMethod.SEQUENCE_LENGTH;
+        return SortMethod.sequenceLength;
       case "recent":
-        return SortMethod.DATE_ADDED;
+        return SortMethod.dateAdded;
       case "author":
         return SortMethod.AUTHOR;
       default:

@@ -6,9 +6,8 @@
  */
 
 // Individual section components
-export { default as DebugSection } from "./DebugSection.svelte";
 export { default as DebugDataGrid } from "./DebugDataGrid.svelte";
-export { default as LocationDebugSection } from "./LocationDebugSection.svelte";
+export { default as DebugSection } from "./DebugSection.svelte";
 
 // Utilities
 export * from "./formatters";

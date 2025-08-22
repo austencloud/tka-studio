@@ -8,13 +8,13 @@
  * Critical: Must maintain visual fidelity when converting from SVG to Canvas.
  */
 
-import type {
-  IBeatRenderingService,
-  BeatRenderOptions,
-} from "../../interfaces/image-export-interfaces";
+import type { ArrowPlacementData, PropPlacementData } from "$lib/domain";
+import { GridMode, MotionColor } from "$lib/domain/enums";
 import type { BeatData, SequenceData } from "../../interfaces/domain-types";
-import type { PropData, ArrowData } from "$lib/domain";
-import { MotionColor, GridMode } from "$lib/domain/enums";
+import type {
+  BeatRenderOptions,
+  IBeatRenderingService,
+} from "../../interfaces/image-export-interfaces";
 import type { IPictographService } from "../../interfaces/pictograph-interfaces";
 
 export class BeatRenderingService implements IBeatRenderingService {
@@ -98,10 +98,10 @@ export class BeatRenderingService implements IBeatRenderingService {
       ctx.fillRect(0, 0, size, size);
 
       // Check if sequence has explicit start position data
-      if (sequence.startPosition) {
+      if (sequence.startingPositionBeat) {
         await this.renderPictographToCanvas(
           ctx,
-          { ...sequence.startPosition, beatNumber: 0 } as BeatData,
+          { ...sequence.startingPositionBeat, beatNumber: 0 } as BeatData,
           size,
           options
         );
@@ -330,25 +330,45 @@ export class BeatRenderingService implements IBeatRenderingService {
     }
 
     // Draw grid background
-    this.drawGrid(ctx, pictograph.gridData?.gridMode || GridMode.DIAMOND, size);
+    this.drawGrid(ctx, pictograph.gridMode || GridMode.DIAMOND, size);
 
-    // Draw props if visible
-    if (pictograph.props) {
-      if (options.blueVisible && pictograph.props.blue) {
-        this.drawProp(ctx, pictograph.props.blue, "blue", size);
+    // Draw props from motion data
+    if (pictograph.motions) {
+      if (options.blueVisible && pictograph.motions.blue) {
+        this.drawProp(
+          ctx,
+          pictograph.motions.blue.propPlacementData,
+          "blue",
+          size
+        );
       }
-      if (options.redVisible && pictograph.props.red) {
-        this.drawProp(ctx, pictograph.props.red, "red", size);
+      if (options.redVisible && pictograph.motions.red) {
+        this.drawProp(
+          ctx,
+          pictograph.motions.red.propPlacementData,
+          "red",
+          size
+        );
       }
     }
 
-    // Draw arrows if visible
-    if (pictograph.arrows) {
-      if (options.blueVisible && pictograph.arrows.blue) {
-        this.drawArrow(ctx, pictograph.arrows.blue, "blue", size);
+    // Draw arrows from motion data
+    if (pictograph.motions) {
+      if (options.blueVisible && pictograph.motions.blue) {
+        this.drawArrow(
+          ctx,
+          pictograph.motions.blue.arrowPlacementData,
+          "blue",
+          size
+        );
       }
-      if (options.redVisible && pictograph.arrows.red) {
-        this.drawArrow(ctx, pictograph.arrows.red, "red", size);
+      if (options.redVisible && pictograph.motions.red) {
+        this.drawArrow(
+          ctx,
+          pictograph.motions.red.arrowPlacementData,
+          "red",
+          size
+        );
       }
     }
 
@@ -462,7 +482,7 @@ export class BeatRenderingService implements IBeatRenderingService {
    */
   private drawProp(
     ctx: CanvasRenderingContext2D,
-    propData: PropData | null,
+    propData: PropPlacementData | null,
     color: string,
     size: number
   ): void {
@@ -483,7 +503,7 @@ export class BeatRenderingService implements IBeatRenderingService {
    */
   private drawArrow(
     ctx: CanvasRenderingContext2D,
-    arrowData: ArrowData | null,
+    arrowData: ArrowPlacementData | null,
     color: string,
     size: number
   ): void {

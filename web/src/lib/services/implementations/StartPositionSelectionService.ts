@@ -5,15 +5,20 @@
  * Extracted from StartPositionPicker component to follow clean architecture.
  */
 
-import type { PictographData } from "$domain/PictographData";
 import type { BeatData } from "$domain/BeatData";
-import type { IStartPositionService } from "$services/interfaces/application-interfaces";
-import type { IStartPositionSelectionService } from "$lib/services/interfaces/IStartPositionSelectionService";
+import type { PictographData } from "$domain/PictographData";
 import {
-  extractEndPosition,
   createStartPositionData,
+  extractEndPosition,
   storeStartPositionData,
 } from "$lib/components/construct/start-position/utils/StartPositionUtils";
+import type { IStartPositionSelectionService } from "$lib/services/interfaces/IStartPositionSelectionService";
+import type { IStartPositionService } from "$services/interfaces/application-interfaces";
+
+interface StartPositionData {
+  endPosition: string;
+  pictographData: PictographData;
+}
 
 /**
  * Service implementation for start position selection
@@ -77,14 +82,15 @@ export class StartPositionSelectionService
   /**
    * Preload options for the selected start position
    */
-  async preloadOptionsForPosition(endPosition: string): Promise<void> {
+  async preloadOptionsForPosition(_endPosition: string): Promise<void> {
     try {
       // Import and use the LetterQueryService to preload options
       const { resolve } = await import("$services/bootstrap");
       const { ILetterQueryServiceInterface } = await import(
         "$services/di/interfaces/codex-interfaces"
       );
-      const letterQueryService = resolve(ILetterQueryServiceInterface);
+      // Resolve service to trigger initialization
+      resolve(ILetterQueryServiceInterface);
 
       // LetterQueryService initializes automatically when first used
       console.log("✅ CSV data preloaded for option picker");
@@ -104,7 +110,7 @@ export class StartPositionSelectionService
    * Dispatch event that coordination service is listening for
    */
   private dispatchStartPositionSelectedEvent(
-    startPositionData: any,
+    startPositionData: StartPositionData,
     endPosition: string
   ): void {
     const event = new CustomEvent("start-position-selected", {

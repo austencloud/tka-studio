@@ -5,7 +5,11 @@
  * Coordinates with other services to compute final arrow positions.
  */
 
-import type { ArrowData, MotionData, PictographData } from "$lib/domain";
+import type {
+  ArrowPlacementData,
+  MotionData,
+  PictographData,
+} from "$lib/domain";
 import type {
   IArrowAdjustmentCalculator,
   IArrowCoordinateSystemService,
@@ -44,7 +48,7 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
   }
 
   async calculateArrowPosition(
-    arrowData: ArrowData,
+    arrowData: ArrowPlacementData,
     pictographData: PictographData,
     motionData?: MotionData
   ): Promise<[number, number, number]> {
@@ -53,7 +57,7 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
      */
     try {
       // STEP 1: Extract or use provided motion data
-      // ✅ FIXED: Pass color directly since ArrowData no longer has color
+      // ✅ FIXED: Pass color directly since ArrowPlacementData no longer has color
       const motion = motionData;
       if (!motion) {
         const center = this.coordinateSystem.getSceneCenter();
@@ -111,13 +115,15 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
   async updateArrowPosition(
     pictographData: PictographData,
     color: string,
-    motionData?: MotionData
+    _motionData?: MotionData
   ): Promise<PictographData> {
     /**
      * Update arrow position in pictograph data.
      */
     try {
-      const arrowData = pictographData.arrows?.[color];
+      const motionData =
+        pictographData.motions?.[color as keyof typeof pictographData.motions];
+      const arrowData = motionData?.arrowPlacementData;
       if (!arrowData) {
         console.warn(`No arrow data found for color: ${color}`);
         return pictographData;
@@ -132,7 +138,7 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
       // CRITICAL: Also calculate mirroring for this arrow
       const shouldMirror = this.shouldMirrorArrow(arrowData, pictographData);
 
-      const updates: Partial<ArrowData> = {
+      const updates: Partial<ArrowPlacementData> = {
         positionX: x,
         positionY: y,
         rotationAngle: rotation,
@@ -156,14 +162,16 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
      * Calculate positions for all arrows in the pictograph.
      */
     try {
-      if (!pictographData.arrows) {
+      if (!pictographData.motions) {
         return pictographData;
       }
 
       let updatedPictograph = { ...pictographData };
 
-      for (const color of Object.keys(pictographData.arrows)) {
-        const arrowData = pictographData.arrows[color];
+      for (const color of Object.keys(pictographData.motions)) {
+        const motionData =
+          pictographData.motions[color as keyof typeof pictographData.motions];
+        const arrowData = motionData?.arrowPlacementData;
         if (arrowData) {
           const [x, y, rotation] = await this.calculateArrowPosition(
             arrowData,
@@ -171,14 +179,17 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
           );
 
           // CRITICAL: Also calculate mirroring for this arrow
-          const currentMotionData = updatedPictograph.motions[color];
+          const currentMotionData =
+            updatedPictograph.motions?.[
+              color as keyof typeof updatedPictograph.motions
+            ];
           const shouldMirror = this.shouldMirrorArrow(
             arrowData,
             updatedPictograph,
             currentMotionData
           );
 
-          const updates: Partial<ArrowData> = {
+          const updates: Partial<ArrowPlacementData> = {
             positionX: x,
             positionY: y,
             rotationAngle: rotation,
@@ -201,7 +212,7 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
   }
 
   shouldMirrorArrow(
-    _arrowData: ArrowData,
+    _arrowData: ArrowPlacementData,
     pictographData?: PictographData,
     motionData?: MotionData
   ): boolean {

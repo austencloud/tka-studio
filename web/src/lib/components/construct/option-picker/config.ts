@@ -1,26 +1,5 @@
 // src/lib/components/construct/option-picker/config.ts
 
-// ----- Types -----
-export type DeviceType =
-  | "smallMobile"
-  | "mobile"
-  | "tablet"
-  | "desktop"
-  | "largeDesktop";
-export type ContainerAspect = "tall" | "square" | "wide" | "widish";
-export type SortMethod = "type" | "endPosition" | "reversals";
-export type ReversalFilter =
-  | "all"
-  | "continuous"
-  | "oneReversal"
-  | "twoReversals";
-export type LayoutCategory =
-  | "singleItem"
-  | "twoItems"
-  | "fewItems"
-  | "mediumItems"
-  | "manyItems";
-
 export interface ResponsiveLayoutConfig {
   gridColumns: string;
   optionSize: string;
@@ -118,6 +97,26 @@ export const GAP_ADJUSTMENTS = {
   mediumItems: 3,
   manyItems: 3,
 };
+
+// ----- Type Definitions -----
+
+export type ContainerAspect = "tall" | "square" | "wide";
+export type DeviceType =
+  | "smallMobile"
+  | "mobile"
+  | "tablet"
+  | "desktop"
+  | "largeDesktop";
+export type LayoutCategory =
+  | "singleItem"
+  | "twoItems"
+  | "fewItems"
+  | "mediumItems"
+  | "manyItems";
+
+// Re-export from domain for convenience
+export type { OptionPickerReversalFilter as ReversalFilter } from "$lib/domain";
+export type { OptionPickerSortMethod as SortMethod } from "$lib/domain";
 
 // ----- Helper Functions -----
 
