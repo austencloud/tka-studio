@@ -5,8 +5,8 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import { GridMode, MotionType } from "$lib/domain";
 import type { PictographData } from "$lib/domain";
+import { GridMode, MotionType } from "$lib/domain";
 
 import type { LetterMapping } from "$lib/domain/codex/types";
 import type { ILetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
@@ -32,7 +32,10 @@ export interface ILetterQueryService {
 }
 
 export class LetterQueryService implements ILetterQueryService {
-  private parsedData: Record<GridMode, ParsedCsvRow[]> | null = null;
+  private parsedData: Record<
+    Exclude<GridMode, GridMode.SKEWED>,
+    ParsedCsvRow[]
+  > | null = null;
   private isInitialized = false;
 
   constructor(
@@ -100,6 +103,7 @@ export class LetterQueryService implements ILetterQueryService {
       this.parsedData = {
         [GridMode.DIAMOND]: diamondParseResult.rows,
         [GridMode.BOX]: boxParseResult.rows,
+        // SKEWED mode doesn't have separate data - it uses both diamond and box
       };
 
       console.log(
@@ -217,7 +221,10 @@ export class LetterQueryService implements ILetterQueryService {
         return [];
       }
 
-      const csvRows = this.parsedData[gridMode];
+      // For SKEWED mode, default to diamond data
+      const actualGridMode =
+        gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+      const csvRows = this.parsedData[actualGridMode];
       if (!csvRows || csvRows.length === 0) {
         console.error(`❌ No CSV data available for grid mode: ${gridMode}`);
         return [];
@@ -334,7 +341,10 @@ export class LetterQueryService implements ILetterQueryService {
       return null;
     }
 
-    const csvRows = this.parsedData[gridMode];
+    // For SKEWED mode, default to diamond data
+    const actualGridMode =
+      gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+    const csvRows = this.parsedData[actualGridMode];
     if (!csvRows) {
       return null;
     }

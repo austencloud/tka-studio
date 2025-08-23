@@ -9,11 +9,14 @@ import { ILetterQueryServiceInterface } from "../interfaces/codex-interfaces";
 import {
   IApplicationInitializationServiceInterface,
   IArrowRenderingServiceInterface,
+  IBeatFallbackRenderingServiceInterface,
+  IBeatGridServiceInterface,
   IConstructTabCoordinationServiceInterface,
   IDataTransformationServiceInterface,
   IDeviceDetectionServiceInterface,
   IExportServiceInterface,
   IGridRenderingServiceInterface,
+  IImageFormatConverterServiceInterface,
   IMotionGenerationServiceInterface,
   IOrientationCalculationServiceInterface,
   IOverlayRenderingServiceInterface,
@@ -36,9 +39,16 @@ import {
   IStartPositionSelectionServiceInterface,
   IStartPositionServiceInterface,
   ISvgConfigurationInterface,
+  // New conversion and rendering microservices
+  ISVGToCanvasConverterServiceInterface,
   ISvgUtilityServiceInterface,
   IWorkbenchBeatOperationsServiceInterface,
 } from "../interfaces/core-interfaces";
+import { ISequenceStateServiceInterface } from "../interfaces/sequence-state-interfaces";
+import {
+  IWorkbenchCoordinationServiceInterface,
+  IWorkbenchServiceInterface,
+} from "../interfaces/workbench-interfaces";
 
 import { ApplicationInitializationService } from "../../implementations/application/ApplicationInitializationService";
 import { ConstructTabCoordinationService } from "../../implementations/construct/ConstructTabCoordinationService";
@@ -69,6 +79,13 @@ export async function registerCoreServices(
 
   // Register layout services
   container.registerSingletonClass(IBeatFrameServiceInterface);
+
+  // Register sequence state services
+  container.registerSingletonClass(ISequenceStateServiceInterface);
+
+  // Register workbench services
+  container.registerSingletonClass(IWorkbenchServiceInterface);
+  container.registerSingletonClass(IWorkbenchCoordinationServiceInterface);
 
   // Register construct tab services
   container.registerSingletonClass(IStartPositionServiceInterface);
@@ -218,4 +235,12 @@ export async function registerCoreServices(
       persistenceService
     );
   });
+
+  // Register new conversion and rendering microservices
+  container.registerSingletonClass(ISVGToCanvasConverterServiceInterface);
+  container.registerSingletonClass(IImageFormatConverterServiceInterface);
+  container.registerSingletonClass(IBeatGridServiceInterface);
+
+  // Register beat fallback service (no dependencies needed)
+  container.registerSingletonClass(IBeatFallbackRenderingServiceInterface);
 }

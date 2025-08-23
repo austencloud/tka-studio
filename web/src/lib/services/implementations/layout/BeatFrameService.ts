@@ -1,26 +1,25 @@
 /**
  * Pure Beat Frame Service Implementation
- * 
+ *
  * Extracted business logic from BeatFrameService.svelte.ts
  * Contains only pure functions with no reactive state.
  */
 
 import type { BeatData } from "$lib/domain";
 import { GridMode } from "$lib/domain";
-import type { 
-  IBeatFrameService, 
-  BeatFrameConfig, 
-  ContainerDimensions, 
-  LayoutInfo, 
-  Position 
+import type {
+  BeatFrameConfig,
+  ContainerDimensions,
+  IBeatFrameService,
+  LayoutInfo,
+  Position,
 } from "$lib/services/interfaces/beat-frame-interfaces";
 
 export class BeatFrameService implements IBeatFrameService {
-  
   // ============================================================================
   // CONFIGURATION METHODS
   // ============================================================================
-  
+
   getDefaultConfig(): BeatFrameConfig {
     return {
       columns: 4,
@@ -30,7 +29,7 @@ export class BeatFrameService implements IBeatFrameService {
       hasStartTile: true,
     };
   }
-  
+
   validateConfig(config: Partial<BeatFrameConfig>): BeatFrameConfig {
     const defaults = this.getDefaultConfig();
     return {
@@ -41,36 +40,47 @@ export class BeatFrameService implements IBeatFrameService {
       hasStartTile: config.hasStartTile ?? defaults.hasStartTile,
     };
   }
-  
+
   // ============================================================================
   // LAYOUT CALCULATION METHODS
   // ============================================================================
-  
-  calculateBeatPosition(index: number, beatCount?: number, config?: BeatFrameConfig): Position {
+
+  calculateBeatPosition(
+    index: number,
+    beatCount?: number,
+    config?: BeatFrameConfig
+  ): Position {
     const effectiveConfig = config ?? this.getDefaultConfig();
-    
+
     // Use the optimal layout for this beat count
     const [, cols] = this.autoAdjustLayout(beatCount ?? index + 1);
     const columnsForBeats = Math.max(1, cols);
     const row = Math.floor(index / columnsForBeats);
-    const col = (index % columnsForBeats) + (effectiveConfig.hasStartTile ? 1 : 0);
+    const col =
+      (index % columnsForBeats) + (effectiveConfig.hasStartTile ? 1 : 0);
 
     const step = effectiveConfig.beatSize + effectiveConfig.gap;
     return { x: col * step, y: row * step };
   }
-  
-  calculateStartPosition(beatCount: number, config?: BeatFrameConfig): Position {
+
+  calculateStartPosition(
+    beatCount: number,
+    config?: BeatFrameConfig
+  ): Position {
     const effectiveConfig = config ?? this.getDefaultConfig();
-    
+
     if (!effectiveConfig.hasStartTile) {
       return { x: 0, y: 0 };
     }
-    
+
     // Start position is always at [0,0] when enabled
     return { x: 0, y: 0 };
   }
-  
-  calculateFrameDimensions(beatCount: number, config?: BeatFrameConfig): { width: number; height: number } {
+
+  calculateFrameDimensions(
+    beatCount: number,
+    config?: BeatFrameConfig
+  ): { width: number; height: number } {
     const effectiveConfig = config ?? this.getDefaultConfig();
     const step = effectiveConfig.beatSize + effectiveConfig.gap;
 
@@ -89,17 +99,30 @@ export class BeatFrameService implements IBeatFrameService {
       height: rows * step - effectiveConfig.gap,
     };
   }
-  
-  calculateLayoutInfo(beatCount: number, config?: BeatFrameConfig, containerDimensions?: ContainerDimensions): LayoutInfo {
+
+  calculateLayoutInfo(
+    beatCount: number,
+    config?: BeatFrameConfig,
+    containerDimensions?: ContainerDimensions
+  ): LayoutInfo {
     const effectiveConfig = config ?? this.getDefaultConfig();
-    const effectiveContainer = containerDimensions ?? { width: 0, height: 0, isFullscreen: false };
-    
+    const effectiveContainer = containerDimensions ?? {
+      width: 0,
+      height: 0,
+      isFullscreen: false,
+    };
+
     // Get optimal layout without mutating state
     const [rows, cols] = this.autoAdjustLayout(beatCount);
     const totalCols = cols + (effectiveConfig.hasStartTile ? 1 : 0);
 
     // Calculate optimal cell size without mutating state
-    const optimalCellSize = this.calculateOptimalCellSize(beatCount, rows, totalCols, effectiveContainer);
+    const optimalCellSize = this.calculateOptimalCellSize(
+      beatCount,
+      rows,
+      totalCols,
+      effectiveContainer
+    );
 
     const step = optimalCellSize + effectiveConfig.gap;
     const totalWidth = totalCols * step - effectiveConfig.gap;
@@ -123,11 +146,11 @@ export class BeatFrameService implements IBeatFrameService {
       shouldScroll,
     };
   }
-  
+
   // ============================================================================
   // LAYOUT OPTIMIZATION METHODS
   // ============================================================================
-  
+
   autoAdjustLayout(beatCount: number): [number, number] {
     if (beatCount <= 0) return [1, 1];
     if (beatCount <= 4) return [1, beatCount];
@@ -138,13 +161,13 @@ export class BeatFrameService implements IBeatFrameService {
     if (beatCount <= 24) return [4, 6];
     if (beatCount <= 28) return [4, 7];
     if (beatCount <= 32) return [4, 8];
-    
+
     // For larger sequences, use dynamic calculation
     const cols = Math.ceil(Math.sqrt(beatCount));
     const rows = Math.ceil(beatCount / cols);
     return [rows, cols];
   }
-  
+
   calculateCellSize(
     beatCount: number,
     containerWidth: number,
@@ -168,15 +191,19 @@ export class BeatFrameService implements IBeatFrameService {
 
     return Math.max(minSize, Math.min(maxSize, Math.floor(maxCellSize)));
   }
-  
+
   calculateOptimalCellSize(
     beatCount: number,
     rows: number,
     totalCols: number,
     containerDimensions?: ContainerDimensions
   ): number {
-    const effectiveContainer = containerDimensions ?? { width: 0, height: 0, isFullscreen: false };
-    
+    const effectiveContainer = containerDimensions ?? {
+      width: 0,
+      height: 0,
+      isFullscreen: false,
+    };
+
     if (effectiveContainer.width <= 0 || effectiveContainer.height <= 0) {
       return 160; // Default fallback
     }
@@ -190,12 +217,17 @@ export class BeatFrameService implements IBeatFrameService {
       0 // gap is handled in the config
     );
   }
-  
+
   // ============================================================================
   // BEAT INTERACTION HELPERS
   // ============================================================================
-  
-  getBeatAtPosition(x: number, y: number, beatCount: number, config?: BeatFrameConfig): number {
+
+  getBeatAtPosition(
+    x: number,
+    y: number,
+    beatCount: number,
+    config?: BeatFrameConfig
+  ): number {
     const effectiveConfig = config ?? this.getDefaultConfig();
     const step = effectiveConfig.beatSize + effectiveConfig.gap;
     const colRaw = Math.floor(x / step);
@@ -209,25 +241,16 @@ export class BeatFrameService implements IBeatFrameService {
     const index = row * Math.max(1, effectiveConfig.columns) + col;
     return index >= 0 && index < beatCount ? index : -1;
   }
-  
+
   isBeatVisible(beat: BeatData): boolean {
     return !beat.isBlank || beat.pictographData != null;
   }
-  
+
   getBeatDisplayText(beat: BeatData): string {
     if (beat.isBlank && !beat.pictographData) {
       // fallback: show beat number if available on metadata or domain type
-      return (
-        beat.beatNumber ??
-        (beat.metadata as Record<string, unknown>)?.beatNumber ??
-        ""
-      ).toString();
+      return beat.beatNumber.toString();
     }
-    const metadataLetter = (beat.metadata as Record<string, unknown>)?.letter;
-    return (
-      beat.pictographData?.letter ??
-      (typeof metadataLetter === "string" ? metadataLetter : "") ??
-      ""
-    );
+    return beat.pictographData?.letter?.toString() || "";
   }
 }

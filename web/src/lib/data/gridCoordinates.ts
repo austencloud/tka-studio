@@ -21,7 +21,10 @@ export interface GridCoordinateData {
   center_point: string;
 }
 
-export const gridCoordinates: Record<GridMode, GridCoordinateData> = {
+export const gridCoordinates: Record<
+  Exclude<GridMode, GridMode.SKEWED>,
+  GridCoordinateData
+> = {
   diamond: {
     hand_points: {
       normal: {
@@ -128,7 +131,10 @@ export function parseCoordinates(
  * Convert raw coordinate data into structured GridData format
  */
 export function createGridData(mode: GridMode): GridPointData {
-  const modeData = gridCoordinates[mode];
+  // SKEWED mode doesn't have its own coordinates - it uses both diamond and box
+  // For now, default to diamond when SKEWED is requested
+  const actualMode = mode === GridMode.SKEWED ? GridMode.DIAMOND : mode;
+  const modeData = gridCoordinates[actualMode];
 
   const parsePoints = (points: Record<string, string>) =>
     Object.fromEntries(

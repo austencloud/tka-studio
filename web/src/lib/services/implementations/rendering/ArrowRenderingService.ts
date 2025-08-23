@@ -12,7 +12,6 @@ import type { ISvgConfiguration } from "./SvgConfiguration";
 
 // Import the microservices
 import type {
-  ArrowSvgData,
   IArrowPathResolutionService,
   IArrowPositioningService,
   ISvgColorTransformationService,
@@ -57,12 +56,6 @@ export interface IArrowRenderingService {
   };
 
   applyColorToSvg(svgText: string, color: MotionColor): string;
-
-  // Method expected by DI container
-  loadArrowSvgData(
-    arrowData: ArrowPlacementData,
-    motionData: MotionData
-  ): Promise<ArrowSvgData>;
 }
 
 export class ArrowRenderingService implements IArrowRenderingService {
@@ -164,16 +157,5 @@ export class ArrowRenderingService implements IArrowRenderingService {
       viewBox: svgData.viewBox,
       center: svgData.center,
     };
-  }
-
-  /**
-   * Implementation of method expected by DI container
-   * Delegates to SvgLoadingService
-   */
-  async loadArrowSvgData(
-    arrowData: ArrowPlacementData,
-    motionData: MotionData
-  ): Promise<ArrowSvgData> {
-    return this.svgLoader.loadArrowSvgData(arrowData, motionData);
   }
 }

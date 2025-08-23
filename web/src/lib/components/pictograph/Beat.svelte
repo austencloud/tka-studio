@@ -50,11 +50,7 @@ The wrapped Pictograph component focuses purely on rendering pictograph data.
     // 1. beatNumber === 0 (common convention)
     // 2. Explicit metadata flag
     // 3. Special beat properties
-    return (
-      beat.beatNumber === 0 ||
-      beat.metadata?.isStartPosition === true ||
-      beat.metadata?.type === "start"
-    );
+    return beat.beatNumber === 0;
   });
 
   /** Get the display beat number */

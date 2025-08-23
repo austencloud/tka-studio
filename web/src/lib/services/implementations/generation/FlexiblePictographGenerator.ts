@@ -3,20 +3,19 @@
  * Handles A-F with data-driven pattern definitions
  */
 
-import type { PictographData } from "$lib/domain/PictographData";
-import { createPictographData } from "$lib/domain/PictographData";
-import { createMotionData } from "$lib/domain/MotionData";
-import { Letter, getLetterType } from "$lib/domain";
+import { Letter } from "$lib/domain";
 import {
-  GridPosition,
-  Timing,
   Direction,
-  MotionType,
-  RotationDirection,
+  GridPosition,
   Location,
   MotionColor,
-  GridMode,
+  MotionType,
+  RotationDirection,
+  Timing,
 } from "$lib/domain/enums";
+import { createMotionData } from "$lib/domain/MotionData";
+import type { PictographData } from "$lib/domain/PictographData";
+import { createPictographData } from "$lib/domain/PictographData";
 
 // Pattern Definition System
 interface LetterPattern {
@@ -526,12 +525,6 @@ export class FlexiblePictographGenerator {
     return createPictographData({
       id: crypto.randomUUID(),
       letter: params.letter as Letter, // Use letter string directly - TODO: fix Letter type
-      startPosition: params.startPosition,
-      endPosition: params.endPosition,
-      timing: params.timing,
-      direction: params.direction,
-      letterType: getLetterType(params.letter as Letter), // Get type from letter string
-      gridMode: GridMode.DIAMOND,
       // Arrows and props are now embedded in motions
       motions: {
         blue: createMotionData({

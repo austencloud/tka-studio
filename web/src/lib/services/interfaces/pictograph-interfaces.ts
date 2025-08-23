@@ -206,14 +206,6 @@ export interface ISvgLoadingService {
   ): Promise<ArrowSvgData>;
 
   /**
-   * Load arrow SVG data (alias method for DI container compatibility)
-   */
-  loadArrowSvgData(
-    arrowData: ArrowPlacementData,
-    motionData: MotionData
-  ): Promise<ArrowSvgData>;
-
-  /**
    * Fetch SVG content from a given path
    */
   fetchSvgContent(path: string): Promise<string>;

@@ -7,8 +7,6 @@
 <script lang="ts">
   import Pictograph from "$lib/components/pictograph/Pictograph.svelte";
   import type { PictographData } from "$lib/domain/PictographData";
-  import { createGridData } from "$lib/domain/GridData";
-  import { GridMode } from "$lib/domain/enums";
 
   // Props
   interface Props {
@@ -41,10 +39,7 @@
       beat: 0,
       isBlank: true,
       isMirrored: false,
-      gridData: createGridData({ gridMode: GridMode.DIAMOND }),
-      arrows: {},
       motions: {},
-      props: {},
       metadata: { isPlaceholder: true },
     } as PictographData;
   }

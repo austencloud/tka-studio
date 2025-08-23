@@ -3,6 +3,7 @@
  */
 
 import type { GridMode } from "../../../domain/enums";
+import type { GridData } from "../../../domain/GridData";
 import type { MotionData } from "../../../domain/MotionData";
 
 export interface IGridModeDerivationService {
@@ -16,10 +17,16 @@ export interface IGridModeDerivationService {
   /**
    * Check if motion uses cardinal locations
    */
-  usesCardinalLocations(motion: MotionData): boolean;
+  usesDiamondLocations(motion: MotionData): boolean;
 
   /**
    * Check if motion uses intercardinal locations
    */
-  usesIntercardinalLocations(motion: MotionData): boolean;
+  usesBoxLocations(motion: MotionData): boolean;
+
+  /**
+   * Compute complete GridData from motion data
+   * Uses deriveGridMode logic and creates GridData with default positioning
+   */
+  computeGridData(blueMotion: MotionData, redMotion: MotionData): GridData;
 }

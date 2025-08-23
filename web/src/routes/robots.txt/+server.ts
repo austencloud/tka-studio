@@ -22,7 +22,6 @@ Allow: /sequence-card
 Allow: /write
 
 # Development tools - lower priority but still allowed
-Allow: /arrow-debug
 Allow: /metadata-tester
 Allow: /motion-tester
 

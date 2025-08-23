@@ -1,182 +1,135 @@
 <!-- StartPositionPicker.svelte - Clean component following TKA architecture -->
 <script lang="ts">
-  import type { PictographData } from "$domain/PictographData";
-  import { resolve } from "$services/bootstrap";
-  import type { IStartPositionService } from "$services/interfaces/application-interfaces";
-  import type { IStartPositionSelectionService } from "$lib/services/interfaces/IStartPositionSelectionService";
-  import { onMount } from "svelte";
   import { GridMode } from "$lib/domain";
-
+  import { resolve } from "$services/bootstrap";
   // UI Components
-  import LoadingState from "./start-position/ui/LoadingState.svelte";
   import ErrorState from "./start-position/ui/ErrorState.svelte";
+  import LoadingState from "./start-position/ui/LoadingState.svelte";
   import PictographGrid from "./start-position/ui/PictographGrid.svelte";
   import TransitionOverlay from "./start-position/ui/TransitionOverlay.svelte";
 
-  // Props using runes
-  const { gridMode = GridMode.DIAMOND } = $props<{
-    gridMode?: GridMode;
-  }>();
+  // Props
+  let { sequenceState } = $props();
 
-  // Simple reactive state directly in component
+  // Get service from DI container (sequence state comes from props)
+  const sequenceStateService = resolve(
+    "ISequenceStateService"
+  ) as import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService;
+
+  // Get start position service from DI container
+  const startPositionService = resolve(
+    "IStartPositionService"
+  ) as import("$lib/services/interfaces/application-interfaces").IStartPositionService;
+
+  // Reactive state
   let isLoading = $state(true);
-  let startPositions = $state<PictographData[]>([]);
-  let loadingError = $state(false);
-  let selectedStartPos = $state<PictographData | null>(null);
+  let loadingError = $state<string | null>(null);
+  let startPositions = $state<any[]>([]);
+  let selectedStartPos = $state<any | null>(null);
   let isTransitioning = $state(false);
 
-  // Services
-  let startPositionService: IStartPositionService | null = null;
-  let selectionService: IStartPositionSelectionService | null = null;
-
-  // Initialize services once
-  function initializeServices() {
-    try {
-      console.log("StartPositionPicker: Attempting to resolve services...");
-
-      // Resolve services
-      try {
-        startPositionService = resolve("IStartPositionService");
-        console.log("StartPositionPicker: ✅ IStartPositionService resolved");
-      } catch (error) {
-        console.log(
-          "StartPositionPicker: ❌ Failed to resolve IStartPositionService:",
-          error
-        );
-        return false; // Container not ready yet
-      }
-
-      try {
-        selectionService = resolve("IStartPositionSelectionService");
-        console.log(
-          "StartPositionPicker: ✅ IStartPositionSelectionService resolved"
-        );
-      } catch (error) {
-        console.log(
-          "StartPositionPicker: ❌ Failed to resolve IStartPositionSelectionService:",
-          error
-        );
-        return false; // Container not ready yet
-      }
-
-      return true;
-    } catch (error) {
-      console.error("StartPositionPicker: Failed to resolve services:", error);
-      return false;
-    }
-  }
-
-  // Load start positions directly
-  async function loadStartPositions() {
-    console.log("StartPositionPicker: loadStartPositions called");
-
-    if (!startPositionService) {
-      console.log(
-        "StartPositionPicker: Service not available, trying to initialize..."
-      );
-      if (!initializeServices()) {
-        console.log("StartPositionPicker: Failed to initialize services");
-        return;
-      }
-    }
-
-    if (!startPositionService) {
-      console.log("StartPositionPicker: Still no service available");
-      return;
-    }
-
-    try {
-      console.log("StartPositionPicker: Setting loading to true");
-      isLoading = true;
-      loadingError = false;
-
-      console.log(
-        "StartPositionPicker: Calling getDefaultStartPositions with gridMode:",
-        gridMode
-      );
-      const positions =
-        await startPositionService.getDefaultStartPositions(gridMode);
-
-      console.log(
-        "StartPositionPicker: Received positions:",
-        positions?.length || 0
-      );
-      startPositions = positions || [];
-
-      console.log("StartPositionPicker: Setting loading to false");
-      isLoading = false;
-
-      console.log(
-        "StartPositionPicker: Final state - isLoading:",
-        isLoading,
-        "positions:",
-        startPositions.length
-      );
-    } catch (error) {
-      console.error(
-        "StartPositionPicker: Error loading start positions:",
-        error
-      );
-      loadingError = true;
-      startPositions = [];
-      isLoading = false;
-    }
-  }
-
-  // Handle start position selection using service
-  async function handleSelect(startPosPictograph: PictographData) {
-    if (!selectionService || !startPositionService) {
-      console.error("Services not available for start position selection");
-      return;
-    }
-
-    try {
-      // Set transition state
-      isTransitioning = true;
-      selectedStartPos = startPosPictograph;
-
-      // Use selection service to handle the complex business logic
-      await selectionService.selectStartPosition(
-        startPosPictograph,
-        startPositionService
-      );
-
-      // Clear transition state after a short delay
-      setTimeout(() => {
-        isTransitioning = false;
-      }, 200);
-    } catch (error) {
-      console.error(
-        "StartPositionPicker: Error selecting start position:",
-        error
-      );
-      isTransitioning = false;
-
-      // Show user-friendly error
-      alert(
-        `Failed to select start position: ${error instanceof Error ? error.message : "Unknown error"}`
-      );
-    }
-  }
-
-  // Initialize on mount
-  onMount(() => {
-    console.log("StartPositionPicker: onMount called");
+  // Load start positions when component mounts
+  $effect(() => {
     loadStartPositions();
   });
 
-  // Reload when grid mode changes
-  $effect(() => {
-    if (gridMode) {
-      loadStartPositions();
+  async function loadStartPositions() {
+    if (!startPositionService) {
+      console.error(
+        "❌ StartPositionPicker: No start position service available"
+      );
+      loadingError = "Start position service not available";
+      isLoading = false;
+      return;
     }
-  });
+
+    try {
+      isLoading = true;
+      loadingError = null;
+
+      console.log(
+        "🔄 StartPositionPicker: Loading start positions for DIAMOND mode"
+      );
+
+      // Load start positions from the service
+      const positions = await startPositionService.getDefaultStartPositions(
+        GridMode.DIAMOND
+      );
+      startPositions = positions;
+
+      console.log(
+        `✅ StartPositionPicker: Loaded ${positions.length} start positions`
+      );
+    } catch (error) {
+      console.error(
+        "❌ StartPositionPicker: Failed to load start positions",
+        error
+      );
+      loadingError =
+        error instanceof Error
+          ? error.message
+          : "Failed to load start positions";
+      startPositions = [];
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  async function handleSelect(position: any) {
+    selectedStartPos = position;
+    console.log("📍 StartPositionPicker: Selected position", position);
+
+    try {
+      // Create or get current sequence
+      let currentSequence = sequenceState.currentSequence;
+
+      if (!currentSequence) {
+        // Create a new sequence if none exists
+        console.log("🔄 StartPositionPicker: Creating new sequence");
+        currentSequence = sequenceStateService.createNewSequence(
+          "New Sequence",
+          16
+        );
+        sequenceState.setCurrentSequence(currentSequence);
+      }
+
+      // Convert the pictograph position to a beat data for start position
+      const startPositionBeat = {
+        id: crypto.randomUUID(),
+        beatNumber: 0, // Start position is beat 0
+        duration: 1.0,
+        blueReversal: false,
+        redReversal: false,
+        isBlank: false,
+        pictographData: position,
+        metadata: {
+          isStartPosition: true,
+          endPosition: position.letter || "unknown",
+        },
+      };
+
+      // Set the start position in the sequence
+      console.log("🎯 StartPositionPicker: Setting start position in sequence");
+      const updatedSequence = sequenceStateService.setStartPosition(
+        currentSequence,
+        startPositionBeat
+      );
+      sequenceState.setCurrentSequence(updatedSequence);
+
+      console.log(
+        "✅ StartPositionPicker: Start position set, should transition to option picker"
+      );
+    } catch (error) {
+      console.error(
+        "❌ StartPositionPicker: Failed to set start position",
+        error
+      );
+    }
+  }
 
   // Listen for sequence state changes to clear transition state
-  import { sequenceStateService } from "$lib/services/SequenceStateService.svelte";
-
   $effect(() => {
-    const currentSequence = sequenceStateService.currentSequence;
+    const currentSequence = sequenceState.currentSequence;
 
     // If a sequence with startPosition exists and we're transitioning, clear the transition
     if (currentSequence && currentSequence.startPosition && isTransitioning) {

@@ -7,25 +7,25 @@
  * Also includes page layout services for printable sequence card creation.
  */
 
-import type { BeatData, SequenceData, ValidationResult } from "./domain-types";
-import type { GridMode } from "./core-types";
 import type {
-  Page,
-  PageDimensions,
-  Margins,
-  Rectangle,
+  DPIConfiguration,
+  GridCalculationOptions,
   GridConfig,
-  PaperSize,
-  PageOrientation,
-  // PrintConfiguration, // Currently unused
-  PageLayoutConfig,
-  PageCreationOptions,
   LayoutCalculationRequest,
   LayoutCalculationResult,
   LayoutValidationResult,
-  GridCalculationOptions,
-  DPIConfiguration,
-} from "../../domain/pageLayoutTypes";
+  Margins,
+  Page,
+  PageCreationOptions,
+  PageDimensions,
+  // PrintConfiguration, // Currently unused
+  PageLayoutConfig,
+  PageOrientation,
+  PaperSize,
+  Rectangle,
+} from "../../domain/PageLayoutTypes";
+import type { GridMode } from "./core-types";
+import type { BeatData, SequenceData, ValidationResult } from "./domain-types";
 
 // ============================================================================
 // SEQUENCE REQUEST TYPES

@@ -27,6 +27,7 @@
 
 import type { LetterType, MotionData, PictographData } from "$lib/domain";
 import { GridMode, Location } from "$lib/domain";
+import { GridModeDerivationService } from "../../../implementations/domain/GridModeDerivationService";
 
 // Arrow color type - using string literals to match usage pattern
 type ArrowColor = "red" | "blue";
@@ -51,6 +52,8 @@ export interface IDashLocationCalculator {
 }
 
 export class DashLocationCalculator implements IDashLocationCalculator {
+  private gridModeService = new GridModeDerivationService();
+
   /**
    * Dash location calculation service.
    *
@@ -447,8 +450,17 @@ export class DashLocationCalculator implements IDashLocationCalculator {
     gridMode: GridMode;
     shiftLocation?: Location;
   } {
+    // Compute gridMode from motion data
+    const gridMode =
+      pictographData.motions?.blue && pictographData.motions?.red
+        ? this.gridModeService.deriveGridMode(
+            pictographData.motions.blue,
+            pictographData.motions.red
+          )
+        : GridMode.DIAMOND;
+
     const result: { gridMode: GridMode; shiftLocation?: Location } = {
-      gridMode: (pictographData.gridMode as GridMode) || GridMode.DIAMOND,
+      gridMode,
     };
 
     // Only add shiftLocation if we can detect it properly

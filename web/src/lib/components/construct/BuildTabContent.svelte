@@ -8,64 +8,23 @@
 <script lang="ts">
   import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
   import type { PictographData } from "$services/interfaces/domain-types";
-  import { resolve } from "$services/bootstrap";
-  import { createSequenceState } from "$lib/state/sequence-state.svelte";
-  import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
   import OptionPickerContainer from "./OptionPickerContainer.svelte";
   import StartPositionPicker from "./StartPositionPicker.svelte";
   // Import fade transition for smooth switching
-  import { getSettings } from "$lib/state/appState.svelte";
+  import { getSettings } from "$lib/state/app-state.svelte";
   import { fade } from "svelte/transition";
-
-  // Create component-scoped state using factory functions - lazily
-  let sequenceService: any = $state(null);
-  let sequenceState: any = $state(null);
-  let constructTabState: any = $state(null);
-
-  // Initialize services when container is ready
-  $effect(() => {
-    try {
-      if (!sequenceService) {
-        sequenceService = resolve("ISequenceService");
-
-        // Create state managers once service is available
-        if (sequenceService && !sequenceState) {
-          sequenceState = createSequenceState(sequenceService);
-          constructTabState = createConstructTabState(sequenceState);
-        }
-      }
-    } catch (error) {
-      console.error("BuildTabContent: Error initializing services:", error);
-    }
-  });
-
   // CRITICAL FIX: Also watch the singleton sequence state for updates
   // This ensures we react to changes made by the coordination service
-  import { sequenceStateService } from "$lib/services/SequenceStateService.svelte";
-  import { GridMode } from "$lib/domain";
+  import { resolve } from "$lib/services/bootstrap";
+  import { createSequenceState } from "$lib/state/sequence/sequence-state.svelte";
 
-  // Sync the component-scoped state with singleton state when it changes
-  $effect(() => {
-    if (!sequenceState) return; // Wait for state to be initialized
+  // Get service from DI container and create component-scoped state
+  const sequenceStateService = resolve(
+    "ISequenceStateService"
+  ) as import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService;
+  const sequenceState = createSequenceState(sequenceStateService);
 
-    const singletonSequence = sequenceStateService.currentSequence;
-    const componentSequence = sequenceState.currentSequence;
-
-    // If singleton has a different sequence, update component state
-    if (singletonSequence && singletonSequence.id !== componentSequence?.id) {
-      sequenceState.setCurrentSequence(singletonSequence);
-    }
-
-    // IMPORTANT: Also sync when startPosition changes
-    if (
-      singletonSequence &&
-      componentSequence &&
-      singletonSequence.id === componentSequence.id &&
-      singletonSequence.startPosition !== componentSequence.startPosition
-    ) {
-      sequenceState.setCurrentSequence(singletonSequence);
-    }
-  });
+  // TODO: Implement proper state synchronization with new DI pattern
 
   // Initialize component coordination using effect instead of onMount
   $effect(() => {
@@ -81,13 +40,19 @@
 
   // Reactive state from store
   let shouldShowStartPositionPicker = $derived.by(() => {
-    // CRITICAL FIX: Use singleton state directly for immediate reactivity
-    const singletonSequence = sequenceStateService.currentSequence;
-    const shouldShow = !singletonSequence || !singletonSequence.startPosition;
+    // Use the new sequence state
+    const currentSequence = sequenceState.currentSequence;
+    const shouldShow =
+      !currentSequence || !currentSequence.startingPositionBeat;
+
+    console.log("🔍 BuildTabContent: shouldShowStartPositionPicker check", {
+      hasSequence: !!currentSequence,
+      hasStartingPositionBeat: !!currentSequence?.startingPositionBeat,
+      shouldShow,
+    });
 
     return shouldShow;
   });
-  let gridMode = $derived(constructTabState?.gridMode || GridMode.DIAMOND);
   let settings = $derived(getSettings());
 
   // Transition functions that respect animation settings - same as main interface
@@ -117,7 +82,7 @@
   {#if shouldShowStartPositionPicker}
     <div class="content-container" in:contentIn out:contentOut>
       <div class="panel-content">
-        <StartPositionPicker {gridMode} />
+        <StartPositionPicker {sequenceState} />
       </div>
     </div>
   {/if}

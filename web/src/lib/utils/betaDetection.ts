@@ -6,6 +6,7 @@
 
 import { GridPosition } from "$lib/domain/enums";
 import type { PictographData } from "$lib/domain/PictographData";
+import { PositionMappingService } from "$lib/services/implementations/movement/PositionMappingService";
 
 /**
  * Check if a grid position is a beta position
@@ -19,26 +20,44 @@ export function isBetaPosition(position: string | GridPosition): boolean {
 /**
  * Check if a pictograph ends with beta (end position is a beta position)
  *
- * ✅ SIMPLIFIED: Only check endPosition field for consistency.
- * All pictographs MUST have endPosition set by PictographDataFactory.
+ * Computes end position from motion data using PositionMappingService
  */
 export function endsWithBeta(pictographData: PictographData): boolean {
-  if (!pictographData.endPosition) {
+  const positionService = new PositionMappingService();
+
+  if (!pictographData.motions?.blue || !pictographData.motions?.red) {
     console.warn(
-      "⚠️ PictographData missing endPosition - this should not happen with PictographDataFactory"
+      "⚠️ PictographData missing motion data for position calculation"
     );
     return false;
   }
 
-  return isBetaPosition(pictographData.endPosition);
+  const endPosition = positionService.getPositionFromLocations(
+    pictographData.motions.blue.endLocation,
+    pictographData.motions.red.endLocation
+  );
+
+  return isBetaPosition(endPosition);
 }
 
 /**
  * Check if a pictograph starts with beta (start position is a beta position)
+ *
+ * Computes start position from motion data using PositionMappingService
  */
 export function startsWithBeta(pictographData: PictographData): boolean {
-  if (!pictographData.startPosition) return false;
-  return isBetaPosition(pictographData.startPosition);
+  const positionService = new PositionMappingService();
+
+  if (!pictographData.motions?.blue || !pictographData.motions?.red) {
+    return false;
+  }
+
+  const startPosition = positionService.getPositionFromLocations(
+    pictographData.motions.blue.startLocation,
+    pictographData.motions.red.startLocation
+  );
+
+  return isBetaPosition(startPosition);
 }
 
 /**

@@ -1,6 +1,7 @@
 <!-- DetailedInfoPanel.svelte - Detailed information about selected beat -->
 <script lang="ts">
   import { GridMode, MotionColor } from "$lib/domain/enums";
+  import { GridModeDerivationService } from "$lib/services/implementations/domain/GridModeDerivationService";
   import type {
     BeatData,
     SequenceData,
@@ -67,12 +68,22 @@
   function getPositionInfo(beatData: BeatData | null) {
     if (!beatData?.pictographData) return null;
 
+    const pictographData = beatData.pictographData;
+
+    // Compute gridMode from motion data
+    const gridModeService = new GridModeDerivationService();
+    const gridMode =
+      pictographData.motions?.blue && pictographData.motions?.red
+        ? gridModeService.deriveGridMode(
+            pictographData.motions.blue,
+            pictographData.motions.red
+          )
+        : GridMode.DIAMOND;
+
     return {
-      gridMode: beatData.pictographData.gridMode || GridMode.DIAMOND,
-      blueStart:
-        beatData.pictographData.motions?.blue?.startLocation || "Unknown",
-      redStart:
-        beatData.pictographData.motions?.red?.startLocation || "Unknown",
+      gridMode,
+      blueStart: pictographData.motions?.blue?.startLocation || "Unknown",
+      redStart: pictographData.motions?.red?.startLocation || "Unknown",
     };
   }
 

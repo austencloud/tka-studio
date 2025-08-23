@@ -308,11 +308,6 @@ export class SequenceGenerationService implements ISequenceGenerationService {
         ...pictograph,
         motions,
       },
-      metadata: {
-        generated: true,
-        generatedAt: new Date().toISOString(),
-        letter: pictograph.letter,
-      },
     };
   }
 

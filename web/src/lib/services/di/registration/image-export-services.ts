@@ -11,29 +11,44 @@ import type { ServiceInterface } from "../types";
 
 // Import service interfaces (proper ServiceInterface objects)
 import {
-  ITKAImageExportServiceInterface,
-  ILayoutCalculationServiceInterface,
+  IBeatRenderingServiceInterface,
+  ICanvasManagementServiceInterface,
   IDimensionCalculationServiceInterface,
   IFileExportServiceInterface,
-  IBeatRenderingServiceInterface,
-  ITextRenderingServiceInterface,
-  IImageCompositionServiceInterface,
   IGridOverlayServiceInterface,
-  ICanvasManagementServiceInterface,
+  IImageCompositionServiceInterface,
+  ILayoutCalculationServiceInterface,
+  ITextRenderingServiceInterface,
+  ITKAImageExportServiceInterface,
+  // Text rendering component interfaces
+  IWordTextRendererInterface,
+  IUserInfoRendererInterface,
+  IDifficultyBadgeRendererInterface,
+  ITextRenderingUtilsInterface,
 } from "../interfaces/image-export-interfaces";
 
-import { IPictographServiceInterface } from "../interfaces/core-interfaces";
+import {
+  IBeatFallbackRenderingServiceInterface,
+  IBeatGridServiceInterface,
+  IPictographServiceInterface,
+  ISVGToCanvasConverterServiceInterface,
+} from "../interfaces/core-interfaces";
 
 // Import service implementations
-import { TKAImageExportService } from "../../implementations/image-export/TKAImageExportService";
-import { LayoutCalculationService } from "../../implementations/image-export/LayoutCalculationService";
+import { BeatRenderingService } from "../../implementations/image-export/BeatRenderingService";
+import { CanvasManagementService } from "../../implementations/image-export/CanvasManagementService";
 import { DimensionCalculationService } from "../../implementations/image-export/DimensionCalculationService";
 import { FileExportService } from "../../implementations/image-export/FileExportService";
-import { BeatRenderingService } from "../../implementations/image-export/BeatRenderingService";
-import { TextRenderingService } from "../../implementations/image-export/TextRenderingService";
-import { ImageCompositionService } from "../../implementations/image-export/ImageCompositionService";
 import { GridOverlayService } from "../../implementations/image-export/GridOverlayService";
-import { CanvasManagementService } from "../../implementations/image-export/CanvasManagementService";
+import { ImageCompositionService } from "../../implementations/image-export/ImageCompositionService";
+import { LayoutCalculationService } from "../../implementations/image-export/LayoutCalculationService";
+import { TKAImageExportService } from "../../implementations/image-export/TKAImageExportService";
+
+// Import text rendering component implementations
+import { WordTextRenderer } from "../../implementations/image-export/text-rendering/internal/WordTextRenderer";
+import { UserInfoRenderer } from "../../implementations/image-export/text-rendering/internal/UserInfoRenderer";
+import { DifficultyBadgeRenderer } from "../../implementations/image-export/text-rendering/internal/DifficultyBadgeRenderer";
+import { TextRenderingUtils } from "../../implementations/image-export/text-rendering/internal/TextRenderingUtils";
 
 /**
  * Register all TKA image export services with the DI container
@@ -66,14 +81,44 @@ export async function registerImageExportServices(
 
     container.registerFactory(IBeatRenderingServiceInterface, () => {
       const pictographService = container.resolve(IPictographServiceInterface);
-      return new BeatRenderingService(pictographService);
+      const svgToCanvasConverter = container.resolve(
+        ISVGToCanvasConverterServiceInterface
+      );
+      const beatGridService = container.resolve(IBeatGridServiceInterface);
+      const fallbackService = container.resolve(
+        IBeatFallbackRenderingServiceInterface
+      );
+      const canvasManager = container.resolve(
+        ICanvasManagementServiceInterface
+      );
+
+      return new BeatRenderingService(
+        pictographService,
+        svgToCanvasConverter,
+        beatGridService,
+        fallbackService,
+        canvasManager
+      );
     });
 
-    container.registerFactory(ITextRenderingServiceInterface, () => {
-      return new TextRenderingService();
+    // Register text rendering components (no dependencies)
+    container.registerFactory(IWordTextRendererInterface, () => {
+      return new WordTextRenderer();
     });
 
-    // Register composition service (depends on layout, dimension, beat rendering, and text rendering)
+    container.registerFactory(IUserInfoRendererInterface, () => {
+      return new UserInfoRenderer();
+    });
+
+    container.registerFactory(IDifficultyBadgeRendererInterface, () => {
+      return new DifficultyBadgeRenderer();
+    });
+
+    container.registerFactory(ITextRenderingUtilsInterface, () => {
+      return new TextRenderingUtils();
+    });
+
+    // Register composition service (depends on layout, dimension, beat rendering, and text rendering components)
     container.registerFactory(IImageCompositionServiceInterface, () => {
       const layoutService = container.resolve(
         ILayoutCalculationServiceInterface
@@ -82,13 +127,19 @@ export async function registerImageExportServices(
         IDimensionCalculationServiceInterface
       );
       const beatRenderer = container.resolve(IBeatRenderingServiceInterface);
-      const textRenderer = container.resolve(ITextRenderingServiceInterface);
+      const wordRenderer = container.resolve(IWordTextRendererInterface);
+      const userInfoRenderer = container.resolve(IUserInfoRendererInterface);
+      const difficultyRenderer = container.resolve(IDifficultyBadgeRendererInterface);
+      const textUtils = container.resolve(ITextRenderingUtilsInterface);
 
       return new ImageCompositionService(
         layoutService,
         dimensionService,
         beatRenderer,
-        textRenderer
+        wordRenderer,
+        userInfoRenderer,
+        difficultyRenderer,
+        textUtils
       );
     });
 

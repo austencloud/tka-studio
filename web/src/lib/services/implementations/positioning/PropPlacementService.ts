@@ -16,6 +16,7 @@ import { createPropPlacementFromPosition } from "$lib/domain/PropPlacementData";
 import { endsWithBeta } from "$lib/utils/betaDetection";
 import { DefaultPropPositioner } from "../../DefaultPropPositioner";
 import { PropRotAngleManager } from "../../PropRotAngleManager";
+import { GridModeDerivationService } from "../domain/GridModeDerivationService";
 import { BetaOffsetCalculator } from "./BetaOffsetCalculator";
 import { BetaPropDirectionCalculator } from "./BetaPropDirectionCalculator";
 
@@ -27,12 +28,25 @@ export interface IPropPlacementService {
 }
 
 export class PropPlacementService implements IPropPlacementService {
+  private gridModeService = new GridModeDerivationService();
+
   calculatePlacement(
     pictographData: PictographData,
     motionData: MotionData
   ): PropPlacementData {
-    const gridMode = pictographData.gridMode || GridMode.DIAMOND;
-    const position = this.calculatePosition(pictographData, motionData);
+    // Compute gridMode from motion data
+    const gridMode =
+      pictographData.motions?.blue && pictographData.motions?.red
+        ? this.gridModeService.deriveGridMode(
+            pictographData.motions.blue,
+            pictographData.motions.red
+          )
+        : GridMode.DIAMOND;
+    const position = this.calculatePosition(
+      pictographData,
+      motionData,
+      gridMode
+    );
 
     const rotation = PropRotAngleManager.calculateRotation(
       motionData.endLocation,
@@ -45,7 +59,8 @@ export class PropPlacementService implements IPropPlacementService {
 
   private calculatePosition(
     pictographData: PictographData,
-    motionData: MotionData
+    motionData: MotionData,
+    gridMode: GridMode
   ): { x: number; y: number } {
     // Prop data is now embedded in motionData
     const propPlacement = motionData.propPlacementData;
@@ -58,7 +73,7 @@ export class PropPlacementService implements IPropPlacementService {
 
     const basePosition = DefaultPropPositioner.calculatePosition(
       motionData.endLocation,
-      pictographData.gridMode || GridMode.DIAMOND
+      gridMode
     );
 
     const betaOffset = this.calculateBetaOffset(pictographData, motionData);

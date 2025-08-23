@@ -14,7 +14,6 @@
 import { browser } from "$app/environment";
 // import type { SequenceData } from "$lib/domain/browse";
 import { SortMethod } from "$lib/domain/browse";
-import { getBrowseStatePersistence } from "./appState.svelte";
 import type {
   BrowseFilterState,
   BrowseScrollState,
@@ -23,6 +22,7 @@ import type {
   BrowseViewState,
   CompleteBrowseState,
 } from "../services/implementations/browse/BrowseStatePersistenceService";
+import { getBrowseStatePersistence } from "./app-state.svelte";
 
 // ============================================================================
 // BROWSE TAB STATE MANAGER

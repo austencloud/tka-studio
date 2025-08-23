@@ -203,6 +203,14 @@ export type {
   UserInfo,
 } from "./image-export-interfaces";
 
+// Text rendering component interfaces
+export type {
+  IWordTextRenderer,
+  IUserInfoRenderer,
+  IDifficultyBadgeRenderer,
+  ITextRenderingUtils,
+} from "./text-rendering-interfaces";
+
 export {
   IBeatRenderingServiceInterface,
   ICanvasManagementServiceInterface,
@@ -217,6 +225,14 @@ export {
   ITextRenderingServiceInterface,
   ITKAImageExportServiceInterface,
 } from "./image-export-interfaces";
+
+// Text rendering component DI interfaces  
+export {
+  IWordTextRendererInterface,
+  IUserInfoRendererInterface,
+  IDifficultyBadgeRendererInterface,
+  ITextRenderingUtilsInterface,
+} from "../di/interfaces/image-export-interfaces";
 
 // ============================================================================
 // PANEL INTERFACES

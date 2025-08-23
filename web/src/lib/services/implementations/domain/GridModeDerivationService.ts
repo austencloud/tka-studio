@@ -3,70 +3,106 @@
  *
  * CORRECTED LOGIC:
  * - Cardinal locations (N, E, S, W) in start/end positions = DIAMOND mode
- * - Intercardinal locations (NE, SE, SW, NW) in start/end positions = BOX mode
+ * - Box locations (NE, SE, SW, NW) in start/end positions = BOX mode
  */
 
-import type { MotionData } from "../../../domain/MotionData";
 import { GridMode, Location } from "../../../domain/enums";
+import { createGridData, type GridData } from "../../../domain/GridData";
+import type { MotionData } from "../../../domain/MotionData";
 import type { IGridModeDerivationService } from "../../interfaces/movement/IGridModeDerivationService";
 
 export class GridModeDerivationService implements IGridModeDerivationService {
+  private readonly cardinalLocations = [
+    Location.NORTH,
+    Location.EAST,
+    Location.SOUTH,
+    Location.WEST,
+  ];
+  private readonly intercardinalLocations = [
+    Location.NORTHEAST,
+    Location.SOUTHEAST,
+    Location.SOUTHWEST,
+    Location.NORTHWEST,
+  ];
+
   /**
    * Determine grid mode from motion start/end locations
    *
    * CORRECTED: Cardinal locations = Diamond mode (not the other way around)
    */
   deriveGridMode(blueMotion: MotionData, redMotion: MotionData): GridMode {
-    const cardinalLocations = [
-      Location.NORTH,
-      Location.EAST,
-      Location.SOUTH,
-      Location.WEST,
-    ];
+    const blueIsDiamond = this.usesDiamondLocations(blueMotion);
+    const redIsDiamond = this.usesDiamondLocations(redMotion);
 
-    const hasBlueStart = cardinalLocations.includes(blueMotion.startLocation);
-    const hasBlueEnd = cardinalLocations.includes(blueMotion.endLocation);
-    const hasRedStart = cardinalLocations.includes(redMotion.startLocation);
-    const hasRedEnd = cardinalLocations.includes(redMotion.endLocation);
+    const blueIsBox = this.usesBoxLocations(blueMotion);
+    const redIsBox = this.usesBoxLocations(redMotion);
 
-    // If any start/end location is cardinal, it's DIAMOND mode
-    if (hasBlueStart || hasBlueEnd || hasRedStart || hasRedEnd) {
-      return GridMode.DIAMOND;
+    const blueIsSkewed = this.isSkewed(blueMotion);
+    const redIsSkewed = this.isSkewed(redMotion);
+
+    if (blueIsSkewed || redIsSkewed) {
+      return GridMode.SKEWED;
     }
 
-    // Otherwise it's BOX mode (intercardinal locations)
-    return GridMode.BOX;
+    if (blueIsDiamond && redIsDiamond) {
+      return GridMode.DIAMOND;
+    } else if (blueIsBox && redIsBox) {
+      return GridMode.BOX;
+    } else {
+      // Fallback if motions don't match expected patterns
+      console.warn(
+        "GridModeDerivationService: Unable to determine grid mode from motions. Defaulting to DIAMOND."
+      );
+      return GridMode.DIAMOND;
+    }
   }
-
   /**
    * Determine if motion uses cardinal locations
    */
-  usesCardinalLocations(motion: MotionData): boolean {
-    const cardinalLocations = [
-      Location.NORTH,
-      Location.EAST,
-      Location.SOUTH,
-      Location.WEST,
-    ];
+  usesDiamondLocations(motion: MotionData): boolean {
     return (
-      cardinalLocations.includes(motion.startLocation) ||
-      cardinalLocations.includes(motion.endLocation)
+      this.cardinalLocations.includes(motion.startLocation) &&
+      this.cardinalLocations.includes(motion.endLocation)
     );
   }
 
   /**
    * Determine if motion uses intercardinal locations
    */
-  usesIntercardinalLocations(motion: MotionData): boolean {
-    const intercardinalLocations = [
-      Location.NORTHEAST,
-      Location.SOUTHEAST,
-      Location.SOUTHWEST,
-      Location.NORTHWEST,
-    ];
+  usesBoxLocations(motion: MotionData): boolean {
     return (
-      intercardinalLocations.includes(motion.startLocation) ||
-      intercardinalLocations.includes(motion.endLocation)
+      this.intercardinalLocations.includes(motion.startLocation) &&
+      this.intercardinalLocations.includes(motion.endLocation)
     );
+  }
+
+  /**
+   * Determine if motion is skewed (starts in one mode and ends in another)
+   */
+  isSkewed(motion: MotionData): boolean {
+    const startIsCardinal = this.cardinalLocations.includes(
+      motion.startLocation
+    );
+    const endIsCardinal = this.cardinalLocations.includes(motion.endLocation);
+    const startIsBox = this.intercardinalLocations.includes(
+      motion.startLocation
+    );
+    const endIsBox = this.intercardinalLocations.includes(motion.endLocation);
+
+    return (startIsCardinal && endIsBox) || (startIsBox && endIsCardinal);
+  }
+
+  /**
+   * Compute complete GridData from motion data
+   * Uses existing deriveGridMode logic and creates GridData with default positioning
+   */
+  computeGridData(blueMotion: MotionData, redMotion: MotionData): GridData {
+    const gridMode = this.deriveGridMode(blueMotion, redMotion);
+    return createGridData({
+      gridMode,
+      centerX: 0.0,
+      centerY: 0.0,
+      radius: 100.0,
+    });
   }
 }

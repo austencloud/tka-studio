@@ -5,29 +5,33 @@
  * Based on the desktop StartPositionOrchestrator but simplified for web.
  */
 
+import { Letter } from "$lib/domain/Letter";
+import type { ValidationError } from "$lib/domain/SequenceCard";
 import type { BeatData, PictographData } from "../../../domain";
 import {
-  MotionColor,
   createBeatData,
   createMotionData,
   createPictographData,
   GridMode,
   Location,
+  MotionColor,
   MotionType,
   Orientation,
   PropType,
   RotationDirection,
 } from "../../../domain";
-import type { ValidationResult } from "../../interfaces/domain-types";
 import type { IStartPositionService } from "../../interfaces/application-interfaces";
-import type { ValidationError } from "$lib/domain/sequenceCard";
-import { Letter } from "$lib/domain/Letter";
+import type { ValidationResult } from "../../interfaces/domain-types";
+import { PositionMappingService } from "../movement/PositionMappingService";
 
 export class StartPositionService implements IStartPositionService {
-  private readonly DEFAULT_START_POSITIONS = {
-    diamond: ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"],
-    box: ["alpha2_alpha2", "beta4_beta4", "gamma12_gamma12"],
+  private readonly DEFAULT_START_POSITIONS: Record<string, string[]> = {
+    [GridMode.DIAMOND]: ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"],
+    [GridMode.BOX]: ["alpha2_alpha2", "beta4_beta4", "gamma12_gamma12"],
+    // SKEWED mode doesn't have separate start positions - it's determined by individual motions
   };
+
+  private positionService = new PositionMappingService();
 
   async getAvailableStartPositions(
     propType: string,
@@ -38,7 +42,10 @@ export class StartPositionService implements IStartPositionService {
     );
 
     try {
-      const startPositionKeys = this.DEFAULT_START_POSITIONS[gridMode];
+      // For SKEWED mode, default to diamond positions
+      const actualGridMode =
+        gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+      const startPositionKeys = this.DEFAULT_START_POSITIONS[actualGridMode];
 
       if (!startPositionKeys) {
         console.error(
@@ -52,11 +59,7 @@ export class StartPositionService implements IStartPositionService {
           return createBeatData({
             beatNumber: 0,
             isBlank: false,
-            pictographData: this.createStartPositionPictograph(
-              key,
-              index,
-              GridMode.DIAMOND
-            ),
+            pictographData: this.createStartPositionPictograph(key, index),
           });
         });
 
@@ -70,11 +73,7 @@ export class StartPositionService implements IStartPositionService {
         return createBeatData({
           beatNumber: 0,
           isBlank: false,
-          pictographData: this.createStartPositionPictograph(
-            key,
-            index,
-            gridMode
-          ),
+          pictographData: this.createStartPositionPictograph(key, index),
         });
       });
 
@@ -86,7 +85,7 @@ export class StartPositionService implements IStartPositionService {
     }
   }
 
-  async setStartPosition(startPosition: BeatData): Promise<void> {
+  async setStartPosition(startPositionBeat: BeatData): Promise<void> {
     try {
       // Store in localStorage for persistence in the format OptionPicker expects
       if (typeof window !== "undefined") {
@@ -105,14 +104,31 @@ export class StartPositionService implements IStartPositionService {
         }
 
         // Create the format that OptionPicker expects
+        if (!startPositionBeat.pictographData) {
+          console.warn("⚠️ Start position beat missing pictographData");
+          return;
+        }
+
+        const pictographData = startPositionBeat.pictographData;
+
+        // Compute endPosition from motion data
+        const endPosition =
+          pictographData.motions?.blue && pictographData.motions?.red
+            ? this.positionService.getPositionFromLocations(
+                pictographData.motions.blue.endLocation,
+                pictographData.motions.red.endLocation
+              )
+            : null;
+
+        const { pictographData: _, ...beatWithoutPictographData } =
+          startPositionBeat;
         const optionPickerFormat = {
-          endPosition: startPosition.metadata?.endPosition || "alpha1", // Extract from metadata
-          pictographData: startPosition.pictographData,
-          letter: startPosition.pictographData?.letter,
+          endPosition,
+          pictographData,
+          letter: pictographData.letter,
           gridMode: GridMode.DIAMOND, // Default
           isStartPosition: true,
-          // Include the full beat data for compatibility
-          ...startPosition,
+          ...beatWithoutPictographData,
         };
 
         localStorage.setItem(
@@ -182,7 +198,10 @@ export class StartPositionService implements IStartPositionService {
     gridMode: GridMode
   ): Promise<PictographData[]> {
     try {
-      const startPositionKeys = this.DEFAULT_START_POSITIONS[gridMode];
+      // For SKEWED mode, default to diamond positions
+      const actualGridMode =
+        gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+      const startPositionKeys = this.DEFAULT_START_POSITIONS[actualGridMode];
 
       if (!startPositionKeys) {
         console.error(
@@ -192,15 +211,14 @@ export class StartPositionService implements IStartPositionService {
         const fallbackKeys = this.DEFAULT_START_POSITIONS.diamond;
 
         const pictographData: PictographData[] = fallbackKeys.map(
-          (key, index) =>
-            this.createStartPositionPictograph(key, index, GridMode.DIAMOND)
+          (key, index) => this.createStartPositionPictograph(key, index)
         );
 
         return pictographData;
       }
 
       const pictographData: PictographData[] = startPositionKeys.map(
-        (key, index) => this.createStartPositionPictograph(key, index, gridMode)
+        (key, index) => this.createStartPositionPictograph(key, index)
       );
 
       return pictographData;
@@ -212,8 +230,7 @@ export class StartPositionService implements IStartPositionService {
 
   private createStartPositionPictograph(
     key: string,
-    index: number,
-    gridMode: GridMode
+    index: number
   ): PictographData {
     // ✅ CENTRALIZED: Use PictographDataFactory for consistent creation
 
@@ -249,7 +266,6 @@ export class StartPositionService implements IStartPositionService {
     return createPictographData({
       id: `start-pos-${key}-${index}`,
       letter,
-      gridMode,
       motions: {
         blue: createMotionData({
           motionType: MotionType.STATIC,

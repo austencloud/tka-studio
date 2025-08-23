@@ -10,7 +10,8 @@ import type { IBeatFrameService } from "$lib/services/interfaces/beat-frame-inte
 // SERVICE INTERFACE DEFINITIONS
 // ============================================================================
 
-export const IBeatFrameServiceInterface = createServiceInterface<IBeatFrameService>(
-  "IBeatFrameService",
-  BeatFrameService
-);
+export const IBeatFrameServiceInterface =
+  createServiceInterface<IBeatFrameService>(
+    "IBeatFrameService",
+    BeatFrameService
+  );

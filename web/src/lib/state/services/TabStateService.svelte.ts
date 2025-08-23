@@ -88,7 +88,6 @@ class TabStateService implements ITabStateService {
           "learn",
           "about",
           "motion-tester",
-          "arrow-debug",
         ];
         if (validTabs.includes(tabState.activeTab as TabId)) {
           this.#activeTab = tabState.activeTab as TabId;

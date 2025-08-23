@@ -8,11 +8,11 @@
 // Re-export core domain models
 export type {
   ArrowPlacementData,
-  PropPlacementData,
   BeatData,
-  SequenceData,
   MotionData,
   PictographData,
+  PropPlacementData,
+  SequenceData,
 } from "../../domain";
 
 // Re-export browse domain types
@@ -26,22 +26,22 @@ export type {
 
 // Re-export sequence card domain types
 export type {
-  LayoutConfig,
-  ExportOptions,
-  SequenceCardExportSettings,
-  DeviceCapabilities,
-  PrintLayoutOptions,
-  CacheEntry,
   CacheConfig,
-  ProgressInfo,
-  ValidationResult,
+  CacheEntry,
+  DeviceCapabilities,
+  ExportOptions,
   ExportResult,
-} from "../../domain/sequenceCard";
+  LayoutConfig,
+  PrintLayoutOptions,
+  ProgressInfo,
+  SequenceCardExportSettings,
+  ValidationResult,
+} from "../../domain/SequenceCard";
 
 // Re-export enums for convenience
 export type {
-  MotionType,
   Location,
+  MotionType,
   Orientation,
   RotationDirection,
 } from "../../domain/enums";

@@ -52,9 +52,6 @@ export class StartPositionSelectionService
         redReversal: false,
         isBlank: false,
         pictographData: startPosPictograph,
-        metadata: {
-          endPosition: endPosition,
-        },
       };
 
       // Save to localStorage in the format OptionPicker expects

@@ -18,8 +18,7 @@ export type TabId =
   | "write"
   | "learn"
   | "about"
-  | "motion-tester"
-  | "arrow-debug";
+  | "motion-tester";
 
 export type Theme = "light" | "dark";
 

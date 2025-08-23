@@ -6,7 +6,7 @@
     getShowSettings,
     isTabActive,
     switchTab,
-  } from "$lib/state/appState.svelte";
+  } from "$lib/state/app-state.svelte";
   // Import background types
   import { BackgroundType } from "./backgrounds/types/types";
 
@@ -56,7 +56,6 @@
     { id: "sequence_card", label: "Sequence Card", icon: "🎴", isMain: false },
     { id: "write", label: "Write", icon: "✍️", isMain: false },
     { id: "motion-tester", label: "Motion Tester", icon: "🎯", isMain: false },
-    { id: "arrow-debug", label: "Arrow Debug", icon: "🏹", isMain: false },
   ] as const;
 
   // Filter tabs based on developer mode
@@ -105,7 +104,6 @@
         | "learn"
         | "about"
         | "motion-tester"
-        | "arrow-debug"
     );
   }
 

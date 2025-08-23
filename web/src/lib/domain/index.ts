@@ -13,7 +13,7 @@ export * from "./BeatData";
 export * from "./GridData";
 export * from "./Letter";
 export * from "./MotionData";
-export * from "./pageLayoutTypes";
+export * from "./PageLayoutTypes";
 export * from "./PictographData";
 export * from "./PropPlacementData";
 export * from "./SequenceData";

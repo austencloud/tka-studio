@@ -3,7 +3,7 @@
  * Just checks if animations should be enabled
  */
 
-import { getSettings } from "$lib/state/appState.svelte";
+import { getSettings } from "$lib/state/app-state.svelte";
 
 /**
  * Check if animations should run based on settings and user preferences

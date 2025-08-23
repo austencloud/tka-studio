@@ -5,13 +5,11 @@
  * Ports the exact functionality from desktop DefaultPlacementService.
  */
 
-import { GridMode as DomainGridMode } from "$lib/domain";
-import type { GridMode } from "../../interfaces/core-types";
-import { MotionType } from "$lib/domain/enums"; // ✅ Import from centralized enums
+import { GridMode, MotionType } from "$lib/domain/enums"; // ✅ Import from centralized enums
 import { jsonCache } from "../../positioning/cache/SimpleJsonCache";
 
 // Placement data structure from JSON files
-export interface PlacementData {
+export interface JsonPlacementData {
   [placementKey: string]: {
     [turns: string]: [number, number]; // [x, y] adjustment
   };
@@ -19,7 +17,7 @@ export interface PlacementData {
 
 // Complete placement data for all motion types
 export interface GridPlacementData {
-  [motionType: string]: PlacementData;
+  [motionType: string]: JsonPlacementData;
 }
 
 // All placement data for all grid modes
@@ -46,15 +44,15 @@ export interface IArrowPlacementService {
 
 export class ArrowPlacementService implements IArrowPlacementService {
   private allPlacements: AllPlacementData = {
-    [DomainGridMode.DIAMOND]: {},
-    [DomainGridMode.BOX]: {},
+    [GridMode.DIAMOND]: {},
+    [GridMode.BOX]: {},
   };
 
   private isDataLoaded = false;
 
   // File mapping for placement data
-  private readonly placementFiles = {
-    [DomainGridMode.DIAMOND]: {
+  private readonly placementFiles: Record<string, Record<string, string>> = {
+    [GridMode.DIAMOND]: {
       pro: "/data/arrow_placement/diamond/default/default_diamond_pro_placements.json",
       anti: "/data/arrow_placement/diamond/default/default_diamond_anti_placements.json",
       float:
@@ -63,7 +61,7 @@ export class ArrowPlacementService implements IArrowPlacementService {
       static:
         "/data/arrow_placement/diamond/default/default_diamond_static_placements.json",
     },
-    [DomainGridMode.BOX]: {
+    [GridMode.BOX]: {
       pro: "/data/arrow_placement/box/default/default_box_pro_placements.json",
       anti: "/data/arrow_placement/box/default/default_box_anti_placements.json",
       float:
@@ -72,6 +70,7 @@ export class ArrowPlacementService implements IArrowPlacementService {
       static:
         "/data/arrow_placement/box/default/default_box_static_placements.json",
     },
+    // SKEWED mode doesn't have separate files - it uses both diamond and box
   };
 
   /**
@@ -84,10 +83,10 @@ export class ArrowPlacementService implements IArrowPlacementService {
 
     try {
       // Load diamond placements
-      await this.loadGridPlacements(DomainGridMode.DIAMOND);
+      await this.loadGridPlacements(GridMode.DIAMOND);
 
       // Load box placements (may not exist yet)
-      await this.loadGridPlacements(DomainGridMode.BOX);
+      await this.loadGridPlacements(GridMode.BOX);
 
       this.isDataLoaded = true;
     } catch (error) {
@@ -102,7 +101,10 @@ export class ArrowPlacementService implements IArrowPlacementService {
    * Load placements for a specific grid mode
    */
   private async loadGridPlacements(gridMode: GridMode): Promise<void> {
-    const files = this.placementFiles[gridMode];
+    // For SKEWED mode, default to diamond files
+    const actualGridMode =
+      gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+    const files = this.placementFiles[actualGridMode];
     this.allPlacements[gridMode] = {};
 
     for (const [motionType, filePath] of Object.entries(files)) {
@@ -121,10 +123,10 @@ export class ArrowPlacementService implements IArrowPlacementService {
   /**
    * Load JSON file with caching
    */
-  private async loadJsonFile(path: string): Promise<PlacementData> {
+  private async loadJsonFile(path: string): Promise<JsonPlacementData> {
     try {
       const data = await jsonCache.get(path);
-      return data as PlacementData;
+      return data as JsonPlacementData;
     } catch (error) {
       console.warn(`Failed to load placement data from ${path}:`, error);
       return {};
@@ -138,7 +140,7 @@ export class ArrowPlacementService implements IArrowPlacementService {
     motionType: MotionType,
     placementKey: string,
     turns: number | string,
-    gridMode: GridMode = DomainGridMode.DIAMOND
+    gridMode: GridMode = GridMode.DIAMOND
   ): Promise<{ x: number; y: number }> {
     await this.ensureDataLoaded();
 
@@ -180,7 +182,7 @@ export class ArrowPlacementService implements IArrowPlacementService {
    */
   async getAvailablePlacementKeys(
     motionType: MotionType,
-    gridMode: GridMode = DomainGridMode.DIAMOND
+    gridMode: GridMode = GridMode.DIAMOND
   ): Promise<string[]> {
     await this.ensureDataLoaded();
 
@@ -230,7 +232,7 @@ export class ArrowPlacementService implements IArrowPlacementService {
    */
   async debugAvailableKeys(
     motionType: MotionType,
-    gridMode: GridMode = DomainGridMode.DIAMOND
+    gridMode: GridMode = GridMode.DIAMOND
   ): Promise<void> {
     const keys = await this.getAvailablePlacementKeys(motionType, gridMode);
     console.log(
@@ -245,7 +247,7 @@ export class ArrowPlacementService implements IArrowPlacementService {
   async getPlacementData(
     motionType: MotionType,
     placementKey: string,
-    gridMode: GridMode = DomainGridMode.DIAMOND
+    gridMode: GridMode = GridMode.DIAMOND
   ): Promise<{ [turns: string]: [number, number] }> {
     await this.ensureDataLoaded();
 

@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Beat } from "$lib/components/pictograph";
   import type { BeatData } from "$lib/domain";
-  import { beatFrameService } from "$lib/services/BeatFrameService.svelte";
+  import { resolve } from "$lib/services/bootstrap";
+  import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
 
   interface Props {
     beat: BeatData;
@@ -25,7 +26,13 @@
     onLeave,
   }: Props = $props();
 
-  const config = $derived(beatFrameService.config);
+  // Get service from DI container and create component-scoped state
+  const beatFrameService = resolve(
+    "IBeatFrameService"
+  ) as import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService;
+  const beatFrameState = createBeatFrameState(beatFrameService);
+
+  const config = $derived(beatFrameState.config);
 
   function handleClick() {
     onClick?.(index);

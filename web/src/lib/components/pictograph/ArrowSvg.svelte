@@ -74,7 +74,10 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
       if (!motionData || !motionData.arrowPlacementData)
         throw new Error("No motion data or arrow placement data available");
 
-      console.log("🏹 ArrowSvg: Loading arrow data for motion:", motionData);
+      console.log(
+        "🏹 ArrowSvg: Loading arrow data for motion:",
+        $inspect(motionData)
+      );
 
       // Use the actual ArrowRenderingService to load real arrow SVGs
       const svgDataResult = await arrowRenderingService.loadArrowPlacementData(

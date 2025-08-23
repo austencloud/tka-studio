@@ -6,6 +6,7 @@
  */
 
 import type { PictographData } from "$lib/domain/PictographData";
+import { GridModeDerivationService } from "$lib/services/implementations/domain/GridModeDerivationService";
 import { endsWithBeta } from "$lib/utils/betaDetection";
 
 export interface DataFlowTrace {
@@ -103,9 +104,19 @@ export class PictographDataDebugger {
       });
     }
 
+    // Compute gridMode from motion data
+    const gridModeService = new GridModeDerivationService();
+    const gridMode =
+      pictographData.motions?.blue && pictographData.motions?.red
+        ? gridModeService.deriveGridMode(
+            pictographData.motions.blue,
+            pictographData.motions.red
+          )
+        : "unknown";
+
     const debugInfo: PictographDebugInfo = {
       letter: pictographData.letter || "unknown",
-      gridMode: pictographData.gridMode || "unknown",
+      gridMode: gridMode.toString(),
       endsWithBeta: endsWithBetaPosition,
       hasValidMotionData,
       hasValidPropPlacementData,

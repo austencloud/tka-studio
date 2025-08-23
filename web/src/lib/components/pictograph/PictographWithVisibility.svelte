@@ -72,40 +72,6 @@ matching the legacy desktop app's behavior.
     // Apply visibility filters
     const filteredData = { ...originalData };
 
-    // Filter arrows based on motion visibility
-    if (filteredData.arrows) {
-      const newArrows: Record<string, any> = {};
-
-      Object.entries(filteredData.arrows).forEach(([color, arrowData]) => {
-        if (
-          arrowData &&
-          visibilityManager.getMotionVisibility(color as MotionColor)
-        ) {
-          newArrows[color] = arrowData;
-        }
-      });
-
-      filteredData.arrows = newArrows;
-    }
-
-    // Filter props based on motion visibility
-    if (filteredData.props) {
-      const newProps: Record<string, any> = {};
-
-      Object.entries(filteredData.props).forEach(
-        ([color, PropPlacementData]) => {
-          if (
-            PropPlacementData &&
-            visibilityManager.getMotionVisibility(color as MotionColor)
-          ) {
-            newProps[color] = PropPlacementData;
-          }
-        }
-      );
-
-      filteredData.props = newProps;
-    }
-
     // Filter letter based on TKA visibility
     if (!visibilityManager.getGlyphVisibility("TKA")) {
       filteredData.letter = null;

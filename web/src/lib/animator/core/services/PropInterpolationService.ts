@@ -5,18 +5,16 @@
  * Single responsibility: Motion interpolation between keyframes.
  */
 
-import type { MotionData } from "$lib/domain";
-import { getBlueMotion, getRedMotion, createMotionData } from "$lib/domain";
-import type { BeatData } from "$lib/domain";
-import {
-  lerpAngle,
-  calculateMotionEndpoints,
-  type MotionEndpoints,
-} from "../../utils/math/index.js";
+import type { BeatData, MotionData } from "$lib/domain";
 import type {
   IPropInterpolationService,
   InterpolationResult,
 } from "$lib/services/di/interfaces/animator-interfaces";
+import {
+  calculateMotionEndpoints,
+  lerpAngle,
+  type MotionEndpoints,
+} from "../../utils/math/index.js";
 
 export class PropInterpolationService implements IPropInterpolationService {
   /**
@@ -28,8 +26,16 @@ export class PropInterpolationService implements IPropInterpolationService {
     beatProgress: number
   ): InterpolationResult {
     // Get motion data directly from domain beat (PURE DOMAIN!)
-    const blueMotion = getBlueMotion(currentBeatData) || createMotionData();
-    const redMotion = getRedMotion(currentBeatData) || createMotionData();
+    const blueMotion = currentBeatData.pictographData?.motions.blue;
+    const redMotion = currentBeatData.pictographData?.motions.red;
+
+    if (!blueMotion) {
+      throw new Error("Blue motion data is missing for current beat.");
+    }
+
+    if (!redMotion) {
+      throw new Error("Red motion data is missing for current beat.");
+    }
 
     // Calculate endpoints using native MotionData
     const blueEndpoints = calculateMotionEndpoints(blueMotion);
@@ -74,8 +80,16 @@ export class PropInterpolationService implements IPropInterpolationService {
    */
   calculateInitialAngles(firstBeat: BeatData): InterpolationResult {
     // Get motion data directly from domain beat (PURE DOMAIN!)
-    const blueStartMotion = getBlueMotion(firstBeat) || createMotionData();
-    const redStartMotion = getRedMotion(firstBeat) || createMotionData();
+    const blueStartMotion = firstBeat.pictographData?.motions.blue;
+    const redStartMotion = firstBeat.pictographData?.motions.red;
+
+    if (!blueStartMotion) {
+      throw new Error("Blue motion data is missing for the first beat.");
+    }
+
+    if (!redStartMotion) {
+      throw new Error("Red motion data is missing for the first beat.");
+    }
 
     const blueStartEndpoints = calculateMotionEndpoints(blueStartMotion);
     const redStartEndpoints = calculateMotionEndpoints(redStartMotion);
@@ -97,9 +111,20 @@ export class PropInterpolationService implements IPropInterpolationService {
    * Get motion data for debugging
    */
   getMotionData(beatData: BeatData): { blue: MotionData; red: MotionData } {
+    const blueMotion = beatData.pictographData?.motions.blue;
+    const redMotion = beatData.pictographData?.motions.red;
+
+    if (!blueMotion) {
+      throw new Error("Blue motion data is missing for current beat.");
+    }
+
+    if (!redMotion) {
+      throw new Error("Red motion data is missing for current beat.");
+    }
+
     return {
-      blue: getBlueMotion(beatData) || createMotionData(),
-      red: getRedMotion(beatData) || createMotionData(),
+      blue: blueMotion,
+      red: redMotion,
     };
   }
 

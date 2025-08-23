@@ -5,8 +5,8 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import { GridMode } from "$lib/domain";
 import type { PictographData } from "$lib/domain";
+import { GridMode } from "$lib/domain";
 import type { ICsvLoaderService } from "./CsvLoaderService";
 import type { ICSVParserService, ParsedCsvRow } from "./CSVParserService";
 import type { IPictographTransformationService } from "./PictographTransformationService";
@@ -26,7 +26,10 @@ export interface IMotionQueryService {
 }
 
 export class MotionQueryService implements IMotionQueryService {
-  private parsedData: Record<GridMode, ParsedCsvRow[]> | null = null;
+  private parsedData: Record<
+    Exclude<GridMode, GridMode.SKEWED>,
+    ParsedCsvRow[]
+  > | null = null;
   private isInitialized = false;
 
   constructor(
@@ -56,6 +59,7 @@ export class MotionQueryService implements IMotionQueryService {
       this.parsedData = {
         [GridMode.DIAMOND]: diamondParseResult.rows,
         [GridMode.BOX]: boxParseResult.rows,
+        // SKEWED mode doesn't have separate data - it uses both diamond and box
       };
 
       this.isInitialized = true;
@@ -82,7 +86,10 @@ export class MotionQueryService implements IMotionQueryService {
       return null;
     }
 
-    const csvRows = this.parsedData[gridMode];
+    // For SKEWED mode, default to diamond data
+    const actualGridMode =
+      gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+    const csvRows = this.parsedData[actualGridMode];
     if (!csvRows || csvRows.length === 0) {
       console.error(`❌ No CSV data available for grid mode: ${gridMode}`);
       return null;

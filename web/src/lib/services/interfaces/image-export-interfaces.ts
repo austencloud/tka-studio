@@ -625,6 +625,13 @@ export const IBeatRenderingServiceInterface = Symbol.for(
 export const ITextRenderingServiceInterface = Symbol.for(
   "ITextRenderingService"
 );
+
+// Text rendering component interface symbols
+export const IWordTextRendererInterface = Symbol.for("IWordTextRenderer");
+export const IUserInfoRendererInterface = Symbol.for("IUserInfoRenderer");
+export const IDifficultyBadgeRendererInterface = Symbol.for("IDifficultyBadgeRenderer");
+export const ITextRenderingUtilsInterface = Symbol.for("ITextRenderingUtils");
+
 export const IImageCompositionServiceInterface = Symbol.for(
   "IImageCompositionService"
 );

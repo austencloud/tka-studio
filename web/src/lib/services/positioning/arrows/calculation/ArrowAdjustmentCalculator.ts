@@ -12,8 +12,10 @@
  */
 
 import type { MotionData, PictographData } from "$lib/domain";
-import { GridMode } from "$lib/domain/enums";
 import { MotionColor } from "$lib/domain";
+import { GridMode } from "$lib/domain/enums";
+import { GridModeDerivationService } from "../../../implementations/domain/GridModeDerivationService";
+import { ArrowPlacementKeyService } from "../../../implementations/positioning/ArrowPlacementKeyService";
 import type { IArrowAdjustmentCalculator } from "../../core-services";
 import type {
   IAttributeKeyGenerator,
@@ -34,7 +36,6 @@ import { SpecialPlacementOriKeyGenerator } from "../key_generators/SpecialPlacem
 import { TurnsTupleKeyGenerator } from "../key_generators/TurnsTupleKeyGenerator";
 import { DefaultPlacementService } from "../placement/DefaultPlacementService";
 import { SpecialPlacementService } from "../placement/SpecialPlacementService";
-import { ArrowPlacementKeyService } from "../../../implementations/positioning/ArrowPlacementKeyService";
 import {
   DirectionalTupleCalculator,
   DirectionalTupleProcessor,
@@ -58,6 +59,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
 
   // Processing services
   private tupleProcessor: IDirectionalTupleProcessor;
+  private gridModeService = new GridModeDerivationService();
 
   constructor(options?: {
     specialPlacementService?: ISpecialPlacementService;
@@ -288,9 +290,18 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
      * Calculate default adjustment - IDENTICAL to ArrowAdjustmentLookup.
      */
     try {
+      // Compute gridMode from motion data
+      const gridMode =
+        pictographData.motions?.blue && pictographData.motions?.red
+          ? this.gridModeService.deriveGridMode(
+              pictographData.motions.blue,
+              pictographData.motions.red
+            )
+          : GridMode.DIAMOND;
+
       const keys = await this.defaultPlacementService.getAvailablePlacementKeys(
         motionData.motionType as MotionTypeType,
-        pictographData.gridMode as GridMode
+        gridMode as GridMode
       );
       const defaultPlacements: Record<string, unknown> = Object.fromEntries(
         (keys || []).map((k) => [k, true])

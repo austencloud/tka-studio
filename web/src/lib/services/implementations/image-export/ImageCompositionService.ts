@@ -6,27 +6,63 @@
  * the final export image. Equivalent to desktop ImageCreator.
  *
  * Critical: Maintains exact positioning and sizing compatibility with desktop.
+ *
+ * Architecture: Uses internal composition to delegate to specialized components
+ * while maintaining the same public interface contracts.
  */
 
+import type { SequenceData } from "../../interfaces/domain-types";
 import type {
+  CompositionOptions,
+  IBeatRenderingService,
+  IDimensionCalculationService,
   IImageCompositionService,
   ILayoutCalculationService,
-  IDimensionCalculationService,
-  IBeatRenderingService,
-  ITextRenderingService,
-  TKAImageExportOptions,
-  CompositionOptions,
   LayoutData,
+  TKAImageExportOptions,
 } from "../../interfaces/image-export-interfaces";
-import type { SequenceData } from "../../interfaces/domain-types";
+
+import type {
+  IWordTextRenderer,
+  IUserInfoRenderer,
+  IDifficultyBadgeRenderer,
+  ITextRenderingUtils,
+} from "../../interfaces/text-rendering-interfaces";
+
+// Internal composition components
+import { CanvasCreator } from "./composition/internal/CanvasCreator";
+import { BeatGridPositioner } from "./composition/internal/BeatGridPositioner";
+import { TextOverlayApplicator } from "./composition/internal/TextOverlayApplicator";
+import { CompositionValidator } from "./composition/internal/CompositionValidator";
+import { CompositionUtils } from "./composition/internal/CompositionTypes";
 
 export class ImageCompositionService implements IImageCompositionService {
+  // Internal composition components (not exposed via DI)
+  private readonly canvasCreator: CanvasCreator;
+  private readonly beatPositioner: BeatGridPositioner;
+  private readonly textApplicator: TextOverlayApplicator;
+  private readonly validator: CompositionValidator;
+
   constructor(
     private layoutService: ILayoutCalculationService,
     private dimensionService: IDimensionCalculationService,
     private beatRenderer: IBeatRenderingService,
-    private textRenderer: ITextRenderingService
-  ) {}
+    private wordRenderer: IWordTextRenderer,
+    private userInfoRenderer: IUserInfoRenderer,
+    private difficultyRenderer: IDifficultyBadgeRenderer,
+    private textUtils: ITextRenderingUtils
+  ) {
+    // Internal composition - these are not registered in DI container
+    this.canvasCreator = new CanvasCreator(layoutService, dimensionService);
+    this.beatPositioner = new BeatGridPositioner(beatRenderer);
+    this.textApplicator = new TextOverlayApplicator(
+      wordRenderer,
+      userInfoRenderer,
+      difficultyRenderer,
+      textUtils
+    );
+    this.validator = new CompositionValidator(layoutService, dimensionService);
+  }
 
   /**
    * Compose complete sequence image from sequence data
@@ -42,13 +78,13 @@ export class ImageCompositionService implements IImageCompositionService {
 
     try {
       // Step 1: Calculate layout and dimensions
-      const layoutData = this.calculateLayoutData(sequence, options);
+      const layoutData = this.canvasCreator.calculateLayoutData(sequence, options);
 
       // Step 2: Create main canvas with calculated dimensions
-      const mainCanvas = this.createMainCanvas(layoutData, options);
+      const mainCanvas = this.canvasCreator.createMainCanvas(layoutData, options);
 
       // Step 3: Render all beats to individual canvases
-      const beatCanvases = await this.renderAllBeats(
+      const beatCanvases = await this.beatPositioner.renderAllBeats(
         sequence,
         layoutData,
         options
@@ -56,7 +92,7 @@ export class ImageCompositionService implements IImageCompositionService {
 
       // Step 4: Render start position if needed
       const startPositionCanvas = options.includeStartPosition
-        ? await this.renderStartPosition(sequence, layoutData, options)
+        ? await this.beatPositioner.renderStartPosition(sequence, layoutData, options)
         : null;
 
       // Step 5: Compose final image
@@ -64,16 +100,11 @@ export class ImageCompositionService implements IImageCompositionService {
         beatCanvases,
         startPositionCanvas,
         layoutData,
-        {
-          ...options,
-          layout: [layoutData.columns, layoutData.rows],
-          additionalHeightTop: layoutData.additionalHeightTop || 0,
-          additionalHeightBottom: layoutData.additionalHeightBottom || 0,
-        }
+        CompositionUtils.toCompositionOptions(options, layoutData)
       );
 
       // Step 6: Add text overlays
-      this.addTextOverlays(mainCanvas, sequence, layoutData, options);
+      this.textApplicator.addTextOverlays(mainCanvas, sequence, layoutData, options);
 
       return mainCanvas;
     } catch (error) {
@@ -94,7 +125,7 @@ export class ImageCompositionService implements IImageCompositionService {
     options: CompositionOptions
   ): Promise<HTMLCanvasElement> {
     // Create main canvas if not provided
-    const mainCanvas = this.createMainCanvas(layoutData, options);
+    const mainCanvas = this.canvasCreator.createMainCanvas(layoutData, options);
     const ctx = mainCanvas.getContext("2d");
     if (!ctx) {
       throw new Error("Failed to get 2D context from main canvas");
@@ -336,7 +367,7 @@ export class ImageCompositionService implements IImageCompositionService {
 
     // Add word title if enabled
     if (options.addWord && sequence.word) {
-      this.textRenderer.renderWordText(canvas, sequence.word, textOptions);
+      this.wordRenderer.render(canvas, sequence.word, textOptions);
     }
 
     // Add user info if enabled
@@ -346,7 +377,7 @@ export class ImageCompositionService implements IImageCompositionService {
         notes: options.notes,
         exportDate: options.exportDate,
       };
-      this.textRenderer.renderUserInfo(canvas, userInfo, textOptions);
+      this.userInfoRenderer.render(canvas, userInfo, textOptions);
     }
 
     // Add difficulty level badge if enabled and available
@@ -358,7 +389,7 @@ export class ImageCompositionService implements IImageCompositionService {
       const badgeSize = Math.floor(layoutData.additionalHeightTop * 0.75);
       const inset = Math.floor(layoutData.additionalHeightTop / 8);
 
-      this.textRenderer.renderDifficultyBadge(
+      this.difficultyRenderer.render(
         canvas,
         sequence.level,
         [inset, inset],
@@ -464,7 +495,7 @@ export class ImageCompositionService implements IImageCompositionService {
           blueReversal: false,
           redReversal: false,
           isBlank: true,
-          metadata: {},
+          pictographData: null,
         },
       ],
       thumbnails: [],

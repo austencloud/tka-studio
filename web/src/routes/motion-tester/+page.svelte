@@ -1,8 +1,8 @@
 <!-- Motion Tester Route - MISSING FILE FIX -->
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { switchTab } from "$lib/state/appState.svelte";
   import MainApplication from "$components/MainApplication.svelte";
+  import { switchTab } from "$lib/state/app-state.svelte";
+  import { onMount } from "svelte";
 
   onMount(async () => {
     // Navigate to motion-tester tab

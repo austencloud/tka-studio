@@ -6,17 +6,14 @@
     IApplicationInitializationService,
     ISettingsService,
   } from "$services/interfaces/application-interfaces";
-  import type { ISequenceService } from "$services/interfaces/sequence-interfaces";
   import type { IDeviceDetectionService } from "$services/interfaces/device-interfaces";
+  import type { ISequenceService } from "$services/interfaces/sequence-interfaces";
   import { getContext, onMount } from "svelte";
-
   // Import app state management
   import {
     getInitializationError,
     getInitializationProgress,
     getIsInitialized,
-    getIsInitializing,
-    getSettings,
     getShowSettings,
     hideSettingsDialog,
     restoreApplicationState,
@@ -26,8 +23,7 @@
     showSettingsDialog,
     switchTab,
     updateSettings,
-  } from "$lib/state/appState.svelte";
-
+  } from "$lib/state/app-state.svelte";
   // Import components
   import ErrorScreen from "$components/ErrorScreen.svelte";
   import LoadingScreen from "$components/LoadingScreen.svelte";
@@ -168,10 +164,6 @@
           case "6":
             event.preventDefault();
             switchTab("motion-tester");
-            break;
-          case "7":
-            event.preventDefault();
-            switchTab("arrow-debug");
             break;
         }
       }

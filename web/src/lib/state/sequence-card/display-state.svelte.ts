@@ -5,7 +5,7 @@
  * Delegates data loading to BrowseService and page layout to PageLayoutService.
  */
 
-import type { DeviceCapabilities } from "$lib/domain/sequenceCard";
+import type { DeviceCapabilities } from "$lib/domain/SequenceCard";
 
 // ============================================================================
 // DISPLAY SETTINGS STATE

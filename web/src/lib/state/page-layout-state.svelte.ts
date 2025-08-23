@@ -6,20 +6,20 @@
  */
 
 import type {
-  IPrintablePageLayoutService,
-  IPageFactoryService,
-} from "$services/interfaces/sequence-interfaces";
-import type {
-  Page,
-  PageLayoutConfig,
-  PageCreationOptions,
-  PaperSize,
-  PageOrientation,
-  PrintConfiguration,
   GridCalculationOptions,
   LayoutCalculationResult,
-} from "$lib/domain/pageLayoutTypes";
+  Page,
+  PageCreationOptions,
+  PageLayoutConfig,
+  PageOrientation,
+  PaperSize,
+  PrintConfiguration,
+} from "$lib/domain/PageLayoutTypes";
 import type { SequenceData } from "$services/interfaces/domain-types";
+import type {
+  IPageFactoryService,
+  IPrintablePageLayoutService,
+} from "$services/interfaces/sequence-interfaces";
 
 export interface PageLayoutState {
   // Page data

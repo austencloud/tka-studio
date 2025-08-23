@@ -15,9 +15,10 @@
 
 import type { MotionData, PictographData } from "$lib/domain";
 import { GridMode } from "$lib/domain/enums";
+import { GridModeDerivationService } from "../../../implementations/domain/GridModeDerivationService";
+import { jsonCache } from "../../cache/SimpleJsonCache";
 import type { ISpecialPlacementService } from "../../placement-services";
 import { SpecialPlacementOriKeyGenerator } from "../key_generators/SpecialPlacementOriKeyGenerator";
-import { jsonCache } from "../../cache/SimpleJsonCache";
 
 // Define Point interface locally since it might not be in domain
 interface Point {
@@ -33,6 +34,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
   > = {};
   private loadingCache: Set<string> = new Set();
   private oriKeyGenerator: SpecialPlacementOriKeyGenerator;
+  private gridModeService = new GridModeDerivationService();
 
   constructor() {
     // Defer loading; we'll lazily load per-letter on demand
@@ -69,8 +71,14 @@ export class SpecialPlacementService implements ISpecialPlacementService {
       pictographData
     );
 
-    // Get grid mode (default to diamond)
-    const gridMode = pictographData.gridMode || GridMode.DIAMOND;
+    // Get grid mode - compute from motion data
+    const gridMode =
+      pictographData.motions?.blue && pictographData.motions?.red
+        ? this.gridModeService.deriveGridMode(
+            pictographData.motions.blue,
+            pictographData.motions.red
+          )
+        : GridMode.DIAMOND;
 
     // Generate turns tuple for lookup
     const turnsTuple = this.generateTurnsTuple(pictographData);

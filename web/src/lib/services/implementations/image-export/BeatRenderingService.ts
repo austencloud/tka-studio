@@ -1,32 +1,26 @@
-/**
- * Beat Rendering Service
- *
- * Converts TKA beats and pictographs from SVG format to Canvas for image export.
- * This service provides functionality equivalent to the desktop BeatDrawer and
- * ImageExportBeatFactory, handling the complex task of rendering beats for export.
- *
- * Critical: Must maintain visual fidelity when converting from SVG to Canvas.
- */
-
-import type { ArrowPlacementData, PropPlacementData } from "$lib/domain";
-import { GridMode, MotionColor } from "$lib/domain/enums";
-import type { BeatData, SequenceData } from "../../interfaces/domain-types";
+import type { BeatData, SequenceData } from "../../../domain";
+import type { IBeatFallbackRenderingService } from "../../interfaces/beat-fallback-interfaces";
+import type { IBeatGridService } from "../../interfaces/beat-grid-interfaces";
 import type {
   BeatRenderOptions,
   IBeatRenderingService,
+  ICanvasManagementService,
 } from "../../interfaces/image-export-interfaces";
 import type { IPictographService } from "../../interfaces/pictograph-interfaces";
+import type { ISVGToCanvasConverterService } from "../../interfaces/svg-conversion-interfaces";
 
 export class BeatRenderingService implements IBeatRenderingService {
-  // Canvas pool for memory efficiency
-  private canvasPool: HTMLCanvasElement[] = [];
-  private readonly MAX_POOL_SIZE = 10;
-
-  constructor(private pictographService: IPictographService) {}
+  constructor(
+    private _pictographService: IPictographService,
+    private svgToCanvasConverter: ISVGToCanvasConverterService,
+    private _beatGridService: IBeatGridService,
+    private fallbackService: IBeatFallbackRenderingService,
+    private canvasManager: ICanvasManagementService
+  ) {}
 
   /**
    * Render a single beat to canvas
-   * Converts SVG pictograph to canvas representation
+   * Orchestrates the rendering process using microservices
    */
   async renderBeatToCanvas(
     beatData: BeatData,
@@ -42,25 +36,60 @@ export class BeatRenderingService implements IBeatRenderingService {
     }
 
     try {
-      // Create canvas for this beat
-      const canvas = this.getCanvasFromPool(size, size);
+      // Create canvas
+      const canvas = this.canvasManager.createCanvas(size, size);
       const ctx = canvas.getContext("2d");
       if (!ctx) {
         throw new Error("Failed to get 2D context from canvas");
       }
 
-      // Clear canvas with white background (match desktop)
+      // Clear canvas with white background
       ctx.fillStyle = "white";
       ctx.fillRect(0, 0, size, size);
 
-      // If beat is blank, return canvas with just background
+      // Handle empty/error beats using fallback service
       if (beatData.isBlank || !beatData.pictographData) {
-        await this.renderEmptyBeat(ctx, beatData, size, options);
+        const fallbackCanvas = this.fallbackService.createEmptyBeat({
+          size,
+          backgroundColor: "white",
+        });
+
+        // Copy fallback to our canvas
+        ctx.drawImage(fallbackCanvas, 0, 0);
+        this.canvasManager.disposeCanvas(fallbackCanvas);
+
         return canvas;
       }
 
-      // Render pictograph to canvas
-      await this.renderPictographToCanvas(ctx, beatData, size, options);
+      // Generate SVG for the beat
+      const svgString = await this.generateSVGString(beatData, size, options);
+      if (!svgString) {
+        // Use fallback for failed SVG generation
+        const fallbackCanvas = this.fallbackService.createErrorBeat({
+          size,
+          backgroundColor: "white",
+        });
+
+        ctx.drawImage(fallbackCanvas, 0, 0);
+        this.canvasManager.disposeCanvas(fallbackCanvas);
+
+        return canvas;
+      }
+
+      // Convert SVG to canvas using microservice
+      const convertedCanvas =
+        await this.svgToCanvasConverter.convertSVGStringToCanvas(svgString, {
+          width: size,
+          height: size,
+          preserveAspectRatio: true,
+          backgroundColor: "white",
+        });
+
+      // Copy converted canvas to our canvas
+      ctx.drawImage(convertedCanvas, 0, 0);
+
+      // Apply grid overlays using grid service (if needed)
+      // Note: Grid rendering would be controlled by other options
 
       // Apply post-processing
       this.applyPostProcessing(ctx, beatData, size, options);
@@ -75,47 +104,19 @@ export class BeatRenderingService implements IBeatRenderingService {
 
   /**
    * Render start position to canvas
-   * Handles the special case of sequence start position
    */
   async renderStartPositionToCanvas(
     sequence: SequenceData,
     size: number,
-    options: BeatRenderOptions
+    _options: BeatRenderOptions
   ): Promise<HTMLCanvasElement> {
     if (!sequence) {
       throw new Error("Sequence data is required for start position rendering");
     }
 
     try {
-      const canvas = this.getCanvasFromPool(size, size);
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        throw new Error("Failed to get 2D context from canvas");
-      }
-
-      // Clear canvas with white background
-      ctx.fillStyle = "white";
-      ctx.fillRect(0, 0, size, size);
-
-      // Check if sequence has explicit start position data
-      if (sequence.startingPositionBeat) {
-        await this.renderPictographToCanvas(
-          ctx,
-          { ...sequence.startingPositionBeat, beatNumber: 0 } as BeatData,
-          size,
-          options
-        );
-      } else {
-        // Render default start position
-        await this.renderDefaultStartPosition(ctx, size, options);
-      }
-
-      // Add "START" label if beat numbers are enabled
-      if (options.addBeatNumbers) {
-        this.renderStartPositionLabel(ctx, size);
-      }
-
-      return canvas;
+      // Use fallback service for consistent start position rendering
+      return this.fallbackService.createDefaultStartPosition(size, "white");
     } catch (error) {
       throw new Error(
         `Failed to render start position: ${error instanceof Error ? error.message : "Unknown error"}`
@@ -124,8 +125,7 @@ export class BeatRenderingService implements IBeatRenderingService {
   }
 
   /**
-   * Batch render multiple beats
-   * Optimized for rendering many beats efficiently
+   * Render multiple beats in batch
    */
   async renderBeatsToCanvases(
     beats: BeatData[],
@@ -136,23 +136,14 @@ export class BeatRenderingService implements IBeatRenderingService {
       return [];
     }
 
-    const canvases: HTMLCanvasElement[] = [];
-
     try {
-      // Process beats in chunks to manage memory
-      const CHUNK_SIZE = 5;
-      for (let i = 0; i < beats.length; i += CHUNK_SIZE) {
-        const chunk = beats.slice(i, i + CHUNK_SIZE);
-        const chunkCanvases = await Promise.all(
-          chunk.map((beat) => this.renderBeatToCanvas(beat, size, options))
-        );
-        canvases.push(...chunkCanvases);
-      }
+      // Process beats in parallel for better performance
+      const promises = beats.map((beat) =>
+        this.renderBeatToCanvas(beat, size, options)
+      );
 
-      return canvases;
+      return await Promise.all(promises);
     } catch (error) {
-      // Clean up any created canvases on error
-      canvases.forEach((canvas) => this.returnCanvasToPool(canvas));
       throw new Error(
         `Batch rendering failed: ${error instanceof Error ? error.message : "Unknown error"}`
       );
@@ -161,19 +152,20 @@ export class BeatRenderingService implements IBeatRenderingService {
 
   /**
    * Apply visibility settings to rendered beat
-   * Matches desktop visibility logic
    */
   applyVisibilitySettings(
     canvas: HTMLCanvasElement,
     options: BeatRenderOptions
   ): HTMLCanvasElement {
     if (options.redVisible && options.blueVisible) {
-      // Both visible - no changes needed
-      return canvas;
+      return canvas; // Both visible - no changes needed
     }
 
-    // Create a new canvas for filtered result
-    const filteredCanvas = this.getCanvasFromPool(canvas.width, canvas.height);
+    // Create new canvas for filtered result
+    const filteredCanvas = this.canvasManager.createCanvas(
+      canvas.width,
+      canvas.height
+    );
     const filteredCtx = filteredCanvas.getContext("2d");
     if (!filteredCtx) {
       throw new Error("Failed to get 2D context from filtered canvas");
@@ -185,364 +177,85 @@ export class BeatRenderingService implements IBeatRenderingService {
     // Apply visibility filters
     this.applyColorFilters(filteredCtx, canvas.width, canvas.height, options);
 
-    // Return original canvas to pool
-    this.returnCanvasToPool(canvas);
+    // Dispose original canvas
+    this.canvasManager.disposeCanvas(canvas);
 
     return filteredCanvas;
   }
 
   /**
-   * Render pictograph data to canvas context
-   * Core rendering logic that converts pictograph to canvas
+   * Generate SVG string for a beat
    */
-  private async renderPictographToCanvas(
-    ctx: CanvasRenderingContext2D,
+  private async generateSVGString(
     beatData: BeatData,
-    size: number,
-    options: BeatRenderOptions
-  ): Promise<void> {
-    if (!beatData.pictographData) {
-      return;
-    }
-
-    try {
-      // Method 1: Try to render using existing Pictograph component
-      const svgElement = await this.createSVGFromPictographData(
-        beatData,
-        size,
-        options
-      );
-      if (svgElement) {
-        await this.drawSVGToCanvas(ctx, svgElement, size, size);
-        return;
-      }
-
-      // Method 2: Fallback to manual rendering
-      await this.renderPictographManually(ctx, beatData, size, options);
-    } catch (error) {
-      console.warn("Pictograph rendering failed, using fallback:", error);
-      await this.renderFallbackBeat(ctx, beatData, size, options);
-    }
-  }
-
-  /**
-   * Create SVG element from pictograph data
-   * Uses the injected pictograph service instead of creating components directly
-   */
-  private async createSVGFromPictographData(
-    beatData: BeatData,
-    size: number,
+    _size: number,
     _options: BeatRenderOptions
-  ): Promise<SVGElement | null> {
+  ): Promise<string | null> {
     try {
-      if (!beatData.pictographData) {
-        return null;
-      }
-
-      // Use the injected pictograph service to render the pictograph to SVG
-      const svgElement = await this.pictographService.renderPictograph(
-        beatData.pictographData
-      );
-
-      if (svgElement) {
-        // Set appropriate size attributes on the SVG
-        svgElement.setAttribute("width", size.toString());
-        svgElement.setAttribute("height", size.toString());
-        svgElement.setAttribute("viewBox", `0 0 ${size} ${size}`);
-
-        return svgElement;
-      }
-
+      // TODO: Implement proper SVG generation using pictograph service
+      // For now, return null to trigger fallback rendering
+      console.warn("SVG generation not yet implemented for beat:", beatData.id);
       return null;
     } catch (error) {
-      console.warn("Failed to create SVG from pictograph service:", error);
+      console.warn("Failed to generate SVG string:", error);
       return null;
     }
   }
 
   /**
-   * Draw SVG element to canvas
+   * Apply post-processing effects (simplified)
    */
-  private async drawSVGToCanvas(
-    ctx: CanvasRenderingContext2D,
-    svgElement: SVGElement,
-    width: number,
-    height: number
-  ): Promise<void> {
-    return new Promise((resolve, reject) => {
-      try {
-        // Serialize SVG to string
-        const svgData = new XMLSerializer().serializeToString(svgElement);
-
-        // Create image from SVG
-        const img = new Image();
-
-        img.onload = () => {
-          try {
-            ctx.drawImage(img, 0, 0, width, height);
-            resolve();
-          } catch (error) {
-            reject(error);
-          }
-        };
-
-        img.onerror = () => {
-          reject(new Error("Failed to load SVG as image"));
-        };
-
-        // Convert SVG to data URL
-        const svgBlob = new Blob([svgData], {
-          type: "image/svg+xml;charset=utf-8",
-        });
-        const url = URL.createObjectURL(svgBlob);
-
-        img.src = url;
-
-        // Clean up URL after image loads
-        img.onload = () => {
-          try {
-            ctx.drawImage(img, 0, 0, width, height);
-            URL.revokeObjectURL(url);
-            resolve();
-          } catch (error) {
-            URL.revokeObjectURL(url);
-            reject(error);
-          }
-        };
-      } catch (error) {
-        reject(error);
-      }
-    });
-  }
-
-  /**
-   * Manual pictograph rendering (fallback method)
-   */
-  private async renderPictographManually(
+  private applyPostProcessing(
     ctx: CanvasRenderingContext2D,
     beatData: BeatData,
     size: number,
     options: BeatRenderOptions
-  ): Promise<void> {
-    const pictograph = beatData.pictographData;
-    if (!pictograph) {
-      throw new Error("Pictograph data is required for rendering");
+  ): void {
+    // Apply combined grids if enabled
+    if (options.combinedGrids) {
+      // TODO: Implement combined grids - requires canvas, not context
+      console.warn("Combined grids not yet implemented");
     }
 
-    // Draw grid background
-    this.drawGrid(ctx, pictograph.gridMode || GridMode.DIAMOND, size);
-
-    // Draw props from motion data
-    if (pictograph.motions) {
-      if (options.blueVisible && pictograph.motions.blue) {
-        this.drawProp(
-          ctx,
-          pictograph.motions.blue.propPlacementData,
-          "blue",
-          size
-        );
-      }
-      if (options.redVisible && pictograph.motions.red) {
-        this.drawProp(
-          ctx,
-          pictograph.motions.red.propPlacementData,
-          "red",
-          size
-        );
-      }
-    }
-
-    // Draw arrows from motion data
-    if (pictograph.motions) {
-      if (options.blueVisible && pictograph.motions.blue) {
-        this.drawArrow(
-          ctx,
-          pictograph.motions.blue.arrowPlacementData,
-          "blue",
-          size
-        );
-      }
-      if (options.redVisible && pictograph.motions.red) {
-        this.drawArrow(
-          ctx,
-          pictograph.motions.red.arrowPlacementData,
-          "red",
-          size
-        );
-      }
-    }
-
-    // Draw letter if present
-    if (pictograph.letter) {
-      this.drawLetter(ctx, pictograph.letter, size);
-    }
-  }
-
-  /**
-   * Render empty beat (blank beat with just beat number)
-   */
-  private async renderEmptyBeat(
-    ctx: CanvasRenderingContext2D,
-    beatData: BeatData,
-    size: number,
-    options: BeatRenderOptions
-  ): Promise<void> {
-    // Draw minimal grid
-    this.drawGrid(ctx, GridMode.DIAMOND, size);
-
-    // Draw beat number if enabled
+    // Apply beat number if enabled
     if (options.addBeatNumbers && beatData.beatNumber > 0) {
       this.drawBeatNumber(ctx, beatData.beatNumber, size);
     }
   }
 
   /**
-   * Render fallback beat when all else fails
+   * Apply color filters for visibility settings
    */
-  private async renderFallbackBeat(
+  private applyColorFilters(
     ctx: CanvasRenderingContext2D,
-    beatData: BeatData,
-    size: number,
+    width: number,
+    height: number,
     options: BeatRenderOptions
-  ): Promise<void> {
-    // Draw basic placeholder
-    ctx.strokeStyle = "#ccc";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(10, 10, size - 20, size - 20);
+  ): void {
+    if (!options.redVisible || !options.blueVisible) {
+      const imageData = ctx.getImageData(0, 0, width, height);
+      const data = imageData.data;
 
-    // Draw X to indicate error
-    ctx.beginPath();
-    ctx.moveTo(20, 20);
-    ctx.lineTo(size - 20, size - 20);
-    ctx.moveTo(size - 20, 20);
-    ctx.lineTo(20, size - 20);
-    ctx.stroke();
+      for (let i = 0; i < data.length; i += 4) {
+        const r = data[i];
+        const g = data[i + 1];
+        const b = data[i + 2];
 
-    // Draw beat number
-    if (options.addBeatNumbers) {
-      this.drawBeatNumber(ctx, beatData.beatNumber, size);
+        // Simple color filtering logic
+        if (!options.redVisible && r > g && r > b) {
+          data[i + 3] = 0; // Make red elements transparent
+        }
+        if (!options.blueVisible && b > r && b > g) {
+          data[i + 3] = 0; // Make blue elements transparent
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
     }
   }
 
   /**
-   * Render default start position
-   */
-  private async renderDefaultStartPosition(
-    ctx: CanvasRenderingContext2D,
-    size: number,
-    _options: BeatRenderOptions
-  ): Promise<void> {
-    // Draw grid
-    this.drawGrid(ctx, GridMode.DIAMOND, size);
-
-    // Draw center circle to indicate start position
-    const centerX = size / 2;
-    const centerY = size / 2;
-    const radius = size * 0.1;
-
-    ctx.fillStyle = "#10b981"; // Green color for start
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-
-  /**
-   * Draw simple grid pattern
-   */
-  private drawGrid(
-    ctx: CanvasRenderingContext2D,
-    gridMode: string,
-    size: number
-  ): void {
-    ctx.strokeStyle = "#e5e7eb";
-    ctx.lineWidth = 1;
-
-    if (gridMode === GridMode.DIAMOND) {
-      // Draw diamond grid
-      const centerX = size / 2;
-      const centerY = size / 2;
-      const radius = size * 0.4;
-
-      ctx.beginPath();
-      ctx.moveTo(centerX, centerY - radius);
-      ctx.lineTo(centerX + radius, centerY);
-      ctx.lineTo(centerX, centerY + radius);
-      ctx.lineTo(centerX - radius, centerY);
-      ctx.closePath();
-      ctx.stroke();
-    } else {
-      // Draw box grid
-      const margin = size * 0.1;
-      ctx.strokeRect(margin, margin, size - 2 * margin, size - 2 * margin);
-    }
-  }
-
-  /**
-   * Draw prop placeholder
-   */
-  private drawProp(
-    ctx: CanvasRenderingContext2D,
-    propData: PropPlacementData | null,
-    color: string,
-    size: number
-  ): void {
-    if (!propData) return;
-
-    const centerX = size / 2;
-    const centerY = size / 2;
-    const radius = size * 0.05;
-
-    ctx.fillStyle = color === MotionColor.BLUE ? "#3b82f6" : "#ef4444";
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-    ctx.fill();
-  }
-
-  /**
-   * Draw arrow placeholder
-   */
-  private drawArrow(
-    ctx: CanvasRenderingContext2D,
-    arrowData: ArrowPlacementData | null,
-    color: string,
-    size: number
-  ): void {
-    if (!arrowData) return;
-
-    const centerX = size / 2;
-    const centerY = size / 2;
-    const length = size * 0.2;
-
-    ctx.strokeStyle = color === "blue" ? "#3b82f6" : "#ef4444";
-    ctx.lineWidth = 3;
-
-    // Simple arrow pointing right
-    ctx.beginPath();
-    ctx.moveTo(centerX - length / 2, centerY);
-    ctx.lineTo(centerX + length / 2, centerY);
-    ctx.moveTo(centerX + length / 2 - 10, centerY - 5);
-    ctx.lineTo(centerX + length / 2, centerY);
-    ctx.lineTo(centerX + length / 2 - 10, centerY + 5);
-    ctx.stroke();
-  }
-
-  /**
-   * Draw letter text
-   */
-  private drawLetter(
-    ctx: CanvasRenderingContext2D,
-    letter: string,
-    size: number
-  ): void {
-    ctx.fillStyle = "#374151";
-    ctx.font = `${size * 0.2}px Arial, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(letter, size / 2, size / 2);
-  }
-
-  /**
-   * Draw beat number
+   * Draw beat number (lightweight implementation)
    */
   private drawBeatNumber(
     ctx: CanvasRenderingContext2D,
@@ -557,123 +270,10 @@ export class BeatRenderingService implements IBeatRenderingService {
   }
 
   /**
-   * Render start position label
-   */
-  private renderStartPositionLabel(
-    ctx: CanvasRenderingContext2D,
-    size: number
-  ): void {
-    ctx.fillStyle = "#059669";
-    ctx.font = `bold ${size * 0.12}px Arial, sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    ctx.fillText("START", size / 2, size * 0.05);
-  }
-
-  /**
-   * Apply post-processing effects
-   */
-  private applyPostProcessing(
-    ctx: CanvasRenderingContext2D,
-    beatData: BeatData,
-    size: number,
-    options: BeatRenderOptions
-  ): void {
-    // Apply combined grids if enabled
-    if (options.combinedGrids) {
-      this.applyCombinedGrids(ctx, size);
-    }
-
-    // Apply reversal symbols if needed
-    if (beatData.blueReversal || beatData.redReversal) {
-      this.drawReversalSymbols(ctx, beatData, size);
-    }
-  }
-
-  /**
-   * Apply combined grids overlay
-   */
-  private applyCombinedGrids(
-    ctx: CanvasRenderingContext2D,
-    size: number
-  ): void {
-    // Draw both diamond and box grids with slight transparency
-    ctx.globalAlpha = 0.5;
-    this.drawGrid(ctx, GridMode.DIAMOND, size);
-    this.drawGrid(ctx, GridMode.BOX, size);
-    ctx.globalAlpha = 1.0;
-  }
-
-  /**
-   * Draw reversal symbols
-   */
-  private drawReversalSymbols(
-    ctx: CanvasRenderingContext2D,
-    beatData: BeatData,
-    size: number
-  ): void {
-    const symbolSize = size * 0.08;
-
-    if (beatData.blueReversal) {
-      ctx.fillStyle = "#3b82f6";
-      ctx.fillRect(size - symbolSize - 5, 5, symbolSize, symbolSize);
-    }
-
-    if (beatData.redReversal) {
-      ctx.fillStyle = "#ef4444";
-      ctx.fillRect(
-        size - symbolSize - 5,
-        symbolSize + 10,
-        symbolSize,
-        symbolSize
-      );
-    }
-  }
-
-  /**
-   * Apply color visibility filters
-   */
-  private applyColorFilters(
-    ctx: CanvasRenderingContext2D,
-    width: number,
-    height: number,
-    options: BeatRenderOptions
-  ): void {
-    if (!options.redVisible || !options.blueVisible) {
-      // This is a simplified approach - in a full implementation,
-      // we would need more sophisticated color filtering
-      console.warn("Color filtering not fully implemented yet");
-    }
-  }
-
-  /**
-   * Canvas pool management
-   */
-  private getCanvasFromPool(width: number, height: number): HTMLCanvasElement {
-    const canvas = this.canvasPool.pop() || document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-
-    // Clear the canvas
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      throw new Error("Failed to get 2D context from canvas");
-    }
-    ctx.clearRect(0, 0, width, height);
-
-    return canvas;
-  }
-
-  private returnCanvasToPool(canvas: HTMLCanvasElement): void {
-    if (this.canvasPool.length < this.MAX_POOL_SIZE) {
-      this.canvasPool.push(canvas);
-    }
-  }
-
-  /**
-   * Cleanup method to dispose of resources
+   * Cleanup method
    */
   dispose(): void {
-    this.canvasPool.length = 0;
+    // Canvas management handled by CanvasManagementService
+    // Nothing to clean up here
   }
 }

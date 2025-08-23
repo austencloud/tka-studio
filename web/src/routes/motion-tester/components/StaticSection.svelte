@@ -7,12 +7,7 @@ This is the left 2/3 section of the new layout.
 -->
 <script lang="ts">
   import Pictograph from "$lib/components/pictograph/Pictograph.svelte";
-  import {
-    createGridData,
-    createMotionData,
-    createPictographData,
-    createPropPlacementData,
-  } from "$lib/domain";
+  import { createMotionData, createPictographData } from "$lib/domain";
   import {
     Location,
     MotionColor,
@@ -43,7 +38,6 @@ This is the left 2/3 section of the new layout.
         .endLocation as Location;
       const redEndLocation = motionState.redMotionParams
         .endLocation as Location;
-      const gridMode = motionState.gridMode;
 
       // TODO: Enhance with letter detection logic
       let letter: Letter = Letter.A;
@@ -51,12 +45,6 @@ This is the left 2/3 section of the new layout.
       // ✅ DIRECT DOMAIN CONSTRUCTOR: No factory needed - positions auto-derived
       const pictographData = createPictographData({
         letter,
-        gridData: createGridData({
-          gridMode,
-          centerX: 475,
-          centerY: 475,
-          radius: 100,
-        }),
         motions: {
           blue: createMotionData({
             startLocation: motionState.blueMotionParams
@@ -89,10 +77,7 @@ This is the left 2/3 section of the new layout.
             isVisible: true,
           }),
         },
-        props: {
-          blue: createPropPlacementData({}),
-          red: createPropPlacementData({}),
-        },
+
         metadata: {
           source: "motion_tester",
           created: Date.now(),

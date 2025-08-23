@@ -10,17 +10,6 @@ import type {
   IStartPositionService,
 } from "../../interfaces/application-interfaces";
 import type {
-  ISequenceDomainService,
-  ISequenceService,
-  IPersistenceService,
-  IPrintablePageLayoutService,
-  IPageFactoryService,
-  ISequenceCardExportIntegrationService,
-  IWorkbenchBeatOperationsService,
-  ISequenceImportService,
-  ISequenceDeletionService,
-} from "../../interfaces/sequence-interfaces";
-import type {
   IArrowRenderingService,
   IDataTransformationService,
   IGridRenderingService,
@@ -31,56 +20,75 @@ import type {
   ISvgUtilityService,
 } from "../../interfaces/pictograph-interfaces";
 import type { IPropRenderingService } from "../../interfaces/positioning-interfaces";
-
-import type { IPropCoordinatorService } from "../../implementations/rendering/PropCoordinatorService";
-import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
 import type {
-  IMotionGenerationService,
-  ISequenceGenerationService,
-  IOrientationCalculationService,
-} from "../../interfaces/generation-interfaces";
+  IPageFactoryService,
+  IPersistenceService,
+  IPrintablePageLayoutService,
+  ISequenceCardExportIntegrationService,
+  ISequenceDeletionService,
+  ISequenceDomainService,
+  ISequenceImportService,
+  ISequenceService,
+  IWorkbenchBeatOperationsService,
+} from "../../interfaces/sequence-interfaces";
+
+import type { ILetterQueryService } from "../../implementations/data/LetterQueryService";
+import type { IPropCoordinatorService } from "../../implementations/rendering/PropCoordinatorService";
+import type { IBeatFallbackRenderingService } from "../../interfaces/beat-fallback-interfaces";
+import type { IBeatGridService } from "../../interfaces/beat-grid-interfaces";
 import type { IDeviceDetectionService } from "../../interfaces/device-interfaces";
 import type {
   IExportService,
   IPageImageExportService,
 } from "../../interfaces/export-interfaces";
-import type { IPanelManagementService } from "../../interfaces/panel-interfaces";
-import type { ILetterQueryService } from "../../implementations/data/LetterQueryService";
+import type {
+  IMotionGenerationService,
+  IOrientationCalculationService,
+  ISequenceGenerationService,
+} from "../../interfaces/generation-interfaces";
+import type { IImageFormatConverterService } from "../../interfaces/image-format-interfaces";
 import type { IStartPositionSelectionService } from "../../interfaces/IStartPositionSelectionService";
+import type { IPanelManagementService } from "../../interfaces/panel-interfaces";
+import type { ISVGToCanvasConverterService } from "../../interfaces/svg-conversion-interfaces";
+import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
 import { createServiceInterface } from "../types";
 
 // Import service implementations
 import { ApplicationInitializationService } from "../../implementations/application/ApplicationInitializationService";
-import { ArrowRenderingService } from "../../implementations/rendering/ArrowRenderingService";
+import { DeviceDetectionService } from "../../implementations/application/DeviceDetectionService";
 import { ConstructTabCoordinationService } from "../../implementations/construct/ConstructTabCoordinationService";
 import { DataTransformationService } from "../../implementations/data/DataTransformationService";
-import { DeviceDetectionService } from "../../implementations/application/DeviceDetectionService";
 import { ExportService } from "../../implementations/export/ExportService";
-import { GridRenderingService } from "../../implementations/rendering/GridRenderingService";
-import { LocalStoragePersistenceService } from "../../implementations/persistence/LocalStoragePersistenceService";
 import { MotionGenerationService } from "../../implementations/generation/MotionGenerationService";
+import { LocalStoragePersistenceService } from "../../implementations/persistence/LocalStoragePersistenceService";
+import { ArrowRenderingService } from "../../implementations/rendering/ArrowRenderingService";
+import { GridRenderingService } from "../../implementations/rendering/GridRenderingService";
 
-import { OverlayRenderingService } from "../../implementations/rendering/OverlayRenderingService";
-import { PanelManagementService } from "../../implementations/navigation/PanelManagementService";
-import { PictographRenderingService } from "../../implementations/rendering/PictographRenderingService";
 import { PictographService } from "../../implementations/domain/PictographService";
+import { PanelManagementService } from "../../implementations/navigation/PanelManagementService";
+import { OverlayRenderingService } from "../../implementations/rendering/OverlayRenderingService";
+import { PictographRenderingService } from "../../implementations/rendering/PictographRenderingService";
 // ✅ REMOVED: PropRenderingService is deprecated and redundant
-import { PropCoordinatorService } from "../../implementations/rendering/PropCoordinatorService";
+import { ImageFormatConverterService } from "../../implementations/conversion/ImageFormatConverterService";
+import { SVGToCanvasConverterService } from "../../implementations/conversion/SVGToCanvasConverterService";
 import { SequenceDomainService } from "../../implementations/domain/SequenceDomainService";
-import { SequenceGenerationService } from "../../implementations/generation/SequenceGenerationService";
-import { SequenceService } from "../../implementations/sequence/SequenceService";
-import { WorkbenchBeatOperationsService } from "../../implementations/sequence/WorkbenchBeatOperationsService";
-import { SequenceImportService } from "../../implementations/sequence/SequenceImportService";
-import { SequenceDeletionService } from "../../implementations/sequence/SequenceDeletionService";
-import { SettingsService } from "../../implementations/persistence/SettingsService";
 import { StartPositionService } from "../../implementations/domain/StartPositionService";
+import { PageImageExportService } from "../../implementations/export/PageImageExportService";
+import { SequenceCardExportIntegrationService } from "../../implementations/export/SequenceCardExportIntegrationService";
+import { PageFactoryService } from "../../implementations/generation/PageFactoryService";
+import { SequenceGenerationService } from "../../implementations/generation/SequenceGenerationService";
+import { SettingsService } from "../../implementations/persistence/SettingsService";
+import { OrientationCalculationService } from "../../implementations/positioning/OrientationCalculationService";
+import { BeatFallbackRenderingService } from "../../implementations/rendering/BeatFallbackRenderingService";
+import { BeatGridService } from "../../implementations/rendering/BeatGridService";
+import { PropCoordinatorService } from "../../implementations/rendering/PropCoordinatorService";
 import { SvgConfiguration } from "../../implementations/rendering/SvgConfiguration";
 import { SvgUtilityService } from "../../implementations/rendering/SvgUtilityService";
 import { PrintablePageLayoutService } from "../../implementations/sequence/PrintablePageLayoutService";
-import { PageFactoryService } from "../../implementations/generation/PageFactoryService";
-import { PageImageExportService } from "../../implementations/export/PageImageExportService";
-import { SequenceCardExportIntegrationService } from "../../implementations/export/SequenceCardExportIntegrationService";
-import { OrientationCalculationService } from "../../implementations/positioning/OrientationCalculationService";
+import { SequenceDeletionService } from "../../implementations/sequence/SequenceDeletionService";
+import { SequenceImportService } from "../../implementations/sequence/SequenceImportService";
+import { SequenceService } from "../../implementations/sequence/SequenceService";
+import { WorkbenchBeatOperationsService } from "../../implementations/sequence/WorkbenchBeatOperationsService";
 import { StartPositionSelectionService } from "../../implementations/StartPositionSelectionService";
 
 // Core domain services
@@ -347,4 +355,30 @@ export const IStartPositionSelectionServiceInterface =
   createServiceInterface<IStartPositionSelectionService>(
     "IStartPositionSelectionService",
     StartPositionSelectionService
+  );
+
+// New conversion and rendering microservices
+export const ISVGToCanvasConverterServiceInterface =
+  createServiceInterface<ISVGToCanvasConverterService>(
+    "ISVGToCanvasConverterService",
+    SVGToCanvasConverterService
+  );
+
+export const IImageFormatConverterServiceInterface =
+  createServiceInterface<IImageFormatConverterService>(
+    "IImageFormatConverterService",
+    ImageFormatConverterService
+  );
+
+export const IBeatGridServiceInterface =
+  createServiceInterface<IBeatGridService>("IBeatGridService", BeatGridService);
+
+export const IBeatFallbackRenderingServiceInterface =
+  createServiceInterface<IBeatFallbackRenderingService>(
+    "IBeatFallbackRenderingService",
+    class extends BeatFallbackRenderingService {
+      constructor(...args: unknown[]) {
+        super(args[0] as IBeatGridService);
+      }
+    }
   );

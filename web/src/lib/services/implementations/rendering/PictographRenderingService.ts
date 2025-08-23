@@ -7,6 +7,7 @@
 
 import type { BeatData, PictographData } from "$lib/domain";
 import { GridMode, MotionColor } from "$lib/domain";
+import { GridModeDerivationService } from "../domain/GridModeDerivationService";
 
 import type {
   IArrowRenderingService,
@@ -20,6 +21,8 @@ import type { IPropRenderingService } from "../../interfaces/positioning-interfa
 import type { IArrowPositioningOrchestrator } from "../../positioning/core-services";
 
 export class PictographRenderingService implements IPictographRenderingService {
+  private gridModeService = new GridModeDerivationService();
+
   constructor(
     private arrowPositioning: IArrowPositioningOrchestrator,
     private propRendering: IPropRenderingService | null, // ✅ FIXED: Made optional for deprecated service
@@ -41,8 +44,14 @@ export class PictographRenderingService implements IPictographRenderingService {
       // 1. Create base SVG
       const svg = this.svgUtility.createBaseSVG();
 
-      // 2. Render grid
-      const gridMode: GridMode = data.gridMode ?? GridMode.DIAMOND;
+      // 2. Render grid - compute gridMode from motion data
+      const gridMode: GridMode =
+        data.motions?.blue && data.motions?.red
+          ? this.gridModeService.deriveGridMode(
+              data.motions.blue,
+              data.motions.red
+            )
+          : GridMode.DIAMOND;
       await this.gridRendering.renderGrid(svg, gridMode);
 
       // 3. Calculate arrow positions using sophisticated positioning orchestrator

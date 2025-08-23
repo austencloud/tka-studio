@@ -115,6 +115,7 @@ export enum GridPosition {
 export enum GridMode {
   DIAMOND = "diamond",
   BOX = "box",
+  SKEWED = "skewed",
 }
 
 export enum DifficultyLevel {

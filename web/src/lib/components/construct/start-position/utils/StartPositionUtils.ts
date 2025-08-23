@@ -79,12 +79,7 @@ export function createStartPositionBeat(
 ): BeatData {
   return createBeatData({
     pictographData: pictographData,
-    beatNumber: 1,
-    // Store end position in metadata for compatibility
-    metadata: {
-      endPosition: extractEndPosition(pictographData),
-      is_start_position: true,
-    },
+    beatNumber: 0,
   });
 }
 

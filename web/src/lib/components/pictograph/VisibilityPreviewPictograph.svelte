@@ -7,12 +7,8 @@ with real-time opacity changes based on visibility settings.
 <script lang="ts">
   import type { PictographData } from "$lib/domain";
   import {
-    createArrowPlacementData,
-    createGridData,
     createMotionData,
     createPictographData,
-    createPropPlacementData,
-    GridMode,
     GridPosition,
     Letter,
     Location,
@@ -56,20 +52,7 @@ with real-time opacity changes based on visibility settings.
   // Example pictograph data (matching desktop app's example)
   const exampleData: PictographData = createPictographData({
     letter: Letter.A,
-    gridData: createGridData({
-      gridMode: GridMode.DIAMOND,
-      centerX: 400,
-      centerY: 400,
-      radius: 200,
-    }),
-    arrows: {
-      blue: createArrowPlacementData({}),
-      red: createArrowPlacementData({}),
-    },
-    props: {
-      blue: createPropPlacementData({}),
-      red: createPropPlacementData({}),
-    },
+
     motions: {
       blue: createMotionData({
         motionType: MotionType.PRO,

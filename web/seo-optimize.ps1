@@ -160,35 +160,7 @@ export const ssr = true;
 
 Write-Host "`n🔧 Enhancing developer routes with SEO..." -ForegroundColor Green
 
-# Update arrow-debug to match professional standards
-if (Test-Path "arrow-debug") {
-    $arrowDebugServer = @"
-import type { PageServerLoad } from "./$types";
 
-export const load: PageServerLoad = async () => {
-  return {
-    meta: {
-      title: "Arrow Debug Tool - TKA Development | Flow Arts Vector Testing",
-      description: "Development tool for debugging arrow vectors and movement paths in TKA flow arts sequences. Test and validate movement directions.",
-      canonical: "https://thekineticalphabet.com/arrow-debug",
-      ogTitle: "Arrow Debug Tool - TKA Development",
-      ogDescription: "Debug and test arrow vectors for flow arts movement sequences with TKA's development tools.",
-      ogType: "website",
-      ogUrl: "https://thekineticalphabet.com/arrow-debug",
-    },
-  };
-};
-"@
-    $arrowDebugServer | Out-File -FilePath "arrow-debug\+page.server.ts" -Encoding UTF8
-    
-    $arrowDebugClient = @"
-export const prerender = true;
-export const ssr = true;
-"@
-    $arrowDebugClient | Out-File -FilePath "arrow-debug\+page.ts" -Encoding UTF8
-    
-    Write-Host "     ✅ Enhanced: arrow-debug with SEO" -ForegroundColor Green
-}
 
 # Add server-side setup to metadata-tester
 if (Test-Path "metadata-tester") {
@@ -273,7 +245,6 @@ const pages = [
   
   // Development Tools (Lower Priority - but still indexed)
   { url: "motion-tester", priority: "0.3", changefreq: "monthly", description: "Motion Tester - Development Tool" },
-  { url: "arrow-debug", priority: "0.3", changefreq: "monthly", description: "Arrow Debug - Development Tool" },
   { url: "metadata-tester", priority: "0.3", changefreq: "monthly", description: "Metadata Tester - Development Tool" },
 ];
 
@@ -333,7 +304,7 @@ Allow: /sequence-card
 Allow: /write
 
 # Development tools - lower priority but still allowed
-Allow: /arrow-debug
+Allow: /
 Allow: /metadata-tester
 Allow: /motion-tester
 

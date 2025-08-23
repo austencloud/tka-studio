@@ -33,6 +33,11 @@ import {
   IStartPositionServiceInterface,
   IWorkbenchBeatOperationsServiceInterface,
 } from "./interfaces/core-interfaces";
+import { ISequenceStateServiceInterface } from "./interfaces/sequence-state-interfaces";
+import {
+  IWorkbenchCoordinationServiceInterface,
+  IWorkbenchServiceInterface,
+} from "./interfaces/workbench-interfaces";
 
 import {
   IArrowAdjustmentCalculatorInterface,
@@ -97,7 +102,10 @@ import { getSequenceCardExportServiceTokens } from "./registration/sequence-card
 export const serviceInterfaceMap = new Map<string, ServiceInterface<unknown>>([
   // Core services
   ["IBeatFrameService", IBeatFrameServiceInterface],
+  ["ISequenceStateService", ISequenceStateServiceInterface],
   ["ISequenceService", ISequenceServiceInterface],
+  ["IWorkbenchService", IWorkbenchServiceInterface],
+  ["IWorkbenchCoordinationService", IWorkbenchCoordinationServiceInterface],
   ["IWorkbenchBeatOperationsService", IWorkbenchBeatOperationsServiceInterface],
   ["ISequenceImportService", ISequenceImportServiceInterface],
   ["ISequenceDeletionService", ISequenceDeletionServiceInterface],

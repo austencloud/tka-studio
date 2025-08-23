@@ -67,12 +67,7 @@ const pages = [
     changefreq: "monthly",
     description: "Motion Tester - Development Tool",
   },
-  {
-    url: "arrow-debug",
-    priority: "0.3",
-    changefreq: "monthly",
-    description: "Arrow Debug - Development Tool",
-  },
+
   {
     url: "metadata-tester",
     priority: "0.3",

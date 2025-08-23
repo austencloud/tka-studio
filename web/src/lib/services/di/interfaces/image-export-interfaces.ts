@@ -6,30 +6,46 @@
  */
 
 import type {
-  ITKAImageExportService,
-  ILayoutCalculationService,
+  IBeatRenderingService,
+  ICanvasManagementService,
   IDimensionCalculationService,
   IFileExportService,
-  IBeatRenderingService,
-  ITextRenderingService,
-  IImageCompositionService,
   IGridOverlayService,
-  ICanvasManagementService,
+  IImageCompositionService,
+  ILayoutCalculationService,
+  ITextRenderingService,
+  ITKAImageExportService,
 } from "../../interfaces/image-export-interfaces";
+
+import type {
+  IWordTextRenderer,
+  IUserInfoRenderer,
+  IDifficultyBadgeRenderer,
+  ITextRenderingUtils,
+} from "../../interfaces/text-rendering-interfaces";
 
 import { createServiceInterface } from "../types";
 
 // Import service implementations
-import { TKAImageExportService } from "../../implementations/image-export/TKAImageExportService";
-import { LayoutCalculationService } from "../../implementations/image-export/LayoutCalculationService";
+import { BeatRenderingService } from "../../implementations/image-export/BeatRenderingService";
+import { CanvasManagementService } from "../../implementations/image-export/CanvasManagementService";
 import { DimensionCalculationService } from "../../implementations/image-export/DimensionCalculationService";
 import { FileExportService } from "../../implementations/image-export/FileExportService";
-import { BeatRenderingService } from "../../implementations/image-export/BeatRenderingService";
-import { TextRenderingService } from "../../implementations/image-export/TextRenderingService";
-import { ImageCompositionService } from "../../implementations/image-export/ImageCompositionService";
 import { GridOverlayService } from "../../implementations/image-export/GridOverlayService";
-import { CanvasManagementService } from "../../implementations/image-export/CanvasManagementService";
+import { ImageCompositionService } from "../../implementations/image-export/ImageCompositionService";
+import { LayoutCalculationService } from "../../implementations/image-export/LayoutCalculationService";
+import { TextRenderingService } from "../../implementations/image-export/TextRenderingService";
+import { TKAImageExportService } from "../../implementations/image-export/TKAImageExportService";
+
+// Import text rendering component implementations
+import { WordTextRenderer } from "../../implementations/image-export/text-rendering/internal/WordTextRenderer";
+import { UserInfoRenderer } from "../../implementations/image-export/text-rendering/internal/UserInfoRenderer";
+import { DifficultyBadgeRenderer } from "../../implementations/image-export/text-rendering/internal/DifficultyBadgeRenderer";
+import { TextRenderingUtils } from "../../implementations/image-export/text-rendering/internal/TextRenderingUtils";
 import type { IPictographService } from "../../interfaces/pictograph-interfaces";
+import type { ISVGToCanvasConverterService } from "../../interfaces/svg-conversion-interfaces";
+import type { IBeatGridService } from "../../interfaces/beat-grid-interfaces";
+import type { IBeatFallbackRenderingService } from "../../interfaces/beat-fallback-interfaces";
 
 // Foundation services (no dependencies)
 export const ILayoutCalculationServiceInterface =
@@ -67,9 +83,40 @@ export const IBeatRenderingServiceInterface =
     "IBeatRenderingService",
     class extends BeatRenderingService {
       constructor(...args: unknown[]) {
-        super(args[0] as IPictographService);
+        super(
+          args[0] as IPictographService,
+          args[1] as ISVGToCanvasConverterService,
+          args[2] as IBeatGridService,
+          args[3] as IBeatFallbackRenderingService,
+          args[4] as ICanvasManagementService
+        );
       }
     }
+  );
+
+// Text rendering component interfaces
+export const IWordTextRendererInterface =
+  createServiceInterface<IWordTextRenderer>(
+    "IWordTextRenderer",
+    WordTextRenderer
+  );
+
+export const IUserInfoRendererInterface =
+  createServiceInterface<IUserInfoRenderer>(
+    "IUserInfoRenderer",
+    UserInfoRenderer
+  );
+
+export const IDifficultyBadgeRendererInterface =
+  createServiceInterface<IDifficultyBadgeRenderer>(
+    "IDifficultyBadgeRenderer",
+    DifficultyBadgeRenderer
+  );
+
+export const ITextRenderingUtilsInterface =
+  createServiceInterface<ITextRenderingUtils>(
+    "ITextRenderingUtils",
+    TextRenderingUtils
   );
 
 export const ITextRenderingServiceInterface =

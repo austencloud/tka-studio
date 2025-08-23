@@ -7,24 +7,24 @@
  * Based on desktop application's printable_layout.py functionality.
  */
 
-import type { IPrintablePageLayoutService } from "../../interfaces/sequence-interfaces";
 import type {
-  PageDimensions,
-  Margins,
-  Rectangle,
+  DPIConfiguration,
+  GridCalculationOptions,
   GridConfig,
-  PaperSize,
-  PageOrientation,
   LayoutCalculationRequest,
   LayoutCalculationResult,
-  LayoutValidationResult,
-  LayoutValidationError,
-  LayoutValidationWarning,
   LayoutSuggestion,
-  GridCalculationOptions,
-  DPIConfiguration,
+  LayoutValidationError,
+  LayoutValidationResult,
+  LayoutValidationWarning,
+  Margins,
+  PageDimensions,
   PageLayoutConfig,
-} from "../../../domain/pageLayoutTypes";
+  PageOrientation,
+  PaperSize,
+  Rectangle,
+} from "../../../domain/PageLayoutTypes";
+import type { IPrintablePageLayoutService } from "../../interfaces/sequence-interfaces";
 
 export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   private readonly paperSizes = {

@@ -53,7 +53,6 @@ export class WorkbenchBeatOperationsService
         redReversal: false,
         isBlank: true,
         pictographData: null,
-        metadata: {},
         ...beatData,
       };
 

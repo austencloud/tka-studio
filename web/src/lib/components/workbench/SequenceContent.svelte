@@ -1,15 +1,16 @@
 <script lang="ts">
-  import { sequenceStateService } from "$lib/services/SequenceStateService.svelte";
+  import type { SequenceState } from "$lib/state/sequence/sequence-state.svelte";
   import BeatFrame from "./BeatFrame.svelte";
 
   interface Props {
+    sequenceState: SequenceState;
     onBeatSelected?: (index: number) => void;
   }
 
-  let { onBeatSelected }: Props = $props();
+  let { sequenceState, onBeatSelected }: Props = $props();
 
-  const currentSequence = $derived(sequenceStateService.currentSequence);
-  const selectedBeatIndex = $derived(sequenceStateService.selectedBeatIndex);
+  const currentSequence = $derived(sequenceState.currentSequence);
+  const selectedBeatIndex = $derived(sequenceState.selectedBeatIndex);
 
   // TODO: Add scroll functionality back later
   let beatFrameShouldScroll = $state(false);

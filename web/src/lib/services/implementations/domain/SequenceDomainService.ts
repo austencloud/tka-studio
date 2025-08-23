@@ -7,12 +7,12 @@
 
 import type { BeatData, SequenceData } from "$lib/domain";
 import { GridMode } from "$lib/domain";
+import type { ValidationError } from "$lib/domain/SequenceCard";
 import type { ValidationResult } from "../../interfaces/domain-types";
 import type {
   ISequenceDomainService,
   SequenceCreateRequest,
 } from "../../interfaces/sequence-interfaces";
-import type { ValidationError } from "$lib/domain/sequenceCard";
 
 export class SequenceDomainService implements ISequenceDomainService {
   /**
@@ -152,9 +152,7 @@ export class SequenceDomainService implements ISequenceDomainService {
 
     // Extract letters from beats (desktop logic)
     const word = sequence.beats
-      .map(
-        (beat) => beat.pictographData?.letter || beat.metadata?.letter || "?"
-      )
+      .map((beat) => beat.pictographData?.letter)
       .join("");
 
     // Apply word simplification for circular sequences (desktop logic)
@@ -202,7 +200,6 @@ export class SequenceDomainService implements ISequenceDomainService {
       redReversal: false,
       isBlank: true,
       pictographData: null,
-      metadata: {},
     };
   }
 

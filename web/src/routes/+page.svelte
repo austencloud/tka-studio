@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { switchTab } from "$lib/state/appState.svelte";
   import MainApplication from "$components/MainApplication.svelte";
+  import { switchTab } from "$lib/state/app-state.svelte";
+  import { onMount } from "svelte";
 
   onMount(async () => {
     // Check for tab parameter in URL (from SEO redirects)

@@ -1,36 +1,59 @@
 <script lang="ts">
-  import { sequenceStateService } from "$lib/services/SequenceStateService.svelte";
-  import { workbenchService } from "$lib/services/WorkbenchService.svelte";
+  import { resolve } from "$lib/services/bootstrap";
+  import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
+  import { createSequenceState } from "$lib/state/sequence/sequence-state.svelte";
+  import { createWorkbenchState } from "$lib/state/workbench/workbench-state.svelte";
   import { onMount } from "svelte";
   import ButtonPanel from "./ButtonPanel.svelte";
   import SequenceContent from "./SequenceContent.svelte";
 
-  const hasSelection = $derived(sequenceStateService.selectedBeatIndex >= 0);
+  // Get services from DI container
+  const sequenceStateService = resolve(
+    "ISequenceStateService"
+  ) as import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService;
+  const beatFrameService = resolve(
+    "IBeatFrameService"
+  ) as import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService;
+  const workbenchService = resolve(
+    "IWorkbenchService"
+  ) as import("$lib/services/interfaces/workbench-interfaces").IWorkbenchService;
+  const workbenchCoordinationService = resolve(
+    "IWorkbenchCoordinationService"
+  ) as import("$lib/services/interfaces/workbench-interfaces").IWorkbenchCoordinationService;
+
+  // Create component-scoped states
+  const sequenceState = createSequenceState(sequenceStateService);
+  const beatFrameState = createBeatFrameState(beatFrameService);
+  const workbenchState = createWorkbenchState(
+    workbenchService,
+    workbenchCoordinationService,
+    sequenceState,
+    beatFrameState
+  );
+
+  const hasSelection = $derived(sequenceState.selectedBeatIndex >= 0);
 
   onMount(() => {
-    workbenchService.initialize();
+    workbenchState.initialize();
 
     // Container element is available for future use if needed
   });
 
   function handleDeleteBeat() {
-    const idx = sequenceStateService.selectedBeatIndex;
+    const idx = sequenceState.selectedBeatIndex;
     if (idx >= 0) {
       // TODO: Replace with WorkbenchBeatOperationsService.removeBeat
       // For now, use the state service directly
-      sequenceStateService.removeBeat(idx);
+      sequenceState.removeBeat(idx);
     }
   }
 
   function handleClearSequence() {
-    const seq = sequenceStateService.currentSequence;
-    if (!seq) return;
-    // Clear by setting zero beats
-    sequenceStateService.setCurrentSequence({ ...seq, beats: [] });
+    sequenceState.clearSequence();
   }
 
   function handleBeatSelected(index: number) {
-    sequenceStateService.selectBeat(index);
+    workbenchState.handleBeatClick(index);
   }
 
   // Advanced button actions (to be wired to services later)
@@ -55,7 +78,7 @@
   }
 
   function handleCopyJson() {
-    const seq = sequenceStateService.currentSequence;
+    const seq = sequenceState.currentSequence;
     if (seq) {
       navigator.clipboard.writeText(JSON.stringify(seq, null, 2));
       console.log("Copied sequence JSON to clipboard");
@@ -66,7 +89,7 @@
 <div class="workbench">
   <div class="main-layout">
     <div class="left-vbox">
-      <SequenceContent onBeatSelected={handleBeatSelected} />
+      <SequenceContent {sequenceState} onBeatSelected={handleBeatSelected} />
     </div>
     <div class="workbench-button-panel">
       <ButtonPanel

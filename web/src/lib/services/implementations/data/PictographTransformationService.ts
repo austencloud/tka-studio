@@ -8,7 +8,7 @@
 import type { PictographData } from "$lib/domain/PictographData";
 import { createPictographData } from "$lib/domain/PictographData";
 
-import { getLetterType, Letter, type GridMode } from "$lib/domain";
+import { getLetterType, Letter } from "$lib/domain";
 import { MotionColor } from "$lib/domain/enums";
 import { createMotionData } from "$lib/domain/MotionData";
 import { pictographDataDebugger } from "../../debug/PictographDataDebugger";
@@ -155,14 +155,6 @@ export class PictographTransformationService
           blue: blueMotion,
           red: redMotion,
         },
-        // Props are now embedded in motions
-        startPosition: this.enumMappingService.convertToGridPosition(
-          row.startPosition
-        ),
-        endPosition: this.enumMappingService.convertToGridPosition(
-          row.endPosition
-        ),
-        gridMode: gridMode as GridMode, // TODO: fix GridMode type
         isBlank: false,
         metadata: {
           source: "csv_transformation_service",

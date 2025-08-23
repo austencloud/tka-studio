@@ -8,22 +8,22 @@
  */
 
 import type {
+  GridCalculationOptions,
+  GridConfig,
+  LayoutSuggestion,
+  LayoutValidationError,
+  LayoutValidationResult,
+  LayoutValidationWarning,
+  Page,
+  PageCreationOptions,
+  PageLayoutConfig,
+  Rectangle,
+} from "../../../domain/PageLayoutTypes";
+import type { SequenceData } from "../../interfaces/domain-types";
+import type {
   IPageFactoryService,
   IPrintablePageLayoutService,
 } from "../../interfaces/sequence-interfaces";
-import type {
-  Page,
-  Rectangle,
-  GridConfig,
-  PageLayoutConfig,
-  PageCreationOptions,
-  LayoutValidationResult,
-  LayoutValidationError,
-  LayoutValidationWarning,
-  LayoutSuggestion,
-  GridCalculationOptions,
-} from "../../../domain/pageLayoutTypes";
-import type { SequenceData } from "../../interfaces/domain-types";
 
 export class PageFactoryService implements IPageFactoryService {
   constructor(private readonly layoutService: IPrintablePageLayoutService) {}

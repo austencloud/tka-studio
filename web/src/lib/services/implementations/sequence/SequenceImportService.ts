@@ -5,16 +5,16 @@
  * Separate from core sequence CRUD operations and focused on data transformation.
  */
 
-import type { BeatData, SequenceData, Letter } from "$lib/domain";
+import type { BeatData, Letter, SequenceData } from "$lib/domain";
 import { createMotionData, createPictographData } from "$lib/domain";
 import {
   GridMode,
-  MotionType,
-  PropType,
-  MotionColor,
-  RotationDirection,
   Location,
+  MotionColor,
+  MotionType,
   Orientation,
+  PropType,
+  RotationDirection,
 } from "$lib/domain/enums";
 import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
 
@@ -79,7 +79,6 @@ export class SequenceImportService implements ISequenceImportService {
         isBlank: false,
         pictographData: createPictographData({
           id: `pictograph-${step.beat}`,
-          gridMode: (meta.gridMode as GridMode) || GridMode.DIAMOND,
           motions: {
             blue: createMotionData({
               color: MotionColor.BLUE,

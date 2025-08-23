@@ -5,10 +5,11 @@
  * position, letter types, rotation, and other motion parameters.
  */
 
-import type { PictographData } from "$lib/domain/PictographData";
-import type { BeatData } from "$lib/domain/BeatData";
-import type { IEnumMappingService } from "./EnumMappingService";
 import { getLetterType } from "$lib/domain";
+import type { BeatData } from "$lib/domain/BeatData";
+import type { PictographData } from "$lib/domain/PictographData";
+import { PositionMappingService } from "../movement/PositionMappingService";
+import type { IEnumMappingService } from "./EnumMappingService";
 
 export interface FilterCriteria {
   startPosition?: string;
@@ -203,6 +204,7 @@ export class OptionFilteringService implements IOptionFilteringService {
 
   /**
    * Extract end position from the last beat in a sequence
+   * Computes end position from motion data using PositionMappingService
    */
   extractEndPosition(lastBeat: BeatData): string | null {
     try {
@@ -210,7 +212,17 @@ export class OptionFilteringService implements IOptionFilteringService {
         return null;
       }
 
-      const endPosition = lastBeat.pictographData.endPosition;
+      const pictographData = lastBeat.pictographData;
+      if (!pictographData.motions?.blue || !pictographData.motions?.red) {
+        return null;
+      }
+
+      const positionService = new PositionMappingService();
+      const endPosition = positionService.getPositionFromLocations(
+        pictographData.motions.blue.endLocation,
+        pictographData.motions.red.endLocation
+      );
+
       return endPosition ? endPosition.toString() : null;
     } catch (error) {
       console.warn("⚠️ Failed to extract end position from beat:", error);
