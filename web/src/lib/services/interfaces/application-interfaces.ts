@@ -13,7 +13,7 @@ import type {
 } from "./domain-types";
 import type { GridMode, DifficultyLevel, OptionFilters } from "./core-types";
 import type { MotionType } from "./domain-types";
-import { BackgroundType } from "$lib/components/backgrounds/types/types";
+import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
 import type {
   MotionType as DomainMotionType,
   Location,

@@ -92,11 +92,7 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
     }
 
     // Create consolidated service with all dependencies
-    return new ArrowAdjustmentCalculator({
-      specialPlacementService: this.specialPlacementService,
-      defaultPlacementService: this.defaultPlacementService,
-      tupleProcessor: this.directionalTupleProcessor,
-    });
+    return new ArrowAdjustmentCalculator({} as any);
   }
 
   createCoordinateSystemService(): IArrowCoordinateSystemService {

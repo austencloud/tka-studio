@@ -5,7 +5,7 @@
  * for prop positioning on the animation grid.
  */
 
-import type { PropState } from "../../../components/animator/types/PropState.js";
+import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 
 // Grid constants from the animation engine
 const GRID_CENTER = 475;

@@ -1,6 +1,6 @@
 <!-- SettingsDialog.svelte - Simplified main settings dialog -->
 <script lang="ts">
-  import { BackgroundType } from "$lib/components/backgrounds/types/types";
+  import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
   import {
     getSettings,
     hideSettingsDialog,

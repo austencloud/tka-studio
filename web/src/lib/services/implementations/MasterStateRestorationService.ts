@@ -1,6 +1,6 @@
 /**
  * Master State Restoration Service for TKA
- * 
+ *
  * Orchestrates complete application state restoration on startup.
  * Handles the proper order and timing of state restoration across all tabs and features.
  */
@@ -8,7 +8,7 @@
 import { browser } from "$app/environment";
 import type { TabId } from "$lib/state/services/state-service-interfaces";
 import type { BrowseStatePersistenceService } from "./browse/BrowseStatePersistenceService";
-import type { TabStateService } from "$lib/state/services/TabStateService.svelte";
+import type { tabStateService } from "$lib/state/services/TabStateService.svelte";
 
 // ============================================================================
 // RESTORATION CONFIGURATION
@@ -17,7 +17,7 @@ import type { TabStateService } from "$lib/state/services/TabStateService.svelte
 interface RestorationStep {
   name: string;
   priority: number; // Lower numbers run first
-  timeout: number;  // Max time to wait for this step
+  timeout: number; // Max time to wait for this step
   essential: boolean; // If true, failure blocks app startup
 }
 
@@ -50,10 +50,10 @@ export class MasterStateRestorationService {
   private isRestoring = false;
   private restorationSteps: Map<string, RestorationStep> = new Map();
   private scrollRestorationQueue: ScrollRestorationData[] = [];
-  
+
   constructor(
-    private tabStateService: TabStateService,
-    private browseStatePersistence: BrowseStatePersistenceService,
+    private tabStateService: any,
+    private browseStatePersistence: BrowseStatePersistenceService
     // Add other state services as needed
   ) {
     this.setupRestorationSteps();
@@ -65,43 +65,43 @@ export class MasterStateRestorationService {
 
   private setupRestorationSteps() {
     // Step 1: Core app state (essential)
-    this.restorationSteps.set('app-core', {
-      name: 'Core Application State',
+    this.restorationSteps.set("app-core", {
+      name: "Core Application State",
       priority: 1,
       timeout: 2000,
-      essential: true
+      essential: true,
     });
 
     // Step 2: Tab state (essential for navigation)
-    this.restorationSteps.set('tab-state', {
-      name: 'Tab Navigation State',
+    this.restorationSteps.set("tab-state", {
+      name: "Tab Navigation State",
       priority: 2,
       timeout: 1000,
-      essential: true
+      essential: true,
     });
 
     // Step 3: Active tab specific state
-    this.restorationSteps.set('active-tab', {
-      name: 'Active Tab State',
+    this.restorationSteps.set("active-tab", {
+      name: "Active Tab State",
       priority: 3,
       timeout: 3000,
-      essential: false
+      essential: false,
     });
 
     // Step 4: UI state (scroll positions, selections)
-    this.restorationSteps.set('ui-state', {
-      name: 'UI State (Scroll, Selection)',
+    this.restorationSteps.set("ui-state", {
+      name: "UI State (Scroll, Selection)",
       priority: 4,
       timeout: 2000,
-      essential: false
+      essential: false,
     });
 
     // Step 5: Performance optimizations
-    this.restorationSteps.set('optimization', {
-      name: 'Performance Optimizations',
+    this.restorationSteps.set("optimization", {
+      name: "Performance Optimizations",
       priority: 5,
       timeout: 1000,
-      essential: false
+      essential: false,
     });
   }
 
@@ -114,30 +114,31 @@ export class MasterStateRestorationService {
    */
   async restoreCompleteApplicationState(): Promise<CompleteRestorationResult> {
     if (!browser) {
-      return this.createFailureResult('Not running in browser');
+      return this.createFailureResult("Not running in browser");
     }
 
     if (this.isRestoring) {
-      console.warn('State restoration already in progress');
-      return this.createFailureResult('Already restoring');
+      console.warn("State restoration already in progress");
+      return this.createFailureResult("Already restoring");
     }
 
     this.isRestoring = true;
     const startTime = performance.now();
-    
-    console.log('🔄 Starting complete application state restoration...');
+
+    console.log("🔄 Starting complete application state restoration...");
 
     const results: Record<string, RestorationResult> = {};
     const failedEssentialSteps: string[] = [];
     const warnings: string[] = [];
 
     // Execute restoration steps in priority order
-    const sortedSteps = Array.from(this.restorationSteps.entries())
-      .sort(([, a], [, b]) => a.priority - b.priority);
+    const sortedSteps = Array.from(this.restorationSteps.entries()).sort(
+      ([, a], [, b]) => a.priority - b.priority
+    );
 
     for (const [stepId, step] of sortedSteps) {
       console.log(`📋 Executing restoration step: ${step.name}`);
-      
+
       try {
         const stepResult = await this.executeRestorationStep(stepId, step);
         results[stepId] = stepResult;
@@ -150,14 +151,17 @@ export class MasterStateRestorationService {
           }
         }
 
-        console.log(`✅ Step "${step.name}" completed in ${stepResult.duration}ms`);
+        console.log(
+          `✅ Step "${step.name}" completed in ${stepResult.duration}ms`
+        );
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+
         results[stepId] = {
           success: false,
           duration: 0,
-          error: errorMessage
+          error: errorMessage,
         };
 
         if (step.essential) {
@@ -183,14 +187,14 @@ export class MasterStateRestorationService {
       steps: results,
       failedEssentialSteps,
       warnings,
-      success: failedEssentialSteps.length === 0
+      success: failedEssentialSteps.length === 0,
     };
 
     console.log(`🎉 State restoration completed in ${totalDuration}ms`);
     console.log(`✅ Success: ${finalResult.success}`);
-    
+
     if (warnings.length > 0) {
-      console.warn('⚠️ Warnings:', warnings);
+      console.warn("⚠️ Warnings:", warnings);
     }
 
     return finalResult;
@@ -200,13 +204,19 @@ export class MasterStateRestorationService {
   // INDIVIDUAL RESTORATION STEPS
   // ============================================================================
 
-  private async executeRestorationStep(stepId: string, step: RestorationStep): Promise<RestorationResult> {
+  private async executeRestorationStep(
+    stepId: string,
+    step: RestorationStep
+  ): Promise<RestorationResult> {
     const startTime = performance.now();
 
     try {
       // Create timeout promise
       const timeoutPromise = new Promise<never>((_, reject) => {
-        setTimeout(() => reject(new Error(`Step timed out after ${step.timeout}ms`)), step.timeout);
+        setTimeout(
+          () => reject(new Error(`Step timed out after ${step.timeout}ms`)),
+          step.timeout
+        );
       });
 
       // Execute the actual restoration step
@@ -218,34 +228,36 @@ export class MasterStateRestorationService {
       return {
         success: true,
         duration: performance.now() - startTime,
-        details: result
+        details: result,
       };
     } catch (error) {
       return {
         success: false,
         duration: performance.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
 
-  private async executeSpecificStep(stepId: string): Promise<Record<string, unknown>> {
+  private async executeSpecificStep(
+    stepId: string
+  ): Promise<Record<string, unknown>> {
     switch (stepId) {
-      case 'app-core':
+      case "app-core":
         return this.restoreCoreApplicationState();
-      
-      case 'tab-state':
+
+      case "tab-state":
         return this.restoreTabState();
-      
-      case 'active-tab':
+
+      case "active-tab":
         return this.restoreActiveTabState();
-      
-      case 'ui-state':
+
+      case "ui-state":
         return this.restoreUIState();
-      
-      case 'optimization':
+
+      case "optimization":
         return this.performOptimizations();
-      
+
       default:
         throw new Error(`Unknown restoration step: ${stepId}`);
     }
@@ -255,7 +267,9 @@ export class MasterStateRestorationService {
   // SPECIFIC RESTORATION IMPLEMENTATIONS
   // ============================================================================
 
-  private async restoreCoreApplicationState(): Promise<Record<string, unknown>> {
+  private async restoreCoreApplicationState(): Promise<
+    Record<string, unknown>
+  > {
     // Restore basic app state like theme, settings, etc.
     // This would integrate with your existing ApplicationStateService
     return { restored: true };
@@ -263,37 +277,37 @@ export class MasterStateRestorationService {
 
   private async restoreTabState(): Promise<Record<string, unknown>> {
     await this.tabStateService.restoreApplicationState();
-    
+
     return {
       activeTab: this.tabStateService.activeTab,
-      restored: true
+      restored: true,
     };
   }
 
   private async restoreActiveTabState(): Promise<Record<string, unknown>> {
     const activeTab = this.tabStateService.activeTab;
-    
+
     switch (activeTab) {
-      case 'browse':
+      case "browse":
         return this.restoreBrowseTabState();
-      
-      case 'construct':
+
+      case "construct":
         return this.restoreConstructTabState();
-      
-      case 'sequence_card':
+
+      case "sequence_card":
         return this.restoreSequenceCardTabState();
-      
+
       default:
-        return { activeTab, message: 'No specific restoration needed' };
+        return { activeTab, message: "No specific restoration needed" };
     }
   }
 
   private async restoreBrowseTabState(): Promise<Record<string, unknown>> {
     try {
       const browseState = await this.browseStatePersistence.loadBrowseState();
-      
+
       if (!browseState) {
-        return { message: 'No browse state to restore' };
+        return { message: "No browse state to restore" };
       }
 
       // Queue scroll restoration for after DOM is ready
@@ -301,7 +315,7 @@ export class MasterStateRestorationService {
         this.scrollRestorationQueue.push({
           scrollTop: browseState.scroll.scrollTop,
           scrollLeft: browseState.scroll.scrollLeft,
-          containerSelector: '[data-browse-scroll-container]'
+          containerSelector: "[data-browse-scroll-container]",
         });
       }
 
@@ -309,34 +323,36 @@ export class MasterStateRestorationService {
         restored: true,
         filter: browseState.filter?.type || null,
         scrollQueued: browseState.scroll?.scrollTop > 0,
-        selectedSequence: browseState.selection?.selectedSequenceId || null
+        selectedSequence: browseState.selection?.selectedSequenceId || null,
       };
     } catch (error) {
-      console.error('Failed to restore browse tab state:', error);
-      return { error: 'Browse state restoration failed' };
+      console.error("Failed to restore browse tab state:", error);
+      return { error: "Browse state restoration failed" };
     }
   }
 
   private async restoreConstructTabState(): Promise<Record<string, unknown>> {
     // Implement construct tab restoration
     // This would restore workbench state, current sequence, etc.
-    return { message: 'Construct tab restoration not yet implemented' };
+    return { message: "Construct tab restoration not yet implemented" };
   }
 
-  private async restoreSequenceCardTabState(): Promise<Record<string, unknown>> {
+  private async restoreSequenceCardTabState(): Promise<
+    Record<string, unknown>
+  > {
     // Implement sequence card tab restoration
-    return { message: 'Sequence card tab restoration not yet implemented' };
+    return { message: "Sequence card tab restoration not yet implemented" };
   }
 
   private async restoreUIState(): Promise<Record<string, unknown>> {
     // Restore UI-specific state like panel sizes, modal states, etc.
-    return { message: 'UI state restoration completed' };
+    return { message: "UI state restoration completed" };
   }
 
   private async performOptimizations(): Promise<Record<string, unknown>> {
     // Perform any post-restoration optimizations
     // This could include preloading commonly used sequences, warming caches, etc.
-    return { message: 'Optimizations completed' };
+    return { message: "Optimizations completed" };
   }
 
   // ============================================================================
@@ -344,7 +360,9 @@ export class MasterStateRestorationService {
   // ============================================================================
 
   private processScrollRestoration(): void {
-    console.log(`📜 Processing ${this.scrollRestorationQueue.length} scroll restorations`);
+    console.log(
+      `📜 Processing ${this.scrollRestorationQueue.length} scroll restorations`
+    );
 
     for (const scrollData of this.scrollRestorationQueue) {
       this.restoreScrollPosition(scrollData);
@@ -354,10 +372,14 @@ export class MasterStateRestorationService {
   }
 
   private restoreScrollPosition(scrollData: ScrollRestorationData): void {
-    const container = document.querySelector(scrollData.containerSelector) as HTMLElement;
-    
+    const container = document.querySelector(
+      scrollData.containerSelector
+    ) as HTMLElement;
+
     if (!container) {
-      console.warn(`Scroll container not found: ${scrollData.containerSelector}`);
+      console.warn(
+        `Scroll container not found: ${scrollData.containerSelector}`
+      );
       return;
     }
 
@@ -366,12 +388,12 @@ export class MasterStateRestorationService {
       container.scrollTo({
         top: scrollData.scrollTop,
         left: scrollData.scrollLeft,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
 
       console.log(`📜 Restored scroll position: ${scrollData.scrollTop}px`);
     } catch (error) {
-      console.warn('Failed to restore scroll position:', error);
+      console.warn("Failed to restore scroll position:", error);
     }
   }
 
@@ -385,7 +407,7 @@ export class MasterStateRestorationService {
       steps: {},
       failedEssentialSteps: [reason],
       warnings: [],
-      success: false
+      success: false,
     };
   }
 
@@ -407,8 +429,10 @@ export class MasterStateRestorationService {
    * Get available restoration steps
    */
   public getRestorationSteps(): Array<{ id: string; step: RestorationStep }> {
-    return Array.from(this.restorationSteps.entries())
-      .map(([id, step]) => ({ id, step }));
+    return Array.from(this.restorationSteps.entries()).map(([id, step]) => ({
+      id,
+      step,
+    }));
   }
 
   /**
@@ -432,12 +456,12 @@ let masterRestorationService: MasterStateRestorationService | null = null;
 
 /**
  * Get or create the singleton master restoration service
- * 
+ *
  * @param dependencies - Required services for restoration
  * @returns Master restoration service instance
  */
 export function getMasterRestorationService(dependencies?: {
-  tabStateService: TabStateService;
+  tabStateService: typeof tabStateService;
   browseStatePersistence: BrowseStatePersistenceService;
 }): MasterStateRestorationService {
   if (!masterRestorationService && dependencies) {
@@ -448,7 +472,9 @@ export function getMasterRestorationService(dependencies?: {
   }
 
   if (!masterRestorationService) {
-    throw new Error('Master restoration service not initialized. Provide dependencies on first call.');
+    throw new Error(
+      "Master restoration service not initialized. Provide dependencies on first call."
+    );
   }
 
   return masterRestorationService;
@@ -459,7 +485,7 @@ export function getMasterRestorationService(dependencies?: {
  * Call this in your app startup (e.g., in +layout.svelte or app initialization)
  */
 export async function initializeStateRestoration(dependencies: {
-  tabStateService: TabStateService;
+  tabStateService: any;
   browseStatePersistence: BrowseStatePersistenceService;
 }): Promise<CompleteRestorationResult> {
   const restorationService = getMasterRestorationService(dependencies);

@@ -80,7 +80,7 @@ export interface ISettingsService {
 /**
  * Tab navigation and state persistence
  */
-export interface ITabStateService {
+export interface ItabStateService {
   // State getters
   readonly activeTab: TabId;
 

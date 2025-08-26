@@ -4,7 +4,7 @@
   Simple page to test codex functionality in isolation
 -->
 <script lang="ts">
-  import CodexComponent from "$lib/components/codex/CodexComponent.svelte";
+  import CodexComponent from "$lib/components/tabs/learn-tab/codex/CodexComponent.svelte";
 
   console.log("🔧 Codex test page: Script loaded");
 

@@ -6,7 +6,7 @@
  */
 
 import type { SequenceData, BeatData } from "$lib/domain";
-import type { PropState } from "../../../components/animator/types/PropState.js";
+import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 import type {
   ISequenceAnimationOrchestrator,
   IAnimationStateService,

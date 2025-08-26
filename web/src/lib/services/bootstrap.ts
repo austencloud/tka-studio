@@ -17,6 +17,7 @@ import { registerPositioningServices } from "./di/registration/positioning-servi
 import { registerSharedServices } from "./di/registration/shared-services";
 
 import { registerAnimatorServices } from "./di/registration/animator-services";
+import { registerBackgroundServices } from "./di/registration/background-services";
 import { registerCodexServices } from "./di/registration/codex-services";
 import { registerGenerationServices } from "./di/registration/generation-services";
 import { registerImageExportServices } from "./di/registration/image-export-services";
@@ -37,6 +38,7 @@ export async function createWebApplication(): Promise<ServiceContainer> {
     await registerCodexServices(container);
     await registerPositioningServices(container);
     await registerAnimatorServices(container);
+    await registerBackgroundServices(container);
     await registerBrowseServices(container);
 
     await registerPictographServices(container);

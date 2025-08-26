@@ -23,81 +23,69 @@ export class MockLetterMappingRepository implements ILetterMappingRepository {
       endPosition: "alpha3",
       blueMotionType: "pro",
       redMotionType: "pro",
-      blueHandPath: "clockwise",
-      redHandPath: "clockwise",
     },
     B: {
       startPosition: "alpha2",
       endPosition: "alpha4",
       blueMotionType: "pro",
       redMotionType: "pro",
-      blueHandPath: "clockwise",
-      redHandPath: "clockwise",
     },
     C: {
       startPosition: "alpha3",
       endPosition: "alpha5",
       blueMotionType: "pro",
       redMotionType: "pro",
-      blueHandPath: "clockwise",
-      redHandPath: "clockwise",
     },
     Σ: {
       startPosition: "alpha4",
       endPosition: "alpha6",
-      blueMotionType: "shift",
-      redMotionType: "shift",
-      blueHandPath: "clockwise",
-      redHandPath: "clockwise",
+      blueMotionType: "anti",
+      redMotionType: "anti",
     },
     Δ: {
       startPosition: "alpha5",
       endPosition: "alpha7",
-      blueMotionType: "shift",
-      redMotionType: "shift",
-      blueHandPath: "clockwise",
-      redHandPath: "clockwise",
+      blueMotionType: "anti",
+      redMotionType: "anti",
     },
     Φ: {
       startPosition: "alpha1",
       endPosition: "alpha1",
       blueMotionType: "dash",
       redMotionType: "dash",
-      blueHandPath: "static",
-      redHandPath: "static",
     },
     α: {
       startPosition: "alpha1",
       endPosition: "alpha1",
       blueMotionType: "static",
       redMotionType: "static",
-      blueHandPath: "static",
-      redHandPath: "static",
     },
     β: {
       startPosition: "alpha2",
       endPosition: "alpha2",
       blueMotionType: "static",
       redMotionType: "static",
-      blueHandPath: "static",
-      redHandPath: "static",
     },
   };
 
   private mockRows: LetterRow[] = [
     {
+      index: 0,
       letters: ["A", "B", "C"],
       category: "basic",
     },
     {
+      index: 1,
       letters: ["Σ", "Δ"],
       category: "greek",
     },
     {
+      index: 2,
       letters: ["Φ"],
       category: "dash",
     },
     {
+      index: 3,
       letters: ["α", "β"],
       category: "static",
     },
@@ -136,24 +124,27 @@ export class MockLessonRepository implements ILessonRepository {
   private mockLessons: Record<string, LessonConfiguration> = {
     basic_pro_anti: {
       name: "Basic Pro/Anti",
-      description: "Basic letters with pro and anti motions",
-      categories: ["basic"],
-      excludeLetters: [],
-      includeLetters: [],
+      description: "Basic pro and anti movements",
+      type: "practice",
+      includedCategories: ["basic"],
+      includedLetters: [],
+      excludedLetters: [],
     },
     all_letters: {
       name: "All Letters",
       description: "All available letters",
-      categories: ["basic", "dash", "static"],
-      excludeLetters: [],
-      includeLetters: [],
+      type: "practice",
+      includedCategories: ["basic"],
+      includedLetters: [],
+      excludedLetters: [],
     },
     beginner: {
       name: "Beginner",
-      description: "Beginner-friendly letters",
-      categories: [],
-      excludeLetters: [],
-      includeLetters: ["A", "B", "C", "G", "H", "I", "M", "N", "O"],
+      description: "Beginner friendly letters",
+      type: "practice",
+      includedCategories: ["basic"],
+      includedLetters: ["A", "B", "C", "G", "H", "I", "M", "N", "O"],
+      excludedLetters: [],
     },
   };
 
@@ -176,20 +167,20 @@ export class MockLessonRepository implements ILessonRepository {
     if (!lesson) return [];
 
     // If specific letters are included, return those
-    if (lesson.includeLetters && lesson.includeLetters.length > 0) {
-      return [...lesson.includeLetters];
+    if (lesson.includedLetters && lesson.includedLetters.length > 0) {
+      return [...lesson.includedLetters];
     }
 
     // Otherwise, get letters by categories
     let letters: string[] = [];
-    for (const category of lesson.categories) {
+    for (const category of lesson.includedCategories) {
       letters.push(...this.letterMappingRepo.getLettersByCategory(category));
     }
 
     // Remove excluded letters
-    if (lesson.excludeLetters && lesson.excludeLetters.length > 0) {
+    if (lesson.excludedLetters && lesson.excludedLetters.length > 0) {
       letters = letters.filter(
-        (letter) => !lesson.excludeLetters!.includes(letter)
+        (letter) => !lesson.excludedLetters!.includes(letter)
       );
     }
 
@@ -198,6 +189,6 @@ export class MockLessonRepository implements ILessonRepository {
 
   getLessonCategories(lessonType: string): LetterCategory[] {
     const lesson = this.mockLessons[lessonType];
-    return lesson ? [...lesson.categories] : [];
+    return lesson ? [...lesson.includedCategories] : [];
   }
 }

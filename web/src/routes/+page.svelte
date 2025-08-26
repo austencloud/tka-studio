@@ -1,5 +1,5 @@
 <script lang="ts">
-  import MainApplication from "$components/MainApplication.svelte";
+  import MainApplication from "$components/layout/MainApplication.svelte";
   import { switchTab } from "$lib/state/app-state.svelte";
   import { onMount } from "svelte";
 

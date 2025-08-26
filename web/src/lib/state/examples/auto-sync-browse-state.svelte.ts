@@ -1,6 +1,6 @@
 /**
  * Example Integration: Auto-Sync Browse State Factory
- * 
+ *
  * This shows how to integrate the auto-sync functionality into your existing
  * createBrowseState factory. You can apply this same pattern to other factories.
  */
@@ -42,41 +42,41 @@ export function createAutoSyncBrowseState(
 ) {
   // Create auto-sync manager
   const autoSync = createBrowseAutoSync();
-  
+
   // Load initial state from persistence
   const initialState = autoSync.load({
     // Filter state
     currentFilter: null as { type: FilterType; value: FilterValue } | null,
-    
+
     // Display state
     displayedSequences: [] as SequenceData[],
     allSequences: [] as SequenceData[],
     filteredSequences: [] as SequenceData[],
-    
+
     // Loading state
     isLoading: false,
     loadingState: {
       isLoading: false,
-      currentOperation: '',
-      error: null
+      currentOperation: "",
+      error: null,
     } as BrowseLoadingState,
-    
+
     // Navigation state
     navigationMode: NavigationMode.FILTER_SELECTION,
     navigationSections: [] as NavigationSection[],
-    
+
     // Selection state
     selectedSequence: null as SequenceData | null,
-    
+
     // Search state
-    searchQuery: '',
-    
+    searchQuery: "",
+
     // Scroll state (for restoration)
     scrollPosition: { top: 0, left: 0 },
-    
+
     // View state
-    viewMode: 'grid' as 'grid' | 'list',
-    
+    viewMode: "grid" as "grid" | "list",
+
     // Delete state
     deleteConfirmation: null as DeleteConfirmationData | null,
     showDeleteDialog: false,
@@ -94,181 +94,237 @@ export function createAutoSyncBrowseState(
 
   return {
     // Direct state access for reactive subscriptions
-    get currentFilter() { return browseState.currentFilter; },
-    get isLoading() { return browseState.isLoading; },
-    get displayedSequences() { return browseState.displayedSequences; },
-    get allSequences() { return browseState.allSequences; },
-    get filteredSequences() { return browseState.filteredSequences; },
-    get navigationMode() { return browseState.navigationMode; },
-    get navigationSections() { return browseState.navigationSections; },
-    get selectedSequence() { return browseState.selectedSequence; },
-    get searchQuery() { return browseState.searchQuery; },
-    get scrollPosition() { return browseState.scrollPosition; },
-    get viewMode() { return browseState.viewMode; },
-    get deleteConfirmation() { return browseState.deleteConfirmation; },
-    get showDeleteDialog() { return browseState.showDeleteDialog; },
-    get loadingState() { return browseState.loadingState; },
+    get currentFilter() {
+      return (browseState as any).currentFilter;
+    },
+    get isLoading() {
+      return (browseState as any).isLoading;
+    },
+    get displayedSequences() {
+      return (browseState as any).displayedSequences;
+    },
+    get allSequences() {
+      return (browseState as any).allSequences;
+    },
+    get filteredSequences() {
+      return (browseState as any).filteredSequences;
+    },
+    get navigationMode() {
+      return (browseState as any).navigationMode;
+    },
+    get navigationSections() {
+      return (browseState as any).navigationSections;
+    },
+    get selectedSequence() {
+      return (browseState as any).selectedSequence;
+    },
+    get searchQuery() {
+      return (browseState as any).searchQuery;
+    },
+    get scrollPosition() {
+      return (browseState as any).scrollPosition;
+    },
+    get viewMode() {
+      return (browseState as any).viewMode;
+    },
+    get deleteConfirmation() {
+      return (browseState as any).deleteConfirmation;
+    },
+    get showDeleteDialog() {
+      return (browseState as any).showDeleteDialog;
+    },
+    get loadingState() {
+      return (browseState as any).loadingState;
+    },
 
     // Derived state
-    get hasError() { return browseState.loadingState.error !== null; },
+    get hasError() {
+      return (browseState as any).loadingState.error !== null;
+    },
 
     // ============================================================================
     // ACTIONS (Auto-synced)
     // ============================================================================
 
     async loadAllSequences() {
-      browseState.isLoading = true;
-      browseState.loadingState = {
+      (browseState as any).isLoading = true;
+      (browseState as any).loadingState = {
         isLoading: true,
-        currentOperation: 'Loading sequences...',
-        error: null
+        currentOperation: "Loading sequences...",
+        error: null,
       };
       // Auto-synced! ✅
 
       try {
         const sequences = await browseService.loadSequenceMetadata();
-        
-        browseState.allSequences = sequences;
-        browseState.filteredSequences = sequences;
-        browseState.displayedSequences = sequences;
-        browseState.isLoading = false;
-        browseState.loadingState.isLoading = false;
+
+        (browseState as any).allSequences = sequences;
+        (browseState as any).filteredSequences = sequences;
+        (browseState as any).displayedSequences = sequences;
+        (browseState as any).isLoading = false;
+        (browseState as any).loadingState.isLoading = false;
         // All auto-synced! ✅
 
         // Generate navigation sections
         const favoriteIds = await favoritesService.getFavorites();
-        const sections = await navigationService.generateNavigationSections(sequences, favoriteIds);
-        browseState.navigationSections = sections;
+        const sections = await navigationService.generateNavigationSections(
+          sequences,
+          favoriteIds
+        );
+        (browseState as any).navigationSections = sections;
         // Auto-synced! ✅
-
       } catch (error) {
-        browseState.loadingState = {
+        (browseState as any).loadingState = {
           isLoading: false,
-          currentOperation: '',
-          error: error instanceof Error ? error.message : 'Failed to load sequences'
+          currentOperation: "",
+          error:
+            error instanceof Error ? error.message : "Failed to load sequences",
         };
-        browseState.isLoading = false;
+        (browseState as any).isLoading = false;
         // Auto-synced! ✅
       }
     },
 
     async applyFilter(type: FilterType, value: FilterValue) {
-      browseState.currentFilter = { type, value };
-      browseState.isLoading = true;
+      (browseState as any).currentFilter = { type, value };
+      (browseState as any).isLoading = true;
       // Auto-synced! ✅
 
       try {
-        const filtered = await browseService.applyFilter(browseState.allSequences, type, value);
-        browseState.filteredSequences = filtered;
-        browseState.displayedSequences = filtered;
-        browseState.navigationMode = NavigationMode.SEQUENCE_BROWSER;
-        browseState.isLoading = false;
+        const filtered = await browseService.applyFilter(
+          (browseState as any).allSequences,
+          type,
+          value
+        );
+        (browseState as any).filteredSequences = filtered;
+        (browseState as any).displayedSequences = filtered;
+        (browseState as any).navigationMode = NavigationMode.SEQUENCE_BROWSER;
+        (browseState as any).isLoading = false;
         // All auto-synced! ✅
-        
       } catch (error) {
-        browseState.loadingState.error = error instanceof Error ? error.message : 'Filter failed';
-        browseState.isLoading = false;
+        (browseState as any).loadingState.error =
+          error instanceof Error ? error.message : "Filter failed";
+        (browseState as any).isLoading = false;
         // Auto-synced! ✅
       }
     },
 
     async searchSequences(query: string) {
-      browseState.searchQuery = query;
+      (browseState as any).searchQuery = query;
       // Auto-synced! ✅
 
       if (!query.trim()) {
-        browseState.displayedSequences = browseState.filteredSequences;
+        (browseState as any).displayedSequences = (
+          browseState as any
+        ).filteredSequences;
         // Auto-synced! ✅
         return;
       }
 
       try {
         const searchResults = await sequenceIndexService.searchSequences(query);
-        browseState.displayedSequences = searchResults;
+        (browseState as any).displayedSequences = searchResults;
         // Auto-synced! ✅
-        
       } catch (error) {
-        browseState.loadingState.error = error instanceof Error ? error.message : 'Search failed';
+        (browseState as any).loadingState.error =
+          error instanceof Error ? error.message : "Search failed";
         // Auto-synced! ✅
       }
     },
 
     selectSequence(sequence: SequenceData) {
-      browseState.selectedSequence = sequence;
+      (browseState as any).selectedSequence = sequence;
       // Auto-synced! ✅
     },
 
     clearSelection() {
-      browseState.selectedSequence = null;
+      (browseState as any).selectedSequence = null;
       // Auto-synced! ✅
     },
 
     setScrollPosition(position: { top: number; left: number }) {
-      browseState.scrollPosition = position;
+      (browseState as any).scrollPosition = position;
       // Auto-synced with debouncing! ✅
     },
 
-    setViewMode(mode: 'grid' | 'list') {
-      browseState.viewMode = mode;
+    setViewMode(mode: "grid" | "list") {
+      (browseState as any).viewMode = mode;
       // Auto-synced! ✅
     },
 
     async backToFilters() {
-      browseState.navigationMode = NavigationMode.FILTER_SELECTION;
-      browseState.currentFilter = null;
-      browseState.searchQuery = '';
-      browseState.selectedSequence = null;
-      browseState.displayedSequences = browseState.allSequences;
+      (browseState as any).navigationMode = NavigationMode.FILTER_SELECTION;
+      (browseState as any).currentFilter = null;
+      (browseState as any).searchQuery = "";
+      (browseState as any).selectedSequence = null;
+      (browseState as any).displayedSequences = (
+        browseState as any
+      ).allSequences;
       // All auto-synced! ✅
     },
 
     clearError() {
-      browseState.loadingState.error = null;
+      (browseState as any).loadingState.error = null;
       // Auto-synced! ✅
     },
 
     // Delete operations
     prepareDeleteSequence(sequence: SequenceData) {
-      browseState.deleteConfirmation = {
+      (browseState as any).deleteConfirmation = {
         sequenceId: sequence.id,
         sequenceName: sequence.name,
-        // Add other required fields
+        sequence: sequence,
+        relatedSequences: [],
+        hasVariations: false,
+        willFixVariationNumbers: false,
       } as DeleteConfirmationData;
-      browseState.showDeleteDialog = true;
+      (browseState as any).showDeleteDialog = true;
       // Auto-synced! ✅
     },
 
     cancelDeleteSequence() {
-      browseState.deleteConfirmation = null;
-      browseState.showDeleteDialog = false;
+      (browseState as any).deleteConfirmation = null;
+      (browseState as any).showDeleteDialog = false;
       // Auto-synced! ✅
     },
 
     async confirmDeleteSequence() {
-      if (!browseState.deleteConfirmation) return;
+      if (!(browseState as any).deleteConfirmation) return;
 
       try {
-        await deleteService.deleteSequence(browseState.deleteConfirmation.sequenceId);
-        
+        await deleteService.deleteSequence(
+          (browseState as any).deleteConfirmation.sequenceId,
+          []
+        );
+
         // Remove from sequences
-        browseState.allSequences = browseState.allSequences.filter(
-          seq => seq.id !== browseState.deleteConfirmation!.sequenceId
+        (browseState as any).allSequences = (
+          browseState as any
+        ).allSequences.filter(
+          (seq: any) =>
+            seq.id !== (browseState as any).deleteConfirmation!.sequenceId
         );
-        browseState.filteredSequences = browseState.filteredSequences.filter(
-          seq => seq.id !== browseState.deleteConfirmation!.sequenceId
+        (browseState as any).filteredSequences = (
+          browseState as any
+        ).filteredSequences.filter(
+          (seq: any) =>
+            seq.id !== (browseState as any).deleteConfirmation!.sequenceId
         );
-        browseState.displayedSequences = browseState.displayedSequences.filter(
-          seq => seq.id !== browseState.deleteConfirmation!.sequenceId
+        (browseState as any).displayedSequences = (
+          browseState as any
+        ).displayedSequences.filter(
+          (seq: any) =>
+            seq.id !== (browseState as any).deleteConfirmation!.sequenceId
         );
 
         // Clear delete state
-        browseState.deleteConfirmation = null;
-        browseState.showDeleteDialog = false;
-        browseState.selectedSequence = null;
+        (browseState as any).deleteConfirmation = null;
+        (browseState as any).showDeleteDialog = false;
+        (browseState as any).selectedSequence = null;
         // All auto-synced! ✅
-        
       } catch (error) {
-        browseState.loadingState.error = error instanceof Error ? error.message : 'Delete failed';
+        (browseState as any).loadingState.error =
+          error instanceof Error ? error.message : "Delete failed";
         // Auto-synced! ✅
       }
     },
@@ -291,7 +347,7 @@ export function createAutoSyncBrowseState(
 
     destroy() {
       cleanup();
-    }
+    },
   };
 }
 
@@ -319,17 +375,17 @@ Example in BrowseTab.svelte:
   );
   
   // Use reactive getters
-  $: sequences = browseState.displayedSequences;
-  $: isLoading = browseState.isLoading;
-  $: currentFilter = browseState.currentFilter;
+  $: sequences = (browseState as any).displayedSequences;
+  $: isLoading = (browseState as any).isLoading;
+  $: currentFilter = (browseState as any).currentFilter;
   
   // Actions automatically persist
   function handleFilter(type, value) {
-    browseState.applyFilter(type, value); // Auto-saves!
+    (browseState as any).applyFilter(type, value); // Auto-saves!
   }
   
   function handleScroll(e) {
-    browseState.setScrollPosition({
+    (browseState as any).setScrollPosition({
       top: e.target.scrollTop,
       left: e.target.scrollLeft
     }); // Auto-saves with debouncing!

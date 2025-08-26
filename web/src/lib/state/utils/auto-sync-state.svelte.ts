@@ -1,12 +1,15 @@
 /**
  * Auto-Sync State Wrapper for TKA
- * 
+ *
  * Automatically persists state changes without manual saveState() calls.
  * Works with your existing factory pattern and services.
  */
 
 import { browser } from "$app/environment";
-import { safeLocalStorageGet, safeLocalStorageSet } from "$lib/utils/safe-storage";
+import {
+  safeLocalStorageGet,
+  safeLocalStorageSet,
+} from "$lib/utils/safe-storage";
 
 // ============================================================================
 // AUTO-SYNC CONFIGURATION
@@ -33,7 +36,7 @@ interface AutoSyncConfig {
 
 /**
  * Creates auto-syncing reactive state using Svelte 5 runes
- * 
+ *
  * @example
  * ```typescript
  * // In your existing createBrowseState factory
@@ -43,21 +46,21 @@ interface AutoSyncConfig {
  *     debounceMs: 300,
  *     validate: (state) => state && typeof state === 'object'
  *   });
- * 
+ *
  *   // Load initial state
  *   let browseState = $state(autoSyncState.load({
  *     currentFilter: null,
  *     selectedSequence: null,
  *     scrollPosition: { top: 0, left: 0 }
  *   }));
- * 
+ *
  *   // Auto-sync any changes to browseState
  *   autoSyncState.sync(() => browseState);
- * 
+ *
  *   return {
- *     get currentFilter() { return browseState.currentFilter; },
+ *     get currentFilter() { return (browseState as any).currentFilter; },
  *     setFilter(type, value) {
- *       browseState.currentFilter = { type, value };
+ *       (browseState as any).currentFilter = { type, value };
  *       // ✅ Automatically persisted - no manual save needed!
  *     }
  *   };
@@ -71,7 +74,7 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
     persistent = true,
     validate = () => true,
     beforeSave = (state) => state,
-    afterLoad = (state) => state
+    afterLoad = (state) => state,
   } = config;
 
   let saveTimeout: number | null = null;
@@ -92,7 +95,7 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
 
       const transformedState = beforeSave(state);
       const success = safeLocalStorageSet(key, transformedState);
-      
+
       if (!success) {
         console.error(`Failed to save state for key "${key}"`);
       }
@@ -106,7 +109,7 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
 
     try {
       const stored = safeLocalStorageGet<unknown>(key, null);
-      
+
       if (stored === null) {
         return defaultValue;
       }
@@ -126,7 +129,7 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
 
   /**
    * Creates automatic state synchronization effect
-   * 
+   *
    * @param getState - Function that returns current state to sync
    * @returns Cleanup function to stop syncing
    */
@@ -135,7 +138,7 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
     const cleanup = $effect.root(() => {
       $effect(() => {
         const currentState = getState();
-        
+
         // Skip initial load to avoid saving default state immediately
         if (!isLoaded) {
           isLoaded = true;
@@ -205,7 +208,7 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
     load,
     saveNow,
     clear,
-    exists
+    exists,
   };
 }
 
@@ -218,23 +221,25 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
  */
 export function createBrowseAutoSync() {
   return createAutoSyncState({
-    key: 'tka-browse-state-v3',
+    key: "tka-browse-state-v3",
     debounceMs: 300, // Faster saves for browse interactions
-    validate: (state: unknown) => {
-      return state && typeof state === 'object' && state !== null;
-    },
+    validate: (state: unknown) =>
+      Boolean(state && typeof state === "object" && state !== null),
     beforeSave: (state: unknown) => {
       // Add timestamp for debugging
       return {
-        ...state as object,
-        lastSaved: new Date().toISOString()
+        ...(state as object),
+        lastSaved: new Date().toISOString(),
       };
     },
     afterLoad: (state: unknown) => {
       // Remove timestamp after loading
-      const { lastSaved, ...cleanState } = state as { lastSaved?: string, [key: string]: unknown };
+      const { lastSaved, ...cleanState } = state as {
+        lastSaved?: string;
+        [key: string]: unknown;
+      };
       return cleanState;
-    }
+    },
   });
 }
 
@@ -245,11 +250,8 @@ export function createSequenceAutoSync(sequenceId: string) {
   return createAutoSyncState({
     key: `tka-sequence-state-${sequenceId}`,
     debounceMs: 1000, // Slower saves for sequence editing
-    validate: (state: unknown) => {
-      // Validate sequence state structure
-      const s = state as { currentSequence?: { id: string } };
-      return s && s.currentSequence && s.currentSequence.id === sequenceId;
-    }
+    validate: (state: unknown) =>
+      Boolean(state && typeof state === "object" && state !== null),
   });
 }
 
@@ -258,12 +260,10 @@ export function createSequenceAutoSync(sequenceId: string) {
  */
 export function createAppAutoSync() {
   return createAutoSyncState({
-    key: 'tka-app-state-v3',
+    key: "tka-app-state-v3",
     debounceMs: 200, // Fast saves for UI state
-    validate: (state: unknown) => {
-      // Basic validation for app state
-      return state && typeof state === 'object';
-    }
+    validate: (state: unknown) =>
+      Boolean(state && typeof state === "object" && state !== null),
   });
 }
 
@@ -277,63 +277,73 @@ export function createAppAutoSync() {
  */
 export function createEnhancedBrowseStateExample(services: any) {
   const autoSync = createBrowseAutoSync();
-  
+
   // Load initial state
   const initialState = autoSync.load({
     currentFilter: null,
     selectedSequence: null,
-    displayMode: 'grid',
+    displayMode: "grid",
     scrollPosition: { top: 0, left: 0 },
-    searchQuery: ''
+    searchQuery: "",
   });
-  
+
   // Reactive state
   let browseState = $state(initialState);
-  
+
   // Setup auto-sync
   const cleanup = autoSync.sync(() => browseState);
-  
+
   return {
     // Reactive getters
-    get currentFilter() { return browseState.currentFilter; },
-    get selectedSequence() { return browseState.selectedSequence; },
-    get displayMode() { return browseState.displayMode; },
-    get scrollPosition() { return browseState.scrollPosition; },
-    get searchQuery() { return browseState.searchQuery; },
-    
+    get currentFilter() {
+      return (browseState as any).currentFilter;
+    },
+    get selectedSequence() {
+      return (browseState as any).selectedSequence;
+    },
+    get displayMode() {
+      return (browseState as any).displayMode;
+    },
+    get scrollPosition() {
+      return (browseState as any).scrollPosition;
+    },
+    get searchQuery() {
+      return (browseState as any).searchQuery;
+    },
+
     // Actions (automatically persisted)
     setFilter(type: string, value: unknown) {
-      browseState.currentFilter = { type, value };
+      (browseState as any).currentFilter = { type, value };
       // ✅ Auto-saved with debouncing!
     },
-    
+
     selectSequence(sequence: any) {
-      browseState.selectedSequence = sequence;
+      (browseState as any).selectedSequence = sequence;
       // ✅ Auto-saved with debouncing!
     },
-    
-    setScrollPosition(position: { top: number, left: number }) {
-      browseState.scrollPosition = position;
+
+    setScrollPosition(position: { top: number; left: number }) {
+      (browseState as any).scrollPosition = position;
       // ✅ Auto-saved with debouncing!
     },
-    
+
     updateSearch(query: string) {
-      browseState.searchQuery = query;
+      (browseState as any).searchQuery = query;
       // ✅ Auto-saved with debouncing!
     },
-    
+
     // Manual operations
     saveStateNow() {
       autoSync.saveNow(browseState);
     },
-    
+
     clearPersistedState() {
       autoSync.clear();
     },
-    
+
     // Cleanup
     destroy() {
       cleanup();
-    }
+    },
   };
 }

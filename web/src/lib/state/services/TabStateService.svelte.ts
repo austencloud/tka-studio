@@ -7,9 +7,9 @@
 
 import { browser } from "$app/environment";
 import { BrowseStatePersistenceService } from "../../services/implementations/browse/BrowseStatePersistenceService";
-import type { ITabStateService, TabId } from "./state-service-interfaces";
+import type { ItabStateService, TabId } from "./state-service-interfaces";
 
-class TabStateService implements ITabStateService {
+class TabStateService implements ItabStateService {
   private browseStatePersistence: BrowseStatePersistenceService;
 
   // Tab state

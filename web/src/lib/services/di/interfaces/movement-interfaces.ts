@@ -22,6 +22,7 @@ import { GridModeDeriver } from "../../implementations/domain/GridModeDeriver";
 import { PictographValidatorService } from "../../implementations/domain/PictographValidatorService";
 import { PictographGenerator } from "../../implementations/generation/PictographGenerator";
 import { PositionMapper } from "../../implementations/movement/PositionMapper";
+import { LetterDeriver } from "../../implementations/domain/LetterDeriver";
 
 // Position Pattern Services
 export const PositionPatternServiceDI =
@@ -96,3 +97,8 @@ export const GridModeDeriverDI = createServiceInterface<IGridModeDeriver>(
   "IGridModeDeriver",
   GridModeDeriver
 );
+
+// LetterDeriver interface
+export const LetterDeriverDI = createServiceInterface<
+  import("../../implementations/domain/LetterDeriver").ILetterDeriver
+>("ILetterDeriver", LetterDeriver);

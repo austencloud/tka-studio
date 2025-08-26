@@ -5,7 +5,7 @@
  * Single responsibility: Prop state management and coordinate transformations.
  */
 
-import type { PropState } from "../../../components/animator/types/PropState.js";
+import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 import { calculateCoordinatesFromAngle } from "../../utils/math/index.js";
 import type {
   IAnimationStateService,

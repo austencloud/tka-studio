@@ -95,11 +95,11 @@ import type {
   ISequenceDomainService,
 } from "../interfaces/sequence-interfaces";
 import type { IArrowAdjustmentCalculator } from "../positioning/core-services";
-import { SequenceImportService } from "../implementations/sequence/SequenceImportService.ts";
-import { ThumbnailService } from "../implementations/export/ThumbnailService.ts";
-import { NavigationService } from "../implementations/navigation/NavigationService.ts";
-import { BrowseService } from "../implementations/browse/BrowseService.ts";
-import { FavoritesService } from "../implementations/browse/FavoritesService.ts";
+import { SequenceImportService } from "../implementations/sequence/SequenceImportService";
+import { ThumbnailService } from "../implementations/export/ThumbnailService";
+import { NavigationService } from "../implementations/navigation/NavigationService";
+import { BrowseService } from "../implementations/browse/BrowseService";
+import { FavoritesService } from "../implementations/browse/FavoritesService";
 
 /**
  * Create and configure the InversifyJS container

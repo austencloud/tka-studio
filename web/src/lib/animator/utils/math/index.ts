@@ -21,5 +21,4 @@ export * from "./EndpointCalculationService.js";
 export * from "./CoordinateUpdateService.js";
 
 // ✅ ELIMINATED: PropAttributes - using native MotionData instead!
-// Re-export types for backward compatibility
-export type { PropState } from "../../../components/animator/types/PropState.js";
+// Note: PropState is exported directly from browse-tab animator types

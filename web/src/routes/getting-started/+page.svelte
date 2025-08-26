@@ -1,8 +1,8 @@
 <!-- SEO-Optimized Getting Started Page with User Redirect -->
 <script lang="ts">
+  import AboutTab from '$lib/components/tabs/about-tab/AboutTab.svelte';
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
-  import AboutTab from "$lib/components/about/AboutTab.svelte";
 
   onMount(() => {
     if (browser) {

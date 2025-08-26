@@ -7,7 +7,7 @@
 
 import { createServiceInterface } from "../types";
 import type { SequenceData, BeatData, MotionData } from "$lib/domain";
-import type { PropState } from "$lib/components/animator/types/PropState";
+import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState";
 
 // ============================================================================
 // CORE ANIMATOR INTERFACES

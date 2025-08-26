@@ -6,19 +6,15 @@
  */
 
 import type { ISettingsService } from "../interfaces/application-interfaces";
-import type {
-  ICSVParsingService,
-  IEnumMappingService,
-  ILetterQueryService,
-  IMotionQueryService,
-} from "../interfaces/data-interfaces";
+import type { ICSVParserService } from "../implementations/data/CSVParserService";
+import type { IEnumMappingService } from "../interfaces/application-interfaces";
+import type { ILetterQueryService } from "../implementations/data/LetterQueryService";
+import type { IMotionQueryService } from "../implementations/data/MotionQueryService";
 import type { IDeviceDetectionService } from "../interfaces/device-interfaces";
-import type {
-  IGridModeDeriver,
-  ILetterDeriver,
-  IPictographValidatorService,
-  IPositionPatternService,
-} from "../interfaces/domain-interfaces";
+import type { IGridModeDeriver } from "../interfaces/movement/IGridModeDeriver";
+import type { ILetterDeriver } from "../implementations/domain/LetterDeriver";
+import type { IPictographValidatorService } from "../interfaces/generation-interfaces";
+import type { IPositionPatternService } from "../interfaces/generation-interfaces";
 import type {
   IExportOptionsValidator,
   IFilenameGeneratorService,
@@ -26,7 +22,7 @@ import type {
 import type {
   IDataTransformationService,
   ISvgConfiguration,
-} from "../interfaces/rendering-interfaces";
+} from "../interfaces/pictograph-interfaces";
 import { container, TYPES } from "./container";
 
 /**
@@ -130,7 +126,7 @@ export function testCSVParserServiceResolution(): boolean {
     console.log("🧪 Testing CSVParserService resolution...");
 
     // Resolve the service from the container
-    const service = container.get<ICSVParsingService>(TYPES.ICSVParsingService);
+    const service = container.get<ICSVParserService>(TYPES.ICSVParsingService);
 
     console.log("✅ CSVParserService resolved successfully");
     return true;

@@ -3,7 +3,7 @@
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
   import { handleSEORedirect } from "$lib/utils/seo-utils";
-  import MainApplication from "$components/MainApplication.svelte";
+  import MainApplication from "$components/layout/MainApplication.svelte";
   import type { PageData } from "./$types";
 
   interface Props {

@@ -11,7 +11,7 @@ import {
   createStartPositionData,
   extractEndPosition,
   storeStartPositionData,
-} from "$lib/components/construct/start-position/utils/StartPositionUtils";
+} from "$lib/components/tabs/build-tab/construct/start-position-picker/utils/StartPositionUtils";
 import type { IStartPositionSelectionService } from "$lib/services/interfaces/IStartPositionSelectionService";
 import type { IStartPositionService } from "$services/interfaces/application-interfaces";
 

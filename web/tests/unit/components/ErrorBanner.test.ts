@@ -4,7 +4,7 @@
  * Tests for the ErrorBanner component extracted from ConstructTab
  */
 
-import ErrorBanner from "$lib/components/construct/ErrorBanner.svelte";
+import ErrorBanner from "$lib/components/construct/shared/ErrorBanner.svelte";
 import "@testing-library/jest-dom";
 import { fireEvent, render, screen } from "@testing-library/svelte";
 import { beforeEach, describe, expect, it, vi } from "vitest";
