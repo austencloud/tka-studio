@@ -5,21 +5,15 @@
  * Extracted from PictographRenderingService.
  */
 
-import type { BeatData, MotionData, PictographData } from "$lib/domain";
+import type {
+  BeatData,
+  GridData,
+  MotionData,
+  PictographData,
+} from "$lib/domain";
 import { injectable } from "inversify";
 import { createPictographData, GridMode } from "$lib/domain";
 import { type GridPointData as RawGridData } from "../../../data/gridCoordinates.js";
-export interface GridData {
-  mode: GridMode;
-  allLayer2PointsNormal: Record<
-    string,
-    { coordinates: { x: number; y: number } }
-  >;
-  allHandPointsNormal: Record<
-    string,
-    { coordinates: { x: number; y: number } }
-  >;
-}
 
 export interface IDataTransformationService {
   beatToPictographData(beat: BeatData): PictographData;
@@ -63,11 +57,20 @@ export class DataTransformationService implements IDataTransformationService {
     };
 
     return {
-      mode,
-      allLayer2PointsNormal: adaptPoints(
-        rawGridData.allLayer2PointsNormal || {}
-      ),
-      allHandPointsNormal: adaptPoints(rawGridData.allHandPointsNormal || {}),
+      gridMode: mode,
+      centerX: 0.0,
+      centerY: 0.0,
+      radius: 100.0,
+      gridPointData: {
+        allLayer2PointsNormal: adaptPoints(
+          rawGridData.allLayer2PointsNormal || {}
+        ),
+        allHandPointsNormal: adaptPoints(rawGridData.allHandPointsNormal || {}),
+        allHandPointsStrict: {},
+        allLayer2PointsStrict: {},
+        allOuterPoints: {},
+        centerPoint: { coordinates: { x: 475, y: 475 } },
+      },
     };
   }
 }

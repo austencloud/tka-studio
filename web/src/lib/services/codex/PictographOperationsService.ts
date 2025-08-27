@@ -6,9 +6,15 @@
  */
 
 import type { PictographData } from "$lib/domain/PictographData";
-import type { 
+import type {
   IPictographOperationsService,
-  PictographOperation 
+  PictographOperation,
+} from "../interfaces/codex-interfaces";
+
+// Re-export types for convenience
+export type {
+  IPictographOperationsService,
+  PictographOperation,
 } from "../interfaces/codex-interfaces";
 
 export class PictographOperationsService

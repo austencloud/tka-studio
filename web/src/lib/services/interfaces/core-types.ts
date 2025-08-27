@@ -5,8 +5,11 @@
  * This file contains shared data structures, coordinates, and utility types.
  */
 
-import type { PictographData } from "../../domain";
+import type { GridData, PictographData } from "../../domain";
 import { GridMode as DomainGridMode } from "../../domain";
+
+// Re-export domain types for service interfaces
+export type { GridData, PictographData };
 import type {
   DifficultyLevel,
   Location,
@@ -26,12 +29,6 @@ export interface Coordinates {
 
 export interface GridPoint {
   coordinates: Coordinates;
-}
-
-export interface GridData {
-  mode: DomainGridMode;
-  allLayer2PointsNormal: Record<string, GridPoint>;
-  allHandPointsNormal: Record<string, GridPoint>;
 }
 
 // ============================================================================

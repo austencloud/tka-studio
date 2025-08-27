@@ -14,11 +14,11 @@ import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 
 import type { IPictographOperationsService } from "../interfaces/codex-interfaces";
-import type { ICodexService } from "./ICodexService";
+import type { ICodexService } from "../interfaces/application-interfaces";
 import type { ILetterQueryService } from "../interfaces/data-interfaces";
 
 // Re-export the interface for convenience
-export type { ICodexService } from "./ICodexService";
+export type { ICodexService } from "../interfaces/application-interfaces";
 
 @injectable()
 export class CodexService implements ICodexService {

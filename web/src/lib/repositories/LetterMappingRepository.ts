@@ -39,11 +39,6 @@ export class LetterMappingRepository implements ILetterMappingRepository {
 
       this.configuration = (await response.json()) as CodexConfiguration;
       this.initialized = true;
-      console.log(
-        "✅ Letter mapping repository initialized with",
-        Object.keys(this.configuration.letters).length,
-        "letters"
-      );
     } catch (error) {
       console.error(
         "❌ Failed to initialize letter mapping repository:",

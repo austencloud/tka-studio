@@ -9,20 +9,13 @@ import { GridMode, MotionType } from "$lib/domain/enums";
 import { injectable } from "inversify";
 import { Letter } from "$lib/domain/Letter";
 import type { MotionData } from "$lib/domain/MotionData";
+import type { PictographData } from "$lib/domain/PictographData";
+import type {
+  ILetterDeriver,
+  LetterDerivationResult,
+} from "../../interfaces/generation-interfaces";
 
-export interface LetterDerivationResult {
-  letter: Letter | null;
-  confidence: "exact" | "partial" | "none";
-  matchedParameters: string[];
-}
-
-export interface ILetterDeriver {
-  deriveLetterFromMotions(
-    blueMotion: MotionData,
-    redMotion: MotionData,
-    gridMode?: GridMode
-  ): LetterDerivationResult;
-}
+// Interface is now imported from generation-interfaces.ts
 
 @injectable()
 export class LetterDeriver implements ILetterDeriver {
@@ -189,5 +182,37 @@ export class LetterDeriver implements ILetterDeriver {
 
     // TODO: Add more patterns from CSV data
     // This should be expanded to include all known letter patterns
+  }
+
+  /**
+   * Derive letter from pictograph data
+   */
+  deriveLetterFromPictograph(
+    pictograph: PictographData
+  ): LetterDerivationResult {
+    if (!pictograph.motions?.blue || !pictograph.motions?.red) {
+      return {
+        letter: null,
+        confidence: "none",
+        matchedParameters: [],
+      };
+    }
+
+    return this.deriveLetterFromMotions(
+      pictograph.motions.blue,
+      pictograph.motions.red
+    );
+  }
+
+  /**
+   * Validate if a letter matches the given motions
+   */
+  validateLetterMatch(
+    letter: Letter,
+    blueMotion: MotionData,
+    redMotion: MotionData
+  ): boolean {
+    const result = this.deriveLetterFromMotions(blueMotion, redMotion);
+    return result.letter === letter && result.confidence === "exact";
   }
 }

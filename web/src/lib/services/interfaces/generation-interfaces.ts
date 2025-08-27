@@ -8,6 +8,7 @@
 import { GenerationMode, MotionColor, PropContinuity } from "$lib/domain/enums";
 import type { DifficultyLevel, GridMode } from "./core-types";
 import type { BeatData, MotionData, SequenceData } from "./domain-types";
+import type { Letter } from "../../domain/Letter";
 
 // ============================================================================
 // GENERATION OPTIONS
@@ -271,4 +272,35 @@ export interface ILetterGeneratorFactory {
    * Get all supported letters
    */
   getSupportedLetters(): string[];
+}
+
+// ============================================================================
+// LETTER DERIVATION INTERFACES
+// ============================================================================
+
+/**
+ * Letter Derivation Result
+ */
+export interface LetterDerivationResult {
+  letter: Letter | null;
+  confidence: "exact" | "partial" | "none";
+  matchedParameters: string[];
+}
+
+/**
+ * Letter Deriver Interface
+ */
+export interface ILetterDeriver {
+  deriveLetterFromMotions(
+    blueMotion: MotionData,
+    redMotion: MotionData
+  ): LetterDerivationResult;
+  deriveLetterFromPictograph(
+    pictograph: PictographData
+  ): LetterDerivationResult;
+  validateLetterMatch(
+    letter: Letter,
+    blueMotion: MotionData,
+    redMotion: MotionData
+  ): boolean;
 }

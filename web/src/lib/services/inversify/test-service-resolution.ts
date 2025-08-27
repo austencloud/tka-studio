@@ -6,13 +6,13 @@
  */
 
 import type { ISettingsService } from "../interfaces/application-interfaces";
-import type { ICSVParserService } from "../implementations/data/CSVParserService";
+import type { ICSVParserService } from "../interfaces/data-interfaces";
 import type { IEnumMappingService } from "../interfaces/application-interfaces";
-import type { ILetterQueryService } from "../implementations/data/LetterQueryService";
-import type { IMotionQueryService } from "../implementations/data/MotionQueryService";
+import type { ILetterQueryService } from "../interfaces/data-interfaces";
+import type { IMotionQueryService } from "../interfaces/data-interfaces";
 import type { IDeviceDetectionService } from "../interfaces/device-interfaces";
-import type { IGridModeDeriver } from "../interfaces/movement/IGridModeDeriver";
-import type { ILetterDeriver } from "../implementations/domain/LetterDeriver";
+import type { IGridModeDeriver } from "../interfaces/positioning-interfaces";
+import type { ILetterDeriver } from "../interfaces/generation-interfaces";
 import type { IPictographValidatorService } from "../interfaces/generation-interfaces";
 import type { IPositionPatternService } from "../interfaces/generation-interfaces";
 import type {

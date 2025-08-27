@@ -55,9 +55,6 @@ export class LetterQueryService implements ILetterQueryService {
         typeof this.letterMappingRepository.initialize === "function"
       ) {
         await this.letterMappingRepository.initialize();
-        console.log(
-          "✅ LetterQueryService: Letter mapping repository initialized"
-        );
       }
 
       // Load raw CSV data
@@ -68,13 +65,6 @@ export class LetterQueryService implements ILetterQueryService {
         csvData.diamondData
       );
       const boxParseResult = this.csvParserService.parseCSV(csvData.boxData);
-
-      console.log(
-        `📊 Diamond CSV parsing result: ${diamondParseResult.successfulRows} successful rows out of ${diamondParseResult.totalRows} total`
-      );
-      console.log(
-        `📊 Box CSV parsing result: ${boxParseResult.successfulRows} successful rows out of ${boxParseResult.totalRows} total`
-      );
 
       // Only log significant parsing errors (not empty row issues)
       const significantDiamondErrors = diamondParseResult.errors.filter(
@@ -121,12 +111,7 @@ export class LetterQueryService implements ILetterQueryService {
         // SKEWED mode doesn't have separate data - it uses both diamond and box
       };
 
-      console.log(
-        `📊 Final parsed data: Diamond=${this.parsedData[GridMode.DIAMOND]?.length || 0} rows, Box=${this.parsedData[GridMode.BOX]?.length || 0} rows`
-      );
-
       this.isInitialized = true;
-      console.log("✅ LetterQueryService: CSV data loaded and parsed");
     } catch (error) {
       console.error("❌ LetterQueryService: Error loading CSV data:", error);
       throw new Error(
@@ -163,11 +148,6 @@ export class LetterQueryService implements ILetterQueryService {
         return null;
       }
 
-      console.log(
-        `🔍 Finding CSV data for letter ${letterString} with mapping:`,
-        mapping
-      );
-
       // Find matching CSV row
       const csvRow = this.findMatchingCsvRowByMapping(
         letterString,
@@ -178,8 +158,6 @@ export class LetterQueryService implements ILetterQueryService {
         console.warn(`⚠️ No CSV data found for letter ${letter}`);
         return null;
       }
-
-      console.log(`✅ Found CSV data for letter ${letter}:`, csvRow);
 
       // Transform CSV row to PictographData using existing service
       return this.csvPictographParser.parseCSVRowToPictograph(csvRow as CSVRow);
@@ -204,7 +182,6 @@ export class LetterQueryService implements ILetterQueryService {
 
     try {
       const allLetters = this.letterMappingRepository.getAllLetters();
-      console.log(`📚 Getting all ${allLetters.length} pictographs from codex`);
 
       const pictographs: PictographData[] = [];
       for (const letterString of allLetters) {
@@ -215,7 +192,6 @@ export class LetterQueryService implements ILetterQueryService {
         }
       }
 
-      console.log(`✅ Retrieved ${pictographs.length} pictographs from codex`);
       return pictographs;
     } catch (error) {
       console.error("❌ Error getting all codex pictographs:", error);
@@ -247,10 +223,6 @@ export class LetterQueryService implements ILetterQueryService {
         return [];
       }
 
-      console.log(
-        `📚 Converting all ${csvRows.length} CSV rows to pictographs`
-      );
-
       const pictographs: PictographData[] = [];
       for (let i = 0; i < csvRows.length; i++) {
         const row = csvRows[i];
@@ -269,9 +241,6 @@ export class LetterQueryService implements ILetterQueryService {
         }
       }
 
-      console.log(
-        `✅ Retrieved ${pictographs.length} pictograph variations from CSV`
-      );
       return pictographs;
     } catch (error) {
       console.error("❌ Error getting all pictograph variations:", error);
@@ -299,10 +268,6 @@ export class LetterQueryService implements ILetterQueryService {
       const allLetters = this.letterMappingRepository.getAllLetters();
       const matchingLetters = allLetters.filter((letter) =>
         letter.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-      console.log(
-        `🔍 Found ${matchingLetters.length} letters matching "${searchTerm}"`
       );
 
       const pictographs: PictographData[] = [];

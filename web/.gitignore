@@ -58,6 +58,9 @@ Thumbs.db
 # SvelteKit
 .svelte-kit/
 
+# TypeScript
+.tsbuildinfo
+
 # Package manager lock files (keep your preferred one, remove others)
 # yarn.lock
 # pnpm-lock.yaml

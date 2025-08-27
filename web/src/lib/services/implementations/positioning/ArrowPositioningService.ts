@@ -22,7 +22,7 @@ import {
 } from "$lib/domain/enums";
 import type { Letter } from "$lib/domain/Letter";
 import { inject, injectable } from "inversify";
-import type { IArrowPositioningOrchestrator } from "$lib/services/positioning";
+import type { IArrowPositioningOrchestrator } from "$lib/services/interfaces/positioning-interfaces";
 import { TYPES } from "$lib/services/inversify/types";
 
 export interface ArrowPositionResult {
@@ -80,7 +80,6 @@ export class ArrowPositioningService implements IArrowPositioningService {
     try {
       // Use the sophisticated positioning pipeline
       const [x, y, rotation] = await this.orchestrator.calculateArrowPosition(
-        arrowPlacementData,
         pictographData,
         motionData
       );

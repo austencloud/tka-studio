@@ -9,34 +9,7 @@
  */
 
 // Auto-detect running dev server port
-async function findDevServerPort() {
-  const commonPorts = [5173, 5174, 5175, 5176, 5177];
-
-  for (const port of commonPorts) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000);
-
-      const response = await fetch(`http://localhost:${port}`, {
-        method: "HEAD",
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        console.log(`✅ Found dev server running on port ${port}`);
-        return `http://localhost:${port}`;
-      }
-    } catch (error) {
-      // Port not available, continue checking
-    }
-  }
-
-  throw new Error(
-    `❌ No dev server found on common ports: ${commonPorts.join(", ")}`
-  );
-}
+import { findDevServerPort } from "./lib/dev-server-detector.js";
 
 let BASE_URL = ""; // Will be set by findDevServerPort()
 const COLORS = {

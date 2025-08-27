@@ -21,7 +21,6 @@
     "validate:all": "node tools/validate-all.js",
     "validate:architecture": "node tools/validate-architecture.js",
     "validate:seo": "node tools/validate-seo.js",
-    "validate:sequences": "node tools/validate-sequences.js",
     "test:seo-live": "node tools/test-seo-live.js",
     "clean": "rm -rf build .svelte-kit node_modules/.vite"
   },

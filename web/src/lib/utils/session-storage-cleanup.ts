@@ -35,9 +35,6 @@ export function cleanupSessionStorage(): void {
           value === "null" ||
           value.trim() === ""
         ) {
-          console.warn(
-            `Removing problematic sessionStorage key: ${key} (value: ${value})`
-          );
           sessionStorage.removeItem(key);
           return;
         }
@@ -53,8 +50,6 @@ export function cleanupSessionStorage(): void {
         sessionStorage.removeItem(key);
       }
     });
-
-    console.log("✅ SessionStorage cleanup completed");
   } catch (error) {
     console.error("❌ Failed to cleanup sessionStorage:", error);
   }
@@ -76,7 +71,6 @@ export function cleanupTKASessionStorage(): void {
     try {
       const value = sessionStorage.getItem(key);
       if (value && (value === "undefined" || value === "null")) {
-        console.warn(`Cleaning up TKA sessionStorage key: ${key}`);
         sessionStorage.removeItem(key);
       }
     } catch (error) {

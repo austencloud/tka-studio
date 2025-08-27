@@ -28,7 +28,7 @@
 import type { LetterType, MotionData, PictographData } from "$lib/domain";
 import { GridMode, Location } from "$lib/domain";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
+import type { IGridModeDeriver } from "$lib/services/interfaces/positioning-interfaces";
 import { injectable } from "inversify";
 
 // Arrow color type - using string literals to match usage pattern

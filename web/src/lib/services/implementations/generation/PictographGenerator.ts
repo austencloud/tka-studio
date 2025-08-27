@@ -9,7 +9,7 @@
 
 import type { PictographData } from "../../../domain/PictographData";
 import type { IPictographGenerator } from "../../interfaces/generation-interfaces";
-import type { ILetterGeneratorFactory } from "./core/ILetterGenerator";
+import type { ILetterGeneratorFactory } from "../../interfaces/generation-interfaces";
 import { LetterGeneratorFactory } from "./letter-generators/LetterGeneratorFactory";
 import { injectable, inject } from "inversify";
 import { TYPES } from "../../inversify/types";

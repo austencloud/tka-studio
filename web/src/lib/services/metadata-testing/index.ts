@@ -29,9 +29,12 @@ export { BatchAnalysisService } from "./BatchAnalysisService";
 export { MetadataTestingStateManager } from "./MetadataTestingStateManager";
 
 // Service Interfaces
-export type { ISequenceDiscoveryService } from "./SequenceDiscoveryService";
-export type { IMetadataExtractionService } from "./MetadataExtractionService";
-export type { IMetadataAnalysisService } from "./MetadataAnalysisService";
+export type {
+  ISequenceDiscoveryService,
+  IMetadataExtractionService,
+  IMetadataAnalysisService,
+  IBatchAnalysisService,
+} from "../interfaces/metadata-testing-interfaces";
 
 // Import for factory function
 import { MetadataTestingStateManager } from "./MetadataTestingStateManager";

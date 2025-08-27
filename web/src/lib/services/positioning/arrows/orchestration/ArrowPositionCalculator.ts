@@ -16,7 +16,7 @@ import type {
   IArrowLocationCalculator,
   IArrowPositioningOrchestrator,
   IArrowRotationCalculator,
-} from "../../core-services";
+} from "$lib/services/interfaces/positioning-interfaces";
 import { ArrowAdjustmentProcessor } from "./ArrowAdjustmentProcessor";
 import { ArrowCoordinateTransformer } from "./ArrowCoordinateTransformer";
 import { ArrowDataProcessor } from "./ArrowDataProcessor";
@@ -55,9 +55,8 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
   }
 
   async calculateArrowPosition(
-    arrowData: ArrowPlacementData,
     pictographData: PictographData,
-    motionData?: MotionData
+    motionData: MotionData
   ): Promise<[number, number, number]> {
     /**
      * Calculate arrow position asynchronously with full service coordination.
@@ -67,21 +66,38 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
       // ✅ FIXED: Pass color directly since ArrowPlacementData no longer has color
       const motion = motionData;
       if (!motion) {
+        console.warn(
+          "🚫 ArrowPositionCalculator: No motion data provided, using scene center"
+        );
         const center = this.coordinateSystem.getSceneCenter();
         return [center.x, center.y, 0];
       }
+
+      console.log("🎯 ArrowPositionCalculator: Starting calculation");
+      console.log("Motion Type:", motion.motionType);
+      console.log("Start Location:", motion.startLocation);
+      console.log("End Location:", motion.endLocation);
 
       // STEP 2: Calculate location and initial position
       const location = this.locationCalculator.calculateLocation(
         motion,
         pictographData
       );
+      console.log("📍 Calculated Location:", location);
+
+      // 🚨 CRITICAL FIX: Store the calculated arrow location for later persistence
+      // This was the missing piece causing arrows to appear at (0,0)!
+      console.log("✅ Calculated arrow location:", location);
+
       const initialPosition = this.coordinateSystem.getInitialPosition(
         motion,
         location
       );
+      console.log("🎯 Initial Position:", initialPosition);
+
       const validPosition =
         this.dataProcessor.ensureValidPosition(initialPosition);
+      console.log("✅ Valid Position:", validPosition);
 
       // STEP 3: Calculate rotation
       const rotation = this.rotationCalculator.calculateRotation(
@@ -93,8 +109,8 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
       const adjustment = await this.adjustmentCalculator.calculateAdjustment(
         pictographData,
         motion,
-        motion.color, // ✅ FIXED: Use color from MotionData
-        location
+        location,
+        motion.color // ✅ FIXED: Use color from MotionData as optional parameter
       );
       const [adjustmentX, adjustmentY] =
         this.dataProcessor.extractAdjustmentValues(adjustment);
@@ -137,7 +153,6 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
       }
 
       const [x, y, rotation] = await this.calculateArrowPosition(
-        arrowData,
         pictographData,
         motionData
       );
@@ -151,10 +166,17 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
         rotationAngle: rotation,
         svgMirrored: shouldMirror, // ✅ FIXED: Use correct property name
       };
+
+      // 🚨 CRITICAL FIX: Pass the calculated arrow location to persist in pictograph data
+      const motionUpdates: Partial<MotionData> = {
+        arrowLocation: location, // Use the calculated location from above
+      };
+
       return this.dataProcessor.updateArrowInPictograph(
         pictographData,
         color,
-        updates
+        updates,
+        motionUpdates
       );
     } catch (error) {
       console.error("Arrow position update failed:", error);
@@ -179,10 +201,16 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
         const motionData =
           pictographData.motions[color as keyof typeof pictographData.motions];
         const arrowData = motionData?.arrowPlacementData;
-        if (arrowData) {
-          const [x, y, rotation] = await this.calculateArrowPosition(
-            arrowData,
+        if (arrowData && motionData) {
+          // Calculate location first to store it properly
+          const calculatedLocation = this.locationCalculator.calculateLocation(
+            motionData,
             updatedPictograph
+          );
+
+          const [x, y, rotation] = await this.calculateArrowPosition(
+            updatedPictograph,
+            motionData
           );
 
           // CRITICAL: Also calculate mirroring for this arrow
@@ -203,10 +231,16 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
             svgMirrored: shouldMirror, // ✅ FIXED: Use correct property name
           };
 
+          // 🚨 CRITICAL FIX: Pass the calculated arrow location to persist in pictograph data
+          const motionUpdates: Partial<MotionData> = {
+            arrowLocation: calculatedLocation, // Use the calculated location from above
+          };
+
           updatedPictograph = this.dataProcessor.updateArrowInPictograph(
             updatedPictograph,
             color,
-            updates
+            updates,
+            motionUpdates
           );
         }
       }

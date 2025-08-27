@@ -8,27 +8,22 @@
 import type { PictographData } from "$lib/domain";
 import { injectable, inject } from "inversify";
 import { GridMode } from "$lib/domain";
-import type { ICsvLoaderService } from "./CsvLoaderService";
-import type { ICSVParserService, ParsedCsvRow } from "./CSVParserService";
+import type { ICsvLoaderService } from "../../interfaces/data-interfaces";
+import type {
+  ICSVParserService,
+  ParsedCsvRow,
+} from "../../interfaces/data-interfaces";
 import type {
   ICSVPictographParserService,
   CSVRow,
 } from "../movement/CSVPictographParserService";
 import { TYPES } from "../../inversify/types";
+import type {
+  IMotionQueryService,
+  MotionQueryParams,
+} from "../../interfaces/data-interfaces";
 
-export interface MotionQueryParams {
-  startLocation: string;
-  endLocation: string;
-  motionType: string;
-}
-
-export interface IMotionQueryService {
-  findPictographByMotionParams(
-    params: MotionQueryParams,
-    gridMode: GridMode
-  ): Promise<PictographData | null>;
-  getNextOptionsForSequence(sequence: unknown[]): Promise<PictographData[]>;
-}
+// Interface is now imported from data-interfaces.ts
 
 @injectable()
 export class MotionQueryService implements IMotionQueryService {
@@ -184,5 +179,244 @@ export class MotionQueryService implements IMotionQueryService {
       (params.motionType?.toLowerCase().trim() || "");
 
     return startMatch && endMatch && motionMatch;
+  }
+
+  /**
+   * Find pictographs by letter
+   */
+  async findPictographsByLetter(letter: string): Promise<PictographData[]> {
+    await this.ensureInitialized();
+    const results: PictographData[] = [];
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data =
+        this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+      const matches = data.filter(
+        (row: ParsedCsvRow) => row.letter.toLowerCase() === letter.toLowerCase()
+      );
+
+      for (const match of matches) {
+        const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+          match as CSVRow
+        );
+        if (pictograph) {
+          results.push(pictograph);
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Find pictographs by motion type
+   */
+  async findPictographsByMotionType(
+    motionType: string
+  ): Promise<PictographData[]> {
+    await this.ensureInitialized();
+    const results: PictographData[] = [];
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+      const matches = data.filter(
+        (row: ParsedCsvRow) =>
+          row.blueMotionType === motionType || row.redMotionType === motionType
+      );
+
+      for (const match of matches) {
+        const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+          match as CSVRow
+        );
+        if (pictograph) {
+          results.push(pictograph);
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Find pictographs by start location
+   */
+  async findPictographsByStartLocation(
+    location: string
+  ): Promise<PictographData[]> {
+    await this.ensureInitialized();
+    const results: PictographData[] = [];
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+      const matches = data.filter(
+        (row: ParsedCsvRow) =>
+          row.blueStartLocation === location ||
+          row.redStartLocation === location
+      );
+
+      for (const match of matches) {
+        const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+          match as CSVRow
+        );
+        if (pictograph) {
+          results.push(pictograph);
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Find pictographs by end location
+   */
+  async findPictographsByEndLocation(
+    location: string
+  ): Promise<PictographData[]> {
+    await this.ensureInitialized();
+    const results: PictographData[] = [];
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+      const matches = data.filter(
+        (row: ParsedCsvRow) =>
+          row.blueEndLocation === location || row.redEndLocation === location
+      );
+
+      for (const match of matches) {
+        const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+          match as CSVRow
+        );
+        if (pictograph) {
+          results.push(pictograph);
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Find pictographs by grid mode
+   */
+  async findPictographsByGridMode(
+    gridMode: GridMode
+  ): Promise<PictographData[]> {
+    if (gridMode === GridMode.SKEWED) {
+      return [];
+    }
+
+    await this.ensureInitialized();
+    const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+    const results: PictographData[] = [];
+
+    for (const row of data) {
+      const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+        row as CSVRow
+      );
+      if (pictograph) {
+        results.push(pictograph);
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Get all pictographs
+   */
+  async getAllPictographs(): Promise<PictographData[]> {
+    await this.ensureInitialized();
+    const results: PictographData[] = [];
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+
+      for (const row of data) {
+        const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+          row as CSVRow
+        );
+        if (pictograph) {
+          results.push(pictograph);
+        }
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Get available motion types
+   */
+  async getAvailableMotionTypes(): Promise<string[]> {
+    await this.ensureInitialized();
+    const motionTypes = new Set<string>();
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+
+      for (const row of data) {
+        motionTypes.add(row.blueMotionType);
+        motionTypes.add(row.redMotionType);
+      }
+    }
+
+    return Array.from(motionTypes).sort();
+  }
+
+  /**
+   * Get available start locations
+   */
+  async getAvailableStartLocations(): Promise<string[]> {
+    await this.ensureInitialized();
+    const locations = new Set<string>();
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+
+      for (const row of data) {
+        locations.add(row.blueStartLocation);
+        locations.add(row.redStartLocation);
+      }
+    }
+
+    return Array.from(locations).sort();
+  }
+
+  /**
+   * Get available end locations
+   */
+  async getAvailableEndLocations(): Promise<string[]> {
+    await this.ensureInitialized();
+    const locations = new Set<string>();
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+
+      for (const row of data) {
+        locations.add(row.blueEndLocation);
+        locations.add(row.redEndLocation);
+      }
+    }
+
+    return Array.from(locations).sort();
+  }
+
+  /**
+   * Get available letters
+   */
+  async getAvailableLetters(): Promise<string[]> {
+    await this.ensureInitialized();
+    const letters = new Set<string>();
+
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const data = this.parsedData![gridMode as Exclude<GridMode, GridMode.SKEWED>];
+
+      for (const row of data) {
+        letters.add(row.letter);
+      }
+    }
+
+    return Array.from(letters).sort();
   }
 }

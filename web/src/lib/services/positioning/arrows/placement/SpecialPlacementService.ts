@@ -16,9 +16,9 @@
 import type { MotionData, PictographData } from "$lib/domain";
 import { GridMode } from "$lib/domain/enums";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
+import type { IGridModeDeriver } from "$lib/services/interfaces/positioning-interfaces";
 import { jsonCache } from "../../cache/SimpleJsonCache";
-import type { ISpecialPlacementService } from "../../placement-services";
+import type { ISpecialPlacementService } from "$lib/services/interfaces/positioning-interfaces";
 import { SpecialPlacementOriKeyGenerator } from "../key_generators/SpecialPlacementOriKeyGenerator";
 import { injectable } from "inversify";
 

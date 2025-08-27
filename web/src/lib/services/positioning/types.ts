@@ -2,7 +2,6 @@
  * Basic types and data structures for arrow positioning services.
  */
 
-import type { Location, MotionData } from "$lib/domain";
 import { MotionColor } from "$lib/domain/enums";
 
 // Enhanced type definitions with comprehensive coverage
@@ -11,28 +10,15 @@ export type { MotionType, RotationDirection } from "$lib/domain";
 export type ArrowColor = MotionColor;
 
 // Basic types
-export interface Point {
-  x: number;
-  y: number;
-}
+// Note: Point is now exported from positioning-interfaces.ts
+import type { Point } from "../interfaces/positioning-interfaces";
+
+// Re-export Point for backward compatibility
+export type { Point };
 
 export interface ArrowPosition extends Point {
   rotation: number;
 }
 
-export interface BeatData {
-  beatNumber: number;
-  letter?: string;
-  pictographData: {
-    motions?: {
-      blue?: MotionData;
-      red?: MotionData;
-    };
-  };
-}
 
-// Grid data structures
-export interface GridData {
-  allHandPointsNormal: Record<Location, { coordinates: Point }>;
-  allLayer2PointsNormal: Record<Location, { coordinates: Point }>;
-}
+

@@ -7,7 +7,7 @@
 
 import { GridMode } from "$lib/domain";
 import type { PictographData } from "$lib/domain/PictographData";
-import type { IPositionMapper } from "$lib/services/interfaces/movement/IPositionMapper";
+import type { IPositionMapper } from "$lib/services/interfaces/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 
 /**
@@ -46,16 +46,12 @@ export function createOptionDataState() {
       const endPosition = getEndPosition(lastBeat);
 
       if (endPosition && typeof endPosition === "string") {
-        console.log(
-          `🎯 Option Picker: Filtering options for end position: ${endPosition}`
-        );
-
         // Get services through DI
         const { resolve, TYPES } = await import(
           "$lib/services/inversify/container"
         );
         const letterQueryService = resolve<
-          import("$lib/services/implementations/data/LetterQueryService").ILetterQueryService
+          import("$lib/services/interfaces/data-interfaces").ILetterQueryService
         >(TYPES.ILetterQueryService);
         const optionFilteringService = resolve<
           import("$lib/services/implementations/data/OptionFilteringService").IOptionFilteringService
@@ -67,10 +63,6 @@ export function createOptionDataState() {
         nextOptions = optionFilteringService.filterByStartPosition(
           allPictographs,
           endPosition
-        );
-
-        console.log(
-          `✅ Option Picker: Found ${nextOptions.length} options that start from ${endPosition}`
         );
       } else {
         console.warn("No end position found in sequence");
@@ -85,14 +77,10 @@ export function createOptionDataState() {
             ? startPosition.endPosition
             : null;
         if (endPosition) {
-          console.log(
-            `🎯 Option Picker: Filtering options for start position end: ${endPosition}`
-          );
-
           // Get services through DI
           // Note: ILetterQueryServiceInterface is no longer needed as we use direct service resolution
           const letterQueryService = resolve<
-            import("$lib/services/implementations/data/LetterQueryService").ILetterQueryService
+            import("$lib/services/interfaces/data-interfaces").ILetterQueryService
           >(TYPES.ILetterQueryService);
 
           const optionFilteringService = resolve<
@@ -107,10 +95,6 @@ export function createOptionDataState() {
           nextOptions = optionFilteringService.filterByStartPosition(
             allPictographs,
             endPosition
-          );
-
-          console.log(
-            `✅ Option Picker: Found ${nextOptions.length} options that start from ${endPosition}`
           );
         }
       }

@@ -8,11 +8,9 @@
 
 import type { MotionData } from "$lib/domain";
 import { MotionColor } from "$lib/domain/enums";
+import type { IArrowPathResolutionService } from "$lib/services/interfaces/positioning-interfaces";
 import type {
-  IArrowPathResolutionService,
   IArrowPositioningService,
-} from "$lib/services/interfaces/positioning-interfaces";
-import type {
   ISvgColorTransformationService,
 } from "$lib/services/interfaces/pictograph-interfaces";
 import type { ArrowPosition } from "$lib/services/positioning/types";

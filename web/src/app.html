@@ -11,8 +11,6 @@
       (function () {
         try {
           // Always clear cache-related items on startup to prevent quota issues
-          console.log(`🧹 Clearing all cache data on startup...`);
-
           const keysToRemove = [];
           for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
@@ -32,10 +30,6 @@
             localStorage.removeItem(key);
           });
 
-          console.log(
-            `🗑️ Cleared ${keysToRemove.length} cache entries on startup`
-          );
-
           // Double-check total size after clearing
           let totalSize = 0;
           for (let key in localStorage) {
@@ -43,11 +37,6 @@
               totalSize += localStorage[key].length + key.length;
             }
           }
-
-          const sizeInMB = totalSize / (1024 * 1024);
-          console.log(
-            `📊 localStorage size after clearing: ${sizeInMB.toFixed(2)}MB`
-          );
         } catch (error) {
           console.warn("Failed to check/clear cache on startup:", error);
         }
@@ -59,7 +48,6 @@
         window.location.hostname === "127.0.0.1"
       ) {
         window.clearTKAStorage = function () {
-          console.log("🧹 Clearing ALL TKA localStorage...");
           const keys = [];
           for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
@@ -69,7 +57,6 @@
           }
           keys.forEach((key) => {
             localStorage.removeItem(key);
-            console.log("✅ Removed:", key);
           });
 
           // Clear other TKA-related keys
@@ -83,18 +70,11 @@
           otherKeys.forEach((key) => {
             if (localStorage.getItem(key)) {
               localStorage.removeItem(key);
-              console.log("✅ Removed other:", key);
             }
           });
-
-          console.log(
-            `🎉 Cleared ${keys.length + otherKeys.filter((k) => localStorage.getItem(k)).length} keys total!`
-          );
-          console.log("💡 Refresh the page to start with clean state");
         };
 
         window.clearSequences = function () {
-          console.log("🧹 Clearing ONLY sequence data...");
           const keys = [];
           for (let i = 0; i < localStorage.length; i++) {
             const key = localStorage.key(i);
@@ -107,14 +87,9 @@
           }
           keys.forEach((key) => {
             localStorage.removeItem(key);
-            console.log("✅ Removed sequence:", key);
           });
-          console.log(`🎉 Cleared ${keys.length} sequence keys!`);
         };
 
-        console.log("🛠️ Development utilities loaded:");
-        console.log("  clearTKAStorage() - Clear ALL TKA data");
-        console.log("  clearSequences() - Clear sequences only");
       }
     </script>
 

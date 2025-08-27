@@ -86,12 +86,17 @@ export class ArrowCoordinateSystemService
      *     Point representing the initial position coordinates
      */
     const motionType = motion.motionType?.toLowerCase();
+    console.log("🎯 ArrowCoordinateSystemService: Getting initial position");
+    console.log("Motion Type:", motionType);
+    console.log("Location:", location);
 
     if (["pro", "anti", "float"].includes(motionType || "")) {
       // Shift arrows use layer2 points
+      console.log("Using layer2 coordinates for shift motion");
       return this.getLayer2Coords(location);
     } else if (["static", "dash"].includes(motionType || "")) {
       // Static/dash arrows use hand points
+      console.log("Using hand point coordinates for static/dash motion");
       return this.getHandPointCoords(location);
     } else {
       // Default fallback
@@ -120,12 +125,15 @@ export class ArrowCoordinateSystemService
   private getHandPointCoords(location: Location): Point {
     /**Get hand point coordinates for static/dash arrows.*/
     const coords = this.HAND_POINTS[location];
+    console.log(`🎯 Looking up hand point for location: ${location}`);
+    console.log("Available hand points:", Object.keys(this.HAND_POINTS));
     if (!coords) {
       console.warn(
         `No hand point coordinates for location: ${location}, using center`
       );
       return this.getSceneCenter();
     }
+    console.log(`✅ Found hand point coordinates:`, coords);
     return coords;
   }
 

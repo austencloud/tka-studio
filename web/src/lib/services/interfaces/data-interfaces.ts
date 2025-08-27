@@ -107,3 +107,37 @@ export interface ICSVParserService {
   validateCSVStructure(csvText: string): { isValid: boolean; errors: string[] };
   createRowFromValues(headers: string[], values: string[]): ParsedCsvRow;
 }
+
+// ============================================================================
+// MOTION QUERY SERVICE
+// ============================================================================
+
+/**
+ * Motion Query Parameters
+ */
+export interface MotionQueryParams {
+  startLocation: string;
+  endLocation: string;
+  motionType: string;
+}
+
+/**
+ * Motion Query Service Interface
+ */
+export interface IMotionQueryService {
+  findPictographByMotionParams(
+    params: MotionQueryParams,
+    gridMode: GridMode
+  ): Promise<PictographData | null>;
+  getNextOptionsForSequence(sequence: unknown[]): Promise<PictographData[]>;
+  findPictographsByLetter(letter: string): Promise<PictographData[]>;
+  findPictographsByMotionType(motionType: string): Promise<PictographData[]>;
+  findPictographsByStartLocation(location: string): Promise<PictographData[]>;
+  findPictographsByEndLocation(location: string): Promise<PictographData[]>;
+  findPictographsByGridMode(gridMode: GridMode): Promise<PictographData[]>;
+  getAllPictographs(): Promise<PictographData[]>;
+  getAvailableMotionTypes(): Promise<string[]>;
+  getAvailableStartLocations(): Promise<string[]>;
+  getAvailableEndLocations(): Promise<string[]>;
+  getAvailableLetters(): Promise<string[]>;
+}

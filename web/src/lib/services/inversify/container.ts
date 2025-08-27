@@ -178,7 +178,6 @@ import { TextRenderingService } from "../implementations/image-export/TextRender
 // Import start position services
 import { StartPositionSelectionService } from "../implementations/StartPositionSelectionService";
 
-console.log("✅ TKA Container: Initializing dependency injection container");
 
 // Create container
 const container = new Container();
@@ -400,10 +399,6 @@ try {
     .bind(TYPES.ISVGToCanvasConverterService)
     .to(SVGToCanvasConverterService);
 
-  console.log("✅ TKA Container: All available services bound successfully");
-  console.log(
-    `📊 Container initialized with ${Object.keys(TYPES).length} service types defined`
-  );
 } catch (error) {
   console.error("❌ TKA Container: Failed to bind services:", error);
 }
@@ -420,4 +415,3 @@ export function resolve<T>(serviceType: symbol): T {
   return container.get<T>(serviceType);
 }
 
-console.log("✅ TKA Container: Dependency injection setup complete");

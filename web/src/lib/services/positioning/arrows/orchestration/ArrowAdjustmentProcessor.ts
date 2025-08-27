@@ -7,7 +7,7 @@
 
 import type { MotionData } from "$lib/domain";
 import { Location, MotionType } from "$lib/domain";
-import type { IArrowLocationCalculator } from "../../core-services";
+import type { IArrowLocationCalculator } from "$lib/services/interfaces/positioning-interfaces";
 import type { Point } from "../../types";
 import { ArrowQuadrantCalculator } from "./ArrowQuadrantCalculator";
 

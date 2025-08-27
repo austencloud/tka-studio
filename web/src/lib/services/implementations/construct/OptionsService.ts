@@ -16,7 +16,7 @@ import {
 } from "$lib/domain";
 import type { PictographData } from "$lib/domain/PictographData";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { IPositionMapper } from "$lib/services/interfaces/movement/IPositionMapper";
+import type { IPositionMapper } from "$lib/services/interfaces/positioning-interfaces";
 
 /**
  * Helper function to compute endPosition from motion data

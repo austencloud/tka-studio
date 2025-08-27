@@ -8,7 +8,7 @@
  */
 
 import type { ArrowPlacementData, PictographData } from "$lib/domain";
-import type { IAttributeKeyGenerator } from "../../data-services";
+import type { IAttributeKeyGenerator } from "$lib/services/interfaces/positioning-interfaces";
 import { injectable } from "inversify";
 
 @injectable()

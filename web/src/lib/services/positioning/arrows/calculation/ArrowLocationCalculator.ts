@@ -14,7 +14,7 @@
 
 import type { MotionData, PictographData } from "$lib/domain";
 import { Location, MotionType } from "$lib/domain";
-import type { IArrowLocationCalculator } from "../../core-services";
+import type { IArrowLocationCalculator } from "$lib/services/interfaces/positioning-interfaces";
 import { DashLocationCalculator } from "./DashLocationCalculator";
 import { injectable, inject } from "inversify";
 import { TYPES } from "../../../inversify/types";
@@ -84,16 +84,26 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
      *     Error: If dash motion requires pictograph data but none provided
      */
     const motionType = motion.motionType?.toLowerCase();
+    console.log("🎯 ArrowLocationCalculator: Calculating location");
+    console.log("Motion Type:", motionType);
+    console.log("Start Location:", motion.startLocation);
+    console.log("End Location:", motion.endLocation);
 
     switch (motionType) {
       case "static":
-        return this.calculateStaticLocation(motion);
+        const staticLocation = this.calculateStaticLocation(motion);
+        console.log("✅ Static location calculated:", staticLocation);
+        return staticLocation;
       case "pro":
       case "anti":
       case "float":
-        return this.calculateShiftLocation(motion);
+        const shiftLocation = this.calculateShiftLocation(motion);
+        console.log("✅ Shift location calculated:", shiftLocation);
+        return shiftLocation;
       case "dash":
-        return this.calculateDashLocation(motion, pictographData);
+        const dashLocation = this.calculateDashLocation(motion, pictographData);
+        console.log("✅ Dash location calculated:", dashLocation);
+        return dashLocation;
       default:
         console.warn(
           `Unknown motion type: ${motionType}, using start location`

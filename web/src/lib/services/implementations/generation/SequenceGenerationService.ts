@@ -13,7 +13,7 @@ import type {
   ISequenceGenerationService,
   IOrientationCalculationService,
 } from "../../interfaces/generation-interfaces";
-import type { ILetterQueryService } from "../data/LetterQueryService";
+import type { ILetterQueryService } from "../../interfaces/data-interfaces";
 
 import type { PictographData } from "$lib/domain/PictographData";
 import { createMotionData } from "$lib/domain/MotionData";

@@ -7,7 +7,7 @@
 
 import type { PictographData } from "$lib/domain";
 // Re-enabled after fixing circular dependency
-import type { IArrowPositioningService } from "$lib/services/interfaces/positioning-interfaces";
+import type { IArrowPositioningService } from "$lib/services/interfaces/pictograph-interfaces";
 
 export interface ArrowPositioningProps {
   /** Current pictograph data containing arrows */
@@ -38,8 +38,9 @@ export function useArrowPositioning(
 
   // Temporary fallback - return mock service
   const positioningService: IArrowPositioningService = {
-    calculatePosition: async () => ({ x: 0, y: 0, rotation: 0 }),
-    shouldMirror: () => false,
+    renderArrowAtPosition: async () => {
+      // Mock implementation - does nothing
+    },
   };
 
   // Clean architecture: Calculate positions from motion data using the orchestrator
@@ -71,18 +72,10 @@ export function useArrowPositioning(
           motionData.arrowPlacementData
         ) {
           try {
-            // Use the actual ArrowPositioningService to calculate positions
-            const positionResult = await positioningService.calculatePosition(
-              motionData.arrowPlacementData,
-              motionData,
-              pictographData
-            );
-
-            const mirroringResult = positioningService.shouldMirror(
-              motionData.arrowPlacementData,
-              motionData,
-              pictographData
-            );
+            // TODO: Use the actual ArrowPositioningService to calculate positions
+            // This needs to be implemented with the correct interface
+            const positionResult = { x: 0, y: 0, rotation: 0 };
+            const mirroringResult = false;
 
             newPositions[color] = {
               x: positionResult.x,

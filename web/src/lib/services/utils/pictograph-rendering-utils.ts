@@ -7,14 +7,14 @@
 
 import type { PictographData, MotionData } from "$lib/domain";
 import { GridMode, MotionColor } from "$lib/domain";
-import type { IGridModeDeriver } from "../interfaces/movement/IGridModeDeriver";
+import type { IGridModeDeriver } from "../interfaces/positioning-interfaces";
 import type {
   IArrowRenderingService,
   IGridRenderingService,
   IOverlayRenderingService,
   ISvgUtilityService,
 } from "../interfaces/pictograph-interfaces";
-import type { IArrowPositioningOrchestrator } from "../positioning/core-services";
+import type { IArrowPositioningOrchestrator } from "../interfaces/positioning-interfaces";
 import { resolve, TYPES } from "../inversify/container";
 
 /**

@@ -11,7 +11,7 @@ import type { PictographData } from "$lib/domain/PictographData";
 import { createPictographData } from "$lib/domain/PictographData";
 import { MotionColor } from "$lib/domain/enums";
 import type { IEnumMappingService } from "../data/EnumMappingService";
-import type { IPositionMapper } from "./PositionMapper";
+import type { IPositionMapper } from "../../interfaces/positioning-interfaces";
 import { injectable, inject } from "inversify";
 import { TYPES } from "../../inversify/types";
 

@@ -111,10 +111,31 @@ export type {
   IArrowPlacementKeyService,
   IArrowPlacementService,
   IPropRenderingService,
+  IPositionMapper,
+  IBetaOffsetCalculator,
+  IArrowLocationCalculator,
+  IArrowRotationCalculator,
+  IArrowAdjustmentCalculator,
+  IArrowCoordinateSystemService,
+  IDashLocationCalculator,
+  IArrowPositioningOrchestrator,
+  IDirectionalTupleCalculator,
+  IQuadrantIndexCalculator,
+  IDirectionalTupleProcessor,
+  IPlacementKeyGenerator,
+  IAttributeKeyGenerator,
+  ISpecialPlacementOriKeyGenerator,
+  ITurnsTupleKeyGenerator,
+  ISpecialPlacementService,
+  IDefaultPlacementService,
+  IDefaultPlacementServiceJson,
+  IArrowAdjustmentLookup,
+  IGridModeDeriver,
+  Point,
+  Position,
 } from "./positioning-interfaces";
 
-// Export orchestrator from positioning services
-export type { IArrowPositioningOrchestrator } from "../positioning/core-services";
+// Note: IArrowPositioningOrchestrator is now exported with other positioning interfaces below
 
 // ============================================================================
 // GENERATION INTERFACES
@@ -255,3 +276,14 @@ export type {
   ResizeDirection,
   ResizeOperation,
 } from "./panel-interfaces";
+
+// ============================================================================
+// METADATA TESTING INTERFACES
+// ============================================================================
+
+export type {
+  IMetadataExtractionService,
+  IMetadataAnalysisService,
+  ISequenceDiscoveryService,
+  IBatchAnalysisService,
+} from "./metadata-testing-interfaces";

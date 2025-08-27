@@ -10,7 +10,7 @@ import type {
   MotionData,
   PictographData,
 } from "$lib/domain";
-import type { IArrowCoordinateSystemService } from "../../core-services";
+import type { IArrowCoordinateSystemService } from "$lib/services/interfaces/positioning-interfaces";
 import type { Point } from "../../types";
 
 export class ArrowDataProcessor {
@@ -71,10 +71,12 @@ export class ArrowDataProcessor {
   updateArrowInPictograph(
     pictographData: PictographData,
     color: string,
-    updates: Partial<ArrowPlacementData>
+    updates: Partial<ArrowPlacementData>,
+    motionUpdates?: Partial<MotionData>
   ): PictographData {
     /**
      * Update arrow properties in pictograph data (now embedded in motions).
+     * Also supports updating motion data properties like arrowLocation.
      */
     const updatedPictograph = { ...pictographData };
 
@@ -87,7 +89,8 @@ export class ArrowDataProcessor {
         ...updatedPictograph.motions,
         [motionKey]: {
           ...motion,
-          arrowPlacement: {
+          ...motionUpdates, // 🚨 CRITICAL FIX: Apply motion updates (like arrowLocation)
+          arrowPlacementData: {
             ...motion.arrowPlacementData,
             ...updates,
           },

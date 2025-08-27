@@ -6,7 +6,7 @@
  */
 
 import type { PictographData } from "$lib/domain/PictographData";
-import type { IPositionMapper } from "$lib/services/interfaces/movement/IPositionMapper";
+import type { IPositionMapper } from "$lib/services/interfaces/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 import type { SortMethod } from "../config";
 import type { LastSelectedTabState } from "./option-ui-state.svelte";

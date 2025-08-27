@@ -7,7 +7,7 @@
 
 import type { PictographData } from "$lib/domain/PictographData";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
+import type { IGridModeDeriver } from "$lib/services/interfaces/positioning-interfaces";
 import { endsWithBeta } from "$lib/utils/betaDetection";
 
 export interface DataFlowTrace {

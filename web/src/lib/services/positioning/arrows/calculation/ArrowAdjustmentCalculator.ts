@@ -14,25 +14,23 @@
 import type { MotionData, PictographData } from "$lib/domain";
 import { MotionColor } from "$lib/domain";
 import { GridMode } from "$lib/domain/enums";
-import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
+import type { IGridModeDeriver } from "$lib/services/interfaces/positioning-interfaces";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 import { ArrowPlacementKeyService } from "../../../implementations/positioning/ArrowPlacementKeyService";
-import type { IArrowAdjustmentCalculator } from "../../core-services";
+import type { IArrowAdjustmentCalculator } from "$lib/services/interfaces/positioning-interfaces";
 import type {
   IAttributeKeyGenerator,
   ISpecialPlacementOriKeyGenerator,
   ITurnsTupleKeyGenerator,
-} from "../../data-services";
-import type {
   IDefaultPlacementService,
   ISpecialPlacementService,
-} from "../../placement-services";
+} from "$lib/services/interfaces/positioning-interfaces";
 import type {
   Location,
   MotionType as MotionTypeType,
   Point,
-} from "../../types";
+} from "$lib/services/interfaces/positioning-interfaces";
 import { AttributeKeyGenerator } from "../key_generators/AttributeKeyGenerator";
 import { SpecialPlacementOriKeyGenerator } from "../key_generators/SpecialPlacementOriKeyGenerator";
 import { TurnsTupleKeyGenerator } from "../key_generators/TurnsTupleKeyGenerator";

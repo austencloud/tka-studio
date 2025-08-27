@@ -46,12 +46,6 @@
     const shouldShow =
       !currentSequence || !currentSequence.startingPositionBeat;
 
-    console.log("🔍 ConstructTabContent: shouldShowStartPositionPicker check", {
-      hasSequence: !!currentSequence,
-      hasStartingPositionBeat: !!currentSequence?.startingPositionBeat,
-      shouldShow,
-    });
-
     return shouldShow;
   });
   let settings = $derived(getSettings());

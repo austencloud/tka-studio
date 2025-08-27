@@ -16,7 +16,7 @@ import { createPropPlacementFromPosition } from "$lib/domain/PropPlacementData";
 import { endsWithBeta } from "$lib/utils/betaDetection";
 
 import { DefaultPropPositioner } from "../../DefaultPropPositioner";
-import type { IGridModeDeriver } from "../../interfaces/movement/IGridModeDeriver";
+import type { IGridModeDeriver } from "../../interfaces/positioning-interfaces";
 import { PropRotAngleManager } from "../../PropRotAngleManager";
 import { BetaOffsetCalculator } from "./BetaOffsetCalculator";
 import { BetaPropDirectionCalculator } from "./BetaPropDirectionCalculator";

@@ -99,26 +99,14 @@ without the complex BackgroundContext system.
 
     // Set up ResizeObserver for smooth resize handling
     if (typeof ResizeObserver !== "undefined") {
-      console.log("CANVAS SETUP: Creating ResizeObserver");
       resizeObserver = new ResizeObserver((entries) => {
-        console.log(
-          "RESIZE OBSERVER: triggered with",
-          entries.length,
-          "entries"
-        );
         for (const entry of entries) {
           if (entry.target === canvas) {
-            console.log(
-              "RESIZE OBSERVER: canvas entry found, calling handleResize"
-            );
             handleResize();
           }
         }
       });
       resizeObserver.observe(canvas);
-      console.log("CANVAS SETUP: ResizeObserver observing canvas");
-    } else {
-      console.log("CANVAS SETUP: ResizeObserver not available");
     }
 
     isInitialized = true;
@@ -163,9 +151,7 @@ without the complex BackgroundContext system.
 
   // Handle resize - preserve existing content and smoothly adapt
   function handleResize() {
-    console.log("CANVAS RESIZE: handleResize called");
     if (!currentBackgroundSystem || !canvas) {
-      console.log("CANVAS RESIZE: early return - no system or canvas");
       return;
     }
 
@@ -173,16 +159,11 @@ without the complex BackgroundContext system.
     const newDimensions = { width: rect.width, height: rect.height };
     const oldDimensions = { width: canvas.width, height: canvas.height };
 
-    console.log(
-      `CANVAS RESIZE: dimensions ${oldDimensions.width}x${oldDimensions.height} -> ${newDimensions.width}x${newDimensions.height}`
-    );
-
     // Only resize if dimensions actually changed
     if (
       newDimensions.width === oldDimensions.width &&
       newDimensions.height === oldDimensions.height
     ) {
-      console.log("CANVAS RESIZE: no change in dimensions, skipping");
       return;
     }
 

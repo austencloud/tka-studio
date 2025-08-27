@@ -10,12 +10,7 @@ import type {
   ThumbnailFile,
   SequenceMetadata,
 } from "$lib/domain/metadata-testing/types";
-
-export interface IMetadataExtractionService {
-  extractMetadata(thumbnail: ThumbnailFile): Promise<SequenceMetadata>;
-  extractMetadataFromFile(file: File): Promise<Record<string, unknown>[]>;
-  extractRawMetadata(filePath: string): Promise<Record<string, unknown>[]>;
-}
+import type { IMetadataExtractionService } from "../interfaces/metadata-testing-interfaces";
 
 export class MetadataExtractionService implements IMetadataExtractionService {
   async extractMetadata(thumbnail: ThumbnailFile): Promise<SequenceMetadata> {

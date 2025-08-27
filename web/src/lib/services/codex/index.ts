@@ -39,7 +39,7 @@ export {
 
 // Main service
 export { CodexService } from "./CodexService";
-export type { ICodexService } from "./ICodexService";
+export type { ICodexService } from "../interfaces/application-interfaces";
 
 // Migration helper
 export { CodexServiceMigrationHelper } from "./CodexServiceMigrationHelper";

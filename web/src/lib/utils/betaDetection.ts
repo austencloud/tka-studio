@@ -7,7 +7,7 @@
 import { GridPosition } from "$lib/domain/enums";
 import type { PictographData } from "$lib/domain/PictographData";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { IPositionMapper } from "$lib/services/implementations/movement/PositionMapper";
+import type { IPositionMapper } from "$lib/services/interfaces/positioning-interfaces";
 
 /**
  * Check if a grid position is a beta position

@@ -33,7 +33,6 @@ export class CsvLoaderService implements ICsvLoaderService {
     try {
       this.csvData = await this.loadFromWindowOrFiles();
       this.isLoaded = true;
-      console.log("CSV data loaded successfully");
       return this.csvData;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
@@ -55,16 +54,13 @@ export class CsvLoaderService implements ICsvLoaderService {
   clearCache(): void {
     this.csvData = null;
     this.isLoaded = false;
-    console.log("CSV cache cleared");
   }
 
   private async loadFromWindowOrFiles(): Promise<CsvDataSet> {
     if (this.isWindowDataAvailable()) {
-      console.log("Loading CSV data from window.csvData");
       return window.csvData as CsvDataSet;
     }
 
-    console.log("Loading CSV data from static files");
     return this.loadFromStaticFiles();
   }
 

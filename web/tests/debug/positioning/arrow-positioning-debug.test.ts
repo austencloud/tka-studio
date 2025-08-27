@@ -113,7 +113,6 @@ describe("Arrow Positioning Debug Tests", () => {
     // Test 2: Direct orchestrator.calculateArrowPosition call
     console.log("\n🎯 Test 3: Direct orchestrator.calculateArrowPosition");
     const [x, y, rotation] = await orchestrator.calculateArrowPosition(
-      blueArrowData,
       pictographData,
       blueMotionData
     );
@@ -198,7 +197,6 @@ describe("Arrow Positioning Debug Tests", () => {
       });
 
       const [, , rotation] = await orchestrator.calculateArrowPosition(
-        motionData.arrowPlacementData,
         pictographData,
         motionData
       );

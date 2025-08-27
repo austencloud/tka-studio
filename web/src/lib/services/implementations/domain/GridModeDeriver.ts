@@ -10,7 +10,7 @@ import { GridMode, Location } from "../../../domain/enums";
 import { injectable } from "inversify";
 import { createGridData, type GridData } from "../../../domain/GridData";
 import type { MotionData } from "../../../domain/MotionData";
-import type { IGridModeDeriver } from "../../interfaces/movement/IGridModeDeriver";
+import type { IGridModeDeriver } from "../../interfaces/positioning-interfaces";
 
 @injectable()
 export class GridModeDeriver implements IGridModeDeriver {
