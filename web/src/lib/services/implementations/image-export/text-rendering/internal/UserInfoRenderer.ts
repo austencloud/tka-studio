@@ -11,7 +11,9 @@ import type {
 } from "../../../../interfaces/image-export-interfaces";
 import type { IUserInfoRenderer } from "../../../../interfaces/text-rendering-interfaces";
 import { createFont } from "./TextRenderingTypes";
+import { injectable } from "inversify";
 
+@injectable()
 export class UserInfoRenderer implements IUserInfoRenderer {
   // Font constants matching desktop application
   private static readonly USER_INFO_FONT_FAMILY = "Georgia";

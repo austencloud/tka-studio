@@ -8,7 +8,7 @@ import { createShootingStarSystem } from "./core/ShootingStarSystem";
 import { ParallaxStarSystem } from "../systems/nightSky/ParallaxStarSystem";
 import { NebulaSystem } from "../systems/nightSky/NebulaSystem";
 import { ConstellationSystem } from "../systems/nightSky/ConstellationSystem";
-import { CelestialBodySystem } from "../systems/nightSky/CelestialBodySystem";
+import { MoonSystem } from "../systems/nightSky/MoonSystem";
 import { SpaceshipSystem } from "../systems/nightSky/SpaceshipSystem";
 import { CometSystem } from "../systems/nightSky/CometSystem";
 
@@ -23,12 +23,13 @@ import type {
 export class NightSkyBackgroundSystem implements BackgroundSystem {
   // core state -------------------------------------------------------------
   private quality: QualityLevel = "medium";
+  private isInitialized: boolean = false;
 
   // Modular systems
   private parallaxStarSystem: ParallaxStarSystem;
   private nebulaSystem: NebulaSystem;
   private constellationSystem: ConstellationSystem;
-  private celestialBodySystem: CelestialBodySystem;
+  private MoonSystem: MoonSystem;
   private spaceshipSystem: SpaceshipSystem;
   private cometSystem: CometSystem;
   private shootingStarSystem = createShootingStarSystem();
@@ -58,11 +59,13 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 
     this.constellationSystem = new ConstellationSystem(this.cfg.constellations);
 
-    this.celestialBodySystem = new CelestialBodySystem(
-      this.cfg.celestialBody,
+    this.MoonSystem = new MoonSystem(
+      this.cfg.Moon,
       this.cfg.background?.gradientStops || [
-        { position: 0, color: "#0A0E2C" },
-        { position: 1, color: "#4A5490" },
+        { position: 0, color: "#0c0c1e" },
+        { position: 0.3, color: "#1a1a2e" },
+        { position: 0.7, color: "#16213e" },
+        { position: 1, color: "#0f3460" },
       ]
     );
 
@@ -79,7 +82,9 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
     // Initialize all modular systems
     this.parallaxStarSystem.initialize(dim, this.a11y);
     this.nebulaSystem.initialize(dim, this.quality);
-    this.celestialBodySystem.initialize(dim, this.quality, this.a11y);
+    this.MoonSystem.initialize(dim, this.quality, this.a11y);
+
+    this.isInitialized = true;
   }
 
   /* UPDATE */
@@ -91,7 +96,7 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
       this.quality,
       this.a11y
     );
-    this.celestialBodySystem.update(dim, this.a11y);
+    this.MoonSystem.update(dim, this.a11y);
 
     if (this.Q.enableShootingStars)
       this.shootingStarState = this.shootingStarSystem.update(
@@ -105,22 +110,40 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 
   /* DRAW */
   public draw(ctx: CanvasRenderingContext2D, dim: Dimensions) {
+    // Always draw the background gradient first
     const gradientStops = this.cfg.background?.gradientStops || [
-      { position: 0, color: "#0A0E2C" },
-      { position: 1, color: "#4A5490" },
+      { position: 0, color: "#0c0c1e" },
+      { position: 0.3, color: "#1a1a2e" },
+      { position: 0.7, color: "#16213e" },
+      { position: 1, color: "#0f3460" },
     ];
     drawBackgroundGradient(ctx, dim, gradientStops);
 
-    this.nebulaSystem.draw(ctx, this.a11y);
-    this.parallaxStarSystem.draw(ctx, this.a11y);
-    this.constellationSystem.draw(ctx, this.a11y);
-    this.celestialBodySystem.draw(ctx, this.a11y);
+    // Only draw other elements if properly initialized
+    if (this.isInitialized) {
+      this.nebulaSystem.draw(ctx, this.a11y);
+      this.parallaxStarSystem.draw(ctx, this.a11y);
+      this.constellationSystem.draw(ctx, this.a11y);
+      this.MoonSystem.draw(ctx, this.a11y);
 
-    if (this.Q.enableShootingStars)
-      this.shootingStarSystem.draw(this.shootingStarState, ctx);
+      if (this.Q.enableShootingStars)
+        this.shootingStarSystem.draw(this.shootingStarState, ctx);
 
-    this.spaceshipSystem.draw(ctx, this.a11y);
-    this.cometSystem.draw(ctx, this.a11y);
+      this.spaceshipSystem.draw(ctx, this.a11y);
+      this.cometSystem.draw(ctx, this.a11y);
+    }
+  }
+
+  /* RESIZE HANDLING */
+  public handleResize(oldDimensions: Dimensions, newDimensions: Dimensions) {
+    // Let the parallax star system handle the smooth resize
+    this.parallaxStarSystem.update(newDimensions, this.a11y);
+
+    // Update other systems that need dimension changes
+    this.nebulaSystem.update(this.a11y);
+    this.MoonSystem.update(newDimensions, this.a11y);
+    this.spaceshipSystem.update(newDimensions, this.a11y, this.quality);
+    this.cometSystem.update(newDimensions, this.a11y, this.quality);
   }
 
   /* QUALITY / A11Y */
@@ -140,11 +163,13 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
     );
     this.nebulaSystem = new NebulaSystem(this.cfg.nebula);
     this.constellationSystem = new ConstellationSystem(this.cfg.constellations);
-    this.celestialBodySystem = new CelestialBodySystem(
-      this.cfg.celestialBody,
+    this.MoonSystem = new MoonSystem(
+      this.cfg.Moon,
       this.cfg.background?.gradientStops || [
-        { position: 0, color: "#0A0E2C" },
-        { position: 1, color: "#4A5490" },
+        { position: 0, color: "#0c0c1e" },
+        { position: 0.3, color: "#1a1a2e" },
+        { position: 0.7, color: "#16213e" },
+        { position: 1, color: "#0f3460" },
       ]
     );
     this.spaceshipSystem = new SpaceshipSystem(this.cfg.spaceship);
@@ -158,10 +183,11 @@ export class NightSkyBackgroundSystem implements BackgroundSystem {
 
   /* CLEANUP */
   public cleanup() {
+    this.isInitialized = false;
     this.parallaxStarSystem.cleanup();
     this.nebulaSystem.cleanup();
     this.constellationSystem.cleanup();
-    this.celestialBodySystem.cleanup();
+    this.MoonSystem.cleanup();
     this.spaceshipSystem.cleanup();
     this.cometSystem.cleanup();
   }

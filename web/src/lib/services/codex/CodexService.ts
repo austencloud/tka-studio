@@ -5,7 +5,7 @@
  * No more hardcoded mappings or mixed responsibilities!
  */
 
-import { GridMode } from "$lib/domain";
+import { GridMode, Letter } from "$lib/domain";
 import type { PictographData } from "$lib/domain/PictographData";
 import type { LetterCategory } from "$lib/domain/codex/types";
 import type { ILetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
@@ -103,7 +103,7 @@ export class CodexService implements ICodexService {
     await this.initialize();
 
     return this.letterQueryService.getPictographByLetter(
-      letter,
+      letter as Letter,
       GridMode.DIAMOND
     );
   }
@@ -123,7 +123,7 @@ export class CodexService implements ICodexService {
     }
 
     const pictographs = await this.letterQueryService.getPictographsByLetters(
-      letters,
+      letters as Letter[],
       GridMode.DIAMOND
     );
     return this.sortPictographsAlphabetically(pictographs);

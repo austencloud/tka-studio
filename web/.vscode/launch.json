@@ -2,30 +2,38 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "🚀 Launch TKA Server",
-      "type": "node",
+      "name": "🌐 Debug TKA in VS Code",
+      "type": "node-terminal",
       "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "command": "npm run dev",
       "serverReadyAction": {
-        "pattern": "Local.*http://localhost:([0-9]+)",
+        "pattern": ".*Local:.*http://localhost:(\\d+).*",
         "uriFormat": "http://localhost:%s",
-        "action": "openExternally"
+        "action": "debugWithChrome"
+      },
+      "presentation": {
+        "hidden": false,
+        "group": "TKA",
+        "order": 1
       }
     },
     {
-      "name": "🌐 Debug TKA in Chrome",
+      "name": "🔧 Debug Existing TKA Server",
       "type": "chrome",
       "request": "launch",
-      "url": "http://localhost:5173",
+      "url": "${input:serverUrl}",
       "webRoot": "${workspaceFolder}",
       "userDataDir": "${workspaceFolder}/.vscode/chrome-debug-fresh",
-      "timeout": 5000,
+      "timeout": 3000,
       "disableNetworkCache": true,
-      "showAsyncStacks": false,
+      "showAsyncStacks": true,
+      "sourceMaps": true,
+      "smartStep": true,
+      "skipFiles": [
+        "<node_internals>/**",
+        "node_modules/**",
+        "${workspaceFolder}/node_modules/**"
+      ],
       "runtimeArgs": [
         "--disable-web-security",
         "--disable-features=VizDisplayCompositor",
@@ -34,24 +42,20 @@
         "--disable-renderer-backgrounding",
         "--no-first-run",
         "--no-default-browser-check"
-      ]
-    },
-    {
-      "name": "🚀 Launch & Debug TKA",
-      "type": "node",
-      "request": "launch",
-      "cwd": "${workspaceFolder}",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "serverReadyAction": {
-        "pattern": "Local.*http://localhost:([0-9]+)",
-        "uriFormat": "http://localhost:%s",
-        "action": "startDebugging",
-        "name": "🌐 Debug TKA in Chrome",
-        "timeout": 3000
+      ],
+      "presentation": {
+        "hidden": false,
+        "group": "TKA",
+        "order": 2
       }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "serverUrl",
+      "description": "Enter the URL of your running dev server",
+      "default": "http://localhost:5173",
+      "type": "promptString"
     }
   ]
 }

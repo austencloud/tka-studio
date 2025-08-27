@@ -460,7 +460,7 @@ let masterRestorationService: MasterStateRestorationService | null = null;
  * @returns Master restoration service instance
  */
 export function getMasterRestorationService(dependencies?: {
-  tabStateService: typeof tabStateService;
+  tabStateService: any;
   browseStatePersistence: BrowseStatePersistenceService;
 }): MasterStateRestorationService {
   if (!masterRestorationService && dependencies) {

@@ -33,6 +33,7 @@ without the complex BackgroundContext system.
   let isInitialized = $state(false);
   let currentBackgroundSystem: BackgroundSystem | null = null;
   let animationId: number | null = null;
+  let resizeObserver: ResizeObserver | null = null;
 
   // Create background system when props change
   $effect(() => {
@@ -49,12 +50,8 @@ without the complex BackgroundContext system.
       initialQuality: quality,
     });
 
-    // Initialize with canvas dimensions
-    const rect = canvas.getBoundingClientRect();
-    const dimensions = { width: rect.width, height: rect.height };
-    currentBackgroundSystem.initialize(dimensions, quality);
-
-    console.log(`✅ Background system created: ${backgroundType} (${quality})`);
+    // Set up canvas dimensions properly
+    setupCanvasDimensions();
   });
 
   // Animation loop
@@ -67,12 +64,12 @@ without the complex BackgroundContext system.
     const animate = () => {
       if (!currentBackgroundSystem || !canvas) return;
 
-      const rect = canvas.getBoundingClientRect();
-      const dimensions = { width: rect.width, height: rect.height };
+      // Use canvas internal dimensions, not getBoundingClientRect
+      const dimensions = { width: canvas.width, height: canvas.height };
 
       // Update and draw
       currentBackgroundSystem.update(dimensions);
-      ctx.clearRect(0, 0, dimensions.width, dimensions.height);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       currentBackgroundSystem.draw(ctx, dimensions);
 
       // Report performance
@@ -97,11 +94,36 @@ without the complex BackgroundContext system.
   onMount(() => {
     if (!browser || !canvas) return;
 
+    // Ensure canvas dimensions are set up correctly on mount
+    setupCanvasDimensions();
+
+    // Set up ResizeObserver for smooth resize handling
+    if (typeof ResizeObserver !== "undefined") {
+      console.log("CANVAS SETUP: Creating ResizeObserver");
+      resizeObserver = new ResizeObserver((entries) => {
+        console.log(
+          "RESIZE OBSERVER: triggered with",
+          entries.length,
+          "entries"
+        );
+        for (const entry of entries) {
+          if (entry.target === canvas) {
+            console.log(
+              "RESIZE OBSERVER: canvas entry found, calling handleResize"
+            );
+            handleResize();
+          }
+        }
+      });
+      resizeObserver.observe(canvas);
+      console.log("CANVAS SETUP: ResizeObserver observing canvas");
+    } else {
+      console.log("CANVAS SETUP: ResizeObserver not available");
+    }
+
     isInitialized = true;
     startAnimation();
     onReady?.();
-
-    console.log("✅ Simple background canvas initialized");
   });
 
   // Cleanup
@@ -110,32 +132,85 @@ without the complex BackgroundContext system.
     if (currentBackgroundSystem) {
       currentBackgroundSystem.cleanup();
     }
+    if (resizeObserver) {
+      resizeObserver.disconnect();
+      resizeObserver = null;
+    }
   });
 
-  // Handle resize
-  function handleResize() {
-    if (!currentBackgroundSystem || !canvas) return;
+  // Set up canvas dimensions to match display size
+  function setupCanvasDimensions() {
+    if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
     const dimensions = { width: rect.width, height: rect.height };
 
-    // Update canvas size
+    // Set canvas internal dimensions to match display dimensions
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
 
-    // Update background system with new dimensions
-    currentBackgroundSystem.update(dimensions);
+    // Initialize background system with correct dimensions
+    if (currentBackgroundSystem) {
+      currentBackgroundSystem.initialize(dimensions, quality);
+
+      // Immediately draw one frame to ensure background is visible
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        currentBackgroundSystem.draw(ctx, dimensions);
+      }
+    }
+  }
+
+  // Handle resize - preserve existing content and smoothly adapt
+  function handleResize() {
+    console.log("CANVAS RESIZE: handleResize called");
+    if (!currentBackgroundSystem || !canvas) {
+      console.log("CANVAS RESIZE: early return - no system or canvas");
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    const newDimensions = { width: rect.width, height: rect.height };
+    const oldDimensions = { width: canvas.width, height: canvas.height };
+
+    console.log(
+      `CANVAS RESIZE: dimensions ${oldDimensions.width}x${oldDimensions.height} -> ${newDimensions.width}x${newDimensions.height}`
+    );
+
+    // Only resize if dimensions actually changed
+    if (
+      newDimensions.width === oldDimensions.width &&
+      newDimensions.height === oldDimensions.height
+    ) {
+      console.log("CANVAS RESIZE: no change in dimensions, skipping");
+      return;
+    }
+
+    // Store current canvas content if we need to preserve it
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    // Update canvas size (this will clear the canvas)
+    canvas.width = newDimensions.width;
+    canvas.height = newDimensions.height;
+
+    // Use handleResize method if available, otherwise just update
+    if (currentBackgroundSystem.handleResize) {
+      currentBackgroundSystem.handleResize(oldDimensions, newDimensions);
+    } else {
+      // Fallback to update method
+      currentBackgroundSystem.update(newDimensions);
+    }
+
+    // Immediately draw one frame to prevent showing blank/fallback content
+    currentBackgroundSystem.draw(ctx, newDimensions);
   }
 </script>
-
-<svelte:window on:resize={handleResize} />
 
 <canvas
   bind:this={canvas}
   class="background-canvas"
   class:initialized={isInitialized}
-  width="800"
-  height="600"
   aria-label="Background animation"
 >
   <!-- Fallback for non-canvas browsers -->

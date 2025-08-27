@@ -62,10 +62,6 @@
 
             const actualLength = realBeats.length;
 
-            console.log(
-              `📏 ${seq.word}: ${actualLength} beats (from metadata)`
-            );
-
             return {
               id: seq.word,
               name: seq.word,

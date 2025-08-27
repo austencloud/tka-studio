@@ -11,8 +11,11 @@
         "echo": true,
         "reveal": "always",
         "focus": false,
-        "panel": "new"
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
       },
+      "isBackground": true,
       "problemMatcher": []
     }
   ]

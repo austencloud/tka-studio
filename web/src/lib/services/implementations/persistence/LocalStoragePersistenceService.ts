@@ -5,7 +5,7 @@
  * This provides a simple persistence layer for sequences and settings.
  */
 
-import type { SequenceData } from "$lib/domain";
+import type { BeatData, SequenceData } from "$lib/domain";
 import { SequenceDataSchema } from "$lib/domain/schemas";
 import { safeParseOrNull } from "$lib/utils/validation";
 import { injectable } from "inversify";
@@ -16,6 +16,54 @@ export class LocalStoragePersistenceService implements IPersistenceService {
   private readonly CACHE_VERSION = "v2.1"; // ✅ ROBUST: Cache versioning
   private readonly SEQUENCES_KEY = `tka-${this.CACHE_VERSION}-sequences`;
   private readonly SEQUENCE_PREFIX = `tka-${this.CACHE_VERSION}-sequence-`;
+
+  /**
+   * Normalize beats array to ensure all required properties are present
+   */
+  private normalizeBeats(beats: unknown[]): BeatData[] {
+    return beats.map((beat: any) => ({
+      ...beat,
+      id: beat.id || crypto.randomUUID(),
+      duration: beat.duration || 1,
+      blueReversal: beat.blueReversal || false,
+      redReversal: beat.redReversal || false,
+      isBlank: beat.isBlank || false,
+    }));
+  }
+
+  /**
+   * Normalize a single beat to ensure all required properties are present
+   */
+  private normalizeBeat(beat: any): BeatData | undefined {
+    if (!beat) return undefined;
+    return {
+      ...beat,
+      id: beat.id || crypto.randomUUID(),
+      duration: beat.duration || 1,
+      blueReversal: beat.blueReversal || false,
+      redReversal: beat.redReversal || false,
+      isBlank: beat.isBlank || false,
+    };
+  }
+
+  /**
+   * Normalize a sequence to ensure all required properties are present
+   */
+  private normalizeSequence(sequence: any): SequenceData {
+    return {
+      ...sequence,
+      id: sequence.id || crypto.randomUUID(),
+      word: sequence.word || "",
+      beats: this.normalizeBeats(sequence.beats || []),
+      startingPositionBeat: this.normalizeBeat(sequence.startingPositionBeat),
+      startPosition: this.normalizeBeat(sequence.startPosition),
+      thumbnails: sequence.thumbnails || [],
+      tags: sequence.tags || [],
+      isFavorite: sequence.isFavorite || false,
+      isCircular: sequence.isCircular || false,
+      metadata: sequence.metadata || {},
+    };
+  }
 
   /**
    * Validate sequence data before storage operations
@@ -102,8 +150,12 @@ export class LocalStoragePersistenceService implements IPersistenceService {
               `sequence ${id}`
             );
 
-            if (validatedSequence && this.isValidSequence(validatedSequence)) {
-              sequences.push(validatedSequence);
+            if (validatedSequence) {
+              const normalizedSequence =
+                this.normalizeSequence(validatedSequence);
+              if (this.isValidSequence(normalizedSequence)) {
+                sequences.push(normalizedSequence);
+              }
             }
           } catch (error) {
             console.warn(`Skipping corrupted sequence ${id}:`, error);
@@ -193,11 +245,14 @@ export class LocalStoragePersistenceService implements IPersistenceService {
       const nowIso = new Date().toISOString();
       const metadata = {
         ...validatedSequence.metadata,
-        saved_at: (validatedSequence.metadata.saved_at as string) || nowIso,
+        saved_at: (validatedSequence.metadata?.saved_at as string) || nowIso,
         updated_at: nowIso,
       };
 
-      return { ...validatedSequence, metadata };
+      return this.normalizeSequence({
+        ...validatedSequence,
+        metadata,
+      });
     } else {
       throw new Error(
         "Invalid sequence data structure - failed Zod validation"

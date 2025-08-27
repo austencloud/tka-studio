@@ -21,9 +21,9 @@ import {
   GridMode,
 } from "$lib/domain/enums";
 import type { Letter } from "$lib/domain/Letter";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import type { IArrowPositioningOrchestrator } from "$lib/services/positioning";
-import { getPositioningServiceFactory } from "$lib/services/positioning/PositioningServiceFactory";
+import { TYPES } from "$lib/services/inversify/types";
 
 export interface ArrowPositionResult {
   x: number;
@@ -62,14 +62,10 @@ export interface IArrowPositioningService {
 
 @injectable()
 export class ArrowPositioningService implements IArrowPositioningService {
-  private orchestrator: IArrowPositioningOrchestrator;
-
-  constructor() {
-    // Use the singleton factory to get a properly configured orchestrator
-    // This prevents recreating placement services and reloading data on hot reload
-    const factory = getPositioningServiceFactory();
-    this.orchestrator = factory.createPositioningOrchestrator();
-  }
+  constructor(
+    @inject(TYPES.IArrowPositioningOrchestrator)
+    private orchestrator: IArrowPositioningOrchestrator
+  ) {}
 
   /**
    * Calculate arrow position using the sophisticated positioning pipeline

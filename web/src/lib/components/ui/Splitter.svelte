@@ -5,7 +5,7 @@ Provides drag-to-resize functionality between panels.
 Follows Svelte 5 runes pattern with clean event handling.
 -->
 <script lang="ts">
-  import type { ResizeDirection } from "$lib/services/interfaces/panel-interfaces";
+  // Direction can be "left" or "right" for horizontal splitters
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
@@ -16,7 +16,7 @@ Follows Svelte 5 runes pattern with clean event handling.
     onResizeMove = (deltaX: number) => {},
     onResizeEnd = () => {},
   } = $props<{
-    direction?: ResizeDirection;
+    direction?: "left" | "right";
     disabled?: boolean;
     thickness?: number;
     onResizeStart?: (startX: number) => void;

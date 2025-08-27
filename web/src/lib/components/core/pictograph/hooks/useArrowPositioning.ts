@@ -55,11 +55,6 @@ export function useArrowPositioning(
     }
 
     try {
-      console.log(
-        "🎯 useArrowPositioning: Starting position calculation for pictograph:",
-        pictographData.letter
-      );
-
       const newPositions: Record<
         string,
         { x: number; y: number; rotation: number }
@@ -75,10 +70,6 @@ export function useArrowPositioning(
           motionData.isVisible &&
           motionData.arrowPlacementData
         ) {
-          console.log(
-            `🏹 useArrowPositioning: Calculating position for ${color} arrow`
-          );
-
           try {
             // Use the actual ArrowPositioningService to calculate positions
             const positionResult = await positioningService.calculatePosition(
@@ -99,10 +90,6 @@ export function useArrowPositioning(
               rotation: positionResult.rotation,
             };
             newMirroring[color] = mirroringResult;
-
-            console.log(
-              `✅ useArrowPositioning: ${color} arrow positioned at (${positionResult.x}, ${positionResult.y}) rotation: ${positionResult.rotation}`
-            );
           } catch (error) {
             console.error(
               `❌ useArrowPositioning: Failed to calculate position for ${color} arrow:`,
@@ -119,11 +106,6 @@ export function useArrowPositioning(
           }
         }
       }
-
-      console.log(
-        "✅ useArrowPositioning: All positions calculated:",
-        newPositions
-      );
 
       return {
         positions: newPositions,

@@ -7,6 +7,7 @@
 
 import type {
   BeatData,
+  MotionData,
   SequenceData,
   PictographData,
   ValidationResult,
@@ -306,6 +307,8 @@ export interface IPropInterpolationService {
     beatProgress: number
   ): InterpolationResult;
   calculateInitialAngles(firstBeat: BeatData): InterpolationResult;
+  getMotionData(beatData: BeatData): { blue: MotionData; red: MotionData };
+  getEndpoints(beatData: BeatData): { blue: any; red: any };
 }
 
 /**

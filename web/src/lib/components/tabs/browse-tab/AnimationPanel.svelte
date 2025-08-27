@@ -9,6 +9,8 @@ Handles data loading, animation engine, and state management.
   import type { PropState } from "$lib/components/tabs/browse-tab/animator";
   import { AnimatorCanvas } from "$lib/components/tabs/browse-tab/animator";
   import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { ISequenceService } from "$lib/services/interfaces/sequence-interfaces";
+
   import type { ISequenceAnimationEngine } from "$lib/services/interfaces/application-interfaces";
   import type { PanelStateManager } from "$lib/state/panel-state.svelte";
   import { onDestroy } from "svelte";
@@ -32,7 +34,9 @@ Handles data loading, animation engine, and state management.
   }>();
 
   // Services
-  const sequenceService = resolve(TYPES.ISequenceService);
+  const sequenceService: ISequenceService = resolve<ISequenceService>(
+    TYPES.ISequenceService
+  );
 
   // ✅ DERIVED RUNES: Panel state
   let isVisible = $derived(panelState.isAnimationVisible);
@@ -44,7 +48,8 @@ Handles data loading, animation engine, and state management.
   let error = $state<string | null>(null);
 
   // Animation engine and state
-  let animationEngine = resolve(TYPES.ISequenceAnimationEngine);
+  const animationEngine: ISequenceAnimationEngine =
+    resolve<ISequenceAnimationEngine>(TYPES.ISequenceAnimationEngine);
   let currentBeat = $state(0);
   let isPlaying = $state(false);
   let speed = $state(1.0);

@@ -64,31 +64,38 @@ export class ParallaxStarSystem {
       mid: mkLayer("mid"),
       near: mkLayer("near"),
     };
+
+    // Set lastDimensions so future updates can detect changes
+    this.lastDimensions = dim;
   }
 
   update(dim: Dimensions, a11y: AccessibilitySettings) {
     if (!this.layers || Object.keys(this.layers).length === 0) {
       this.initialize(dim, a11y);
+      return;
+    }
+
+    // Handle dimension changes smoothly
+    if (
+      this.lastDimensions &&
+      (dim.width !== this.lastDimensions.width ||
+        dim.height !== this.lastDimensions.height)
+    ) {
+      this.adaptToNewDimensions(dim, a11y);
       this.lastDimensions = dim;
       return;
     }
 
-    // Check if dimensions have changed significantly (requiring reinitialization)
-    const dimensionsChanged =
-      !this.lastDimensions ||
-      Math.abs(dim.width - this.lastDimensions.width) > 50 ||
-      Math.abs(dim.height - this.lastDimensions.height) > 50;
-
-    if (dimensionsChanged) {
-      this.initialize(dim, a11y);
-      this.lastDimensions = dim;
-      return;
-    }
-
+    // Regular animation updates
     (["far", "mid", "near"] as Array<keyof typeof this.layers>).forEach(
       (key) => {
         const L = this.layers[key];
         if (L && L.stars && Array.isArray(L.stars)) {
+          // Update drift values for current dimensions
+          const pCfg = this.config[key];
+          L.driftX = pCfg.drift * dim.width;
+          L.driftY = pCfg.drift * dim.height;
+
           L.stars.forEach((s: Star) => {
             s.x =
               (s.x + L.driftX * (a11y.reducedMotion ? 0.3 : 1) + dim.width) %
@@ -132,6 +139,69 @@ export class ParallaxStarSystem {
       }
     );
     ctx.globalAlpha = 1;
+  }
+
+  /**
+   * Smoothly adapt existing stars to new dimensions instead of regenerating them
+   */
+  private adaptToNewDimensions(
+    newDim: Dimensions,
+    a11y: AccessibilitySettings
+  ) {
+    if (!this.lastDimensions) {
+      this.initialize(newDim, a11y);
+      return;
+    }
+
+    const scaleX = newDim.width / this.lastDimensions.width;
+    const scaleY = newDim.height / this.lastDimensions.height;
+
+    (["far", "mid", "near"] as Array<keyof typeof this.layers>).forEach(
+      (key) => {
+        const layer = this.layers[key];
+        const pCfg = this.config[key];
+
+        if (layer && layer.stars && Array.isArray(layer.stars)) {
+          // Redistribute existing stars to new dimensions
+          this.redistributeStars(layer.stars, newDim, scaleX, scaleY);
+
+          // Update drift values for new dimensions
+          layer.driftX = pCfg.drift * newDim.width;
+          layer.driftY = pCfg.drift * newDim.height;
+        }
+      }
+    );
+  }
+
+  /**
+   * Smoothly redistribute stars when canvas dimensions change
+   */
+  private redistributeStars(
+    stars: Star[],
+    newDim: Dimensions,
+    scaleX: number,
+    scaleY: number
+  ) {
+    // Scale all star positions proportionally
+    stars.forEach((star) => {
+      star.x = star.x * scaleX;
+      star.y = star.y * scaleY;
+    });
+
+    // Handle stars that are now out of bounds
+    stars.forEach((star) => {
+      // Wrap stars that went out of bounds back into the visible area
+      if (star.x >= newDim.width) {
+        star.x = star.x % newDim.width;
+      }
+      if (star.y >= newDim.height) {
+        star.y = star.y % newDim.height;
+      }
+
+      // Ensure no negative coordinates
+      if (star.x < 0) star.x = 0;
+      if (star.y < 0) star.y = 0;
+    });
   }
 
   getNearStars(): Star[] {

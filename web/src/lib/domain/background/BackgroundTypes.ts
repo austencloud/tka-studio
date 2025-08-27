@@ -131,7 +131,7 @@ export interface Star {
   color: string;
 }
 
-export interface CelestialBody {
+export interface Moon {
   x: number;
   y: number;
   radius: number;

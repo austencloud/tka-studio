@@ -107,7 +107,6 @@ export const TYPES = {
   IOptionFilteringService: Symbol.for("IOptionFilteringService"),
 
   // === ANIMATOR SERVICES ===
-  IAnimatorService: Symbol.for("IAnimatorService"),
   ISequenceAnimationEngine: Symbol.for("ISequenceAnimationEngine"),
   ISequenceAnimationOrchestrator: Symbol.for("ISequenceAnimationOrchestrator"),
 
@@ -119,7 +118,6 @@ export const TYPES = {
   // === SHARED SERVICES ===
   IEnumMappingService: Symbol.for("IEnumMappingService"),
   ICSVParsingService: Symbol.for("ICSVParsingService"),
-  IValidationService: Symbol.for("IValidationService"),
 
   // === ADDITIONAL SERVICES ===
   IMotionQueryService: Symbol.for("IMotionQueryService"),
@@ -138,7 +136,7 @@ export const TYPES = {
   IMotionCalculationService: Symbol.for("IMotionCalculationService"),
   IEndpointCalculationService: Symbol.for("IEndpointCalculationService"),
   ICoordinateUpdateService: Symbol.for("ICoordinateUpdateService"),
-  IImageExportServices: Symbol.for("IImageExportServices"),
+
   IAnimatedPictographDataService: Symbol.for("IAnimatedPictographDataService"),
   IBackgroundService: Symbol.for("IBackgroundService"),
   IBrowseStatePersistenceService: Symbol.for("IBrowseStatePersistenceService"),
@@ -156,12 +154,32 @@ export const TYPES = {
 
   // === MISSING TYPES ===
   IArrowPathResolutionService: Symbol.for("IArrowPathResolutionService"),
-  IUltimateArrowRenderingService: Symbol.for("IUltimateArrowRenderingService"),
-  IUltimatePropRenderingService: Symbol.for("IUltimatePropRenderingService"),
+
   IUltimatePictographRenderingService: Symbol.for(
     "IUltimatePictographRenderingService"
   ),
-  ICSVLoaderService: Symbol.for("ICSVLoaderService"),
+
+  // === MISSING ARROW POSITIONING TYPES ===
+  IDirectionCalculator: Symbol.for("IDirectionCalculator"),
+  IArrowLocationCalculator: Symbol.for("IArrowLocationCalculator"),
+  IArrowRotationCalculator: Symbol.for("IArrowRotationCalculator"),
+  IArrowCoordinateSystemService: Symbol.for("IArrowCoordinateSystemService"),
+  ISpecialPlacementService: Symbol.for("ISpecialPlacementService"),
+  IDefaultPlacementService: Symbol.for("IDefaultPlacementService"),
+  ISpecialPlacementOriKeyGenerator: Symbol.for(
+    "ISpecialPlacementOriKeyGenerator"
+  ),
+  ArrowPlacementKeyService: Symbol.for("ArrowPlacementKeyService"),
+  ITurnsTupleKeyGenerator: Symbol.for("ITurnsTupleKeyGenerator"),
+  IAttributeKeyGenerator: Symbol.for("IAttributeKeyGenerator"),
+  IDirectionalTupleProcessor: Symbol.for("IDirectionalTupleProcessor"),
+
+  // === MISSING IMAGE EXPORT TYPES ===
+  IWordTextRenderer: Symbol.for("IWordTextRenderer"),
+  IUserInfoRenderer: Symbol.for("IUserInfoRenderer"),
+  IDifficultyBadgeRenderer: Symbol.for("IDifficultyBadgeRenderer"),
+  ITextRenderingUtils: Symbol.for("ITextRenderingUtils"),
+  ITextRenderingService: Symbol.for("ITextRenderingService"),
 } as const;
 
 // Type helper for getting service types

@@ -1,13 +1,13 @@
-// src/lib/components/backgrounds/systems/nightSky/CelestialBodySystem.ts
+// src/lib/components/backgrounds/systems/nightSky/MoonSystem.ts
 import { NightSkyUtils } from "./NightSkyUtils";
 import type {
   AccessibilitySettings,
-  CelestialBody,
+  Moon,
   Dimensions,
   QualityLevel,
 } from "$lib/domain/background/BackgroundTypes";
 
-export interface CelestialBodyConfig {
+export interface MoonConfig {
   radiusPercent: number;
   maxRadiusPx: number;
   color: string;
@@ -21,15 +21,13 @@ export interface BackgroundGradientStop {
   color: string;
 }
 
-export class CelestialBodySystem {
-  private celestialBody: CelestialBody | null = null;
-  private config: CelestialBodyConfig;
+export class MoonSystem {
+  private Moon: Moon | null = null;
+  private config: MoonConfig;
   private gradientStops: BackgroundGradientStop[];
+  private lastDimensions: Dimensions | null = null;
 
-  constructor(
-    config: CelestialBodyConfig,
-    gradientStops: BackgroundGradientStop[]
-  ) {
+  constructor(config: MoonConfig, gradientStops: BackgroundGradientStop[]) {
     this.config = config;
     this.gradientStops = gradientStops;
   }
@@ -38,9 +36,9 @@ export class CelestialBodySystem {
     dim: Dimensions,
     quality: QualityLevel,
     a11y: AccessibilitySettings
-  ): CelestialBody | null {
+  ): Moon | null {
     if (!this.config.enabledOnQuality.includes(quality)) {
-      this.celestialBody = null;
+      this.Moon = null;
       return null;
     }
 
@@ -52,7 +50,7 @@ export class CelestialBodySystem {
 
     const moonIlluminationData = NightSkyUtils.getMoonIllumination(new Date());
 
-    this.celestialBody = {
+    this.Moon = {
       x: dim.width * this.config.position.x,
       y: dim.height * this.config.position.y,
       radius: radius,
@@ -66,13 +64,28 @@ export class CelestialBodySystem {
       },
     };
 
-    return this.celestialBody;
+    // Set lastDimensions so future updates can detect changes
+    this.lastDimensions = dim;
+
+    return this.Moon;
   }
 
   update(dim: Dimensions, a11y: AccessibilitySettings) {
-    if (!this.celestialBody) return;
+    if (!this.Moon) return;
 
-    const b = this.celestialBody;
+    // Handle dimension changes smoothly
+    if (
+      this.lastDimensions &&
+      (dim.width !== this.lastDimensions.width ||
+        dim.height !== this.lastDimensions.height)
+    ) {
+      this.handleResize(this.lastDimensions, dim);
+      this.lastDimensions = dim;
+      return;
+    }
+
+    // Regular animation updates (drift movement)
+    const b = this.Moon;
     const effectiveDriftSpeed = a11y.reducedMotion ? 0.1 : 1;
     b.x = (b.x + (b.driftX || 0) * effectiveDriftSpeed + dim.width) % dim.width;
     b.y =
@@ -86,8 +99,33 @@ export class CelestialBodySystem {
     }
   }
 
+  /**
+   * Handle canvas resize by scaling the celestial body position proportionally
+   */
+  private handleResize(oldDim: Dimensions, newDim: Dimensions) {
+    if (!this.Moon) return;
+
+    const scaleX = newDim.width / oldDim.width;
+    const scaleY = newDim.height / oldDim.height;
+
+    // Scale the celestial body position proportionally
+    this.Moon.x = this.Moon.x * scaleX;
+    this.Moon.y = this.Moon.y * scaleY;
+
+    // Update drift values for new dimensions
+    this.Moon.driftX = (this.Moon.driftX || 0) * scaleX;
+    this.Moon.driftY = (this.Moon.driftY || 0) * scaleY;
+
+    // Recalculate radius based on new dimensions
+    const baseSize = Math.min(newDim.width, newDim.height);
+    this.Moon.radius = Math.min(
+      baseSize * this.config.radiusPercent,
+      this.config.maxRadiusPx
+    );
+  }
+
   draw(ctx: CanvasRenderingContext2D, a11y: AccessibilitySettings) {
-    const b = this.celestialBody;
+    const b = this.Moon;
     if (!b || !b.illumination) return;
 
     const { x, y, radius, color } = b;
@@ -180,11 +218,11 @@ export class CelestialBodySystem {
     ctx.restore();
   }
 
-  getCelestialBody(): CelestialBody | null {
-    return this.celestialBody;
+  getMoon(): Moon | null {
+    return this.Moon;
   }
 
   cleanup() {
-    this.celestialBody = null;
+    this.Moon = null;
   }
 }

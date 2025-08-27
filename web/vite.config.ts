@@ -17,7 +17,6 @@ export default defineConfig({
     include: ["@sveltejs/kit"],
   },
   server: {
-    port: 5173,
     host: "0.0.0.0", // Bind to all interfaces (IPv4 and IPv6)
     open: false, // Don't auto-open so debugger can control it
     fs: {

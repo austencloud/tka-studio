@@ -14,6 +14,7 @@ import type {
   IOverlayRenderingService,
   ISvgUtilityService,
 } from "../interfaces/pictograph-interfaces";
+import type { IArrowPositioningOrchestrator } from "../positioning/core-services";
 import { resolve, TYPES } from "../inversify/container";
 
 /**
@@ -36,11 +37,10 @@ export async function renderPictograph(
     );
     const gridModeService = resolve<IGridModeDeriver>(TYPES.IGridModeDeriver);
 
-    // Get arrow positioning from factory (same pattern as before)
-    // Note: Using dynamic import to match existing container pattern
-    const positioningModule = await import("../positioning/factory");
-    const factory = positioningModule.getPositioningServiceFactory();
-    const arrowPositioning = factory.createPositioningOrchestrator();
+    // Get arrow positioning from InversifyJS container
+    const arrowPositioning: IArrowPositioningOrchestrator = resolve(
+      TYPES.IArrowPositioningOrchestrator
+    );
 
     // Create base SVG
     const svg = svgUtility.createBaseSVG();

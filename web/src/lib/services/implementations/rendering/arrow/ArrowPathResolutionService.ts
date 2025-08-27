@@ -27,14 +27,6 @@ export class ArrowPathResolutionService implements IArrowPathResolutionService {
     const { motionType, turns } = motionData;
     const baseDir = `/images/arrows/${motionType}`;
 
-    console.log("🔍 ArrowPathResolutionService: Resolving path for motion:", {
-      motionType,
-      turns,
-      turnsType: typeof turns,
-      arrowData,
-      motionData,
-    });
-
     // For motion types that have turn-based subdirectories (pro, anti, static)
     if (["pro", "anti", "static"].includes(motionType)) {
       // Determine if we should use radial vs non-radial arrows
@@ -53,13 +45,11 @@ export class ArrowPathResolutionService implements IArrowPathResolutionService {
       const turnValue = typeof turns === "number" ? turns.toFixed(1) : "0.0";
       const path = `${baseDir}/${subDir}/${motionType}_${turnValue}.svg`;
 
-      console.log("✅ ArrowPathResolutionService: Generated path:", path);
       return path;
     }
 
     // For simple motion types (dash, float) - use base directory
     const path = `${baseDir}.svg`;
-    console.log("✅ ArrowPathResolutionService: Generated simple path:", path);
     return path;
   }
 

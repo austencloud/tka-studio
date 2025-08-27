@@ -98,7 +98,7 @@ Provides three-section layout with:
   <!-- Splitter between center and animation (only when animation panel is visible) -->
   {#if showRightPanel}
     <Splitter
-      direction="left"
+      direction="right"
       disabled={panelState.isAnimationCollapsed}
       onResizeStart={handleAnimationResizeStart}
       onResizeMove={handleAnimationResizeMove}

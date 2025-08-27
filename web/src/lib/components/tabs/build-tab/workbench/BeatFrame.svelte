@@ -127,16 +127,6 @@
       lastCellSize = layoutInfo.cellSize;
       lastColumns = layoutInfo.columns;
 
-      // DEBUG: Log layout info changes
-      console.log("[MODERN] Layout info updated:", {
-        cellSize: layoutInfo.cellSize,
-        columns: layoutInfo.columns,
-        beatCount: beats.length,
-        containerDimensions: beatFrameState.containerDimensions,
-        frameDimensions,
-        shouldScroll: layoutInfo.shouldScroll,
-      });
-
       // Only update if significantly different to prevent micro-adjustments
       if (Math.abs(layoutInfo.cellSize - beatFrameState.config.beatSize) > 1) {
         beatFrameState.setConfig({

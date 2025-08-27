@@ -105,34 +105,19 @@ export class PropPlacementService implements IPropPlacementService {
     const needsBetaOffset = endsWithBeta(pictographData);
 
     if (!needsBetaOffset) {
-      console.log(
-        `🔍 Beta offset: Pictograph does not end with beta, no offset needed`
-      );
       return { x: 0, y: 0 };
     }
-
-    console.log(
-      `🔍 Beta offset: Pictograph ends with beta, calculating offset for ${motionData.color}`
-    );
 
     const redMotion = pictographData.motions?.red;
     const blueMotion = pictographData.motions?.blue;
 
     if (!redMotion || !blueMotion) {
-      console.log("🔍 Beta offset: Missing motion data, no offset needed");
       return { x: 0, y: 0 };
     }
 
     if (redMotion.endLocation !== blueMotion.endLocation) {
-      console.log(
-        `🔍 Beta offset: Props end at different locations (red: ${redMotion.endLocation}, blue: ${blueMotion.endLocation}), no offset needed`
-      );
       return { x: 0, y: 0 };
     }
-
-    console.log(
-      `🔍 Beta offset: Both props end at ${redMotion.endLocation}, calculating separation`
-    );
 
     if (!propPlacement) {
       throw new Error(
@@ -154,19 +139,11 @@ export class PropPlacementService implements IPropPlacementService {
       );
     }
 
-    console.log(
-      `🔍 Beta offset: Calculated direction for ${motionData.color}: ${direction}`
-    );
-
     const offsetCalculator = new BetaOffsetCalculator();
     const basePosition = { x: 0, y: 0 };
     const newPosition = offsetCalculator.calculateNewPositionWithOffset(
       basePosition,
       direction
-    );
-
-    console.log(
-      `🔍 Beta offset: Final offset for ${motionData.color}: x=${newPosition.x}, y=${newPosition.y}`
     );
 
     return { x: newPosition.x, y: newPosition.y };

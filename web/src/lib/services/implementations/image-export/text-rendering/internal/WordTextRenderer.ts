@@ -12,7 +12,9 @@ import {
   measureTextWithKerning,
   renderTextWithKerning,
 } from "./TextRenderingTypes";
+import { injectable } from "inversify";
 
+@injectable()
 export class WordTextRenderer implements IWordTextRenderer {
   // Font constants matching desktop application
   private static readonly WORD_FONT_FAMILY = "Georgia";

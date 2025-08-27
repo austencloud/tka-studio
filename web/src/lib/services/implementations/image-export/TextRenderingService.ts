@@ -24,13 +24,18 @@ import type {
   IUserInfoRenderer,
   IWordTextRenderer,
 } from "../../interfaces/text-rendering-interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
+@injectable()
 export class TextRenderingService implements ITextRenderingService {
   constructor(
-    private wordRenderer: IWordTextRenderer,
+    @inject(TYPES.IWordTextRenderer) private wordRenderer: IWordTextRenderer,
+    @inject(TYPES.IUserInfoRenderer)
     private userInfoRenderer: IUserInfoRenderer,
+    @inject(TYPES.IDifficultyBadgeRenderer)
     private difficultyRenderer: IDifficultyBadgeRenderer,
-    private textUtils: ITextRenderingUtils
+    @inject(TYPES.ITextRenderingUtils) private textUtils: ITextRenderingUtils
   ) {}
 
   /**

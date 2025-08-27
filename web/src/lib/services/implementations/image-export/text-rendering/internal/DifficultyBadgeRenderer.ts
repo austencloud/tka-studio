@@ -7,7 +7,9 @@
 
 import type { IDifficultyBadgeRenderer } from "../../../../interfaces/text-rendering-interfaces";
 import { createFont } from "./TextRenderingTypes";
+import { injectable } from "inversify";
 
+@injectable()
 export class DifficultyBadgeRenderer implements IDifficultyBadgeRenderer {
   // Font constants matching desktop application
   private static readonly DIFFICULTY_FONT_FAMILY = "Georgia";

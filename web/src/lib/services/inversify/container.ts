@@ -153,6 +153,16 @@ import { DimensionCalculationService } from "../implementations/image-export/Dim
 import { ImageFormatConverterService } from "../implementations/conversion/ImageFormatConverterService";
 import { SVGToCanvasConverterService } from "../implementations/conversion/SVGToCanvasConverterService";
 
+// Import text rendering services
+import { WordTextRenderer } from "../implementations/image-export/text-rendering/internal/WordTextRenderer";
+import { UserInfoRenderer } from "../implementations/image-export/text-rendering/internal/UserInfoRenderer";
+import { DifficultyBadgeRenderer } from "../implementations/image-export/text-rendering/internal/DifficultyBadgeRenderer";
+import { TextRenderingUtils } from "../implementations/image-export/text-rendering/internal/TextRenderingUtils";
+import { TextRenderingService } from "../implementations/image-export/TextRenderingService";
+
+// Import start position services
+import { StartPositionSelectionService } from "../implementations/StartPositionSelectionService";
+
 console.log("✅ TKA Container: Initializing dependency injection container");
 
 // Create container
@@ -259,8 +269,19 @@ try {
   container.bind(TYPES.IImageCompositionService).to(ImageCompositionService);
   container.bind(TYPES.IImagePreviewGenerator).to(ImagePreviewGenerator);
   container.bind(TYPES.ILayoutCalculationService).to(LayoutCalculationService);
-  // container.bind(TYPES.ITextRenderingService).to(TextRenderingService); // TODO: Add to TYPES
   container.bind(TYPES.ITKAImageExportService).to(TKAImageExportService);
+
+  // Bind text rendering services
+  container.bind(TYPES.IWordTextRenderer).to(WordTextRenderer);
+  container.bind(TYPES.IUserInfoRenderer).to(UserInfoRenderer);
+  container.bind(TYPES.IDifficultyBadgeRenderer).to(DifficultyBadgeRenderer);
+  container.bind(TYPES.ITextRenderingUtils).to(TextRenderingUtils);
+  container.bind(TYPES.ITextRenderingService).to(TextRenderingService);
+
+  // Bind start position services
+  container
+    .bind(TYPES.IStartPositionSelectionService)
+    .to(StartPositionSelectionService);
 
   // Bind navigation services
   container.bind(TYPES.INavigationService).to(NavigationService);

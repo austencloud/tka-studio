@@ -6,7 +6,9 @@
 
 import type { ITextRenderingUtils } from "../../../../interfaces/text-rendering-interfaces";
 import { createFont } from "./TextRenderingTypes";
+import { injectable } from "inversify";
 
+@injectable()
 export class TextRenderingUtils implements ITextRenderingUtils {
   /**
    * Calculate text dimensions for layout planning

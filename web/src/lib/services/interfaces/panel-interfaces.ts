@@ -13,6 +13,18 @@ export interface IPanelManagementService {
   startResize(operation: ResizeOperation): void;
   endResize(): void;
   isResizing(): boolean;
+
+  // Additional methods used by panel-state.svelte.ts
+  onPanelStateChanged(
+    callback: (panelId: string, state: PanelState) => void
+  ): void;
+  offPanelStateChanged(
+    callback: (panelId: string, state: PanelState) => void
+  ): void;
+  togglePanelCollapse(panelId: string): void;
+  setPanelVisible(panelId: string, visible: boolean): void;
+  setPanelWidth(panelId: string, width: number): void;
+  loadPanelStates(): void;
 }
 
 export interface PanelState {

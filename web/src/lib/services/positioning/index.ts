@@ -8,6 +8,6 @@
 // Re-export all types and interfaces
 export * from "./core-services";
 export * from "./data-services";
-export * from "./factory";
+// export * from "./factory"; // Temporarily disabled due to missing exports
 export * from "./placement-services";
 export * from "./types";

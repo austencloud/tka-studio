@@ -242,7 +242,7 @@ export {
   ITextRenderingUtilsInterface,
   IUserInfoRendererInterface,
   IWordTextRendererInterface,
-} from "../di/interfaces/image-export-interfaces";
+} from "./image-export-interfaces";
 
 // ============================================================================
 // PANEL INTERFACES

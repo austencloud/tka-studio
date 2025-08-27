@@ -59,7 +59,7 @@ export const NightSkyConfig = {
       | "minimal"
     )[],
   },
-  celestialBody: {
+  Moon: {
     radiusPercent: 0.04,
     maxRadiusPx: 60,
     color: "#f5f5dc",
@@ -124,7 +124,7 @@ export const NightSkyConfig = {
   },
   animation: {
     starDriftSpeed: 0.1,
-    celestialBodyDriftSpeed: 0.05,
+    MoonDriftSpeed: 0.05,
     parallaxMultiplier: 0.3,
   },
 };
