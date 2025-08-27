@@ -191,11 +191,11 @@ export class CSVParserService implements ICSVParserService {
       blueMotionType: row.blueMotionType || "",
       blueRotationDirection: row.blueRotationDirection || "",
       blueStartLocation: row.blueStartLocation || row.blueStartLoc || "", // Handle variations
-      blueEndLocation: row.blueEndLocation || row.blueendLocation || "", // Handle variations
+      blueEndLocation: row.blueEndLocation || row.blueEndLocation || "", // Handle variations
       redMotionType: row.redMotionType || "",
       redRotationDirection: row.redRotationDirection || "",
       redStartLocation: row.redStartLocation || row.redStartLoc || "", // Handle variations
-      redEndLocation: row.redEndLocation || row.redendLocation || "", // Handle variations
+      redEndLocation: row.redEndLocation || row.redEndLocation || "", // Handle variations
       ...row, // Include all other fields
     } as ParsedCsvRow;
   }
@@ -222,7 +222,7 @@ export class CSVParserService implements ICSVParserService {
       ],
       blueEndLocation: [
         "blueEndLocation",
-        "blueendLocation",
+        "blueEndLocation",
         "blue_end_location",
       ],
       redStartLocation: [
@@ -230,7 +230,7 @@ export class CSVParserService implements ICSVParserService {
         "redStartLoc",
         "red_start_location",
       ],
-      redEndLocation: ["redEndLocation", "redendLocation", "red_end_location"],
+      redEndLocation: ["redEndLocation", "redEndLocation", "red_end_location"],
     };
 
     for (const [standardName, variants] of Object.entries(variations)) {

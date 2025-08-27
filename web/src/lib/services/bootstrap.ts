@@ -6,7 +6,6 @@
  * pattern established in the desktop application.
  */
 
-import { serviceInterfaceMap } from "./di/service-registry";
 import { ServiceContainer } from "./di/ServiceContainer";
 import type { ServiceInterface } from "./di/types";
 
@@ -20,8 +19,7 @@ import { registerAnimatorServices } from "./di/registration/animator-services";
 import { registerBackgroundServices } from "./di/registration/background-services";
 import { registerCodexServices } from "./di/registration/codex-services";
 import { registerGenerationServices } from "./di/registration/generation-services";
-import { registerImageExportServices } from "./di/registration/image-export-services";
-import { registerPictographServices } from "./di/registration/movement-services";
+
 import { registerSequenceCardExportServices } from "./di/registration/sequence-card-export-services";
 
 /**
@@ -41,9 +39,9 @@ export async function createWebApplication(): Promise<ServiceContainer> {
     await registerBackgroundServices(container);
     await registerBrowseServices(container);
 
-    await registerPictographServices(container);
     await registerGenerationServices(container);
-    await registerImageExportServices(container);
+    // ⚠️ TEMPORARILY DISABLED: Image export services still use old DI system
+    // await registerImageExportServices(container);
     await registerSequenceCardExportServices(container);
 
     // Temporarily disable validation to fix infinite loop
@@ -86,28 +84,13 @@ export function setGlobalContainer(container: ServiceContainer | null): void {
 }
 
 /**
- * Helper function to resolve services from the global container
+ * DISABLED: Legacy DI system - use InversifyJS instead
  */
-export function resolve<T>(serviceInterface: ServiceInterface<T> | string): T {
-  const container = getContainer();
-
-  if (typeof serviceInterface === "string") {
-    // Legacy string-based resolution for backward compatibility
-    const mappedInterface = serviceInterfaceMap.get(serviceInterface);
-    if (!mappedInterface) {
-      console.error(
-        `❌ Service interface not found for key: ${serviceInterface}`
-      );
-      console.error(
-        `❌ Available service keys:`,
-        Array.from(serviceInterfaceMap.keys())
-      );
-      throw new Error(
-        `Service interface not found for key: ${serviceInterface}`
-      );
-    }
-    return container.resolve(mappedInterface) as T;
-  }
-
-  return container.resolve(serviceInterface);
+export function legacyResolve<T>(
+  serviceInterface: ServiceInterface<T> | string
+): T {
+  throw new Error(
+    `🚨 LEGACY DI SYSTEM DISABLED! Service "${serviceInterface}" must use InversifyJS container instead. ` +
+      `Import { resolve, TYPES } from "$lib/services/inversify/container" and use resolve(TYPES.ServiceName)`
+  );
 }

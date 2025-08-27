@@ -57,17 +57,25 @@
 <style>
   .sequence-card {
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: var(--border-radius-md);
     overflow: hidden;
-    transition: transform 0.2s ease;
+    transition: all var(--transition-normal);
     background: white;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     /* No forced aspect ratio - let the actual sequence image determine size */
   }
 
   .sequence-card:hover {
-    transform: scale(1.02);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.02) translateY(-2px);
+    box-shadow:
+      0 4px 16px rgba(0, 0, 0, 0.15),
+      0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .sequence-card:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
   }
 
   .sequence-image {
@@ -80,27 +88,30 @@
   .image-fallback {
     width: 100%;
     height: 100%;
-    background: #f5f5f5;
-    border: 1px solid #ddd;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 120px;
   }
 
   .fallback-content {
     text-align: center;
-    padding: 16px;
-    color: #666;
+    padding: var(--spacing-lg);
+    color: var(--text-color);
   }
 
   .sequence-name {
-    font-size: 12px;
+    font-size: var(--font-size-sm);
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-color);
   }
 
   .beat-count {
-    font-size: 10px;
-    color: #999;
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
   }
 </style>

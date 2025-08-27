@@ -1,12 +1,11 @@
 /**
  * SvelteKit Client Hooks
- * 
- * This file handles client-side initialization, including
- * the InversifyJS container setup.
+ *
+ * This file handles client-side initialization.
+ * The InversifyJS container is self-initializing when imported.
  */
 
 import "reflect-metadata";
-import { initializeInversifyContainer } from "$lib/services/inversify/bootstrap";
 
 /**
  * Initialize the application on the client side
@@ -14,10 +13,10 @@ import { initializeInversifyContainer } from "$lib/services/inversify/bootstrap"
 async function initializeClient() {
   try {
     console.log("🚀 Initializing TKA client application...");
-    
-    // Initialize the InversifyJS container
-    await initializeInversifyContainer();
-    
+
+    // The InversifyJS container is self-initializing when imported by the layout
+    // No need to explicitly initialize it here to avoid circular dependencies
+
     console.log("✅ TKA client application initialized successfully");
   } catch (error) {
     console.error("❌ Failed to initialize TKA client application:", error);

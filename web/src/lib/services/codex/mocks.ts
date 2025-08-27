@@ -180,7 +180,7 @@ export class MockLessonRepository implements ILessonRepository {
     // Remove excluded letters
     if (lesson.excludedLetters && lesson.excludedLetters.length > 0) {
       letters = letters.filter(
-        (letter) => !lesson.excludedLetters!.includes(letter)
+        (letter) => !(lesson.excludedLetters ?? []).includes(letter)
       );
     }
 

@@ -83,8 +83,11 @@
     width: 100%;
     gap: var(--spacing-md);
     padding: var(--spacing-md);
-    background: rgba(20, 20, 30, 0.2);
-    border-radius: 8px;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     overflow: hidden;
     transition: all var(--transition-normal);
   }
@@ -127,14 +130,15 @@
   }
 
   .no-act-state h3 {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-color);
     font-size: var(--font-size-xl);
     margin: 0;
     font-family: "Segoe UI", sans-serif;
+    text-shadow: var(--text-shadow-glass);
   }
 
   .no-act-state p {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-secondary);
     font-size: var(--font-size-base);
     margin: 0;
     line-height: 1.5;

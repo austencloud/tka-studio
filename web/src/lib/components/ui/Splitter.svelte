@@ -5,7 +5,7 @@ Provides drag-to-resize functionality between panels.
 Follows Svelte 5 runes pattern with clean event handling.
 -->
 <script lang="ts">
-  import type { ResizeDirection } from "$lib/services/di/interfaces/panel-interfaces";
+  import type { ResizeDirection } from "$lib/services/interfaces/panel-interfaces";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

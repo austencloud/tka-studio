@@ -6,7 +6,9 @@
  */
 
 import type { SequenceData } from "$lib/domain";
+import { injectable, inject } from "inversify";
 import { GridMode } from "$lib/domain";
+import { TYPES } from "$lib/services/inversify/types";
 import type {
   BeatClickResult,
   BeatEditResult,
@@ -17,10 +19,13 @@ import type {
   WorkbenchMode,
 } from "$lib/services/interfaces/workbench-interfaces";
 
+@injectable()
 export class WorkbenchCoordinationService
   implements IWorkbenchCoordinationService
 {
-  constructor(private workbenchService: IWorkbenchService) {}
+  constructor(
+    @inject(TYPES.IWorkbenchService) private workbenchService: IWorkbenchService
+  ) {}
 
   // ============================================================================
   // SERVICE COORDINATION

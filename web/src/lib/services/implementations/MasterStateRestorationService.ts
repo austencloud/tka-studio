@@ -6,9 +6,8 @@
  */
 
 import { browser } from "$app/environment";
-import type { TabId } from "$lib/state/services/state-service-interfaces";
 import type { BrowseStatePersistenceService } from "./browse/BrowseStatePersistenceService";
-import type { tabStateService } from "$lib/state/services/TabStateService.svelte";
+import type { ItabStateService } from "$lib/state/services/state-service-interfaces";
 
 // ============================================================================
 // RESTORATION CONFIGURATION
@@ -52,7 +51,7 @@ export class MasterStateRestorationService {
   private scrollRestorationQueue: ScrollRestorationData[] = [];
 
   constructor(
-    private tabStateService: any,
+    private tabStateService: ItabStateService,
     private browseStatePersistence: BrowseStatePersistenceService
     // Add other state services as needed
   ) {
@@ -485,7 +484,7 @@ export function getMasterRestorationService(dependencies?: {
  * Call this in your app startup (e.g., in +layout.svelte or app initialization)
  */
 export async function initializeStateRestoration(dependencies: {
-  tabStateService: any;
+  tabStateService: ItabStateService;
   browseStatePersistence: BrowseStatePersistenceService;
 }): Promise<CompleteRestorationResult> {
   const restorationService = getMasterRestorationService(dependencies);

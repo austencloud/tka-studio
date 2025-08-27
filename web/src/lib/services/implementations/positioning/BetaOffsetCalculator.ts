@@ -6,6 +6,10 @@
  */
 
 import type { Direction } from "./BetaPropDirectionCalculator";
+import type {
+  IBetaOffsetCalculator,
+  Position,
+} from "../../interfaces/positioning-interfaces";
 import { injectable } from "inversify";
 import {
   UP,
@@ -18,13 +22,8 @@ import {
   DOWNLEFT,
 } from "./BetaPropDirectionCalculator";
 
-export interface Position {
-  x: number;
-  y: number;
-}
-
 @injectable()
-export class BetaOffsetCalculator {
+export class BetaOffsetCalculator implements IBetaOffsetCalculator {
   // Standard offset distance (matches legacy 25 pixel separation)
   private readonly OFFSET_DISTANCE = 25;
 

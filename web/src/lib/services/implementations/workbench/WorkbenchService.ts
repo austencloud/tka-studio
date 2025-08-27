@@ -6,6 +6,7 @@
  */
 
 import type { BeatData, PictographData, SequenceData } from "$lib/domain";
+import { injectable } from "inversify";
 import { createBeatData, createPictographData, GridMode } from "$lib/domain";
 import { Letter } from "$lib/domain/Letter";
 import type {
@@ -17,6 +18,7 @@ import type {
   WorkbenchMode,
 } from "$lib/services/interfaces/workbench-interfaces";
 
+@injectable()
 export class WorkbenchService implements IWorkbenchService {
   // ============================================================================
   // INITIALIZATION

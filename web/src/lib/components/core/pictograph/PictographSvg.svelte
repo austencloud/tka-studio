@@ -8,7 +8,7 @@ and leaves state management to the parent component.
 <script lang="ts">
   import type { MotionColor, MotionData, PictographData } from "$lib/domain";
   import { GridMode } from "$lib/domain/enums";
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
   // ✅ REMOVED: Beta calculation imports - now handled in PropPlacementService
 
@@ -70,7 +70,9 @@ and leaves state management to the parent component.
       }
 
       try {
-        const gridModeService = resolve<IGridModeDeriver>("IGridModeDeriver");
+        const gridModeService = resolve<IGridModeDeriver>(
+          TYPES.IGridModeDeriver
+        );
         return gridModeService.deriveGridMode(
           pictographData.motions.blue,
           pictographData.motions.red

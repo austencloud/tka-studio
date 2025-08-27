@@ -1,18 +1,18 @@
 <!-- ConstructTab.svelte - Refactored with factory-based state management -->
 <script lang="ts">
-	import RightPanel from './layout/RightPanel.svelte';
-	import LoadingOverlay from './shared/LoadingOverlay.svelte';
-	import LeftPanel from './layout/LeftPanel.svelte';
-	import ErrorBanner from './shared/ErrorBanner.svelte';
+  import RightPanel from "./layout/RightPanel.svelte";
+  import LoadingOverlay from "./shared/LoadingOverlay.svelte";
+  import LeftPanel from "./layout/LeftPanel.svelte";
+  import ErrorBanner from "./shared/ErrorBanner.svelte";
 
   import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
-  import { resolve } from "$services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createSequenceState } from "$lib/state/sequence-state.svelte";
   import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
   import { onMount } from "svelte";
 
   // Create component-scoped state using factory functions
-  const sequenceService = resolve("ISequenceService") as any; // TODO: Fix typing
+  const sequenceService = resolve(TYPES.ISequenceService) as any; // TODO: Fix typing
   const sequenceState = createSequenceState(sequenceService);
   const constructTabState = createConstructTabState(sequenceState);
 

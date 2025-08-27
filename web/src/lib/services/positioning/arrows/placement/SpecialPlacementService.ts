@@ -15,7 +15,7 @@
 
 import type { MotionData, PictographData } from "$lib/domain";
 import { GridMode } from "$lib/domain/enums";
-import { resolve } from "$lib/services/bootstrap";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
 import { jsonCache } from "../../cache/SimpleJsonCache";
 import type { ISpecialPlacementService } from "../../placement-services";
@@ -39,7 +39,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
 
   private getGridModeService(): IGridModeDeriver {
     if (!this.gridModeService) {
-      this.gridModeService = resolve<IGridModeDeriver>("IGridModeDeriver");
+      this.gridModeService = resolve<IGridModeDeriver>(TYPES.IGridModeDeriver);
     }
     return this.gridModeService;
   }

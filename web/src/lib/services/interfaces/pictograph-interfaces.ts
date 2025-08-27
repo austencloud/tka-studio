@@ -32,22 +32,13 @@ export interface ISvgConfiguration {
 // ============================================================================
 
 /**
- * Core pictograph service for managing pictograph data and updates
- */
-export interface IPictographService {
-  renderPictograph(data: PictographData): Promise<SVGElement>;
-  updateArrow(
-    pictographId: string,
-    arrowData: ArrowPlacementData
-  ): Promise<PictographData>;
-}
-
-/**
- * Specialized rendering service for pictographs and beats
+ * @deprecated Use renderPictograph utility function from pictograph-rendering-utils instead
+ *
+ * This orchestration service has been replaced with direct composition for better
+ * maintainability and clearer dependencies.
  */
 export interface IPictographRenderingService {
   renderPictograph(data: PictographData): Promise<SVGElement>;
-  renderBeat(beat: BeatData): Promise<SVGElement>;
 }
 
 // ============================================================================

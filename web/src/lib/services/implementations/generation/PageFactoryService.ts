@@ -24,9 +24,15 @@ import type {
   IPageFactoryService,
   IPrintablePageLayoutService,
 } from "../../interfaces/sequence-interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
+@injectable()
 export class PageFactoryService implements IPageFactoryService {
-  constructor(private readonly layoutService: IPrintablePageLayoutService) {}
+  constructor(
+    @inject(TYPES.IPrintablePageLayoutService)
+    private readonly layoutService: IPrintablePageLayoutService
+  ) {}
 
   createPages(sequences: SequenceData[], options: PageCreationOptions): Page[] {
     // Validate options first

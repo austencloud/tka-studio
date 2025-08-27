@@ -6,19 +6,18 @@
  */
 
 import type { BeatData, SequenceData } from "../../../interfaces/domain-types";
-import type { IPictographRenderingService } from "../../../interfaces/pictograph-interfaces";
 import type {
   ISequenceCardImageGenerationService,
   ISequenceCardMetadataOverlayService,
   ISequenceCardSVGCompositionService,
   SequenceCardDimensions,
 } from "../../../interfaces/sequence-card-export-interfaces";
+import { renderPictograph } from "../../../utils/pictograph-rendering-utils";
 
 export class SequenceCardImageGenerationService
   implements ISequenceCardImageGenerationService
 {
   constructor(
-    private readonly pictographService: IPictographRenderingService,
     private readonly svgCompositionService: ISequenceCardSVGCompositionService,
     private readonly metadataService: ISequenceCardMetadataOverlayService
   ) {}
@@ -195,9 +194,21 @@ export class SequenceCardImageGenerationService
         const beat = beats[i];
         console.log(`🎯 Rendering beat ${i + 1}/${beats.length}`);
 
-        // Use pictograph service to render the beat
-        const beatSVGElement = await this.pictographService.renderBeat(beat);
-        const beatSVG = this.svgElementToString(beatSVGElement);
+        // Check if pictograph data exists
+        if (!beat.pictographData) {
+          console.warn(
+            `⚠️ Beat ${i + 1} has no pictograph data, using fallback`
+          );
+          const fallbackSVG = this.createFallbackBeatSVG(i + 1);
+          beatSVGs.push(fallbackSVG);
+          continue;
+        }
+
+        // Use direct composition utility to render the beat
+        const pictographSVGElement = await renderPictograph(
+          beat.pictographData
+        );
+        const beatSVG = this.svgElementToString(pictographSVGElement);
         beatSVGs.push(beatSVG);
       } catch (error) {
         console.error(`❌ Failed to render beat ${i + 1}:`, error);

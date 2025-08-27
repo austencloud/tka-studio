@@ -10,7 +10,7 @@ Integrates panel management service with runes for:
 <script lang="ts">
   import type { SequenceData } from "$domain/SequenceData";
   import { NavigationMode } from "$lib/domain/browse";
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import type {
     IBrowseService,
     IDeleteService,
@@ -45,27 +45,37 @@ Integrates panel management service with runes for:
   import { createNavigationEventHandlers } from "./navigation-event-handlers";
 
   // ✅ RESOLVE SERVICES: Get services from DI container
-  const browseService = resolve("IBrowseService") as IBrowseService;
-  const thumbnailService = resolve("IThumbnailService") as IThumbnailService;
-  const sequenceIndexService = resolve(
-    "ISequenceIndexService"
-  ) as ISequenceIndexService;
-  const favoritesService = resolve("IFavoritesService") as IFavoritesService;
-  const navigationService = resolve("INavigationService") as INavigationService;
-  const filterPersistenceService = resolve(
-    "IFilterPersistenceService"
-  ) as IFilterPersistenceService;
-  const sectionService = resolve("ISectionService") as ISectionService;
-  const deleteService = resolve("IDeleteService") as IDeleteService;
-  const panelManagementService = resolve(
-    "IPanelManagementService"
-  ) as IPanelManagementService;
+  const browseService = resolve(TYPES.IBrowseService) as IBrowseService;
+  const thumbnailService = resolve(
+    TYPES.IThumbnailService
+  ) as IThumbnailService;
+  const sequenceIndexService = resolve<ISequenceIndexService>(
+    TYPES.ISequenceIndexService
+  );
+  const favoritesService = resolve(
+    TYPES.IFavoritesService
+  ) as IFavoritesService;
+  const navigationService = resolve(
+    TYPES.INavigationService
+  ) as INavigationService;
+  const filterPersistenceService = resolve<IFilterPersistenceService>(
+    TYPES.IFilterPersistenceService
+  );
+  const sectionService = resolve(TYPES.ISectionService) as ISectionService;
+  const deleteService = resolve(TYPES.IDeleteService) as IDeleteService;
+  const panelManagementService = resolve<IPanelManagementService>(
+    TYPES.IPanelManagementService
+  );
 
-  // ✅ REGISTER PANELS: Configure panel management
-  onMount(() => {
-    panelManagementService.registerPanel(BROWSE_TAB_PANEL_CONFIGS.navigation);
-    panelManagementService.registerPanel(BROWSE_TAB_PANEL_CONFIGS.animation);
-  });
+  // ✅ REGISTER PANELS IMMEDIATELY: Configure panel management before creating state
+  panelManagementService.registerPanel(
+    "navigation",
+    BROWSE_TAB_PANEL_CONFIGS.navigation
+  );
+  panelManagementService.registerPanel(
+    "animation",
+    BROWSE_TAB_PANEL_CONFIGS.animation
+  );
 
   // ✅ CREATE STATE MANAGERS: Runes-based reactive state
   const browseState = createBrowseState(

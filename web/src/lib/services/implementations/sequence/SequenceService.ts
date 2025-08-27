@@ -9,6 +9,8 @@
  * Import operations moved to SequenceImportService.
  */
 
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 import type { BeatData, SequenceData } from "$lib/domain";
 import type {
   IPersistenceService,
@@ -18,10 +20,14 @@ import type {
   SequenceCreateRequest,
 } from "../../interfaces/sequence-interfaces";
 
+@injectable()
 export class SequenceService implements ISequenceService {
   constructor(
+    @inject(TYPES.ISequenceDomainService)
     private sequenceDomainService: ISequenceDomainService,
+    @inject(TYPES.IPersistenceService)
     private persistenceService: IPersistenceService,
+    @inject(TYPES.ISequenceImportService)
     private sequenceImportService?: ISequenceImportService
   ) {}
 

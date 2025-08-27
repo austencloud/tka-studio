@@ -5,7 +5,7 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
 -->
 <script lang="ts">
   import { MotionColor, type MotionData } from "$lib/domain";
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import type { IArrowRenderingService } from "$lib/services/interfaces/pictograph-interfaces";
   import { onMount } from "svelte";
 
@@ -30,9 +30,9 @@ REFACTORED: Now purely presentational, uses ArrowRenderingService for business l
   }: Props = $props();
 
   // Get arrow rendering service from DI container
-  const arrowRenderingService = resolve(
-    "IArrowRenderingService"
-  ) as IArrowRenderingService;
+  const arrowRenderingService = resolve<IArrowRenderingService>(
+    TYPES.IArrowRenderingService
+  );
 
   let loaded = $state(false);
   let error = $state<string | null>(null);

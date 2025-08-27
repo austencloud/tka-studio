@@ -76,9 +76,11 @@
 
 <style>
   .sequence-thumbnail {
-    background: rgba(40, 40, 50, 0.8);
-    border: 2px solid rgba(80, 80, 100, 0.5);
-    border-radius: 8px;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     width: 120px;
     height: 110px;
     cursor: pointer;
@@ -86,13 +88,12 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    backdrop-filter: var(--glass-backdrop);
     position: relative;
   }
 
   .sequence-thumbnail:hover {
-    background: rgba(60, 60, 70, 0.9);
-    border-color: rgba(120, 120, 140, 0.8);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: var(--shadow-glass-hover);
   }
@@ -106,23 +107,24 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-xs);
-    background: rgba(20, 20, 30, 0.6);
-    border-bottom: 1px solid rgba(80, 80, 100, 0.3);
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: var(--glass-border);
   }
 
   .position-number {
-    color: rgba(255, 255, 255, 0.8);
+    color: white;
     font-size: var(--font-size-xs);
     font-weight: bold;
-    background: rgba(100, 150, 200, 0.7);
+    background: var(--primary-color);
     padding: 2px 6px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-sm);
     min-width: 20px;
     text-align: center;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
   }
 
   .remove-button {
-    background: rgba(200, 100, 100, 0.7);
+    background: var(--secondary-color);
     border: none;
     border-radius: 50%;
     width: 18px;
@@ -136,11 +138,13 @@
     justify-content: center;
     transition: all var(--transition-fast);
     line-height: 1;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
   }
 
   .remove-button:hover {
-    background: rgba(220, 120, 120, 0.9);
+    background: var(--secondary-light);
     transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
   }
 
   .remove-button:active {

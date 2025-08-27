@@ -1,9 +1,9 @@
 <!-- Write Tab - Act creation and editing with pixel-perfect desktop replica -->
 <script lang="ts">
-	import ActSheet from './ActSheet.svelte';
-	import MusicPlayer from './MusicPlayer.svelte';
-	import ActBrowser from './ActBrowser.svelte';
-	import WriteToolbar from './WriteToolbar.svelte';
+  import ActSheet from "./ActSheet.svelte";
+  import MusicPlayer from "./MusicPlayer.svelte";
+  import ActBrowser from "./ActBrowser.svelte";
+  import WriteToolbar from "./WriteToolbar.svelte";
 
   import {
     createDefaultMusicPlayerState,

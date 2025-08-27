@@ -1,12 +1,14 @@
 <script lang="ts">
-	import PictographVisualizationPanel from './PictographVisualizationPanel.svelte';
+  import PictographVisualizationPanel from "./PictographVisualizationPanel.svelte";
   import { getContext } from "svelte";
-  import type { ServiceContainer } from "$lib/services/di/ServiceContainer";
-  import { createMotionTesterState, type MotionTesterState } from "$lib/state/motion-tester/motion-tester-state.svelte";
+  import type { Container } from "inversify";
+  import {
+    createMotionTesterState,
+    type MotionTesterState,
+  } from "$lib/state/motion-tester/motion-tester-state.svelte";
 
   // Get DI container from context
-  const getContainer =
-    getContext<() => ServiceContainer | null>("di-container");
+  const getContainer = getContext<() => Container | null>("di-container");
 
   // State - resolved lazily when container is available
   let state: MotionTesterState | null = null;

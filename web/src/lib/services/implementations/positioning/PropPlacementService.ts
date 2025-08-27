@@ -14,7 +14,7 @@ import type {
 import { GridMode } from "$lib/domain/enums";
 import { createPropPlacementFromPosition } from "$lib/domain/PropPlacementData";
 import { endsWithBeta } from "$lib/utils/betaDetection";
-import { resolve } from "../../bootstrap";
+
 import { DefaultPropPositioner } from "../../DefaultPropPositioner";
 import type { IGridModeDeriver } from "../../interfaces/movement/IGridModeDeriver";
 import { PropRotAngleManager } from "../../PropRotAngleManager";
@@ -25,27 +25,31 @@ export interface IPropPlacementService {
   calculatePlacement(
     pictographData: PictographData,
     motionData: MotionData
-  ): PropPlacementData;
+  ): Promise<PropPlacementData>;
 }
 
 export class PropPlacementService implements IPropPlacementService {
   private gridModeService: IGridModeDeriver | null = null;
 
-  private getGridModeService(): IGridModeDeriver {
+  private async getGridModeService(): Promise<IGridModeDeriver> {
     if (!this.gridModeService) {
-      this.gridModeService = resolve<IGridModeDeriver>("IGridModeDeriver");
+      const { resolve, TYPES } = await import(
+        "$lib/services/inversify/container"
+      );
+      this.gridModeService = resolve<IGridModeDeriver>(TYPES.IGridModeDeriver);
     }
     return this.gridModeService;
   }
 
-  calculatePlacement(
+  async calculatePlacement(
     pictographData: PictographData,
     motionData: MotionData
-  ): PropPlacementData {
+  ): Promise<PropPlacementData> {
     // Compute gridMode from motion data
+    const gridModeService = await this.getGridModeService();
     const gridMode =
       pictographData.motions?.blue && pictographData.motions?.red
-        ? this.getGridModeService().deriveGridMode(
+        ? gridModeService.deriveGridMode(
             pictographData.motions.blue,
             pictographData.motions.red
           )

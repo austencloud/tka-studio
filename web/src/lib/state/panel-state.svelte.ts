@@ -9,7 +9,8 @@ import type {
   IPanelManagementService,
   PanelState,
   ResizeOperation,
-} from "$lib/services/di/interfaces/panel-interfaces";
+} from "$lib/services/interfaces/panel-interfaces";
+import { ResizeDirection } from "$lib/services/interfaces/panel-interfaces";
 
 export interface PanelStateManager {
   // Panel state getters (reactive)
@@ -46,42 +47,62 @@ export interface PanelStateManager {
 }
 
 /**
+ * Default panel state for unregistered panels
+ */
+function getDefaultPanelState(panelId: string): PanelState {
+  return {
+    id: panelId,
+    width: 300,
+    isCollapsed: false,
+    isVisible: true,
+    minWidth: 200,
+    maxWidth: 600,
+    defaultWidth: 300,
+    collapsedWidth: 60,
+    isResizing: false,
+  };
+}
+
+/**
  * Creates reactive panel state manager using Svelte 5 runes
  */
 export function createPanelState(
   panelService: IPanelManagementService
 ): PanelStateManager {
-  // ✅ PURE RUNES: Reactive state for UI
+  // ✅ PURE RUNES: Reactive state for UI with default fallbacks
   let navigationPanel = $state<PanelState>(
-    panelService.getPanelState("navigation")
+    panelService.getPanelState("navigation") ||
+      getDefaultPanelState("navigation")
   );
   let animationPanel = $state<PanelState>(
-    panelService.getPanelState("animation")
+    panelService.getPanelState("animation") || getDefaultPanelState("animation")
   );
   let currentResize = $state<ResizeOperation | null>(null);
 
-  // ✅ DERIVED RUNES: Computed values from state
+  // ✅ DERIVED RUNES: Computed values from state with defensive checks
   const isAnyPanelResizing = $derived(
-    navigationPanel.isResizing ||
-      animationPanel.isResizing ||
+    navigationPanel?.isResizing ||
+      false ||
+      animationPanel?.isResizing ||
+      false ||
       currentResize !== null
   );
 
   const navigationWidth = $derived(
-    navigationPanel.isCollapsed
-      ? navigationPanel.collapsedWidth
-      : navigationPanel.width
+    navigationPanel?.isCollapsed
+      ? navigationPanel?.collapsedWidth || 60
+      : navigationPanel?.width || 300
   );
 
   const animationWidth = $derived(
-    animationPanel.isCollapsed
-      ? animationPanel.collapsedWidth
-      : animationPanel.width
+    animationPanel?.isCollapsed
+      ? animationPanel?.collapsedWidth || 60
+      : animationPanel?.width || 400
   );
 
-  const isNavigationCollapsed = $derived(navigationPanel.isCollapsed);
-  const isAnimationCollapsed = $derived(animationPanel.isCollapsed);
-  const isAnimationVisible = $derived(animationPanel.isVisible);
+  const isNavigationCollapsed = $derived(navigationPanel?.isCollapsed || false);
+  const isAnimationCollapsed = $derived(animationPanel?.isCollapsed || false);
+  const isAnimationVisible = $derived(animationPanel?.isVisible || true);
 
   // ✅ SERVICE INTEGRATION: Listen to service state changes
   const handleStateChange = (panelId: string, newState: PanelState) => {
@@ -118,26 +139,46 @@ export function createPanelState(
 
   // ✅ RESIZE OPERATIONS: Coordinated through service
   function startNavigationResize(startX: number): void {
-    const operation = panelService.startResize("navigation", startX);
+    const operation: ResizeOperation = {
+      panelId: "navigation",
+      direction: ResizeDirection.HORIZONTAL,
+      startPosition: { x: startX, y: 0 },
+      startSize: { width: navigationPanel.width, height: 0 },
+    };
+    panelService.startResize(operation);
     currentResize = operation;
   }
 
   function startAnimationResize(startX: number): void {
-    const operation = panelService.startResize("animation", startX);
+    const operation: ResizeOperation = {
+      panelId: "animation",
+      direction: ResizeDirection.HORIZONTAL,
+      startPosition: { x: startX, y: 0 },
+      startSize: { width: animationPanel.width, height: 0 },
+    };
+    panelService.startResize(operation);
     currentResize = operation;
   }
 
   function updateCurrentResize(currentX: number): void {
     if (!currentResize) return;
 
-    panelService.updateResize(currentResize, currentX);
-    // State will be updated through handleStateChange callback
+    // Calculate new width based on resize operation
+    const deltaX = currentX - currentResize.startPosition.x;
+    const newWidth = currentResize.startSize.width + deltaX;
+
+    // Update panel width through service
+    if (currentResize.panelId === "navigation") {
+      setNavigationWidth(newWidth);
+    } else if (currentResize.panelId === "animation") {
+      setAnimationWidth(newWidth);
+    }
   }
 
   function endCurrentResize(): void {
     if (!currentResize) return;
 
-    panelService.endResize(currentResize);
+    panelService.endResize();
     currentResize = null;
   }
 
@@ -209,18 +250,24 @@ export function createPanelState(
 export const BROWSE_TAB_PANEL_CONFIGS = {
   navigation: {
     id: "navigation",
+    title: "Navigation",
     defaultWidth: 300,
     minWidth: 200,
     maxWidth: 500,
     collapsedWidth: 60,
     persistKey: "browse-navigation-panel",
+    resizable: true,
+    collapsible: true,
   },
   animation: {
     id: "animation",
+    title: "Animation",
     defaultWidth: 400,
     minWidth: 300,
     maxWidth: 600,
     collapsedWidth: 60,
     persistKey: "browse-animation-panel",
+    resizable: true,
+    collapsible: true,
   },
 } as const;

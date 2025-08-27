@@ -302,7 +302,7 @@ export type OptionPickerScrollState = ReturnType<
 /**
  * Creates state with default values for testing or fallback scenarios
  */
-export function createDefaultScrollState(): any {
+export function createDefaultScrollState() {
   const defaultProps: ScrollContainerProps = {
     pictographs: [],
     onPictographSelected: () => {},

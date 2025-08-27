@@ -1,9 +1,8 @@
-import {
-  createWebApplication,
-  setGlobalContainer,
-} from "$lib/services/bootstrap";
-import "@testing-library/jest-dom";
 import { afterEach, beforeEach, vi } from "vitest";
+import { Container } from "inversify";
+
+// Global Inversify container for tests
+let testContainer: Container;
 
 // Mock browser APIs BEFORE any imports that might use them
 Object.defineProperty(window, "matchMedia", {
@@ -22,19 +21,24 @@ Object.defineProperty(window, "matchMedia", {
 
 // Global test setup
 beforeEach(async () => {
-  // Initialize the DI container for each test
+  // Initialize a fresh Inversify container for each test
   try {
-    await createWebApplication();
+    testContainer = new Container();
+    // Note: Services will need to be registered manually in individual tests
+    // as they require the new Inversify configuration
   } catch (error) {
-    console.warn("Failed to initialize container in test setup:", error);
-    // Continue with test execution even if container fails to initialize
-    // Some tests might not need the full container
+    console.warn(
+      "Failed to initialize Inversify container in test setup:",
+      error
+    );
   }
 });
 
 afterEach(() => {
-  // Clean up the global container after each test
-  setGlobalContainer(null);
+  // Clean up the container after each test
+  if (testContainer) {
+    testContainer.unbindAll();
+  }
 });
 
 // Mock $app/stores for SvelteKit

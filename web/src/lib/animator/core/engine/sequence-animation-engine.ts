@@ -12,14 +12,20 @@ import type {
   ISequenceAnimationOrchestrator,
   SequenceMetadata,
   PropStates,
-} from "$lib/services/di/interfaces/animator-interfaces";
+} from "$lib/services/interfaces/application-interfaces";
+import { TYPES } from "$lib/services/inversify/types";
+import { inject, injectable } from "inversify";
 
 /**
  * Lightweight Animation Engine Wrapper
  * Delegates to focused services instead of doing everything itself
  */
+@injectable()
 export class SequenceAnimationEngine implements ISequenceAnimationEngine {
-  constructor(private readonly orchestrator: ISequenceAnimationOrchestrator) {}
+  constructor(
+    @inject(TYPES.ISequenceAnimationOrchestrator)
+    private readonly orchestrator: ISequenceAnimationOrchestrator
+  ) {}
 
   /**
    * Initialize with domain sequence data (DELEGATES TO ORCHESTRATOR!)

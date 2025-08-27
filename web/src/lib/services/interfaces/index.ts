@@ -95,8 +95,6 @@ export type {
   IFallbackArrowService,
   IGridRenderingService,
   IOverlayRenderingService,
-  IPictographRenderingService,
-  IPictographService,
   ISvgColorTransformationService,
   ISvgConfiguration,
   ISvgLoadingService,

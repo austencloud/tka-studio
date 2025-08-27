@@ -77,9 +77,11 @@
 
 <style>
   .act-thumbnail {
-    background: rgba(40, 40, 50, 0.8);
-    border: 2px solid rgba(80, 80, 100, 0.5);
-    border-radius: 8px;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     padding: var(--spacing-sm);
     cursor: pointer;
     transition: all var(--transition-normal);
@@ -88,12 +90,11 @@
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
-    backdrop-filter: var(--glass-backdrop);
   }
 
   .act-thumbnail:hover {
-    background: rgba(60, 60, 70, 0.9);
-    border-color: rgba(120, 120, 140, 0.8);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: var(--shadow-glass-hover);
   }
@@ -105,9 +106,9 @@
   .thumbnail-image {
     width: 100%;
     height: 120px;
-    border-radius: 4px;
+    border-radius: var(--border-radius-md);
     overflow: hidden;
-    background: rgba(20, 20, 30, 0.5);
+    background: rgba(255, 255, 255, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -117,7 +118,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: var(--border-radius-md);
   }
 
   .act-info {
@@ -128,7 +129,7 @@
   }
 
   .act-name {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
     font-size: var(--font-size-sm);
     font-weight: bold;
     margin: 0;
@@ -136,10 +137,11 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-shadow: var(--text-shadow-glass);
   }
 
   .act-description {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
     font-size: var(--font-size-xs);
     margin: 0;
     line-height: 1.3;
@@ -159,19 +161,19 @@
   }
 
   .sequence-count {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-color);
     font-size: var(--font-size-xs);
     font-weight: 500;
   }
 
   .music-indicator {
-    color: rgba(100, 200, 100, 0.9);
+    color: var(--accent-color);
     font-size: var(--font-size-sm);
     font-weight: bold;
   }
 
   .last-modified {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-secondary);
     font-size: var(--font-size-xs);
     margin-top: var(--spacing-xs);
   }

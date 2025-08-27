@@ -11,7 +11,7 @@ Refactored into smaller section components for better maintainability:
 - Maintains all original functionality with cleaner separation
 -->
 <script lang="ts">
-  import { resolve } from "$services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import type { IDeviceDetectionService } from "$services/interfaces/device-interfaces";
   import { onMount } from "svelte";
   // Import section components
@@ -32,7 +32,7 @@ Refactored into smaller section components for better maintainability:
   onMount(() => {
     try {
       const deviceService = resolve<IDeviceDetectionService>(
-        "IDeviceDetectionService"
+        TYPES.IDeviceDetectionService
       );
       return deviceState.initializeDevice(deviceService);
     } catch (error) {

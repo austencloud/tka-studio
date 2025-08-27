@@ -123,8 +123,11 @@
     height: 100%;
     width: 100%;
     min-width: 250px;
-    background: rgba(20, 20, 30, 0.3);
-    border-radius: 8px;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     overflow: hidden;
   }
 
@@ -133,16 +136,17 @@
     align-items: center;
     justify-content: space-between;
     padding: var(--spacing-md);
-    background: rgba(40, 40, 50, 0.8);
-    border-bottom: 1px solid rgba(80, 80, 100, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: var(--glass-border);
     backdrop-filter: var(--glass-backdrop);
   }
 
   .browser-title {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
     font-size: var(--font-size-lg);
     font-weight: bold;
     margin: 0;
+    text-shadow: var(--text-shadow-glass);
   }
 
   .refresh-button {
@@ -177,8 +181,8 @@
   .loading-spinner {
     width: 32px;
     height: 32px;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-top: 3px solid rgba(255, 255, 255, 0.8);
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid var(--primary-color);
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
@@ -193,7 +197,7 @@
   }
 
   .loading-state p {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
     margin: 0;
   }
 
@@ -213,13 +217,14 @@
   }
 
   .empty-state h4 {
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
     font-size: var(--font-size-lg);
     margin: 0;
+    text-shadow: var(--text-shadow-glass);
   }
 
   .empty-state p {
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary);
     margin: 0;
     max-width: 200px;
   }
@@ -279,16 +284,17 @@
   }
 
   .browser-content::-webkit-scrollbar-track {
-    background: rgba(40, 40, 50, 0.3);
-    border-radius: 4px;
+    background: transparent;
+    border-radius: var(--border-radius-sm);
   }
 
   .browser-content::-webkit-scrollbar-thumb {
-    background: rgba(80, 80, 100, 0.6);
-    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .browser-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(100, 100, 120, 0.8);
+    background: rgba(255, 255, 255, 0.3);
   }
 </style>

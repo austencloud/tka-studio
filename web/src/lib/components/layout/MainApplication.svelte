@@ -1,7 +1,7 @@
 <!-- Main Application Layout -->
 <script lang="ts">
-  import { resolve } from "$services/bootstrap";
-  import type { ServiceContainer } from "$services/di/ServiceContainer";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { Container } from "inversify";
   import type {
     IApplicationInitializationService,
     ISettingsService,
@@ -31,8 +31,7 @@
   import SettingsDialog from "$components/SettingsDialog.svelte";
 
   // Get DI container from context
-  const getContainer =
-    getContext<() => ServiceContainer | null>("di-container");
+  const getContainer = getContext<() => Container | null>("di-container");
 
   // Services - resolved lazily
   let initService: IApplicationInitializationService | null = $state(null);
@@ -52,10 +51,10 @@
     if (container && !servicesResolved) {
       try {
         // Use resolve which will use the global container once it's ready
-        initService = resolve("IApplicationInitializationService");
-        settingsService = resolve("ISettingsService");
-        sequenceService = resolve("ISequenceService");
-        deviceService = resolve("IDeviceDetectionService");
+        initService = resolve(TYPES.IApplicationInitializationService);
+        settingsService = resolve(TYPES.ISettingsService);
+        sequenceService = resolve(TYPES.ISequenceService);
+        deviceService = resolve(TYPES.IDeviceDetectionService);
 
         servicesResolved = true;
       } catch (error) {

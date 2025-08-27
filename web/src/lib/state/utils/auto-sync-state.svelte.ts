@@ -71,7 +71,6 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
   const {
     key,
     debounceMs = 500,
-    persistent = true,
     validate = () => true,
     beforeSave = (state) => state,
     afterLoad = (state) => state,
@@ -233,11 +232,10 @@ export function createBrowseAutoSync() {
       };
     },
     afterLoad: (state: unknown) => {
-      // Remove timestamp after loading
-      const { lastSaved, ...cleanState } = state as {
-        lastSaved?: string;
-        [key: string]: unknown;
-      };
+      // Remove timestamp after loading - keep only the actual state
+      const stateObj = state as { lastSaved?: string; [key: string]: unknown };
+      const { lastSaved, ...cleanState } = stateObj;
+      void lastSaved; // Suppress unused variable warning
       return cleanState;
     },
   });
@@ -265,85 +263,4 @@ export function createAppAutoSync() {
     validate: (state: unknown) =>
       Boolean(state && typeof state === "object" && state !== null),
   });
-}
-
-// ============================================================================
-// USAGE EXAMPLE IN EXISTING FACTORIES
-// ============================================================================
-
-/**
- * Example: Enhanced browse state factory with auto-sync
- * You can use this pattern in your existing createBrowseState factory
- */
-export function createEnhancedBrowseStateExample(services: any) {
-  const autoSync = createBrowseAutoSync();
-
-  // Load initial state
-  const initialState = autoSync.load({
-    currentFilter: null,
-    selectedSequence: null,
-    displayMode: "grid",
-    scrollPosition: { top: 0, left: 0 },
-    searchQuery: "",
-  });
-
-  // Reactive state
-  let browseState = $state(initialState);
-
-  // Setup auto-sync
-  const cleanup = autoSync.sync(() => browseState);
-
-  return {
-    // Reactive getters
-    get currentFilter() {
-      return (browseState as any).currentFilter;
-    },
-    get selectedSequence() {
-      return (browseState as any).selectedSequence;
-    },
-    get displayMode() {
-      return (browseState as any).displayMode;
-    },
-    get scrollPosition() {
-      return (browseState as any).scrollPosition;
-    },
-    get searchQuery() {
-      return (browseState as any).searchQuery;
-    },
-
-    // Actions (automatically persisted)
-    setFilter(type: string, value: unknown) {
-      (browseState as any).currentFilter = { type, value };
-      // ✅ Auto-saved with debouncing!
-    },
-
-    selectSequence(sequence: any) {
-      (browseState as any).selectedSequence = sequence;
-      // ✅ Auto-saved with debouncing!
-    },
-
-    setScrollPosition(position: { top: number; left: number }) {
-      (browseState as any).scrollPosition = position;
-      // ✅ Auto-saved with debouncing!
-    },
-
-    updateSearch(query: string) {
-      (browseState as any).searchQuery = query;
-      // ✅ Auto-saved with debouncing!
-    },
-
-    // Manual operations
-    saveStateNow() {
-      autoSync.saveNow(browseState);
-    },
-
-    clearPersistedState() {
-      autoSync.clear();
-    },
-
-    // Cleanup
-    destroy() {
-      cleanup();
-    },
-  };
 }

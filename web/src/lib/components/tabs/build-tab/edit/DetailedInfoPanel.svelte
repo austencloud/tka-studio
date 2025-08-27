@@ -1,7 +1,7 @@
 <!-- DetailedInfoPanel.svelte - Detailed information about selected beat -->
 <script lang="ts">
   import { GridMode, MotionColor } from "$lib/domain/enums";
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
   import type {
     BeatData,
@@ -72,7 +72,7 @@
     const pictographData = beatData.pictographData;
 
     // Compute gridMode from motion data
-    const gridModeService = resolve<IGridModeDeriver>("IGridModeDeriver");
+    const gridModeService = resolve<IGridModeDeriver>(TYPES.IGridModeDeriver);
     const gridMode =
       pictographData.motions?.blue && pictographData.motions?.red
         ? gridModeService.deriveGridMode(

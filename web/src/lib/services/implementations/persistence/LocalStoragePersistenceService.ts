@@ -5,7 +5,9 @@
  * This provides a simple persistence layer for sequences and settings.
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
+import type { SequenceData } from "$lib/domain";
+import { SequenceDataSchema } from "$lib/domain/schemas";
+import { safeParseOrNull } from "$lib/utils/validation";
 import { injectable } from "inversify";
 import type { IPersistenceService } from "../../interfaces/sequence-interfaces";
 
@@ -88,10 +90,24 @@ export class LocalStoragePersistenceService implements IPersistenceService {
       const sequences: SequenceData[] = [];
 
       for (const id of sequenceIds) {
-        const sequence = await this.loadSequence(id);
-        if (sequence && this.isValidSequence(sequence)) {
-          // ✅ PERMANENT: Filter out invalid sequences during load
-          sequences.push(sequence);
+        const sequenceKey = `${this.SEQUENCE_PREFIX}${id}`;
+        const rawData = localStorage.getItem(sequenceKey);
+
+        if (rawData) {
+          try {
+            const parsedData = JSON.parse(rawData);
+            const validatedSequence = safeParseOrNull(
+              SequenceDataSchema,
+              parsedData,
+              `sequence ${id}`
+            );
+
+            if (validatedSequence && this.isValidSequence(validatedSequence)) {
+              sequences.push(validatedSequence);
+            }
+          } catch (error) {
+            console.warn(`Skipping corrupted sequence ${id}:`, error);
+          }
         }
       }
 
@@ -162,55 +178,31 @@ export class LocalStoragePersistenceService implements IPersistenceService {
   }
 
   /**
-   * Validate sequence data structure
+   * Validate sequence data using Zod schema - replaces 50+ lines of manual validation
    */
   private validateSequenceData(raw: unknown): SequenceData {
-    const data = (raw as Record<string, unknown>) || {};
-    // Basic validation - ensure required fields exist
-    if (
-      typeof data.id !== "string" ||
-      typeof data.name !== "string" ||
-      !Array.isArray(data.beats)
-    ) {
-      throw new Error("Invalid sequence data structure");
+    // Use safe parsing to handle corrupted localStorage data gracefully
+    const validatedSequence = safeParseOrNull(
+      SequenceDataSchema,
+      raw,
+      "localStorage sequence data"
+    );
+
+    if (validatedSequence) {
+      // Ensure metadata has persistence timestamps
+      const nowIso = new Date().toISOString();
+      const metadata = {
+        ...validatedSequence.metadata,
+        saved_at: (validatedSequence.metadata.saved_at as string) || nowIso,
+        updated_at: nowIso,
+      };
+
+      return { ...validatedSequence, metadata };
+    } else {
+      throw new Error(
+        "Invalid sequence data structure - failed Zod validation"
+      );
     }
-
-    // Ensure all required fields have defaults
-    const nowIso = new Date().toISOString();
-    const existingMeta = (data.metadata as Record<string, unknown>) || {};
-    const metadata = {
-      ...existingMeta,
-      saved_at:
-        typeof existingMeta.saved_at === "string"
-          ? existingMeta.saved_at
-          : nowIso,
-      updated_at: nowIso,
-    };
-    const beatsArray = Array.isArray(data.beats)
-      ? (data.beats as unknown[])
-      : [];
-    const beats: BeatData[] = beatsArray.filter((b): b is BeatData => {
-      if (b == null || typeof b !== "object") return false;
-      const candidate = b as Record<string, unknown>;
-      return "beatNumber" in candidate;
-    });
-    const result: SequenceData = {
-      id: data.id as string,
-      name: data.name as string,
-      beats,
-      word: (data.word as string) || "",
-      thumbnails: (data.thumbnails as string[]) || [],
-      isFavorite: Boolean(data.isFavorite),
-      isCircular: Boolean(data.isCircular),
-      tags: (data.tags as string[]) || [],
-      metadata,
-      // **CRITICAL: Include startPosition field if it exists**
-      ...(data.startPosition
-        ? { startPosition: data.startPosition as BeatData }
-        : {}),
-    };
-
-    return result;
   }
 
   /**

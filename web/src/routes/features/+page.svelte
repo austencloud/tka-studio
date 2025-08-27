@@ -1,6 +1,6 @@
 <!-- SEO-Optimized Features Page with User Redirect -->
 <script lang="ts">
-	import AboutTab from './../../lib/components/tabs/about-tab/AboutTab.svelte';
+  import AboutTab from "./../../lib/components/tabs/about-tab/AboutTab.svelte";
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
   import { handleSEORedirect } from "$lib/utils/seo-utils";

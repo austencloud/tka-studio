@@ -129,10 +129,15 @@
   />
 
   <!-- Main Content Area -->
-  <main class="content-area">
+  <main class="content-area" class:about-active={isTabActive("about")}>
     <!-- App Content with reliable transitions -->
     {#key activeTab}
-      <div class="tab-content" in:tabIn out:tabOut>
+      <div
+        class="tab-content"
+        class:about-tab={isTabActive("about")}
+        in:tabIn
+        out:tabOut
+      >
         {#if isTabActive("construct")}
           <ConstructTab />
         {:else if isTabActive("browse")}
@@ -189,6 +194,19 @@
     overflow: hidden;
     width: 100%;
     height: 100%;
+  }
+
+  /* Allow scrolling for About tab */
+  .content-area.about-active {
+    overflow: visible;
+  }
+
+  .tab-content.about-tab {
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: static;
+    height: auto;
+    min-height: 100%;
   }
 
   /* Responsive design */

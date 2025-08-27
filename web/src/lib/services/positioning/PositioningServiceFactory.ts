@@ -15,7 +15,7 @@ import type {
   IDirectionalTupleProcessor,
   IPositioningServiceFactory,
 } from "$services/positioning";
-import { ArrowAdjustmentCalculator } from "$services/positioning/arrows/calculation/ArrowAdjustmentCalculator";
+// import { ArrowAdjustmentCalculator } from "$services/positioning/arrows/calculation/ArrowAdjustmentCalculator";
 import { ArrowLocationCalculator } from "$services/positioning/arrows/calculation/ArrowLocationCalculator";
 import { ArrowRotationCalculator } from "$services/positioning/arrows/calculation/ArrowRotationCalculator";
 import { DashLocationCalculator } from "$services/positioning/arrows/calculation/DashLocationCalculator";
@@ -92,7 +92,12 @@ export class PositioningServiceFactory implements IPositioningServiceFactory {
     }
 
     // Create consolidated service with all dependencies
-    return new ArrowAdjustmentCalculator({} as any);
+    // TODO: This service requires proper dependency injection setup
+    // ArrowAdjustmentCalculator is designed for inversify DI, not manual instantiation
+    throw new Error(
+      "ArrowAdjustmentCalculator creation not implemented in factory pattern. Use DI container instead."
+    );
+    // return new ArrowAdjustmentCalculator({} as any);
   }
 
   createCoordinateSystemService(): IArrowCoordinateSystemService {

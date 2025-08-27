@@ -9,8 +9,10 @@ import type { BeatData } from "$lib/domain";
 import type {
   IBeatCalculationService,
   BeatCalculationResult,
-} from "$lib/services/di/interfaces/animator-interfaces";
+} from "$lib/services/interfaces/application-interfaces";
+import { injectable } from "inversify";
 
+@injectable()
 export class BeatCalculationService implements IBeatCalculationService {
   /**
    * Calculate current beat index and progress from animation time

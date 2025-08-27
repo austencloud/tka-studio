@@ -20,7 +20,10 @@ import type {
 import { ArrowAdjustmentProcessor } from "./ArrowAdjustmentProcessor";
 import { ArrowCoordinateTransformer } from "./ArrowCoordinateTransformer";
 import { ArrowDataProcessor } from "./ArrowDataProcessor";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../../inversify/types";
 
+@injectable()
 export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
   private locationCalculator: IArrowLocationCalculator;
   private rotationCalculator: IArrowRotationCalculator;
@@ -32,9 +35,13 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
   private dataProcessor: ArrowDataProcessor;
 
   constructor(
+    @inject(TYPES.IArrowLocationCalculator)
     locationCalculator: IArrowLocationCalculator,
+    @inject(TYPES.IArrowRotationCalculator)
     rotationCalculator: IArrowRotationCalculator,
+    @inject(TYPES.IArrowAdjustmentCalculator)
     adjustmentCalculator: IArrowAdjustmentCalculator,
+    @inject(TYPES.IArrowCoordinateSystemService)
     coordinateSystem: IArrowCoordinateSystemService
   ) {
     this.locationCalculator = locationCalculator;

@@ -5,6 +5,7 @@
  * following the microservices architecture pattern.
  */
 
+import { injectable } from "inversify";
 import type { SequenceData, SortMethod } from "../../interfaces/domain-types";
 
 export interface SequenceSection {
@@ -54,6 +55,7 @@ export interface ISectionService {
   };
 }
 
+@injectable()
 export class SectionService implements ISectionService {
   async organizeSections(
     sequences: SequenceData[],

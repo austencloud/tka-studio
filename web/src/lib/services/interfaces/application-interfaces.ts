@@ -13,14 +13,17 @@ import type {
 } from "./domain-types";
 import type { GridMode, DifficultyLevel, OptionFilters } from "./core-types";
 import type { MotionType } from "./domain-types";
-import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
+import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState";
 import type {
   MotionType as DomainMotionType,
   Location,
   Orientation,
   RotationDirection,
   GridPosition,
-} from "$lib/domain/enums";
+} from "$lib/domain";
+
+// BackgroundType is not exported from domain index, so import directly
+import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
 
 // ============================================================================
 // SHARED UTILITY SERVICES
@@ -227,3 +230,185 @@ export interface IStartPositionService {
   validateStartPosition(position: BeatData): ValidationResult;
   getDefaultStartPositions(gridMode: GridMode): Promise<PictographData[]>;
 }
+
+// ============================================================================
+// ANIMATOR INTERFACES (migrated from deleted animator-interfaces.ts)
+// ============================================================================
+
+/**
+ * Animation engine for sequence playback
+ */
+export interface ISequenceAnimationEngine {
+  initializeWithDomainData(sequenceData: SequenceData): boolean;
+  calculateState(currentBeat: number): void;
+  getCurrentPropStates(): PropStates;
+  getBluePropState(): PropState;
+  getRedPropState(): PropState;
+  getMetadata(): SequenceMetadata;
+  isInitialized(): boolean;
+  dispose(): void;
+  reset(): void;
+}
+
+/**
+ * Animation orchestrator for coordinating multiple services
+ */
+export interface ISequenceAnimationOrchestrator {
+  initializeWithDomainData(sequenceData: SequenceData): boolean;
+  calculateState(currentBeat: number): void;
+  getPropStates(): PropStates;
+  getBluePropState(): PropState;
+  getRedPropState(): PropState;
+  getMetadata(): SequenceMetadata;
+  getCurrentPropStates(): PropStates;
+  isInitialized(): boolean;
+  dispose(): void;
+}
+
+/**
+ * Beat calculation service for timing
+ */
+export interface IBeatCalculationService {
+  calculateBeatState(
+    currentBeat: number,
+    beats: readonly BeatData[],
+    totalBeats: number
+  ): BeatCalculationResult;
+  validateBeats(beats: readonly BeatData[]): boolean;
+  getBeatSafely(beats: readonly BeatData[], index: number): BeatData | null;
+  calculateTotalDuration(beats: readonly BeatData[]): number;
+  findBeatByNumber(
+    beats: readonly BeatData[],
+    beatNumber: number
+  ): BeatData | null;
+}
+
+/**
+ * Animation state management service
+ */
+export interface IAnimationStateService {
+  getBluePropState(): PropState;
+  getRedPropState(): PropState;
+  getPropStates(): PropStates;
+  updatePropStates(interpolationResult: InterpolationResult): PropStates;
+  updateBluePropState(updates: Partial<PropState>): void;
+  updateRedPropState(updates: Partial<PropState>): void;
+  setPropStates(blue: PropState, red: PropState): void;
+  resetPropStates(): void;
+}
+
+/**
+ * Prop interpolation service for smooth transitions
+ */
+export interface IPropInterpolationService {
+  interpolatePropAngles(
+    currentBeatData: BeatData,
+    beatProgress: number
+  ): InterpolationResult;
+  calculateInitialAngles(firstBeat: BeatData): InterpolationResult;
+}
+
+/**
+ * Animation control service
+ */
+export interface IAnimationControlService {
+  play(): void;
+  pause(): void;
+  stop(): void;
+  seek(position: number): void;
+  setSpeed(speed: number): void;
+}
+
+// Type definitions for animator interfaces
+export interface SequenceMetadata {
+  word: string;
+  author: string;
+  totalBeats: number;
+}
+
+export interface PropStates {
+  blue: PropState;
+  red: PropState;
+}
+
+export interface InterpolationResult {
+  blueAngles: {
+    centerPathAngle: number;
+    staffRotationAngle: number;
+  };
+  redAngles: {
+    centerPathAngle: number;
+    staffRotationAngle: number;
+  };
+  isValid: boolean;
+}
+
+export interface BeatCalculationResult {
+  currentBeatIndex: number;
+  beatProgress: number;
+  currentBeatData: BeatData;
+  isValid: boolean;
+}
+
+// ============================================================================
+// MISSING SERVICE INTERFACES (from deleted legacy DI system)
+// ============================================================================
+// TODO: Add these interfaces back when needed
+
+/**
+ * Codex service interface
+ */
+export interface ICodexService {
+  /**
+   * Load all pictographs in alphabetical order
+   */
+  loadAllPictographs(): Promise<PictographData[]>;
+
+  /**
+   * Search pictographs by letter or pattern
+   */
+  searchPictographs(searchTerm: string): Promise<PictographData[]>;
+
+  /**
+   * Get a specific pictograph by letter
+   */
+  getPictographByLetter(letter: string): Promise<PictographData | null>;
+
+  /**
+   * Get pictographs for a specific lesson type
+   */
+  getPictographsForLesson(lessonType: string): Promise<PictographData[]>;
+
+  /**
+   * Get letters organized by rows for grid display (matches desktop layout)
+   */
+  getLettersByRow(): string[][];
+
+  /**
+   * Apply rotate operation to all pictographs
+   */
+  rotateAllPictographs(
+    pictographs: PictographData[]
+  ): Promise<PictographData[]>;
+
+  /**
+   * Apply mirror operation to all pictographs
+   */
+  mirrorAllPictographs(
+    pictographs: PictographData[]
+  ): Promise<PictographData[]>;
+
+  /**
+   * Apply color swap operation to all pictographs
+   */
+  colorSwapAllPictographs(
+    pictographs: PictographData[]
+  ): Promise<PictographData[]>;
+
+  /**
+   * Get all pictograph data organized by letter
+   */
+  getAllPictographData(): Promise<Record<string, PictographData | null>>;
+}
+
+// Additional interfaces will be added here as needed during the InversifyJS migration

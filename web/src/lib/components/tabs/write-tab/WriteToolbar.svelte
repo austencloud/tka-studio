@@ -79,10 +79,11 @@
     align-items: center;
     gap: var(--spacing-md);
     padding: var(--spacing-sm) var(--spacing-md);
-    background: rgba(40, 40, 50, 0.9);
-    border: 1px solid rgba(80, 80, 100, 0.4);
-    border-radius: 8px;
+    background: var(--surface-color);
     backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     min-height: 48px;
     transition: all var(--transition-normal);
   }
@@ -108,7 +109,7 @@
 
   .toolbar-button {
     padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: 6px;
+    border-radius: var(--border-radius-md);
     font-size: var(--font-size-sm);
     font-weight: 500;
     font-family: "Segoe UI", sans-serif;
@@ -118,6 +119,7 @@
     align-items: center;
     gap: var(--spacing-xs);
     position: relative;
+    backdrop-filter: blur(8px);
   }
 
   .toolbar-button:disabled {
@@ -127,46 +129,51 @@
   }
 
   .new-button {
-    background: rgba(70, 130, 180, 0.8);
-    border: 1px solid rgba(100, 150, 200, 0.6);
+    background: var(--primary-color);
+    border: 1px solid var(--primary-light);
     color: white;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
   }
 
   .new-button:hover:not(:disabled) {
-    background: rgba(80, 140, 190, 0.9);
-    transform: translateY(-1px);
+    background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
   }
 
   .save-button,
   .save-as-button {
-    background: rgba(60, 60, 70, 0.8);
-    border: 1px solid rgba(100, 100, 120, 0.4);
-    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
   }
 
   .save-button:hover:not(:disabled),
   .save-as-button:hover:not(:disabled) {
-    background: rgba(70, 70, 80, 0.9);
-    border-color: rgba(120, 120, 140, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-1px);
   }
 
   .save-button.has-changes {
-    background: rgba(100, 150, 100, 0.8);
-    border-color: rgba(120, 170, 120, 0.6);
+    background: var(--accent-color);
+    border-color: var(--accent-light);
     color: white;
+    box-shadow: 0 4px 16px rgba(6, 182, 212, 0.3);
   }
 
   .save-button.has-changes:hover:not(:disabled) {
-    background: rgba(110, 160, 110, 0.9);
+    background: var(--accent-light);
+    box-shadow: 0 6px 20px rgba(6, 182, 212, 0.4);
   }
 
   .unsaved-indicator {
-    color: rgba(255, 200, 100, 0.9);
+    color: var(--secondary-color);
     font-weight: bold;
     font-size: var(--font-size-lg);
     line-height: 1;
     animation: pulse 2s infinite;
+    text-shadow: var(--text-shadow-glass);
   }
 
   @keyframes pulse {

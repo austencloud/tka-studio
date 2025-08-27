@@ -6,15 +6,19 @@ import type {
   IBeatRenderingService,
   ICanvasManagementService,
 } from "../../interfaces/image-export-interfaces";
-import type { IPictographService } from "../../interfaces/pictograph-interfaces";
 import type { ISVGToCanvasConverterService } from "../../interfaces/svg-conversion-interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
+@injectable()
 export class BeatRenderingService implements IBeatRenderingService {
   constructor(
-    private _pictographService: IPictographService,
+    @inject(TYPES.ISVGToCanvasConverterService)
     private svgToCanvasConverter: ISVGToCanvasConverterService,
-    private _beatGridService: IBeatGridService,
+    @inject(TYPES.IBeatGridService) private _beatGridService: IBeatGridService,
+    @inject(TYPES.IBeatFallbackRenderingService)
     private fallbackService: IBeatFallbackRenderingService,
+    @inject(TYPES.ICanvasManagementService)
     private canvasManager: ICanvasManagementService
   ) {}
 

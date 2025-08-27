@@ -6,6 +6,7 @@
  */
 
 import type { BeatData } from "$domain/BeatData";
+import { injectable } from "inversify";
 import type { PictographData } from "$domain/PictographData";
 import {
   createStartPositionData,
@@ -23,6 +24,7 @@ interface StartPositionData {
 /**
  * Service implementation for start position selection
  */
+@injectable()
 export class StartPositionSelectionService
   implements IStartPositionSelectionService
 {
@@ -82,12 +84,11 @@ export class StartPositionSelectionService
   async preloadOptionsForPosition(_endPosition: string): Promise<void> {
     try {
       // Import and use the LetterQueryService to preload options
-      const { resolve } = await import("$services/bootstrap");
-      const { ILetterQueryServiceInterface } = await import(
-        "$services/di/interfaces/codex-interfaces"
+      const { resolve, TYPES } = await import(
+        "$lib/services/inversify/container"
       );
       // Resolve service to trigger initialization
-      resolve(ILetterQueryServiceInterface);
+      resolve(TYPES.ILetterQueryService);
 
       // LetterQueryService initializes automatically when first used
       console.log("✅ CSV data preloaded for option picker");

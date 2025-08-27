@@ -1,15 +1,18 @@
-
 // Section state management for option picker
 export function createSectionState() {
-  let currentSection = $state('letters');
-  let sections = $state(['letters', 'positions', 'motions']);
-  
+  let currentSection = $state("letters");
+  const sections = $state(["letters", "positions", "motions"]);
+
   return {
-    get currentSection() { return currentSection; },
-    get sections() { return sections; },
+    get currentSection() {
+      return currentSection;
+    },
+    get sections() {
+      return sections;
+    },
     setSection(section: string) {
       currentSection = section;
-    }
+    },
   };
 }
 

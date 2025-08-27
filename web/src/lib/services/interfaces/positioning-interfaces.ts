@@ -13,9 +13,45 @@ import type {
 import type { GridMode } from "./core-types";
 import type { MotionType } from "./domain-types";
 import { MotionColor } from "../../domain/enums";
+import type { Direction } from "../implementations/positioning/BetaPropDirectionCalculator";
 
 // Import orchestrator interface from positioning services
 export type { IArrowPositioningOrchestrator } from "../positioning/core-services";
+
+// ============================================================================
+// BETA OFFSET CALCULATOR
+// ============================================================================
+
+/**
+ * Position interface for beta offset calculations
+ */
+export interface Position {
+  x: number;
+  y: number;
+}
+
+/**
+ * Service interface for beta offset calculations
+ * Converts direction values to pixel offsets for beta prop positioning
+ */
+export interface IBetaOffsetCalculator {
+  /**
+   * Calculate new position with offset based on direction
+   */
+  calculateNewPositionWithOffset(
+    currentPosition: Position,
+    direction: Direction
+  ): Position;
+
+  /**
+   * Calculate beta separation offsets for both props
+   * Returns offsets for blue and red props based on their calculated directions
+   */
+  calculateBetaSeparationOffsets(
+    blueDirection: Direction | null,
+    redDirection: Direction | null
+  ): { blue: Position; red: Position };
+}
 
 // ============================================================================
 // ARROW POSITIONING SERVICE

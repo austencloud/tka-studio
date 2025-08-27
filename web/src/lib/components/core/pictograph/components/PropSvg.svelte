@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { MotionData, PictographData } from "$lib/domain";
-  import { resolve } from "$lib/services/bootstrap";
-  import { IPropCoordinatorServiceInterface } from "$lib/services/di/interfaces/core-interfaces";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
+
   import type { IPropCoordinatorService } from "$lib/services/implementations/rendering/PropCoordinatorService";
   interface Props {
     motionData: MotionData; // Single source of truth - contains embedded prop placement data
@@ -29,9 +29,8 @@
   // Native SVG content scales automatically with the parent SVG container
   // No manual scaling needed - the 950x950 coordinate system handles this naturally
 
-  const propCoordinator: IPropCoordinatorService = resolve(
-    IPropCoordinatorServiceInterface
-  );
+  const propCoordinator: IPropCoordinatorService =
+    resolve<IPropCoordinatorService>(TYPES.IPropCoordinatorService);
 
   let renderData = $state<RenderData>({
     position: { x: 475, y: 475 },

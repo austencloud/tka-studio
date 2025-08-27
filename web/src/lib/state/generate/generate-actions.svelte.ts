@@ -5,7 +5,6 @@
  * to create real sequences that update the BeatFrame.
  */
 
-import { resolve } from "$lib/services/bootstrap";
 import type {
   ISequenceGenerationService,
   GenerationOptions,
@@ -53,8 +52,11 @@ export function createGenerationActionsState() {
 
     try {
       // Get the sequence generation service through DI
+      const { resolve, TYPES } = await import(
+        "$lib/services/inversify/container"
+      );
       const sequenceGenerationService = resolve<ISequenceGenerationService>(
-        "ISequenceGenerationService"
+        TYPES.ISequenceGenerationService
       );
 
       if (!sequenceGenerationService) {

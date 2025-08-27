@@ -1,11 +1,11 @@
 <!-- ExportPanel.svelte - Construct Tab Export Panel with Real TKA Image Export -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { resolve } from "$services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createImageExportState } from "$lib/state/image-export-state.svelte";
   import type { SequenceData } from "$lib/domain";
   import type { ITKAImageExportService } from "$services/interfaces/image-export-interfaces";
-  import { ITKAImageExportServiceInterface } from "$services/di/interfaces/image-export-interfaces";
+
   import ExportActionsCard from "./ExportActionsCard.svelte";
   import ExportPreviewCard from "./ExportPreviewCard.svelte";
   import ExportSettingsCard from "./ExportSettingsCard.svelte";
@@ -28,9 +28,7 @@
 
   // Get the real TKA image export service
   const imageExportService = browser
-    ? (resolve(
-        ITKAImageExportServiceInterface
-      ) as ITKAImageExportService | null)
+    ? resolve<ITKAImageExportService>(TYPES.ITKAImageExportService)
     : null;
 
   // Create image export state with real service

@@ -19,8 +19,6 @@ export const TYPES = {
   IPanelManagementService: Symbol.for("IPanelManagementService"),
 
   // === RENDERING SERVICES ===
-  IPictographRenderingService: Symbol.for("IPictographRenderingService"),
-  IPictographService: Symbol.for("IPictographService"),
   ISvgUtilityService: Symbol.for("ISvgUtilityService"),
   ISvgConfiguration: Symbol.for("ISvgConfiguration"),
   IDataTransformationService: Symbol.for("IDataTransformationService"),
@@ -33,7 +31,7 @@ export const TYPES = {
   IArrowPositioningOrchestrator: Symbol.for("IArrowPositioningOrchestrator"),
   IArrowPositioningService: Symbol.for("IArrowPositioningService"),
   IArrowAdjustmentCalculator: Symbol.for("IArrowAdjustmentCalculator"),
-  IPositionMappingService: Symbol.for("IPositionMappingService"),
+  IPositionMapper: Symbol.for("IPositionMapper"),
   IPositionCalculatorService: Symbol.for("IPositionCalculatorService"),
   IBetaOffsetCalculator: Symbol.for("IBetaOffsetCalculator"),
   IOrientationCalculationService: Symbol.for("IOrientationCalculationService"),
@@ -43,7 +41,6 @@ export const TYPES = {
   IPictographValidatorService: Symbol.for("IPictographValidatorService"),
   IGridModeDeriver: Symbol.for("IGridModeDeriver"),
   IPictographGenerator: Symbol.for("IPictographGenerator"),
-  IPositionMapper: Symbol.for("IPositionMapper"),
 
   // === BROWSE SERVICES ===
   IBrowseService: Symbol.for("IBrowseService"),
@@ -103,9 +100,16 @@ export const TYPES = {
 
   // === CODEX SERVICES ===
   ILetterQueryService: Symbol.for("ILetterQueryService"),
+  IPictographTransformationService: Symbol.for(
+    "IPictographTransformationService"
+  ),
+  ILetterMappingRepository: Symbol.for("ILetterMappingRepository"),
+  IOptionFilteringService: Symbol.for("IOptionFilteringService"),
 
   // === ANIMATOR SERVICES ===
   IAnimatorService: Symbol.for("IAnimatorService"),
+  ISequenceAnimationEngine: Symbol.for("ISequenceAnimationEngine"),
+  ISequenceAnimationOrchestrator: Symbol.for("ISequenceAnimationOrchestrator"),
 
   // === APPLICATION SERVICES ===
   IApplicationInitializationService: Symbol.for(
@@ -121,6 +125,43 @@ export const TYPES = {
   IMotionQueryService: Symbol.for("IMotionQueryService"),
   ILetterDeriver: Symbol.for("ILetterDeriver"),
   ICsvLoaderService: Symbol.for("ICsvLoaderService"),
+
+  // === MISSING SERVICES ===
+  IExampleSequenceService: Symbol.for("IExampleSequenceService"),
+  ILessonRepository: Symbol.for("ILessonRepository"),
+  ICodexService: Symbol.for("ICodexService"),
+  IPictographOperationsService: Symbol.for("IPictographOperationsService"),
+  IBeatCalculationService: Symbol.for("IBeatCalculationService"),
+  IPropInterpolationService: Symbol.for("IPropInterpolationService"),
+  IAnimationStateService: Symbol.for("IAnimationStateService"),
+  IAngleCalculationService: Symbol.for("IAngleCalculationService"),
+  IMotionCalculationService: Symbol.for("IMotionCalculationService"),
+  IEndpointCalculationService: Symbol.for("IEndpointCalculationService"),
+  ICoordinateUpdateService: Symbol.for("ICoordinateUpdateService"),
+  IImageExportServices: Symbol.for("IImageExportServices"),
+  IAnimatedPictographDataService: Symbol.for("IAnimatedPictographDataService"),
+  IBackgroundService: Symbol.for("IBackgroundService"),
+  IBrowseStatePersistenceService: Symbol.for("IBrowseStatePersistenceService"),
+  IArrowPlacementService: Symbol.for("IArrowPlacementService"),
+  ICSVParserService: Symbol.for("ICSVParserService"),
+  IMotionParameterService: Symbol.for("IMotionParameterService"),
+  IAnimationControlService: Symbol.for("IAnimationControlService"),
+  IMotionLetterIdentificationService: Symbol.for(
+    "IMotionLetterIdentificationService"
+  ),
+  ICSVPictographLoaderService: Symbol.for("ICSVPictographLoaderService"),
+  IArrowLocationService: Symbol.for("IArrowLocationService"),
+  IArrowPlacementKeyService: Symbol.for("IArrowPlacementKeyService"),
+  IPropPlacementService: Symbol.for("IPropPlacementService"),
+
+  // === MISSING TYPES ===
+  IArrowPathResolutionService: Symbol.for("IArrowPathResolutionService"),
+  IUltimateArrowRenderingService: Symbol.for("IUltimateArrowRenderingService"),
+  IUltimatePropRenderingService: Symbol.for("IUltimatePropRenderingService"),
+  IUltimatePictographRenderingService: Symbol.for(
+    "IUltimatePictographRenderingService"
+  ),
+  ICSVLoaderService: Symbol.for("ICSVLoaderService"),
 } as const;
 
 // Type helper for getting service types
@@ -136,8 +177,6 @@ export const CoreTypes = {
 } as const;
 
 export const RenderingTypes = {
-  IPictographRenderingService: TYPES.IPictographRenderingService,
-  IPictographService: TYPES.IPictographService,
   ISvgUtilityService: TYPES.ISvgUtilityService,
   IGridRenderingService: TYPES.IGridRenderingService,
   IArrowRenderingService: TYPES.IArrowRenderingService,
@@ -145,7 +184,7 @@ export const RenderingTypes = {
 
 export const PositioningTypes = {
   IArrowPositioningOrchestrator: TYPES.IArrowPositioningOrchestrator,
-  IPositionMappingService: TYPES.IPositionMappingService,
+  IPositionMapper: TYPES.IPositionMapper,
   IPositionCalculatorService: TYPES.IPositionCalculatorService,
   IArrowPositioningService: TYPES.IArrowPositioningService,
   IBetaOffsetCalculator: TYPES.IBetaOffsetCalculator,

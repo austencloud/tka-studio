@@ -9,13 +9,15 @@ import type { BeatData, MotionData } from "$lib/domain";
 import type {
   IPropInterpolationService,
   InterpolationResult,
-} from "$lib/services/di/interfaces/animator-interfaces";
+} from "$lib/services/interfaces/application-interfaces";
 import {
   calculateMotionEndpoints,
   lerpAngle,
   type MotionEndpoints,
 } from "../../utils/math/index.js";
+import { injectable } from "inversify";
 
+@injectable()
 export class PropInterpolationService implements IPropInterpolationService {
   /**
    * Calculate interpolated prop angles for current beat progress

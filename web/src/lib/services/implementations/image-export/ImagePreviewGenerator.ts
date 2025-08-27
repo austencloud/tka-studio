@@ -13,11 +13,16 @@ import type {
   IImagePreviewGenerator,
   TKAImageExportOptions,
 } from "../../interfaces/image-export-interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
+@injectable()
 export class ImagePreviewGenerator implements IImagePreviewGenerator {
   constructor(
+    @inject(TYPES.IImageCompositionService)
     private compositionService: IImageCompositionService,
-    private fileService: IFileExportService,
+    @inject(TYPES.IFileExportService) private fileService: IFileExportService,
+    @inject(TYPES.IExportConfigurationManager)
     private configManager: IExportConfigurationManager
   ) {}
 

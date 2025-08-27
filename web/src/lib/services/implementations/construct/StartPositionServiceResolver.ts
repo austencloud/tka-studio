@@ -3,15 +3,14 @@
  */
 
 import type { IStartPositionService } from "$services/interfaces/application-interfaces";
-import type { IPictographRenderingService } from "$services/interfaces/pictograph-interfaces";
-import { resolve } from "$services/bootstrap";
+import { resolve, TYPES } from "$lib/services/inversify/container";
+import { renderPictograph } from "../../utils/pictograph-rendering-utils";
 
 /**
  * Resolves and manages service dependencies for start position functionality
  */
 export class StartPositionServiceResolver {
   private startPositionService: IStartPositionService | null = null;
-  private pictographRenderingService: IPictographRenderingService | null = null;
   private resolutionAttempted = false;
 
   /**
@@ -19,13 +18,13 @@ export class StartPositionServiceResolver {
    */
   public async resolveServices(): Promise<{
     startPositionService: IStartPositionService | null;
-    pictographRenderingService: IPictographRenderingService | null;
+    renderPictograph: typeof renderPictograph;
     isResolved: boolean;
   }> {
     if (this.resolutionAttempted) {
       return {
         startPositionService: this.startPositionService,
-        pictographRenderingService: this.pictographRenderingService,
+        renderPictograph,
         isResolved: this.isServicesResolved(),
       };
     }
@@ -36,18 +35,14 @@ export class StartPositionServiceResolver {
       // Resolve start position service
       this.startPositionService = await this.resolveStartPositionService();
 
-      // Resolve pictograph rendering service
-      this.pictographRenderingService =
-        await this.resolvePictographRenderingService();
-
       console.log("🔧 StartPositionServiceResolver: Services resolved", {
         startPositionService: !!this.startPositionService,
-        pictographRenderingService: !!this.pictographRenderingService,
+        renderPictograph: "Available via utility function",
       });
 
       return {
         startPositionService: this.startPositionService,
-        pictographRenderingService: this.pictographRenderingService,
+        renderPictograph,
         isResolved: this.isServicesResolved(),
       };
     } catch (error) {
@@ -57,7 +52,7 @@ export class StartPositionServiceResolver {
       );
       return {
         startPositionService: null,
-        pictographRenderingService: null,
+        renderPictograph,
         isResolved: false,
       };
     }
@@ -71,17 +66,17 @@ export class StartPositionServiceResolver {
   }
 
   /**
-   * Get pictograph rendering service (must call resolveServices first)
+   * Get pictograph rendering function (direct utility access)
    */
-  public getPictographRenderingService(): IPictographRenderingService | null {
-    return this.pictographRenderingService;
+  public getRenderPictograph(): typeof renderPictograph {
+    return renderPictograph;
   }
 
   /**
    * Check if all services are resolved
    */
   public isServicesResolved(): boolean {
-    return !!(this.startPositionService && this.pictographRenderingService);
+    return !!this.startPositionService;
   }
 
   /**
@@ -89,7 +84,6 @@ export class StartPositionServiceResolver {
    */
   public resetServices(): void {
     this.startPositionService = null;
-    this.pictographRenderingService = null;
     this.resolutionAttempted = false;
   }
 
@@ -98,7 +92,9 @@ export class StartPositionServiceResolver {
    */
   private async resolveStartPositionService(): Promise<IStartPositionService | null> {
     try {
-      const service = resolve("IStartPositionService") as IStartPositionService;
+      const service = resolve(
+        TYPES.IStartPositionService
+      ) as IStartPositionService;
 
       if (!service) {
         console.warn(
@@ -114,35 +110,6 @@ export class StartPositionServiceResolver {
     } catch (error) {
       console.error(
         "❌ StartPositionServiceResolver: Failed to resolve IStartPositionService",
-        error
-      );
-      return null;
-    }
-  }
-
-  /**
-   * Resolve pictograph rendering service
-   */
-  private async resolvePictographRenderingService(): Promise<IPictographRenderingService | null> {
-    try {
-      const service = resolve(
-        "IPictographRenderingService"
-      ) as IPictographRenderingService;
-
-      if (!service) {
-        console.warn(
-          "⚠️ StartPositionServiceResolver: IPictographRenderingService not found"
-        );
-        return null;
-      }
-
-      console.log(
-        "✅ StartPositionServiceResolver: IPictographRenderingService resolved"
-      );
-      return service;
-    } catch (error) {
-      console.error(
-        "❌ StartPositionServiceResolver: Failed to resolve IPictographRenderingService",
         error
       );
       return null;

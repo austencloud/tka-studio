@@ -163,14 +163,15 @@
 
 <style>
   .music-player {
-    background: rgba(40, 40, 50, 0.9);
-    border: 1px solid rgba(80, 80, 100, 0.4);
-    border-radius: 6px;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     padding: var(--spacing-sm) var(--spacing-md);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-xs);
-    backdrop-filter: var(--glass-backdrop);
     min-height: 85px;
     transition: all var(--transition-normal);
   }
@@ -208,8 +209,8 @@
   .position-slider {
     width: 100%;
     height: 6px;
-    background: rgba(60, 60, 70, 0.8);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-sm);
     outline: none;
     cursor: pointer;
     transition: all var(--transition-normal);
@@ -219,9 +220,9 @@
 
   .position-slider::-webkit-slider-track {
     height: 6px;
-    background: rgba(60, 60, 70, 0.8);
-    border-radius: 3px;
-    border: 1px solid rgba(80, 80, 100, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
   .position-slider::-webkit-slider-thumb {
@@ -229,30 +230,32 @@
     appearance: none;
     height: 16px;
     width: 16px;
-    background: rgba(100, 150, 200, 0.9);
-    border: 1px solid rgba(80, 120, 160, 0.8);
+    background: var(--primary-color);
+    border: 1px solid var(--primary-light);
     border-radius: 50%;
     cursor: pointer;
     transition: all var(--transition-fast);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
   }
 
   .position-slider::-webkit-slider-thumb:hover {
-    background: rgba(120, 170, 220, 0.9);
+    background: var(--primary-light);
     transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
   }
 
   .position-slider::-moz-range-track {
     height: 6px;
-    background: rgba(60, 60, 70, 0.8);
-    border-radius: 3px;
-    border: 1px solid rgba(80, 80, 100, 0.5);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
   .position-slider::-moz-range-thumb {
     height: 16px;
     width: 16px;
-    background: rgba(100, 150, 200, 0.9);
-    border: 1px solid rgba(80, 120, 160, 0.8);
+    background: var(--primary-color);
+    border: 1px solid var(--primary-light);
     border-radius: 50%;
     cursor: pointer;
     transition: all var(--transition-fast);
@@ -276,11 +279,11 @@
     gap: var(--spacing-xs);
     font-size: var(--font-size-sm);
     font-family: "Segoe UI", sans-serif;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
   }
 
   .time-separator {
-    color: rgba(255, 255, 255, 0.6);
+    color: var(--text-secondary);
   }
 
   .control-buttons {
@@ -290,9 +293,9 @@
   }
 
   .control-button {
-    background: rgba(70, 130, 180, 0.8);
-    border: 1px solid rgba(100, 150, 200, 0.6);
-    border-radius: 4px;
+    background: var(--primary-color);
+    border: 1px solid var(--primary-light);
+    border-radius: var(--border-radius-sm);
     color: white;
     font-weight: bold;
     font-size: var(--font-size-sm);
@@ -303,24 +306,28 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
   }
 
   .control-button:hover:not(:disabled) {
-    background: rgba(80, 140, 190, 0.9);
+    background: var(--primary-light);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
   }
 
   .control-button:active:not(:disabled) {
-    background: rgba(60, 120, 170, 0.9);
+    background: var(--primary-dark);
     transform: translateY(0);
   }
 
   .control-button:disabled {
-    background: rgba(60, 60, 70, 0.5);
-    border-color: rgba(80, 80, 90, 0.3);
-    color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
     cursor: not-allowed;
     transform: none;
+    box-shadow: none;
   }
 
   /* Responsive adjustments */

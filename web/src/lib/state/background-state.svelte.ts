@@ -1,15 +1,17 @@
-import { resolve } from "$lib/services/bootstrap";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 import {
   BackgroundType,
   type QualityLevel,
   type PerformanceMetrics,
   type BackgroundSystem,
 } from "$lib/domain/background/BackgroundTypes";
-import type { IBackgroundService } from "$lib/services/implementations/background/BackgroundService";
+import type { IBackgroundService } from "$lib/services/interfaces/background-interfaces";
 
 export function createBackgroundState() {
   // Get services from DI container
-  const backgroundService = resolve("IBackgroundService") as IBackgroundService;
+  const backgroundService = resolve(
+    TYPES.IBackgroundService
+  ) as IBackgroundService;
 
   // Runes-based reactive state
   let backgroundType = $state<BackgroundType>(BackgroundType.NIGHT_SKY);
@@ -19,9 +21,9 @@ export function createBackgroundState() {
   let metrics = $state<PerformanceMetrics>({ fps: 60, warnings: [] });
 
   // Derived state
-  let isReady = $derived(currentSystem !== null && !isLoading);
-  let hasWarnings = $derived(metrics.warnings.length > 0);
-  let shouldOptimize = $derived(metrics.fps < 30);
+  const isReady = $derived(currentSystem !== null && !isLoading);
+  const hasWarnings = $derived(metrics.warnings.length > 0);
+  const shouldOptimize = $derived(metrics.fps < 30);
 
   return {
     // State getters

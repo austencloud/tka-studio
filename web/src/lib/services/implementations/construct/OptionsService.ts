@@ -15,7 +15,7 @@ import {
   OptionPickerSortMethod,
 } from "$lib/domain";
 import type { PictographData } from "$lib/domain/PictographData";
-import { resolve } from "$lib/services/bootstrap";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 import type { IPositionMapper } from "$lib/services/interfaces/movement/IPositionMapper";
 
 /**
@@ -23,7 +23,7 @@ import type { IPositionMapper } from "$lib/services/interfaces/movement/IPositio
  */
 function getEndPosition(option: PictographData): string | null {
   if (option.motions?.blue && option.motions?.red) {
-    const positionService = resolve("IPositionMapper") as IPositionMapper;
+    const positionService = resolve(TYPES.IPositionMapper) as IPositionMapper;
     const position = positionService.getPositionFromLocations(
       option.motions.blue.endLocation,
       option.motions.red.endLocation

@@ -10,6 +10,8 @@ import type { BeatData } from "$lib/domain/BeatData";
 import type { PictographData } from "$lib/domain/PictographData";
 import type { IPositionMapper } from "../../interfaces/movement/IPositionMapper";
 import type { IEnumMappingService } from "./EnumMappingService";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
 export interface FilterCriteria {
   startPosition?: string;
@@ -54,10 +56,12 @@ export interface IOptionFilteringService {
   extractEndPosition(lastBeat: BeatData): string | null;
 }
 
+@injectable()
 export class OptionFilteringService implements IOptionFilteringService {
   constructor(
+    @inject(TYPES.IEnumMappingService)
     private enumMappingService: IEnumMappingService,
-    private positionService: IPositionMapper
+    @inject(TYPES.IPositionMapper) private positionService: IPositionMapper
   ) {}
 
   /**

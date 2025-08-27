@@ -32,6 +32,7 @@ export class ParallaxStarSystem {
   private config: ParallaxConfig;
   private starConfig: StarConfig;
   private qualitySettings: QualitySettings;
+  private lastDimensions: Dimensions | null = null;
 
   constructor(
     config: ParallaxConfig,
@@ -68,6 +69,19 @@ export class ParallaxStarSystem {
   update(dim: Dimensions, a11y: AccessibilitySettings) {
     if (!this.layers || Object.keys(this.layers).length === 0) {
       this.initialize(dim, a11y);
+      this.lastDimensions = dim;
+      return;
+    }
+
+    // Check if dimensions have changed significantly (requiring reinitialization)
+    const dimensionsChanged =
+      !this.lastDimensions ||
+      Math.abs(dim.width - this.lastDimensions.width) > 50 ||
+      Math.abs(dim.height - this.lastDimensions.height) > 50;
+
+    if (dimensionsChanged) {
+      this.initialize(dim, a11y);
+      this.lastDimensions = dim;
       return;
     }
 
@@ -130,5 +144,6 @@ export class ParallaxStarSystem {
       mid: { stars: [], driftX: 0, driftY: 0 },
       near: { stars: [], driftX: 0, driftY: 0 },
     };
+    this.lastDimensions = null;
   }
 }

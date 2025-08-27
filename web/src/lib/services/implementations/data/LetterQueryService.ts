@@ -6,18 +6,20 @@
  */
 
 import type { PictographData } from "$lib/domain";
-import { injectable } from "inversify";
-import { GridMode, MotionType } from "$lib/domain";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
+import { GridMode, MotionType, Letter } from "$lib/domain";
+import type { CSVRow } from "../movement/CSVPictographParserService";
 
 import type { LetterMapping } from "$lib/domain/codex/types";
 import type { ILetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
 import type { ICsvLoaderService } from "./CsvLoaderService";
 import type { ICSVParserService, ParsedCsvRow } from "./CSVParserService";
-import type { IPictographTransformationService } from "./PictographTransformationService";
+import { CSVPictographParserService } from "../movement/CSVPictographParserService";
 
 export interface ILetterQueryService {
   getPictographByLetter(
-    letter: string,
+    letter: Letter,
     gridMode: GridMode
   ): Promise<PictographData | null>;
   getAllCodexPictographs(gridMode: GridMode): Promise<PictographData[]>;
@@ -27,7 +29,7 @@ export interface ILetterQueryService {
     gridMode: GridMode
   ): Promise<PictographData[]>;
   getPictographsByLetters(
-    letters: string[],
+    letters: Letter[],
     gridMode: GridMode
   ): Promise<PictographData[]>;
 }
@@ -41,10 +43,13 @@ export class LetterQueryService implements ILetterQueryService {
   private isInitialized = false;
 
   constructor(
+    @inject(TYPES.ILetterMappingRepository)
     private letterMappingRepository: ILetterMappingRepository,
+    @inject(TYPES.ICsvLoaderService)
     private csvLoaderService: ICsvLoaderService,
+    @inject(TYPES.ICSVParsingService)
     private csvParserService: ICSVParserService,
-    private pictographTransformationService: IPictographTransformationService
+    private csvPictographParser: CSVPictographParserService = new CSVPictographParserService()
   ) {}
 
   /**
@@ -126,7 +131,7 @@ export class LetterQueryService implements ILetterQueryService {
    * Get a specific pictograph by letter using LetterMappingRepository
    */
   async getPictographByLetter(
-    letter: string,
+    letter: Letter,
     gridMode: GridMode
   ): Promise<PictographData | null> {
     if (!this.letterMappingRepository) {
@@ -139,21 +144,25 @@ export class LetterQueryService implements ILetterQueryService {
     await this.ensureInitialized();
 
     try {
+      // Convert Letter enum to string for repository lookup
+      const letterString = letter.toString();
+
       // Get letter mapping from repository
-      const mapping = this.letterMappingRepository.getLetterMapping(letter);
+      const mapping =
+        this.letterMappingRepository.getLetterMapping(letterString);
       if (!mapping) {
-        console.warn(`⚠️ No letter mapping found for letter: ${letter}`);
+        console.warn(`⚠️ No letter mapping found for letter: ${letterString}`);
         return null;
       }
 
       console.log(
-        `🔍 Finding CSV data for letter ${letter} with mapping:`,
+        `🔍 Finding CSV data for letter ${letterString} with mapping:`,
         mapping
       );
 
       // Find matching CSV row
       const csvRow = this.findMatchingCsvRowByMapping(
-        letter,
+        letterString,
         mapping,
         gridMode
       );
@@ -164,11 +173,8 @@ export class LetterQueryService implements ILetterQueryService {
 
       console.log(`✅ Found CSV data for letter ${letter}:`, csvRow);
 
-      // Transform CSV row to PictographData using shared service
-      return this.pictographTransformationService.convertCsvRowToPictographData(
-        csvRow,
-        gridMode.toString()
-      );
+      // Transform CSV row to PictographData using existing service
+      return this.csvPictographParser.parseCSVRowToPictograph(csvRow as CSVRow);
     } catch (error) {
       console.error(`❌ Error getting pictograph for letter ${letter}:`, error);
       return null;
@@ -193,7 +199,8 @@ export class LetterQueryService implements ILetterQueryService {
       console.log(`📚 Getting all ${allLetters.length} pictographs from codex`);
 
       const pictographs: PictographData[] = [];
-      for (const letter of allLetters) {
+      for (const letterString of allLetters) {
+        const letter = letterString as Letter; // Convert string to Letter enum
         const pictograph = await this.getPictographByLetter(letter, gridMode);
         if (pictograph) {
           pictographs.push(pictograph);
@@ -240,12 +247,9 @@ export class LetterQueryService implements ILetterQueryService {
       for (let i = 0; i < csvRows.length; i++) {
         const row = csvRows[i];
         try {
-          const pictograph =
-            this.pictographTransformationService.convertCsvRowToPictographData(
-              row,
-              gridMode.toString(),
-              i
-            );
+          const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+            row as CSVRow
+          );
           if (pictograph) {
             pictographs.push(pictograph);
           }
@@ -294,7 +298,8 @@ export class LetterQueryService implements ILetterQueryService {
       );
 
       const pictographs: PictographData[] = [];
-      for (const letter of matchingLetters) {
+      for (const letterString of matchingLetters) {
+        const letter = letterString as Letter; // Convert string to Letter enum
         const pictograph = await this.getPictographByLetter(letter, gridMode);
         if (pictograph) {
           pictographs.push(pictograph);
@@ -315,7 +320,7 @@ export class LetterQueryService implements ILetterQueryService {
    * Get pictographs for multiple letters
    */
   async getPictographsByLetters(
-    letters: string[],
+    letters: Letter[],
     gridMode: GridMode
   ): Promise<PictographData[]> {
     await this.ensureInitialized();

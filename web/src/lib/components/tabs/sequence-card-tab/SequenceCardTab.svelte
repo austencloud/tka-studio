@@ -211,16 +211,21 @@
     display: flex;
     flex-direction: column;
     height: 100%;
-    background: #1a1a1a;
-    color: white;
+    background: transparent;
+    color: var(--text-color);
   }
 
   /* Header */
   .header {
-    background: #2a2a2a;
-    border-bottom: 1px solid #444;
-    padding: 16px 20px;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border-bottom: var(--glass-border);
+    border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
+    box-shadow: var(--shadow-glass);
+    padding: var(--spacing-lg) var(--spacing-xl);
     flex-shrink: 0;
+    margin: var(--spacing-md);
+    margin-bottom: 0;
   }
 
   .header-content {
@@ -229,16 +234,17 @@
   }
 
   .title {
-    margin: 0 0 4px 0;
-    font-size: 24px;
+    margin: 0 0 var(--spacing-xs) 0;
+    font-size: var(--font-size-2xl);
     font-weight: 600;
-    color: white;
+    color: var(--text-color);
+    text-shadow: var(--text-shadow-glass);
   }
 
   .subtitle {
     margin: 0;
-    font-size: 14px;
-    color: #aaa;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
   }
 
   /* Main Content */
@@ -246,18 +252,27 @@
     display: flex;
     flex: 1;
     min-height: 0;
+    gap: var(--spacing-md);
+    padding: 0 var(--spacing-md) var(--spacing-md);
   }
 
   .navigation {
     width: 250px;
-    background: #2a2a2a;
-    border-right: 1px solid #444;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     flex-shrink: 0;
   }
 
   .content {
     flex: 1;
-    background: #1a1a1a;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     overflow: hidden;
   }
 
@@ -265,6 +280,7 @@
   @media (max-width: 768px) {
     .main-content {
       flex-direction: column;
+      gap: var(--spacing-sm);
     }
 
     .navigation {
@@ -272,15 +288,24 @@
       height: auto;
       max-height: 200px;
       border-right: none;
-      border-bottom: 1px solid #444;
     }
 
     .title {
-      font-size: 20px;
+      font-size: var(--font-size-xl);
     }
 
     .subtitle {
-      font-size: 12px;
+      font-size: var(--font-size-xs);
+    }
+
+    .header {
+      margin: var(--spacing-sm);
+      margin-bottom: 0;
+      padding: var(--spacing-md) var(--spacing-lg);
+    }
+
+    .main-content {
+      padding: 0 var(--spacing-sm) var(--spacing-sm);
     }
   }
 </style>

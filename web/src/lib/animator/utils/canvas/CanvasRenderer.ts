@@ -83,29 +83,7 @@ export class CanvasRenderer {
     const staffWidth = STAFF_VIEWBOX_WIDTH * gridScaleFactor;
     const staffHeight = STAFF_VIEWBOX_HEIGHT * gridScaleFactor;
 
-    // 🔧 [RENDER DEBUG] Log rendering values
-    console.log("🔧 [RENDER DEBUG] Drawing staff:", {
-      canvasSize: canvasSize,
-      centerX: centerX,
-      centerY: centerY,
-      gridScaleFactor: gridScaleFactor,
-      scaledHalfwayRadius: scaledHalfwayRadius,
-      inwardFactor: inwardFactor,
-      centerPathAngle: propState.centerPathAngle,
-      centerPathAngleDegrees: (
-        (propState.centerPathAngle * 180) /
-        Math.PI
-      ).toFixed(1),
-      staffRotationAngle: propState.staffRotationAngle,
-      staffRotationAngleDegrees: (
-        (propState.staffRotationAngle * 180) /
-        Math.PI
-      ).toFixed(1),
-      calculatedX: x,
-      calculatedY: y,
-      propStateX: propState.x,
-      propStateY: propState.y,
-    });
+    // Render calculations completed
 
     // Draw exactly as in standalone
     ctx.save();

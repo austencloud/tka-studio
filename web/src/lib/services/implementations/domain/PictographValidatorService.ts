@@ -84,17 +84,6 @@ export class PictographValidatorService implements IPictographValidatorService {
       }
     }
 
-    // Check for valid transitions
-    for (let i = 0; i < positions.length - 1; i++) {
-      const error = this.validatePositionTransition(
-        positions[i],
-        positions[i + 1]
-      );
-      if (error) {
-        return false;
-      }
-    }
-
     return true;
   }
 
@@ -142,22 +131,6 @@ export class PictographValidatorService implements IPictographValidatorService {
     }
 
     return errors;
-  }
-
-  private validatePositionTransition(
-    start: GridPosition,
-    end: GridPosition
-  ): string | null {
-    const startSystem = this.getPositionSystem(start);
-    const endSystem = this.getPositionSystem(end);
-
-    // Allow transitions within same system or to different systems for special patterns
-    if (startSystem === endSystem) {
-      return null; // Same system transitions are generally valid
-    }
-
-    // Cross-system transitions are valid for certain movement types
-    return null;
   }
 
   private getPositionSystem(

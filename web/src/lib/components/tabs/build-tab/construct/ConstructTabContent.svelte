@@ -6,8 +6,8 @@
   based on the current sequence state.
 -->
 <script lang="ts">
-	import OptionPickerContainer from './option-picker/OptionPickerContainer.svelte';
-	import StartPositionPicker from './start-position-picker/StartPositionPicker.svelte';
+  import OptionPickerContainer from "./option-picker/OptionPickerContainer.svelte";
+  import StartPositionPicker from "./start-position-picker/StartPositionPicker.svelte";
   import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
   import type { PictographData } from "$services/interfaces/domain-types";
 
@@ -16,13 +16,14 @@
   import { fade } from "svelte/transition";
   // CRITICAL FIX: Also watch the singleton sequence state for updates
   // This ensures we react to changes made by the coordination service
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve } from "$lib/services/inversify/container";
+  import { TYPES } from "$lib/services/inversify/types";
   import { createSequenceState } from "$lib/state/sequence/sequence-state.svelte";
 
   // Get service from DI container and create component-scoped state
-  const sequenceStateService = resolve(
-    "ISequenceStateService"
-  ) as import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService;
+  const sequenceStateService = resolve<
+    import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService
+  >(TYPES.ISequenceStateService);
   const sequenceState = createSequenceState(sequenceStateService);
 
   // TODO: Implement proper state synchronization with new DI pattern

@@ -5,14 +5,16 @@
  * Single responsibility: Prop state management and coordinate transformations.
  */
 
+import { injectable } from "inversify";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 import { calculateCoordinatesFromAngle } from "../../utils/math/index.js";
 import type {
   IAnimationStateService,
   PropStates,
   InterpolationResult,
-} from "$lib/services/di/interfaces/animator-interfaces";
+} from "$lib/services/interfaces/application-interfaces";
 
+@injectable()
 export class AnimationStateService implements IAnimationStateService {
   private bluePropState: PropState = {
     centerPathAngle: 0,

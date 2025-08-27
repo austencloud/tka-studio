@@ -207,7 +207,7 @@ export class ExampleSequenceService implements IExampleSequenceService {
  * How to register this service in the DI container:
  *
  * ```typescript
- * // In src/lib/services/di/registration/example-services.ts
+ * // In src/lib/services/inversify/bindings.ts
  * import { ExampleSequenceService } from '$lib/examples/services/example-sequence-service';
  *
  * export async function registerExampleServices(container: ServiceContainer) {
@@ -224,7 +224,7 @@ export class ExampleSequenceService implements IExampleSequenceService {
  *
  * ```svelte
  * <script lang="ts">
- *   import { resolve } from '$services/bootstrap';
+ *   import { resolve } from '$services/inversify/container';
  *
  *   const sequenceService = resolve('IExampleSequenceService');
  *

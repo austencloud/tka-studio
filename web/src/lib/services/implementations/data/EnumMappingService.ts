@@ -116,7 +116,7 @@ export class EnumMappingService implements IEnumMappingService {
   mapRotationDirection(rotationDirection: string): RotationDirection {
     if (!rotationDirection) return RotationDirection.NO_ROTATION;
 
-    switch (rotationDirection.toLowerCase().trim()) {
+    switch (rotationDirection.trim()) {
       case "cw":
         return RotationDirection.CLOCKWISE;
       case "ccw":

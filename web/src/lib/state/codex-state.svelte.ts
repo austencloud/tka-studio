@@ -7,30 +7,27 @@
  */
 
 import type { PictographData } from "$lib/domain/PictographData";
-import { getContext } from "svelte";
-import type { ServiceContainer } from "$lib/services/di/ServiceContainer";
-import { ICodexServiceInterface } from "$lib/services/di/interfaces/codex-interfaces";
-import type { ICodexService } from "$lib/services/codex/ICodexService";
+import type { ICodexService } from "$lib/services/interfaces/application-interfaces";
+import { TYPES } from "$lib/services/inversify/types";
+
+// CRITICAL: Import container to ensure it loads
+import { container } from "$lib/services/inversify/container";
+
+// Container is now loaded successfully - debug messages removed
+
+// TEMPORARY: Import minimal container for testing - REMOVED TO TEST MODULE EXECUTION
+// import { resolve } from "$lib/services/inversify/container";
 
 export function createCodexState() {
   console.log("🔧 createCodexState() called - creating new state instance");
 
-  // Get the DI container from context (provided by layout)
-  const getContainer =
-    getContext<() => ServiceContainer | null>("di-container");
+  // Using direct container import instead of context
 
   function getCodexService(): ICodexService {
-    console.log("🔧 getCodexService() called");
-    const container = getContainer?.();
-    if (!container) {
-      throw new Error(
-        "DI container not yet available - this should not happen after layout initialization"
-      );
-    }
+    console.log("🔧 getCodexService() called - using direct container import");
 
-    const service = container.resolve(ICodexServiceInterface);
-    console.log("🔧 Container resolved service:", !!service);
-    return service;
+    // Use the directly imported container instead of context
+    return container.get<ICodexService>(TYPES.ICodexService);
   }
 
   // Core reactive state using Svelte 5 runes

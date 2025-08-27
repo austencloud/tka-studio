@@ -9,7 +9,7 @@
 import type { BeatData } from "$domain/BeatData";
 import { createBeatData } from "$domain/BeatData";
 import type { PictographData } from "$domain/PictographData";
-import { resolve } from "../../bootstrap";
+
 import type { IConstructTabCoordinationService } from "../../interfaces/application-interfaces";
 
 export class ConstructTabEventService {
@@ -26,7 +26,9 @@ export class ConstructTabEventService {
     }
 
     try {
-      this.constructCoordinator = resolve("IConstructTabCoordinationService");
+      this.constructCoordinator = resolve(
+        TYPES.IConstructTabCoordinationService
+      );
       this.initialized = true;
     } catch (error) {
       // This is expected during SSR - services will be resolved once client-side DI container is ready

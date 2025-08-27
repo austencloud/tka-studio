@@ -62,7 +62,8 @@ export function detectFoldableDevice(): FoldableDetectionResult {
   // Check for window segments API
   const hasSegments =
     "getWindowSegments" in navigator &&
-    typeof (navigator as any).getWindowSegments === "function";
+    typeof (navigator as Navigator & { getWindowSegments?: () => unknown })
+      .getWindowSegments === "function";
 
   if (isScreenSpanning || hasSegments) {
     return {

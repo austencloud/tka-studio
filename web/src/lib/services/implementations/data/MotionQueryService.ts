@@ -6,11 +6,15 @@
  */
 
 import type { PictographData } from "$lib/domain";
-import { injectable } from "inversify";
+import { injectable, inject } from "inversify";
 import { GridMode } from "$lib/domain";
 import type { ICsvLoaderService } from "./CsvLoaderService";
 import type { ICSVParserService, ParsedCsvRow } from "./CSVParserService";
-import type { IPictographTransformationService } from "./PictographTransformationService";
+import {
+  CSVPictographParserService,
+  type CSVRow,
+} from "../movement/CSVPictographParserService";
+import { TYPES } from "../../inversify/types";
 
 export interface MotionQueryParams {
   startLocation: string;
@@ -35,9 +39,11 @@ export class MotionQueryService implements IMotionQueryService {
   private isInitialized = false;
 
   constructor(
+    @inject(TYPES.ICsvLoaderService)
     private csvLoaderService: ICsvLoaderService,
+    @inject(TYPES.ICSVParserService)
     private csvParserService: ICSVParserService,
-    private pictographTransformationService: IPictographTransformationService
+    private csvPictographParser: CSVPictographParserService = new CSVPictographParserService()
   ) {}
 
   /**
@@ -113,10 +119,9 @@ export class MotionQueryService implements IMotionQueryService {
     const matchingRow = matchingRows[0];
     console.log(`✅ Found exact match for letter "${matchingRow.letter}"`);
 
-    // Transform CSV row to PictographData using shared service
-    return this.pictographTransformationService.convertCsvRowToPictographData(
-      matchingRow,
-      gridMode.toString()
+    // Transform CSV row to PictographData using existing service
+    return this.csvPictographParser.parseCSVRowToPictograph(
+      matchingRow as CSVRow
     );
   }
 
@@ -140,11 +145,9 @@ export class MotionQueryService implements IMotionQueryService {
 
     for (const row of csvRows.slice(0, 20)) {
       // Limit to first 20 for performance
-      const pictograph =
-        this.pictographTransformationService.convertCsvRowToPictographData(
-          row,
-          GridMode.DIAMOND.toString()
-        );
+      const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+        row as CSVRow
+      );
       if (pictograph) {
         pictographs.push(pictograph);
       }

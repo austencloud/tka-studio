@@ -12,6 +12,7 @@ import type {
   PictographData,
 } from "$lib/domain";
 import { MotionColor } from "$lib/domain/enums";
+import { injectable } from "inversify";
 import { PropPlacementService } from "../positioning/PropPlacementService";
 import type { IPropPlacementService } from "../positioning/PropPlacementService";
 
@@ -35,6 +36,7 @@ export interface IPropCoordinatorService {
   ): Promise<PropRenderData>;
 }
 
+@injectable()
 export class PropCoordinatorService implements IPropCoordinatorService {
   private svgCache = new Map<
     string,
@@ -55,8 +57,6 @@ export class PropCoordinatorService implements IPropCoordinatorService {
     motionData?: MotionData,
     pictographData?: PictographData
   ): Promise<PropRenderData> {
-    // Debug logging removed for performance
-
     try {
       // ✅ SIMPLIFIED: Only need pictographData and motionData for placement calculation
       if (!pictographData) {
@@ -71,15 +71,13 @@ export class PropCoordinatorService implements IPropCoordinatorService {
         );
       }
 
-      const placementData = this.placementService.calculatePlacement(
+      const placementData = await this.placementService.calculatePlacement(
         pictographData,
         motionData
       );
 
       // Load SVG data using motion data for color (single source of truth)
-      console.log("✅ About to load SVG data");
       const svgData = await this.loadSvgData(PropPlacementData, motionData);
-      console.log("✅ SVG data loaded:", svgData);
 
       const result = {
         position: { x: placementData.positionX, y: placementData.positionY },
@@ -89,10 +87,6 @@ export class PropCoordinatorService implements IPropCoordinatorService {
         error: null,
       };
 
-      console.log(
-        "✅ PropCoordinatorService.calculatePropRenderData returning:",
-        result
-      );
       return result;
     } catch (error) {
       console.error(
@@ -122,16 +116,11 @@ export class PropCoordinatorService implements IPropCoordinatorService {
     const cacheKey = `${motionData?.propType || "staff"}_${color}`;
 
     if (this.svgCache.has(cacheKey)) {
-      console.log(
-        `✅ PropCoordinatorService: Using cached SVG for ${cacheKey}`
-      );
       const cachedData = this.svgCache.get(cacheKey);
       if (cachedData) {
         return cachedData;
       }
     }
-
-    console.log(`🔄 PropCoordinatorService: Creating new SVG for ${cacheKey}`);
 
     const response = await fetch(
       `/images/props/${motionData?.propType || "staff"}.svg`
@@ -151,7 +140,6 @@ export class PropCoordinatorService implements IPropCoordinatorService {
       center,
     };
 
-    console.log(`💾 PropCoordinatorService: Caching SVG for ${cacheKey}`);
     this.svgCache.set(cacheKey, svgData);
     return svgData;
   }
@@ -225,32 +213,18 @@ export class PropCoordinatorService implements IPropCoordinatorService {
       ""
     );
 
-    console.log(
-      `🔧 PropCoordinatorService: Applied unique class names with suffix -${colorSuffix}`
-    );
     return coloredSvg;
   }
 
   private extractSvgContent(svgText: string): string {
     // Extract SVG content (everything inside the <svg> tags)
     // Props are already correctly sized for 950x950 coordinate system
-    console.log(
-      `🔍 PropCoordinatorService: Extracting SVG content from: ${svgText.substring(0, 200)}...`
-    );
-
     const svgContentMatch = svgText.match(/<svg[^>]*>(.*)<\/svg>/s);
     if (!svgContentMatch) {
       console.warn("Could not extract SVG content");
-      console.log(
-        `🚫 PropCoordinatorService: SVG text that failed to match: ${svgText}`
-      );
       return svgText;
     }
 
-    const extractedContent = svgContentMatch[1];
-    console.log(
-      `✅ PropCoordinatorService: Extracted SVG content: ${extractedContent.substring(0, 200)}...`
-    );
-    return extractedContent;
+    return svgContentMatch[1];
   }
 }

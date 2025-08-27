@@ -14,9 +14,11 @@ import {
   PropType,
   RotationDirection,
 } from "$lib/domain/enums";
-import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";
+import type { ISequenceAnimationEngine } from "$lib/services/interfaces/application-interfaces";
 import type { MotionTestParams } from "./MotionParameterService";
 import type { IAnimationControlService } from "./interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
 export interface AnimationState {
   isPlaying: boolean;
@@ -34,13 +36,17 @@ export interface PropStates {
   red?: PropState;
 }
 
+@injectable()
 export class AnimationControlService implements IAnimationControlService {
   private animationFrameId: number | null = null;
   private currentProgress: number = 0;
   private isInitialized: boolean = false;
   private propVisibility: PropVisibility = { blue: true, red: true };
 
-  constructor(private readonly animationEngine: ISequenceAnimationEngine) {}
+  constructor(
+    @inject(TYPES.ISequenceAnimationEngine)
+    private readonly animationEngine: ISequenceAnimationEngine
+  ) {}
 
   // Initialize the animation engine with motion data
   async initializeEngine(

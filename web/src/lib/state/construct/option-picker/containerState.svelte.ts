@@ -4,10 +4,7 @@
  * Handles container dimensions and aspect ratio calculations
  */
 
-import {
-  BREAKPOINTS,
-  type ContainerAspect,
-} from "./config";
+import { BREAKPOINTS, type ContainerAspect } from "./config";
 import { getContainerAspect } from "./utils/layoutUtils";
 
 export interface ContainerState {

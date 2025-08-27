@@ -1,7 +1,7 @@
 <!-- StartPositionPicker.svelte - Clean component following TKA architecture -->
 <script lang="ts">
   import { GridMode } from "$lib/domain";
-  import { resolve } from "$services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   // UI Components
   import ErrorState from "./ui/ErrorState.svelte";
   import LoadingState from "./ui/LoadingState.svelte";
@@ -14,14 +14,14 @@
   }>();
 
   // Get service from DI container (sequence state comes from props)
-  const sequenceStateService = resolve(
-    "ISequenceStateService"
-  ) as import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService;
+  const sequenceStateService = resolve<
+    import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService
+  >(TYPES.ISequenceStateService);
 
   // Get start position service from DI container
-  const startPositionService = resolve(
-    "IStartPositionService"
-  ) as import("$lib/services/interfaces/application-interfaces").IStartPositionService;
+  const startPositionService = resolve<
+    import("$lib/services/interfaces/application-interfaces").IStartPositionService
+  >(TYPES.IStartPositionService);
 
   // Reactive state
   let isLoading = $state(true);

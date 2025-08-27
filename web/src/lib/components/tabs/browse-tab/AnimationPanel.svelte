@@ -8,9 +8,8 @@ Handles data loading, animation engine, and state management.
   import type { SequenceData } from "$domain/SequenceData";
   import type { PropState } from "$lib/components/tabs/browse-tab/animator";
   import { AnimatorCanvas } from "$lib/components/tabs/browse-tab/animator";
-  import { resolve } from "$lib/services/bootstrap";
-  import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";
-  import type { ISequenceService } from "$lib/services/interfaces/sequence-interfaces";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { ISequenceAnimationEngine } from "$lib/services/interfaces/application-interfaces";
   import type { PanelStateManager } from "$lib/state/panel-state.svelte";
   import { onDestroy } from "svelte";
   // Sub-components
@@ -33,7 +32,7 @@ Handles data loading, animation engine, and state management.
   }>();
 
   // Services
-  const sequenceService = resolve("ISequenceService") as ISequenceService;
+  const sequenceService = resolve(TYPES.ISequenceService);
 
   // ✅ DERIVED RUNES: Panel state
   let isVisible = $derived(panelState.isAnimationVisible);
@@ -45,9 +44,7 @@ Handles data loading, animation engine, and state management.
   let error = $state<string | null>(null);
 
   // Animation engine and state
-  let animationEngine = resolve(
-    "ISequenceAnimationEngine"
-  ) as ISequenceAnimationEngine;
+  let animationEngine = resolve(TYPES.ISequenceAnimationEngine);
   let currentBeat = $state(0);
   let isPlaying = $state(false);
   let speed = $state(1.0);
@@ -97,11 +94,14 @@ Handles data loading, animation engine, and state management.
     error = null;
 
     try {
-      console.log("🎬 Loading sequence for animation:", sequence.id);
-      const fullSequence = await sequenceService.getSequence(sequence.id);
+      // Use the uppercase word for PNG file matching, not the lowercase id
+      const sequenceIdentifier = sequence.word || sequence.id.toUpperCase();
+      console.log("🎬 Loading sequence for animation:", sequenceIdentifier);
+      const fullSequence =
+        await sequenceService.getSequence(sequenceIdentifier);
 
       if (!fullSequence) {
-        throw new Error(`Sequence not found: ${sequence.id}`);
+        throw new Error(`Sequence not found: ${sequenceIdentifier}`);
       }
 
       // Initialize engine directly with domain data (no conversion needed!)

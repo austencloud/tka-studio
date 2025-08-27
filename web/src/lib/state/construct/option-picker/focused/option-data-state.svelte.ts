@@ -8,14 +8,14 @@
 import { GridMode } from "$lib/domain";
 import type { PictographData } from "$lib/domain/PictographData";
 import type { IPositionMapper } from "$lib/services/interfaces/movement/IPositionMapper";
-import { resolve } from "$services/bootstrap";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 
 /**
  * Helper function to compute endPosition from motion data
  */
 function getEndPosition(pictographData: PictographData): string | null {
   if (pictographData.motions?.blue && pictographData.motions?.red) {
-    const positionService = resolve("IPositionMapper") as IPositionMapper;
+    const positionService = resolve(TYPES.IPositionMapper) as IPositionMapper;
     const position = positionService.getPositionFromLocations(
       pictographData.motions.blue.endLocation,
       pictographData.motions.red.endLocation
@@ -51,16 +51,15 @@ export function createOptionDataState() {
         );
 
         // Get services through DI
-        const { ILetterQueryServiceInterface } = await import(
-          "$lib/services/di/interfaces/codex-interfaces"
+        const { resolve, TYPES } = await import(
+          "$lib/services/inversify/container"
         );
-        const letterQueryService = resolve(ILetterQueryServiceInterface);
-        const { IOptionFilteringServiceInterface } = await import(
-          "$lib/services/di/registration/shared-services"
-        );
-        const optionFilteringService = resolve(
-          IOptionFilteringServiceInterface
-        );
+        const letterQueryService = resolve<
+          import("$lib/services/implementations/data/LetterQueryService").ILetterQueryService
+        >(TYPES.ILetterQueryService);
+        const optionFilteringService = resolve<
+          import("$lib/services/implementations/data/OptionFilteringService").IOptionFilteringService
+        >(TYPES.IOptionFilteringService);
 
         // Get ALL pictograph variations from CSV (like desktop algorithm) and filter by start position
         const allPictographs =
@@ -91,16 +90,14 @@ export function createOptionDataState() {
           );
 
           // Get services through DI
-          const { ILetterQueryServiceInterface } = await import(
-            "$lib/services/di/interfaces/codex-interfaces"
-          );
-          const letterQueryService = resolve(ILetterQueryServiceInterface);
-          const { IOptionFilteringServiceInterface } = await import(
-            "$lib/services/di/registration/shared-services"
-          );
-          const optionFilteringService = resolve(
-            IOptionFilteringServiceInterface
-          );
+          // Note: ILetterQueryServiceInterface is no longer needed as we use direct service resolution
+          const letterQueryService = resolve<
+            import("$lib/services/implementations/data/LetterQueryService").ILetterQueryService
+          >(TYPES.ILetterQueryService);
+
+          const optionFilteringService = resolve<
+            import("$lib/services/implementations/data/OptionFilteringService").IOptionFilteringService
+          >(TYPES.IOptionFilteringService);
 
           // Get ALL pictograph variations from CSV (like desktop algorithm) and filter by start position
           const allPictographs =

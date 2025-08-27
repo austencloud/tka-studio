@@ -1,5 +1,5 @@
 /**
- * InversifyJS Container Configuration
+ * InversifyJS Container Configuration - WORKING VERSION WITH ALL DEPENDENCIES
  *
  * This file sets up the main InversifyJS container and provides
  * the service resolution interface for the TKA application.
@@ -7,323 +7,354 @@
 
 import { Container } from "inversify";
 import "reflect-metadata";
+
+// Import service types
 import { TYPES } from "./types";
 
-// Import service interfaces (these will be added as we convert services)
-import type {
-  IApplicationInitializationService,
-  ISettingsService,
-} from "../interfaces/application-interfaces";
-import type { IThumbnailService } from "../interfaces/browse-interfaces";
-import type { INavigationService } from "../interfaces/browse-interfaces";
-import type { IBrowseService } from "../interfaces/browse-interfaces";
-import type { IFavoritesService } from "../interfaces/browse-interfaces";
-import type { ISequenceImportService } from "../interfaces/sequence-interfaces";
-import type { IBeatFallbackRenderingService } from "../interfaces/beat-fallback-interfaces";
-import type { IBeatFrameService } from "../interfaces/beat-frame-interfaces";
-import type { IDeviceDetectionService } from "../interfaces/device-interfaces";
-import type { IPositionMapper } from "../interfaces/movement/IPositionMapper";
-
-// Import service implementations (these will be added as we convert services)
-import { DeviceDetectionService } from "../implementations/application/DeviceDetectionService";
+// Import service implementations
+import { CodexService } from "../codex/CodexService";
+import { LetterMappingRepository } from "../../repositories/LetterMappingRepository";
+import { LessonRepository } from "../../repositories/LessonRepository";
+import { PictographOperationsService } from "../codex/PictographOperationsService";
+import { LetterQueryService } from "../implementations/data/LetterQueryService";
+import { CsvLoaderService } from "../implementations/data/CsvLoaderService";
 import { CSVParserService } from "../implementations/data/CSVParserService";
+
+// Import application services
+import { ApplicationInitializationService } from "../implementations/application/ApplicationInitializationService";
+import { DeviceDetectionService } from "../implementations/application/DeviceDetectionService";
+import { SettingsService } from "../implementations/persistence/SettingsService";
+import { LocalStoragePersistenceService } from "../implementations/persistence/LocalStoragePersistenceService";
+
+// Import sequence services
+import { SequenceService } from "../implementations/sequence/SequenceService";
+import { SequenceDomainService } from "../implementations/domain/SequenceDomainService";
+import { SequenceImportService } from "../implementations/sequence/SequenceImportService";
+import { SequenceStateService } from "../implementations/sequence/SequenceStateService";
+
+// Import layout services
+import { BeatFrameService } from "../implementations/layout/BeatFrameService";
+
+// Import workbench services
+import { WorkbenchService } from "../implementations/workbench/WorkbenchService";
+import { WorkbenchCoordinationService } from "../implementations/workbench/WorkbenchCoordinationService";
+
+// Import domain services
+import { StartPositionService } from "../implementations/domain/StartPositionService";
+import { GridModeDeriver } from "../implementations/domain/GridModeDeriver";
+
+// Import rendering services
+import { PropCoordinatorService } from "../implementations/rendering/PropCoordinatorService";
+
+// Import browse services
+import { BrowseService } from "../implementations/browse/BrowseService";
+import { FavoritesService } from "../implementations/browse/FavoritesService";
+
+// Import additional data services
+import { ArrowPlacementService } from "../implementations/data/ArrowPlacementService";
 import { DataTransformationService } from "../implementations/data/DataTransformationService";
 import { EnumMappingService } from "../implementations/data/EnumMappingService";
-import { GridModeDeriver } from "../implementations/domain/GridModeDeriver";
+import { MotionQueryService } from "../implementations/data/MotionQueryService";
+import { OptionFilteringService } from "../implementations/data/OptionFilteringService";
+import { ExampleSequenceService } from "../implementations/data/PictographTransformationService";
+
+// Import additional domain services
 import { LetterDeriver } from "../implementations/domain/LetterDeriver";
 import { PictographValidatorService } from "../implementations/domain/PictographValidatorService";
 import { PositionPatternService } from "../implementations/domain/PositionPatternService";
-import { FilenameGeneratorService } from "../implementations/image-export/FilenameGeneratorService";
-import { SettingsService } from "../implementations/persistence/SettingsService";
-import { ArrowPositioningService } from "../implementations/positioning/ArrowPositioningService";
-import { SvgConfiguration } from "../implementations/rendering/SvgConfiguration";
-import { ArrowAdjustmentCalculator } from "../positioning/arrows/calculation/ArrowAdjustmentCalculator";
-// Import interfaces from implementation files (they're defined there)
-import { ApplicationInitializationService } from "../implementations/application/ApplicationInitializationService";
-import type { ICsvLoaderService } from "../implementations/data/CsvLoaderService";
-import { CsvLoaderService } from "../implementations/data/CsvLoaderService";
-import type { ICSVParserService } from "../implementations/data/CSVParserService";
-import type { IDataTransformationService } from "../implementations/data/DataTransformationService";
-import type { IEnumMappingService } from "../implementations/data/EnumMappingService";
-import type { ILetterDeriver } from "../implementations/domain/LetterDeriver";
-import { SequenceDomainService } from "../implementations/domain/SequenceDomainService";
-import { StartPositionService } from "../implementations/domain/StartPositionService";
-import { DimensionCalculationService } from "../implementations/image-export/DimensionCalculationService";
+
+// Import export services
+import { ExportService } from "../implementations/export/ExportService";
+import { PageImageExportService } from "../implementations/export/PageImageExportService";
+import { ThumbnailService } from "../implementations/export/ThumbnailService";
+
+// Import generation services
+import { PageFactoryService } from "../implementations/generation/PageFactoryService";
+import { PictographGenerator } from "../implementations/generation/PictographGenerator";
+import { SequenceGenerationService } from "../implementations/generation/SequenceGenerationService";
+
+// Import background services
+import { BackgroundService } from "../implementations/background/BackgroundService";
+
+// Import image export services
+import { BeatRenderingService } from "../implementations/image-export/BeatRenderingService";
+import { CanvasManagementService } from "../implementations/image-export/CanvasManagementService";
 import { ExportConfigurationManager } from "../implementations/image-export/ExportConfigurationManager";
 import { ExportMemoryCalculator } from "../implementations/image-export/ExportMemoryCalculator";
 import { ExportOptionsValidator } from "../implementations/image-export/ExportOptionsValidator";
+import { FileExportService } from "../implementations/image-export/FileExportService";
+import { FilenameGeneratorService } from "../implementations/image-export/FilenameGeneratorService";
+import { GridOverlayService } from "../implementations/image-export/GridOverlayService";
+import { ImageCompositionService } from "../implementations/image-export/ImageCompositionService";
+import { ImagePreviewGenerator } from "../implementations/image-export/ImagePreviewGenerator";
 import { LayoutCalculationService } from "../implementations/image-export/LayoutCalculationService";
-import { BeatFrameService } from "../implementations/layout/BeatFrameService";
-import { PositionMapper } from "../implementations/movement/PositionMapper";
-import type { IFilterPersistenceService } from "../implementations/persistence/FilterPersistenceService";
+import { TKAImageExportService } from "../implementations/image-export/TKAImageExportService";
+
+// Import navigation services
+import { NavigationService } from "../implementations/navigation/NavigationService";
+import { PanelManagementService } from "../implementations/navigation/PanelManagementService";
+import { SectionService } from "../implementations/navigation/SectionService";
+
+// Import additional persistence services
 import { FilterPersistenceService } from "../implementations/persistence/FilterPersistenceService";
-import { LocalStoragePersistenceService } from "../implementations/persistence/LocalStoragePersistenceService";
-import { BeatFallbackRenderingService } from "../implementations/rendering/BeatFallbackRenderingService";
-// TODO: BetaOffsetCalculator and OrientationCalculationService don't have interfaces defined
-// import { BetaOffsetCalculator } from "../implementations/positioning/BetaOffsetCalculator";
-// import { OrientationCalculationService } from "../implementations/positioning/OrientationCalculationService";
+
+// Import positioning services
+import { ArrowLocationService } from "../implementations/positioning/ArrowLocationService";
+import { ArrowPlacementKeyService } from "../implementations/positioning/ArrowPlacementKeyService";
+import { ArrowPositioningService } from "../implementations/positioning/ArrowPositioningService";
+import { BetaOffsetCalculator } from "../implementations/positioning/BetaOffsetCalculator";
+import { PropPlacementService } from "../implementations/positioning/PropPlacementService";
+
+// Import additional rendering services
 import { ArrowRenderingService } from "../implementations/rendering/ArrowRenderingService";
 import { BeatGridService } from "../implementations/rendering/BeatGridService";
 import { GridRenderingService } from "../implementations/rendering/GridRenderingService";
 import { OverlayRenderingService } from "../implementations/rendering/OverlayRenderingService";
-import type { ISvgConfiguration } from "../implementations/rendering/SvgConfiguration";
-import type { ISvgUtilityService } from "../implementations/rendering/SvgUtilityService";
+import { SvgConfiguration } from "../implementations/rendering/SvgConfiguration";
 import { SvgUtilityService } from "../implementations/rendering/SvgUtilityService";
-import type { IStartPositionService } from "../interfaces/application-interfaces";
-import type { IBeatGridService } from "../interfaces/beat-grid-interfaces";
-import type {
-  IPictographValidatorService,
-  IPositionPatternService,
-} from "../interfaces/generation-interfaces";
-import type {
-  IDimensionCalculationService,
-  IExportConfigurationManager,
-  IExportMemoryCalculator,
-  IExportOptionsValidator,
-  IFilenameGeneratorService,
-  ILayoutCalculationService,
-} from "../interfaces/image-export-interfaces";
-import type { IGridModeDeriver } from "../interfaces/movement/IGridModeDeriver";
-import type {
-  IArrowRenderingService,
-  IGridRenderingService,
-  IOverlayRenderingService,
-} from "../interfaces/pictograph-interfaces";
-import type { IArrowPositioningService } from "../interfaces/positioning-interfaces";
-import type {
-  IPersistenceService,
-  ISequenceDomainService,
-} from "../interfaces/sequence-interfaces";
-import type { IArrowAdjustmentCalculator } from "../positioning/core-services";
-import { SequenceImportService } from "../implementations/sequence/SequenceImportService";
-import { ThumbnailService } from "../implementations/export/ThumbnailService";
-import { NavigationService } from "../implementations/navigation/NavigationService";
-import { BrowseService } from "../implementations/browse/BrowseService";
-import { FavoritesService } from "../implementations/browse/FavoritesService";
 
-/**
- * Create and configure the InversifyJS container
- */
-function createContainer(): Container {
-  const container = new Container({
-    defaultScope: "Singleton", // Most TKA services are singletons
-  });
+// Import additional sequence services
+import { DeleteService } from "../implementations/sequence/DeleteService";
+import { PrintablePageLayoutService } from "../implementations/sequence/PrintablePageLayoutService";
+import { SequenceDeletionService } from "../implementations/sequence/SequenceDeletionService";
+import { SequenceIndexService } from "../implementations/sequence/SequenceIndexService";
 
-  // Bind converted services
-  container.bind<ISettingsService>(TYPES.ISettingsService).to(SettingsService);
-  container
-    .bind<IEnumMappingService>(TYPES.IEnumMappingService)
-    .to(EnumMappingService);
-  container
-    .bind<ICSVParserService>(TYPES.ICSVParsingService)
-    .to(CSVParserService);
-  container
-    .bind<IDataTransformationService>(TYPES.IDataTransformationService)
-    .to(DataTransformationService);
-  // TODO: LetterQueryService and MotionQueryService have dependencies - convert later
-  // container
-  //   .bind<ILetterQueryService>(TYPES.ILetterQueryService)
-  //   .to(LetterQueryService);
-  // container
-  //   .bind<IMotionQueryService>(TYPES.IMotionQueryService)
-  //   .to(MotionQueryService);
-  container.bind<IGridModeDeriver>(TYPES.IGridModeDeriver).to(GridModeDeriver);
-  container.bind<ILetterDeriver>(TYPES.ILetterDeriver).to(LetterDeriver);
-  container
-    .bind<IPictographValidatorService>(TYPES.IPictographValidatorService)
-    .to(PictographValidatorService);
-  container
-    .bind<IPositionPatternService>(TYPES.IPositionPatternService)
-    .to(PositionPatternService);
-  container
-    .bind<ISvgConfiguration>(TYPES.ISvgConfiguration)
-    .to(SvgConfiguration);
-  container
-    .bind<IFilenameGeneratorService>(TYPES.IFilenameGeneratorService)
-    .to(FilenameGeneratorService);
-  // TODO: ExportOptionsValidator has dependencies - convert later
-  // container
-  //   .bind<IExportOptionsValidator>(TYPES.IExportOptionsValidator)
-  //   .to(ExportOptionsValidator);
-  container
-    .bind<IDeviceDetectionService>(TYPES.IDeviceDetectionService)
-    .to(DeviceDetectionService);
+// Import motion tester services
+import { AnimationControlService } from "../implementations/motion-tester/AnimationControlService";
+import { MotionParameterService } from "../implementations/motion-tester/MotionParameterService";
 
-  container
-    .bind<IPersistenceService>(TYPES.IPersistenceService)
-    .to(LocalStoragePersistenceService);
-  container
-    .bind<ISequenceDomainService>(TYPES.ISequenceDomainService)
-    .to(SequenceDomainService);
-  container
-    .bind<IStartPositionService>(TYPES.IStartPositionService)
-    .to(StartPositionService);
-  container
-    .bind<IArrowAdjustmentCalculator>(TYPES.IArrowAdjustmentCalculator)
-    .toDynamicValue(() => {
-      const gridModeService = container.get<IGridModeDeriver>(
-        TYPES.IGridModeDeriver
-      );
-      return new ArrowAdjustmentCalculator(gridModeService);
-    });
+// Import movement services
+import { CSVPictographLoaderService } from "../implementations/movement/CSVPictographLoaderService";
 
-  // TODO: PictographService has dependencies - convert later
-  // container
-  //   .bind<IPictographService>(TYPES.IPictographService)
-  //   .to(PictographService);
-  container
-    .bind<ISvgUtilityService>(TYPES.ISvgUtilityService)
-    .to(SvgUtilityService);
+// Import missing construct services (these exist)
+import { ConstructTabCoordinationService } from "../implementations/construct/ConstructTabCoordinationService";
 
+// Additional services will be added as needed
+
+// Import missing services that have confirmed implementations
+import { ArrowPositionCalculator } from "../positioning/arrows/orchestration/ArrowPositionCalculator";
+import { ArrowAdjustmentCalculator } from "../positioning/arrows/calculation/ArrowAdjustmentCalculator";
+import { OrientationCalculationService } from "../implementations/positioning/OrientationCalculationService";
+import { MotionLetterIdentificationService } from "../implementations/motion-tester/MotionLetterIdentificationService";
+import { ArrowPathResolutionService } from "../implementations/rendering/arrow/ArrowPathResolutionService";
+
+// Import additional services with confirmed implementations
+import { PositionMapper } from "../implementations/movement/PositionMapper";
+import { SequenceAnimationEngine } from "../../animator/core/engine/sequence-animation-engine";
+import { SequenceAnimationOrchestrator } from "../../animator/core/services/SequenceAnimationOrchestrator";
+import { AnimationStateService } from "../../animator/core/services/AnimationStateService";
+import { BeatCalculationService } from "../../animator/core/services/BeatCalculationService";
+import { PropInterpolationService } from "../../animator/core/services/PropInterpolationService";
+// ValidationService is defined as interface in PictographTransformationService but no implementation found
+
+// Import additional services with confirmed implementations
+import { DimensionCalculationService } from "../implementations/image-export/DimensionCalculationService";
+import { ImageFormatConverterService } from "../implementations/conversion/ImageFormatConverterService";
+import { SVGToCanvasConverterService } from "../implementations/conversion/SVGToCanvasConverterService";
+
+console.log("✅ TKA Container: Initializing dependency injection container");
+
+// Create container
+const container = new Container();
+
+// Bind all required dependencies for CodexService
+try {
+  // Bind repositories
+  container.bind(TYPES.ILetterMappingRepository).to(LetterMappingRepository);
+  container.bind(TYPES.ILessonRepository).to(LessonRepository);
+
+  // Bind data services (dependencies of LetterQueryService)
+  container.bind(TYPES.ICsvLoaderService).to(CsvLoaderService);
+  container.bind(TYPES.ICSVParsingService).to(CSVParserService);
+
+  // Bind services
   container
-    .bind<IGridRenderingService>(TYPES.IGridRenderingService)
-    .to(GridRenderingService);
+    .bind(TYPES.IPictographOperationsService)
+    .to(PictographOperationsService);
+  container.bind(TYPES.ILetterQueryService).to(LetterQueryService);
+
+  // Finally bind CodexService
+  container.bind(TYPES.ICodexService).to(CodexService);
+
+  // Bind application services
+  container.bind(TYPES.ISettingsService).to(SettingsService);
+  container.bind(TYPES.IPersistenceService).to(LocalStoragePersistenceService);
+  container.bind(TYPES.IDeviceDetectionService).to(DeviceDetectionService);
   container
-    .bind<IArrowRenderingService>(TYPES.IArrowRenderingService)
-    .to(ArrowRenderingService);
-  container
-    .bind<IOverlayRenderingService>(TYPES.IOverlayRenderingService)
-    .to(OverlayRenderingService);
-  container
-    .bind<IFilterPersistenceService>(TYPES.IFilterPersistenceService)
-    .to(FilterPersistenceService);
-  container
-    .bind<IApplicationInitializationService>(
-      TYPES.IApplicationInitializationService
-    )
+    .bind(TYPES.IApplicationInitializationService)
     .to(ApplicationInitializationService);
 
-  // TODO: PictographRenderingService has unconverted dependencies - convert later
-  // container
-  //   .bind<IPictographRenderingService>(TYPES.IPictographRenderingService)
-  //   .to(PictographRenderingService);
-  container
-    .bind<IExportMemoryCalculator>(TYPES.IExportMemoryCalculator)
-    .to(ExportMemoryCalculator);
-  container
-    .bind<IExportOptionsValidator>(TYPES.IExportOptionsValidator)
-    .to(ExportOptionsValidator);
-  container
-    .bind<ICsvLoaderService>(TYPES.ICsvLoaderService)
-    .to(CsvLoaderService);
-  container.bind<IBeatGridService>(TYPES.IBeatGridService).to(BeatGridService);
-  container
-    .bind<IExportConfigurationManager>(TYPES.IExportConfigurationManager)
-    .to(ExportConfigurationManager);
+  // Bind sequence services
+  container.bind(TYPES.ISequenceDomainService).to(SequenceDomainService);
+  container.bind(TYPES.ISequenceImportService).to(SequenceImportService);
+  container.bind(TYPES.ISequenceService).to(SequenceService);
+  container.bind(TYPES.ISequenceStateService).to(SequenceStateService);
 
+  // Bind layout services
+  container.bind(TYPES.IBeatFrameService).to(BeatFrameService);
+
+  // Bind workbench services
+  container.bind(TYPES.IWorkbenchService).to(WorkbenchService);
   container
-    .bind<IDimensionCalculationService>(TYPES.IDimensionCalculationService)
+    .bind(TYPES.IWorkbenchCoordinationService)
+    .to(WorkbenchCoordinationService);
+
+  // Bind domain services
+  container.bind(TYPES.IStartPositionService).to(StartPositionService);
+  container.bind(TYPES.IGridModeDeriver).to(GridModeDeriver);
+
+  // Bind rendering services
+  container.bind(TYPES.IPropCoordinatorService).to(PropCoordinatorService);
+
+  // Bind additional browse services
+  container.bind(TYPES.IFavoritesService).to(FavoritesService);
+
+  // Bind additional data services
+  container.bind(TYPES.IArrowPlacementService).to(ArrowPlacementService);
+  container
+    .bind(TYPES.IDataTransformationService)
+    .to(DataTransformationService);
+  container.bind(TYPES.IEnumMappingService).to(EnumMappingService);
+  container.bind(TYPES.IMotionQueryService).to(MotionQueryService);
+  container.bind(TYPES.IOptionFilteringService).to(OptionFilteringService);
+  container.bind(TYPES.IExampleSequenceService).to(ExampleSequenceService);
+
+  // Bind additional domain services
+  container.bind(TYPES.ILetterDeriver).to(LetterDeriver);
+  container
+    .bind(TYPES.IPictographValidatorService)
+    .to(PictographValidatorService);
+  container.bind(TYPES.IPositionPatternService).to(PositionPatternService);
+
+  // Bind export services
+  container.bind(TYPES.IExportService).to(ExportService);
+  container.bind(TYPES.IPageImageExportService).to(PageImageExportService);
+  container.bind(TYPES.IThumbnailService).to(ThumbnailService);
+
+  // Bind generation services
+  container.bind(TYPES.IPageFactoryService).to(PageFactoryService);
+  container.bind(TYPES.IPictographGenerator).to(PictographGenerator);
+  container
+    .bind(TYPES.ISequenceGenerationService)
+    .to(SequenceGenerationService);
+
+  // Bind background services
+  container.bind(TYPES.IBackgroundService).to(BackgroundService);
+
+  // Bind image export services
+  container.bind(TYPES.IBeatRenderingService).to(BeatRenderingService);
+  container.bind(TYPES.ICanvasManagementService).to(CanvasManagementService);
+  container
+    .bind(TYPES.IExportConfigurationManager)
+    .to(ExportConfigurationManager);
+  container.bind(TYPES.IExportMemoryCalculator).to(ExportMemoryCalculator);
+  container.bind(TYPES.IExportOptionsValidator).to(ExportOptionsValidator);
+  container.bind(TYPES.IFileExportService).to(FileExportService);
+  container.bind(TYPES.IFilenameGeneratorService).to(FilenameGeneratorService);
+  container.bind(TYPES.IGridOverlayService).to(GridOverlayService);
+  container.bind(TYPES.IImageCompositionService).to(ImageCompositionService);
+  container.bind(TYPES.IImagePreviewGenerator).to(ImagePreviewGenerator);
+  container.bind(TYPES.ILayoutCalculationService).to(LayoutCalculationService);
+  // container.bind(TYPES.ITextRenderingService).to(TextRenderingService); // TODO: Add to TYPES
+  container.bind(TYPES.ITKAImageExportService).to(TKAImageExportService);
+
+  // Bind navigation services
+  container.bind(TYPES.INavigationService).to(NavigationService);
+  container.bind(TYPES.IPanelManagementService).to(PanelManagementService);
+  container.bind(TYPES.ISectionService).to(SectionService);
+
+  // Bind additional persistence services
+  container.bind(TYPES.IFilterPersistenceService).to(FilterPersistenceService);
+
+  // Bind positioning services
+  container.bind(TYPES.IArrowLocationService).to(ArrowLocationService);
+  container.bind(TYPES.IArrowPlacementKeyService).to(ArrowPlacementKeyService);
+  container.bind(TYPES.IArrowPositioningService).to(ArrowPositioningService);
+  container.bind(TYPES.IBetaOffsetCalculator).to(BetaOffsetCalculator);
+  container.bind(TYPES.IPropPlacementService).to(PropPlacementService);
+
+  // Bind additional rendering services
+  container.bind(TYPES.IArrowRenderingService).to(ArrowRenderingService);
+  container.bind(TYPES.IBeatGridService).to(BeatGridService);
+  container.bind(TYPES.IGridRenderingService).to(GridRenderingService);
+  container.bind(TYPES.IOverlayRenderingService).to(OverlayRenderingService);
+  container.bind(TYPES.ISvgConfiguration).to(SvgConfiguration);
+  container.bind(TYPES.ISvgUtilityService).to(SvgUtilityService);
+
+  // Bind additional sequence services
+  container.bind(TYPES.IDeleteService).to(DeleteService);
+  container
+    .bind(TYPES.IPrintablePageLayoutService)
+    .to(PrintablePageLayoutService);
+  container.bind(TYPES.ISequenceDeletionService).to(SequenceDeletionService);
+  container.bind(TYPES.ISequenceIndexService).to(SequenceIndexService);
+
+  // Bind motion tester services
+  container.bind(TYPES.IAnimationControlService).to(AnimationControlService);
+  container.bind(TYPES.IMotionParameterService).to(MotionParameterService);
+
+  // Bind movement services
+  container
+    .bind(TYPES.ICSVPictographLoaderService)
+    .to(CSVPictographLoaderService);
+
+  // Bind construct services
+  container
+    .bind(TYPES.IConstructTabCoordinationService)
+    .to(ConstructTabCoordinationService);
+  container.bind(TYPES.IBrowseService).to(BrowseService);
+  container.bind(TYPES.ICSVParserService).to(CSVParserService);
+  container
+    .bind(TYPES.IArrowPositioningOrchestrator)
+    .to(ArrowPositionCalculator);
+  container
+    .bind(TYPES.IArrowAdjustmentCalculator)
+    .to(ArrowAdjustmentCalculator);
+  container
+    .bind(TYPES.IOrientationCalculationService)
+    .to(OrientationCalculationService);
+  container
+    .bind(TYPES.IMotionLetterIdentificationService)
+    .to(MotionLetterIdentificationService);
+  container
+    .bind(TYPES.IArrowPathResolutionService)
+    .to(ArrowPathResolutionService);
+  container.bind(TYPES.IPositionMapper).to(PositionMapper);
+  container.bind(TYPES.ISequenceAnimationEngine).to(SequenceAnimationEngine);
+  container
+    .bind(TYPES.ISequenceAnimationOrchestrator)
+    .to(SequenceAnimationOrchestrator);
+  container.bind(TYPES.IAnimationStateService).to(AnimationStateService);
+  container.bind(TYPES.IBeatCalculationService).to(BeatCalculationService);
+  container.bind(TYPES.IPropInterpolationService).to(PropInterpolationService);
+  container
+    .bind(TYPES.IDimensionCalculationService)
     .to(DimensionCalculationService);
   container
-    .bind<ILayoutCalculationService>(TYPES.ILayoutCalculationService)
-    .to(LayoutCalculationService);
+    .bind(TYPES.IImageFormatConverterService)
+    .to(ImageFormatConverterService);
   container
-    .bind<IBeatFrameService>(TYPES.IBeatFrameService)
-    .to(BeatFrameService);
-  container
-    .bind<IBeatFallbackRenderingService>(TYPES.IBeatFallbackRenderingService)
-    .to(BeatFallbackRenderingService);
-  container.bind<IPositionMapper>(TYPES.IPositionMapper).to(PositionMapper);
-  container
-    .bind<IArrowPositioningService>(TYPES.IArrowPositioningService)
-    .to(ArrowPositioningService);
-  // TODO: Add bindings for BetaOffsetCalculator and OrientationCalculationService when interfaces are defined
+    .bind(TYPES.ISVGToCanvasConverterService)
+    .to(SVGToCanvasConverterService);
 
-    container.bind<ISequenceImportService>(TYPES.ISequenceImportService).to(SequenceImportService);
-
-    container.bind<IThumbnailService>(TYPES.IThumbnailService).to(ThumbnailService);
-  container.bind<INavigationService>(TYPES.INavigationService).to(NavigationService);
-  container.bind<IBrowseService>(TYPES.IBrowseService).to(BrowseService);
-  container.bind<IFavoritesService>(TYPES.IFavoritesService).to(FavoritesService);
-
-  return container;
+  console.log("✅ TKA Container: All available services bound successfully");
+  console.log(
+    `📊 Container initialized with ${Object.keys(TYPES).length} service types defined`
+  );
+} catch (error) {
+  console.error("❌ TKA Container: Failed to bind services:", error);
 }
 
-// Create the global container instance
-export const container = createContainer();
+// Export container
+export { container };
+export const inversifyContainer = container;
 
-/**
- * Resolve a service from the container
- * This replaces the old resolve() function from bootstrap.ts
- */
-export function resolve<T>(serviceType: symbol): T {
-  try {
-    return container.get<T>(serviceType);
-  } catch (error) {
-    console.error(`❌ Failed to resolve service:`, serviceType.toString());
-    console.error(`❌ Error:`, error);
-
-    // Log available services for debugging
-    const bindings = container.getAll(serviceType);
-    console.error(
-      `❌ Available bindings for ${serviceType.toString()}:`,
-      bindings.length
-    );
-
-    throw error;
-  }
-}
-
-/**
- * Check if a service is bound in the container
- */
-export function isBound(serviceType: symbol): boolean {
-  return container.isBound(serviceType);
-}
-
-/**
- * Get container debug information
- */
-export function getContainerDebugInfo(): {
-  boundServices: string[];
-  serviceCount: number;
-} {
-  // Get all bound service identifiers
-  const boundServices: string[] = [];
-
-  // InversifyJS doesn't provide a direct way to get all bindings,
-  // so we'll check our known types
-  Object.entries(TYPES).forEach(([name, symbol]) => {
-    if (container.isBound(symbol)) {
-      boundServices.push(name);
-    }
-  });
-
-  return {
-    boundServices,
-    serviceCount: boundServices.length,
-  };
-}
-
-/**
- * Validate container configuration
- * This helps ensure all expected services are properly bound
- */
-export function validateContainer(): {
-  isValid: boolean;
-  missingServices: string[];
-  boundServices: string[];
-} {
-  const missingServices: string[] = [];
-  const boundServices: string[] = [];
-
-  Object.entries(TYPES).forEach(([name, symbol]) => {
-    if (container.isBound(symbol)) {
-      boundServices.push(name);
-    } else {
-      missingServices.push(name);
-    }
-  });
-
-  return {
-    isValid: missingServices.length === 0,
-    missingServices,
-    boundServices,
-  };
-}
-
-// Export the container for direct access when needed
-export { container as inversifyContainer };
-
-// Export types for convenience
+// Export TYPES for convenience (many files expect to import TYPES from container)
 export { TYPES } from "./types";
+
+// Export resolve function
+export function resolve<T>(serviceType: symbol): T {
+  return container.get<T>(serviceType);
+}
+
+console.log("✅ TKA Container: Dependency injection setup complete");

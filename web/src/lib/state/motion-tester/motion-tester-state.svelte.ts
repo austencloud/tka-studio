@@ -8,8 +8,8 @@ import {
   type PropVisibility,
   type PropStates,
 } from "$lib/services/implementations/motion-tester/AnimationControlService";
-import { resolve } from "$lib/services/bootstrap";
-import type { ISequenceAnimationEngine } from "$lib/services/di/interfaces/animator-interfaces";
+import { resolve, TYPES } from "$lib/services/inversify/container";
+import type { ISequenceAnimationEngine } from "$lib/services/interfaces/application-interfaces";
 import { OrientationCalculationService } from "$lib/services/implementations/positioning/OrientationCalculationService";
 import {
   MotionLetterIdentificationService,
@@ -59,7 +59,7 @@ export function createMotionTesterState(): MotionTesterState {
   // Services
   const motionService = new MotionParameterService();
   const animationEngine = resolve(
-    "ISequenceAnimationEngine"
+    TYPES.ISequenceAnimationEngine
   ) as ISequenceAnimationEngine;
   const animationService = new AnimationControlService(animationEngine);
   const orientationService = new OrientationCalculationService();

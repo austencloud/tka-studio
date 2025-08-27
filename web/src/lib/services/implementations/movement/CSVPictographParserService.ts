@@ -13,7 +13,7 @@ import { MotionColor } from "$lib/domain/enums";
 import { EnumMappingService } from "../data/EnumMappingService";
 import { PositionMapper } from "./PositionMapper";
 
-interface CSVRow {
+export interface CSVRow {
   letter: string;
   startPosition: string;
   endPosition: string;

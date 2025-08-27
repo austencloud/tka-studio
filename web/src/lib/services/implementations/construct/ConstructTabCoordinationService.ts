@@ -17,6 +17,8 @@ import type {
   ISequenceService,
   IWorkbenchBeatOperationsService,
 } from "../../interfaces/sequence-interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
 // Note: This service will need to be updated to use the new DI pattern
 // For now, we'll comment out the direct import to avoid build errors
@@ -26,6 +28,7 @@ interface ComponentWithEventHandler {
   handleEvent?: (eventType: string, data: unknown) => void;
 }
 
+@injectable()
 export class ConstructTabCoordinationService
   implements IConstructTabCoordinationService
 {
@@ -39,8 +42,10 @@ export class ConstructTabCoordinationService
   } | null = null;
 
   constructor(
-    private sequenceService: ISequenceService,
+    @inject(TYPES.ISequenceService) private sequenceService: ISequenceService,
+    @inject(TYPES.IStartPositionService)
     private startPositionService: IStartPositionService,
+    @inject(TYPES.IWorkbenchBeatOperationsService)
     private workbenchBeatOperations: IWorkbenchBeatOperationsService
   ) {}
 

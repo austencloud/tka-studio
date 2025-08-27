@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
   import { createSequenceState } from "$lib/state/sequence/sequence-state.svelte";
   import { createWorkbenchState } from "$lib/state/workbench/workbench-state.svelte";
@@ -8,18 +8,18 @@
   import SequenceContent from "./SequenceContent.svelte";
 
   // Get services from DI container
-  const sequenceStateService = resolve(
-    "ISequenceStateService"
-  ) as import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService;
-  const beatFrameService = resolve(
-    "IBeatFrameService"
-  ) as import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService;
-  const workbenchService = resolve(
-    "IWorkbenchService"
-  ) as import("$lib/services/interfaces/workbench-interfaces").IWorkbenchService;
-  const workbenchCoordinationService = resolve(
-    "IWorkbenchCoordinationService"
-  ) as import("$lib/services/interfaces/workbench-interfaces").IWorkbenchCoordinationService;
+  const sequenceStateService = resolve<
+    import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService
+  >(TYPES.ISequenceStateService);
+  const beatFrameService = resolve<
+    import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService
+  >(TYPES.IBeatFrameService);
+  const workbenchService = resolve<
+    import("$lib/services/interfaces/workbench-interfaces").IWorkbenchService
+  >(TYPES.IWorkbenchService);
+  const workbenchCoordinationService = resolve<
+    import("$lib/services/interfaces/workbench-interfaces").IWorkbenchCoordinationService
+  >(TYPES.IWorkbenchCoordinationService);
 
   // Create component-scoped states
   const sequenceState = createSequenceState(sequenceStateService);

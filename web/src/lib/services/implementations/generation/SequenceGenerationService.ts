@@ -26,6 +26,8 @@ import {
   PropContinuity,
   GenerationMode,
 } from "$lib/domain/enums";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
 // Legacy constants for rotation directions - using enum values
 const ROTATION_DIRS = {
@@ -42,9 +44,12 @@ const MOTION_TYPES = {
   STATIC: MotionType.STATIC,
 } as const;
 
+@injectable()
 export class SequenceGenerationService implements ISequenceGenerationService {
   constructor(
+    @inject(TYPES.ILetterQueryService)
     private letterQueryService: ILetterQueryService,
+    @inject(TYPES.IOrientationCalculationService)
     private orientationCalculationService: IOrientationCalculationService
   ) {}
 

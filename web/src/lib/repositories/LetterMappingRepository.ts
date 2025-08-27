@@ -11,6 +11,7 @@ import type {
   LetterCategory,
   LetterRow,
 } from "$lib/domain/codex/types";
+import { injectable } from "inversify";
 
 export interface ILetterMappingRepository {
   initialize(): Promise<void>;
@@ -21,6 +22,7 @@ export interface ILetterMappingRepository {
   isValidLetter(letter: string): boolean;
 }
 
+@injectable()
 export class LetterMappingRepository implements ILetterMappingRepository {
   private configuration: CodexConfiguration | null = null;
   private initialized = false;

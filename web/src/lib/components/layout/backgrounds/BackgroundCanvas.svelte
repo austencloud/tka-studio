@@ -115,13 +115,16 @@ without the complex BackgroundContext system.
   // Handle resize
   function handleResize() {
     if (!currentBackgroundSystem || !canvas) return;
-    
+
     const rect = canvas.getBoundingClientRect();
     const dimensions = { width: rect.width, height: rect.height };
-    
+
     // Update canvas size
     canvas.width = dimensions.width;
     canvas.height = dimensions.height;
+
+    // Update background system with new dimensions
+    currentBackgroundSystem.update(dimensions);
   }
 </script>
 

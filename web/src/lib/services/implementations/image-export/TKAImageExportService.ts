@@ -18,12 +18,18 @@ import type {
   TKAImageExportOptions,
 } from "../../interfaces/image-export-interfaces";
 import type { SequenceData } from "../../interfaces/domain-types";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
+@injectable()
 export class TKAImageExportService implements ITKAImageExportService {
   constructor(
+    @inject(TYPES.IImageCompositionService)
     private compositionService: IImageCompositionService,
-    private fileService: IFileExportService,
+    @inject(TYPES.IFileExportService) private fileService: IFileExportService,
+    @inject(TYPES.ILayoutCalculationService)
     private layoutService: ILayoutCalculationService,
+    @inject(TYPES.IDimensionCalculationService)
     private dimensionService: IDimensionCalculationService
   ) {}
 

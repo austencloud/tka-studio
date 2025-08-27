@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { BeatData } from "$lib/domain";
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
   import { onMount } from "svelte";
   import BeatView from "./BeatView.svelte";
@@ -29,9 +29,9 @@
   }: Props = $props();
 
   // Get service from DI container and create component-scoped state
-  const beatFrameService = resolve(
-    "IBeatFrameService"
-  ) as import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService;
+  const beatFrameService = resolve<
+    import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService
+  >(TYPES.IBeatFrameService);
   const beatFrameState = createBeatFrameState(beatFrameService);
 
   const config = $derived(beatFrameState.config);
@@ -151,7 +151,6 @@
     onBeatClick?.(index);
   }
 
-
   function handleBeatHover(index: number) {
     beatFrameState.setHoveredBeatIndex(index);
   }
@@ -159,7 +158,7 @@
   function handleBeatLeave() {
     beatFrameState.clearHover();
   }
-</script>   
+</script>
 
 <div
   class="beat-frame-container"

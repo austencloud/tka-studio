@@ -10,6 +10,8 @@ import type { PictographData } from "$lib/domain/PictographData";
 import type { LetterCategory } from "$lib/domain/codex/types";
 import type { ILetterMappingRepository } from "$lib/repositories/LetterMappingRepository";
 import type { ILessonRepository } from "$lib/repositories/LessonRepository";
+import { TYPES } from "$lib/services/inversify/types";
+import { inject, injectable } from "inversify";
 
 import type { IPictographOperationsService } from "./PictographOperationsService";
 import type { ICodexService } from "./ICodexService";
@@ -18,13 +20,18 @@ import type { ILetterQueryService } from "../implementations/data/LetterQuerySer
 // Re-export the interface for convenience
 export type { ICodexService } from "./ICodexService";
 
+@injectable()
 export class CodexService implements ICodexService {
   private initialized = false;
 
   constructor(
+    @inject(TYPES.ILetterMappingRepository)
     private letterMappingRepository: ILetterMappingRepository,
+    @inject(TYPES.ILessonRepository)
     private lessonRepository: ILessonRepository,
+    @inject(TYPES.IPictographOperationsService)
     private operationsService: IPictographOperationsService,
+    @inject(TYPES.ILetterQueryService)
     private letterQueryService: ILetterQueryService
   ) {
     console.log(

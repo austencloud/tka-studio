@@ -14,12 +14,15 @@ import type {
   IPropInterpolationService,
   SequenceMetadata,
   PropStates,
-} from "$lib/services/di/interfaces/animator-interfaces";
+} from "$lib/services/interfaces/application-interfaces";
+import { TYPES } from "$lib/services/inversify/types";
+import { inject, injectable } from "inversify";
 
 /**
  * Lightweight Animation Orchestrator
  * Coordinates focused services instead of doing everything itself
  */
+@injectable()
 export class SequenceAnimationOrchestrator
   implements ISequenceAnimationOrchestrator
 {
@@ -29,8 +32,11 @@ export class SequenceAnimationOrchestrator
   private initialized = false;
 
   constructor(
+    @inject(TYPES.IAnimationStateService)
     private readonly animationStateService: IAnimationStateService,
+    @inject(TYPES.IBeatCalculationService)
     private readonly beatCalculationService: IBeatCalculationService,
+    @inject(TYPES.IPropInterpolationService)
     private readonly propInterpolationService: IPropInterpolationService
   ) {}
 
@@ -106,15 +112,7 @@ export class SequenceAnimationOrchestrator
       return;
     }
 
-    console.log(
-      "🔧 [MOTION DEBUG] ===== CALCULATING STATE FOR BEAT",
-      currentBeat,
-      "====="
-    );
-    console.log(
-      "🔧 [MOTION DEBUG] Current beat data:",
-      JSON.stringify(beatState.currentBeatData, null, 2)
-    );
+    // Debug logging removed for cleaner console output
 
     // Use focused service for interpolation
     const interpolationResult =
@@ -137,21 +135,12 @@ export class SequenceAnimationOrchestrator
       beatState.currentBeatData
     );
 
-    console.log("🔧 [MOTION DEBUG] Blue motion:", motionData.blue);
-    console.log("🔧 [MOTION DEBUG] Red motion:", motionData.red);
-    console.log("🔧 [MOTION DEBUG] Blue endpoints:", endpoints.blue);
-    console.log("🔧 [MOTION DEBUG] Red endpoints:", endpoints.red);
-    console.log(
-      "🔧 [MOTION DEBUG] Interpolation factor t:",
-      beatState.beatProgress
-    );
+    // Motion debug logs removed for cleaner output
 
     // Use focused service to update prop states
     const finalStates =
       this.animationStateService.updatePropStates(interpolationResult);
-    console.log("🔧 [MOTION DEBUG] Final state after coordinate update:");
-    console.log("🔧 [MOTION DEBUG] Blue final:", finalStates.blue);
-    console.log("🔧 [MOTION DEBUG] Red final:", finalStates.red);
+    // Final state debug logs removed
   }
 
   /**
@@ -186,23 +175,16 @@ export class SequenceAnimationOrchestrator
    * Initialize prop states using focused services
    */
   private initializePropStates(): void {
-    console.log(
-      "🔧 [MOTION DEBUG] SequenceAnimationOrchestrator: Initializing prop states"
-    );
-    console.log("🔧 [MOTION DEBUG] Beats length:", this.beats.length);
-
+    // Initializing prop states
     if (!this.beats || this.beats.length === 0) {
       console.warn(
-        "🔧 [MOTION DEBUG] No beats available, using fallback initialization"
+        "SequenceAnimationOrchestrator: No beats available, using fallback initialization"
       );
       this.animationStateService.resetPropStates();
     } else {
       // Use first beat for initial state (PURE DOMAIN!)
       const firstBeat = this.beats[0];
-      console.log(
-        "🔧 [MOTION DEBUG] First beat data:",
-        JSON.stringify(firstBeat, null, 2)
-      );
+      // First beat data processed
 
       // Use focused service for initial angle calculation
       const initialAngles =
@@ -232,8 +214,7 @@ export class SequenceAnimationOrchestrator
     }
 
     const initialStates = this.animationStateService.getPropStates();
-    console.log("🔧 [MOTION DEBUG] Initial blue state:", initialStates.blue);
-    console.log("🔧 [MOTION DEBUG] Initial red state:", initialStates.red);
+    // Initial states calculated and applied
   }
 
   /**

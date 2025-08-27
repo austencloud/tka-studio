@@ -1,7 +1,7 @@
 <script lang="ts">
   import Beat from "./Beat.svelte";
   import type { BeatData } from "$lib/domain";
-  import { resolve } from "$lib/services/bootstrap";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
 
   interface Props {
@@ -24,9 +24,9 @@
     onLeave,
   }: Props = $props();
 
-  const beatFrameService = resolve(
-    "IBeatFrameService"
-  ) as import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService;
+  const beatFrameService = resolve<
+    import("$lib/services/interfaces/beat-frame-interfaces").IBeatFrameService
+  >(TYPES.IBeatFrameService);
   const beatFrameState = createBeatFrameState(beatFrameService);
 
   const config = $derived(beatFrameState.config);

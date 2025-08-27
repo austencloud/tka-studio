@@ -181,7 +181,28 @@
   .page-display {
     height: 100%;
     overflow-y: auto;
-    background: #1a1a1a;
+    background: transparent;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  }
+
+  .page-display::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .page-display::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: var(--border-radius-sm);
+  }
+
+  .page-display::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .page-display::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
   }
 
   /* State Containers */
@@ -191,19 +212,19 @@
     align-items: center;
     justify-content: center;
     height: 100%;
-    padding: 40px;
+    padding: var(--spacing-2xl);
     text-align: center;
-    color: #aaa;
+    color: var(--text-secondary);
   }
 
   .loading-spinner {
     width: 48px;
     height: 48px;
-    border: 4px solid #333;
-    border-top: 4px solid #0066cc;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid var(--primary-color);
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-xl);
   }
 
   @keyframes spin {
@@ -218,45 +239,50 @@
   .error-icon,
   .empty-icon {
     font-size: 48px;
-    margin-bottom: 16px;
+    margin-bottom: var(--spacing-lg);
   }
 
   .state-title {
-    margin: 0 0 8px 0;
-    font-size: 20px;
+    margin: 0 0 var(--spacing-sm) 0;
+    font-size: var(--font-size-xl);
     font-weight: 600;
-    color: white;
+    color: var(--text-color);
+    text-shadow: var(--text-shadow-glass);
   }
 
   .state-message {
-    margin: 0 0 24px 0;
-    font-size: 14px;
-    color: #aaa;
+    margin: 0 0 var(--spacing-xl) 0;
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
     max-width: 400px;
     line-height: 1.5;
   }
 
   .retry-button {
-    background: #0066cc;
-    border: none;
+    background: var(--primary-color);
+    border: 1px solid var(--primary-light);
     color: white;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-size: 14px;
+    padding: var(--spacing-md) var(--spacing-xl);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: all var(--transition-normal);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
   }
 
   .retry-button:hover {
-    background: #0088ff;
+    background: var(--primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
   }
 
   /* Pages Container - grid layout for multiple pages side-by-side */
   .pages-container {
-    padding: 20px;
+    padding: var(--spacing-xl);
     display: grid;
-    gap: 20px;
+    gap: var(--spacing-xl);
     max-width: none; /* Allow full width for multiple pages */
     margin: 0 auto;
     justify-items: center; /* Center pages in grid cells */
@@ -265,12 +291,18 @@
 
   /* Individual Page - Responsive size based on container and column count */
   .page {
-    background: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-lg);
+    box-shadow:
+      0 8px 32px rgba(0, 0, 0, 0.1),
+      0 4px 16px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
     /* Dimensions set via style attributes based on container size and column count */
     position: relative;
     flex-shrink: 0; /* Prevent pages from shrinking */
+    overflow: hidden;
   }
 
   /* Hide page headers - we want clean printable pages */
@@ -290,7 +322,8 @@
     /* Legacy desktop margins: 18pt left/right, 36pt top/bottom */
     /* Convert points to pixels: 18pt = 24px, 36pt = 48px at 96 DPI */
     /* But reduce top padding to eliminate space above images */
-    padding: 24px 24px 48px 24px; /* top right bottom left */
+    padding: var(--spacing-xl) var(--spacing-xl) var(--spacing-2xl)
+      var(--spacing-xl);
     height: 100%;
     box-sizing: border-box;
   }
@@ -300,7 +333,7 @@
     display: grid;
     /* Legacy desktop spacing calculation: content_width / (columns * 40) */
     /* For 2 columns on letter size: ~768px / (2 * 40) = ~9.6px */
-    gap: 10px; /* Close to legacy calculation */
+    gap: var(--spacing-sm); /* Close to legacy calculation */
     grid-template-columns: repeat(
       2,
       1fr
@@ -309,52 +342,38 @@
     align-items: start; /* Align to top of grid cells */
   }
 
-  /* Scrollbar styling */
-  .page-display::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  .page-display::-webkit-scrollbar-track {
-    background: #333;
-  }
-
-  .page-display::-webkit-scrollbar-thumb {
-    background: #555;
-    border-radius: 4px;
-  }
-
-  .page-display::-webkit-scrollbar-thumb:hover {
-    background: #666;
-  }
-
   /* Responsive */
   @media (max-width: 768px) {
     .pages-container {
-      padding: 16px;
-      gap: 24px;
+      padding: var(--spacing-lg);
+      gap: var(--spacing-xl);
     }
 
     .page-header {
-      padding: 12px 16px;
+      padding: var(--spacing-md) var(--spacing-lg);
       flex-direction: column;
       align-items: flex-start;
-      gap: 4px;
+      gap: var(--spacing-xs);
     }
 
     .page-content {
-      padding: 16px;
+      padding: var(--spacing-lg);
     }
 
     .sequence-grid {
-      gap: 12px;
+      gap: var(--spacing-md);
     }
 
     .page-title {
-      font-size: 16px;
+      font-size: var(--font-size-lg);
     }
 
     .page-info {
-      font-size: 11px;
+      font-size: var(--font-size-xs);
+    }
+
+    .state-container {
+      padding: var(--spacing-xl);
     }
   }
 </style>

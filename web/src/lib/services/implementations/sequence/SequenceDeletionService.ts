@@ -9,41 +9,16 @@ import type { SequenceData } from "$lib/domain";
 import type {
   IPersistenceService,
   ISequenceService,
+  ISequenceDeletionService,
 } from "../../interfaces/sequence-interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
-export interface ISequenceDeletionService {
-  /**
-   * Delete an entire sequence
-   */
-  deleteSequence(sequenceId: string): Promise<void>;
-
-  /**
-   * Remove a specific beat from a sequence and return updated sequence
-   */
-  removeBeat(sequenceId: string, beatIndex: number): Promise<SequenceData>;
-
-  /**
-   * Clear all beats from a sequence, keeping the sequence structure
-   */
-  clearSequenceBeats(sequenceId: string): Promise<SequenceData>;
-
-  /**
-   * Remove multiple beats from a sequence by indices
-   */
-  removeBeats(sequenceId: string, beatIndices: number[]): Promise<SequenceData>;
-
-  /**
-   * Remove all beats from a specific index onwards
-   */
-  removeBeatAndFollowing(
-    sequenceId: string,
-    startIndex: number
-  ): Promise<SequenceData>;
-}
-
+@injectable()
 export class SequenceDeletionService implements ISequenceDeletionService {
   constructor(
-    private sequenceService: ISequenceService,
+    @inject(TYPES.ISequenceService) private sequenceService: ISequenceService,
+    @inject(TYPES.IPersistenceService)
     private persistenceService: IPersistenceService
   ) {}
 

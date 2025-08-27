@@ -5,8 +5,8 @@
 	Contains the 4-tab interface with navigation and content areas.
 -->
 <script lang="ts">
-	import ExportPanel from './../export/ExportPanel.svelte';
-	import GraphEditor from './../edit/GraphEditor.svelte';
+  import ExportPanel from "./../export/ExportPanel.svelte";
+  import GraphEditor from "./../edit/GraphEditor.svelte";
 
   import type { SequenceData } from "$lib/domain";
   import type { ArrowPlacementData } from "$lib/domain/ArrowPlacementData";

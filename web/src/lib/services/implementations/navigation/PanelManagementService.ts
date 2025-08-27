@@ -5,13 +5,15 @@
  * Follows microservices architecture with clean business logic separation.
  */
 
+import { injectable } from "inversify";
 import type {
   IPanelManagementService,
   PanelState,
   PanelConfiguration,
   ResizeOperation,
-} from "../../di/interfaces/panel-interfaces";
+} from "../../interfaces/panel-interfaces";
 
+@injectable()
 export class PanelManagementService implements IPanelManagementService {
   private panels = new Map<string, PanelState>();
   private configurations = new Map<string, PanelConfiguration>();
@@ -25,28 +27,32 @@ export class PanelManagementService implements IPanelManagementService {
   }
 
   // Panel registration
-  registerPanel(config: PanelConfiguration): void {
-    this.configurations.set(config.id, config);
+  registerPanel(id: string, config: PanelConfiguration): void {
+    // Use the provided id, but also ensure config.id matches
+    const panelId = id || config.id;
+    const panelConfig = { ...config, id: panelId };
+
+    this.configurations.set(panelId, panelConfig);
 
     // Create initial state if not exists
-    if (!this.panels.has(config.id)) {
+    if (!this.panels.has(panelId)) {
       const savedWidth = this.loadPanelWidth(
-        config.persistKey,
-        config.defaultWidth
+        panelConfig.persistKey,
+        panelConfig.defaultWidth
       );
       const initialState: PanelState = {
-        id: config.id,
+        id: panelId,
         width: savedWidth,
         isCollapsed: false,
         isVisible: true,
-        minWidth: config.minWidth,
-        maxWidth: config.maxWidth,
-        defaultWidth: config.defaultWidth,
-        collapsedWidth: config.collapsedWidth,
+        minWidth: panelConfig.minWidth,
+        maxWidth: panelConfig.maxWidth,
+        defaultWidth: panelConfig.defaultWidth,
+        collapsedWidth: panelConfig.collapsedWidth,
         isResizing: false,
       };
 
-      this.panels.set(config.id, initialState);
+      this.panels.set(panelId, initialState);
     }
   }
 
@@ -56,24 +62,27 @@ export class PanelManagementService implements IPanelManagementService {
   }
 
   // Panel state management
-  getPanelState(panelId: string): PanelState {
+  getPanelState(panelId: string): PanelState | null {
     const state = this.panels.get(panelId);
     if (!state) {
-      // Return a default state for unregistered panels instead of throwing
-      console.warn(`Panel not registered: ${panelId}, returning default state`);
-      return {
-        id: panelId,
-        width: 300,
-        isCollapsed: false,
-        isVisible: true,
-        minWidth: 200,
-        maxWidth: 600,
-        defaultWidth: 300,
-        collapsedWidth: 60,
-        isResizing: false,
-      };
+      // Return null for unregistered panels as per interface contract
+      console.warn(`Panel not registered: ${panelId}, returning null`);
+      return null;
     }
     return { ...state }; // Return copy to prevent direct mutation
+  }
+
+  updatePanelState(id: string, state: Partial<PanelState>): void {
+    const currentState = this.panels.get(id);
+    if (!currentState) {
+      console.warn(`Cannot update state for unregistered panel: ${id}`);
+      return;
+    }
+
+    const updatedState = { ...currentState, ...state };
+    this.panels.set(id, updatedState);
+    this.notifyStateChange(id, updatedState);
+    this.savePanelStates();
   }
 
   togglePanelCollapse(panelId: string): void {
@@ -127,38 +136,47 @@ export class PanelManagementService implements IPanelManagementService {
   }
 
   // Resize operations
-  startResize(panelId: string, startX: number): ResizeOperation | null {
-    const state = this.panels.get(panelId);
-    if (!state || !this.canResize(panelId)) {
-      return null;
+  startResize(operation: ResizeOperation): void {
+    const state = this.panels.get(operation.panelId);
+    if (!state || !this.canResize(operation.panelId)) {
+      return;
     }
-
-    const operation: ResizeOperation = {
-      panelId,
-      startWidth: state.width,
-      startX,
-      currentX: startX,
-    };
 
     this.currentResize = operation;
 
     // Mark panel as resizing
     const updatedState = { ...state, isResizing: true };
-    this.panels.set(panelId, updatedState);
-    this.notifyStateChange(panelId, updatedState);
-
-    return operation;
+    this.panels.set(operation.panelId, updatedState);
+    this.notifyStateChange(operation.panelId, updatedState);
   }
 
+  endResize(): void {
+    if (!this.currentResize) return;
+
+    const state = this.panels.get(this.currentResize.panelId);
+    if (state) {
+      const updatedState = { ...state, isResizing: false };
+      this.panels.set(this.currentResize.panelId, updatedState);
+      this.notifyStateChange(this.currentResize.panelId, updatedState);
+    }
+
+    this.currentResize = null;
+    this.savePanelStates();
+  }
+
+  isResizing(): boolean {
+    return this.currentResize !== null;
+  }
+
+  // Legacy methods for backward compatibility (can be removed later)
   updateResize(operation: ResizeOperation, currentX: number): PanelState {
     const state = this.panels.get(operation.panelId);
     if (!state) {
       throw new Error(`Panel not found during resize: ${operation.panelId}`);
     }
 
-    operation.currentX = currentX;
-    const deltaX = currentX - operation.startX;
-    const newWidth = operation.startWidth + deltaX;
+    const deltaX = currentX - operation.startPosition.x;
+    const newWidth = operation.startSize.width + deltaX;
     const validatedWidth = this.validateWidth(operation.panelId, newWidth);
 
     const updatedState = {
@@ -172,16 +190,9 @@ export class PanelManagementService implements IPanelManagementService {
     return updatedState;
   }
 
-  endResize(operation: ResizeOperation): void {
-    const state = this.panels.get(operation.panelId);
-    if (!state) return;
-
-    const updatedState = { ...state, isResizing: false };
-    this.panels.set(operation.panelId, updatedState);
-    this.notifyStateChange(operation.panelId, updatedState);
-
-    this.currentResize = null;
-    this.savePanelStates();
+  // Legacy method - use endResize() instead
+  endResizeOperation(_operation: ResizeOperation): void {
+    this.endResize();
   }
 
   // Validation

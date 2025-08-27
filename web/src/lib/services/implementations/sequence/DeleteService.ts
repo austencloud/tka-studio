@@ -6,6 +6,7 @@
  */
 
 import type { SequenceData } from "../../interfaces/domain-types";
+import { injectable } from "inversify";
 
 export interface DeleteResult {
   success: boolean;
@@ -53,6 +54,7 @@ export interface IDeleteService {
   ): Promise<SequenceData[]>;
 }
 
+@injectable()
 export class DeleteService implements IDeleteService {
   async prepareDeleteConfirmation(
     sequence: SequenceData,

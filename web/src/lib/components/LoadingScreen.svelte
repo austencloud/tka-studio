@@ -10,9 +10,6 @@
   const clampedProgress = $derived(Math.max(0, Math.min(100, progress)));
 </script>
 
-/** * Loading Screen - Pure Svelte 5 implementation * * Shows loading progress
-during application initialization. */
-
 <div class="loading-screen">
   <div class="loading-content">
     <div class="spinner"></div>

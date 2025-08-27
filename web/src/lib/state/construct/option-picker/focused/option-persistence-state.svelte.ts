@@ -7,7 +7,7 @@
 
 import type { PictographData } from "$lib/domain/PictographData";
 import type { IPositionMapper } from "$lib/services/interfaces/movement/IPositionMapper";
-import { resolve } from "$services/bootstrap";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 import type { SortMethod } from "../config";
 import type { LastSelectedTabState } from "./option-ui-state.svelte";
 
@@ -26,7 +26,7 @@ export function createOptionPersistenceState() {
    */
   function getEndPosition(pictographData: PictographData): string | null {
     if (pictographData.motions?.blue && pictographData.motions?.red) {
-      const positionService = resolve("IPositionMapper") as IPositionMapper;
+      const positionService = resolve(TYPES.IPositionMapper) as IPositionMapper;
       const position = positionService.getPositionFromLocations(
         pictographData.motions.blue.endLocation,
         pictographData.motions.red.endLocation

@@ -6,6 +6,7 @@
  */
 
 import type { BeatData, Letter, SequenceData } from "$lib/domain";
+import { injectable } from "inversify";
 import {
   addBeatToSequence,
   createSequenceData,
@@ -18,6 +19,7 @@ import type {
   ValidationResult,
 } from "$lib/services/interfaces/sequence-state-interfaces";
 
+@injectable()
 export class SequenceStateService implements ISequenceStateService {
   // ============================================================================
   // SEQUENCE MANAGEMENT

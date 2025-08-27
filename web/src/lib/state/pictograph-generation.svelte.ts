@@ -8,7 +8,7 @@
 
 import { Letter } from "$lib/domain/Letter";
 import type { PictographData } from "$lib/domain/PictographData";
-import { resolve } from "$lib/services/bootstrap";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 import type { IPictographGenerator } from "$lib/services/interfaces/generation-interfaces";
 
 /**
@@ -17,7 +17,7 @@ import type { IPictographGenerator } from "$lib/services/interfaces/generation-i
 export function createPictographGenerationState() {
   // Get services from DI container
   const pictographGenerator = resolve(
-    "IPictographGenerator"
+    TYPES.IPictographGenerator
   ) as IPictographGenerator;
 
   // Core reactive state

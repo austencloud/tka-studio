@@ -16,7 +16,7 @@ export interface LayoutState {
 export function createLayoutState(
   deviceState: DeviceState,
   containerState: ContainerState,
-  optionsCount: number = 0
+  _optionsCount: number = 0
 ) {
   // Derived layout configuration using runes
   const layoutConfig = $derived(() => {

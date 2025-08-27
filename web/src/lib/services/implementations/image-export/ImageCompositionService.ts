@@ -28,6 +28,8 @@ import type {
   IUserInfoRenderer,
   IWordTextRenderer,
 } from "../../interfaces/text-rendering-interfaces";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 
 // Internal composition components
 import { BeatGridPositioner } from "./composition/internal/BeatGridPositioner";
@@ -35,6 +37,7 @@ import { CanvasCreator } from "./composition/internal/CanvasCreator";
 import { CompositionUtils } from "./composition/internal/CompositionTypes";
 import { TextOverlayApplicator } from "./composition/internal/TextOverlayApplicator";
 
+@injectable()
 export class ImageCompositionService implements IImageCompositionService {
   // Internal composition components (not exposed via DI)
   private readonly canvasCreator: CanvasCreator;
@@ -42,13 +45,16 @@ export class ImageCompositionService implements IImageCompositionService {
   private readonly textApplicator: TextOverlayApplicator;
 
   constructor(
+    @inject(TYPES.ILayoutCalculationService)
     layoutService: ILayoutCalculationService,
+    @inject(TYPES.IDimensionCalculationService)
     dimensionService: IDimensionCalculationService,
-    beatRenderer: IBeatRenderingService,
-    wordRenderer: IWordTextRenderer,
-    userInfoRenderer: IUserInfoRenderer,
+    @inject(TYPES.IBeatRenderingService) beatRenderer: IBeatRenderingService,
+    @inject(TYPES.IWordTextRenderer) wordRenderer: IWordTextRenderer,
+    @inject(TYPES.IUserInfoRenderer) userInfoRenderer: IUserInfoRenderer,
+    @inject(TYPES.IDifficultyBadgeRenderer)
     difficultyRenderer: IDifficultyBadgeRenderer,
-    textUtils: ITextRenderingUtils
+    @inject(TYPES.ITextRenderingUtils) textUtils: ITextRenderingUtils
   ) {
     // Internal composition - these are not registered in DI container
     this.canvasCreator = new CanvasCreator(layoutService, dimensionService);

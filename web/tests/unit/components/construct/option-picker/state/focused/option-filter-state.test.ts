@@ -3,6 +3,7 @@
  */
 
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createOptionFilterState } from "../../../../../../src/lib/components/construct/option-picker/state/focused/option-filter-state.svelte";
 
 // Mock pictograph data for testing
 interface MockPictographData {

@@ -6,6 +6,7 @@
  */
 
 import type { SequenceData } from "$lib/services/interfaces/domain-types";
+import { injectable } from "inversify";
 import { createSequenceData } from "$lib/domain";
 import type { ISequenceIndexService } from "$lib/services/interfaces/browse-interfaces";
 import { GridMode, PropType, GridPositionGroup } from "$lib/domain/enums";
@@ -17,6 +18,7 @@ interface SearchIndex {
   metadataIndex: Map<string, Set<string>>; // combined metadata -> sequence IDs
 }
 
+@injectable()
 export class SequenceIndexService implements ISequenceIndexService {
   private sequenceIndex: SequenceData[] | null = null;
   private searchIndex: SearchIndex | null = null;

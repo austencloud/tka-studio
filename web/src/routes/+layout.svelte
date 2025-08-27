@@ -2,7 +2,8 @@
   import type { Snippet } from "svelte";
   import { onMount, setContext } from "svelte";
   import "../app.css";
-  import type { ServiceContainer } from "../lib/services/di/ServiceContainer";
+  import type { Container } from "inversify";
+  import { container as inversifyContainer } from "../lib/services/inversify/container";
 
   interface Props {
     children: Snippet;
@@ -11,7 +12,7 @@
   let { children }: Props = $props();
 
   // Application bootstrap
-  let container: ServiceContainer | null = $state(null);
+  let container: Container | null = $state(null);
   let isInitialized = $state(false);
   let initializationError = $state<string | null>(null);
 
@@ -29,11 +30,8 @@
       cleanupSessionStorage();
 
       try {
-        // Import bootstrap function
-        const { createWebApplication } = await import("$services/bootstrap");
-
-        // Create DI container
-        container = await createWebApplication();
+        // Use InversifyJS container directly
+        container = inversifyContainer;
 
         // Mark as initialized
         isInitialized = true;

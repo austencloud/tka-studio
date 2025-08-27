@@ -83,7 +83,7 @@ export function createAutoSyncBrowseState(
   });
 
   // Reactive state
-  let browseState = $state(initialState);
+  const browseState = $state(initialState);
 
   // Setup auto-sync - this will automatically save any changes to browseState
   const cleanup = autoSync.sync(() => browseState);

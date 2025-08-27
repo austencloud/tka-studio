@@ -10,6 +10,8 @@ import type {
   LetterCategory,
 } from "$lib/domain/codex/types";
 import type { ILetterMappingRepository } from "./LetterMappingRepository";
+import { injectable, inject } from "inversify";
+import { TYPES } from "../services/inversify/types";
 
 export interface ILessonRepository {
   initialize(): Promise<void>;
@@ -23,11 +25,15 @@ interface LessonConfigurationFile {
   lessons: LessonConfiguration[];
 }
 
+@injectable()
 export class LessonRepository implements ILessonRepository {
   private configurations: Map<string, LessonConfiguration> = new Map();
   private initialized = false;
 
-  constructor(private letterMappingRepository: ILetterMappingRepository) {}
+  constructor(
+    @inject(TYPES.ILetterMappingRepository)
+    private letterMappingRepository: ILetterMappingRepository
+  ) {}
 
   async initialize(): Promise<void> {
     if (this.initialized) return;

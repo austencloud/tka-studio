@@ -5,6 +5,7 @@
  */
 
 import type { BeatData, SequenceData } from "$lib/domain";
+import { injectable } from "inversify";
 import type { Page } from "$lib/domain/PageLayoutTypes";
 import type {
   ExportOptions,
@@ -17,11 +18,9 @@ import type {
   ImageExportOptions,
   PDFExportOptions,
 } from "../../interfaces/export-interfaces";
-import type { IPictographService } from "../../interfaces/pictograph-interfaces";
-
+@injectable()
 export class ExportService implements IExportService {
-  // pictographService reserved for future richer rendering; omitted to reduce lint noise
-  constructor(_pictographService: IPictographService) {}
+  constructor() {}
 
   /**
    * Export sequence as PNG image

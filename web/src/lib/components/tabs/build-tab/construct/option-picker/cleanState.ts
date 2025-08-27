@@ -5,7 +5,10 @@
  */
 
 // Main orchestrator (use this in most cases)
-export { createSectionState, type SectionState } from "$lib/state/construct/option-picker/index.svelte";
+export {
+  createSectionState,
+  type SectionState,
+} from "$lib/state/construct/option-picker/index.svelte";
 
 // Individual state modules (for advanced use cases)
 export {
@@ -20,4 +23,7 @@ export {
   createLayoutState,
   type LayoutState,
 } from "$lib/state/construct/option-picker/layoutState.svelte";
-export { createUIState, type UIState } from "$lib/state/construct/option-picker/uiState.svelte";
+export {
+  createUIState,
+  type UIState,
+} from "$lib/state/construct/option-picker/uiState.svelte";

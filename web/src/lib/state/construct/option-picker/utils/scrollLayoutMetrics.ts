@@ -72,7 +72,7 @@ export function createLayoutMetricsCalculator() {
     calculateOptimalLayout(
       deviceInfo: DeviceInfo,
       containerWidth: number,
-      containerHeight: number
+      _containerHeight: number
     ): LayoutMetrics {
       let columns = 2;
       let itemSize = 120;

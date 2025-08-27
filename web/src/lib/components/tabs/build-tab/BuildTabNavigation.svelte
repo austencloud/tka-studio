@@ -40,7 +40,7 @@
     onclick={() => handleTabClick("build")}
     onkeydown={(e) => handleKeyDown(e, "build")}
   >
-    🔨 Build
+    🔨 Constuct
   </button>
   <button
     type="button"

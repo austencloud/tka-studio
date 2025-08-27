@@ -66,34 +66,30 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
 
   constructor(
     @inject(TYPES.IGridModeDeriver) gridModeService: IGridModeDeriver,
-    options?: {
-      specialPlacementService?: ISpecialPlacementService;
-      defaultPlacementService?: IDefaultPlacementService;
-      orientationKeyService?: ISpecialPlacementOriKeyGenerator;
-      placementKeyService?: ArrowPlacementKeyService;
-      turnsTupleService?: ITurnsTupleKeyGenerator;
-      attributeKeyService?: IAttributeKeyGenerator;
-      tupleProcessor?: IDirectionalTupleProcessor;
-    }
+    @inject(TYPES.ISpecialPlacementService)
+    specialPlacementService: ISpecialPlacementService,
+    @inject(TYPES.IDefaultPlacementService)
+    defaultPlacementService: IDefaultPlacementService,
+    @inject(TYPES.ISpecialPlacementOriKeyGenerator)
+    orientationKeyService: ISpecialPlacementOriKeyGenerator,
+    @inject(TYPES.ArrowPlacementKeyService)
+    placementKeyService: ArrowPlacementKeyService,
+    @inject(TYPES.ITurnsTupleKeyGenerator)
+    turnsTupleService: ITurnsTupleKeyGenerator,
+    @inject(TYPES.IAttributeKeyGenerator)
+    attributeKeyService: IAttributeKeyGenerator,
+    @inject(TYPES.IDirectionalTupleProcessor)
+    tupleProcessor: IDirectionalTupleProcessor
   ) {
-    // Store injected service
+    // Store all injected services
     this.gridModeService = gridModeService;
-
-    // Initialize services with defaults if not provided
-    this.specialPlacementService =
-      options?.specialPlacementService || new SpecialPlacementService();
-    this.defaultPlacementService =
-      options?.defaultPlacementService || new DefaultPlacementService();
-    this.orientationKeyService =
-      options?.orientationKeyService || new SpecialPlacementOriKeyGenerator();
-    this.placementKeyService =
-      options?.placementKeyService || new ArrowPlacementKeyService();
-    this.turnsTupleService =
-      options?.turnsTupleService || new TurnsTupleKeyGenerator();
-    this.attributeKeyService =
-      options?.attributeKeyService || new AttributeKeyGenerator();
-    this.tupleProcessor =
-      options?.tupleProcessor || this.createDefaultTupleProcessor();
+    this.specialPlacementService = specialPlacementService;
+    this.defaultPlacementService = defaultPlacementService;
+    this.orientationKeyService = orientationKeyService;
+    this.placementKeyService = placementKeyService;
+    this.turnsTupleService = turnsTupleService;
+    this.attributeKeyService = attributeKeyService;
+    this.tupleProcessor = tupleProcessor;
   }
 
   async calculateAdjustment(
@@ -336,13 +332,5 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
       console.error("Error calculating default adjustment:", error);
       throw new Error(`Default adjustment calculation failed: ${error}`);
     }
-  }
-
-  private createDefaultTupleProcessor(): IDirectionalTupleProcessor {
-    /**Create tuple processor with default dependencies.*/
-    return new DirectionalTupleProcessor(
-      new DirectionalTupleCalculator(),
-      new QuadrantIndexCalculator()
-    );
   }
 }

@@ -109,14 +109,15 @@
 
 <style>
   .act-header {
-    background: rgba(40, 40, 50, 0.8);
-    border: 1px solid rgba(80, 80, 100, 0.4);
-    border-radius: 8px;
+    background: var(--surface-color);
+    backdrop-filter: var(--glass-backdrop);
+    border: var(--glass-border);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-glass);
     padding: var(--spacing-md);
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
-    backdrop-filter: var(--glass-backdrop);
     transition: all var(--transition-normal);
   }
 
@@ -133,31 +134,32 @@
 
   .name-input {
     flex: 1;
-    background: rgba(60, 60, 70, 0.8);
-    border: 1px solid rgba(100, 100, 120, 0.4);
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
     padding: var(--spacing-sm) var(--spacing-md);
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
     font-size: var(--font-size-lg);
     font-weight: bold;
     font-family: "Segoe UI", sans-serif;
     transition: all var(--transition-normal);
+    backdrop-filter: blur(8px);
   }
 
   .name-input:focus {
     outline: none;
-    border-color: rgba(120, 150, 200, 0.8);
-    background: rgba(70, 70, 80, 0.9);
-    box-shadow: 0 0 0 2px rgba(120, 150, 200, 0.2);
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
   }
 
   .name-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-secondary);
   }
 
   .music-button {
     padding: var(--spacing-sm) var(--spacing-md);
-    border-radius: 6px;
+    border-radius: var(--border-radius-md);
     font-size: var(--font-size-sm);
     font-weight: 500;
     white-space: nowrap;
@@ -165,28 +167,29 @@
   }
 
   .description-input {
-    background: rgba(60, 60, 70, 0.8);
-    border: 1px solid rgba(100, 100, 120, 0.4);
-    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-md);
     padding: var(--spacing-sm) var(--spacing-md);
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color);
     font-size: var(--font-size-sm);
     font-family: "Segoe UI", sans-serif;
     resize: vertical;
     min-height: 60px;
     max-height: 120px;
     transition: all var(--transition-normal);
+    backdrop-filter: blur(8px);
   }
 
   .description-input:focus {
     outline: none;
-    border-color: rgba(120, 150, 200, 0.8);
-    background: rgba(70, 70, 80, 0.9);
-    box-shadow: 0 0 0 2px rgba(120, 150, 200, 0.2);
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
   }
 
   .description-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--text-secondary);
   }
 
   .info-bar {
@@ -195,11 +198,11 @@
     justify-content: space-between;
     gap: var(--spacing-md);
     padding-top: var(--spacing-xs);
-    border-top: 1px solid rgba(80, 80, 100, 0.3);
+    border-top: var(--glass-border);
   }
 
   .sequence-count {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-color);
     font-size: var(--font-size-sm);
     font-weight: 500;
   }
@@ -275,16 +278,17 @@
   }
 
   .description-input::-webkit-scrollbar-track {
-    background: rgba(40, 40, 50, 0.3);
-    border-radius: 3px;
+    background: transparent;
+    border-radius: var(--border-radius-sm);
   }
 
   .description-input::-webkit-scrollbar-thumb {
-    background: rgba(80, 80, 100, 0.6);
-    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .description-input::-webkit-scrollbar-thumb:hover {
-    background: rgba(100, 100, 120, 0.8);
+    background: rgba(255, 255, 255, 0.3);
   }
 </style>

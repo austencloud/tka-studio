@@ -109,6 +109,7 @@ export function testEnumMappingServiceResolution(): boolean {
     const service = container.get<IEnumMappingService>(
       TYPES.IEnumMappingService
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ EnumMappingService resolved successfully");
     return true;
@@ -127,6 +128,7 @@ export function testCSVParserServiceResolution(): boolean {
 
     // Resolve the service from the container
     const service = container.get<ICSVParserService>(TYPES.ICSVParsingService);
+    void service; // Suppress unused variable warning
 
     console.log("✅ CSVParserService resolved successfully");
     return true;
@@ -147,6 +149,7 @@ export function testDataTransformationServiceResolution(): boolean {
     const service = container.get<IDataTransformationService>(
       TYPES.IDataTransformationService
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ DataTransformationService resolved successfully");
     return true;
@@ -167,6 +170,7 @@ export function testLetterQueryServiceResolution(): boolean {
     const service = container.get<ILetterQueryService>(
       TYPES.ILetterQueryService
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ LetterQueryService resolved successfully");
     return true;
@@ -187,6 +191,7 @@ export function testMotionQueryServiceResolution(): boolean {
     const service = container.get<IMotionQueryService>(
       TYPES.IMotionQueryService
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ MotionQueryService resolved successfully");
     return true;
@@ -205,6 +210,7 @@ export function testGridModeDeriverResolution(): boolean {
 
     // Resolve the service from the container
     const service = container.get<IGridModeDeriver>(TYPES.IGridModeDeriver);
+    void service; // Suppress unused variable warning
 
     console.log("✅ GridModeDeriver resolved successfully");
     return true;
@@ -223,6 +229,7 @@ export function testLetterDeriverResolution(): boolean {
 
     // Resolve the service from the container
     const service = container.get<ILetterDeriver>(TYPES.ILetterDeriver);
+    void service; // Suppress unused variable warning
 
     console.log("✅ LetterDeriver resolved successfully");
     return true;
@@ -243,6 +250,7 @@ export function testPictographValidatorServiceResolution(): boolean {
     const service = container.get<IPictographValidatorService>(
       TYPES.IPictographValidatorService
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ PictographValidatorService resolved successfully");
     return true;
@@ -263,6 +271,7 @@ export function testPositionPatternServiceResolution(): boolean {
     const service = container.get<IPositionPatternService>(
       TYPES.IPositionPatternService
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ PositionPatternService resolved successfully");
     return true;
@@ -281,6 +290,7 @@ export function testSvgConfigurationResolution(): boolean {
 
     // Resolve the service from the container
     const service = container.get<ISvgConfiguration>(TYPES.ISvgConfiguration);
+    void service; // Suppress unused variable warning
 
     console.log("✅ SvgConfiguration resolved successfully");
     return true;
@@ -301,6 +311,7 @@ export function testFilenameGeneratorServiceResolution(): boolean {
     const service = container.get<IFilenameGeneratorService>(
       TYPES.IFilenameGeneratorService
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ FilenameGeneratorService resolved successfully");
     return true;
@@ -321,6 +332,7 @@ export function testExportOptionsValidatorResolution(): boolean {
     const service = container.get<IExportOptionsValidator>(
       TYPES.IExportOptionsValidator
     );
+    void service; // Suppress unused variable warning
 
     console.log("✅ ExportOptionsValidator resolved successfully");
     return true;

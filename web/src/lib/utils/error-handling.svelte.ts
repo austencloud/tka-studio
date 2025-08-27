@@ -34,8 +34,8 @@ export function createErrorState() {
       errorCode: code,
       retryCount: errorState.retryCount,
     };
-    
-    console.error(`TKA Error [${code || 'UNKNOWN'}]:`, message, error);
+
+    console.error(`TKA Error [${code || "UNKNOWN"}]:`, message, error);
   }
 
   function clearError() {
@@ -55,7 +55,9 @@ export function createErrorState() {
   }
 
   return {
-    get state() { return errorState; },
+    get state() {
+      return errorState;
+    },
     setError,
     clearError,
     incrementRetry,
@@ -82,10 +84,10 @@ export function createAsyncState<T>() {
     options: { maxRetries?: number; retryDelay?: number } = {}
   ): Promise<T | null> {
     const { maxRetries = 3, retryDelay = 1000 } = options;
-    
+
     state.isLoading = true;
     state.error.hasError = false;
-    
+
     for (let attempt = 0; attempt <= maxRetries; attempt++) {
       try {
         const result = await operation();
@@ -95,9 +97,10 @@ export function createAsyncState<T>() {
         return result;
       } catch (error) {
         console.warn(`Attempt ${attempt + 1} failed:`, error);
-        
+
         if (attempt === maxRetries) {
-          const message = error instanceof Error ? error.message : String(error);
+          const message =
+            error instanceof Error ? error.message : String(error);
           state.error = {
             hasError: true,
             errorMessage: message,
@@ -106,13 +109,13 @@ export function createAsyncState<T>() {
           state.isLoading = false;
           throw error;
         }
-        
+
         if (retryDelay > 0) {
-          await new Promise(resolve => setTimeout(resolve, retryDelay));
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
         }
       }
     }
-    
+
     return null;
   }
 
@@ -129,7 +132,9 @@ export function createAsyncState<T>() {
   }
 
   return {
-    get state() { return state; },
+    get state() {
+      return state;
+    },
     execute,
     reset,
   };
@@ -137,16 +142,20 @@ export function createAsyncState<T>() {
 
 /**
  * Safe service resolution with error handling
+ * FIXED: Now uses TYPES symbols instead of strings
  */
 export async function safeResolve<T>(
-  serviceKey: string,
+  serviceType: symbol,
   fallback?: () => T
 ): Promise<T | null> {
   try {
-    const { resolve } = await import("$lib/services/bootstrap");
-    return resolve<T>(serviceKey);
+    const { resolve } = await import("$lib/services/inversify/container");
+    return resolve<T>(serviceType);
   } catch (error) {
-    console.error(`Failed to resolve service ${serviceKey}:`, error);
+    console.error(
+      `Failed to resolve service ${serviceType.toString()}:`,
+      error
+    );
     return fallback ? fallback() : null;
   }
 }
