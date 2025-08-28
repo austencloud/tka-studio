@@ -1,44 +1,56 @@
 <!--
-OptionPickerContainer.svelte - Main container for the option picker
+OptionPickerContainer.svelte - Simplified UI-only component
 
-Integrates all option picker components:
-- Uses optionPickerRunes for state management
-- Handles scrolling with OptionPickerScroll
-- Manages layout responsively
-- Coordinates with sequence state
+Clean, minimal component that focuses only on UI concerns:
+- No business logic or reactive effects that cause infinite loops
+- Simple props-based interface
+- Responsive container dimensions tracking only
 -->
 <script lang="ts">
   import ErrorBanner from "../../shared/ErrorBanner.svelte";
   import LoadingOverlay from "../../shared/LoadingOverlay.svelte";
-  import OptionPickerHeader from "./components/OptionPickerHeader.svelte";
-  import OptionPickerScroll from "./components/OptionPickerScroll.svelte";
+  import OptionPickerHeader from "./OptionPickerHeader.svelte";
+  import OptionPickerScroll from "./OptionPickerScroll.svelte";
   import type { PictographData } from "$lib/domain/PictographData";
-  import { createErrorState } from "$lib/utils/error-handling.svelte";
   import { onMount } from "svelte";
-  import { createOptionDataState } from "$lib/state/construct/option-picker/focused/option-data-state.svelte";
-  import { createOptionUIState } from "$lib/state/construct/option-picker/focused/option-ui-state.svelte";
-  import { createOptionFilterState } from "$lib/state/construct/option-picker/focused/option-filter-state.svelte";
-  import { createOptionPersistenceState } from "$lib/state/construct/option-picker/focused/option-persistence-state.svelte";
 
-  // Props
-  const { onOptionSelected = () => {}, initialSequence = [] } = $props<{
+  // Props - all data comes from parent, no business logic here
+  const {
+    onOptionSelected = () => {},
+    initialSequence = [],
+    // UI state props (passed from parent)
+    isLoading = false,
+    error = null,
+    filteredOptions = [],
+    sortMethod = "alphabetical",
+    reversalFilter = "all",
+    layout = null,
+    // Event handlers (passed from parent)
+    onSortMethodChanged = () => {},
+    onReversalFilterChanged = () => {},
+    onRetryLoading = () => {},
+  } = $props<{
     onOptionSelected?: (option: PictographData) => void;
     initialSequence?: PictographData[];
+    // UI state
+    isLoading?: boolean;
+    error?: string | null;
+    filteredOptions?: PictographData[];
+    sortMethod?: string;
+    reversalFilter?: string;
+    layout?: any;
+    // Event handlers
+    onSortMethodChanged?: (method: string) => void;
+    onReversalFilterChanged?: (filter: string) => void;
+    onRetryLoading?: () => void;
   }>();
 
-  // Create microservice states
-  const dataState = createOptionDataState();
-  const uiState = createOptionUIState();
-  const filterState = createOptionFilterState(dataState, uiState);
-  const persistenceState = createOptionPersistenceState();
-  const errorState = createErrorState();
-
-  // Container dimensions for responsive layout
+  // Component state (UI concerns only)
   let containerElement: HTMLElement;
   let containerWidth = $state(800);
   let containerHeight = $state(600);
 
-  // Initialize component
+  // Initialize component - UI only, no business logic
   onMount(() => {
     // Set up resize observer for responsive behavior
     if (containerElement) {
@@ -53,82 +65,6 @@ Integrates all option picker components:
       return () => resizeObserver.disconnect();
     }
   });
-
-  // Track if we've loaded to prevent infinite loop
-  let hasLoadedInitialSequence = $state(false);
-
-  // Load options when sequence changes - prevent infinite loop
-  $effect(() => {
-    if (initialSequence.length >= 0 && !hasLoadedInitialSequence) {
-      hasLoadedInitialSequence = true;
-      loadOptionsForSequence(initialSequence);
-    }
-  });
-
-  // Coordinated loading logic (moved from composition layer)
-  async function loadOptionsForSequence(sequence: PictographData[]) {
-    try {
-      errorState.clearError();
-      dataState.setSequence(sequence);
-
-      // Check for preloaded options first to avoid loading state
-      const preloadedOptions = persistenceState.checkPreloadedOptions();
-      if (preloadedOptions) {
-        dataState.setOptions(preloadedOptions);
-        uiState.setLoading(false);
-        uiState.setError(null);
-
-        // Set default tab if needed
-        if (
-          !uiState.lastSelectedTab[uiState.sortMethod] ||
-          uiState.lastSelectedTab[uiState.sortMethod] === null
-        ) {
-          uiState.setLastSelectedTabForSort(uiState.sortMethod, "all");
-        }
-        return;
-      }
-
-      // Check for bulk preloaded options
-      const targetEndPosition = persistenceState.getTargetEndPosition(sequence);
-      if (targetEndPosition) {
-        const bulkOptions =
-          persistenceState.checkBulkPreloadedOptions(targetEndPosition);
-        if (bulkOptions && bulkOptions.length > 0) {
-          dataState.setOptions(bulkOptions);
-          uiState.setLoading(false);
-          uiState.setError(null);
-
-          if (
-            !uiState.lastSelectedTab[uiState.sortMethod] ||
-            uiState.lastSelectedTab[uiState.sortMethod] === null
-          ) {
-            uiState.setLastSelectedTabForSort(uiState.sortMethod, "all");
-          }
-          return;
-        }
-      }
-
-      // Load from services
-      await dataState.loadOptionsFromServices(sequence);
-    } catch (error) {
-      errorState.setError(error, "OPTION_LOAD_FAILED");
-    }
-  }
-
-  // Handle option selection
-  async function handleOptionSelected(option: PictographData) {
-    try {
-      await dataState.selectOption(option);
-      onOptionSelected(option);
-    } catch (error) {
-      errorState.setError(error, "OPTION_SELECT_FAILED");
-    }
-  }
-
-  // Handle sort method changes
-  function handleSortMethodChanged(method: string) {
-    uiState.setSortMethod(method as any); // Type assertion for now
-  }
 </script>
 
 <div
@@ -137,37 +73,38 @@ Integrates all option picker components:
   data-testid="option-picker-container"
 >
   <!-- Header with sorting controls -->
-  <OptionPickerHeader />
+  <OptionPickerHeader
+    {sortMethod}
+    {reversalFilter}
+    {onSortMethodChanged}
+    {onReversalFilterChanged}
+  />
 
   <!-- Error banner -->
-  {#if errorState.state.hasError}
-    <ErrorBanner
-      message={errorState.state.errorMessage || "An error occurred"}
-      onDismiss={errorState.clearError}
-    />
+  {#if error}
+    <ErrorBanner message={error} onDismiss={() => {}} />
   {/if}
 
   <!-- Main content -->
   <div class="option-picker-content">
-    {#if uiState.isLoading}
+    {#if isLoading}
       <LoadingOverlay message="Loading options..." />
-    {:else if uiState.error}
+    {:else if error}
       <div class="error-state">
-        <p>Error loading options: {uiState.error}</p>
-        <button onclick={() => loadOptionsForSequence(initialSequence)}>
-          Retry
-        </button>
+        <p>Error loading options: {error}</p>
+        <button onclick={onRetryLoading}> Retry </button>
       </div>
-    {:else if filterState.filteredOptions.length === 0}
+    {:else if filteredOptions.length === 0}
       <div class="empty-state">
         <p>No options available for the current sequence.</p>
       </div>
     {:else}
       <OptionPickerScroll
-        pictographs={filterState.filteredOptions}
-        onPictographSelected={handleOptionSelected}
+        pictographs={filteredOptions}
+        onPictographSelected={onOptionSelected}
         {containerWidth}
         {containerHeight}
+        {layout}
       />
     {/if}
   </div>
@@ -179,7 +116,8 @@ Integrates all option picker components:
     flex-direction: column;
     height: 100%;
     width: 100%;
-    background: transparent;
+    background: var(--background);
+    border-radius: var(--border-radius);
     overflow: hidden;
   }
 
@@ -198,21 +136,20 @@ Integrates all option picker components:
     height: 100%;
     padding: var(--spacing-xl);
     text-align: center;
-    color: var(--muted-foreground);
+    color: var(--text-muted);
   }
 
   .error-state button {
     margin-top: var(--spacing-md);
-    padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--primary);
-    color: var(--primary-foreground);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--primary-color);
+    color: white;
     border: none;
-    border-radius: var(--radius);
+    border-radius: var(--border-radius);
     cursor: pointer;
-    transition: all 0.2s ease;
   }
 
   .error-state button:hover {
-    background: var(--primary-hover);
+    background: var(--primary-color-hover);
   }
 </style>

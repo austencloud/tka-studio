@@ -8,39 +8,65 @@
   import ExportPanel from "./../export/ExportPanel.svelte";
   import GraphEditor from "./../edit/GraphEditor.svelte";
 
-  import type { SequenceData } from "$lib/domain";
   import type { ArrowPlacementData } from "$lib/domain/ArrowPlacementData";
-  import type { ActiveRightPanel } from "$lib/state/construct-tab-state.svelte";
-  import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
-  import BuildTabContent from "../construct/ConstructTabContent.svelte";
-  import ConstructTabNavigation from "../BuildTabNavigation.svelte";
+  import { constructTabEventService } from "$lib/services/implementations/build/BuildTabEventService";
+  import ConstructTabContent from "../construct/ConstructTabContent.svelte";
+  import ConstructTabNavigation from "../BuildSubTabNavigation.svelte";
   import GeneratePanel from "../generate/GeneratePanel.svelte";
   // Import Svelte's built-in fade transition for consistency with main tabs
   import type { BeatData } from "$lib/domain";
+  import type { PictographData } from "$services/interfaces/domain-types";
+  import type { ActiveBuildSubTab } from "$lib/state/services/state-service-interfaces";
   import { getAnimationSettings } from "$lib/utils/animation-control";
   import { shouldAnimate } from "$lib/utils/simple-fade";
   import { fade } from "svelte/transition";
 
-  // Props from parent ConstructTab
+  // Props from parent BuildTab
   interface Props {
-    constructTabState: {
-      activeRightPanel: ActiveRightPanel;
-      isSubTabTransitionActive: boolean;
-      setActiveRightPanel: (tab: ActiveRightPanel) => void;
-      // Sequence state for GraphEditor
-      currentSequence: SequenceData | null;
-      selectedBeatIndex: number | null;
-      selectedBeatData: BeatData | null;
+    // Master tab state (shared across all sub-tabs)
+    buildTabState: {
+      readonly isLoading: boolean;
+      readonly error: string | null;
+      readonly isTransitioning: boolean;
+      readonly hasError: boolean;
+      readonly hasSequence: boolean;
+      readonly activeSubTab: ActiveBuildSubTab;
+      readonly sequenceState: any; // TODO: Fix typing
+      setLoading: (loading: boolean) => void;
+      setTransitioning: (transitioning: boolean) => void;
+      setError: (errorMessage: string | null) => void;
+      clearError: () => void;
+      setActiveRightPanel: (panel: ActiveBuildSubTab) => void;
     };
+    // Construct sub-tab state (construct-specific)
+    constructTabState: {
+      readonly isLoading: boolean;
+      readonly error: string | null;
+      readonly isTransitioning: boolean;
+      readonly hasError: boolean;
+      readonly canSelectOptions: boolean;
+      readonly showStartPositionPicker: boolean;
+      readonly shouldShowStartPositionPicker: () => boolean;
+      readonly selectedStartPosition: any; // TODO: Fix typing
+      readonly startPositionStateService: any; // TODO: Fix typing
+      setLoading: (loading: boolean) => void;
+      setTransitioning: (transitioning: boolean) => void;
+      setError: (errorMessage: string | null) => void;
+      clearError: () => void;
+      setShowStartPositionPicker: (show: boolean) => void;
+      setSelectedStartPosition: (position: any) => void;
+    };
+    // Action handlers (start position selection handled by unified service)
+    onOptionSelected: (option: PictographData) => Promise<void>;
   }
 
-  const { constructTabState }: Props = $props();
+  const { buildTabState, constructTabState, onOptionSelected }: Props =
+    $props();
 
   // Reactive state from props
-  let activeRightPanel = $derived(constructTabState.activeRightPanel);
-  let isSubTabTransitionActive = $derived(
-    constructTabState.isSubTabTransitionActive
-  );
+  let activeRightPanel = $derived(buildTabState.activeSubTab);
+  let isSubTabTransitionActive = $derived(buildTabState.isTransitioning);
+
   let animationSettings = $derived(getAnimationSettings());
 
   // Sequential fade timing - same as main tabs for consistency
@@ -83,11 +109,6 @@
     constructTabEventService().handleArrowSelected(fullArrowData);
   }
 
-  function handleGraphEditorVisibilityChanged(isVisible: boolean) {
-    // Handle graph editor visibility changes if needed
-    console.log("Graph editor visibility changed:", isVisible);
-  }
-
   function handleExportSettingChanged(data: { setting: string; value: any }) {
     const event = new CustomEvent("settingChanged", { detail: data });
     constructTabEventService().handleExportSettingChanged(event);
@@ -109,8 +130,8 @@
 <div class="right-panel" data-testid="right-panel">
   <!-- Tab Navigation -->
   <ConstructTabNavigation
-    {activeRightPanel}
-    setActiveRightPanel={constructTabState.setActiveRightPanel}
+    activeBuildSubTab={activeRightPanel}
+    setActiveBuildSubTab={buildTabState.setActiveRightPanel}
   />
 
   <!-- Tab Content with Sequential Fade Transitions -->
@@ -121,28 +142,26 @@
         in:fade={fadeInParams}
         out:fade={fadeOutParams}
       >
-        {#if activeRightPanel === "build"}
-          <BuildTabContent />
+        {#if activeRightPanel === "construct"}
+          <ConstructTabContent
+            shouldShowStartPositionPicker={constructTabState.shouldShowStartPositionPicker()}
+            {onOptionSelected}
+          />
         {:else if activeRightPanel === "generate"}
           <GeneratePanel />
         {:else if activeRightPanel === "edit"}
-          <div class="panel-header">
-            <h2>Graph Editor</h2>
-            <p>Advanced sequence editing tools</p>
-          </div>
           <div class="panel-content graph-editor-content">
             <GraphEditor
-              currentSequence={constructTabState.currentSequence}
-              selectedBeatIndex={constructTabState.selectedBeatIndex}
-              selectedBeatData={constructTabState.selectedBeatData}
+              currentSequence={buildTabState.sequenceState.currentSequence}
+              selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
+              selectedBeatData={buildTabState.sequenceState.selectedBeatData}
               onBeatModified={handleBeatModified}
               onArrowSelected={handleArrowSelected}
-              onVisibilityChanged={handleGraphEditorVisibilityChanged}
             />
           </div>
         {:else if activeRightPanel === "export"}
           <ExportPanel
-            currentSequence={constructTabState.currentSequence}
+            currentSequence={buildTabState.sequenceState.currentSequence}
             onsettingchanged={handleExportSettingChanged}
             onpreviewupdaterequested={handlePreviewUpdateRequested}
             onexportrequested={handleExportRequested}
@@ -197,27 +216,6 @@
     backface-visibility: hidden;
   }
 
-  .panel-header {
-    flex-shrink: 0;
-    padding: var(--spacing-lg);
-    background: var(--muted) / 30;
-    border-bottom: 1px solid var(--border);
-    text-align: center;
-  }
-
-  .panel-header h2 {
-    margin: 0 0 var(--spacing-sm) 0;
-    color: var(--foreground);
-    font-size: var(--font-size-xl);
-    font-weight: 500;
-  }
-
-  .panel-header p {
-    margin: 0;
-    color: var(--muted-foreground);
-    font-size: var(--font-size-sm);
-  }
-
   .panel-content {
     flex: 1;
     overflow: auto;
@@ -245,12 +243,5 @@
     z-index: 999;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     pointer-events: none;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .panel-header {
-      padding: var(--spacing-md);
-    }
   }
 </style>

@@ -5,16 +5,11 @@
  * Extracted from StartPositionPicker component to follow clean architecture.
  */
 
-import type { BeatData } from "$domain/BeatData";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import type { PictographData } from "$domain/PictographData";
-import {
-  createStartPositionData,
-  extractEndPosition,
-  storeStartPositionData,
-} from "$lib/components/tabs/build-tab/construct/start-position-picker/utils/StartPositionUtils";
 import type { IStartPositionSelectionService } from "$lib/services/interfaces/IStartPositionSelectionService";
-import type { IStartPositionService } from "$services/interfaces/application-interfaces";
+import type { IStartPositionService as IApplicationStartPositionService, IStartPositionService } from "$services/interfaces/application-interfaces";
+import { TYPES } from "$services/inversify/types";
 
 interface StartPositionData {
   endPosition: string;
@@ -28,42 +23,46 @@ interface StartPositionData {
 export class StartPositionSelectionService
   implements IStartPositionSelectionService
 {
+  constructor(
+    @inject(TYPES.IStartPositionService)
+    private readonly utilityStartPositionService: IStartPositionService
+  ) {}
+
   /**
    * Handle the complete start position selection process
    */
   async selectStartPosition(
     startPosPictograph: PictographData,
-    startPositionService: IStartPositionService
+    applicationStartPositionService: IApplicationStartPositionService
   ): Promise<void> {
     try {
       // Extract end position from the pictograph data
-      const endPosition = extractEndPosition(startPosPictograph);
+      const endPosition =
+        this.utilityStartPositionService.extractEndPosition(startPosPictograph);
 
       // Create start position data in the format the OptionPicker expects
-      const startPositionData = createStartPositionData(
-        startPosPictograph,
-        endPosition
-      );
+      const startPositionData =
+        this.utilityStartPositionService.createStartPositionData(
+          startPosPictograph,
+          endPosition
+        );
 
       // Create start position beat data for internal use
-      const startPositionBeat: BeatData = {
-        id: crypto.randomUUID(),
-        beatNumber: 0,
-        duration: 1.0,
-        blueReversal: false,
-        redReversal: false,
-        isBlank: false,
-        pictographData: startPosPictograph,
-      };
+      const startPositionBeat =
+        this.utilityStartPositionService.createStartPositionBeat(
+          startPosPictograph
+        );
 
       // Save to localStorage in the format OptionPicker expects
-      storeStartPositionData(startPositionData);
+      this.utilityStartPositionService.storeStartPositionData(
+        startPositionData as unknown as Record<string, unknown>
+      );
 
       // Preload options for better UX
       await this.preloadOptionsForPosition(endPosition);
 
-      // Use service to set start position
-      await startPositionService.setStartPosition(startPositionBeat);
+      // Use application service to set start position in the sequence
+      await applicationStartPositionService.setStartPosition(startPositionBeat);
 
       // Dispatch event for coordination service
       this.dispatchStartPositionSelectedEvent(startPositionData, endPosition);

@@ -84,26 +84,16 @@ export class ArrowLocationCalculator implements IArrowLocationCalculator {
      *     Error: If dash motion requires pictograph data but none provided
      */
     const motionType = motion.motionType?.toLowerCase();
-    console.log("🎯 ArrowLocationCalculator: Calculating location");
-    console.log("Motion Type:", motionType);
-    console.log("Start Location:", motion.startLocation);
-    console.log("End Location:", motion.endLocation);
 
     switch (motionType) {
       case "static":
-        const staticLocation = this.calculateStaticLocation(motion);
-        console.log("✅ Static location calculated:", staticLocation);
-        return staticLocation;
+        return this.calculateStaticLocation(motion);
       case "pro":
       case "anti":
       case "float":
-        const shiftLocation = this.calculateShiftLocation(motion);
-        console.log("✅ Shift location calculated:", shiftLocation);
-        return shiftLocation;
+        return this.calculateShiftLocation(motion);
       case "dash":
-        const dashLocation = this.calculateDashLocation(motion, pictographData);
-        console.log("✅ Dash location calculated:", dashLocation);
-        return dashLocation;
+        return this.calculateDashLocation(motion, pictographData);
       default:
         console.warn(
           `Unknown motion type: ${motionType}, using start location`

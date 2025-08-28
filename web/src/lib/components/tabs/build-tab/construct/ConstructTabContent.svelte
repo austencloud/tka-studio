@@ -1,53 +1,24 @@
 <!--
   ConstructTabContent.svelte
 
-  Construct tab content component extracted from ConstructTab.
-  Handles the conditional logic for showing either StartPositionPicker or OptionPicker
-  based on the current sequence state.
+  Pure UI component that displays StartPositionPicker or OptionPicker
+  based on the current sequence state. Receives all state and handlers as props.
 -->
 <script lang="ts">
   import OptionPickerContainer from "./option-picker/OptionPickerContainer.svelte";
   import StartPositionPicker from "./start-position-picker/StartPositionPicker.svelte";
-  import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
   import type { PictographData } from "$services/interfaces/domain-types";
 
   // Import fade transition for smooth switching
   import { getSettings } from "$lib/state/app-state.svelte";
   import { fade } from "svelte/transition";
-  // CRITICAL FIX: Also watch the singleton sequence state for updates
-  // This ensures we react to changes made by the coordination service
-  import { resolve, TYPES } from "$lib/services/inversify/container";
-  import { createSequenceState } from "$lib/state/sequence/sequence-state.svelte";
 
-  // Get service from DI container and create component-scoped state
-  const sequenceStateService = resolve<
-    import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService
-  >(TYPES.ISequenceStateService);
-  const sequenceState = createSequenceState(sequenceStateService);
+  // Props - simplified with unified service
+  let { shouldShowStartPositionPicker, onOptionSelected } = $props<{
+    shouldShowStartPositionPicker: boolean;
+    onOptionSelected: (option: PictographData) => Promise<void>;
+  }>();
 
-  // TODO: Implement proper state synchronization with new DI pattern
-
-  // Initialize component coordination using effect instead of onMount
-  $effect(() => {
-    try {
-      constructTabEventService().setupComponentCoordination();
-    } catch (error) {
-      console.error(
-        "ConstructTabContent: Error setting up component coordination:",
-        error
-      );
-    }
-  });
-
-  // Reactive state from store
-  let shouldShowStartPositionPicker = $derived.by(() => {
-    // Use the new sequence state
-    const currentSequence = sequenceState.currentSequence;
-    const shouldShow =
-      !currentSequence || !currentSequence.startingPositionBeat;
-
-    return shouldShow;
-  });
   let settings = $derived(getSettings());
 
   // Transition functions that respect animation settings - same as main interface
@@ -65,20 +36,6 @@
       delay: animationsEnabled ? 250 : 0, // Wait for out transition
     });
   };
-
-  // Event handlers
-  async function handleOptionSelected(option: PictographData) {
-    await constructTabEventService().handleOptionSelected(option);
-  }
-
-  async function handleStartPositionSelected(position: any) {
-    try {
-      // Use the event service to handle start position selection
-      await constructTabEventService().handleStartPositionSelected(position);
-    } catch (error) {
-      console.error("❌ Error handling start position selection:", error);
-    }
-  }
 </script>
 
 <div class="construct-tab-content" data-testid="construct-tab-content">
@@ -86,12 +43,11 @@
   {#if shouldShowStartPositionPicker}
     <div class="content-container" in:contentIn out:contentOut>
       <div class="panel-content">
-        <StartPositionPicker {sequenceState} />
+        <StartPositionPicker />
       </div>
     </div>
   {/if}
 
-  <!-- Option Picker - Always mounted to receive events, but hidden when start position picker is shown -->
   <div
     class="content-container"
     class:hidden={shouldShowStartPositionPicker}
@@ -99,7 +55,7 @@
     out:contentOut
   >
     <div class="panel-content transparent-scroll">
-      <OptionPickerContainer onOptionSelected={handleOptionSelected} />
+      <OptionPickerContainer {onOptionSelected} />
     </div>
   </div>
 </div>

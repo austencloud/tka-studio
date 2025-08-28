@@ -20,6 +20,8 @@ export type TabId =
   | "about"
   | "motion-tester";
 
+export type ActiveBuildSubTab = "construct" | "generate" | "edit" | "export";
+
 export type Theme = "light" | "dark";
 
 export interface PerformanceMetrics {

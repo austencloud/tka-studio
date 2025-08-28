@@ -4,7 +4,7 @@
  * Handles core application lifecycle state
  */
 
-import type { IInitializationService } from "../interfaces/state-service-interfaces";
+import type { IInitializationService } from "../state-service-interfaces";
 import { injectable } from "inversify";
 
 @injectable()

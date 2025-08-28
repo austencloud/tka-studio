@@ -9,7 +9,7 @@ import { Letter } from "$lib/domain/Letter";
 import { createMotionData } from "$lib/domain/MotionData";
 import type { PictographData } from "$lib/domain/PictographData";
 import { createPictographData } from "$lib/domain/PictographData";
-import { MotionColor } from "$lib/domain/enums";
+import { MotionColor, GridPosition } from "$lib/domain/enums";
 import type { IEnumMappingService } from "../data/EnumMappingService";
 import type { IPositionMapper } from "../../interfaces/positioning-interfaces";
 import { injectable, inject } from "inversify";
@@ -50,10 +50,9 @@ export class CSVPictographParserService implements ICSVPictographParserService {
    * Convert a CSV row to PictographData object
    */
   parseCSVRowToPictograph(row: CSVRow): PictographData {
-    // Parse letter
+    // Convert string letter to Letter enum (e.g., "A" -> Letter.A)
     const letter = row.letter as Letter;
 
-    // Parse blue hand motion
     const blueMotion = createMotionData({
       motionType: this.enumMapper.mapMotionType(row.blueMotionType),
       rotationDirection: this.enumMapper.mapRotationDirection(
@@ -64,7 +63,6 @@ export class CSVPictographParserService implements ICSVPictographParserService {
       color: MotionColor.BLUE,
     });
 
-    // Parse red hand motion
     const redMotion = createMotionData({
       motionType: this.enumMapper.mapMotionType(row.redMotionType),
       rotationDirection: this.enumMapper.mapRotationDirection(
@@ -77,13 +75,33 @@ export class CSVPictographParserService implements ICSVPictographParserService {
 
     return createPictographData({
       letter,
-      startPosition: row.startPosition,
-      endPosition: row.endPosition,
+      startPosition: this.mapStringToGridPosition(row.startPosition),
+      endPosition: this.mapStringToGridPosition(row.endPosition),
       motions: {
         [MotionColor.BLUE]: blueMotion,
         [MotionColor.RED]: redMotion,
       },
     });
+  }
+
+  /**
+   * Convert string position to GridPosition enum
+   */
+  private mapStringToGridPosition(position: string): GridPosition | null {
+    const upperPosition = position.toUpperCase();
+
+    // Convert to enum format (e.g., "alpha1" -> "ALPHA1")
+    const enumKey = upperPosition.replace(
+      /(\d)/,
+      (match) => match
+    ) as keyof typeof GridPosition;
+
+    // Check if it's a valid GridPosition
+    if (enumKey in GridPosition) {
+      return GridPosition[enumKey];
+    }
+
+    return null;
   }
 
   /**

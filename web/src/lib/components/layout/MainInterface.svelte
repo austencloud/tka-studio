@@ -19,7 +19,7 @@
   import SettingsDialog from "$components/SettingsDialog.svelte";
   import AboutTab from "$components/tabs/about-tab/AboutTab.svelte";
   import BrowseTab from "$components/tabs/browse-tab/BrowseTab.svelte";
-  import ConstructTab from "$components/tabs/build-tab/BuildTab.svelte";
+  import ConstructTab from "$lib/components/tabs/build-tab/BuildTab.svelte";
   import LearnTab from "$components/tabs/learn-tab/LearnTab.svelte";
   import MotionTesterTab from "$components/tabs/motion-tester-tab/MotionTesterTab.svelte";
   import SequenceCardTab from "$components/tabs/sequence-card-tab/SequenceCardTab.svelte";

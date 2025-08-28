@@ -7,7 +7,8 @@
 
 import type { PictographData } from "$lib/domain";
 // Re-enabled after fixing circular dependency
-import type { IArrowPositioningService } from "$lib/services/interfaces/pictograph-interfaces";
+import type { IArrowPositioningOrchestrator } from "$lib/services/interfaces/positioning-interfaces";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 
 export interface ArrowPositioningProps {
   /** Current pictograph data containing arrows */
@@ -30,18 +31,11 @@ export interface ArrowPositioningState {
 export function useArrowPositioning(
   _props: ArrowPositioningProps
 ): ArrowPositioningState {
-  // TODO: Temporarily disabled due to circular dependency
-  // Get the arrow positioning service from DI container
-  // const positioningService = resolve(
-  //   IArrowPositioningServiceInterface
-  // ) as IArrowPositioningService;
-
-  // Temporary fallback - return mock service
-  const positioningService: IArrowPositioningService = {
-    renderArrowAtPosition: async () => {
-      // Mock implementation - does nothing
-    },
-  };
+  // 🚨 CRITICAL FIX: Re-enable the arrow positioning orchestrator
+  // Get the arrow positioning orchestrator from DI container
+  const arrowOrchestrator = resolve<IArrowPositioningOrchestrator>(
+    TYPES.IArrowPositioningOrchestrator
+  );
 
   // Clean architecture: Calculate positions from motion data using the orchestrator
   async function calculateArrowPositions(
@@ -62,9 +56,18 @@ export function useArrowPositioning(
       > = {};
       const newMirroring: Record<string, boolean> = {};
 
-      // Calculate positions for each motion using the actual positioning orchestrator
+      // 🚨 CRITICAL FIX: Use the actual ArrowPositioningOrchestrator
+      console.log(
+        "🎯 useArrowPositioning: Starting calculation for pictograph"
+      );
+
+      // First, calculate all arrow positions using the orchestrator
+      const updatedPictographData =
+        await arrowOrchestrator.calculateAllArrowPositions(pictographData);
+
+      // Extract positions and mirroring from the updated data
       for (const [color, motionData] of Object.entries(
-        pictographData.motions
+        updatedPictographData.motions || {}
       )) {
         if (
           motionData &&
@@ -72,24 +75,24 @@ export function useArrowPositioning(
           motionData.arrowPlacementData
         ) {
           try {
-            // TODO: Use the actual ArrowPositioningService to calculate positions
-            // This needs to be implemented with the correct interface
-            const positionResult = { x: 0, y: 0, rotation: 0 };
-            const mirroringResult = false;
+            const arrowPlacement = motionData.arrowPlacementData;
 
             newPositions[color] = {
-              x: positionResult.x,
-              y: positionResult.y,
-              rotation: positionResult.rotation,
+              x: arrowPlacement.positionX,
+              y: arrowPlacement.positionY,
+              rotation: arrowPlacement.rotationAngle || 0,
             };
-            newMirroring[color] = mirroringResult;
+
+            newMirroring[color] = arrowPlacement.svgMirrored || false;
+
+
           } catch (error) {
             console.error(
-              `❌ useArrowPositioning: Failed to calculate position for ${color} arrow:`,
+              `❌ useArrowPositioning: Failed to extract position for ${color} arrow:`,
               error
             );
 
-            // Fallback to center position if orchestrator fails
+            // Fallback to center position if extraction fails
             newPositions[color] = {
               x: 475,
               y: 475,

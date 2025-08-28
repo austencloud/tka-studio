@@ -9,7 +9,7 @@ and leaves state management to the parent component.
   import type { MotionColor, MotionData, PictographData } from "$lib/domain";
   import { GridMode } from "$lib/domain/enums";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
+  import type { IGridModeDeriver } from "$lib/services/interfaces/positioning-interfaces";
   // ✅ REMOVED: Beta calculation imports - now handled in PropPlacementService
 
   import Arrow from "./components/ArrowSvg.svelte";

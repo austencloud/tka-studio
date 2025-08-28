@@ -73,31 +73,19 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
         return [center.x, center.y, 0];
       }
 
-      console.log("🎯 ArrowPositionCalculator: Starting calculation");
-      console.log("Motion Type:", motion.motionType);
-      console.log("Start Location:", motion.startLocation);
-      console.log("End Location:", motion.endLocation);
-
       // STEP 2: Calculate location and initial position
       const location = this.locationCalculator.calculateLocation(
         motion,
         pictographData
       );
-      console.log("📍 Calculated Location:", location);
-
-      // 🚨 CRITICAL FIX: Store the calculated arrow location for later persistence
-      // This was the missing piece causing arrows to appear at (0,0)!
-      console.log("✅ Calculated arrow location:", location);
 
       const initialPosition = this.coordinateSystem.getInitialPosition(
         motion,
         location
       );
-      console.log("🎯 Initial Position:", initialPosition);
 
       const validPosition =
         this.dataProcessor.ensureValidPosition(initialPosition);
-      console.log("✅ Valid Position:", validPosition);
 
       // STEP 3: Calculate rotation
       const rotation = this.rotationCalculator.calculateRotation(
@@ -168,9 +156,9 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
       };
 
       // 🚨 CRITICAL FIX: Pass the calculated arrow location to persist in pictograph data
-      const motionUpdates: Partial<MotionData> = {
+      const motionUpdates = {
         arrowLocation: location, // Use the calculated location from above
-      };
+      } as unknown as Partial<MotionData>;
 
       return this.dataProcessor.updateArrowInPictograph(
         pictographData,
@@ -232,9 +220,9 @@ export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {
           };
 
           // 🚨 CRITICAL FIX: Pass the calculated arrow location to persist in pictograph data
-          const motionUpdates: Partial<MotionData> = {
+          const motionUpdates = {
             arrowLocation: calculatedLocation, // Use the calculated location from above
-          };
+          } as unknown as Partial<MotionData>;
 
           updatedPictograph = this.dataProcessor.updateArrowInPictograph(
             updatedPictograph,

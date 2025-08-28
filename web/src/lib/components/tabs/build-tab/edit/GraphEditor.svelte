@@ -14,7 +14,6 @@
     selectedBeatIndex,
     selectedBeatData,
     onArrowSelected: _onArrowSelected,
-    onVisibilityChanged: _onVisibilityChanged,
   } = $props<{
     currentSequence: SequenceData | null;
     selectedBeatIndex: number | null;
@@ -103,14 +102,7 @@
     return undefined;
   });
 
-  onMount(() => {
-    console.log("Graph Editor mounted");
-    _onVisibilityChanged?.(true);
 
-    return () => {
-      _onVisibilityChanged?.(false);
-    };
-  });
 </script>
 
 <div class="graph-editor" data-testid="graph-editor">

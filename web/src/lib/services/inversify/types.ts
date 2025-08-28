@@ -18,6 +18,13 @@ export const TYPES = {
   IDeviceDetectionService: Symbol.for("IDeviceDetectionService"),
   IPanelManagementService: Symbol.for("IPanelManagementService"),
 
+  // === BUILD TAB SERVICES ===
+  IBuildTabService: Symbol.for("IBuildTabService"),
+
+  // === OPTION PICKER SERVICES ===
+  IOptionPickerLayoutService: Symbol.for("IOptionPickerLayoutService"),
+  IOptionPickerDataService: Symbol.for("IOptionPickerDataService"),
+
   // === RENDERING SERVICES ===
   ISvgUtilityService: Symbol.for("ISvgUtilityService"),
   ISvgConfiguration: Symbol.for("ISvgConfiguration"),
@@ -61,8 +68,7 @@ export const TYPES = {
   IConstructTabCoordinationService: Symbol.for(
     "IConstructTabCoordinationService"
   ),
-  IStartPositionService: Symbol.for("IStartPositionService"),
-  IStartPositionSelectionService: Symbol.for("IStartPositionSelectionService"),
+  IStartPositionService: Symbol.for("IStartPositionService"), // UNIFIED SERVICE
 
   // === BEAT FRAME SERVICES ===
   IBeatFrameService: Symbol.for("IBeatFrameService"),

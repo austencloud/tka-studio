@@ -7,15 +7,15 @@
 
 import { Letter } from "./Letter";
 import type { MotionData } from "./MotionData";
-import { MotionColor } from "./enums";
+import { GridPosition, MotionColor } from "./enums";
 
 export interface PictographData {
   readonly id: string;
 
   // Letter and position data
   readonly letter?: Letter | null;
-  readonly startPosition?: string | null;
-  readonly endPosition?: string | null;
+  readonly startPosition?: GridPosition | null;
+  readonly endPosition?: GridPosition | null;
 
   // Movement data
   readonly motions: Partial<Record<MotionColor, MotionData>>;

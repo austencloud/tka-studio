@@ -1,4 +1,4 @@
-import OptionPickerSection from "$lib/components/tabs/build-tab/construct/option-picker/components/OptionPickerSection.svelte";
+import OptionPickerSection from "$lib/components/tabs/build-tab/construct/option-picker/OptionPickerSection.svelte";
 import type { PictographData } from "$lib/domain/PictographData";
 import { GridMode } from "$lib/domain/enums";
 import { fireEvent, render, screen } from "@testing-library/svelte";

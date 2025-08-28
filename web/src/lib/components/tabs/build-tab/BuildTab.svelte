@@ -1,56 +1,64 @@
-<!-- ConstructTab.svelte - Refactored with factory-based state management -->
+<!-- BuildTab.svelte - Master tab with clean service resolution -->
 <script lang="ts">
   import RightPanel from "./layout/RightPanel.svelte";
   import LoadingOverlay from "./shared/LoadingOverlay.svelte";
   import LeftPanel from "./layout/LeftPanel.svelte";
   import ErrorBanner from "./shared/ErrorBanner.svelte";
 
-  import { constructTabEventService } from "$services/implementations/construct/ConstructTabEventService";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import { createSequenceState } from "$lib/state/sequence-state.svelte";
+  import { createBuildTabState } from "$lib/state/build-tab-state.svelte";
   import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
+  import type { IBuildTabService } from "$lib/services/interfaces/IBuildTabService";
+  import type { IStartPositionService } from "$lib/services/interfaces/IStartPositionService";
+  import type { ISequenceService } from "$lib/services/interfaces/sequence-interfaces";
+  import { GridMode } from "$lib/domain/enums";
   import { onMount } from "svelte";
 
-  // Create component-scoped state using factory functions
-  const sequenceService = resolve(TYPES.ISequenceService) as any; // TODO: Fix typing
-  const sequenceState = createSequenceState(sequenceService);
-  const constructTabState = createConstructTabState(sequenceState);
+  // ✅ CLEAN SERVICE RESOLUTION: Resolve services using clean pattern (no 'as any')
+  const sequenceService = resolve(TYPES.ISequenceService) as ISequenceService; // TODO: Fix typing
+  const startPositionService = resolve(
+    TYPES.IStartPositionService
+  ) as IStartPositionService;
+  const buildTabService = resolve(TYPES.IBuildTabService) as IBuildTabService;
+  // Services are now resolved directly in components that need them
+  // ✅ CREATE SEPARATED STATES: Master tab state + construct sub-tab state
+  const buildTabState = createBuildTabState(sequenceService);
+  const constructTabState = createConstructTabState(
+    buildTabService,
+    startPositionService
+  );
 
-  // Reactive state from store
-  let errorMessage = $derived(constructTabState.errorMessage);
-  let isTransitioning = $derived(constructTabState.isTransitioning);
-
-  // Create derived props for child components
-  const rightPanelProps = $derived({
-    activeRightPanel: constructTabState.activeRightPanel,
-    isSubTabTransitionActive: constructTabState.isSubTabTransitionActive,
-    setActiveRightPanel: constructTabState.setActiveRightPanel,
-    // Sequence state for GraphEditor
-    currentSequence: sequenceState.currentSequence,
-    selectedBeatIndex: sequenceState.selectedBeatIndex,
-    selectedBeatData:
-      sequenceState.selectedBeatIndex !== null
-        ? (sequenceState.currentSequence?.beats[
-            sequenceState.selectedBeatIndex
-          ] ?? null)
-        : null,
+  // Initialize start position service on mount
+  onMount(async () => {
+    // Load start positions using the service
+    const startPositionService = resolve(
+      TYPES.IStartPositionService
+    ) as IStartPositionService;
+    await startPositionService.getDefaultStartPositions(GridMode.DIAMOND);
+    console.log("✅ BuildTab: Start positions loaded via service");
   });
 
-  // Setup component coordination and reactive state updates on mount
-  onMount(() => {
-    constructTabEventService().setupComponentCoordination();
+  // Start position selection is now handled directly by the unified service
 
-    // Initialize start position picker state once on mount
-    constructTabState?.updateShouldShowStartPositionPicker();
-  });
+  async function handleOptionSelected(option: any): Promise<void> {
+    try {
+      // Delegate to Application Service - handles all business logic
+      await buildTabService.selectOption(option);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to select option";
+      constructTabState.setError(errorMessage);
+      console.error("❌ BuildTab: Error handling option selection:", err);
+    }
+  }
 </script>
 
 <div class="construct-tab" data-testid="construct-tab">
   <!-- Error display -->
-  {#if errorMessage}
+  {#if constructTabState.error}
     <ErrorBanner
-      message={errorMessage}
-      onDismiss={() => constructTabState.clearError()}
+      message={constructTabState.error}
+      onDismiss={constructTabState.clearError}
     />
   {/if}
 
@@ -60,11 +68,15 @@
     <LeftPanel />
 
     <!-- Right Panel: 4-Tab interface matching desktop -->
-    <RightPanel constructTabState={rightPanelProps} />
+    <RightPanel
+      {buildTabState}
+      {constructTabState}
+      onOptionSelected={handleOptionSelected}
+    />
   </div>
 
   <!-- Loading overlay -->
-  {#if isTransitioning}
+  {#if constructTabState.isTransitioning}
     <LoadingOverlay message="Processing..." />
   {/if}
 </div>

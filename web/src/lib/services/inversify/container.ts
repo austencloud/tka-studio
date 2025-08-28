@@ -32,15 +32,18 @@ import { SequenceDomainService } from "../implementations/domain/SequenceDomainS
 import { SequenceImportService } from "../implementations/sequence/SequenceImportService";
 import { SequenceStateService } from "../implementations/sequence/SequenceStateService";
 
+// Import build tab services
+import { BuildTabService } from "../implementations/BuildTabService";
+
 // Import layout services
 import { BeatFrameService } from "../implementations/layout/BeatFrameService";
 
 // Import workbench services
 import { WorkbenchService } from "../implementations/workbench/WorkbenchService";
 import { WorkbenchCoordinationService } from "../implementations/workbench/WorkbenchCoordinationService";
+import { WorkbenchBeatOperationsService } from "../implementations/sequence/WorkbenchBeatOperationsService";
 
 // Import domain services
-import { StartPositionService } from "../implementations/domain/StartPositionService";
 import { GridModeDeriver } from "../implementations/domain/GridModeDeriver";
 
 // Import rendering services
@@ -128,7 +131,7 @@ import { MotionParameterService } from "../implementations/motion-tester/MotionP
 import { CSVPictographLoaderService } from "../implementations/movement/CSVPictographLoaderService";
 
 // Import missing construct services (these exist)
-import { ConstructTabCoordinationService } from "../implementations/construct/ConstructTabCoordinationService";
+import { ConstructSubTabCoordinationService } from "../implementations/build/ConstructSubTabCoordinationService";
 
 // Additional services will be added as needed
 
@@ -175,9 +178,12 @@ import { DifficultyBadgeRenderer } from "../implementations/image-export/text-re
 import { TextRenderingUtils } from "../implementations/image-export/text-rendering/internal/TextRenderingUtils";
 import { TextRenderingService } from "../implementations/image-export/TextRenderingService";
 
-// Import start position services
-import { StartPositionSelectionService } from "../implementations/StartPositionSelectionService";
+// Import start position service
+import { StartPositionService } from "../implementations/StartPositionService";
 
+// Import option picker services
+import { OptionPickerLayoutService } from "../implementations/OptionPickerLayoutService";
+import { OptionPickerDataService } from "../implementations/OptionPickerDataService";
 
 // Create container
 const container = new Container();
@@ -215,6 +221,15 @@ try {
   container.bind(TYPES.ISequenceService).to(SequenceService);
   container.bind(TYPES.ISequenceStateService).to(SequenceStateService);
 
+  // Bind build tab services
+  container.bind(TYPES.IBuildTabService).to(BuildTabService);
+
+  // Bind option picker services
+  container
+    .bind(TYPES.IOptionPickerLayoutService)
+    .to(OptionPickerLayoutService);
+  container.bind(TYPES.IOptionPickerDataService).to(OptionPickerDataService);
+
   // Bind layout services
   container.bind(TYPES.IBeatFrameService).to(BeatFrameService);
 
@@ -223,9 +238,11 @@ try {
   container
     .bind(TYPES.IWorkbenchCoordinationService)
     .to(WorkbenchCoordinationService);
+  container
+    .bind(TYPES.IWorkbenchBeatOperationsService)
+    .to(WorkbenchBeatOperationsService);
 
-  // Bind domain services
-  container.bind(TYPES.IStartPositionService).to(StartPositionService);
+  // Bind domain services (StartPositionService moved to unified service below)
   container.bind(TYPES.IGridModeDeriver).to(GridModeDeriver);
 
   // Bind rendering services
@@ -292,10 +309,11 @@ try {
   container.bind(TYPES.ITextRenderingUtils).to(TextRenderingUtils);
   container.bind(TYPES.ITextRenderingService).to(TextRenderingService);
 
-  // Bind start position services
+  // Bind start position service as singleton
   container
-    .bind(TYPES.IStartPositionSelectionService)
-    .to(StartPositionSelectionService);
+    .bind(TYPES.IStartPositionService)
+    .to(StartPositionService)
+    .inSingletonScope();
 
   // Bind navigation services
   container.bind(TYPES.INavigationService).to(NavigationService);
@@ -340,7 +358,7 @@ try {
   // Bind construct services
   container
     .bind(TYPES.IConstructTabCoordinationService)
-    .to(ConstructTabCoordinationService);
+    .to(ConstructSubTabCoordinationService);
   container.bind(TYPES.IBrowseService).to(BrowseService);
   container.bind(TYPES.ICSVParserService).to(CSVParserService);
   container
@@ -398,7 +416,6 @@ try {
   container
     .bind(TYPES.ISVGToCanvasConverterService)
     .to(SVGToCanvasConverterService);
-
 } catch (error) {
   console.error("❌ TKA Container: Failed to bind services:", error);
 }
@@ -414,4 +431,3 @@ export { TYPES } from "./types";
 export function resolve<T>(serviceType: symbol): T {
   return container.get<T>(serviceType);
 }
-

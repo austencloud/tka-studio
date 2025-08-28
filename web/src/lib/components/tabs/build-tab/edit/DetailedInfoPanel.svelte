@@ -2,7 +2,7 @@
 <script lang="ts">
   import { GridMode, MotionColor } from "$lib/domain/enums";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import type { IGridModeDeriver } from "$lib/services/interfaces/movement/IGridModeDeriver";
+  import type { IGridModeDeriver } from "$lib/services/interfaces/positioning-interfaces";
   import type {
     BeatData,
     SequenceData,

@@ -287,3 +287,16 @@ export type {
   ISequenceDiscoveryService,
   IBatchAnalysisService,
 } from "./metadata-testing-interfaces";
+
+// ============================================================================
+// OPTION PICKER INTERFACES
+// ============================================================================
+
+export type {
+  IOptionPickerLayoutService,
+  IOptionPickerDataService,
+  OptionPickerLayoutDimensions,
+  OptionPickerGridConfiguration,
+  OptionPickerLayoutCalculationParams,
+  OptionPickerLayoutCalculationResult,
+} from "./option-picker-interfaces";

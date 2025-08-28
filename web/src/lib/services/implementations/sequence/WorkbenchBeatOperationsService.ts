@@ -5,6 +5,8 @@
  * These operations are UI-driven and separate from core sequence CRUD operations.
  */
 
+import { injectable, inject } from "inversify";
+import { TYPES } from "../../inversify/types";
 import type { BeatData, SequenceData } from "$lib/domain";
 import type {
   IPersistenceService,
@@ -22,12 +24,16 @@ export interface IWorkbenchBeatOperationsService {
   ): Promise<SequenceData>;
 }
 
+@injectable()
 export class WorkbenchBeatOperationsService
   implements IWorkbenchBeatOperationsService
 {
   constructor(
-    private sequenceService: ISequenceService,
-    private persistenceService: IPersistenceService
+    @inject(TYPES.ISequenceService)
+    private readonly sequenceService: ISequenceService,
+
+    @inject(TYPES.IPersistenceService)
+    private readonly persistenceService: IPersistenceService
   ) {}
 
   /**

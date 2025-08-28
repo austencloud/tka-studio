@@ -21,9 +21,10 @@ export class LocalStoragePersistenceService implements IPersistenceService {
    * Normalize beats array to ensure all required properties are present
    */
   private normalizeBeats(beats: unknown[]): BeatData[] {
-    return beats.map((beat: any) => ({
+    return beats.map((beat: any, index: number) => ({
       ...beat,
       id: beat.id || crypto.randomUUID(),
+      beatNumber: beat.beatNumber ?? index + 1, // ✅ CRITICAL: Ensure beatNumber is always present
       duration: beat.duration || 1,
       blueReversal: beat.blueReversal || false,
       redReversal: beat.redReversal || false,
@@ -39,6 +40,7 @@ export class LocalStoragePersistenceService implements IPersistenceService {
     return {
       ...beat,
       id: beat.id || crypto.randomUUID(),
+      beatNumber: beat.beatNumber ?? 0, // ✅ CRITICAL: Ensure beatNumber is always present
       duration: beat.duration || 1,
       blueReversal: beat.blueReversal || false,
       redReversal: beat.redReversal || false,
@@ -87,15 +89,35 @@ export class LocalStoragePersistenceService implements IPersistenceService {
     try {
       // ✅ PERMANENT: Validate before saving
       if (!this.isValidSequence(sequence)) {
+        console.warn(
+          `Skipping invalid sequence: ${sequence.name || sequence.id}`
+        );
         return;
       }
 
+      // ✅ CRITICAL: Validate with Zod schema before saving to prevent invalid data
+      const validationResult = safeParseOrNull(
+        SequenceDataSchema,
+        sequence,
+        `sequence ${sequence.id} before save`
+      );
+
+      if (!validationResult) {
+        console.warn(
+          `Sequence ${sequence.id} failed schema validation, skipping save`
+        );
+        return;
+      }
+
+      // Normalize the sequence to ensure all required fields are present
+      const normalizedSequence = this.normalizeSequence(validationResult);
+
       // Save individual sequence
       const sequenceKey = `${this.SEQUENCE_PREFIX}${sequence.id}`;
-      localStorage.setItem(sequenceKey, JSON.stringify(sequence));
+      localStorage.setItem(sequenceKey, JSON.stringify(normalizedSequence));
 
       // Update sequence index
-      await this.updateSequenceIndex(sequence);
+      await this.updateSequenceIndex(normalizedSequence);
     } catch (error) {
       console.error("Failed to save sequence:", error);
       throw new Error(

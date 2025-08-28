@@ -5,9 +5,10 @@ node_modules/
 
 # Build and deployment artifacts
 .netlify/
-build/
+/build/
 dist/
 .output/
+
 
 # Environment files
 .env

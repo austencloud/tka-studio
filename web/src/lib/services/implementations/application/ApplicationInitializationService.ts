@@ -119,8 +119,12 @@ export class ApplicationInitializationService
    */
   private async loadInitialData(): Promise<void> {
     try {
+      // TEMPORARILY DISABLED - Causing initialization to hang due to validation failures
       // Load sequences count for info
-      await this.persistenceService.loadAllSequences();
+      // await this.persistenceService.loadAllSequences();
+      console.log(
+        "⚠️ Initial data loading temporarily disabled to fix initialization hang"
+      );
     } catch (error) {
       console.warn("⚠️ Failed to load initial data:", error);
       // Continue - this is not fatal

@@ -11,10 +11,9 @@
 
   let { children }: Props = $props();
 
-  // Application bootstrap
+  // Application bootstrap - simplified to just DI container setup
   let container: Container | null = $state(null);
-  let isInitialized = $state(false);
-  let initializationError = $state<string | null>(null);
+  let containerError = $state<string | null>(null);
 
   // Set context immediately (will be null initially)
   setContext("di-container", () => {
@@ -22,6 +21,7 @@
   });
 
   onMount(async () => {
+    console.log("🚀 Root layout: Setting up DI container only");
     try {
       // Clean up problematic sessionStorage values first
       const { cleanupSessionStorage } = await import(
@@ -29,23 +29,15 @@
       );
       cleanupSessionStorage();
 
-      try {
-        // Use InversifyJS container directly
-        container = inversifyContainer;
-
-        // Mark as initialized
-        isInitialized = true;
-      } catch (error) {
-        console.error("❌ Failed to initialize application:", error);
-        initializationError =
-          error instanceof Error ? error.message : "Unknown error";
-      }
-    } catch (outerError) {
-      console.error(
-        "🚨 CRITICAL: Application initialization failed:",
-        outerError
+      // Set up DI container - this is all we need at root level
+      container = inversifyContainer;
+      console.log(
+        "✅ Root layout: DI container ready, handing off to MainApplication"
       );
-      initializationError = "Critical initialization failure";
+    } catch (error) {
+      console.error("❌ Root layout: Failed to set up DI container:", error);
+      containerError =
+        error instanceof Error ? error.message : "Container setup failed";
     }
   });
 </script>
@@ -56,20 +48,20 @@
   <meta name="viewport" content="width=device-width" />
 </svelte:head>
 
-{#if initializationError}
+{#if containerError}
   <div class="error-screen">
-    <h1>Initialization Failed</h1>
-    <p>{initializationError}</p>
+    <h1>Critical Error</h1>
+    <p>{containerError}</p>
     <button onclick={() => window.location.reload()}>Retry</button>
   </div>
-{:else if !isInitialized}
-  <div class="loading-screen">
-    <div class="spinner"></div>
-    <p>Initializing TKA...</p>
-  </div>
-{:else}
-  <!-- Container is provided via context, children renders with access -->
+{:else if container}
+  <!-- Only render children when container is ready -->
   {@render children()}
+{:else}
+  <!-- Brief loading while container sets up -->
+  <div class="error-screen">
+    <p>Setting up services...</p>
+  </div>
 {/if}
 
 <style>
@@ -81,34 +73,5 @@
     min-height: 100vh;
     padding: 2rem;
     text-align: center;
-  }
-
-  .loading-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
   }
 </style>

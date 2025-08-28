@@ -1,145 +1,45 @@
-<!-- StartPositionPicker.svelte - Clean component following TKA architecture -->
+<!-- StartPositionPicker.svelte - Thin component using proper state layer -->
 <script lang="ts">
-  import { GridMode } from "$lib/domain";
-  import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { IStartPositionService } from "$lib/services/interfaces/IStartPositionService";
+  import { resolve } from "$lib/services/inversify/container";
+  import { TYPES } from "$lib/services/inversify/types";
+  import { createStartPositionPickerState } from "$lib/state/start-position-state.svelte";
+  import { GridMode } from "$lib/domain/enums";
+  import { onMount } from "svelte";
+
   // UI Components
-  import ErrorState from "./ui/ErrorState.svelte";
-  import LoadingState from "./ui/LoadingState.svelte";
-  import PictographGrid from "./ui/PictographGrid.svelte";
-  import TransitionOverlay from "./ui/TransitionOverlay.svelte";
+  import ErrorState from "./ErrorState.svelte";
+  import LoadingState from "./LoadingState.svelte";
+  import PictographGrid from "./PictographGrid.svelte";
 
-  // Props
-  let { sequenceState } = $props<{
-    sequenceState: import("$lib/state/sequence/sequence-state.svelte").SequenceState;
-  }>();
+  // Proper TKA architecture: Service → State → Component
+  const startPositionService = resolve(
+    TYPES.IStartPositionService
+  ) as IStartPositionService;
+  const state = createStartPositionPickerState(startPositionService);
 
-  // Get service from DI container (sequence state comes from props)
-  const sequenceStateService = resolve<
-    import("$lib/services/interfaces/sequence-state-interfaces").ISequenceStateService
-  >(TYPES.ISequenceStateService);
-
-  // Get start position service from DI container
-  const startPositionService = resolve<
-    import("$lib/services/interfaces/application-interfaces").IStartPositionService
-  >(TYPES.IStartPositionService);
-
-  // Reactive state
-  let isLoading = $state(true);
-  let loadingError = $state<string | null>(null);
-  let startPositions = $state<any[]>([]);
-  let selectedStartPos = $state<any | null>(null);
-  let isTransitioning = $state(false);
-
-  // Load start positions when component mounts
-  $effect(() => {
-    loadStartPositions();
-  });
-
-  async function loadStartPositions() {
-    if (!startPositionService) {
-      console.error(
-        "❌ StartPositionPicker: No start position service available"
-      );
-      loadingError = "Start position service not available";
-      isLoading = false;
-      return;
-    }
-
-    try {
-      isLoading = true;
-      loadingError = null;
-
-      // Load start positions from the service
-      const positions = await startPositionService.getDefaultStartPositions(
-        GridMode.DIAMOND
-      );
-      startPositions = positions;
-    } catch (error) {
-      console.error(
-        "❌ StartPositionPicker: Failed to load start positions",
-        error
-      );
-      loadingError =
-        error instanceof Error
-          ? error.message
-          : "Failed to load start positions";
-      startPositions = [];
-    } finally {
-      isLoading = false;
-    }
-  }
-
-  async function handleSelect(position: any) {
-    selectedStartPos = position;
-
-    try {
-      // Create or get current sequence
-      let currentSequence = sequenceState.currentSequence;
-
-      if (!currentSequence) {
-        // Create a new sequence if none exists
-        currentSequence = sequenceStateService.createNewSequence(
-          "New Sequence",
-          16
-        );
-        sequenceState.setCurrentSequence(currentSequence);
-      }
-
-      // Convert the pictograph position to a beat data for start position
-      const startPositionBeat = {
-        id: crypto.randomUUID(),
-        beatNumber: 0, // Start position is beat 0
-        duration: 1.0,
-        blueReversal: false,
-        redReversal: false,
-        isBlank: false,
-        pictographData: position,
-        metadata: {
-          isStartPosition: true,
-          endPosition: position.letter || "unknown",
-        },
-      };
-
-      // Set the start position in the sequence
-      const updatedSequence = sequenceStateService.setStartPosition(
-        currentSequence,
-        startPositionBeat
-      );
-      sequenceState.setCurrentSequence(updatedSequence);
-    } catch (error) {
-      console.error(
-        "❌ StartPositionPicker: Failed to set start position",
-        error
-      );
-    }
-  }
-
-  // Listen for sequence state changes to clear transition state
-  $effect(() => {
-    const currentSequence = sequenceState.currentSequence;
-
-    // If a sequence with startPosition exists and we're transitioning, clear the transition
-    if (currentSequence && currentSequence.startPosition && isTransitioning) {
-      isTransitioning = false;
-    }
+  // Initialize on mount
+  onMount(() => {
+    state.loadStartPositions(GridMode.DIAMOND);
   });
 </script>
 
 <div class="start-pos-picker" data-testid="start-position-picker">
-  {#if isLoading}
+  {#if state.isLoading}
     <LoadingState />
-  {:else if loadingError}
-    <ErrorState />
-  {:else if startPositions.length === 0}
+  {:else if state.loadingError}
+    <ErrorState message="Failed to load start positions" />
+  {:else if state.startPositionPictographs.length === 0}
     <ErrorState
       message="No valid start positions found for the current configuration."
       hasRefreshButton={false}
     />
   {:else}
     <PictographGrid
-      pictographDataSet={startPositions}
-      selectedPictograph={selectedStartPos}
-      onPictographSelect={handleSelect}
+      pictographDataSet={state.startPositionPictographs}
+      selectedPictograph={state.selectedStartPos}
+      onPictographSelect={(position) =>
+        startPositionService.selectStartPosition(position)}
     />
   {/if}
 
@@ -147,13 +47,9 @@
   <div
     style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 5px; font-size: 10px;"
   >
-    Debug: isLoading={isLoading}, pictographs={startPositions.length}, error={loadingError}
+    Debug: isLoading={state.isLoading}, pictographs={state
+      .startPositionPictographs.length}, error={state.loadingError}
   </div>
-
-  <!-- Loading overlay during transition -->
-  {#if isTransitioning}
-    <TransitionOverlay />
-  {/if}
 </div>
 
 <style>

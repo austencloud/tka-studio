@@ -1,180 +1,154 @@
 /**
- * ConstructTab State Factory - Component-Scoped State for Svelte 5 Runes
+ * Construct Tab State - Sub-tab State
  *
- * Creates component-scoped state management for ConstructTab component.
- * Takes sequence state as dependency instead of importing global state.
+ * Manages state specific to the Construct sub-tab functionality.
+ * Handles start position selection, option picking, and construct-specific UI state.
+ *
+ * ✅ All construct-specific runes ($state, $derived, $effect) live here
+ * ✅ Pure reactive wrappers - no business logic
+ * ✅ Services injected via parameters
+ * ✅ Component-scoped state (not global singleton)
  */
 
-import type { SequenceData } from "$lib/domain";
-
 import { GridMode } from "$lib/domain";
+import type { IBuildTabService } from "$lib/services/interfaces/IBuildTabService";
+import type { IStartPositionService } from "$lib/services/interfaces/IStartPositionService";
+import type { PictographData } from "$lib/domain/PictographData";
 
-export type ActiveRightPanel = "build" | "generate" | "edit" | "export";
-
-// Type for sequence state dependency
-interface SequenceStateType {
-  currentSequence: SequenceData | null;
-}
-
-// ============================================================================
-// FACTORY FUNCTION
-// ============================================================================
-
-export function createConstructTabState(sequenceState: SequenceStateType) {
+/**
+ * Creates construct tab state for construct-specific concerns
+ *
+ * @param buildTabService - Injected build tab service for business logic
+ * @param startPositionService - Injected start position service
+ * @returns Reactive state object with getters and state mutations
+ */
+export function createConstructTabState(
+  buildTabService: IBuildTabService,
+  startPositionService: IStartPositionService
+) {
   // ============================================================================
-  // COMPONENT-SCOPED STATE
-  // ============================================================================
-
-  const state = $state({
-    // Main tab state
-    activeRightPanel: "build" as ActiveRightPanel,
-    gridMode: GridMode.DIAMOND as GridMode,
-
-    // Transition and loading states
-    isTransitioning: false,
-    isSubTabTransitionActive: false,
-    currentSubTabTransition: null as string | null,
-
-    // Error handling
-    errorMessage: null as string | null,
-  });
-
-  // ============================================================================
-  // STATE MANAGEMENT FUNCTIONS
+  // REACTIVE STATE (Construct-specific)
   // ============================================================================
 
-  // REACTIVE: Automatically update shouldShowStartPositionPicker when sequence changes
-  const shouldShowStartPositionPicker = $derived(() => {
-    const sequence = sequenceState.currentSequence;
+  let isLoading = $state(false);
+  let error = $state<string | null>(null);
+  let isTransitioning = $state(false);
+  let showStartPositionPicker = $state(true);
+  let selectedStartPosition = $state<PictographData | null>(null);
 
-    // Show start position picker if:
-    // 1. No sequence exists, OR
-    // 2. Sequence exists but has no start position set
-    const shouldShow = !sequence || !sequence.startingPositionBeat;
+  // Sub-states (construct-specific)
+  const startPositionStateService =
+    createStartPositionPickerState(startPositionService);
 
-    console.log(
-      `🎯 [CONSTRUCT-TAB-STATE] Start position picker: ${shouldShow ? "SHOW" : "HIDE"}`,
-      {
-        sequenceExists: !!sequence,
-        sequenceId: sequence?.id,
-        hasStartPosition: !!sequence?.startingPositionBeat,
-        startPositionId: sequence?.startingPositionBeat?.pictographData?.id,
-        beatCount: sequence?.beats?.length || 0,
-        shouldShow,
-      }
-    );
+  // ============================================================================
+  // DERIVED STATE (Construct-specific derived state)
+  // ============================================================================
 
-    return shouldShow;
-  });
+  const hasError = $derived(error !== null);
+  const canSelectOptions = $derived(selectedStartPosition !== null);
+  const shouldShowStartPositionPicker = $derived(() => showStartPositionPicker);
 
-  // Method to manually trigger update (for backward compatibility)
-  function updateShouldShowStartPositionPicker() {
-    // This is now handled automatically by the derived state above
-    // But we keep this method for any components that might call it
+  // ============================================================================
+  // EFFECTS (Construct-specific effects)
+  // ============================================================================
+
+  // Load start positions when construct tab is initialized - using onMount to prevent infinite loops
+  let startPositionsLoaded = $state(false);
+  let coordinationSetup = $state(false);
+
+  // Initialize construct tab - called from component onMount
+  function initializeConstructTab() {
+    if (!startPositionsLoaded) {
+      console.log("🚀 Loading start positions...");
+      startPositionStateService.loadStartPositions(GridMode.DIAMOND);
+      startPositionsLoaded = true;
+      console.log("✅ Start positions loaded flag set");
+    }
+
+    if (!coordinationSetup) {
+      console.log("🚀 Initializing build tab service...");
+      buildTabService.initialize();
+      coordinationSetup = true;
+      console.log("✅ Coordination setup flag set");
+    }
   }
 
-  // State management functions
-  function setActiveRightPanel(panel: ActiveRightPanel) {
-    state.activeRightPanel = panel;
+  // ============================================================================
+  // STATE MUTATIONS (Construct-specific state updates)
+  // ============================================================================
+
+  function setLoading(loading: boolean) {
+    isLoading = loading;
   }
 
-  function setGridMode(mode: GridMode) {
-    state.gridMode = mode;
+  function setTransitioning(transitioning: boolean) {
+    isTransitioning = transitioning;
   }
 
-  function setTransitioning(isTransitioning: boolean) {
-    state.isTransitioning = isTransitioning;
-  }
-
-  function setSubTabTransition(
-    isActive: boolean,
-    transitionId: string | null = null
-  ) {
-    state.isSubTabTransitionActive = isActive;
-    state.currentSubTabTransition = transitionId;
-  }
-
-  function setError(message: string | null) {
-    state.errorMessage = message;
+  function setError(errorMessage: string | null) {
+    error = errorMessage;
   }
 
   function clearError() {
-    state.errorMessage = null;
+    error = null;
+  }
+
+  function setShowStartPositionPicker(show: boolean) {
+    showStartPositionPicker = show;
+  }
+
+  function setSelectedStartPosition(position: PictographData | null) {
+    selectedStartPosition = position;
   }
 
   // ============================================================================
-  // DERIVED STATE GETTERS
-  // ============================================================================
-
-  function getCurrentSequence() {
-    return sequenceState.currentSequence;
-  }
-
-  function getHasError() {
-    return state.errorMessage !== null;
-  }
-
-  function getIsInBuildMode() {
-    return state.activeRightPanel === "build";
-  }
-
-  function getIsInGenerateMode() {
-    return state.activeRightPanel === "generate";
-  }
-
-  function getIsInEditMode() {
-    return state.activeRightPanel === "edit";
-  }
-
-  function getIsInExportMode() {
-    return state.activeRightPanel === "export";
-  }
-
-  // shouldShowStartPositionPicker is now automatically reactive via $derived
-
-  // ============================================================================
-  // RETURN STATE OBJECT
+  // PUBLIC API
   // ============================================================================
 
   return {
-    // State access (reactive)
-    get activeRightPanel() {
-      return state.activeRightPanel;
+    // Readonly state access
+    get isLoading() {
+      return isLoading;
     },
-    get gridMode() {
-      return state.gridMode;
+    get error() {
+      return error;
     },
     get isTransitioning() {
-      return state.isTransitioning;
+      return isTransitioning;
     },
-    get isSubTabTransitionActive() {
-      return state.isSubTabTransitionActive;
+    get hasError() {
+      return hasError;
     },
-    get currentSubTabTransition() {
-      return state.currentSubTabTransition;
+    get canSelectOptions() {
+      return canSelectOptions;
     },
-    get errorMessage() {
-      return state.errorMessage;
+    get showStartPositionPicker() {
+      return showStartPositionPicker;
     },
     get shouldShowStartPositionPicker() {
       return shouldShowStartPositionPicker;
     },
+    get selectedStartPosition() {
+      return selectedStartPosition;
+    },
 
-    // Actions
-    updateShouldShowStartPositionPicker,
-    setActiveRightPanel,
-    setGridMode,
+    // Sub-states
+    get startPositionStateService() {
+      return startPositionStateService;
+    },
+
+    // State mutations
+    setLoading,
     setTransitioning,
-    setSubTabTransition,
     setError,
     clearError,
+    setShowStartPositionPicker,
+    setSelectedStartPosition,
 
-    // Getters
-    getCurrentSequence,
-    getHasError,
-    getIsInBuildMode,
-    getIsInGenerateMode,
-    getIsInEditMode,
-    getIsInExportMode,
+    // Initialization
+    initializeConstructTab,
   };
 }
+
+// Import required state factories
+import { createStartPositionPickerState } from "./start-position-state.svelte";

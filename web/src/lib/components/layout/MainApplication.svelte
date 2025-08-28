@@ -45,48 +45,57 @@
   let initializationError = $derived(getInitializationError());
   let initializationProgress = $derived(getInitializationProgress());
 
-  // Resolve services when container is available - ONCE ONLY
-  $effect(() => {
-    const container = getContainer?.();
-    if (container && !servicesResolved) {
-      try {
-        // Use resolve which will use the global container once it's ready
-        initService = resolve(TYPES.IApplicationInitializationService);
-        settingsService = resolve(TYPES.ISettingsService);
-        sequenceService = resolve(TYPES.ISequenceService);
-        deviceService = resolve(TYPES.IDeviceDetectionService);
+  // DISABLED - Resolve services in onMount instead to prevent infinite loops
+  // $effect(() => {
+  //   const container = getContainer?.();
+  //   if (container && !servicesResolved) {
+  //     try {
+  //       // Use resolve which will use the global container once it's ready
+  //       initService = resolve(TYPES.IApplicationInitializationService);
+  //       settingsService = resolve(TYPES.ISettingsService);
+  //       sequenceService = resolve(TYPES.ISequenceService);
+  //       deviceService = resolve(TYPES.IDeviceDetectionService);
 
-        servicesResolved = true;
-      } catch (error) {
-        console.error("Failed to resolve services:", error);
-        setInitializationError(`Service resolution failed: ${error}`);
-      }
-    }
-  });
+  //       servicesResolved = true;
+  //     } catch (error) {
+  //       console.error("Failed to resolve services:", error);
+  //       setInitializationError(`Service resolution failed: ${error}`);
+  //     }
+  //   }
+  // });
 
   // Initialize application
   onMount(async () => {
+    console.log("🚀 MainApplication onMount started");
     const container = getContainer?.();
     if (!container) {
       setInitializationError("No DI container available");
       return;
     }
 
-    // Wait for services to be resolved
-    let attempts = 0;
-    while (!servicesResolved && attempts < 10) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      attempts++;
+    // Resolve services directly in onMount to prevent infinite loops
+    try {
+      console.log("🔧 Resolving services...");
+      initService = resolve(TYPES.IApplicationInitializationService);
+      settingsService = resolve(TYPES.ISettingsService);
+      sequenceService = resolve(TYPES.ISequenceService);
+      deviceService = resolve(TYPES.IDeviceDetectionService);
+      servicesResolved = true;
+      console.log("✅ Services resolved successfully");
+    } catch (error) {
+      console.error("❌ Failed to resolve services:", error);
+      setInitializationError(`Service resolution failed: ${error}`);
+      return;
     }
 
+    // Double-check services are available
     if (
-      !servicesResolved ||
       !initService ||
       !settingsService ||
       !sequenceService ||
       !deviceService
     ) {
-      setInitializationError("Failed to resolve required services");
+      setInitializationError("Services not properly resolved");
       return;
     }
 
