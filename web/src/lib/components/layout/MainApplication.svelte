@@ -1,13 +1,11 @@
 <!-- Main Application Layout -->
 <script lang="ts">
+  import type { IApplicationInitializationService } from "$lib/services/interfaces/application/IApplicationInitializationService";
+  import type { IDeviceDetectionService } from "$lib/services/interfaces/application/IDeviceDetectionService";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import type { Container } from "inversify";
-  import type {
-    IApplicationInitializationService,
-    ISettingsService,
-  } from "$services/interfaces/application-interfaces";
-  import type { IDeviceDetectionService } from "$services/interfaces/device-interfaces";
+  import type { ISettingsService } from "$services/interfaces/application-interfaces";
   import type { ISequenceService } from "$services/interfaces/sequence-interfaces";
+  import type { Container } from "inversify";
   import { getContext, onMount } from "svelte";
   // Import app state management
   import {
@@ -26,8 +24,8 @@
   } from "$lib/state/app-state.svelte";
   // Import components
   import ErrorScreen from "$components/ErrorScreen.svelte";
-  import LoadingScreen from "$components/LoadingScreen.svelte";
   import MainInterface from "$components/layout/MainInterface.svelte";
+  import LoadingScreen from "$components/LoadingScreen.svelte";
   import SettingsDialog from "$components/SettingsDialog.svelte";
 
   // Get DI container from context

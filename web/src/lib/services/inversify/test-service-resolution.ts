@@ -10,7 +10,6 @@ import type { ICSVParserService } from "../interfaces/data-interfaces";
 import type { IEnumMappingService } from "../interfaces/application-interfaces";
 import type { ILetterQueryService } from "../interfaces/data-interfaces";
 import type { IMotionQueryService } from "../interfaces/data-interfaces";
-import type { IDeviceDetectionService } from "../interfaces/device-interfaces";
 import type { IGridModeDeriver } from "../interfaces/positioning-interfaces";
 import type { ILetterDeriver } from "../interfaces/generation-interfaces";
 import type { IPictographValidatorService } from "../interfaces/generation-interfaces";
@@ -24,6 +23,7 @@ import type {
   ISvgConfiguration,
 } from "../interfaces/pictograph-interfaces";
 import { container, TYPES } from "./container";
+import type { IDeviceDetectionService } from "../interfaces/application/IDeviceDetectionService";
 
 /**
  * Test that SettingsService can be resolved from the container

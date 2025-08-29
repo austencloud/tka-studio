@@ -64,12 +64,12 @@ export type {
 
 export type {
   AppSettings,
-  IApplicationInitializationService,
   IConstructTabCoordinationService,
   IOptionDataService,
   ISettingsService,
   IStartPositionService,
 } from "./application-interfaces";
+export type { IApplicationInitializationService } from "./application/IApplicationInitializationService";
 
 // ============================================================================
 // SEQUENCE INTERFACES
@@ -108,29 +108,29 @@ export type {
 // ============================================================================
 
 export type {
+  IArrowAdjustmentCalculator,
+  IArrowAdjustmentLookup,
+  IArrowCoordinateSystemService,
+  IArrowLocationCalculator,
   IArrowPlacementKeyService,
   IArrowPlacementService,
-  IPropRenderingService,
-  IPositionMapper,
-  IBetaOffsetCalculator,
-  IArrowLocationCalculator,
-  IArrowRotationCalculator,
-  IArrowAdjustmentCalculator,
-  IArrowCoordinateSystemService,
-  IDashLocationCalculator,
   IArrowPositioningOrchestrator,
-  IDirectionalTupleCalculator,
-  IQuadrantIndexCalculator,
-  IDirectionalTupleProcessor,
-  IPlacementKeyGenerator,
+  IArrowRotationCalculator,
   IAttributeKeyGenerator,
-  ISpecialPlacementOriKeyGenerator,
-  ITurnsTupleKeyGenerator,
-  ISpecialPlacementService,
+  IBetaOffsetCalculator,
+  IDashLocationCalculator,
   IDefaultPlacementService,
   IDefaultPlacementServiceJson,
-  IArrowAdjustmentLookup,
+  IDirectionalTupleCalculator,
+  IDirectionalTupleProcessor,
   IGridModeDeriver,
+  IPlacementKeyGenerator,
+  IPositionMapper,
+  IPropRenderingService,
+  IQuadrantIndexCalculator,
+  ISpecialPlacementOriKeyGenerator,
+  ISpecialPlacementService,
+  ITurnsTupleKeyGenerator,
   Point,
   Position,
 } from "./positioning-interfaces";
@@ -177,7 +177,7 @@ export type {
 export type {
   IDeviceDetectionService,
   ResponsiveSettings,
-} from "./device-interfaces";
+} from "./application/IDeviceDetectionService";
 
 // ============================================================================
 // EXPORT INTERFACES
@@ -218,14 +218,14 @@ export type {
   IImagePreviewGenerator,
   ILayoutCalculationService,
   IReversalDetectionService,
-  ITextRenderingService,
   ITKAImageExportService,
+  ITextRenderingService,
   LayoutConstraints,
   LayoutData,
   MemoryEstimate,
   RenderQualitySettings,
-  TextRenderOptions,
   TKAImageExportOptions,
+  TextRenderOptions,
   UserInfo,
 } from "./image-export-interfaces";
 
@@ -253,8 +253,8 @@ export {
   IImagePreviewGeneratorInterface,
   ILayoutCalculationServiceInterface,
   IReversalDetectionServiceInterface,
-  ITextRenderingServiceInterface,
   ITKAImageExportServiceInterface,
+  ITextRenderingServiceInterface,
 } from "./image-export-interfaces";
 
 // Text rendering component DI interfaces
@@ -282,10 +282,10 @@ export type {
 // ============================================================================
 
 export type {
-  IMetadataExtractionService,
-  IMetadataAnalysisService,
-  ISequenceDiscoveryService,
   IBatchAnalysisService,
+  IMetadataAnalysisService,
+  IMetadataExtractionService,
+  ISequenceDiscoveryService,
 } from "./metadata-testing-interfaces";
 
 // ============================================================================
@@ -293,10 +293,10 @@ export type {
 // ============================================================================
 
 export type {
-  IOptionPickerLayoutService,
   IOptionPickerDataService,
-  OptionPickerLayoutDimensions,
+  IOptionPickerLayoutService,
   OptionPickerGridConfiguration,
   OptionPickerLayoutCalculationParams,
   OptionPickerLayoutCalculationResult,
+  OptionPickerLayoutDimensions,
 } from "./option-picker-interfaces";

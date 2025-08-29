@@ -4,7 +4,9 @@
  * Manages application settings with persistence and reactive updates.
  */
 
+import type { BackgroundType } from "$lib/domain/background/BackgroundTypes";
 import { GridMode as DomainGridMode } from "$lib/domain/enums";
+import { updateBodyBackground } from "$lib/utils/background-preloader";
 import { injectable } from "inversify";
 import type {
   AppSettings,
@@ -47,6 +49,12 @@ export class SettingsService implements ISettingsService {
     try {
       this._settings[key] = value;
       await this.persistSettings();
+
+      // Update body background immediately if background type changed
+      if (key === "backgroundType" && typeof value === "string") {
+        updateBodyBackground(value as BackgroundType);
+      }
+
       console.log(`Setting ${key} updated to:`, value);
     } catch (error) {
       console.error(`Failed to update setting ${key}:`, error);

@@ -11,13 +11,13 @@ Refactored into smaller section components for better maintainability:
 - Maintains all original functionality with cleaner separation
 -->
 <script lang="ts">
+  import type { IDeviceDetectionService } from "$lib/services/interfaces/application/IDeviceDetectionService";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import type { IDeviceDetectionService } from "$services/interfaces/device-interfaces";
   import { onMount } from "svelte";
   // Import section components
+  import ActionSection from "./components/ActionSection.svelte";
   import GeneratePanelHeader from "./components/GeneratePanelHeader.svelte";
   import SettingsContainer from "./components/SettingsContainer.svelte";
-  import ActionSection from "./components/ActionSection.svelte";
   // Import simple state managers
   import { createGenerationActionsState } from "$lib/state/generate/generate-actions.svelte";
   import { createGenerationConfigState } from "$lib/state/generate/generate-config.svelte";

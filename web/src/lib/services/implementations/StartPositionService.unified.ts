@@ -10,24 +10,25 @@
  * NO MORE CONFUSION - ONE SERVICE TO RULE THEM ALL!
  */
 
-import { injectable } from "inversify";
-import type { PictographData } from "$lib/domain/PictographData";
 import type { BeatData } from "$lib/domain/BeatData";
-import { createBeatData } from "$lib/domain/BeatData";
-import { createPictographData } from "$lib/domain/PictographData";
-import { createMotionData } from "$lib/domain/MotionData";
 import {
   GridMode,
-  MotionType,
-  RotationDirection,
-  Orientation,
+  Location,
   MotionColor,
+  MotionType,
+  Orientation,
   PropType,
+  RotationDirection,
 } from "$lib/domain/enums";
+import { Letter } from "$lib/domain/Letter";
+import { createMotionData } from "$lib/domain/MotionData";
+import type { PictographData } from "$lib/domain/PictographData";
+import { createPictographData } from "$lib/domain/PictographData";
 import type {
-  ValidationResult,
   ValidationError,
-} from "$lib/domain/ValidationResult";
+  ValidationResult,
+} from "$lib/domain/SequenceCard";
+import { injectable } from "inversify";
 
 /**
  * SINGLE START POSITION SERVICE INTERFACE
@@ -244,6 +245,7 @@ export class UnifiedStartPositionService implements IStartPositionService {
     return {
       isValid: errors.length === 0,
       errors,
+      warnings: [],
     };
   }
 
@@ -268,15 +270,24 @@ export class UnifiedStartPositionService implements IStartPositionService {
     index: number
   ): PictographData {
     // Parse the key (e.g., "alpha1_alpha1" -> both hands at alpha1)
-    const [blueLocation, redLocation] = key.split("_");
+    const [blueLocationStr, redLocationStr] = key.split("_");
+
+    // Map position strings to Location enum values
+    const locationMap: Record<string, Location> = {
+      alpha1: Location.SOUTH,
+      beta5: Location.SOUTH,
+      gamma11: Location.SOUTH,
+    };
+    const blueLocation = locationMap[blueLocationStr] || Location.SOUTH;
+    const redLocation = locationMap[redLocationStr] || Location.NORTH;
 
     // Map position to letter
-    const letterMap: Record<string, string> = {
-      alpha1: "α",
-      beta5: "β",
-      gamma11: "Γ",
+    const letterMap: Record<string, Letter> = {
+      alpha1: Letter.ALPHA,
+      beta5: Letter.BETA,
+      gamma11: Letter.GAMMA,
     };
-    const letter = letterMap[blueLocation] || "α";
+    const letter = letterMap[blueLocation] || Letter.ALPHA;
 
     return createPictographData({
       id: `start-pos-${key}-${index}`,

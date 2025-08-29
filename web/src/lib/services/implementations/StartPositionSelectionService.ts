@@ -5,11 +5,14 @@
  * Extracted from StartPositionPicker component to follow clean architecture.
  */
 
-import { inject, injectable } from "inversify";
 import type { PictographData } from "$domain/PictographData";
 import type { IStartPositionSelectionService } from "$lib/services/interfaces/IStartPositionSelectionService";
-import type { IStartPositionService as IApplicationStartPositionService, IStartPositionService } from "$services/interfaces/application-interfaces";
+import type {
+  IStartPositionService as IApplicationStartPositionService,
+  IStartPositionService,
+} from "$services/interfaces/application-interfaces";
 import { TYPES } from "$services/inversify/types";
+import { inject, injectable } from "inversify";
 
 interface StartPositionData {
   endPosition: string;
@@ -37,24 +40,20 @@ export class StartPositionSelectionService
   ): Promise<void> {
     try {
       // Extract end position from the pictograph data
-      const endPosition =
-        this.utilityStartPositionService.extractEndPosition(startPosPictograph);
+      const endPosition = this.extractEndPosition(startPosPictograph);
 
       // Create start position data in the format the OptionPicker expects
-      const startPositionData =
-        this.utilityStartPositionService.createStartPositionData(
-          startPosPictograph,
-          endPosition
-        );
+      const startPositionData = this.createStartPositionData(
+        startPosPictograph,
+        endPosition
+      );
 
       // Create start position beat data for internal use
       const startPositionBeat =
-        this.utilityStartPositionService.createStartPositionBeat(
-          startPosPictograph
-        );
+        this.createStartPositionBeat(startPosPictograph);
 
       // Save to localStorage in the format OptionPicker expects
-      this.utilityStartPositionService.storeStartPositionData(
+      this.storeStartPositionData(
         startPositionData as unknown as Record<string, unknown>
       );
 
@@ -74,6 +73,52 @@ export class StartPositionSelectionService
       throw new Error(
         `Failed to select start position: ${error instanceof Error ? error.message : "Unknown error"}`
       );
+    }
+  }
+
+  /**
+   * Extract end position from pictograph data
+   */
+  private extractEndPosition(pictograph: PictographData): string {
+    // Extract end position from motion data
+    if (pictograph.motions?.blue && pictograph.motions?.red) {
+      return `${pictograph.motions.blue.endLocation}_${pictograph.motions.red.endLocation}`;
+    }
+    return "alpha1_alpha1"; // Default fallback
+  }
+
+  /**
+   * Create start position data in the format expected by OptionPicker
+   */
+  private createStartPositionData(
+    pictograph: PictographData,
+    endPosition: string
+  ): StartPositionData {
+    return {
+      endPosition,
+      pictographData: pictograph,
+    };
+  }
+
+  /**
+   * Create start position beat data for internal use
+   */
+  private createStartPositionBeat(pictograph: PictographData): any {
+    // Convert pictograph to beat data format
+    return {
+      beat: 1,
+      pictographData: pictograph,
+      // Add other required beat properties as needed
+    };
+  }
+
+  /**
+   * Store start position data to localStorage
+   */
+  private storeStartPositionData(data: Record<string, unknown>): void {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("startPosition", JSON.stringify(data));
+      console.log("💾 StartPositionSelectionService: Saved to localStorage");
     }
   }
 

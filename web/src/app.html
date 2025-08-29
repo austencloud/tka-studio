@@ -89,7 +89,6 @@
             localStorage.removeItem(key);
           });
         };
-
       }
     </script>
 
@@ -215,6 +214,52 @@
         window.addEventListener("unhandledrejection", function (event) {
           console.error("🚨 UNHANDLED PROMISE REJECTION:", event.reason);
         });
+      })();
+    </script>
+
+    <!-- BACKGROUND PRELOADER - Load saved background immediately to prevent default gradient flash -->
+    <script>
+      (function () {
+        try {
+          // Load saved settings
+          const settingsKey = "tka-modern-web-settings";
+          const stored = localStorage.getItem(settingsKey);
+
+          if (stored) {
+            const settings = JSON.parse(stored);
+            const backgroundType = settings.backgroundType || "nightSky";
+
+            // Background gradients mapping - same as background-config.ts
+            const backgroundGradients = {
+              aurora:
+                "linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)",
+              snowfall:
+                "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+              nightSky:
+                "linear-gradient(135deg, #0a0e2c 0%, #1a2040 50%, #2a3060 100%)",
+              bubbles:
+                "linear-gradient(135deg, #143250 0%, #0a1e3c 50%, #050f28 100%)",
+              deepOcean:
+                "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+            };
+
+            const selectedGradient =
+              backgroundGradients[backgroundType] ||
+              backgroundGradients.nightSky;
+
+            // Update the CSS custom property immediately
+            document.documentElement.style.setProperty(
+              "--gradient-cosmic",
+              selectedGradient
+            );
+
+            console.log("🎨 Background preloaded:", backgroundType);
+          } else {
+            console.log("🎨 No saved background found, using default");
+          }
+        } catch (error) {
+          console.warn("Failed to preload background:", error);
+        }
       })();
     </script>
 

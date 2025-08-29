@@ -1,6 +1,7 @@
 <!-- BackgroundTab.svelte - Refactored using modular components -->
 <script lang="ts">
   import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
+  import { updateBodyBackground } from "$lib/utils/background-preloader";
   import SettingCard from "../SettingCard.svelte";
   import BackgroundSelector from "./background/BackgroundSelector.svelte";
 
@@ -21,6 +22,9 @@
   // Handle background selection
   function handleBackgroundSelect(backgroundType: BackgroundType) {
     selectedBackground = backgroundType;
+
+    // Update the body background immediately for smooth transition
+    updateBodyBackground(backgroundType);
 
     // Update settings - backgrounds are always enabled, quality is auto-managed
     if (onupdate) {

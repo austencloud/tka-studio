@@ -6,10 +6,8 @@
  */
 
 import { inject, injectable } from "inversify";
-import type {
-  IApplicationInitializationService,
-  ISettingsService,
-} from "../../interfaces/application-interfaces";
+import type { ISettingsService } from "../../interfaces/application-interfaces";
+import type { IApplicationInitializationService } from "../../interfaces/application/IApplicationInitializationService.js";
 import type { IPersistenceService } from "../../interfaces/sequence-interfaces";
 import { TYPES } from "../../inversify/types";
 

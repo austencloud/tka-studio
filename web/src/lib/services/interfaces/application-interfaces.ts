@@ -5,23 +5,23 @@
  * and configuration management.
  */
 
-import type {
-  BeatData,
-  MotionData,
-  SequenceData,
-  PictographData,
-  ValidationResult,
-} from "./domain-types";
-import type { GridMode, DifficultyLevel, OptionFilters } from "./core-types";
-import type { MotionType } from "./domain-types";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState";
 import type {
   MotionType as DomainMotionType,
+  GridPosition,
   Location,
   Orientation,
   RotationDirection,
-  GridPosition,
 } from "$lib/domain";
+import type { DifficultyLevel, GridMode, OptionFilters } from "./core-types";
+import type {
+  BeatData,
+  MotionData,
+  MotionType,
+  PictographData,
+  SequenceData,
+  ValidationResult,
+} from "./domain-types";
 
 // BackgroundType is not exported from domain index, so import directly
 import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
@@ -153,12 +153,7 @@ export interface AppSettings {
 // APPLICATION SERVICE INTERFACES
 // ============================================================================
 
-/**
- * Application initialization and startup service
- */
-export interface IApplicationInitializationService {
-  initialize(): Promise<void>;
-}
+// IApplicationInitializationService moved to individual file: ./application/IApplicationInitializationService.ts
 
 /**
  * Settings management service

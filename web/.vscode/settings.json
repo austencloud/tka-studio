@@ -4,5 +4,19 @@
   "debug.showInlineBreakpointCandidates": false,
   "typescript.preferences.includePackageJsonAutoImports": "off",
   "typescript.suggest.autoImports": false,
-  "extensions.autoUpdate": false
+  "extensions.autoUpdate": false,
+  "editor.codeActionsOnSave": {
+    "source.removeUnused": "explicit",
+    "source.organizeImports": "explicit",
+    "source.fixAll": "explicit"
+  },
+  "typescript.preferences.removeUnusedImports": true,
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.includeAutomaticOptionalChainCompletions": false,
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  }
 }

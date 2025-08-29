@@ -7,7 +7,7 @@ import { injectable } from "inversify";
 import type {
   IDeviceDetectionService,
   ResponsiveSettings,
-} from "../../interfaces/device-interfaces";
+} from "../../interfaces/application/IDeviceDetectionService";
 import type { DeviceCapabilities } from "../../interfaces/domain-types";
 
 @injectable()
