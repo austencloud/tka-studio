@@ -5,9 +5,9 @@
  * position, letter types, rotation, and other motion parameters.
  */
 
-import { getLetterType } from "$lib/domain";
-import type { BeatData } from "$lib/domain/build/workbench/BeatData";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import { getLetterType } from "$domain";
+import type { BeatData } from "$domain/build/workbench/BeatData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import type { IPositionMapper } from "$lib/services/contracts/positioning-interfaces";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";

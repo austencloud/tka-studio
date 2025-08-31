@@ -4,13 +4,13 @@
  * Clean contracts for dependency injection and testability
  */
 
-import type { MotionData } from "$lib/domain/core/pictograph/MotionData";
 import type {
   Location,
   MotionColor,
   MotionType,
   RotationDirection,
-} from "$lib/domain/enums";
+} from "$domain";
+import type { MotionData } from "$domain/core/pictograph/MotionData";
 import type { PropStates } from "../implementations/motion-tester/AnimationControlService";
 import type { MotionTestParams } from "../implementations/motion-tester/MotionParameterService";
 

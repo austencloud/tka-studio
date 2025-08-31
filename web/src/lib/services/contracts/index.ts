@@ -5,58 +5,56 @@
  * These define what operations and behaviors are available.
  */
 
+// ENTERPRISE PATTERN: One-to-one interface-to-implementation mapping
+// Organized by domain structure that mirrors implementations
+
+// Animation Domain
 export * from "./animation/IAnimationControlService";
 export * from "./animation/IAnimationStateService";
 export * from "./animation/IBeatCalculationService";
 export * from "./animation/IPropInterpolationService";
 export * from "./animation/ISequenceAnimationOrchestrator";
-export * from "./application-interfaces";
+
+// Application Domain
 export * from "./application/IApplicationInitializer";
 export * from "./application/ICodexService";
 export * from "./application/IConstructTabCoordinator";
 export * from "./application/ICSVLoader";
 export * from "./application/ICSVParser";
+export * from "./application/IDeviceDetector";
 export * from "./application/IEnumMapper";
 export * from "./application/IOptionDataService";
 export * from "./application/ISettingsService";
 export * from "./application/IStartPositionService";
-export * from "./background-interfaces";
+
+// Background Domain
 export * from "./background/IBackgroundFactory";
 export * from "./background/IBackgroundService";
 export * from "./background/IBackgroundSystem";
-export * from "./batch-export-interfaces";
-export * from "./beat-frame-interfaces";
-export * from "./beat-grid-interfaces";
-export * from "./browse-interfaces";
+// Browse Domain - TODO: Move to individual interface files
+// TEMPORARILY REMOVED: export * from "./browse-interfaces"; (conflicts with DeleteConfirmationData, DeleteResult, IDeleteService)
+
+// Build Domain - TODO: Move to individual interface files
 export * from "./build-interfaces";
-export * from "./codex-interfaces";
-export * from "./device-interfaces";
-export * from "./domain/browse/index";
-export * from "./export-interfaces";
-export * from "./generation-interfaces";
-export * from "./image-export-core-interfaces";
-export * from "./image-export-file-interfaces";
-export * from "./image-export-interfaces";
-export * from "./image-export-layout-interfaces";
-export * from "./image-export-rendering-interfaces";
-export * from "./image-export-utility-interfaces";
-export * from "./image-format-interfaces";
-export * from "./metadata-testing-interfaces";
-export * from "./motion-tester-interfaces";
-export * from "./option-picker-interfaces";
-export * from "./page-export-interfaces";
-export * from "./panel-interfaces";
-export * from "./pdf-export-interfaces";
-export * from "./pictograph-interfaces";
-export * from "./positioning-interfaces";
-export * from "./rendering/index";
-export * from "./responsive-layout-interfaces";
-export * from "./sequence-card-export-interfaces";
-export * from "./sequence-card-interfaces";
-export * from "./sequence-interfaces";
-export * from "./sequence-state-interfaces";
+
+// Generation Domain - TODO: Move to individual interface files
+// TEMPORARILY REMOVED: export * from "./generation-interfaces"; (conflicts with IOptionDataService)
+
+// TODO: Replace these consolidated interface files with individual domain-organized interfaces
+// Following the one-to-one interface-to-implementation pattern
+
+// Sequence Domain - Individual interface (correct pattern)
 export * from "./sequence/ISequenceStateService";
-export * from "./service-constants";
+
+// Temporary exports until migration to individual interfaces is complete
+// TEMPORARILY REMOVED: export * from "./motion-tester-interfaces"; (conflicts with IAnimationControlService)
+export * from "./option-picker-interfaces";
+export * from "./panel-interfaces";
+// TEMPORARILY REMOVED: export * from "./pictograph-interfaces"; (conflicts with IArrowPathResolutionService, IArrowPositioningService)
+// TEMPORARILY REMOVED: export * from "./positioning-interfaces"; (conflicts with pictograph services)
+export * from "./responsive-layout-interfaces";
+export * from "./sequence-interfaces";
+// TEMPORARILY REMOVED: export * from "./sequence-state-interfaces"; (conflicts with ISequenceStateService)
 export * from "./svg-conversion-interfaces";
 export * from "./text-rendering-interfaces";
 export * from "./workbench-interfaces";

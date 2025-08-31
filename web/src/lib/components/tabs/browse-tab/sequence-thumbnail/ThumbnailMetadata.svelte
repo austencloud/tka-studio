@@ -5,7 +5,7 @@ Displays sequence metadata including title, difficulty, length, author, date, an
 Extracted from SequenceThumbnail.svelte for better separation of concerns.
 -->
 <script lang="ts">
-  import type { SequenceData } from "$lib/domain/SequenceData";
+  import type { SequenceData } from "$domain";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

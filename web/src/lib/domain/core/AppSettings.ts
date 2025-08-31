@@ -5,8 +5,8 @@
  * This is a domain type that represents the user's preferences and app state.
  */
 
-import { BackgroundType } from "../background/BackgroundTypes";
 import type { GridMode } from "../enums";
+import { BackgroundType } from "./ui/backgrounds/BackgroundTypes";
 
 export interface AppSettings {
   theme: "light" | "dark";

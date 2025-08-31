@@ -5,7 +5,7 @@
  * Handles communication between different construct tab components.
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
+import type { BeatData, SequenceData } from "$domain";
 
 export interface IConstructTabCoordinator {
   setupComponentCoordination(components: Record<string, unknown>): void;

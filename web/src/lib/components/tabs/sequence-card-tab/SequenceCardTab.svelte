@@ -1,11 +1,11 @@
 <!-- SequenceCardTab.svelte - Simple page-based sequence card tab matching legacy desktop -->
 <script lang="ts">
+  import type { SequenceData } from "$domain";
   import { onMount } from "svelte";
-  import type { SequenceData } from "$lib/domain/core";
   // Note: Loading directly from dictionary API
+  import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
   import SequenceCardNavigation from "./Navigation.svelte";
   import PageDisplay from "./PageDisplay.svelte";
-  import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
 
   // Simple state matching legacy desktop
   let sequences: SequenceData[] = $state([]);

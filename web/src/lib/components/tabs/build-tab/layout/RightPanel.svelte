@@ -5,17 +5,15 @@
 	Contains the 4-tab interface with navigation and content areas.
 -->
 <script lang="ts">
-  import ExportPanel from "./../export/ExportPanel.svelte";
   import GraphEditor from "./../edit/GraphEditor.svelte";
+  import ExportPanel from "./../export/ExportPanel.svelte";
 
-  import type { ArrowPlacementData } from "$lib/domain/ArrowPlacementData";
   import { constructTabEventService } from "$lib/services/implementations/build/BuildTabEventService";
-  import ConstructTabContent from "../construct/ConstructTabContent.svelte";
   import ConstructTabNavigation from "../BuildSubTabNavigation.svelte";
+  import ConstructTabContent from "../construct/ConstructTabContent.svelte";
   import GeneratePanel from "../generate/GeneratePanel.svelte";
   // Import Svelte's built-in fade transition for consistency with main tabs
-  import type { BeatData } from "$lib/domain";
-  import type { PictographData } from "$lib/domain/core";
+  import type { ArrowPlacementData, BeatData, PictographData } from "$domain";
   import type { ActiveBuildSubTab } from "$lib/state/services/state-service-interfaces";
   import { getAnimationSettings } from "$lib/utils/animation-control";
   import { shouldAnimate } from "$lib/utils/simple-fade";

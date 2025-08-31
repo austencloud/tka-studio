@@ -1,3 +1,5 @@
+import type { CsvParseResult, ParsedCsvRow } from "../data-interfaces";
+
 /**
  * CSV Parser Service Interface
  *
@@ -6,8 +8,6 @@
  * parsing with error handling.
  */
 
-import type { CSVParseResult, ParsedCsvRow } from "$lib/domain";
-
 /**
  * Service for parsing CSV data
  *
@@ -15,7 +15,7 @@ import type { CSVParseResult, ParsedCsvRow } from "$lib/domain";
  * Handles line splitting, header extraction, and row parsing with error handling.
  */
 export interface ICSVParser {
-  parseCSV(csvText: string): CSVParseResult;
+  parseCSV(csvText: string): CsvParseResult;
   parseCSVToRows(csvText: string): ParsedCsvRow[];
   validateCSVStructure(csvText: string): { isValid: boolean; errors: string[] };
   createRowFromValues(headers: string[], values: string[]): ParsedCsvRow;

@@ -1,28 +1,30 @@
-re/**
+/**
  * StartPositionService.ts - Complete start position service implementation
  */
 
-import type { BeatData } from "$lib/domain/build/workbench/BeatData";
-import { Letter } from "$lib/domain/core/Letter";
-import { createMotionData } from "$lib/domain/core/pictograph/MotionData";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import { createPictographData } from "$lib/domain/core/pictograph/PictographData";
-import {
-  GridMode,
-  Location,
-  MotionColor,
-  MotionType,
-  Orientation,
-  PropType,
-  RotationDirection,
-} from "$lib/domain/enums";
-import type { ValidationError } from "$lib/domain/sequence-card/SequenceCard";
+import type { ValidationResult } from "$domain";
+import { GridMode, Orientation, PropType, RotationDirection,  } from "$domain";
+import { Location, MotionColor, MotionType } from "$domain/enums";
+import type { BeatData } from "$domain/build/workbench/BeatData";
+import { Letter } from "$domain/core/Letter";
+import { createMotionData } from "$domain/core/pictograph/MotionData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
+import { createPictographData } from "$domain/core/pictograph/PictographData";
+import type { ValidationError } from "$domain/sequence-card/SequenceCard";
 import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
 import { injectable } from "inversify";
-import type { ValidationResult } from "$lib/domain/core";
 
 @injectable()
 export class StartPositionService implements IStartPositionService {
+  getAvailableStartPositions(
+    propType: string,
+    gridMode: GridMode
+  ): Promise<BeatData[]> {
+    throw new Error("Method not implemented.");
+  }
+  setStartPosition(startPosition: BeatData): Promise<void> {
+    throw new Error("Method not implemented.");
+  }
   // Clean constructor - no debug logging needed
   // Default start positions for each grid mode
   private readonly DEFAULT_START_POSITIONS: Record<string, string[]> = {

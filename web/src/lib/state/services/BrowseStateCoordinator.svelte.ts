@@ -6,18 +6,18 @@
  */
 
 import type {
+  FilterType,
+  FilterValue,
+  SequenceData,
+  SortMethod,
+} from "$domain";
+import type {
   IBrowseService,
   IFavoritesService,
   INavigationService,
   ISequenceIndexService,
   IThumbnailService,
 } from "$lib/services/contracts/browse-interfaces";
-import type {
-  FilterType,
-  FilterValue,
-  SequenceData,
-  SortMethod,
-} from "$lib/domain/core";
 
 import type { IBrowseDisplayStateService } from "./BrowseDisplayStateService.svelte";
 import type { IBrowseFilterStateService } from "./BrowseFilterStateService.svelte";

@@ -1,12 +1,10 @@
 <!-- DetailedInfoPanel.svelte - Detailed information about selected beat -->
 <script lang="ts">
-  import { GridMode, MotionColor } from "$lib/domain/enums";
-  import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { BeatData, SequenceData } from "$domain";
+  import { GridMode } from "$domain";
+  import { MotionColor } from "$domain/enums";
   import type { IGridModeDeriver } from "$lib/services/contracts/positioning-interfaces";
-  import type {
-    BeatData,
-    SequenceData,
-  } from "$lib/domain/core";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { onMount } from "svelte";
 
   // Props

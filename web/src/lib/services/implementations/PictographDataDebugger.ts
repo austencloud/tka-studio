@@ -5,7 +5,7 @@
  * where data corruption or missing information occurs.
  */
 
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import type { IGridModeDeriver } from "$lib/services/contracts/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 import { endsWithBeta } from "$lib/utils/betaDetection";

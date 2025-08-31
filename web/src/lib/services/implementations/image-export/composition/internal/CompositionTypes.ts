@@ -2,7 +2,7 @@
  * Shared types and utilities for image composition components
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   CompositionOptions,
   LayoutData,

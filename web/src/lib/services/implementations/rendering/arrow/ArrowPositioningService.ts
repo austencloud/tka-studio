@@ -6,8 +6,8 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import type { MotionData } from "$lib/domain";
-import { MotionColor } from "$lib/domain/enums";
+import type { MotionData } from "$domain";
+import { MotionColor } from "$domain/enums";
 import type {
   IArrowPositioningService,
   ISvgColorTransformer,

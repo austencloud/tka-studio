@@ -1,9 +1,5 @@
 <!-- LessonWorkspaceView.svelte - Enhanced lesson workspace with full functionality -->
 <script lang="ts">
-  import type { PictographData } from "$lib/domain/PictographData";
-  import { LessonConfigService } from "$lib/services/learn/LessonConfigService";
-  import { QuestionGeneratorService } from "$lib/services/learn/QuestionGeneratorService";
-  import { QuizSessionService } from "$lib/services/learn/QuizSessionService";
   import type {
     LayoutMode,
     LessonProgress,
@@ -19,6 +15,10 @@
   import QuestionGenerator from "./QuestionGenerator.svelte";
   import QuizTimer from "./QuizTimer.svelte";
   import LessonControls from "./LessonControls.svelte";
+  import { QuizSessionService } from "../../../services/implementations/learn/QuizSessionService";
+  import { LessonConfigService } from "../../../services/implementations/learn/LessonConfigService";
+  import { QuestionGeneratorService } from "../../../services/implementations/learn/QuestionGeneratorService";
+  import type { PictographData } from "$domain";
 
   // Props
   interface Props {

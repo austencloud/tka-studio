@@ -6,17 +6,23 @@
 // ============================================================================
 // CORE TYPES
 // ============================================================================
-import type {
-  ExportOptions,
-  SequenceData,
-} from "$lib/domain/core";
+import type { ExportOptions, SequenceData } from "$domain";
 import type {
   BatchExportProgress,
   BatchOperationConfig,
   SequenceCardDimensions,
   SequenceCardExportResult,
   SequenceCardMetadata,
-} from "$lib/domain/data-interfaces/sequence-card-export-interfaces-data";
+} from "$domain/data-interfaces/sequence-card-export-interfaces-data";
+
+// Re-export the imported types so other services can use them
+export type {
+  BatchExportProgress,
+  BatchOperationConfig,
+  SequenceCardDimensions,
+  SequenceCardExportResult,
+  SequenceCardMetadata,
+} from "$domain/data-interfaces/sequence-card-export-interfaces-data";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -322,15 +328,5 @@ export interface ISequenceCardCacheService {
   cleanup(): Promise<void>;
 }
 
-// ============================================================================
-// RE-EXPORT TYPES FOR EXTERNAL USE
-// ============================================================================
-
-// Re-export types that other modules need to import
-export type {
-  BatchExportProgress,
-  BatchOperationConfig,
-  SequenceCardDimensions,
-  SequenceCardExportResult,
-  SequenceCardMetadata,
-} from "$lib/domain/data-interfaces/sequence-card-export-interfaces-data";
+// Note: Import types directly from $domain/data-interfaces/sequence-card-export-interfaces-data
+// instead of re-exporting them from service contracts

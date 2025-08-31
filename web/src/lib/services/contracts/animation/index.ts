@@ -1,4 +1,4 @@
-I/**
+/**
  * Animation Service Interfaces
  *
  * Consolidated export point for all animation-related service interfaces.
@@ -16,4 +16,4 @@ export type {
   ISequenceAnimationEngine,
   PropStates,
   SequenceMetadata,
-} from "$lib/domain/data-interfaces/ISequenceAnimationEngine";
+} from "$domain/data-interfaces/ISequenceAnimationEngine";

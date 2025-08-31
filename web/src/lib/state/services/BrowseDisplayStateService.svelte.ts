@@ -5,14 +5,11 @@
  * Handles loading, error, and display settings without business logic.
  */
 
+import type { BrowseDisplayState, BrowseLoadingState } from "$domain";
 import {
   createDefaultDisplayState,
   createDefaultLoadingState,
-} from "$lib/domain/browse";
-import type {
-  BrowseDisplayState,
-  BrowseLoadingState,
-} from "$lib/domain/core";
+} from "$domain/browse";
 
 export interface IBrowseDisplayStateService {
   // Reactive state getters

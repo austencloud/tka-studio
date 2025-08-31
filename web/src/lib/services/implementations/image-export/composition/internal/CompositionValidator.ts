@@ -5,7 +5,7 @@
  * Provides memory estimation, parameter validation, and test composition capabilities.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   IDimensionCalculationService,
   ILayoutCalculationService,

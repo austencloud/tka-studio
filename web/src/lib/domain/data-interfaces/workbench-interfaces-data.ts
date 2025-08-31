@@ -7,8 +7,8 @@
 // ============================================================================
 // WORKBENCH TYPES
 // ============================================================================
-import type { BeatData, SequenceData } from "$lib/domain";
-import { GridMode } from "$lib/domain";
+import type { BeatData, SequenceData } from "$domain";
+import { GridMode } from "$domain";
 
 // ============================================================================
 // DATA CONTRACTS (Domain Models)
@@ -31,12 +31,6 @@ export interface BeatEditResult {
   success: boolean;
   updatedBeat?: BeatData;
   error?: string;
-}
-
-export interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-  warnings: string[];
 }
 
 export interface SequenceCreationParams {

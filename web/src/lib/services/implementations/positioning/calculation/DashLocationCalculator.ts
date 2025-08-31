@@ -25,10 +25,11 @@
 	}ation mappings for different scenarios
  */
 
-import type { LetterType, MotionData, PictographData } from "$lib/domain";
-import { GridMode, Location } from "$lib/domain";
-import { resolve, TYPES } from "$lib/services/inversify/container";
+import type { LetterType, MotionData, PictographData } from "$domain";
+import { GridMode } from "$domain";
+import { Location } from "$domain/enums";
 import type { IGridModeDeriver } from "$lib/services/contracts/positioning-interfaces";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 import { injectable } from "inversify";
 
 // Arrow color type - using string literals to match usage pattern

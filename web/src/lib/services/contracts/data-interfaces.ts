@@ -4,24 +4,47 @@
  * Service contracts for data handling, CSV parsing, and query operations.
  */
 
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 
 // ============================================================================
 // DATA CONTRACTS
 // ============================================================================
 
+export interface CsvDataSet {
+  headers: string[];
+  rows: string[][];
+  metadata?: Record<string, any>;
+  diamondData?: string;
+  boxData?: string;
+}
+
 export interface ParsedCsvRow {
-  data: Record<string, string>;
-  errors: string[];
-  isValid: boolean;
+  letter: string;
+  startPosition: string;
+  endPosition: string;
+  timing: string;
+  direction: string;
+  blueMotionType: string;
+  blueRotationDirection: string;
+  blueStartLocation: string;
+  blueEndLocation: string;
+  redMotionType: string;
+  redRotationDirection: string;
+  redStartLocation: string;
+  redEndLocation: string;
+  [key: string]: string; // Allow additional properties
 }
 
 export interface CsvParseResult {
-  data: ParsedCsvRow[];
+  headers: string[];
+  rows: ParsedCsvRow[];
+  totalRows: number;
+  successfulRows: number;
   errors: Array<{
     error: string;
     rawRow: string;
     lineNumber: number;
+    rowIndex?: number;
   }>;
   isValid: boolean;
 }
@@ -51,6 +74,14 @@ export interface ILetterQueryHandler {
     letter: any,
     gridMode: any
   ): Promise<PictographData | null>;
+
+  /**
+   * Get pictographs for multiple letters
+   */
+  getPictographsByLetters(
+    letters: any[],
+    gridMode: any
+  ): Promise<PictographData[]>;
 }
 
 export interface IMotionQueryHandler {
@@ -68,6 +99,11 @@ export interface IMotionQueryHandler {
    * Search motions by pattern
    */
   searchMotions(pattern: string): Promise<PictographData[]>;
+
+  /**
+   * Get next options for sequence building
+   */
+  getNextOptionsForSequence(sequence: unknown[]): Promise<PictographData[]>;
 }
 
 export interface ICSVPictographParserService {
@@ -87,9 +123,6 @@ export interface ICSVPictographParserService {
   getSupportedColumns(): string[];
 }
 
-// Re-export from application interfaces for backward compatibility
-export type {
-  ICSVLoader,
-  ICSVLoader as ICsvLoader,
-  ICSVParser,
-} from "./application-interfaces";
+// Re-export from data interfaces for backward compatibility
+export type { ICsvLoader as ICSVLoader, ICsvLoader } from "./data/ICsvLoader";
+export type { ICSVParser } from "./data/ICsvParser";

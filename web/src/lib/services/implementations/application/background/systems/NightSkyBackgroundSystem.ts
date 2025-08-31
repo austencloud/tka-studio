@@ -1,6 +1,6 @@
 // src/lib/services/implementations/background/systems/NightSkyBackgroundSystem.ts
-import { getOptimizedConfig } from "$lib/domain/background/configs/config";
-import { NightSkyConfig } from "$lib/domain/background/configs/nightSky";
+import { getOptimizedConfig } from "$domain/core/ui/backgrounds/configs/config";
+import { NightSkyConfig } from "$domain/core/ui/backgrounds/configs/nightSky";
 import { drawBackgroundGradient } from "$lib/utils/background/backgroundUtils";
 import { createShootingStarSystem } from "./core/ShootingStarSystem";
 
@@ -17,8 +17,8 @@ import type {
   Dimensions,
   QualityLevel,
   ShootingStarState,
-} from "$lib/domain/background/BackgroundTypes";
-import type { IBackgroundSystem } from "$lib/services/contracts/background-interfaces";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
+import type { IBackgroundSystem } from "$lib/services/contracts/background/IBackgroundSystem";
 
 export class NightSkyBackgroundSystem implements IBackgroundSystem {
   // core state -------------------------------------------------------------

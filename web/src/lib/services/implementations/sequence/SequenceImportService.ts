@@ -5,25 +5,14 @@
  * Separate from core sequence CRUD operations and focused on data transformation.
  */
 
-import type { BeatData, Letter, SequenceData } from "$lib/domain";
-import { createMotionData, createPictographData } from "$lib/domain";
-import {
-  GridMode,
-  Location,
-  MotionColor,
-  MotionType,
-  Orientation,
-  PropType,
-  RotationDirection,
-} from "$lib/domain/enums";
-import {
-  PngMetadataArraySchema,
-  SequenceDataSchema,
-} from "$lib/domain/schemas";
+import type { BeatData, Letter, SequenceData } from "$domain";
+import { createMotionData, createPictographData, GridMode, Orientation, PropType, RotationDirection,  } from "$domain";
+import { Location, MotionColor, MotionType } from "$domain/enums";
+import { PngMetadataArraySchema, SequenceDataSchema } from "$domain/schemas";
+import type { ISequenceImportService } from "$lib/services/contracts/sequence-interfaces";
 import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
 import { parseStrict } from "$lib/utils/validation";
 import { injectable } from "inversify";
-import type { ISequenceImportService } from "$lib/services/contracts/sequence-interfaces";
 
 // Constants for PNG metadata conversion
 const PNG_MOTION_TYPES = {

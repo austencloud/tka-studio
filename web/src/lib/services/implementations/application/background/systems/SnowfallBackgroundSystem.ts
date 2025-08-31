@@ -4,10 +4,10 @@ import type {
   QualityLevel,
   ShootingStarState,
   Snowflake,
-} from "$lib/domain/background/BackgroundTypes";
-import { getOptimizedConfig } from "$lib/domain/background/configs/config";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
+import { getOptimizedConfig } from "$domain/core/ui/backgrounds/configs/config";
+import type { IBackgroundSystem } from "$lib/services/contracts/background/IBackgroundSystem";
 import { drawBackgroundGradient } from "$lib/utils/background/backgroundUtils";
-import type { IBackgroundSystem } from "$lib/services/contracts/background-interfaces";
 import { createShootingStarSystem } from "./core/ShootingStarSystem";
 import { createSnowflakeSystem } from "./core/SnowflakeSystem";
 

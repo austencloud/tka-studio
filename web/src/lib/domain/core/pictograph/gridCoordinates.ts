@@ -1,4 +1,3 @@
-
 /**
  * Grid coordinate data for pictograph rendering
  * This data defines the precise positioning points for arrows and props
@@ -129,9 +128,9 @@ export function parseCoordinates(
 }
 
 /**
- * Convert raw coordinate data into structured GridData format
+ * Convert raw coordinate data into structured GridPointData format
  */
-export function createGridData(mode: GridMode): GridPointData {
+export function createGridPointData(mode: GridMode): GridPointData {
   // SKEWED mode doesn't have its own coordinates - it uses both diamond and box
   // For now, default to diamond when SKEWED is requested
   const actualMode = mode === GridMode.SKEWED ? GridMode.DIAMOND : mode;

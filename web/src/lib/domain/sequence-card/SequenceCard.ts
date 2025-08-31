@@ -23,13 +23,7 @@ export interface LayoutConfig {
   utilization: number; // 0-1 representing how well the layout uses available space
 }
 
-export interface GridConfig {
-  columns: number;
-  rows: number;
-  gap: number;
-  containerWidth: number;
-  containerHeight: number;
-}
+
 
 export interface ResponsiveBreakpoints {
   mobile: number;
@@ -98,7 +92,7 @@ export interface SequenceCardExportSettings {
 }
 
 export interface PrintLayoutOptions {
-  paperSize: PaperSize;
+  paperSize: SequenceCardPaperSize;
   orientation: "Portrait" | "Landscape";
   margins: {
     top: number;
@@ -120,7 +114,7 @@ export interface PrintLayoutOptions {
   footerText?: string;
 }
 
-export type PaperSize = "A4" | "Letter" | "Legal" | "Tabloid";
+type SequenceCardPaperSize = "A4" | "Letter" | "Legal" | "Tabloid";
 
 // ============================================================================
 // DEVICE CAPABILITIES & RESPONSIVENESS
@@ -369,7 +363,6 @@ export interface ExportResult {
 // UTILITY TYPES
 // ============================================================================
 
-export type LayoutMode = "grid" | "list" | "printable";
 export type SortOrder = "asc" | "desc";
 export type SortField =
   | "name"
@@ -379,12 +372,12 @@ export type SortField =
   | "created"
   | "modified";
 
-export interface SortConfig {
+export interface SequenceCardSortConfig {
   field: SortField;
   order: SortOrder;
 }
 
-export interface FilterConfig {
+export interface SequenceCardFilterConfig {
   lengthFilter: number | null; // null means "all"
   difficultyFilter: string[];
   authorFilter: string[];

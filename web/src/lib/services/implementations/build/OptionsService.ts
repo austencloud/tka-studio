@@ -13,8 +13,8 @@ import {
   LetterType,
   OptionPickerReversalFilter,
   OptionPickerSortMethod,
-} from "$lib/domain";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+} from "$domain";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import type { IPositionMapper } from "$lib/services/contracts/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 

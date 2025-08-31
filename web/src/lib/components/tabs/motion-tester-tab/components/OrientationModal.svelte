@@ -5,9 +5,9 @@ A small popup modal that appears when clicking the orientation button,
 positioned over the specific prop panel that triggered it.
 -->
 <script lang="ts">
-  import { onMount } from "svelte";
-  import type { Orientation } from "$lib/domain/enums";
+  import type { Orientation } from "$domain";
   import "$lib/styles/modal-animations.css";
+  import { onMount } from "svelte";
 
   interface Props {
     selectedOrientation: Orientation;

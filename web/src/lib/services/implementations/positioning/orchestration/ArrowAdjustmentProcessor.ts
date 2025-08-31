@@ -5,8 +5,8 @@
  * Responsible for computing base adjustments and applying directional transformations.
  */
 
-import type { MotionData } from "$lib/domain";
-import { Location, MotionType } from "$lib/domain";
+import type { MotionData } from "$domain";
+import { Location, MotionType } from "$domain/enums";
 import type { IArrowLocationCalculator } from "$lib/services/contracts/positioning-interfaces";
 import type { Point } from "../types";
 import { ArrowQuadrantCalculator } from "./ArrowQuadrantCalculator";

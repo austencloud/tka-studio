@@ -6,10 +6,13 @@
  */
 
 import type {
-  DifficultyLevel, MotionType, OptionFilters, PictographData,
+  DifficultyLevel,
+  MotionType,
+  OptionFilters,
+  PictographData,
   SequenceData,
-  ValidationResult
-} from "$lib/domain/core";
+  ValidationResult,
+} from "$domain";
 
 export interface IOptionDataService {
   getNextOptions(

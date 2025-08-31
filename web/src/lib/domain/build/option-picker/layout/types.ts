@@ -113,3 +113,54 @@ export interface FoldableDetectionResult {
     matchedSpecs?: string[];
   };
 }
+
+// ============================================================================
+// OPTION PICKER LAYOUT CALCULATION TYPES
+// ============================================================================
+
+export interface OptionPickerGridConfiguration {
+  columns: number;
+  gap: string;
+  itemSize: number;
+  gridClass: string;
+  aspectClass: string;
+  scaleFactor: number;
+}
+
+export interface OptionPickerLayoutCalculationParams {
+  count: number;
+  containerWidth: number;
+  containerHeight: number;
+  windowWidth?: number;
+  windowHeight?: number;
+  isMobileUserAgent?: boolean;
+}
+
+export interface OptionPickerLayoutCalculationResult {
+  optionsPerRow: number;
+  optionSize: number;
+  gridGap: string;
+  gridColumns: string;
+  gridClass: string;
+  aspectClass: string;
+  scaleFactor: number;
+  deviceType: DeviceType;
+  containerAspect: ContainerAspect;
+  layoutCategory: LayoutCategory;
+  canFitHorizontally: boolean;
+  optimalSize: number;
+  debugInfo?: {
+    userAgent: string;
+    dimensions: { width: number; height: number };
+    matchedSpecs?: string[];
+  };
+}
+
+export interface ResponsiveLayoutConfig {
+  gridColumns: string;
+  optionSize: string;
+  gridGap: string;
+  gridClass: string;
+  aspectClass: string;
+  scaleFactor: number;
+}

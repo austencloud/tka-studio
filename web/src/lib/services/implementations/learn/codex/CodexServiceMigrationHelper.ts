@@ -5,7 +5,7 @@
  * to the new clean implementation.
  */
 
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import { CodexService } from "./CodexService";
 
 export class CodexServiceMigrationHelper {

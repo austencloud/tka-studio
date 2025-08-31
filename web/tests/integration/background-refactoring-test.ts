@@ -1,7 +1,7 @@
 // background-refactoring-test.ts
 // Quick test to verify our monolith decomposition worked
 
-import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
+import { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
 import {
   backgroundsConfig,
   getBackgroundConfig,

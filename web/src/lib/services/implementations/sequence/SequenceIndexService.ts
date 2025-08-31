@@ -5,9 +5,13 @@
  * Provides search capabilities across sequence metadata.
  */
 
-import { createSequenceData } from "$lib/domain";
-import type { SequenceData } from "$lib/domain/core";
-import { GridMode, GridPositionGroup, PropType } from "$lib/domain/enums";
+import type { SequenceData } from "$domain";
+import {
+  createSequenceData,
+  GridMode,
+  GridPositionGroup,
+  PropType,
+} from "$domain";
 import type { ISequenceIndexService } from "$lib/services/contracts/browse-interfaces";
 import { injectable } from "inversify";
 

@@ -1,6 +1,6 @@
 <!-- FullscreenSequenceInfo.svelte - Sequence metadata display for fullscreen viewer -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
+  import type { SequenceData } from "$domain";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const { sequence } = $props<{

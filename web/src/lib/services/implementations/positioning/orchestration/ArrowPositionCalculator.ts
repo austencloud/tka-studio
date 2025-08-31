@@ -5,11 +5,7 @@
  * Coordinates with other services to compute final arrow positions.
  */
 
-import type {
-  ArrowPlacementData,
-  MotionData,
-  PictographData,
-} from "$lib/domain";
+import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
 import type {
   IArrowAdjustmentCalculator,
   IArrowCoordinateSystemService,
@@ -17,11 +13,11 @@ import type {
   IArrowPositioningOrchestrator,
   IArrowRotationCalculator,
 } from "$lib/services/contracts/positioning-interfaces";
+import { inject, injectable } from "inversify";
+import { TYPES } from "../../../inversify/types";
 import { ArrowAdjustmentProcessor } from "./ArrowAdjustmentProcessor";
 import { ArrowCoordinateTransformer } from "./ArrowCoordinateTransformer";
 import { ArrowDataProcessor } from "./ArrowDataProcessor";
-import { injectable, inject } from "inversify";
-import { TYPES } from "../../../inversify/types";
 
 @injectable()
 export class ArrowPositionCalculator implements IArrowPositioningOrchestrator {

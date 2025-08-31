@@ -5,7 +5,7 @@
  * Ensures smooth transitions without showing the default gradient.
  */
 
-import type { BackgroundType } from "$lib/domain/background/BackgroundTypes";
+import type { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 // Background gradients mapping - mirrors background-config.ts
 export const BACKGROUND_GRADIENTS: Record<string, string> = {

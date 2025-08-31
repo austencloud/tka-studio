@@ -6,13 +6,9 @@
  * Returns PropPlacementData that can be attached to PropPlacementData.
  */
 
-import type {
-  MotionData,
-  PictographData,
-  PropPlacementData,
-} from "$lib/domain";
-import { createPropPlacementFromPosition } from "$lib/domain/core/pictograph/PropPlacementData";
-import { GridMode } from "$lib/domain/enums";
+import type { MotionData, PictographData, PropPlacementData } from "$domain";
+import { GridMode } from "$domain";
+import { createPropPlacementFromPosition } from "$domain/core/pictograph/PropPlacementData";
 import { endsWithBeta } from "$lib/utils/betaDetection";
 
 import { injectable } from "inversify";

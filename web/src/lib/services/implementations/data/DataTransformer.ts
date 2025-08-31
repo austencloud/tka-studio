@@ -5,13 +5,8 @@
  * Extracted from PictographRenderingService.
  */
 
-import type {
-  BeatData,
-  GridData,
-  MotionData,
-  PictographData,
-} from "$lib/domain";
-import { createPictographData, GridMode } from "$lib/domain";
+import type { BeatData, GridData, MotionData, PictographData } from "$domain";
+import { createPictographData, GridMode } from "$domain";
 import { injectable } from "inversify";
 import { type GridPointData as RawGridData } from "../../../domain/core/pictograph/gridCoordinates.js";
 

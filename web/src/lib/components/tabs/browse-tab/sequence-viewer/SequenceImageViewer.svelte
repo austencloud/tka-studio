@@ -1,7 +1,7 @@
 <!-- SequenceImageViewer.svelte - Image viewer with variation navigation -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
-  import { GridMode } from "$lib/domain";
+  import type { SequenceData } from "$domain";
+  import { GridMode } from "$domain";
 
   interface Props {
     sequence?: SequenceData & {

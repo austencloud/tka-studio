@@ -1,22 +1,32 @@
 /**
  * Application Service Interfaces
  *
- * Consolidated export point for all application-level service interfaces.
+ * Consolidated interfaces for application-level services.
+ * This file consolidates interfaces that were previously scattered.
  */
 
-// Application Services
-export * from "./application/IApplicationInitializer";
-export * from "./application/ICodexService";
-export * from "./application/IConstructTabCoordinator";
-export * from "./application/ICSVLoader";
-export * from "./application/ICSVParser";
-export * from "./application/IDeviceDetector";
-export * from "./application/IEnumMapper";
-export * from "./application/IOptionDataService";
-export * from "./application/ISettingsService";
-export * from "./application/IStartPositionSelectionService";
-export * from "./application/IStartPositionService";
+// Re-export from individual interface files
+export type { IApplicationInitializer } from "./application/IApplicationInitializer";
+export type { ISettingsService } from "./application/ISettingsService";
+export type { IDeviceDetector, ResponsiveSettings } from "./application/IDeviceDetector";
 
-// Re-export commonly used domain types
-export type { AppSettings } from "$lib/domain/core/AppSettings";
-export type { ISequenceAnimationEngine } from "$lib/services/contracts/animation";
+// Re-export domain types
+export type { AppSettings } from "$domain/core/AppSettings";
+
+// Additional interfaces that may be referenced
+export interface ISequenceAnimationEngine {
+  startAnimation(): void;
+  stopAnimation(): void;
+  pauseAnimation(): void;
+  resumeAnimation(): void;
+  setSpeed(speed: number): void;
+  getCurrentFrame(): number;
+  getTotalFrames(): number;
+  isPlaying(): boolean;
+}
+
+export interface IStartPositionService {
+  getAvailableStartPositions(): Promise<string[]>;
+  getStartPositionData(position: string): Promise<any>;
+  validateStartPosition(position: string): boolean;
+}

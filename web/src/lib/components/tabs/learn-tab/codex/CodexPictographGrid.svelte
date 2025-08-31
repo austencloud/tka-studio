@@ -6,7 +6,7 @@
 -->
 <script lang="ts">
   import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
-  import type { PictographData } from "$lib/domain/PictographData";
+  import type { PictographData } from "$domain";
 
   // Props
   interface Props {

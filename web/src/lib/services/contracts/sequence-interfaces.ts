@@ -9,17 +9,12 @@
 // ============================================================================
 // SEQUENCE REQUEST TYPES
 // ============================================================================
+import type { SequenceData, ValidationResult } from "$domain";
+import type { BeatData } from "$domain/build/workbench/BeatData";
+// Page layout types from sequence-card domain
 import type {
-  BeatData,
-  SequenceData,
-  ValidationResult,
-} from "$lib/domain/core";
-import type {
-  DeleteConfirmationData,
-  DeleteResult,
   DPIConfiguration,
   GridCalculationOptions,
-  GridConfig,
   LayoutCalculationRequest,
   LayoutCalculationResult,
   LayoutValidationResult,
@@ -29,16 +24,24 @@ import type {
   PageDimensions,
   PageLayoutConfig,
   PageOrientation,
-  PaperSize,
   Rectangle,
+  SequenceCardGridConfig,
+  SequenceCardPaperSize,
+} from "$domain/sequence-card/PageLayoutTypes";
+
+// Sequence-specific types from data-interfaces
+import type {
+  DeleteConfirmationData,
+  DeleteResult,
   SequenceCreateRequest,
-} from "$lib/domain/data-interfaces/sequence-interfaces-data";
+} from "$domain/data-interfaces/sequence-interfaces-data";
 
 // Re-export sequence-specific domain types
 export type {
   DeleteConfirmationData,
   DeleteResult,
-} from "$lib/domain/data-interfaces/sequence-interfaces-data";
+  SequenceCreateRequest,
+} from "$domain/data-interfaces/sequence-interfaces-data";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -137,14 +140,14 @@ export interface IPrintablePageLayoutService {
    * Calculate page dimensions for a given paper size and orientation
    */
   calculatePageDimensions(
-    paperSize: PaperSize,
+    paperSize: SequenceCardPaperSize,
     orientation: PageOrientation
   ): PageDimensions;
 
   /**
    * Calculate margins for a given paper size
    */
-  calculateMargins(paperSize: PaperSize): Margins;
+  calculateMargins(paperSize: SequenceCardPaperSize): Margins;
 
   /**
    * Calculate the content area (page dimensions minus margins)
@@ -158,13 +161,13 @@ export interface IPrintablePageLayoutService {
     cardAspectRatio: number,
     contentArea: Rectangle,
     options?: Partial<GridCalculationOptions>
-  ): GridConfig;
+  ): SequenceCardGridConfig;
 
   /**
    * Get page size in pixels for screen display
    */
   getPageSizeInPixels(
-    paperSize: PaperSize,
+    paperSize: SequenceCardPaperSize,
     orientation: PageOrientation,
     dpi?: number
   ): PageDimensions;

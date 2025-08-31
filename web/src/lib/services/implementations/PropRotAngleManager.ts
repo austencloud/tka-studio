@@ -1,4 +1,5 @@
-import { Orientation, Location, GridMode } from "$lib/domain/enums";
+import { GridMode, Orientation } from "$domain";
+import { Location } from "$domain/enums";
 
 /**
  * Calculates prop rotation angles based on location, orientation, and grid mode.

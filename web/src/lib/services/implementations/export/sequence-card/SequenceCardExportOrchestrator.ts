@@ -5,7 +5,7 @@
  * Single responsibility: Coordinate focused services for export workflow.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   BatchExportProgress,
   BatchOperationConfig,

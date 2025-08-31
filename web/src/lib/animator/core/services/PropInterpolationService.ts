@@ -5,16 +5,16 @@
  * Single responsibility: Motion interpolation between keyframes.
  */
 
-import type { BeatData, MotionData } from "$lib/domain";
+import type { BeatData, MotionData } from "$domain";
 import type { IPropInterpolationService } from "../../../services/contracts/animation/IPropInterpolationService.js";
 import type { InterpolationResult } from "../../../services/contracts/index.js";
 
+import { injectable } from "inversify";
 import {
   calculateMotionEndpoints,
   lerpAngle,
   type MotionEndpoints,
 } from "../../utils/math/index.js";
-import { injectable } from "inversify";
 
 @injectable()
 export class PropInterpolationService implements IPropInterpolationService {

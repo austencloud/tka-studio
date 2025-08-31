@@ -5,8 +5,8 @@
  * after extraction from the mixed reactive service.
  */
 
-import { GridMode } from "$lib/domain";
-import type { BeatFrameConfig } from "$lib/services/contracts/beat-frame-interfaces";
+import { GridMode } from "$domain";
+import type { BeatFrameConfig } from "$domain/build/workbench/beat-frame";
 import { BeatFrameService } from "$lib/services/implementations/layout/BeatFrameService";
 import { beforeEach, describe, expect, it } from "vitest";
 

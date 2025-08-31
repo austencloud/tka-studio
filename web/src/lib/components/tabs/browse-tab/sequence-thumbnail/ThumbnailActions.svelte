@@ -5,7 +5,7 @@ Handles favorite, delete, and edit actions for sequence thumbnails.
 Extracted from SequenceThumbnail.svelte for better separation of concerns.
 -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
+  import type { SequenceData } from "$domain";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

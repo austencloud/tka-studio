@@ -9,7 +9,7 @@ import type {
   BatchExportResult,
   ImageExportOptions,
   ServiceExportResult,
-} from "$lib/domain/data-interfaces/export-config-interfaces";
+} from "$domain/data-interfaces/export-config-interfaces";
 import { injectable } from "inversify";
 import type { IPageImageExportService } from "../../contracts/page-export-interfaces";
 
@@ -17,7 +17,7 @@ import type {
   ExportProgress,
   Html2CanvasFunction,
   WindowWithHtml2Canvas,
-} from "$lib/domain/data-interfaces/html-canvas-types";
+} from "$domain/data-interfaces/html-canvas-types";
 
 @injectable()
 export class PageImageExportService implements IPageImageExportService {

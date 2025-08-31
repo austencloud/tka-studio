@@ -5,17 +5,17 @@
  * to create real sequences that update the BeatFrame.
  */
 
-import type {
-  ISequenceGenerationService,
-  GenerationOptions,
-} from "$lib/services/contracts/generation-interfaces";
-import type { SequenceData } from "$lib/domain";
+import type { SequenceData } from "$domain";
 import {
-  GridMode,
   DifficultyLevel,
-  PropContinuity,
   GenerationMode,
+  GridMode,
+  PropContinuity,
 } from "$lib/domain/enums";
+import type {
+  GenerationOptions,
+  ISequenceGenerationService,
+} from "$lib/services/contracts/generation-interfaces";
 
 export interface GenerationConfig {
   mode: GenerationMode;

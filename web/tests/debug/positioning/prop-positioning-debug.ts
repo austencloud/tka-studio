@@ -1,4 +1,4 @@
-import { Orientation, Location } from "$lib/domain/enums";
+import { Location, Orientation } from "$domain/enums";
 
 /**
  * PropRotAngleManager - Calculates prop rotation angles based on location and orientation

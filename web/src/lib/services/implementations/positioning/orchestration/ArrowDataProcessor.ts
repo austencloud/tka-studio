@@ -5,11 +5,7 @@
  * Responsible for working with pictograph data and arrow data structures.
  */
 
-import type {
-  ArrowPlacementData,
-  MotionData,
-  PictographData,
-} from "$lib/domain";
+import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
 import type { IArrowCoordinateSystemService } from "$lib/services/contracts/positioning-interfaces";
 import type { Point } from "../types";
 

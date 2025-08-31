@@ -2,24 +2,17 @@
 Arrow Mirroring Test Route - Simple test for arrow positioning
 -->
 <script lang="ts">
-  import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
-  import type { PictographData } from "$lib/domain";
+  import type { PictographData } from "$domain";
   import {
-    createArrowPlacementData,
-    createGridData,
     createMotionData,
     createPictographData,
-  } from "$lib/domain";
-  import { Letter } from "$lib/domain/Letter";
-  import {
-    GridMode,
     GridPosition,
-    Location,
-    MotionColor,
-    MotionType,
+    Letter,
     Orientation,
     RotationDirection,
-  } from "$lib/domain/enums";
+  } from "$domain";
+  import { Location, MotionColor, MotionType } from "$domain/enums";
+  import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
   import { onMount } from "svelte";
 
   // Test state

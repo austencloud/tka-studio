@@ -5,7 +5,7 @@
  * Matches the desktop implementation's question generation logic.
  */
 
-import { GridMode } from "$lib/domain";
+import { GridMode } from "$domain";
 import {
   AnswerFormat,
   type AnswerOption,

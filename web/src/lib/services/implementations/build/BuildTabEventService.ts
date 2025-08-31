@@ -6,12 +6,12 @@
  * that was previously scattered throughout the massive ConstructTab component.
  */
 
-import type { BeatData } from "$lib/domain/build/workbench/BeatData";
-import { createBeatData } from "$lib/domain/build/workbench/BeatData";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import type { BeatData } from "$domain/build/workbench/BeatData";
+import { createBeatData } from "$domain/build/workbench/BeatData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 
-import type { IConstructTabCoordinator as IConstructSubTabCoordinationService } from "$lib/services/contracts/application-interfaces";
+import type { IConstructTabCoordinator as IConstructSubTabCoordinationService } from "$lib/services/contracts/application/IConstructTabCoordinator";
 
 import { injectable } from "inversify";
 import type { IBuildTabEventService } from "../../contracts/build-interfaces";

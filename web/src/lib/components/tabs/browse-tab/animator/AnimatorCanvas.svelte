@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { PropState } from "./types/PropState";
-  import { svgStringToImage } from "./svgStringToImage";
-  import { GridMode } from "$lib/domain";
-  import { SVGGenerator } from "$lib/animator/utils/canvas/SVGGenerator";
+  import { GridMode } from "$domain";
   import { CanvasRenderer } from "$lib/animator/utils/canvas/CanvasRenderer";
+  import { SVGGenerator } from "$lib/animator/utils/canvas/SVGGenerator";
+  import { svgStringToImage } from "./svgStringToImage";
+  import type { PropState } from "./types/PropState";
   // TODO: Fix missing SVGGenerator and CanvasRenderer imports
   // import { SVGGenerator } from "../../utils/canvas/SVGGenerator.js";
   // import { CanvasRenderer } from "../../utils/canvas/CanvasRenderer.js";

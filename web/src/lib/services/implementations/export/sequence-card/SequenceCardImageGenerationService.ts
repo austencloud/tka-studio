@@ -5,10 +5,7 @@
  * Single responsibility: Converting sequence data to images via SVG composition.
  */
 
-import type {
-  BeatData,
-  SequenceData,
-} from "$lib/domain/core";
+import type { BeatData, SequenceData } from "$domain";
 import { injectable } from "inversify";
 import type {
   ISequenceCardImageGenerationService,

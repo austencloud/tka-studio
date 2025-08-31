@@ -5,7 +5,7 @@
  * Handles angle calculations and motion data extraction.
  */
 
-import type { BeatData, MotionData } from "$lib/domain";
+import type { BeatData, MotionData } from "$domain";
 import type { InterpolationResult } from "./IAnimationStateService";
 
 // Import MotionEndpoints type for the getEndpoints method

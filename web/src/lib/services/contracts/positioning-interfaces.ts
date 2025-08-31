@@ -12,8 +12,7 @@
 /**
  * Basic point interface for coordinates
  */
-import type { GridMode } from "$lib/domain/core";
-import type { MotionType } from "$lib/domain/core";
+import type { GridMode, MotionType } from "$domain";
 import type { GridData } from "../../domain/core/pictograph/GridData";
 import { GridPosition, Location, MotionColor } from "../../domain/enums";
 import type { Direction } from "../implementations/positioning/BetaPropDirectionCalculator";
@@ -26,7 +25,7 @@ import type {
   PictographData,
   Point,
   Position,
-} from "$lib/domain/data-interfaces/positioning-interfaces-data";
+} from "$domain/data-interfaces/positioning-interfaces-data";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -401,4 +400,4 @@ export type {
   PictographData,
   Point,
   Position,
-} from "$lib/domain/data-interfaces/positioning-interfaces-data";
+} from "$domain/data-interfaces/positioning-interfaces-data";

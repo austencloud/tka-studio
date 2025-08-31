@@ -1,5 +1,5 @@
+import { createMotionData, createPictographData } from "$domain";
 import { describe, expect, it } from "vitest";
-import { createMotionData, createPictographData } from "$lib/domain";
 import { TurnsTupleKeyGenerator } from "./TurnsTupleKeyGenerator";
 
 describe("TurnsTupleKeyGenerator", () => {

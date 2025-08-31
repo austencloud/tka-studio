@@ -13,8 +13,8 @@
  * No UI dependencies, completely testable in isolation.
  */
 
-import type { MotionData } from "$lib/domain";
-import { Location } from "$lib/domain";
+import type { MotionData } from "$domain";
+import { Location } from "$domain/enums";
 import { injectable } from "inversify";
 import type { Point } from "../types";
 

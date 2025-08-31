@@ -1,6 +1,6 @@
 <!-- SequenceDetails.svelte - Sequence metadata and details display -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
+  import type { SequenceData } from "$domain";
 
   interface Props {
     sequence?: SequenceData & {

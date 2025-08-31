@@ -12,12 +12,12 @@
  * No UI dependencies, completely testable in isolation.
  */
 
-import type { MotionData, PictographData } from "$lib/domain";
-import { Location, MotionType } from "$lib/domain";
+import type { MotionData, PictographData } from "$domain";
+import { Location, MotionType } from "$domain/enums";
 import type { IArrowLocationCalculator } from "$lib/services/contracts/positioning-interfaces";
-import { DashLocationCalculator } from "./DashLocationCalculator";
-import { injectable, inject } from "inversify";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../../inversify/types";
+import { DashLocationCalculator } from "./DashLocationCalculator";
 
 @injectable()
 export class ArrowLocationCalculator implements IArrowLocationCalculator {

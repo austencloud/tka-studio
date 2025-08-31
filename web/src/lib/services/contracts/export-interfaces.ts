@@ -9,19 +9,8 @@
  * ============================================================================
  */
 
-// ============================================================================
-// RE-EXPORTS FROM SPLIT INTERFACE FILES
-// ============================================================================
-
-// Configuration types (foundation for all export services)
-export type {
-  BatchExportOptions,
-  BatchExportResult,
-  ExportProgress,
-  ImageExportOptions,
-  PDFExportOptions,
-  ServiceExportResult,
-} from "$lib/domain/data-interfaces/export-config-interfaces";
+// Note: Import types directly from $domain/data-interfaces/export-config-interfaces
+// instead of re-exporting them from service contracts
 
 // Page export services (image generation, printing)
 export type {
@@ -46,20 +35,28 @@ export type {
 } from "./sequence-card-interfaces";
 
 // Batch export services (large-scale operations)
-export type { IBatchExportService } from "./batch-export-interfaces";
+export type { IBatchExportService } from "./IBatchExportService";
 
 // ============================================================================
 // MAIN ORCHESTRATOR SERVICES (kept in this file)
 // ============================================================================
 
-import type { ExportResult } from "$lib/domain/core";
+import type { ExportResult } from "$domain";
 import type {
   BatchExportOptions,
   BatchExportResult,
   ImageExportOptions,
   PDFExportOptions,
-} from "$lib/domain/data-interfaces/export-config-interfaces";
+} from "$domain/data-interfaces/export-config-interfaces";
 import type { Page } from "../../domain/sequence-card/PageLayoutTypes";
+
+// Re-export the imported types so other services can use them
+export type {
+  BatchExportOptions,
+  BatchExportResult,
+  ImageExportOptions,
+  PDFExportOptions,
+} from "$domain/data-interfaces/export-config-interfaces";
 
 /**
  * Main export service for handling different export types

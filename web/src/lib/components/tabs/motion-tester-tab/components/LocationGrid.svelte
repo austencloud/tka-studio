@@ -5,7 +5,8 @@ Replaces dropdown with intuitive visual grid showing N/E/S/W positions.
 Much more intuitive than dropdown for spatial location selection.
 -->
 <script lang="ts">
-  import { GridMode, type Location } from "$lib/domain/enums";
+  import { GridMode } from "$domain";
+import { Location } from "$domain/enums";
 
   interface Props {
     selectedLocation: string;

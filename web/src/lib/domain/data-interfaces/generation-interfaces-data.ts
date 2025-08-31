@@ -7,8 +7,9 @@
 // ============================================================================
 // GENERATION OPTIONS
 // ============================================================================
-import type { DifficultyLevel, GridMode } from "$lib/domain/core";
-import { GenerationMode, PropContinuity } from "$lib/domain/enums";
+import type { DifficultyLevel, GridMode } from "$domain";
+import { GenerationMode } from "$domain";
+import { PropContinuity } from "$domain/enums";
 import type { Letter } from "../core/Letter";
 
 // ============================================================================

@@ -5,8 +5,8 @@
  * This provides a simple persistence layer for sequences and settings.
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
-import { SequenceDataSchema } from "$lib/domain/schemas";
+import type { BeatData, SequenceData } from "$domain";
+import { SequenceDataSchema } from "$domain/schemas";
 import { safeParseOrNull } from "$lib/utils/validation";
 import { injectable } from "inversify";
 import type { IPersistenceService } from "$lib/services/contracts/sequence-interfaces";

@@ -13,8 +13,8 @@
  * Direct TypeScript mirror of reference/modern/application/services/positioning/arrows/placement/special_placement_service.py
  */
 
-import type { MotionData, PictographData } from "$lib/domain";
-import { GridMode } from "$lib/domain/enums";
+import type { MotionData, PictographData } from "$domain";
+import { GridMode } from "$domain";
 import type {
   IGridModeDeriver,
   ISpecialPlacementService,

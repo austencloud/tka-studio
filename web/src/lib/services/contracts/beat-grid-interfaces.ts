@@ -5,12 +5,12 @@
  * Consolidates grid-related logic that was duplicated across
  * BeatRenderingService, GridOverlayService, and other services.
  */
+import type { GridMode } from "$domain";
 import type {
   CombinedGridOptions,
   GridDrawOptions,
   GridValidationResult,
-} from "$lib/domain/build/image-export/beat/grid";
-import type { GridMode } from "$lib/domain/enums";
+} from "$domain/build/image-export/beat/grid";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -112,4 +112,4 @@ export type {
   CombinedGridOptions,
   GridDrawOptions,
   GridValidationResult,
-} from "$lib/domain/build/image-export/beat/grid";
+} from "$domain/build/image-export/beat/grid";

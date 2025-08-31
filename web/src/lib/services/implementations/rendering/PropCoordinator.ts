@@ -6,12 +6,8 @@
  * Uses PropPlacementService for placement calculations following separation of concerns.
  */
 
-import type {
-  MotionData,
-  PictographData,
-  PropPlacementData,
-} from "$lib/domain";
-import { MotionColor } from "$lib/domain/enums";
+import type { MotionData, PictographData, PropPlacementData } from "$domain";
+import { MotionColor } from "$domain/enums";
 import { injectable } from "inversify";
 import type { IPropPlacementService } from "../positioning/PropPlacementService";
 import { PropPlacementService } from "../positioning/PropPlacementService";

@@ -5,7 +5,7 @@
  * Based on the legacy desktop StaticLocationCalculator.
  */
 
-import type { MotionData } from "$lib/domain";
+import type { MotionData } from "$domain";
 
 export class StaticLocationCalculator {
   calculateLocation(motion: MotionData): string {

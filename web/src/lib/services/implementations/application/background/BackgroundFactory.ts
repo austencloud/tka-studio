@@ -3,17 +3,17 @@
 
 import {
   BackgroundType,
-  type BackgroundSystem,
-  type QualityLevel,
   type AccessibilitySettings,
   type BackgroundFactoryParams,
-} from "$lib/domain/background/BackgroundTypes";
-import { detectAppropriateQuality } from "$lib/domain/background/configs/config";
-import { NightSkyBackgroundSystem } from "./systems/NightSkyBackgroundSystem";
-import { SnowfallBackgroundSystem } from "./systems/SnowfallBackgroundSystem";
+  type BackgroundSystem,
+  type QualityLevel,
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
+import { detectAppropriateQuality } from "$domain/core/ui/backgrounds/configs/config";
 import { AuroraBackgroundSystem } from "./systems/AuroraBackgroundSystem";
 import { BubblesBackgroundSystem } from "./systems/BubblesBackgroundSystem";
 import { DeepOceanBackgroundSystem } from "./systems/DeepOceanBackgroundSystem";
+import { NightSkyBackgroundSystem } from "./systems/NightSkyBackgroundSystem";
+import { SnowfallBackgroundSystem } from "./systems/SnowfallBackgroundSystem";
 
 export class BackgroundFactory {
   // Default accessibility settings

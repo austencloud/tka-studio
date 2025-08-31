@@ -5,7 +5,7 @@
  * Manages text positioning and rendering within the composition layout.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   LayoutData,
   TKAImageExportOptions,

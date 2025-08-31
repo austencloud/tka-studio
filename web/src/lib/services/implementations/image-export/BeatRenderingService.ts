@@ -1,6 +1,6 @@
-import { inject, injectable } from "inversify";
-import type { BeatData, SequenceData } from "../../../domain";
+import type { BeatData, SequenceData } from "$domain";
 import type { IBeatFallbackRenderer } from "$lib/services/contracts/beat-fallback-interfaces";
+import { inject, injectable } from "inversify";
 import type { IBeatGridService } from "../../contracts/beat-grid-interfaces";
 import type {
   BeatRenderOptions,
@@ -53,9 +53,9 @@ export class BeatRenderingService implements IBeatRenderingService {
 
       // Handle empty/error beats using fallback service
       if (beatData.isBlank || !beatData.pictographData) {
-        const fallbackCanvas = this.fallbackService.createEmptyBeat({
-          size,
-          backgroundColor: "white",
+        const fallbackCanvas = await this.fallbackService.createEmptyBeat({
+          showPlaceholder: true,
+          placeholderText: "Empty Beat",
         });
 
         // Copy fallback to our canvas
@@ -69,9 +69,10 @@ export class BeatRenderingService implements IBeatRenderingService {
       const svgString = await this.generateSVGString(beatData, size, options);
       if (!svgString) {
         // Use fallback for failed SVG generation
-        const fallbackCanvas = this.fallbackService.createErrorBeat({
-          size,
-          backgroundColor: "white",
+        const fallbackCanvas = await this.fallbackService.createErrorBeat({
+          showError: true,
+          errorMessage: "Failed to generate SVG",
+          size: { width: size, height: size },
         });
 
         ctx.drawImage(fallbackCanvas, 0, 0);
@@ -120,7 +121,7 @@ export class BeatRenderingService implements IBeatRenderingService {
 
     try {
       // Use fallback service for consistent start position rendering
-      return this.fallbackService.createDefaultStartPosition(size, "white");
+      return await this.fallbackService.createDefaultStartPosition();
     } catch (error) {
       throw new Error(
         `Failed to render start position: ${error instanceof Error ? error.message : "Unknown error"}`

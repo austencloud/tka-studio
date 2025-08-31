@@ -11,7 +11,7 @@ This component wraps the Pictograph component and handles all beat-specific conc
 The wrapped Pictograph component focuses purely on rendering pictograph data.
 -->
 <script lang="ts">
-  import type { BeatData } from "$lib/domain";
+  import type { BeatData } from "$domain";
   import { Pictograph } from "$lib/components/core/pictograph";
 
   interface Props {

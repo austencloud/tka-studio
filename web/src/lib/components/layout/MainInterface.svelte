@@ -8,22 +8,22 @@
     switchTab,
   } from "$lib/state/app-state.svelte";
   // Import background types
-  import { BackgroundType } from "$lib/domain/background/BackgroundTypes";
+  import { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
 
   // Import transition utilities
   import { fade } from "$lib/utils/simple-fade";
 
   // Import components - App Interface
-  import BackgroundCanvas from "./backgrounds/BackgroundCanvas.svelte";
   import NavigationBar from "$components/navigation/NavigationBar.svelte";
   import SettingsDialog from "$components/SettingsDialog.svelte";
   import AboutTab from "$components/tabs/about-tab/AboutTab.svelte";
   import BrowseTab from "$components/tabs/browse-tab/BrowseTab.svelte";
-  import ConstructTab from "$lib/components/tabs/build-tab/BuildTab.svelte";
   import LearnTab from "$components/tabs/learn-tab/LearnTab.svelte";
   import MotionTesterTab from "$components/tabs/motion-tester-tab/MotionTesterTab.svelte";
   import SequenceCardTab from "$components/tabs/sequence-card-tab/SequenceCardTab.svelte";
   import WriteTab from "$components/tabs/write-tab/WriteTab.svelte";
+  import ConstructTab from "$lib/components/tabs/build-tab/BuildTab.svelte";
+  import BackgroundCanvas from "./backgrounds/BackgroundCanvas.svelte";
 
   // Reactive state for template using proper derived
   let activeTab = $derived(getActiveTab());

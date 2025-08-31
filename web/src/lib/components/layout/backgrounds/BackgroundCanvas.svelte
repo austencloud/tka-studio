@@ -5,15 +5,15 @@ A simplified background canvas component that works directly with BackgroundFact
 without the complex BackgroundContext system.
 -->
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
-  import { BackgroundFactory } from "$lib/services/implementations/background/BackgroundFactory";
+  import { browser } from "$app/environment";
   import type {
+    BackgroundSystem,
     BackgroundType,
     PerformanceMetrics,
     QualityLevel,
-    BackgroundSystem,
-  } from "$lib/domain/background/BackgroundTypes";
-  import { browser } from "$app/environment";
+  } from "$domain/core/ui/backgrounds/BackgroundTypes";
+  import { BackgroundFactory } from "$lib/services/implementations/application/background/BackgroundFactory";
+  import { onDestroy, onMount } from "svelte";
 
   // Props
   const {

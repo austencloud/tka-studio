@@ -6,7 +6,7 @@ import type {
   EasterEggState,
   Spaceship,
   QualityLevel,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface SpaceshipConfig {
   size: number;

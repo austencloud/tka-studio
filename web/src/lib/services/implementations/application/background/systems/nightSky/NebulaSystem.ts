@@ -4,7 +4,7 @@ import type {
   AccessibilitySettings,
   Dimensions,
   QualityLevel,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface NebulaConfig {
   count: number;

@@ -4,8 +4,8 @@
  * Manages application settings with persistence and reactive updates.
  */
 
-import type { BackgroundType } from "$lib/domain/background/BackgroundTypes";
-import { GridMode } from "$lib/domain/enums";
+import { GridMode } from "$domain";
+import type { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
 import type {
   AppSettings,
   ISettingsService,
@@ -55,9 +55,9 @@ export class SettingsService implements ISettingsService {
         updateBodyBackground(value as BackgroundType);
       }
 
-      console.log(`Setting ${key} updated to:`, value);
+      console.log(`Setting ${String(key)} updated to:`, value);
     } catch (error) {
-      console.error(`Failed to update setting ${key}:`, error);
+      console.error(`Failed to update setting ${String(key)}:`, error);
       throw new Error(
         `Failed to update setting: ${error instanceof Error ? error.message : "Unknown error"}`
       );

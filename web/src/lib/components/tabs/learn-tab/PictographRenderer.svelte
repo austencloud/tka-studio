@@ -5,7 +5,7 @@
 -->
 
 <script lang="ts">
-  import type { PictographData } from "$domain/PictographData";
+  import type { PictographData } from "$domain";
 
   // Props using Svelte 5 runes
   let {

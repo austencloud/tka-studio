@@ -5,7 +5,7 @@
  * Handles loading CSV files from various sources with caching support.
  */
 
-import type { GridMode } from "$lib/domain";
+import type { GridMode } from "$domain";
 
 export interface ICSVLoader {
   loadCSVFile(filename: string): Promise<{

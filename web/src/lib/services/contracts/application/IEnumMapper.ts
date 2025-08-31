@@ -11,7 +11,7 @@ import type {
   MotionType,
   Orientation,
   RotationDirection,
-} from "$lib/domain";
+} from "$domain";
 
 export interface IEnumMapper {
   mapMotionType(motionType: string): MotionType;

@@ -5,8 +5,8 @@
  * maintains proper separation of concerns and clean architecture.
  */
 
-import type { ILessonRepository } from "$lib/domain/learn/LessonRepository";
-import type { ILetterMappingRepository } from "$lib/domain/learn/codex/LetterMappingRepository";
+import type { ILessonRepository } from "$domain/learn/LessonRepository";
+import type { ILetterMappingRepository } from "$domain/learn/codex/LetterMappingRepository";
 import {
   MockLessonRepository,
   MockLetterMappingRepository,

@@ -5,8 +5,8 @@
  * No placeholders, no simplified versions - complete algorithm from legacy desktop app.
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
-import { createSequenceData, GridMode, PropType } from "$lib/domain";
+import type { BeatData, SequenceData } from "$domain";
+import { createSequenceData, GridMode, PropType } from "$domain";
 import type { ILetterQueryHandler } from "$lib/services/contracts/data-interfaces";
 import type {
   GenerationOptions,
@@ -14,17 +14,10 @@ import type {
   ISequenceGenerationService,
 } from "../../contracts/generation-interfaces";
 
-import { createMotionData } from "$lib/domain/core/pictograph/MotionData";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import {
-  DifficultyLevel,
-  GenerationMode,
-  Location,
-  MotionType,
-  Orientation,
-  PropContinuity,
-  RotationDirection,
-} from "$lib/domain/enums";
+import { GenerationMode, Orientation, RotationDirection,  } from "$domain";
+import { DifficultyLevel, Location, MotionType, PropContinuity } from "$domain/enums";
+import { createMotionData } from "$domain/core/pictograph/MotionData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 

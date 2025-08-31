@@ -1,22 +1,22 @@
-import {
-  MotionParameterService,
-  type MotionTestParams,
-} from "$lib/services/implementations/motion-tester/MotionParameterService";
+import type { ISequenceAnimationEngine } from "$lib/services/contracts/animation";
 import {
   AnimationControlService,
   type AnimationState,
-  type PropVisibility,
   type PropStates,
+  type PropVisibility,
 } from "$lib/services/implementations/motion-tester/AnimationControlService";
-import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { ISequenceAnimationEngine } from "$lib/services/contracts/application-interfaces";
-import { OrientationCalculationService } from "$lib/services/implementations/positioning/OrientationCalculationService";
 import {
   MotionLetterIdentificationService,
   type LetterIdentificationResult,
 } from "$lib/services/implementations/motion-tester/MotionLetterIdentificationService";
+import {
+  MotionParameterService,
+  type MotionTestParams,
+} from "$lib/services/implementations/motion-tester/MotionParameterService";
+import { OrientationCalculationService } from "$lib/services/implementations/positioning/OrientationCalculationService";
+import { resolve, TYPES } from "$lib/services/inversify/container";
 
-import { MotionType, MotionColor, GridMode, Location } from "$lib/domain/enums";
+import { GridMode, Location, MotionColor, MotionType } from "$domain/enums";
 
 export interface MotionTesterState {
   // Reactive state getters

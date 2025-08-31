@@ -1,5 +1,5 @@
-import type { SequenceData } from "$lib/domain/core/SequenceData";
-import type { FilterType, FilterValue } from "$lib/domain/core/types";
+import type { FilterType, FilterValue } from "$domain/browse";
+import type { SequenceData } from "$domain/core/SequenceData";
 import type { BrowseState } from "$lib/state/browse-state-factory.svelte";
 
 /**

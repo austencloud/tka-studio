@@ -1,8 +1,7 @@
 <!-- PictographGrid.svelte - Pictograph grid display for StartPositionPicker -->
 <script lang="ts">
-  import type { PictographData } from "$domain/PictographData";
+  import { getLetterBorderColorSafe, type PictographData } from "$domain";
   import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
-  import { getLetterBorderColorSafe } from "$lib/domain";
 
   const {
     pictographDataSet,

@@ -2,7 +2,7 @@ import type {
   BackgroundSystem,
   BackgroundType,
   QualityLevel,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 import type { IBackgroundService } from "$lib/services/contracts/background/IBackgroundService";
 import { injectable } from "inversify";
 import { BackgroundFactory } from "./BackgroundFactory";

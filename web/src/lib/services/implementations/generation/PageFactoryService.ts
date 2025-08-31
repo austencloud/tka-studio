@@ -7,7 +7,7 @@
  * Based on desktop application's printable_factory.py functionality.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   IPageFactoryService,
   IPrintablePageLayoutService,
@@ -15,7 +15,6 @@ import type {
 import { inject, injectable } from "inversify";
 import type {
   GridCalculationOptions,
-  GridConfig,
   LayoutSuggestion,
   LayoutValidationError,
   LayoutValidationResult,
@@ -24,6 +23,7 @@ import type {
   PageCreationOptions,
   PageLayoutConfig,
   Rectangle,
+  SequenceCardGridConfig,
 } from "../../../domain/sequence-card/PageLayoutTypes";
 import { TYPES } from "../../inversify/types";
 
@@ -134,7 +134,7 @@ export class PageFactoryService implements IPageFactoryService {
     );
 
     // Create minimal grid config for empty page
-    const gridConfig: GridConfig = {
+    const gridConfig: SequenceCardGridConfig = {
       rows: 1,
       columns: 1,
       spacing: 0,
@@ -247,7 +247,7 @@ export class PageFactoryService implements IPageFactoryService {
     contentArea: Rectangle,
     cardAspectRatio: number,
     layout: PageLayoutConfig
-  ): GridConfig {
+  ): SequenceCardGridConfig {
     // If we have a fixed sequences per page, use that
     const targetSequences = Math.max(sequences.length, layout.sequencesPerPage);
 

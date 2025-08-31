@@ -10,7 +10,7 @@ import type {
   LetterCategory,
   LetterMapping,
   LetterRow,
-} from "$lib/domain/learn/codex/types";
+} from "$domain/learn/codex/types";
 import { injectable } from "inversify";
 
 export interface ILetterMappingRepository {

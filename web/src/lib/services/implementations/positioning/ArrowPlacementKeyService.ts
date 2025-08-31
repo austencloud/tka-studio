@@ -5,9 +5,8 @@
  * Simplified version of the desktop PlacementKeyGenerator logic.
  */
 
-import type { MotionData } from "$lib/domain";
-import type { PictographData } from "$lib/domain/core";
-import { MotionType } from "$lib/domain/enums";
+import type { MotionData, PictographData } from "$domain";
+import { MotionType } from "$domain/enums";
 import { injectable } from "inversify";
 
 export interface IArrowPlacementKeyService {

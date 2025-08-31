@@ -5,12 +5,12 @@
  * Handles validation, retrieval, and setting of start positions.
  */
 
-import type { GridMode } from "$lib/domain/core";
 import type {
   BeatData,
+  GridMode,
   PictographData,
   ValidationResult,
-} from "$lib/domain/core";
+} from "$domain";
 
 export interface IStartPositionService {
   getAvailableStartPositions(
@@ -20,4 +20,13 @@ export interface IStartPositionService {
   setStartPosition(startPosition: BeatData): Promise<void>;
   validateStartPosition(position: BeatData): ValidationResult;
   getDefaultStartPositions(gridMode: GridMode): Promise<PictographData[]>;
+
+  // State properties for reactive state management
+  readonly startPositions: PictographData[];
+  readonly selectedPosition: PictographData | null;
+  readonly isLoading: boolean;
+  readonly error: string | null;
+
+  // Additional methods for state management
+  selectStartPosition(position: PictographData): Promise<void>;
 }

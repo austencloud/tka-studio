@@ -5,7 +5,7 @@
  * and progress types used across all export functionality.
  */
 
-import type { ExportResult } from "$lib/domain/sequence-card/SequenceCard";
+import type { ExportResult } from "$domain/sequence-card/SequenceCard";
 
 // ============================================================================
 // EXPORT CONFIGURATION TYPES

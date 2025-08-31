@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { MotionData, PictographData } from "$lib/domain";
+  import type { MotionData, PictographData } from "$domain";
   import { resolve, TYPES } from "$lib/services/inversify/container";
 
   import type { IPropCoordinator } from "$lib/services/implementations/rendering/PropCoordinator";

@@ -10,7 +10,8 @@
 /**
  * Pure business logic service for sequence state management
  */
-import type { BeatData, SequenceData } from "$lib/domain";
+import type { BeatData, SequenceData, ValidationResult } from "$domain";
+import type { SequenceStatistics } from "$domain/data-interfaces/sequence-state-interfaces-data";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

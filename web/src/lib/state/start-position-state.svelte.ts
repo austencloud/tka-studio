@@ -3,8 +3,8 @@
  * Follows TKA architecture: Service → State → Component
  */
 
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import { GridMode } from "$lib/domain/enums";
+import { GridMode } from "$domain";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
 
 /**

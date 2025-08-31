@@ -5,7 +5,7 @@
  * Provides centralized canvas management functionality.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   IDimensionCalculationService,
   ILayoutCalculationService,

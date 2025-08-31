@@ -4,17 +4,17 @@ Handles the responsive layout and scrolling behavior
 All individual controls are evenly spaced throughout the container
 -->
 <script lang="ts">
-  import LevelSelector from "../selectors/LevelSelector.svelte";
-  import LengthSelector from "../selectors/LengthSelector.svelte";
-  import TurnIntensitySelector from "../selectors/TurnIntensitySelector.svelte";
-  import GridModeSelector from "../selectors/GridModeSelector.svelte";
-  import GenerationModeToggle from "../selectors/GenerationModeToggle.svelte";
-  import PropContinuityToggle from "../selectors/PropContinuityToggle.svelte";
-  import LetterTypeSelector from "../selectors/LetterTypeSelector.svelte";
-  import SliceSizeSelector from "../selectors/SliceSizeSelector.svelte";
-  import CAPTypeSelector from "../selectors/CAPTypeSelector.svelte";
+  import { GenerationMode } from "$domain";
   import type { GenerationConfig } from "$lib/state/generate/generate-config.svelte";
-  import { GenerationMode, LetterType } from "$lib/domain";
+  import CAPTypeSelector from "../selectors/CAPTypeSelector.svelte";
+  import GenerationModeToggle from "../selectors/GenerationModeToggle.svelte";
+  import GridModeSelector from "../selectors/GridModeSelector.svelte";
+  import LengthSelector from "../selectors/LengthSelector.svelte";
+  import LetterTypeSelector from "../selectors/LetterTypeSelector.svelte";
+  import LevelSelector from "../selectors/LevelSelector.svelte";
+  import PropContinuityToggle from "../selectors/PropContinuityToggle.svelte";
+  import SliceSizeSelector from "../selectors/SliceSizeSelector.svelte";
+  import TurnIntensitySelector from "../selectors/TurnIntensitySelector.svelte";
 
   interface Props {
     config: GenerationConfig;

@@ -4,7 +4,7 @@
  * Service contracts for fallback beat rendering when primary rendering fails.
  */
 
-import type { BeatData } from "$lib/domain/core";
+import type { BeatData } from "$domain";
 
 // ============================================================================
 // DATA CONTRACTS
@@ -78,4 +78,5 @@ export interface EmptyBeatOptions {
 export interface ErrorBeatOptions {
   showError: boolean;
   errorMessage?: string;
+  size?: { width: number; height: number };
 }

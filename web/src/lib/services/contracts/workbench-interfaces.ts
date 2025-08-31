@@ -7,10 +7,14 @@
 // ============================================================================
 // WORKBENCH TYPES
 // ============================================================================
-import type { BeatData, PictographData, SequenceData } from "$lib/domain";
-import { GridMode } from "$lib/domain";
-import type { Letter } from "$lib/domain/core/Letter";
-import type { ValidationResult } from "$lib/domain/core";
+import type {
+  BeatData,
+  PictographData,
+  SequenceData,
+  ValidationResult,
+} from "$domain";
+import { GridMode } from "$domain";
+import type { Letter } from "$domain/core/Letter";
 import type {
   BeatClickResult,
   BeatEditOperation,
@@ -20,7 +24,7 @@ import type {
   SequenceCreationResult,
   WorkbenchConfig,
   WorkbenchMode,
-} from "$lib/domain/data-interfaces/workbench-interfaces-data";
+} from "$domain/data-interfaces/workbench-interfaces-data";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -114,4 +118,4 @@ export type {
   SequenceCreationResult,
   WorkbenchConfig,
   WorkbenchMode,
-} from "$lib/domain/data-interfaces/workbench-interfaces-data";
+} from "$domain/data-interfaces/workbench-interfaces-data";

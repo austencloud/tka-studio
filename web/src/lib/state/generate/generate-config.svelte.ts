@@ -5,13 +5,13 @@
  */
 
 import {
+  CAPType,
   GenerationMode,
   GridMode,
   LetterType,
-  PropContinuity,
   SliceSize,
-  CAPType,
-} from "$lib/domain";
+} from "$domain";
+import { PropContinuity } from "$domain/enums";
 
 export interface GenerationConfig {
   mode: GenerationMode;

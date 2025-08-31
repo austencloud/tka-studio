@@ -4,13 +4,13 @@
   import LessonResultsView from "$lib/components/tabs/learn-tab/LessonResultsView.svelte";
   import LessonSelectorView from "$lib/components/tabs/learn-tab/LessonSelectorView.svelte";
   import LessonWorkspaceView from "$lib/components/tabs/learn-tab/LessonWorkspaceView.svelte";
-  import type { PictographData } from "$lib/domain/PictographData";
   import {
     LearnView,
     LessonType,
     QuizMode,
     type LessonResults,
   } from "$lib/types/learn";
+  import type { PictographData } from "$domain";
 
   // State management using regular Svelte reactivity for better performance
   let currentView: LearnView = LearnView.LESSON_SELECTOR;

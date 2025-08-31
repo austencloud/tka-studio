@@ -4,12 +4,13 @@
  * Handles exporting sequences to various formats (images, JSON, etc.)
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
 import type {
+  BeatData,
   ExportOptions,
   ExportResult,
-} from "$lib/domain/core";
-import type { Page } from "$lib/domain/sequence-card/PageLayoutTypes";
+  SequenceData,
+} from "$domain";
+import type { Page } from "$domain/sequence-card/PageLayoutTypes";
 import { injectable } from "inversify";
 import type {
   BatchExportOptions,

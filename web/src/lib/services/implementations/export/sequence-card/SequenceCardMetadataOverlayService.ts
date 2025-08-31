@@ -5,7 +5,7 @@
  * Single responsibility: Adding titles, beat numbers, and styling.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import { injectable } from "inversify";
 import type {
   ISequenceCardMetadataOverlayService,

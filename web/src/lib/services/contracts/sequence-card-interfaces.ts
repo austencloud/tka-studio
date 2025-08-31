@@ -5,10 +5,7 @@
  * for printable formats. Includes caching and batch processing capabilities.
  */
 
-import type {
-  ExportOptions,
-  SequenceData,
-} from "$lib/domain/core";
+import type { ExportOptions, SequenceData } from "$domain";
 import type { Page } from "../../domain/sequence-card/PageLayoutTypes";
 
 // ============================================================================

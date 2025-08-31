@@ -5,9 +5,15 @@
  * Replaces the 738-line monolith with focused, testable services.
  */
 
-import { NavigationMode } from "$lib/domain/browse";
 import type {
-  DeleteConfirmationData,
+  BrowseDeleteConfirmationData,
+  BrowseLoadingState,
+  FilterType,
+  FilterValue,
+  SequenceData,
+} from "$domain";
+import { NavigationMode } from "$domain/browse";
+import type {
   IBrowseService,
   IDeleteService,
   IFavoritesService,
@@ -18,12 +24,6 @@ import type {
   IThumbnailService,
   NavigationSection,
 } from "$lib/services/contracts/browse-interfaces";
-import type {
-  BrowseLoadingState,
-  FilterType,
-  FilterValue,
-  SequenceData,
-} from "$lib/domain/core";
 
 import { BrowseDisplayStateService } from "./services/BrowseDisplayStateService.svelte";
 import { BrowseFilterStateService } from "./services/BrowseFilterStateService.svelte";
@@ -82,7 +82,7 @@ export interface BrowseState {
   ): Promise<SequenceData[]>;
 
   // Delete operations (delegated to existing delete service)
-  readonly deleteConfirmation: DeleteConfirmationData | null;
+  readonly deleteConfirmation: BrowseDeleteConfirmationData | null;
   readonly showDeleteDialog: boolean;
 }
 
@@ -118,7 +118,7 @@ export function createBrowseState(
   );
 
   // Delete state (delegate to existing services)
-  const deleteConfirmation = $state<DeleteConfirmationData | null>(null);
+  const deleteConfirmation = $state<BrowseDeleteConfirmationData | null>(null);
   const showDeleteDialog = $state<boolean>(false);
 
   return {

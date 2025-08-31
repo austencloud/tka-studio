@@ -5,8 +5,9 @@
  * Ported from legacy_web BetaPropDirectionCalculator.ts
  */
 
-import type { MotionData, PropPlacementData } from "$lib/domain";
-import { Location, MotionType, GridMode } from "$lib/domain/enums";
+import type { MotionData, PropPlacementData } from "$domain";
+import { GridMode } from "$domain";
+import { Location, MotionType } from "$domain/enums";
 
 // Direction constants
 export const UP = "up";

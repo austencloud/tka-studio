@@ -1,6 +1,6 @@
 <!-- ExportPreviewCard.svelte - Real TKA Image Export Preview -->
 <script lang="ts">
-  import type { SequenceData } from "$lib/domain/core";
+  import type { SequenceData } from "$domain";
 
   interface Props {
     currentSequence: SequenceData | null;

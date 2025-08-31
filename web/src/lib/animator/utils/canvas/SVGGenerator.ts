@@ -1,4 +1,4 @@
-import { GridMode } from "$lib/domain";
+import { GridMode } from "$domain";
 
 /**
  * SVG Generator for creating prop staff images and grid

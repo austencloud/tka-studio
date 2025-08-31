@@ -8,19 +8,10 @@
  * REFACTORED: Removed singleton pattern, now uses DI container.
  */
 
-import type {
-  ArrowPlacementData,
-  MotionData,
-  PictographData,
-} from "$lib/domain";
-import type { Letter } from "$lib/domain/core/Letter";
-import {
-  GridMode,
-  Location,
-  MotionColor,
-  MotionType,
-  Orientation,
-} from "$lib/domain/enums";
+import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
+import { GridMode, Orientation,  } from "$domain";
+import { Location, MotionColor, MotionType } from "$domain/enums";
+import type { Letter } from "$domain/core/Letter";
 import type { IArrowPositioningOrchestrator } from "$lib/services/contracts/positioning-interfaces";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
@@ -40,11 +31,6 @@ export interface ArrowPositioningInput {
   letter: Letter;
   startOrientation: Orientation;
   endOrientatio?: Orientation;
-}
-
-export interface Position {
-  x: number;
-  y: number;
 }
 
 export interface IArrowPositioningService {

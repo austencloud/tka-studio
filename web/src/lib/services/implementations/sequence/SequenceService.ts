@@ -9,8 +9,7 @@
  * Import operations moved to SequenceImportService.
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
-import { inject, injectable } from "inversify";
+import type { BeatData, SequenceData } from "$domain";
 import type {
   IPersistenceService,
   ISequenceDomainService,
@@ -18,6 +17,7 @@ import type {
   ISequenceService,
   SequenceCreateRequest,
 } from "$lib/services/contracts/sequence-interfaces";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 
 @injectable()

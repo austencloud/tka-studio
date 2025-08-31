@@ -5,8 +5,9 @@
  * This replaces the PictographRenderingService with explicit composition.
  */
 
-import type { MotionData, PictographData } from "$lib/domain";
-import { GridMode, MotionColor } from "$lib/domain";
+import type { MotionData, PictographData } from "$domain";
+import { GridMode } from "$domain";
+import { MotionColor } from "$domain/enums";
 import type {
   IArrowRenderer,
   IGridRenderingService,

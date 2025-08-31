@@ -1,12 +1,11 @@
 <!-- StartPositionPicker.svelte - Thin component using proper state layer -->
 <script lang="ts">
+  import { GridMode } from "$domain";
   import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
   import { resolve } from "$lib/services/inversify/container";
   import { TYPES } from "$lib/services/inversify/types";
   import { createStartPositionPickerState } from "$lib/state/start-position-state.svelte";
-  import { GridMode } from "$lib/domain/enums";
   import { onMount } from "svelte";
-
   // UI Components
   import ErrorState from "./ErrorState.svelte";
   import LoadingState from "./LoadingState.svelte";

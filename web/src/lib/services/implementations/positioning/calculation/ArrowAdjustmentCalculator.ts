@@ -11,9 +11,9 @@
  * - Better TypeScript organization
  */
 
-import type { MotionData, PictographData } from "$lib/domain";
-import { MotionColor } from "$lib/domain";
-import { GridMode } from "$lib/domain/enums";
+import type { MotionData, PictographData } from "$domain";
+import { GridMode } from "$domain";
+import { MotionColor } from "$domain/enums";
 import type {
   IArrowAdjustmentCalculator,
   IAttributeKeyGenerator,

@@ -2,10 +2,10 @@
  * Basic types and data structures for arrow positioning services.
  */
 
-import { MotionColor } from "$lib/domain/enums";
+import { MotionColor } from "$domain/enums";
 
 // Enhanced type definitions with comprehensive coverage
-export type { Location, MotionType, RotationDirection } from "$lib/domain";
+export type { Location, MotionType, RotationDirection } from "$domain";
 export type ArrowColor = MotionColor;
 
 // Basic types

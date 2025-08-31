@@ -5,7 +5,7 @@ A modal dialog for confirming sequence deletion with detailed information
 about the sequence being deleted and potential consequences.
 -->
 <script lang="ts">
-  import type { DeleteConfirmationData } from "$lib/services/contracts/browse-interfaces";
+  import type { BrowseDeleteConfirmationData } from "$domain/browse";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
@@ -14,7 +14,7 @@ about the sequence being deleted and potential consequences.
     onConfirm = () => {},
     onCancel = () => {},
   } = $props<{
-    confirmationData: DeleteConfirmationData | null;
+    confirmationData: BrowseDeleteConfirmationData | null;
     show: boolean;
     onConfirm: () => void;
     onCancel: () => void;

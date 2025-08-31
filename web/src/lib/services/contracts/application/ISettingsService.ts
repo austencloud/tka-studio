@@ -5,7 +5,7 @@
  * Handles loading, saving, and updating application configuration.
  */
 
-import type { AppSettings } from "$lib/domain/core/AppSettings";
+import type { AppSettings } from "$domain/core/AppSettings";
 
 export interface ISettingsService {
   currentSettings: AppSettings;

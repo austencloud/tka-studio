@@ -4,8 +4,8 @@ import type {
   Dimensions,
   PerformanceMetrics,
   QualityLevel,
-} from "$lib/domain/background/BackgroundTypes";
-import type { IBackgroundSystem } from "$lib/services/contracts/background-interfaces";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
+import type { IBackgroundSystem } from "$lib/services/contracts/background/IBackgroundSystem";
 
 interface Star {
   x: number;

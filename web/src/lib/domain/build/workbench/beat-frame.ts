@@ -7,8 +7,7 @@
 // ============================================================================
 // CONFIGURATION TYPES
 // ============================================================================
-import type { BeatData } from "$lib/domain";
-import { GridMode } from "$lib/domain";
+import { GridMode } from "$domain";
 
 // ============================================================================
 // DATA CONTRACTS (Domain Models)
@@ -43,3 +42,4 @@ export interface Position {
   x: number;
   y: number;
 }
+

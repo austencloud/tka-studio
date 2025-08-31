@@ -6,7 +6,7 @@
 // ============================================================================
 // CORE TYPES
 // ============================================================================
-import type { ProgressInfo } from "$lib/domain/sequence-card";
+import type { ProgressInfo } from "$domain/sequence-card";
 
 // ============================================================================
 // DATA CONTRACTS (Domain Models)

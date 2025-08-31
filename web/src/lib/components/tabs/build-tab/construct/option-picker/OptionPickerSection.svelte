@@ -8,8 +8,8 @@ Matches the desktop version exactly:
 - Responsive grid sizing
 -->
 <script lang="ts">
+  import type { PictographData } from "$domain";
   import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
-  import type { PictographData } from "$lib/domain/PictographData";
   import OptionPickerSectionHeader from "./OptionPickerSectionHeader.svelte";
 
   // Props

@@ -4,7 +4,7 @@
  * Service contract for device detection and responsive settings management.
  */
 
-import type { DeviceCapabilities } from "$lib/domain/sequence-card/SequenceCard";
+import type { DeviceCapabilities } from "$domain/sequence-card/SequenceCard";
 
 // ============================================================================
 // DATA CONTRACTS
@@ -69,6 +69,13 @@ export interface IDeviceDetector {
   removeCapabilityListener(
     callback: (capabilities: DeviceCapabilities) => void
   ): void;
+
+  /**
+   * Add listener for capability changes with cleanup function
+   */
+  onCapabilitiesChanged(
+    callback: (capabilities: DeviceCapabilities) => void
+  ): () => void;
 
   /**
    * Cleanup resources

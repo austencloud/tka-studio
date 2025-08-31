@@ -1,9 +1,9 @@
 <!-- MainAdjustmentPanel.svelte - Switches between orientation and turn controls -->
 <script lang="ts">
+  import type { BeatData } from "$domain";
   import { onMount } from "svelte";
   import DualOrientationPicker from "./DualOrientationPicker.svelte";
   import TurnAdjustmentControls from "./TurnAdjustmentControls.svelte";
-  import type { BeatData } from "$lib/domain/core";
 
   // Props
   const {

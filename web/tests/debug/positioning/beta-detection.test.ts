@@ -4,9 +4,9 @@
  * This test suite verifies the beta detection approach works correctly.
  */
 
-import { Letter } from "$lib/domain/core/Letter";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import { GridPosition } from "$lib/domain/enums";
+import { GridPosition } from "$domain";
+import { Letter } from "$domain/core/Letter";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import { endsWithBeta, isBetaPosition } from "$lib/utils/betaDetection";
 import { describe, expect, it } from "vitest";
 

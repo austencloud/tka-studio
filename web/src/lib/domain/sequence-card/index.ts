@@ -6,4 +6,3 @@
 
 export * from "./PageLayoutTypes";
 export * from "./SequenceCard";
-export * from "./types";

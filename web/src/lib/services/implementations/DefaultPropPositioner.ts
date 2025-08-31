@@ -1,8 +1,9 @@
+import { GridMode } from "$domain";
 import {
-  createGridData,
   type GridPointData,
-} from "$lib/domain/core/pictograph/gridCoordinates.js";
-import { GridMode, Location } from "$lib/domain/enums";
+  createGridPointData,
+} from "$domain/core/pictograph/gridCoordinates.js";
+import { Location } from "$domain/enums";
 
 /**
  * DefaultPropPositioner - Calculates default prop positions using grid coordinates
@@ -108,7 +109,7 @@ export class DefaultPropPositioner {
     gridMode: GridMode
   ): { x: number; y: number } {
     try {
-      const gridPointData = createGridData(gridMode);
+      const gridPointData = createGridPointData(gridMode);
       const positioner = new DefaultPropPositioner(gridPointData, gridMode);
       const result = positioner.calculateCoordinates(location);
       return result;

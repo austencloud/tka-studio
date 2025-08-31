@@ -5,9 +5,9 @@ Appears when user moves away from float motion and needs to choose
 between Pro (natural) or Anti (reverse) circular motion direction.
 -->
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { MotionType } from "$lib/domain/enums";
+  import { MotionType } from "$domain/enums";
   import "$lib/styles/modal-animations.css";
+  import { onMount } from "svelte";
 
   interface Props {
     onMotionTypeSelect: (motionType: MotionType) => void;

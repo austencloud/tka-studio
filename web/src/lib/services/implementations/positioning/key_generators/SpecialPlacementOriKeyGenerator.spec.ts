@@ -1,6 +1,5 @@
+import { createMotionData, createPictographData, Orientation } from "$domain";
 import { describe, expect, it } from "vitest";
-import { createMotionData, createPictographData } from "$lib/domain";
-import { Orientation } from "$lib/domain/enums";
 import { SpecialPlacementOriKeyGenerator } from "./SpecialPlacementOriKeyGenerator";
 
 describe("SpecialPlacementOriKeyGenerator", () => {

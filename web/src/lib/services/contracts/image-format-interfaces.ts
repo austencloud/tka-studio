@@ -10,7 +10,7 @@
 import type {
   ImageFormatOptions,
   OptimizationSettings,
-} from "$lib/domain/data-interfaces/image-format-interfaces-data";
+} from "$domain/data-interfaces/image-format-interfaces-data";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -101,4 +101,4 @@ export interface IImageFormatConverterService {
 export type {
   ImageFormatOptions,
   OptimizationSettings,
-} from "$lib/domain/data-interfaces/image-format-interfaces-data";
+} from "$domain/data-interfaces/image-format-interfaces-data";

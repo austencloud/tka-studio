@@ -5,7 +5,7 @@
  * NO REDUNDANT LOGIC - uses BrowseService for data, PageLayoutService for layout.
  */
 
-import type { SequenceData } from "$lib/domain";
+import type { SequenceData } from "$domain";
 import type { IBrowseService } from "$services/contracts/browse-interfaces";
 import type {
   IPageFactoryService,

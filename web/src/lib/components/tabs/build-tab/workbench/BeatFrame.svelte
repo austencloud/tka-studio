@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { BeatData } from "$lib/domain";
+  import type { BeatData } from "$domain";
   import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
   import { onMount } from "svelte";

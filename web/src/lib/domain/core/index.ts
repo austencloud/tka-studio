@@ -4,17 +4,13 @@
  * Export point for core domain types and fundamental data structures.
  */
 
+export * from "./ApplicationTypes";
 export * from "./AppSettings";
 export * from "./Letter";
 export * from "./pictograph";
 export * from "./SequenceData";
 export * from "./types";
+export * from "./ui";
 
-// Re-export commonly used types from other domain areas
-export type { BrowseDisplayState, BrowseLoadingState } from "../browse";
-export type { BeatData } from "../build/workbench/BeatData";
-export type { ValidationResult } from "../data-interfaces/sequence-state-interfaces-data";
-export type {
-  ExportOptions,
-  ExportResult,
-} from "../sequence-card/SequenceCard";
+// Note: Types from other domain areas are exported directly from domain/index.ts
+// to avoid duplicate exports. Import them directly from their source modules.

@@ -5,8 +5,8 @@
  * Each component gets its own isolated state through factory function.
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
-import { GridMode } from "$lib/domain/enums";
+import type { BeatData, SequenceData } from "$domain";
+import { GridMode } from "$domain";
 import type { ArrowPosition } from "$lib/services/implementations/positioning/types";
 import type { ISequenceService } from "$services/contracts/sequence-interfaces";
 

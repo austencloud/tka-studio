@@ -6,7 +6,7 @@
  */
 
 import { injectable } from "inversify";
-import type { CsvDataSet } from "../../../domain/data-interfaces/data-interfaces";
+import type { CsvDataSet } from "../../contracts/data-interfaces";
 import type { ICsvLoader } from "../../contracts/data/ICsvLoader";
 
 @injectable()
@@ -83,7 +83,12 @@ export class CsvLoader implements ICsvLoader {
       boxResponse.text(),
     ]);
 
-    return { diamondData, boxData };
+    return {
+      headers: [],
+      rows: [],
+      diamondData,
+      boxData,
+    };
   }
 
   private validateResponses(

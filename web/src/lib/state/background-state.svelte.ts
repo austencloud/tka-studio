@@ -3,7 +3,7 @@ import {
   type BackgroundSystem,
   type PerformanceMetrics,
   type QualityLevel,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 import type { IBackgroundService } from "$lib/services/contracts/background/IBackgroundService";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 
@@ -73,7 +73,5 @@ export function createBackgroundState() {
     updateMetrics(newMetrics: PerformanceMetrics) {
       metrics = newMetrics;
     },
-
-
   };
 }

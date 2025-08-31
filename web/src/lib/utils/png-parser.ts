@@ -3,7 +3,7 @@
  * Copied from animator module to avoid path issues
  */
 
-import type { SequenceData } from "$lib/domain";
+import type { SequenceData } from "$domain";
 
 export interface PNGParseResult {
   success: boolean;

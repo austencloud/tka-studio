@@ -33,7 +33,7 @@ export interface Rectangle {
   height: number;
 }
 
-export interface GridConfig {
+export interface SequenceCardGridConfig {
   rows: number;
   columns: number;
   spacing: number;
@@ -44,9 +44,9 @@ export interface GridConfig {
 export interface Page {
   id: string;
   sequences: SequenceData[];
-  layout: GridConfig;
+  layout: SequenceCardGridConfig;
   pageNumber: number;
-  paperSize: PaperSize;
+  paperSize: SequenceCardPaperSize;
   orientation: PageOrientation;
   margins: Margins;
 }
@@ -55,18 +55,18 @@ export interface Page {
 // PAPER SPECIFICATIONS
 // ============================================================================
 
-export type PaperSize = "A4" | "Letter" | "Legal" | "Tabloid";
+export type SequenceCardPaperSize = "A4" | "Letter" | "Legal" | "Tabloid";
 export type PageOrientation = "Portrait" | "Landscape";
 
 export interface PaperSpecification {
-  name: PaperSize;
+  name: SequenceCardPaperSize;
   dimensions: PageDimensions; // in points (1/72 inch)
   displayName: string;
   description: string;
 }
 
 export interface PrintConfiguration {
-  paperSize: PaperSize;
+  paperSize: SequenceCardPaperSize;
   orientation: PageOrientation;
   margins: Margins;
   dpi: number;
@@ -82,7 +82,7 @@ export interface PrintConfiguration {
 // ============================================================================
 
 export interface LayoutCalculationRequest {
-  paperSize: PaperSize;
+  paperSize: SequenceCardPaperSize;
   orientation: PageOrientation;
   margins: Margins;
   cardAspectRatio: number;
@@ -91,7 +91,7 @@ export interface LayoutCalculationRequest {
 }
 
 export interface LayoutCalculationResult {
-  gridConfig: GridConfig;
+  gridConfig: SequenceCardGridConfig;
   pagesNeeded: number;
   cardDimensions: PageDimensions;
   contentArea: Rectangle;
@@ -184,7 +184,7 @@ export interface LayoutSuggestion {
 // CONSTANTS
 // ============================================================================
 
-export const PAPER_SIZES: Record<PaperSize, PaperSpecification> = {
+export const PAPER_SIZES: Record<SequenceCardPaperSize, PaperSpecification> = {
   A4: {
     name: "A4",
     dimensions: { width: 595, height: 842 }, // 210mm x 297mm at 72 DPI
@@ -243,7 +243,7 @@ export const MEASUREMENT_UNITS: Record<string, MeasurementUnit> = {
 // UTILITY TYPES
 // ============================================================================
 
-export type LayoutMode = "optimal" | "fixed" | "custom";
+export type SequenceCardLayoutMode = "optimal" | "fixed" | "custom";
 export type OptimizationGoal =
   | "maximize_card_size"
   | "minimize_pages"

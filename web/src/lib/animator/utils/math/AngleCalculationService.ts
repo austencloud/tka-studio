@@ -5,8 +5,9 @@
  * position mapping, and orientation mapping.
  */
 
-import { Location, Orientation } from "$lib/domain/enums";
-import { PI, TWO_PI, HALF_PI, LOCATION_ANGLES } from "./MathConstants.js";
+import { Orientation } from "$domain";
+import { Location } from "$domain/enums";
+import { HALF_PI, LOCATION_ANGLES, PI, TWO_PI } from "./MathConstants.js";
 
 /**
  * Normalize angle to positive range [0, 2π)

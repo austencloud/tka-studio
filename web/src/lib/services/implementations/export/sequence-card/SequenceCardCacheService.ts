@@ -5,10 +5,7 @@
  * Single responsibility: Cache storage and retrieval.
  */
 
-import type {
-  ExportOptions,
-  SequenceData,
-} from "$lib/domain/core";
+import type { ExportOptions, SequenceData } from "$domain";
 import { injectable } from "inversify";
 import type { ISequenceCardCacheService } from "../../../contracts/sequence-card-export-interfaces";
 

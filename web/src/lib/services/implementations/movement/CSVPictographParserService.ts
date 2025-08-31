@@ -5,11 +5,12 @@
  * Uses the correct position mapping based on hand location combinations.
  */
 
-import { Letter } from "$lib/domain/core/Letter";
-import { createMotionData } from "$lib/domain/core/pictograph/MotionData";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import { createPictographData } from "$lib/domain/core/pictograph/PictographData";
-import { GridPosition, MotionColor } from "$lib/domain/enums";
+import { GridPosition } from "$domain";
+import { MotionColor } from "$domain/enums";
+import { Letter } from "$domain/core/Letter";
+import { createMotionData } from "$domain/core/pictograph/MotionData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
+import { createPictographData } from "$domain/core/pictograph/PictographData";
 import { inject, injectable } from "inversify";
 import type { IPositionMapper } from "../../contracts/positioning-interfaces";
 import { TYPES } from "../../inversify/types";

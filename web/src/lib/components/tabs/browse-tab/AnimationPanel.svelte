@@ -5,13 +5,13 @@ Refactored into smaller sub-components for better maintainability.
 Handles data loading, animation engine, and state management.
 -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
+  import type { SequenceData } from "$domain";
   import type { PropState } from "$lib/components/tabs/browse-tab/animator";
   import { AnimatorCanvas } from "$lib/components/tabs/browse-tab/animator";
-  import { resolve, TYPES } from "$lib/services/inversify/container";
   import type { ISequenceService } from "$lib/services/contracts/sequence-interfaces";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
 
-  import type { ISequenceAnimationEngine } from "$lib/services/contracts/application-interfaces";
+  import type { ISequenceAnimationEngine } from "$lib/services/contracts/animation";
   import type { PanelStateManager } from "$lib/state/panel-state.svelte";
   import { onDestroy } from "svelte";
   // Sub-components

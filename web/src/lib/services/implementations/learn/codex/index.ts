@@ -12,18 +12,17 @@ export type {
   LetterCategory,
   LetterMapping,
   LetterRow,
-  MotionType,
-} from "$lib/domain/learn/codex/types";
+} from "$domain/learn/codex/types";
 
 // Repositories
 export {
   LetterMappingRepository,
   type ILetterMappingRepository,
-} from "$lib/domain/learn/codex/LetterMappingRepository";
+} from "$domain/learn/codex/LetterMappingRepository";
 export {
   LessonRepository,
   type ILessonRepository,
-} from "$lib/domain/learn/LessonRepository";
+} from "$domain/learn/LessonRepository";
 
 // Services
 // TODO: Re-enable when PictographQueryService is implemented
@@ -34,11 +33,10 @@ export {
 export {
   PictographOperationsService,
   type IPictographOperationsService,
-  type PictographOperation,
+  type PictographTransformOperation,
 } from "./PictographOperationsService";
 
 // Main service
-export type { ICodexService } from "$lib/services/contracts/application-interfaces";
 export { CodexService } from "./CodexService";
 
 // Migration helper

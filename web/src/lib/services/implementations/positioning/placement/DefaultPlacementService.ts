@@ -5,8 +5,8 @@
  * Mirrors the exact functionality from desktop DefaultPlacementService.
  */
 
-import type { GridMode } from "$lib/domain/core";
-import { MotionType } from "$lib/domain/enums"; // ✅ Import from centralized enums
+import type { GridMode } from "$domain";
+import { MotionType } from "$domain/enums"; // ✅ Import from centralized enums
 import { injectable } from "inversify";
 import { ArrowPlacementService } from "../ArrowPlacementService";
 

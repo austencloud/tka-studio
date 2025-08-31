@@ -5,7 +5,7 @@ A clean, simple toggle for switching between diamond and box grid modes.
 Replaces the overcomplicated GridModeSelector with just essential functionality.
 -->
 <script lang="ts">
-  import { GridMode } from "$lib/domain";
+  import { GridMode } from "$domain";
   import type { MotionTesterState } from "$lib/state/motion-tester/motion-tester-state.svelte";
 
   interface Props {

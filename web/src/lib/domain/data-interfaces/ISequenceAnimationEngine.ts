@@ -5,8 +5,8 @@
  * Manages prop states and animation calculations.
  */
 
+import type { SequenceData } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState";
-import type { SequenceData } from "$lib/domain";
 
 export interface ISequenceAnimationEngine {
   initializeWithDomainData(sequenceData: SequenceData): boolean;

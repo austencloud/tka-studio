@@ -5,11 +5,7 @@
  * following the microservices architecture pattern.
  */
 
-import type {
-  FilterType,
-  FilterValue,
-  SortMethod,
-} from "$lib/domain/core";
+import type { FilterType, FilterValue } from "$domain";
 import {
   safeSessionStorageGet,
   safeSessionStorageRemove,
@@ -27,15 +23,6 @@ export interface FilterState {
   value: FilterValue;
   appliedAt: Date;
 }
-
-// Use the BrowseState from the interface instead of defining our own
-// export interface BrowseState {
-//   currentFilter: FilterState | null;
-//   sortMethod: SortMethod;
-//   navigationMode: "filter_selection" | "sequence_browser";
-//   searchQuery: string;
-//   lastUpdated: Date;
-// }
 
 export interface IFilterPersistenceService {
   /** Save current browse state */
@@ -220,76 +207,46 @@ export class FilterPersistenceService implements IFilterPersistenceService {
 
   async getDefaultBrowseState(): Promise<BrowseState> {
     return {
-      displayState: {
-        currentView: "filter_selection",
-        selectedSequence: null,
-        isSequenceDetailOpen: false,
-      },
-      loadingState: {
-        isLoading: false,
-        hasError: false,
-        errorMessage: null,
-      },
-      filterState: {
-        activeFilters: {
-          starting_letter: "",
-          contains_letters: "",
-          length: "",
-          difficulty: "",
-          startPosition: "",
-          author: "",
-          gridMode: "",
-          all_sequences: "",
-          favorites: "",
-          recent: "",
-        },
-        sortMethod: "alphabetical" as SortMethod,
-        searchQuery: "",
-      },
+      filterType: null,
+      filterValues: null,
+      selectedSequence: null,
+      selectedVariation: null,
+      navigationMode: "filter_selector" as any, // NavigationMode.FILTER_SELECTION
+      sortMethod: SortMethodEnum.ALPHABETICAL,
     };
   }
 
   // Additional methods required by browse-interfaces.ts
-  async saveFilterState(state: BrowseFilterState): Promise<void> {
+  async saveFilterState(): Promise<void> {
     // Create a BrowseState with the filter state
     const browseState: BrowseState = {
-      displayState: {
-        currentView: "filter_selection",
-        selectedSequence: null,
-        isSequenceDetailOpen: false,
-      },
-      loadingState: {
-        isLoading: false,
-        hasError: false,
-        errorMessage: null,
-      },
-      filterState: state,
+      filterType: null,
+      filterValues: null,
+      selectedSequence: null,
+      selectedVariation: null,
+      navigationMode: "filter_selector" as any,
+      sortMethod: SortMethodEnum.ALPHABETICAL,
     };
     await this.saveBrowseState(browseState);
   }
 
   async loadFilterState(): Promise<BrowseFilterState> {
-    // Use the existing loadBrowseState method
-    const browseState = await this.loadBrowseState();
-
-    // Return the filter state or a default one with proper FilterType keys
-    return (
-      browseState?.filterState || {
-        activeFilters: {
-          starting_letter: null,
-          contains_letters: null,
-          length: null,
-          difficulty: null,
-          startPosition: null,
-          author: null,
-          gridMode: null,
-          all_sequences: null,
-          favorites: null,
-          recent: null,
-        },
-        sortMethod: SortMethodEnum.ALPHABETICAL,
-        searchQuery: "",
-      }
-    );
+    // Return a default filter state since BrowseState doesn't have filterState property
+    return {
+      activeFilters: {
+        starting_letter: null,
+        contains_letters: null,
+        length: null,
+        difficulty: null,
+        startPosition: null,
+        author: null,
+        gridMode: null,
+        all_sequences: null,
+        favorites: null,
+        recent: null,
+      },
+      sortMethod: SortMethodEnum.ALPHABETICAL,
+      searchQuery: "",
+    };
   }
 }

@@ -6,10 +6,10 @@ This component is focused solely on rendering the SVG elements
 and leaves state management to the parent component.
 -->
 <script lang="ts">
-  import type { MotionColor, MotionData, PictographData } from "$lib/domain";
-  import { GridMode } from "$lib/domain/enums";
-  import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { MotionColor, MotionData, PictographData } from "$domain";
+  import { GridMode } from "$domain";
   import type { IGridModeDeriver } from "$lib/services/contracts/positioning-interfaces";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   // ✅ REMOVED: Beta calculation imports - now handled in PropPlacementService
 
   import Arrow from "./components/ArrowSvg.svelte";

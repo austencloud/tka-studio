@@ -5,13 +5,13 @@
  * pro, anti, static, dash, and float motions.
  */
 
-import { RotationDirection, Orientation } from "$lib/domain/enums";
-import { PI, TWO_PI } from "./MathConstants.js";
+import { Orientation, RotationDirection } from "$domain";
 import {
+  mapOrientationToAngle,
   normalizeAnglePositive,
   normalizeAngleSigned,
-  mapOrientationToAngle,
 } from "./AngleCalculationService.js";
+import { PI, TWO_PI } from "./MathConstants.js";
 
 /**
  * Calculate Pro Isolation staff angle using centralized enums

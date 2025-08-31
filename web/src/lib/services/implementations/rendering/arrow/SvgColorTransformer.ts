@@ -5,7 +5,7 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import { MotionColor } from "$lib/domain/enums";
+import { MotionColor } from "$domain/enums";
 import type { ISvgColorTransformer } from "$lib/services/contracts/pictograph-interfaces";
 
 export class SvgColorTransformer implements ISvgColorTransformer {

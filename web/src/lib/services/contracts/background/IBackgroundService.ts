@@ -6,10 +6,10 @@
  */
 
 import type {
+  BackgroundSystem,
   BackgroundType,
   QualityLevel,
-  BackgroundSystem,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface IBackgroundService {
   /**
@@ -19,8 +19,4 @@ export interface IBackgroundService {
     type: BackgroundType,
     quality: QualityLevel
   ): Promise<BackgroundSystem>;
-
-
-
-
 }

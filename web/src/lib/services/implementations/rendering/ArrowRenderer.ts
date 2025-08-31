@@ -5,9 +5,8 @@
  *
  */
 
-import type { MotionData } from "$lib/domain";
-import type { ArrowPlacementData } from "$lib/domain/core/pictograph/ArrowPlacementData";
-import { MotionColor } from "$lib/domain/enums";
+import type { ArrowPlacementData, MotionData } from "$domain";
+import { MotionColor } from "$domain/enums";
 import { inject, injectable } from "inversify";
 import type { ISvgConfiguration } from "./SvgConfiguration";
 
@@ -128,7 +127,21 @@ export class ArrowRenderer implements IArrowRenderer {
     viewBox: { width: number; height: number };
     center: { x: number; y: number };
   } {
-    return this.svgParser.parseArrowSvg(svgText);
+    const parsed = this.svgParser.parseArrowSvg(svgText);
+
+    // Convert string viewBox to object format
+    let viewBox = { width: 100, height: 100 };
+    if (typeof parsed.viewBox === "string") {
+      const [width, height] = parsed.viewBox.split(" ").map(Number);
+      viewBox = { width: width || 100, height: height || 100 };
+    } else if (parsed.viewBox) {
+      viewBox = parsed.viewBox;
+    }
+
+    return {
+      viewBox,
+      center: parsed.center || { x: 50, y: 50 },
+    };
   }
 
   /**
@@ -157,10 +170,19 @@ export class ArrowRenderer implements IArrowRenderer {
     );
 
     // Convert ArrowSvgData format to the expected return format
+    // Handle viewBox conversion from string to object
+    let viewBox = { width: 100, height: 100 };
+    if (typeof svgData.viewBox === "string") {
+      const [width, height] = svgData.viewBox.split(" ").map(Number);
+      viewBox = { width: width || 100, height: height || 100 };
+    } else if (svgData.viewBox) {
+      viewBox = svgData.viewBox;
+    }
+
     return {
-      imageSrc: svgData.imageSrc,
-      viewBox: svgData.viewBox,
-      center: svgData.center,
+      imageSrc: svgData.imageSrc || "",
+      viewBox,
+      center: svgData.center || { x: 50, y: 50 },
     };
   }
 }

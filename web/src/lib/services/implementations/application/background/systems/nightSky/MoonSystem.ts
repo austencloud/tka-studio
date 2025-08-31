@@ -5,7 +5,7 @@ import type {
   Moon,
   Dimensions,
   QualityLevel,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface MoonConfig {
   radiusPercent: number;

@@ -10,22 +10,21 @@
 /**
  * Main browse service for sequence discovery and filtering
  */
+
 import type {
+  BrowseDeleteConfirmationData,
+  BrowseDeleteResult,
   BrowseState,
-  DeleteConfirmationData,
-  DeleteResult,
   FilterState,
+  FilterType,
+  FilterValue,
   NavigationItem,
   NavigationSection,
   SectionConfiguration,
+  SequenceData,
   SequenceSection,
-} from "$lib/domain/data-interfaces/browse-interfaces-data";
-import type {
-  FilterType,
-  FilterValue,
   SortMethod,
-} from "$lib/domain/core";
-import type { SequenceData } from "$lib/domain/core";
+} from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -70,11 +69,11 @@ export interface IDeleteService {
   prepareDeleteConfirmation(
     sequence: SequenceData,
     allSequences: SequenceData[]
-  ): Promise<DeleteConfirmationData>;
+  ): Promise<BrowseDeleteConfirmationData>;
   deleteSequence(
     sequence: SequenceData,
     allSequences: SequenceData[]
-  ): Promise<DeleteResult>;
+  ): Promise<BrowseDeleteResult>;
   fixVariationNumbers(
     deletedSequence: SequenceData,
     allSequences: SequenceData[]
@@ -152,18 +151,12 @@ export interface ISectionService {
   ): SectionConfiguration;
 }
 
-// ============================================================================
-// RE-EXPORT TYPES FOR EXTERNAL USE
-// ============================================================================
-
-// Re-export types that other modules need to import
+// Export types for external usage
 export type {
   BrowseState,
-  DeleteConfirmationData,
-  DeleteResult,
   FilterState,
   NavigationItem,
   NavigationSection,
   SectionConfiguration,
   SequenceSection,
-} from "$lib/domain/data-interfaces/browse-interfaces-data";
+} from "$domain/browse";

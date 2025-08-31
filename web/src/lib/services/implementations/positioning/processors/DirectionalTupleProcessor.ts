@@ -11,8 +11,8 @@
  * Note: Uses ArrowQuadrantCalculator for quadrant index calculations to avoid duplication.
  */
 
-import type { MotionData } from "$lib/domain";
-import { Location } from "$lib/domain";
+import type { MotionData } from "$domain";
+import { Location } from "$domain/enums";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 import { ArrowQuadrantCalculator } from "../orchestration/ArrowQuadrantCalculator";

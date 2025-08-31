@@ -5,15 +5,15 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import type { PictographData } from "$lib/domain";
-import { GridMode } from "$lib/domain";
+import type { PictographData } from "$domain";
+import { GridMode } from "$domain";
 import type {
   ICsvLoader,
   ICSVParser,
   IMotionQueryHandler,
-  ParsedCsvRow,
 } from "$lib/services/contracts/data-interfaces";
 import { inject, injectable } from "inversify";
+import type { ParsedCsvRow } from "../../../domain/core/csv-types";
 import { TYPES } from "../../inversify/types";
 import type {
   CSVRow,
@@ -47,27 +47,17 @@ export class MotionQueryHandler implements IMotionQueryHandler {
 
     try {
       // Load raw CSV data
-      const csvData = await this.csvLoaderService.loadCSVDataSet();
+      const csvData = await this.csvLoaderService.loadCsvData();
 
       // Parse CSV data using shared service
       const diamondParseResult = this.CSVParser.parseCSV(
-        csvData.data?.diamondData || ""
+        csvData.diamondData || ""
       );
-      const boxParseResult = this.CSVParser.parseCSV(
-        csvData.data?.boxData || ""
-      );
+      const boxParseResult = this.CSVParser.parseCSV(csvData.boxData || "");
 
       this.parsedData = {
-        [GridMode.DIAMOND]: diamondParseResult.rows.map((row) => ({
-          data: row,
-          errors: [],
-          isValid: true,
-        })),
-        [GridMode.BOX]: boxParseResult.rows.map((row) => ({
-          data: row,
-          errors: [],
-          isValid: true,
-        })),
+        [GridMode.DIAMOND]: diamondParseResult.rows,
+        [GridMode.BOX]: boxParseResult.rows,
         // SKEWED mode doesn't have separate data - it uses both diamond and box
       };
 
@@ -79,6 +69,108 @@ export class MotionQueryHandler implements IMotionQueryHandler {
         `Failed to load CSV data: ${error instanceof Error ? error.message : "Unknown error"}`
       );
     }
+  }
+
+  /**
+   * Query motions based on criteria
+   */
+  async queryMotions(criteria: Record<string, any>): Promise<PictographData[]> {
+    await this.ensureInitialized();
+
+    if (!this.parsedData) {
+      console.error("❌ No parsed CSV data available");
+      return [];
+    }
+
+    // Simple implementation - filter based on criteria
+    const gridMode = criteria.gridMode || GridMode.DIAMOND;
+    const actualGridMode =
+      gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+    const csvRows =
+      this.parsedData[actualGridMode as keyof typeof this.parsedData] || [];
+    const pictographs: PictographData[] = [];
+
+    for (const row of csvRows.slice(0, 50)) {
+      // Limit for performance
+      const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+        row.data as unknown as CSVRow
+      );
+      if (pictograph) {
+        pictographs.push(pictograph);
+      }
+    }
+
+    return pictographs;
+  }
+
+  /**
+   * Get motion data by ID
+   */
+  async getMotionById(motionId: string): Promise<PictographData | null> {
+    await this.ensureInitialized();
+
+    if (!this.parsedData) {
+      console.error("❌ No parsed CSV data available");
+      return null;
+    }
+
+    // Search through all grid modes for the motion ID
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const csvRows =
+        this.parsedData[gridMode as keyof typeof this.parsedData] || [];
+      for (const row of csvRows) {
+        const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+          row.data as unknown as CSVRow
+        );
+        if (pictograph && pictograph.id === motionId) {
+          return pictograph;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * Search motions by pattern
+   */
+  async searchMotions(pattern: string): Promise<PictographData[]> {
+    await this.ensureInitialized();
+
+    if (!this.parsedData) {
+      console.error("❌ No parsed CSV data available");
+      return [];
+    }
+
+    const pictographs: PictographData[] = [];
+    const lowerPattern = pattern.toLowerCase();
+
+    // Search through all grid modes
+    for (const gridMode of [GridMode.DIAMOND, GridMode.BOX]) {
+      const csvRows =
+        this.parsedData[gridMode as keyof typeof this.parsedData] || [];
+      for (const row of csvRows.slice(0, 100)) {
+        // Limit for performance
+        const data = row.data as any;
+        // Search in letter, motion types, and locations
+        if (
+          data.letter?.toLowerCase().includes(lowerPattern) ||
+          data.blueMotionType?.toLowerCase().includes(lowerPattern) ||
+          data.redMotionType?.toLowerCase().includes(lowerPattern) ||
+          data.blueStartLocation?.toLowerCase().includes(lowerPattern) ||
+          data.redStartLocation?.toLowerCase().includes(lowerPattern)
+        ) {
+          const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
+            data as CSVRow
+          );
+          if (pictograph) {
+            pictographs.push(pictograph);
+          }
+        }
+      }
+    }
+
+    return pictographs;
   }
 
   /**
@@ -102,7 +194,7 @@ export class MotionQueryHandler implements IMotionQueryHandler {
     for (const row of csvRows.slice(0, 20)) {
       // Limit to first 20 for performance
       const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
-        row as CSVRow
+        row.data as unknown as CSVRow
       );
       if (pictograph) {
         pictographs.push(pictograph);

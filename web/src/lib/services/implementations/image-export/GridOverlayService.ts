@@ -8,7 +8,7 @@
  * Critical: Must match desktop overlay opacity and positioning exactly.
  */
 
-import { GridMode } from "$lib/domain/enums";
+import { GridMode } from "$domain";
 import { injectable } from "inversify";
 import type { IGridOverlayService } from "../../contracts/image-export-interfaces";
 

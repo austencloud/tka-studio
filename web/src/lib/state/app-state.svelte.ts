@@ -7,13 +7,13 @@
  * This replaces the 460-line monolith with a clean, focused architecture.
  */
 
+import type { AppSettings } from "$domain";
 import { applicationStateService } from "./services/ApplicationStateService.svelte";
-import { settingsService } from "./services/SettingsService.svelte";
-import { tabStateService } from "./services/TabStateService.svelte";
 import { initializationService } from "./services/InitializationService.svelte";
 import { performanceMetricsService } from "./services/PerformanceMetricsService.svelte";
-import type { AppSettings } from "$services/contracts/application-interfaces";
+import { settingsService } from "./services/SettingsService.svelte";
 import type { TabId, Theme } from "./services/state-service-interfaces";
+import { tabStateService } from "./services/TabStateService.svelte";
 
 // ============================================================================
 // CLEAN API - Delegates to focused services

@@ -3,8 +3,8 @@ Grid Mode Selector - Svelte Version
 A compact control using segmented control for selecting between Diamond and Box grid modes.
 -->
 <script lang="ts">
+  import { GridMode } from "$domain";
   import IOSToggle from "$lib/components/ui/IOSToggle.svelte";
-  import { GridMode } from "$lib/domain";
 
   interface Props {
     initialMode?: GridMode;

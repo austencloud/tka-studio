@@ -4,10 +4,18 @@
  * Interfaces for responsive UI layout calculations, grid configuration,
  * and option picker layout management.
  */
+
+// Import missing types
+import type {
+  GridConfiguration,
+  LayoutCalculationParams,
+  LayoutCalculationResult,
+} from "$domain";
+import type { ResponsiveLayoutConfig } from "$domain/option-picker/OptionPickerTypes";
+
 // ============================================================================
 // LAYOUT TYPES
 // ============================================================================
-
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

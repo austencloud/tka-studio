@@ -5,10 +5,8 @@
  * This service orchestrates calls to other services but contains no reactive state.
  */
 
-import type { SequenceData } from "$lib/domain";
-import { injectable, inject } from "inversify";
-import { GridMode } from "$lib/domain";
-import { TYPES } from "$lib/services/inversify/types";
+import type { SequenceData } from "$domain";
+import { GridMode } from "$domain";
 import type {
   BeatClickResult,
   BeatEditResult,
@@ -18,6 +16,8 @@ import type {
   SequenceCreationResult,
   WorkbenchMode,
 } from "$lib/services/contracts/workbench-interfaces";
+import { TYPES } from "$lib/services/inversify/types";
+import { inject, injectable } from "inversify";
 
 @injectable()
 export class WorkbenchCoordinationService

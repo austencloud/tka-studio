@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
-  import type { FilterType, FilterValue } from "$lib/domain/browse";
-  import { SortMethod } from "$lib/domain/browse";
-  import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { SequenceData } from "$domain";
+  import type { FilterType, FilterValue } from "$domain/browse";
+  import { SortMethod } from "$domain/browse";
   import type { IThumbnailService } from "$lib/services/contracts/browse-interfaces";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { getBrowseTabStateManager } from "$lib/state/browse-tab-state-manager.svelte";
   import { onMount } from "svelte";
   import SequenceBrowserControls from "./SequenceBrowserControls.svelte";

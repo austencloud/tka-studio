@@ -5,10 +5,11 @@
  * This service reverse-engineers the letter from motion parameters.
  */
 
-import { Letter } from "$lib/domain/core/Letter";
-import type { MotionData } from "$lib/domain/core/pictograph/MotionData";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import { GridMode, MotionType } from "$lib/domain/enums";
+import { GridMode } from "$domain";
+import { MotionType } from "$domain/enums";
+import { Letter } from "$domain/core/Letter";
+import type { MotionData } from "$domain/core/pictograph/MotionData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import { injectable } from "inversify";
 import type {
   ILetterDeriver,

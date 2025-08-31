@@ -4,8 +4,8 @@
  * Tests that the start position picker correctly detects beta positions
  */
 
+import { GridMode } from "$domain";
 import { StartPositionService } from "$lib/services/implementations/domain/StartPositionService";
-import { GridMode } from "$lib/domain/enums";
 import { endsWithBeta } from "$lib/utils/betaDetection";
 
 // Test the start position service beta detection

@@ -4,7 +4,7 @@
  * Just extracts the device detection logic without over-engineering
  */
 
-import type { DeviceCapabilities } from "$lib/domain/sequence-card/SequenceCard";
+import type { DeviceCapabilities } from "$domain/sequence-card/SequenceCard";
 import type { ResponsiveSettings } from "$lib/services/contracts/application/IDeviceDetector";
 
 /**

@@ -4,7 +4,7 @@ import type {
   AccessibilitySettings,
   Dimensions,
   Star,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface ParallaxConfig {
   far: { density: number; drift: number };

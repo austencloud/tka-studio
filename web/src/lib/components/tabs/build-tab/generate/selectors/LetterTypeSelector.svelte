@@ -3,7 +3,7 @@ Letter Type Selector - Svelte Version
 Simple horizontal row of numbered buttons for letter types in freeform mode.
 -->
 <script lang="ts">
-  import { LetterType } from "$lib/domain";
+  import { LetterType } from "$domain";
 
   interface Props {
     initialValue?: Set<LetterType>;

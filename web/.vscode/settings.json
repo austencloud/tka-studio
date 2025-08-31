@@ -18,5 +18,12 @@
     "other": true,
     "comments": false,
     "strings": false
+  },
+  "typescript.preferences.exclude": ["**/archive/**", "**/node_modules/**"],
+  "files.exclude": {
+    "**/archive/**": true
+  },
+  "search.exclude": {
+    "**/archive/**": true
   }
 }

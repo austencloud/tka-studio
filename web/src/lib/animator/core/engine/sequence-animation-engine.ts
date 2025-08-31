@@ -5,13 +5,13 @@
  * The 304-line monolith has been decomposed into focused services.
  */
 
+import type { SequenceData } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
-import type { SequenceData } from "$lib/domain";
 import type {
   ISequenceAnimationEngine,
   ISequenceAnimationOrchestrator,
-  SequenceMetadata,
   PropStates,
+  SequenceMetadata,
 } from "$lib/services/contracts/animation";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";

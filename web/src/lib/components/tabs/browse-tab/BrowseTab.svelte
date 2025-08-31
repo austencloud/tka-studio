@@ -8,9 +8,8 @@ Integrates panel management service with runes for:
 - Reactive UI updates
 -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
-  import { NavigationMode } from "$lib/domain/browse";
-  import { resolve, TYPES } from "$lib/services/inversify/container";
+  import type { SequenceData } from "$domain";
+  import { NavigationMode } from "$domain/browse";
   import type {
     IBrowseService,
     IDeleteService,
@@ -22,6 +21,7 @@ Integrates panel management service with runes for:
     IThumbnailService,
   } from "$lib/services/contracts/browse-interfaces";
   import type { IPanelManagementService } from "$lib/services/contracts/panel-interfaces";
+  import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createBrowseState } from "$lib/state/browse-state-factory.svelte";
   import {
     BROWSE_TAB_PANEL_CONFIGS,

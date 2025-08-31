@@ -3,7 +3,7 @@
  * Embeds SVG grid data directly - no file loading needed
  */
 
-import { GridMode } from "$lib/domain/enums";
+import { GridMode } from "$domain";
 import { injectable } from "inversify";
 import type {
   CombinedGridOptions,

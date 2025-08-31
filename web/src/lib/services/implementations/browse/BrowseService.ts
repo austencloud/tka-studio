@@ -5,18 +5,14 @@
  * Ported and adapted from desktop app's BrowseService.
  */
 
-import { GridMode, GridPositionGroup, PropType } from "$lib/domain";
+import { GridMode, GridPositionGroup, PropType } from "$domain";
+import type { FilterType, FilterValue, SortMethod } from "$domain/browse";
 import {
   FilterType as FilterTypeEnum,
   SortMethod as SortMethodEnum,
-} from "$lib/domain/browse";
-import type { SequenceData } from "$lib/domain/core/SequenceData";
-import { createSequenceData } from "$lib/domain/core/SequenceData";
-import type {
-  FilterType,
-  FilterValue,
-  SortMethod,
-} from "$lib/domain/core";
+} from "$domain/browse";
+import type { SequenceData } from "$domain/core/SequenceData";
+import { createSequenceData } from "$domain/core/SequenceData";
 import type { IBrowseService } from "$lib/services/contracts/browse-interfaces";
 import { injectable } from "inversify";
 

@@ -10,11 +10,11 @@
 /**
  * Export settings management service
  */
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   ExportValidationResult,
   MemoryEstimate,
-} from "$lib/domain/data-interfaces/image-export-utility-interfaces-data";
+} from "$domain/data-interfaces/image-export-utility-interfaces-data";
 import type { TKAImageExportOptions } from "./image-export-core-interfaces";
 
 // ============================================================================
@@ -114,4 +114,4 @@ export interface IImagePreviewGenerator {
 export type {
   ExportValidationResult,
   MemoryEstimate,
-} from "$lib/domain/data-interfaces/image-export-utility-interfaces-data";
+} from "$domain/data-interfaces/image-export-utility-interfaces-data";

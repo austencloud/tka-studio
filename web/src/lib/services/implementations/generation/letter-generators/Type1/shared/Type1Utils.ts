@@ -5,7 +5,7 @@
  * Type 1 letters only use PRO/ANTI motion types with matching rotations.
  */
 
-import { RotationDirection } from "$lib/domain/enums";
+import { RotationDirection } from "$domain";
 import type { Type1LetterConfig } from "./Type1Configurations";
 
 /**

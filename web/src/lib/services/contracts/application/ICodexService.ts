@@ -5,7 +5,7 @@
  * Handles loading, searching, and transforming pictograph data.
  */
 
-import type { PictographData } from "$lib/domain";
+import type { PictographData } from "$domain";
 
 export interface ICodexService {
   /**

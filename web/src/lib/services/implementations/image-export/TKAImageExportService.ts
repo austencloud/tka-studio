@@ -9,7 +9,7 @@
  * Equivalent to desktop ImageExportManager.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import { inject, injectable } from "inversify";
 import type {
   IDimensionCalculationService,

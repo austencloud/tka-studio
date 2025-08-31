@@ -1,9 +1,9 @@
 // src/lib/services/implementations/background/systems/core/SnowflakeSystem.ts
-import { SnowfallConfig } from "$lib/domain/background/configs/config";
 import type {
   Dimensions,
   Snowflake,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
+import { SnowfallConfig } from "$domain/core/ui/backgrounds/configs/config";
 
 export const createSnowflakeSystem = () => {
   const config = SnowfallConfig;

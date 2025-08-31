@@ -7,8 +7,14 @@
 // ============================================================================
 // SHARED TYPES (imported from core-types to avoid duplication)
 // ============================================================================
-import type { GridData } from "$lib/domain/core";
-import type { GridMode } from "../../domain";
+import type {
+  BeatData,
+  GridData,
+  GridMode,
+  MotionData,
+  PictographData,
+} from "$domain";
+import type { ArrowPlacementData } from "$domain/core/pictograph/ArrowPlacementData";
 import type { GridPointData as RawGridData } from "../../domain/core/pictograph/gridCoordinates.js";
 import { MotionColor } from "../../domain/enums";
 import type { ArrowPosition } from "../implementations/positioning/types.js";
@@ -171,10 +177,14 @@ export interface ArrowSvgData {
   id: string;
   svgContent: string;
   dimensions: SVGDimensions;
+  imageSrc?: string;
+  viewBox?: string;
+  center?: { x: number; y: number };
 }
 
 export interface SVGDimensions {
   width: number;
   height: number;
   viewBox?: string;
+  center?: { x: number; y: number };
 }

@@ -5,22 +5,26 @@
  * Handles line splitting, header extraction, and row parsing with error handling.
  */
 
-import type { CSVParseResult, ParsedCsvRow } from "$lib/domain";
 import type { ICSVParser } from "$lib/services/contracts/data/ICsvParser";
 import { injectable } from "inversify";
+import type {
+  CsvParseResult,
+  ParsedCsvRow,
+} from "../../contracts/data-interfaces";
 
 @injectable()
 export class CSVParser implements ICSVParser {
   /**
    * Parse CSV text into structured result with detailed error reporting
    */
-  parseCSV(csvText: string): CSVParseResult {
-    const result: CSVParseResult = {
+  parseCSV(csvText: string): CsvParseResult {
+    const result: CsvParseResult = {
       headers: [],
       rows: [],
       totalRows: 0,
       successfulRows: 0,
       errors: [],
+      isValid: true,
     };
 
     try {
@@ -29,6 +33,7 @@ export class CSVParser implements ICSVParser {
       if (lines.length < 2) {
         result.errors.push({
           rowIndex: 0,
+          lineNumber: 0,
           error: "CSV must have at least header and one data row",
           rawRow: csvText,
         });
@@ -64,6 +69,7 @@ export class CSVParser implements ICSVParser {
           } else {
             result.errors.push({
               rowIndex: i,
+              lineNumber: i,
               error: "Row validation failed - missing required fields",
               rawRow: lines[i],
             });
@@ -71,6 +77,7 @@ export class CSVParser implements ICSVParser {
         } catch (error) {
           result.errors.push({
             rowIndex: i,
+            lineNumber: i,
             error:
               error instanceof Error ? error.message : "Unknown parsing error",
             rawRow: lines[i],
@@ -82,6 +89,7 @@ export class CSVParser implements ICSVParser {
     } catch (error) {
       result.errors.push({
         rowIndex: 0,
+        lineNumber: 0,
         error: `CSV parsing failed: ${error instanceof Error ? error.message : "Unknown error"}`,
         rawRow: csvText.substring(0, 100) + "...",
       });
@@ -99,7 +107,7 @@ export class CSVParser implements ICSVParser {
       console.warn(
         `⚠️ CSV parsing had ${result.errors.length} errors out of ${result.totalRows} rows`
       );
-      result.errors.forEach((error) => {
+      result.errors.forEach((error: any) => {
         console.warn(`⚠️ Row ${error.rowIndex}: ${error.error}`);
       });
     }

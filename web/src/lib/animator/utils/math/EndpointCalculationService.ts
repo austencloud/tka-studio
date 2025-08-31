@@ -5,18 +5,21 @@
  * for different motion types.
  */
 
-import { MotionType, Orientation, RotationDirection } from "$lib/domain/enums";
-import type { MotionData } from "$lib/domain";
-import { mapPositionToAngle } from "./AngleCalculationService.js";
+import type { MotionData } from "$domain";
+import { Orientation, RotationDirection } from "$domain";
+import { MotionType } from "$domain/enums";
 import {
-  calculateProTargetAngle,
-  calculateProIsolationStaffAngle,
+  mapOrientationToAngle,
+  mapPositionToAngle,
+} from "./AngleCalculationService.js";
+import {
   calculateAntispinTargetAngle,
-  calculateStaticStaffAngle,
   calculateDashTargetAngle,
   calculateFloatStaffAngle,
+  calculateProIsolationStaffAngle,
+  calculateProTargetAngle,
+  calculateStaticStaffAngle,
 } from "./MotionCalculationService.js";
-import { mapOrientationToAngle } from "./AngleCalculationService.js";
 
 // ✅ ELIMINATED: StepEndpoints and StepDefinition - pointless reshuffling!
 // Work directly with MotionData and return simple objects

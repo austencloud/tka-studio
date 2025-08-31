@@ -6,7 +6,7 @@ import type {
   EasterEggState,
   Star,
   QualityLevel,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface CometConfig {
   size: number;

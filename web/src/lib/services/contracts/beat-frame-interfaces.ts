@@ -7,13 +7,13 @@
 // ============================================================================
 // CONFIGURATION TYPES
 // ============================================================================
-import type { BeatData } from "$lib/domain";
+import type { BeatData } from "$domain";
 import type {
   BeatFrameConfig,
   ContainerDimensions,
   LayoutInfo,
   Position,
-} from "$lib/domain/build/workbench/beat-frame";
+} from "$domain/build/workbench/beat-frame";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -96,13 +96,3 @@ export interface IBeatFrameStateService {
   isHovered(index: number): boolean;
   isDragged(index: number): boolean;
 }
-
-// ============================================================================
-// RE-EXPORT DOMAIN TYPES
-// ============================================================================
-export type {
-  BeatFrameConfig,
-  ContainerDimensions,
-  LayoutInfo,
-  Position,
-} from "$lib/domain/build/workbench/beat-frame";

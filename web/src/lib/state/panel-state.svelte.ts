@@ -5,12 +5,12 @@
  * Follows TKA architecture: services handle logic, runes handle reactivity.
  */
 
+import { ResizeDirection } from "$lib/domain/data-interfaces/panel-interfaces-data";
 import type {
   IPanelManagementService,
   PanelState,
   ResizeOperation,
 } from "$lib/services/contracts/panel-interfaces";
-import { ResizeDirection } from "$lib/services/contracts/panel-interfaces";
 
 export interface PanelStateManager {
   // Panel state getters (reactive)
@@ -141,7 +141,7 @@ export function createPanelState(
   function startNavigationResize(startX: number): void {
     const operation: ResizeOperation = {
       panelId: "navigation",
-      direction: ResizeDirection.HORIZONTAL,
+      direction: ResizeDirection.RIGHT,
       startPosition: { x: startX, y: 0 },
       startSize: { width: navigationPanel.width, height: 0 },
     };
@@ -152,7 +152,7 @@ export function createPanelState(
   function startAnimationResize(startX: number): void {
     const operation: ResizeOperation = {
       panelId: "animation",
-      direction: ResizeDirection.HORIZONTAL,
+      direction: ResizeDirection.RIGHT,
       startPosition: { x: startX, y: 0 },
       startSize: { width: animationPanel.width, height: 0 },
     };

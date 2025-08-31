@@ -10,8 +10,8 @@
  * ✅ Component-scoped state (not global singleton)
  */
 
-import { GridMode } from "$lib/domain";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import { GridMode } from "$domain";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
 import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
 
@@ -152,3 +152,4 @@ export function createConstructTabState(
 
 // Import required state factories
 import { createStartPositionPickerState } from "./start-position-state.svelte";
+

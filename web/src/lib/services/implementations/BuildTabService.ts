@@ -8,7 +8,7 @@
  * across components, providing a clean separation of concerns.
  */
 
-import type { PictographData } from "$lib/domain/core";
+import type { BeatData, PictographData } from "$domain";
 import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
 import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
 import { inject, injectable } from "inversify";
@@ -18,6 +18,9 @@ import { constructTabEventService } from "./build/BuildTabEventService";
 
 @injectable()
 export class BuildTabService implements IBuildTabService {
+  private currentTab: string = "construct"; // Default tab
+  private tabStates: Map<string, unknown> = new Map();
+
   constructor(
     @inject(TYPES.IStartPositionService)
     private readonly startPositionService: IStartPositionService
@@ -32,9 +35,13 @@ export class BuildTabService implements IBuildTabService {
     try {
       // Business logic: Convert PictographData to BeatData for the service
       const beatData: BeatData = {
+        id: `beat-${Date.now()}`,
         beatNumber: 0,
         pictographData: position,
-        timing: { duration: 1000, delay: 0 },
+        duration: 1000,
+        blueReversal: false,
+        redReversal: false,
+        isBlank: false,
       };
       await this.startPositionService.setStartPosition(beatData);
 
@@ -78,5 +85,43 @@ export class BuildTabService implements IBuildTabService {
       console.error("❌ BuildTabService: Error initializing build tab:", error);
       throw error; // Re-throw to let caller handle UI error states
     }
+  }
+
+  /**
+   * Get the current active tab
+   */
+  getCurrentTab(): string {
+    return this.currentTab;
+  }
+
+  /**
+   * Switch to a different tab
+   */
+  async switchToTab(tabId: string): Promise<void> {
+    try {
+      this.currentTab = tabId;
+      console.log(`✅ BuildTabService: Switched to tab ${tabId}`);
+    } catch (error) {
+      console.error(
+        `❌ BuildTabService: Error switching to tab ${tabId}:`,
+        error
+      );
+      throw error;
+    }
+  }
+
+  /**
+   * Get the state for a specific tab
+   */
+  getTabState(tabId: string): unknown {
+    return this.tabStates.get(tabId) || null;
+  }
+
+  /**
+   * Update the state for a specific tab
+   */
+  updateTabState(tabId: string, state: unknown): void {
+    this.tabStates.set(tabId, state);
+    console.log(`✅ BuildTabService: Updated state for tab ${tabId}`);
   }
 }

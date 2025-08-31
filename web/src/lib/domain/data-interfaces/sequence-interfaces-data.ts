@@ -9,7 +9,7 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
-import type { GridMode, SequenceData } from "$lib/domain/core";
+import type { GridMode, SequenceData } from "$domain";
 
 // ============================================================================
 // DATA CONTRACTS (Domain Models)

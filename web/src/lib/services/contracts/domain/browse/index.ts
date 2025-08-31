@@ -5,12 +5,13 @@
  * This includes navigation, thumbnails, and search functionality.
  */
 
+import type { SequenceData } from "$domain";
 import type {
+  BrowseState,
   FilterType,
   FilterValue,
-  SequenceData,
   SortMethod,
-} from "$lib/domain/core";
+} from "$domain/browse";
 
 // ============================================================================
 // BROWSE SERVICE INTERFACES
@@ -201,11 +202,7 @@ export interface FilterState {
   searchQuery: string;
 }
 
-export interface BrowseState {
-  displayState: BrowseDisplayState;
-  loadingState: BrowseLoadingState;
-  filterState: FilterState;
-}
+// Note: BrowseState moved to browse-state-factory.svelte.ts as the canonical reactive version
 
 export interface NavigationItem {
   id: string;
@@ -236,6 +233,8 @@ export interface SectionConfiguration {
   sortMethod: SortMethod;
   showEmptySections: boolean;
   expandedSections?: Set<string>;
+  sortOrder?: "asc" | "desc";
+  showCounts?: boolean;
 }
 
 export interface SequenceSection {
@@ -244,5 +243,6 @@ export interface SequenceSection {
   count: number;
   sequences: SequenceData[];
   isExpanded: boolean;
+  sortOrder: number;
   metadata?: Record<string, unknown>;
 }

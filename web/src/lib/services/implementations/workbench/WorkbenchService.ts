@@ -1,24 +1,52 @@
 /**
- * Pure Workbench Service Implementation
+
  *
  * Extracted business logic from WorkbenchService.svelte.ts
  * Contains only pure functions with no reactive state.
  */
 
-import type { BeatData, PictographData, SequenceData } from "$lib/domain";
-import { createBeatData, createPictographData, GridMode } from "$lib/domain";
-import { Letter } from "$lib/domain/core/Letter";
+import type {
+  BeatData,
+  PictographData,
+  SequenceData,
+  ValidationResult,
+} from "$domain";
+import { createBeatData, createPictographData, GridMode } from "$domain";
+import { Letter } from "$domain/core/Letter";
 import type {
   BeatEditOperation,
   IWorkbenchService,
   SequenceCreationParams,
-  ValidationResult,
   WorkbenchConfig,
   WorkbenchMode,
 } from "$lib/services/contracts/workbench/IWorkbenchService";
 import { injectable } from "inversify";
 @injectable()
 export class WorkbenchService implements IWorkbenchService {
+  private currentBeat: BeatData | null = null;
+
+  // ============================================================================
+  // REQUIRED INTERFACE METHODS
+  // ============================================================================
+
+  async initializeWorkbench(): Promise<void> {
+    console.log("✅ WorkbenchService: Workbench initialized");
+  }
+
+  getCurrentBeat(): BeatData | null {
+    return this.currentBeat;
+  }
+
+  async updateBeat(beat: BeatData): Promise<void> {
+    this.currentBeat = beat;
+    console.log("✅ WorkbenchService: Beat updated", beat);
+  }
+
+  clearWorkbench(): void {
+    this.currentBeat = null;
+    console.log("✅ WorkbenchService: Workbench cleared");
+  }
+
   // ============================================================================
   // INITIALIZATION
   // ============================================================================
@@ -53,7 +81,7 @@ export class WorkbenchService implements IWorkbenchService {
   // BEAT INTERACTION LOGIC
   // ============================================================================
 
-  shouldSelectBeatOnClick(mode: WorkbenchMode, beatIndex: number): boolean {
+  shouldSelectBeatOnClick(_mode: WorkbenchMode, beatIndex: number): boolean {
     return beatIndex >= 0; // Always select valid beats
   }
 
@@ -148,8 +176,16 @@ export class WorkbenchService implements IWorkbenchService {
 
     return {
       isValid: errors.length === 0,
-      errors,
-      warnings,
+      errors: errors.map((err) => ({
+        message: err,
+        code: "VALIDATION_ERROR",
+        severity: "error" as const,
+      })),
+      warnings: warnings.map((warn) => ({
+        message: warn,
+        code: "VALIDATION_WARNING",
+        severity: "warning" as const,
+      })),
     };
   }
 
@@ -167,12 +203,12 @@ export class WorkbenchService implements IWorkbenchService {
   // CONFIGURATION OPERATIONS
   // ============================================================================
 
-  validateGridModeChange(currentMode: GridMode, newMode: GridMode): boolean {
+  validateGridModeChange(_currentMode: GridMode, newMode: GridMode): boolean {
     // All grid mode changes are valid
     return Object.values(GridMode).includes(newMode);
   }
 
-  validateBeatSizeChange(currentSize: number, newSize: number): boolean {
+  validateBeatSizeChange(_currentSize: number, newSize: number): boolean {
     return newSize >= 50 && newSize <= 300;
   }
 
@@ -258,7 +294,11 @@ export class WorkbenchService implements IWorkbenchService {
 
     return {
       isValid: errors.length === 0,
-      errors,
+      errors: errors.map((err) => ({
+        message: err,
+        code: "VALIDATION_ERROR",
+        severity: "error" as const,
+      })),
       warnings: [],
     };
   }

@@ -45,7 +45,12 @@ export class SvgParser implements ISvgParser {
       // SVG center calculation failed, using default center
     }
 
-    return { viewBox, center };
+    return {
+      width: viewBox.width,
+      height: viewBox.height,
+      viewBox: `${viewBox.width} ${viewBox.height}`,
+      center,
+    };
   }
 
   /**

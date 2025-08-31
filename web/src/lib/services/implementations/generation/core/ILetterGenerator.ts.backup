@@ -5,7 +5,7 @@
  * Provides consistent API for generating movement sets for individual letters.
  */
 
-import type { PictographData } from "../../../../domain";
+import type { PictographData } from "$domain";
 
 export interface ILetterGenerator {
   /**

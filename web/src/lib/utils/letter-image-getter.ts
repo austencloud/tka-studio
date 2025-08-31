@@ -1,4 +1,4 @@
-import { getLetterType, Letter } from "../domain";
+import { getLetterType, Letter } from "$domain";
 
 /**
  * Get the full image path for a letter based on its type

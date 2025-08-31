@@ -5,7 +5,7 @@
  * Extracted from PictographRenderingService.
  */
 
-import type { Letter, PictographData } from "$lib/domain";
+import type { Letter, PictographData } from "$domain";
 import type { ArrowPosition } from "$lib/services/implementations/positioning/types";
 import { getLetterImagePath } from "$lib/utils/letter-image-getter";
 import { inject, injectable } from "inversify";

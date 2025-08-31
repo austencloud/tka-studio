@@ -1,6 +1,6 @@
 <!-- FullscreenSequenceViewer.svelte - Fullscreen sequence viewer with actions -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
+  import type { SequenceData } from "$domain";
   import type { IThumbnailService } from "$services/contracts/browse-interfaces";
   import { fade } from "svelte/transition";
   // Import subcomponents

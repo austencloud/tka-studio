@@ -1,4 +1,4 @@
-import type { CsvDataSet } from "../../../domain/data-interfaces/data-interfaces";
+import type { CsvDataSet } from "../data-interfaces";
 
 export interface ICsvLoader {
   loadCsvData(): Promise<CsvDataSet>;

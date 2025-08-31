@@ -5,11 +5,11 @@
  * No more hardcoded mappings or mixed responsibilities!
  */
 
-import { GridMode, Letter } from "$lib/domain";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import type { ILetterMappingRepository } from "$lib/domain/learn/codex/LetterMappingRepository";
-import type { LetterCategory } from "$lib/domain/learn/codex/types";
-import type { ILessonRepository } from "$lib/domain/learn/LessonRepository";
+import { GridMode, Letter } from "$domain";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
+import type { ILetterMappingRepository } from "$domain/learn/codex/LetterMappingRepository";
+import type { LetterCategory } from "$domain/learn/codex/types";
+import type { ILessonRepository } from "$domain/learn/LessonRepository";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 
@@ -122,7 +122,7 @@ export class CodexService implements ICodexService {
       return [];
     }
 
-    const pictographs = await this.LetterQueryHandler.getAllCodexPictographs(
+    const pictographs = await this.LetterQueryHandler.getPictographsByLetters(
       letters as Letter[],
       GridMode.DIAMOND
     );

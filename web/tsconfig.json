@@ -29,6 +29,7 @@
     ".svelte-kit",
     ".vercel_build_output",
     ".vercel",
+    "archive/**/*",
     "**/*.js"
   ]
 }

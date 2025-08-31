@@ -8,7 +8,7 @@
 import type {
   LessonConfiguration,
   LetterCategory,
-} from "$lib/domain/learn/codex/types";
+} from "$domain/learn/codex/types";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../services/inversify/types";
 import type { ILetterMappingRepository } from "./codex/LetterMappingRepository";

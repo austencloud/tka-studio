@@ -94,9 +94,9 @@ import { TKAImageExportService } from "../implementations/image-export/TKAImageE
 import { BeatFallbackRenderer } from "../implementations/rendering/BeatFallbackRenderer";
 
 // Import navigation services
+import { BrowseSectionService } from "../implementations/navigation/BrowseSectionService";
 import { NavigationService } from "../implementations/navigation/NavigationService";
 import { PanelManagementService } from "../implementations/navigation/PanelManagementService";
-import { SectionService } from "../implementations/navigation/SectionService";
 
 // Import additional persistence services
 import { FilterPersistenceService } from "../implementations/persistence/FilterPersistenceService";
@@ -310,7 +310,7 @@ try {
   // Bind navigation services
   container.bind(TYPES.INavigationService).to(NavigationService);
   container.bind(TYPES.IPanelManagementService).to(PanelManagementService);
-  container.bind(TYPES.ISectionService).to(SectionService);
+  container.bind(TYPES.ISectionService).to(BrowseSectionService);
 
   // Bind additional persistence services
   container.bind(TYPES.IFilterPersistenceService).to(FilterPersistenceService);

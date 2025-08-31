@@ -18,12 +18,10 @@ import type { PictographData } from "./pictograph/PictographData";
 // Core types only - no re-exports to avoid circular dependencies
 
 // ============================================================================
-// BROWSE TYPES
+// BROWSE TYPES - Moved to browse domain
 // ============================================================================
-
-export type FilterType = "difficulty" | "author" | "propType" | "gridMode";
-export type FilterValue = string | number | boolean;
-export type SortMethod = "alphabetical" | "difficulty" | "author" | "recent";
+// FilterType, FilterValue, SortMethod are now in browse/ domain
+// Import them from $domain/browse instead
 
 // ============================================================================
 // BASIC COORDINATE TYPES

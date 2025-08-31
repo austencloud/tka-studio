@@ -5,17 +5,12 @@
  * Handles pattern creation, movement generation, and caching.
  */
 
-import { Letter } from "$lib/domain/core/Letter";
-import type { MotionData } from "$lib/domain/core/pictograph/MotionData";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import { createPictographData } from "$lib/domain/core/pictograph/PictographData";
-import {
-  Direction,
-  MotionType,
-  PositionSystem,
-  RotationDirection,
-  Timing,
-} from "$lib/domain/enums";
+import { Direction, PositionSystem, RotationDirection, Timing,  } from "$domain";
+import { MotionType } from "$domain/enums";
+import { Letter } from "$domain/core/Letter";
+import type { MotionData } from "$domain/core/pictograph/MotionData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
+import { createPictographData } from "$domain/core/pictograph/PictographData";
 import type { ILetterGenerator } from "../../../contracts/generation-interfaces";
 
 export abstract class BaseLetterGenerator implements ILetterGenerator {

@@ -10,7 +10,7 @@ import type {
   ExportProgress,
   ImageExportOptions,
   ServiceExportResult,
-} from "$lib/domain/data-interfaces/export-config-interfaces";
+} from "$domain/data-interfaces/export-config-interfaces";
 
 // ============================================================================
 // PAGE IMAGE EXPORT SERVICES

@@ -6,9 +6,9 @@
  * Generates pictograph data, not just letters.
  */
 
-import { Letter } from "$lib/domain/core/Letter";
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import { Direction, PositionSystem, Timing } from "$lib/domain/enums";
+import { Direction, PositionSystem, Timing } from "$domain";
+import { Letter } from "$domain/core/Letter";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import { BaseLetterGenerator } from "../../../core/BaseLetterGenerator";
 import {
   calculateDirectionForPositionSystem,

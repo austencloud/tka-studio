@@ -5,14 +5,15 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import type { PictographData } from "$lib/domain";
-import { GridMode, Letter, MotionType } from "$lib/domain";
+import type { PictographData } from "$domain";
+import { GridMode, Letter } from "$domain";
+import { MotionType } from "$domain/enums";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 import type { CSVRow } from "../movement/CSVPictographParserService";
 
-import type { ILetterMappingRepository } from "$lib/domain/learn/codex/LetterMappingRepository";
-import type { LetterMapping } from "$lib/domain/learn/codex/types";
+import type { ILetterMappingRepository } from "$domain/learn/codex/LetterMappingRepository";
+import type { LetterMapping } from "$domain/learn/codex/types";
 import type {
   ICSVParser,
   ILetterQueryHandler,
@@ -61,41 +62,45 @@ export class LetterQueryHandler implements ILetterQueryHandler {
       const csvData = await this.csvLoaderService.loadCsvData();
 
       // Parse CSV data using shared service
-      const diamondParseResult = this.CSVParser.parseCSV(csvData.diamondData);
-      const boxParseResult = this.CSVParser.parseCSV(csvData.boxData);
+      const diamondParseResult = this.CSVParser.parseCSV(
+        csvData.diamondData || ""
+      );
+      const boxParseResult = this.CSVParser.parseCSV(csvData.boxData || "");
 
       // Only log significant parsing errors (not empty row issues)
       const significantDiamondErrors = diamondParseResult.errors.filter(
-        (error) =>
+        (error: any) =>
           !error.error.includes("missing required fields") ||
           (error.rawRow &&
             error.rawRow.trim() !== "" &&
-            !error.rawRow.split(",").every((v) => v.trim() === ""))
+            !error.rawRow.split(",").every((v: any) => v.trim() === ""))
       );
       const significantBoxErrors = boxParseResult.errors.filter(
-        (error) =>
+        (error: any) =>
           !error.error.includes("missing required fields") ||
           (error.rawRow &&
             error.rawRow.trim() !== "" &&
-            !error.rawRow.split(",").every((v) => v.trim() === ""))
+            !error.rawRow.split(",").every((v: any) => v.trim() === ""))
       );
 
       if (significantDiamondErrors.length > 0) {
         console.warn(
           `⚠️ Diamond CSV parsing errors (${significantDiamondErrors.length} significant):`
         );
-        significantDiamondErrors.slice(0, 3).forEach((error, index) => {
-          console.warn(
-            `  Error ${index + 1}: Row ${error.rowIndex} - ${error.error}`
-          );
-          console.warn(`  Raw row: ${error.rawRow.substring(0, 100)}...`);
-        });
+        significantDiamondErrors
+          .slice(0, 3)
+          .forEach((error: any, index: any) => {
+            console.warn(
+              `  Error ${index + 1}: Row ${error.rowIndex} - ${error.error}`
+            );
+            console.warn(`  Raw row: ${error.rawRow.substring(0, 100)}...`);
+          });
       }
       if (significantBoxErrors.length > 0) {
         console.warn(
           `⚠️ Box CSV parsing errors (${significantBoxErrors.length} significant):`
         );
-        significantBoxErrors.slice(0, 3).forEach((error, index) => {
+        significantBoxErrors.slice(0, 3).forEach((error: any, index: any) => {
           console.warn(
             `  Error ${index + 1}: Row ${error.rowIndex} - ${error.error}`
           );
@@ -104,16 +109,8 @@ export class LetterQueryHandler implements ILetterQueryHandler {
       }
 
       this.parsedData = {
-        [GridMode.DIAMOND]: diamondParseResult.rows.map((row) => ({
-          data: row,
-          errors: [],
-          isValid: true,
-        })),
-        [GridMode.BOX]: boxParseResult.rows.map((row) => ({
-          data: row,
-          errors: [],
-          isValid: true,
-        })),
+        [GridMode.DIAMOND]: diamondParseResult.rows,
+        [GridMode.BOX]: boxParseResult.rows,
         // SKEWED mode doesn't have separate data - it uses both diamond and box
       };
 
@@ -243,7 +240,7 @@ export class LetterQueryHandler implements ILetterQueryHandler {
           }
         } catch (error) {
           console.warn(
-            `⚠️ Failed to convert CSV row ${i} (letter: ${row.data.letter}):`,
+            `⚠️ Failed to convert CSV row ${i} (letter: ${row.letter}):`,
             error
           );
         }
@@ -344,12 +341,12 @@ export class LetterQueryHandler implements ILetterQueryHandler {
     };
     const matchingRow = csvRows.find(
       (row) =>
-        row.data.letter === letter &&
-        row.data.startPosition === mapping.startPosition &&
-        row.data.endPosition === mapping.endPosition &&
-        row.data.blueMotionType ===
+        row.letter === letter &&
+        row.startPosition === mapping.startPosition &&
+        row.endPosition === mapping.endPosition &&
+        row.blueMotionType ===
           (mappingData.blueMotion || mappingData.blueMotionType) &&
-        row.data.redMotionType ===
+        row.redMotionType ===
           (mappingData.redMotion || mappingData.redMotionType)
     );
 

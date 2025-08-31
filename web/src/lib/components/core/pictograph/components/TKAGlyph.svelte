@@ -5,8 +5,8 @@ Renders letters, turn indicators, and other TKA notation elements.
 Uses pure runes instead of stores for reactivity.
 -->
 <script lang="ts">
-  import { MotionColor } from "$lib/domain/enums";
-  import { Letter } from "$lib/domain/Letter";
+  import { Letter } from "$domain/core/Letter";
+  import { MotionColor } from "$domain/enums";
   import { getLetterImagePath } from "$lib/utils/letter-image-getter";
 
   interface Props {

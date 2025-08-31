@@ -1,6 +1,6 @@
 <!-- PageDisplay.svelte - Simple page display matching legacy desktop -->
 <script lang="ts">
-  import type { SequenceData } from "$lib/domain/core";
+  import type { SequenceData } from "$domain";
   import SequenceCard from "./SequenceCard.svelte";
 
   // Props

@@ -1,4 +1,4 @@
-import type { PictographData } from "$lib/domain";
+import type { PictographData } from "$domain";
 import type { ITurnsTupleKeyGenerator } from "$lib/services/contracts/positioning-interfaces";
 import { injectable } from "inversify";
 

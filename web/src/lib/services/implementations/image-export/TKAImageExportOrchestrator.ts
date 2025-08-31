@@ -8,7 +8,7 @@
  * Refactored from the monolithic TKAImageExportService to focus solely on orchestration.
  */
 
-import type { SequenceData } from "../../../domain";
+import type { SequenceData } from "$domain";
 import type {
   IDimensionCalculationService,
   IExportConfigurationManager,

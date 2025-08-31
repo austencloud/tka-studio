@@ -1,20 +1,16 @@
-import type { PropState } from "$lib/components/tabs/browse-tab/animator";
-import type { MotionData, SequenceData } from "$lib/domain";
+import type { MotionData, SequenceData } from "$domain";
 import {
   createBeatData,
   createMotionData,
   createPictographData,
   createSequenceData,
-} from "$lib/domain";
-import {
-  Location,
-  MotionColor,
-  MotionType,
   Orientation,
   PropType,
   RotationDirection,
-} from "$lib/domain/enums";
-import type { ISequenceAnimationEngine } from "$lib/services/contracts/application-interfaces";
+} from "$domain";
+import { Location, MotionColor, MotionType } from "$domain/enums";
+import type { PropState } from "$lib/components/tabs/browse-tab/animator";
+import type { ISequenceAnimationEngine } from "$lib/services/contracts/animation";
 import { inject, injectable } from "inversify";
 import type { IAnimationControlService } from "../../contracts/motion-tester-interfaces";
 import { TYPES } from "../../inversify/types";

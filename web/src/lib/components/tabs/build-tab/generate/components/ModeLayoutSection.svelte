@@ -3,11 +3,11 @@ ModeLayoutSection.svelte - Mode and layout configuration settings
 Contains Grid Mode, Generation Mode, and Prop Continuity selectors
 -->
 <script lang="ts">
-  import GridModeSelector from "../selectors/GridModeSelector.svelte";
-  import GenerationModeToggle from "../selectors/GenerationModeToggle.svelte";
-  import PropContinuityToggle from "../selectors/PropContinuityToggle.svelte";
+  import { GenerationMode } from "$domain";
   import type { GenerationConfig } from "$lib/state/generate/generate-config.svelte";
-  import { GenerationMode } from "$lib/domain";
+  import GenerationModeToggle from "../selectors/GenerationModeToggle.svelte";
+  import GridModeSelector from "../selectors/GridModeSelector.svelte";
+  import PropContinuityToggle from "../selectors/PropContinuityToggle.svelte";
 
   interface Props {
     config: GenerationConfig;

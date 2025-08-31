@@ -10,5 +10,4 @@ export { default as OptionPickerSectionHeader } from "./OptionPickerSectionHeade
 
 // Service exports - Use these for business logic
 export * from "$lib/services/contracts/option-picker-interfaces";
-export { PictographOrganizerService } from "$lib/services/implementations/build/PictographOrganizerService";
 export { OptionPickerServiceAdapter } from "$lib/services/implementations/OptionPickerServiceAdapter";

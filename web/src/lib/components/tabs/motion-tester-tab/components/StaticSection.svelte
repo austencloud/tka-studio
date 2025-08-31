@@ -6,16 +6,15 @@ Combines static pictograph display (no card wrapper) with motion designer contro
 This is the left 2/3 section of the new layout.
 -->
 <script lang="ts">
-  import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
-  import { createMotionData, createPictographData } from "$lib/domain";
   import {
-    Location,
-    MotionColor,
-    MotionType,
+    createMotionData,
+    createPictographData,
     Orientation,
     RotationDirection,
-  } from "$lib/domain/enums";
-  import { Letter } from "$lib/domain/Letter";
+  } from "$domain";
+  import { Letter } from "$domain/core/Letter";
+  import { Location, MotionColor, MotionType } from "$domain/enums";
+  import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
   import type { MotionTesterState } from "$lib/state/motion-tester/motion-tester-state.svelte";
   import PropPanel from "./PropPanel.svelte";
   import SimpleGridToggle from "./SimpleGridToggle.svelte";

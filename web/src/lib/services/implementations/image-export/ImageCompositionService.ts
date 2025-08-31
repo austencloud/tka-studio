@@ -11,7 +11,7 @@
  * while maintaining the same public interface contracts.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import type {
   CompositionOptions,
   IBeatRenderingService,

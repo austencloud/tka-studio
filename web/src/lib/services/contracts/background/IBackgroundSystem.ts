@@ -6,11 +6,11 @@
  */
 
 import type {
-  Dimensions,
-  QualityLevel,
   AccessibilitySettings,
+  Dimensions,
   PerformanceMetrics,
-} from "$lib/domain/background/BackgroundTypes";
+  QualityLevel,
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface IBackgroundSystem {
   /**

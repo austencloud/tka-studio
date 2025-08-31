@@ -12,7 +12,6 @@ import { injectable } from "inversify";
 import type {
   DPIConfiguration,
   GridCalculationOptions,
-  GridConfig,
   LayoutCalculationRequest,
   LayoutCalculationResult,
   LayoutSuggestion,
@@ -23,8 +22,9 @@ import type {
   PageDimensions,
   PageLayoutConfig,
   PageOrientation,
-  PaperSize,
   Rectangle,
+  SequenceCardGridConfig,
+  SequenceCardPaperSize,
 } from "../../../domain/sequence-card/PageLayoutTypes";
 
 @injectable()
@@ -50,7 +50,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   };
 
   calculatePageDimensions(
-    paperSize: PaperSize,
+    paperSize: SequenceCardPaperSize,
     orientation: PageOrientation
   ): PageDimensions {
     const dimensions = this.paperSizes[paperSize];
@@ -68,7 +68,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
     };
   }
 
-  calculateMargins(_paperSize: PaperSize): Margins {
+  calculateMargins(_paperSize: SequenceCardPaperSize): Margins {
     // For now, use default margins for all paper sizes
     // Could be extended to have paper-specific margins
     return { ...this.defaultMargins };
@@ -87,7 +87,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
     cardAspectRatio: number,
     contentArea: Rectangle,
     options: Partial<GridCalculationOptions> = {}
-  ): GridConfig {
+  ): SequenceCardGridConfig {
     const opts: GridCalculationOptions = {
       minCardsPerPage: 2,
       maxCardsPerPage: 12,
@@ -97,7 +97,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
       ...options,
     };
 
-    let bestGrid: GridConfig | null = null;
+    let bestGrid: SequenceCardGridConfig | null = null;
     let bestScore = 0;
 
     // Try different grid configurations
@@ -182,7 +182,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   }
 
   getPageSizeInPixels(
-    paperSize: PaperSize,
+    paperSize: SequenceCardPaperSize,
     orientation: PageOrientation,
     dpi: number = this.dpiConfig.screenDPI
   ): PageDimensions {

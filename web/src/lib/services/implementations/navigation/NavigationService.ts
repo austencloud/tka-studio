@@ -5,7 +5,7 @@
  * following the microservices architecture pattern.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import { injectable } from "inversify";
 
 export interface NavigationSection {

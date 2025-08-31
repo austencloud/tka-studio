@@ -5,12 +5,9 @@
  * Extracted from StartPositionPicker component to follow clean architecture.
  */
 
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import type { IStartPositionSelectionService } from "$lib/services/contracts/application/IStartPositionSelectionService";
-import type {
-  IStartPositionService as IApplicationStartPositionService,
-  IStartPositionService,
-} from "$services/contracts/application-interfaces";
+import type { IStartPositionService } from "$services/contracts/application/IStartPositionService";
 import { TYPES } from "$services/inversify/types";
 import { inject, injectable } from "inversify";
 
@@ -36,7 +33,7 @@ export class StartPositionSelectionService
    */
   async selectStartPosition(
     startPosPictograph: PictographData,
-    applicationStartPositionService: IApplicationStartPositionService
+    applicationStartPositionService: IStartPositionService
   ): Promise<void> {
     try {
       // Extract end position from the pictograph data
@@ -60,8 +57,10 @@ export class StartPositionSelectionService
       // Preload options for better UX
       await this.preloadOptionsForPosition(endPosition);
 
-      // Use application service to set start position in the sequence
-      await applicationStartPositionService.setStartPosition(startPositionBeat);
+      // Use application service to select start position in the sequence
+      await applicationStartPositionService.selectStartPosition(
+        startPosPictograph
+      );
 
       // Dispatch event for coordination service
       this.dispatchStartPositionSelectedEvent(startPositionData, endPosition);

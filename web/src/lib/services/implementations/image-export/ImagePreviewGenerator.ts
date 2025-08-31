@@ -5,7 +5,7 @@
  * Extracted from the monolithic TKAImageExportService to focus solely on preview generation.
  */
 
-import type { SequenceData } from "$lib/domain/core";
+import type { SequenceData } from "$domain";
 import { inject, injectable } from "inversify";
 import type {
   IExportConfigurationManager,

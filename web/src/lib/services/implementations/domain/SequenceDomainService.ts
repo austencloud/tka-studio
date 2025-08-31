@@ -5,10 +5,13 @@
  * and desktop.modern.domain.models for actual validation and business rules.
  */
 
-import type { BeatData, SequenceData } from "$lib/domain";
-import { GridMode } from "$lib/domain";
-import type { ValidationResult } from "$lib/domain/core";
-import type { ValidationError } from "$lib/domain/sequence-card/SequenceCard";
+import type {
+  BeatData,
+  SequenceData,
+  ValidationError,
+  ValidationResult,
+} from "$domain";
+import { GridMode } from "$domain";
 import type {
   ISequenceDomainService,
   SequenceCreateRequest,
@@ -71,7 +74,7 @@ export class SequenceDomainService implements ISequenceDomainService {
 
     return {
       isValid: errors.length === 0,
-      errors: errors.map((error) => error.message || String(error)),
+      errors,
       warnings: [],
     };
   }

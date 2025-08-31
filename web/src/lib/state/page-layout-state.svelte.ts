@@ -5,6 +5,7 @@
  * and page navigation for the sequence card tab.
  */
 
+import type { SequenceData } from "$domain";
 import type {
   GridCalculationOptions,
   LayoutCalculationResult,
@@ -12,14 +13,13 @@ import type {
   PageCreationOptions,
   PageLayoutConfig,
   PageOrientation,
-  PaperSize,
   PrintConfiguration,
-} from "$lib/domain/sequence-card/PageLayoutTypes";
+  SequenceCardPaperSize,
+} from "$domain/sequence-card/PageLayoutTypes";
 import type {
   IPageFactoryService,
   IPrintablePageLayoutService,
 } from "$services/contracts/sequence-interfaces";
-import type { SequenceData } from "$lib/domain/core";
 
 export interface PageLayoutState {
   // Page data
@@ -30,7 +30,7 @@ export interface PageLayoutState {
   readonly error: string | null;
 
   // Layout configuration
-  readonly paperSize: PaperSize;
+  readonly paperSize: SequenceCardPaperSize;
   readonly orientation: PageOrientation;
   readonly sequencesPerPage: number;
   readonly enableOptimization: boolean;
@@ -42,7 +42,7 @@ export interface PageLayoutState {
 
   // Actions
   createPages: (sequences: SequenceData[]) => Promise<void>;
-  setPaperSize: (size: PaperSize) => void;
+  setPaperSize: (size: SequenceCardPaperSize) => void;
   setOrientation: (orientation: PageOrientation) => void;
   setSequencesPerPage: (count: number) => void;
   setOptimization: (enabled: boolean) => void;
@@ -68,7 +68,7 @@ export function createPageLayoutState(
   let error = $state<string | null>(null);
 
   // Layout configuration state
-  let paperSize = $state<PaperSize>("A4");
+  let paperSize = $state<SequenceCardPaperSize>("A4");
   let orientation = $state<PageOrientation>("Portrait");
   let sequencesPerPage = $state(6);
   let enableOptimization = $state(true);
@@ -189,7 +189,7 @@ export function createPageLayoutState(
     }
   }
 
-  function setPaperSize(size: PaperSize): void {
+  function setPaperSize(size: SequenceCardPaperSize): void {
     if (paperSize !== size) {
       paperSize = size;
       layoutResult = null; // Reset layout calculation

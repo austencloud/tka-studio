@@ -5,7 +5,7 @@
  * Consolidates grid-related logic that was duplicated across
  * BeatRenderingService, GridOverlayService, and other services.
  */
-import type { GridMode } from "$lib/domain/enums";
+import type { GridMode } from "$domain";
 
 // ============================================================================
 // DATA CONTRACTS (Domain Models)

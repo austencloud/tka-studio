@@ -5,15 +5,15 @@
  * Single responsibility: Coordinate animation services and manage sequence lifecycle.
  */
 
-import type { SequenceData, BeatData } from "$lib/domain";
+import type { BeatData, SequenceData } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 import type {
-  ISequenceAnimationOrchestrator,
   IAnimationStateService,
   IBeatCalculationService,
   IPropInterpolationService,
-  SequenceMetadata,
+  ISequenceAnimationOrchestrator,
   PropStates,
+  SequenceMetadata,
 } from "$lib/services/contracts/animation";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";

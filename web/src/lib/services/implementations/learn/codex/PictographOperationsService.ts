@@ -5,16 +5,16 @@
  * rotation, mirroring, and color swapping.
  */
 
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
 import type {
   IPictographOperationsService,
-  PictographOperation,
+  PictographTransformOperation,
 } from "../../../contracts/codex-interfaces";
 
 // Re-export types for convenience
 export type {
   IPictographOperationsService,
-  PictographOperation,
+  PictographTransformOperation,
 } from "../../../contracts/codex-interfaces";
 
 export class PictographOperationsService
@@ -71,7 +71,7 @@ export class PictographOperationsService
 
   async applyOperation(
     pictographs: PictographData[],
-    operation: PictographOperation
+    operation: PictographTransformOperation
   ): Promise<PictographData[]> {
     switch (operation) {
       case "rotate":

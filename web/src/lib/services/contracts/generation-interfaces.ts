@@ -7,18 +7,19 @@
 // ============================================================================
 // GENERATION OPTIONS
 // ============================================================================
-import type { GridMode } from "$lib/domain/core";
 import type {
   BeatData,
+  GridMode,
   MotionData,
   PictographData,
   SequenceData,
-} from "$lib/domain/core";
+} from "$domain";
+import { GenerationMode, GridPosition } from "$domain";
+import { MotionColor } from "$domain/enums";
 import type {
   GenerationOptions,
   LetterDerivationResult,
-} from "$lib/domain/data-interfaces/generation-interfaces-data";
-import { GenerationMode, GridPosition, MotionColor } from "$lib/domain/enums";
+} from "$domain/data-interfaces/generation-interfaces-data";
 import type { Letter } from "../../domain/core/Letter";
 
 // ============================================================================
@@ -247,4 +248,4 @@ export interface ILetterDeriver {
 export type {
   GenerationOptions,
   LetterDerivationResult,
-} from "$lib/domain/data-interfaces/generation-interfaces-data";
+} from "$domain/data-interfaces/generation-interfaces-data";

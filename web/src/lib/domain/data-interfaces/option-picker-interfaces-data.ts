@@ -10,7 +10,7 @@
 import type {
   ContainerAspect,
   DeviceType,
-} from "$lib/domain/build/option-picker/layout/types";
+} from "$domain/build/option-picker/layout/types";
 
 // ============================================================================
 // DATA CONTRACTS (Domain Models)

@@ -1,17 +1,17 @@
 <!-- BuildTab.svelte - Master tab with clean service resolution -->
 <script lang="ts">
-  import RightPanel from "./layout/RightPanel.svelte";
-  import LoadingOverlay from "./shared/LoadingOverlay.svelte";
   import LeftPanel from "./layout/LeftPanel.svelte";
+  import RightPanel from "./layout/RightPanel.svelte";
   import ErrorBanner from "./shared/ErrorBanner.svelte";
+  import LoadingOverlay from "./shared/LoadingOverlay.svelte";
 
+  import { GridMode } from "$domain";
+  import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
+  import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
+  import type { ISequenceService } from "$lib/services/contracts/sequence-interfaces";
   import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createBuildTabState } from "$lib/state/build-tab-state.svelte";
   import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
-  import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
-  import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
-  import type { ISequenceService } from "$lib/services/contracts/sequence-interfaces";
-  import { GridMode } from "$lib/domain/enums";
   import { onMount } from "svelte";
 
   // ✅ CLEAN SERVICE RESOLUTION: Resolve services using clean pattern (no 'as any')

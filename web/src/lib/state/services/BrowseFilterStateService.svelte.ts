@@ -5,12 +5,8 @@
  * Handles reactive filter state without business logic.
  */
 
+import type { FilterType, FilterValue, SequenceData } from "$domain";
 import type { IBrowseService } from "$lib/services/contracts/browse-interfaces";
-import type {
-  FilterType,
-  FilterValue,
-  SequenceData,
-} from "$lib/domain/core";
 
 export interface IBrowseFilterStateService {
   // Reactive state getters

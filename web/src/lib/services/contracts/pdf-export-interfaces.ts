@@ -5,8 +5,8 @@
  * Supports both individual page and multi-page PDF generation.
  */
 
-import type { ExportResult } from "$lib/domain/core";
-import type { PDFExportOptions } from "$lib/domain/data-interfaces/export-config-interfaces";
+import type { ExportResult } from "$domain";
+import type { PDFExportOptions } from "$domain/data-interfaces/export-config-interfaces";
 import type { Page } from "../../domain/sequence-card/PageLayoutTypes";
 
 // ============================================================================

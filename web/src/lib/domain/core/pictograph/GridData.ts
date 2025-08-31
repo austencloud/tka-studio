@@ -5,7 +5,7 @@
  * Based on modern desktop app's gridData.py
  */
 
-import type { GridPointData } from "$lib/domain/core/pictograph/gridCoordinates";
+import type { GridPointData } from "$domain/core/pictograph/gridCoordinates";
 import { GridMode } from "../../enums";
 
 export interface GridData {

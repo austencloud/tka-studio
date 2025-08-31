@@ -1,7 +1,7 @@
 import type {
   Dimensions,
   GradientStop,
-} from "$lib/domain/background/BackgroundTypes";
+} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export function drawBackgroundGradient(
   ctx: CanvasRenderingContext2D,

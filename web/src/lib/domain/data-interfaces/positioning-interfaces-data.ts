@@ -8,7 +8,7 @@
 // ============================================================================
 // IMPORTS
 // ============================================================================
-import type { MotionType } from "$lib/domain/core";
+import type { MotionType } from "$domain";
 import { Location } from "../enums";
 
 // Re-export commonly used types
@@ -35,11 +35,7 @@ export interface Position {
 }
 
 // Import the actual types from domain-types to avoid duplicates
-import type {
-  ArrowPlacementData,
-  MotionData,
-  PictographData,
-} from "$lib/domain/core";
+import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
 
 // Re-export for convenience
 export type { ArrowPlacementData, MotionData, PictographData };

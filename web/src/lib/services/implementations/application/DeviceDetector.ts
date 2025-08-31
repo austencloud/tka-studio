@@ -3,7 +3,7 @@
  * Uses modern detection methods based on research from W3C, Material Design, and iOS guidelines
  */
 
-import type { DeviceCapabilities } from "$lib/domain/sequence-card/SequenceCard";
+import type { DeviceCapabilities } from "$domain/sequence-card/SequenceCard";
 
 import { injectable } from "inversify";
 import type {
@@ -61,6 +61,15 @@ export class DeviceDetector implements IDeviceDetector {
       allowScrolling,
       layoutDensity,
       fontScaling,
+      isMobile: caps.screenSize === "mobile",
+      isTablet: caps.screenSize === "tablet",
+      isDesktop: caps.screenSize === "desktop",
+      screenWidth: caps.viewport.width,
+      screenHeight: caps.viewport.height,
+      devicePixelRatio: caps.pixelRatio,
+      touchSupported: caps.hasTouch,
+      orientation:
+        caps.viewport.width > caps.viewport.height ? "landscape" : "portrait",
     };
   }
 
@@ -81,6 +90,21 @@ export class DeviceDetector implements IDeviceDetector {
     if (width < 1024) return "tablet";
     if (width < 1440) return "desktop";
     return "large-desktop";
+  }
+
+  addCapabilityListener(
+    callback: (capabilities: DeviceCapabilities) => void
+  ): void {
+    this.listeners.push(callback);
+  }
+
+  removeCapabilityListener(
+    callback: (capabilities: DeviceCapabilities) => void
+  ): void {
+    const index = this.listeners.indexOf(callback);
+    if (index > -1) {
+      this.listeners.splice(index, 1);
+    }
   }
 
   onCapabilitiesChanged(

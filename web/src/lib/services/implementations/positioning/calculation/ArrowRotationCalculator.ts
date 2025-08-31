@@ -1,5 +1,5 @@
-import type { MotionData } from "$lib/domain";
-import { Location, MotionType } from "$lib/domain";
+import type { MotionData } from "$domain";
+import { Location, MotionType } from "$domain/enums";
 import { injectable } from "inversify";
 
 export interface IArrowRotationCalculator {

@@ -4,7 +4,7 @@
  * Clean domain types for the codex system, separated from business logic.
  */
 
-export type MotionType = "pro" | "anti" | "static" | "dash";
+import { MotionType } from "../../enums";
 
 export interface LetterMapping {
   startPosition: string;
@@ -50,3 +50,5 @@ export interface LessonConfiguration {
   includedLetters?: string[];
   excludedLetters?: string[];
 }
+
+export type PictographTransformOperation = "rotate" | "mirror" | "colorSwap";

@@ -10,8 +10,11 @@
 /**
  * Types of operations that can be performed on pictographs
  */
-import type { PictographData } from "$lib/domain/core/pictograph/PictographData";
-import type { PictographOperation } from "$lib/domain/data-interfaces/generation-interfaces-data";
+import type { PictographData } from "$domain/core/pictograph/PictographData";
+import type { PictographTransformOperation } from "$domain/learn/codex";
+
+// Re-export the imported types so other services can use them
+export type { PictographTransformOperation } from "$domain/learn/codex";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -29,6 +32,6 @@ export interface IPictographOperationsService {
   ): Promise<PictographData[]>;
   applyOperation(
     pictographs: PictographData[],
-    operation: PictographOperation
+    operation: PictographTransformOperation
   ): Promise<PictographData[]>;
 }

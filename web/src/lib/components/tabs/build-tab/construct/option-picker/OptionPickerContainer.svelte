@@ -7,12 +7,12 @@ Clean, minimal component that focuses only on UI concerns:
 - Responsive container dimensions tracking only
 -->
 <script lang="ts">
+  import type { PictographData } from "$domain";
+  import { onMount } from "svelte";
   import ErrorBanner from "../../shared/ErrorBanner.svelte";
   import LoadingOverlay from "../../shared/LoadingOverlay.svelte";
   import OptionPickerHeader from "./OptionPickerHeader.svelte";
   import OptionPickerScroll from "./OptionPickerScroll.svelte";
-  import type { PictographData } from "$lib/domain/PictographData";
-  import { onMount } from "svelte";
 
   // Props - all data comes from parent, no business logic here
   const {

@@ -5,28 +5,33 @@
  * Based on the desktop StartPositionOrchestrator but simplified for web.
  */
 
-import type { ValidationResult } from "$lib/domain/core";
-import { Letter } from "$lib/domain/core/Letter";
-import type { ValidationError } from "$lib/domain/sequence-card/SequenceCard";
-import type { IStartPositionService } from "$lib/services/contracts/application-interfaces";
-import { injectable } from "inversify";
-import type { BeatData, PictographData } from "../../../domain";
+import type { BeatData, PictographData, ValidationResult } from "$domain";
 import {
   createBeatData,
   createMotionData,
   createPictographData,
   GridMode,
-  Location,
-  MotionColor,
-  MotionType,
   Orientation,
   PropType,
   RotationDirection,
-} from "../../../domain";
+} from "$domain";
+import { Letter } from "$domain/core/Letter";
+import { Location, MotionColor, MotionType } from "$domain/enums";
+import { injectable } from "inversify";
+import type { IStartPositionService } from "../../contracts/application/IStartPositionService";
 import { PositionMapper } from "../movement/PositionMapper";
 
 @injectable()
 export class StartPositionService implements IStartPositionService {
+  startPositions: PictographData[] = [];
+  selectedPosition: PictographData | null = null;
+  isLoading: boolean = false;
+  error: string | null = null;
+
+  async selectStartPosition(position: PictographData): Promise<void> {
+    this.selectedPosition = position;
+    console.log("✅ StartPositionService: Start position selected", position);
+  }
   private readonly DEFAULT_START_POSITIONS: Record<string, string[]> = {
     [GridMode.DIAMOND]: ["alpha1_alpha1", "beta5_beta5", "gamma11_gamma11"],
     [GridMode.BOX]: ["alpha2_alpha2", "beta4_beta4", "gamma12_gamma12"],
@@ -145,11 +150,15 @@ export class StartPositionService implements IStartPositionService {
   }
 
   validateStartPosition(position: BeatData): ValidationResult {
-    const errors: ValidationError[] = [];
+    const errors: Array<{
+      code: string;
+      message: string;
+      severity: "error" | "warning" | "info";
+    }> = [];
 
     if (!position.pictographData) {
       errors.push({
-        code: "MISSING_pictographData",
+        code: "MISSING_PICTOGRAPH_DATA",
         message: "Start position must have pictograph data",
         severity: "error",
       });
@@ -171,7 +180,7 @@ export class StartPositionService implements IStartPositionService {
       position.pictographData?.motions?.blue?.motionType !== MotionType.STATIC
     ) {
       errors.push({
-        code: "INVALID_BLUE_MOTION",
+        code: "INVALID_BLUE_MOTION_TYPE",
         message: "Blue motion must be static for start positions",
         severity: "error",
       });
@@ -181,7 +190,7 @@ export class StartPositionService implements IStartPositionService {
       position.pictographData?.motions?.red?.motionType !== MotionType.STATIC
     ) {
       errors.push({
-        code: "INVALID_RED_MOTION",
+        code: "INVALID_RED_MOTION_TYPE",
         message: "Red motion must be static for start positions",
         severity: "error",
       });
@@ -189,7 +198,7 @@ export class StartPositionService implements IStartPositionService {
 
     return {
       isValid: errors.length === 0,
-      errors: errors.map((error) => error.message || String(error)),
+      errors,
       warnings: [],
     };
   }

@@ -4,14 +4,15 @@
  * Used for testing to provide predictable data without external dependencies.
  */
 
-import type { ILetterMappingRepository } from "$lib/domain/learn/codex/LetterMappingRepository";
+import { MotionType } from "$domain/enums";
+import type { ILetterMappingRepository } from "$domain/learn/codex/LetterMappingRepository";
 import type {
   LessonConfiguration,
   LetterCategory,
   LetterMapping,
   LetterRow,
-} from "$lib/domain/learn/codex/types";
-import type { ILessonRepository } from "$lib/domain/learn/LessonRepository";
+} from "$domain/learn/codex/types";
+import type { ILessonRepository } from "$domain/learn/LessonRepository";
 
 /**
  * Mock Letter Mapping Repository for testing
@@ -21,50 +22,50 @@ export class MockLetterMappingRepository implements ILetterMappingRepository {
     A: {
       startPosition: "alpha1",
       endPosition: "alpha3",
-      blueMotionType: "pro",
-      redMotionType: "pro",
+      blueMotionType: MotionType.PRO,
+      redMotionType: MotionType.PRO,
     },
     B: {
       startPosition: "alpha2",
       endPosition: "alpha4",
-      blueMotionType: "pro",
-      redMotionType: "pro",
+      blueMotionType: MotionType.PRO,
+      redMotionType: MotionType.PRO,
     },
     C: {
       startPosition: "alpha3",
       endPosition: "alpha5",
-      blueMotionType: "pro",
-      redMotionType: "pro",
+      blueMotionType: MotionType.PRO,
+      redMotionType: MotionType.PRO,
     },
     Σ: {
       startPosition: "alpha4",
       endPosition: "alpha6",
-      blueMotionType: "anti",
-      redMotionType: "anti",
+      blueMotionType: MotionType.ANTI,
+      redMotionType: MotionType.ANTI,
     },
     Δ: {
       startPosition: "alpha5",
       endPosition: "alpha7",
-      blueMotionType: "anti",
-      redMotionType: "anti",
+      blueMotionType: MotionType.ANTI,
+      redMotionType: MotionType.ANTI,
     },
     Φ: {
       startPosition: "alpha1",
       endPosition: "alpha1",
-      blueMotionType: "dash",
-      redMotionType: "dash",
+      blueMotionType: MotionType.DASH,
+      redMotionType: MotionType.DASH,
     },
     α: {
       startPosition: "alpha1",
       endPosition: "alpha1",
-      blueMotionType: "static",
-      redMotionType: "static",
+      blueMotionType: MotionType.STATIC,
+      redMotionType: MotionType.STATIC,
     },
     β: {
       startPosition: "alpha2",
       endPosition: "alpha2",
-      blueMotionType: "static",
-      redMotionType: "static",
+      blueMotionType: MotionType.STATIC,
+      redMotionType: MotionType.STATIC,
     },
   };
 

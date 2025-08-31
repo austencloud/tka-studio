@@ -10,17 +10,11 @@
 /**
  * Pure business logic service for sequence state management
  */
-import type { SequenceData } from "$lib/domain";
+import type { SequenceData } from "$domain";
 
 // ============================================================================
 // DATA CONTRACTS (Domain Models)
 // ============================================================================
-
-export interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-  warnings: string[];
-}
 
 export interface SequenceStatistics {
   totalBeats: number;

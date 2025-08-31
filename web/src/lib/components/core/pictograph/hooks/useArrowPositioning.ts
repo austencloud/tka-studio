@@ -5,7 +5,7 @@
  * REFACTORED: Updated to use DI container and proper reactive patterns.
  */
 
-import type { PictographData } from "$lib/domain";
+import type { PictographData } from "$domain";
 // Re-enabled after fixing circular dependency
 import type { IArrowPositioningOrchestrator } from "$lib/services/contracts/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";

@@ -5,17 +5,16 @@
  * Contains only pure functions with no reactive state.
  */
 
-import type { BeatData, Letter, SequenceData } from "$lib/domain";
+import type { BeatData, Letter, SequenceData, ValidationResult } from "$domain";
 import {
   addBeatToSequence,
   createSequenceData,
   removeBeatFromSequence,
   updateSequenceData,
-} from "$lib/domain/core/SequenceData";
+} from "$domain/core/SequenceData";
 import type {
   ISequenceStateService,
   SequenceStatistics,
-  ValidationResult,
 } from "$lib/services/contracts/sequence/ISequenceStateService";
 import { injectable } from "inversify";
 @injectable()
@@ -81,8 +80,15 @@ export class SequenceStateService implements ISequenceStateService {
 
     return {
       isValid: errors.length === 0,
-      errors,
-      warnings,
+      errors: errors.map((err) => ({
+        code: "VALIDATION_ERROR",
+        message: err,
+        severity: "error" as const,
+      })),
+      warnings: warnings.map((warn) => ({
+        code: "VALIDATION_WARNING",
+        message: warn,
+      })),
     };
   }
 

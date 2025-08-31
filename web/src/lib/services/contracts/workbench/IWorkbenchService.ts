@@ -4,7 +4,7 @@
  * Interface for managing workbench operations.
  */
 
-import type { BeatData } from "$lib/domain/core";
+import type { BeatData } from "$domain";
 
 export interface IWorkbenchService {
   initializeWorkbench(): Promise<void>;
@@ -19,4 +19,4 @@ export type {
   SequenceCreationParams,
   WorkbenchConfig,
   WorkbenchMode,
-} from "$lib/domain/data-interfaces/workbench-interfaces-data";
+} from "$domain/data-interfaces/workbench-interfaces-data";

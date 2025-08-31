@@ -6,8 +6,8 @@
 -->
 
 <script lang="ts">
-  import type { PictographData } from "$domain/PictographData";
-  import { QuestionGeneratorService } from "$lib/services/learn/QuestionGeneratorService";
+  import type { PictographData } from "$domain";
+  import { QuestionGeneratorService } from "$lib/services/implementations/learn/QuestionGeneratorService";
   import type {
     AnswerOption,
     LessonType,

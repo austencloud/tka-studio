@@ -5,8 +5,9 @@
  * Implements sophisticated quadrant mapping logic from desktop implementations.
  */
 
-import type { MotionData } from "$lib/domain";
-import { Location, MotionType, GridMode } from "$lib/domain/enums";
+import type { MotionData } from "$domain";
+import { GridMode } from "$domain";
+import { Location, MotionType } from "$domain/enums";
 
 export class ArrowQuadrantCalculator {
   calculateQuadrantIndex(motion: MotionData, location: Location): number {

@@ -5,8 +5,8 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import type { MotionData } from "$lib/domain";
-import type { ArrowPlacementData } from "$lib/domain/core/pictograph/ArrowPlacementData";
+import type { MotionData } from "$domain";
+import type { ArrowPlacementData } from "$domain/core/pictograph/ArrowPlacementData";
 import type {
   ArrowSvgData,
   IArrowPathResolutionService,
@@ -40,7 +40,7 @@ export class SvgLoader implements ISvgLoader {
 
     const originalSvgText = await this.fetchSvgContent(path);
 
-    const { viewBox, center } = this.svgParser.parseArrowSvg(originalSvgText);
+    const parsedSvg = this.svgParser.parseArrowSvg(originalSvgText);
 
     // Apply color transformation to the SVG
     const coloredSvgText = this.colorTransformer.applyColorToSvg(
@@ -51,13 +51,19 @@ export class SvgLoader implements ISvgLoader {
     // Extract just the inner SVG content (no scaling needed - arrows are already correctly sized)
     const svgContent = this.svgParser.extractSvgContent(coloredSvgText);
 
-    const result = {
+    return {
+      id: `arrow-${Date.now()}`,
+      svgContent: svgContent,
       imageSrc: svgContent,
-      viewBox,
-      center,
+      viewBox: parsedSvg.viewBox || "100 100",
+      center: parsedSvg.center,
+      dimensions: {
+        width: parsedSvg.width || 100,
+        height: parsedSvg.height || 100,
+        viewBox: parsedSvg.viewBox || "100 100",
+        center: parsedSvg.center,
+      },
     };
-
-    return result;
   }
 
   /**

@@ -1,6 +1,6 @@
 <!-- SequenceViewerHeader.svelte - Header with title, back button, and difficulty -->
 <script lang="ts">
-  import type { SequenceData } from "$domain/SequenceData";
+  import type { SequenceData } from "$domain";
 
   interface Props {
     sequence?: SequenceData & {
