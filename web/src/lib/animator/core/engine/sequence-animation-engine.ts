@@ -5,11 +5,11 @@
  * The 304-line monolith has been decomposed into focused services.
  */
 
+import type { ISequenceAnimationOrchestrator } from "$contracts";
 import type { SequenceData } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 import type {
   ISequenceAnimationEngine,
-  ISequenceAnimationOrchestrator,
   PropStates,
   SequenceMetadata,
 } from "$lib/services/contracts/animation";

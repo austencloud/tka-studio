@@ -5,13 +5,15 @@
  * Single responsibility: Coordinate animation services and manage sequence lifecycle.
  */
 
-import type { BeatData, SequenceData } from "$domain";
-import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 import type {
   IAnimationStateService,
   IBeatCalculationService,
   IPropInterpolationService,
   ISequenceAnimationOrchestrator,
+} from "$contracts";
+import type { BeatData, SequenceData } from "$domain";
+import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
+import type {
   PropStates,
   SequenceMetadata,
 } from "$lib/services/contracts/animation";
@@ -128,18 +130,9 @@ export class SequenceAnimationOrchestrator
       return;
     }
 
-    const motionData = this.propInterpolationService.getMotionData(
-      beatState.currentBeatData
-    );
-    const endpoints = this.propInterpolationService.getEndpoints(
-      beatState.currentBeatData
-    );
-
     // Motion debug logs removed for cleaner output
 
     // Use focused service to update prop states
-    const finalStates =
-      this.animationStateService.updatePropStates(interpolationResult);
     // Final state debug logs removed
   }
 
@@ -213,7 +206,6 @@ export class SequenceAnimationOrchestrator
       }
     }
 
-    const initialStates = this.animationStateService.getPropStates();
     // Initial states calculated and applied
   }
 

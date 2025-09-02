@@ -5,8 +5,8 @@
  * Follows the established TKA state factory pattern.
  */
 
+import type { ISequenceStateService } from "$contracts";
 import type { BeatData, SequenceData, ValidationResult } from "$domain";
-import type { ISequenceStateService } from "$lib/services/contracts/sequence/ISequenceStateService";
 /**
  * Creates component-scoped sequence state
  *

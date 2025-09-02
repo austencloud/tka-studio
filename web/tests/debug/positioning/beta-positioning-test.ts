@@ -6,17 +6,17 @@
 
 import {
   GridPosition,
+  Letter,
   Location,
   MotionColor,
   MotionType,
   Orientation,
   PropType,
   RotationDirection,
-} from "$lib/domain/enums/enums";
+  createMotionData,
+  createPictographData,
+} from "$domain";
 import { PropPlacementService } from "$lib/services/implementations/positioning/PropPlacementService";
-import { Letter } from "../../../src/lib/domain/models/core/Letter";
-import { createMotionData } from "../../../src/lib/domain/models/core/MotionData";
-import { createPictographData } from "../../../src/lib/domain/models/core/PictographData";
 
 // Test the new simplified beta positioning
 async function testBetaPositioning() {

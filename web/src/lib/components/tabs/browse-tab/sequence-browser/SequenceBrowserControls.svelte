@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { SortMethod } from "$domain/browse";
+  import { SortMethod } from "$domain";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

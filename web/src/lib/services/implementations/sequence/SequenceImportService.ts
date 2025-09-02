@@ -5,18 +5,21 @@
  * Separate from core sequence CRUD operations and focused on data transformation.
  */
 
+import type { ISequenceImportService } from "$contracts";
 import type { BeatData, Letter, SequenceData } from "$domain";
 import {
   createMotionData,
   createPictographData,
   GridMode,
+  Location,
+  MotionColor,
+  MotionType,
   Orientation,
+  PngMetadataArraySchema,
   PropType,
   RotationDirection,
+  SequenceDataSchema,
 } from "$domain";
-import { PngMetadataArraySchema, SequenceDataSchema } from "$domain/schemas";
-import { Location, MotionColor, MotionType } from "$lib/domain/enums/enums";
-import type { ISequenceImportService } from "$lib/services/contracts/sequence-interfaces";
 import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
 import { parseStrict } from "$lib/utils/validation";
 import { injectable } from "inversify";
@@ -28,28 +31,6 @@ const PNG_MOTION_TYPES = {
   ANTI: "anti",
   FLOAT: "float",
   DASH: "dash",
-} as const;
-
-const PNG_LOCATIONS = {
-  NORTH: "n",
-  EAST: "e",
-  SOUTH: "s",
-  WEST: "w",
-  NORTHEAST: "ne",
-  SOUTHEAST: "se",
-  SOUTHWEST: "sw",
-  NORTHWEST: "nw",
-} as const;
-
-const PNG_ORIENTATIONS = {
-  IN: "in",
-  OUT: "out",
-} as const;
-
-const PNG_ROTATION_DIRECTIONS = {
-  NO_ROTATION: "no_rot",
-  CLOCKWISE: "cw",
-  COUNTER_CLOCKWISE: "ccw",
 } as const;
 
 @injectable()

@@ -4,8 +4,8 @@
  * Interface definitions for the codex system.
  */
 
-import { MotionType } from "../../enums/enums";
-import type { LetterCategory } from "../../types/CodexTypes";
+import { MotionType } from "$domain";
+import type { LetterCategory } from "$domain";
 
 export interface LetterMapping {
   startPosition: string;
@@ -41,4 +41,34 @@ export interface LessonConfiguration {
   includedCategories: LetterCategory[];
   includedLetters?: string[];
   excludedLetters?: string[];
+}
+
+// Factory functions
+export function createLetterRow(data: Partial<LetterRow>): LetterRow {
+  return {
+    index: data.index ?? 0,
+    category: data.category ?? ("BASIC" as LetterCategory),
+    letters: data.letters ?? [],
+  };
+}
+
+export function createLetterMapping(
+  data: Partial<LetterMapping>
+): LetterMapping {
+  return {
+    startPosition: data.startPosition ?? "",
+    endPosition: data.endPosition ?? "",
+    blueMotionType: data.blueMotionType ?? ("STATIC" as MotionType),
+    redMotionType: data.redMotionType ?? ("STATIC" as MotionType),
+  };
+}
+
+export function createCodexLetter(data: Partial<CodexLetter>): CodexLetter {
+  return {
+    letter: data.letter ?? "",
+    mapping: data.mapping ?? createLetterMapping({}),
+    category: data.category ?? ("BASIC" as LetterCategory),
+    row: data.row ?? 0,
+    position: data.position ?? 0,
+  };
 }

@@ -6,9 +6,13 @@
  * Generates pictograph data, not just letters.
  */
 
-import { Direction, PositionSystem, Timing } from "$domain";
-import { Letter } from "../../../../../../domain/models/core/Letter";
-import type { PictographData } from "../../../../../../domain/models/core/PictographData";
+import {
+  Direction,
+  Letter,
+  PositionSystem,
+  Timing,
+  type PictographData,
+} from "$domain";
 import { BaseLetterGenerator } from "../../../core/BaseLetterGenerator";
 import {
   calculateDirectionForPositionSystem,

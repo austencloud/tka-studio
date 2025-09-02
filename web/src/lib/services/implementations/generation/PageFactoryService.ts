@@ -7,24 +7,29 @@
  * Based on desktop application's printable_factory.py functionality.
  */
 
-import type { SequenceData } from "$domain";
-import type {
-  IPageFactoryService,
-  IPrintablePageLayoutService,
-} from "$lib/services/contracts/sequence-interfaces";
-import { inject, injectable } from "inversify";
 import type {
   GridCalculationOptions,
-  LayoutSuggestion,
   LayoutValidationError,
   LayoutValidationResult,
   LayoutValidationWarning,
   Page,
-  PageCreationOptions,
-  PageLayoutConfig,
   Rectangle,
   SequenceCardGridConfig,
-} from "../../../domain/sequence-card/PageLayoutTypes";
+  SequenceData,
+} from "$domain";
+
+// Import the correct interfaces from sequence-card-models
+import type {
+  IPageFactoryService,
+  IPrintablePageLayoutService,
+  PageOrientation,
+} from "$contracts";
+import type {
+  PageCreationOptions,
+  PageLayoutConfig,
+} from "$domain/models/sequence-card/sequence-card-models";
+import type { SequenceCardPaperSize } from "$lib/services/contracts/sequence-interfaces";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 
 @injectable()
@@ -38,9 +43,7 @@ export class PageFactoryService implements IPageFactoryService {
     // Validate options first
     const validation = this.validatePageOptions(options);
     if (!validation.isValid) {
-      throw new Error(
-        `Invalid page options: ${validation.errors.map((e) => e.message).join(", ")}`
-      );
+      throw new Error(`Invalid page options: ${validation.errors.join(", ")}`);
     }
 
     const pages: Page[] = [];
@@ -53,8 +56,8 @@ export class PageFactoryService implements IPageFactoryService {
 
     // Calculate layout details
     const pageDimensions = this.layoutService.calculatePageDimensions(
-      layout.printConfiguration.paperSize,
-      layout.printConfiguration.orientation
+      layout.printConfiguration.paperSize as SequenceCardPaperSize,
+      layout.printConfiguration.orientation as PageOrientation
     );
     const margins = layout.printConfiguration.margins;
     const contentArea = this.layoutService.calculateContentArea(
@@ -71,7 +74,7 @@ export class PageFactoryService implements IPageFactoryService {
       const optimalCardsPerPage = this.getOptimalCardsPerPage(
         contentArea,
         cardAspectRatio,
-        layout.gridOptions
+        layout.gridOptions as Partial<GridCalculationOptions>
       );
       sequencesPerPage = optimalCardsPerPage;
     }
@@ -124,8 +127,8 @@ export class PageFactoryService implements IPageFactoryService {
     _message?: string
   ): Page {
     const pageDimensions = this.layoutService.calculatePageDimensions(
-      layout.printConfiguration.paperSize,
-      layout.printConfiguration.orientation
+      layout.printConfiguration.paperSize as SequenceCardPaperSize,
+      layout.printConfiguration.orientation as PageOrientation
     );
     const margins = layout.printConfiguration.margins;
     const contentArea = this.layoutService.calculateContentArea(
@@ -182,7 +185,6 @@ export class PageFactoryService implements IPageFactoryService {
   validatePageOptions(options: PageCreationOptions): LayoutValidationResult {
     const errors: LayoutValidationError[] = [];
     const warnings: LayoutValidationWarning[] = [];
-    const suggestions: LayoutSuggestion[] = [];
 
     // Validate sequences per page
     if (options.layout.sequencesPerPage < 1) {
@@ -214,17 +216,37 @@ export class PageFactoryService implements IPageFactoryService {
     }
 
     // Validate layout configuration
-    const layoutValidation = this.layoutService.validateLayout(options.layout);
-    errors.push(...layoutValidation.errors);
-    warnings.push(...layoutValidation.warnings);
+    const layoutValidation = this.layoutService.validateLayout(
+      options.layout as any
+    );
+    // Convert layout validation results to our format
+    layoutValidation.errors.forEach((error: any) => {
+      errors.push({
+        code: "LAYOUT_ERROR",
+        message:
+          typeof error === "string" ? error : error?.message || String(error),
+        field: "layout",
+        severity: "error" as const,
+      });
+    });
+
+    layoutValidation.warnings.forEach((warning: any) => {
+      warnings.push({
+        code: "LAYOUT_WARNING",
+        message:
+          typeof warning === "string"
+            ? warning
+            : warning?.message || String(warning),
+        suggestion: "Review layout configuration",
+      });
+    });
     // Note: LayoutValidationResult doesn't have suggestions property
     // suggestions.push(...layoutValidation.suggestions);
 
     return {
       isValid: errors.length === 0,
-      errors,
-      warnings,
-      suggestions,
+      errors: errors.map((e) => e.message),
+      warnings: warnings.map((w) => w.message),
     };
   }
 

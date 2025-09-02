@@ -9,6 +9,7 @@
  * - Ocean gradient background
  */
 
+import type { IBackgroundSystem } from "$contracts";
 import type {
   AccessibilitySettings,
   Bubble,
@@ -18,8 +19,7 @@ import type {
   OceanParticle,
   PerformanceMetrics,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
-import type { IBackgroundSystem } from "$lib/services/contracts/background/IBackgroundSystem";
+} from "$domain";
 
 export class DeepOceanBackgroundSystem implements IBackgroundSystem {
   private state: DeepOceanState;

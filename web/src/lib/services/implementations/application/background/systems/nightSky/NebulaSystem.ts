@@ -1,10 +1,6 @@
 // src/lib/components/backgrounds/systems/nightSky/NebulaSystem.ts
+import type { AccessibilitySettings, Dimensions, QualityLevel } from "$domain";
 import { NightSkyUtils } from "./NightSkyUtils";
-import type {
-  AccessibilitySettings,
-  Dimensions,
-  QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface NebulaConfig {
   count: number;

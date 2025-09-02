@@ -6,7 +6,7 @@
  */
 
 // Browse types
-export * from "./BrowseTypes";
+export * from "./browse/BrowseTypes";
 
 // Codex types
 export * from "./CodexTypes";
@@ -15,4 +15,4 @@ export * from "./CodexTypes";
 export * from "./PageLayoutTypes";
 
 // Workbench types
-export * from "./WorkbenchTypes";
+export * from "./build/WorkbenchTypes";

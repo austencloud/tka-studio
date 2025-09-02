@@ -5,16 +5,18 @@
  * Ported and adapted from desktop app's BrowseService.
  */
 
-import { GridMode, GridPositionGroup, PropType } from "$domain";
-import type { FilterType, FilterValue, SortMethod } from "$domain/browse";
+import type { IBrowseService } from "$contracts";
+import type { FilterValue } from "$domain";
 import {
-  FilterType as FilterTypeEnum,
-  SortMethod as SortMethodEnum,
-} from "$domain/browse";
-import type { IBrowseService } from "$lib/services/contracts/browse-interfaces";
+  createSequenceData,
+  FilterType,
+  GridMode,
+  GridPositionGroup,
+  PropType,
+  SortMethod,
+  type SequenceData,
+} from "$domain";
 import { injectable } from "inversify";
-import type { SequenceData } from "../../../domain/models/core/SequenceData";
-import { createSequenceData } from "../../../domain/models/core/SequenceData";
 
 @injectable()
 export class BrowseService implements IBrowseService {
@@ -104,7 +106,7 @@ export class BrowseService implements IBrowseService {
     console.log("  - filterValue:", filterValue);
     console.log("  - input sequences:", sequences.length, "items");
 
-    if (filterType === FilterTypeEnum.ALL_SEQUENCES) {
+    if (filterType === FilterType.ALL_SEQUENCES) {
       console.log(
         "✅ ALL_SEQUENCES filter detected - returning all sequences:",
         sequences.length
@@ -116,31 +118,31 @@ export class BrowseService implements IBrowseService {
     let filtered: SequenceData[];
 
     switch (filterType) {
-      case FilterTypeEnum.STARTING_LETTER:
+      case FilterType.STARTING_LETTER:
         filtered = this.filterByStartingLetter(sequences, filterValue);
         break;
-      case FilterTypeEnum.CONTAINS_LETTERS:
+      case FilterType.CONTAINS_LETTERS:
         filtered = this.filterByContainsLetters(sequences, filterValue);
         break;
-      case FilterTypeEnum.LENGTH:
+      case FilterType.LENGTH:
         filtered = this.filterByLength(sequences, filterValue);
         break;
-      case FilterTypeEnum.DIFFICULTY:
+      case FilterType.DIFFICULTY:
         filtered = this.filterByDifficulty(sequences, filterValue);
         break;
-      case FilterTypeEnum.startPosition:
+      case FilterType.startPosition:
         filtered = this.filterByStartingPosition(sequences, filterValue);
         break;
-      case FilterTypeEnum.AUTHOR:
+      case FilterType.AUTHOR:
         filtered = this.filterByAuthor(sequences, filterValue);
         break;
-      case FilterTypeEnum.GRID_MODE:
+      case FilterType.GRID_MODE:
         filtered = this.filterByGridMode(sequences, filterValue);
         break;
-      case FilterTypeEnum.FAVORITES:
+      case FilterType.FAVORITES:
         filtered = sequences.filter((s) => s.isFavorite);
         break;
-      case FilterTypeEnum.RECENT:
+      case FilterType.RECENT:
         filtered = this.filterByRecent(sequences);
         break;
       default:
@@ -163,29 +165,29 @@ export class BrowseService implements IBrowseService {
     const sorted = [...sequences];
 
     switch (sortMethod) {
-      case SortMethodEnum.ALPHABETICAL:
+      case SortMethod.ALPHABETICAL:
         return sorted.sort((a, b) => a.word.localeCompare(b.word));
-      case SortMethodEnum.dateAdded:
+      case SortMethod.dateAdded:
         return sorted.sort((a, b) => {
           const dateA = a.dateAdded || new Date(0);
           const dateB = b.dateAdded || new Date(0);
           return dateB.getTime() - dateA.getTime();
         });
-      case SortMethodEnum.difficultyLevel:
+      case SortMethod.difficultyLevel:
         return sorted.sort((a, b) => {
           const levelA = this.getDifficultyOrder(a.difficultyLevel);
           const levelB = this.getDifficultyOrder(b.difficultyLevel);
           return levelA - levelB;
         });
-      case SortMethodEnum.sequenceLength:
+      case SortMethod.sequenceLength:
         return sorted.sort(
           (a, b) => (a.sequenceLength || 0) - (b.sequenceLength || 0)
         );
-      case SortMethodEnum.AUTHOR:
+      case SortMethod.AUTHOR:
         return sorted.sort((a, b) =>
           (a.author || "").localeCompare(b.author || "")
         );
-      case SortMethodEnum.POPULARITY:
+      case SortMethod.POPULARITY:
         return sorted.sort(
           (a, b) => Number(b.isFavorite) - Number(a.isFavorite)
         );
@@ -227,15 +229,15 @@ export class BrowseService implements IBrowseService {
 
   async getFilterOptions(filterType: FilterType): Promise<string[]> {
     switch (filterType) {
-      case FilterTypeEnum.STARTING_LETTER:
+      case FilterType.STARTING_LETTER:
         return ["A-D", "E-H", "I-L", "M-P", "Q-T", "U-Z"];
-      case FilterTypeEnum.LENGTH:
+      case FilterType.LENGTH:
         return ["3", "4", "5", "6", "7", "8+"];
-      case FilterTypeEnum.DIFFICULTY:
+      case FilterType.DIFFICULTY:
         return ["beginner", "intermediate", "advanced"];
-      case FilterTypeEnum.AUTHOR:
+      case FilterType.AUTHOR:
         return this.getUniqueValues("author");
-      case FilterTypeEnum.GRID_MODE:
+      case FilterType.GRID_MODE:
         return [GridMode.DIAMOND, GridMode.BOX];
       default:
         return [];
@@ -482,13 +484,13 @@ export class BrowseService implements IBrowseService {
     sortMethod: SortMethod
   ): string {
     switch (sortMethod) {
-      case SortMethodEnum.ALPHABETICAL:
+      case SortMethod.ALPHABETICAL:
         return sequence.word[0]?.toUpperCase() || "#";
-      case SortMethodEnum.difficultyLevel:
+      case SortMethod.difficultyLevel:
         return sequence.difficultyLevel || "Unknown";
-      case SortMethodEnum.AUTHOR:
+      case SortMethod.AUTHOR:
         return sequence.author || "Unknown";
-      case SortMethodEnum.sequenceLength: {
+      case SortMethod.sequenceLength: {
         const length = sequence.sequenceLength || 0;
         if (length <= 4) return "3-4 beats";
         if (length <= 6) return "5-6 beats";

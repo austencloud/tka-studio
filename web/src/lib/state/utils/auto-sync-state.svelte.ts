@@ -41,14 +41,14 @@ interface AutoSyncConfig {
  * ```typescript
  * // In your existing createBrowseState factory
  * export function createBrowseState(services) {
- *   const autoSyncState = createAutoSyncState({
+ *   const autoSyncState = createAutoSyncState<BrowseState>({
  *     key: 'tka-browse-state-v3',
  *     debounceMs: 300,
  *     validate: (state) => state && typeof state === 'object'
  *   });
  *
  *   // Load initial state
- *   let browseState = $state(autoSyncState.load({
+ *   let browseState: BrowseState = $state(autoSyncState.load({
  *     currentFilter: null,
  *     selectedSequence: null,
  *     scrollPosition: { top: 0, left: 0 }
@@ -58,9 +58,9 @@ interface AutoSyncConfig {
  *   autoSyncState.sync(() => browseState);
  *
  *   return {
- *     get currentFilter() { return (browseState as any).currentFilter; },
+ *     get currentFilter() { return browseState.currentFilter; },
  *     setFilter(type, value) {
- *       (browseState as any).currentFilter = { type, value };
+ *       browseState.currentFilter = { type, value };
  *       // ✅ Automatically persisted - no manual save needed!
  *     }
  *   };

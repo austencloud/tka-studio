@@ -1,12 +1,12 @@
 // src/lib/services/implementations/background/systems/SnowfallBackgroundSystem.ts
+import type { IBackgroundSystem } from "$contracts";
 import type {
   Dimensions,
   QualityLevel,
   ShootingStarState,
   Snowflake,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
-import { getOptimizedConfig } from "$domain/core/ui/backgrounds/configs/config";
-import type { IBackgroundSystem } from "$lib/services/contracts/background/IBackgroundSystem";
+} from "$domain";
+import { getOptimizedConfig } from "$domain";
 import { drawBackgroundGradient } from "$lib/utils/background/backgroundUtils";
 import { createShootingStarSystem } from "./core/ShootingStarSystem";
 import { createSnowflakeSystem } from "./core/SnowflakeSystem";

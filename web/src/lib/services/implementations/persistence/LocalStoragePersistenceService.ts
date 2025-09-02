@@ -5,11 +5,11 @@
  * This provides a simple persistence layer for sequences and settings.
  */
 
+import type { IPersistenceService } from "$contracts";
 import type { BeatData, SequenceData } from "$domain";
-import { SequenceDataSchema } from "$domain/schemas";
+import { SequenceDataSchema } from "$domain";
 import { safeParseOrNull } from "$lib/utils/validation";
 import { injectable } from "inversify";
-import type { IPersistenceService } from "$lib/services/contracts/sequence-interfaces";
 
 @injectable()
 export class LocalStoragePersistenceService implements IPersistenceService {

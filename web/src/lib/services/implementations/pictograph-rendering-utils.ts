@@ -5,19 +5,18 @@
  * This replaces the PictographRenderingService with explicit composition.
  */
 
-import type { MotionData, PictographData } from "$domain";
-import { GridMode } from "$domain";
-import { MotionColor } from "$lib/domain/enums/enums";
 import type {
   IArrowRenderer,
   IGridRenderingService,
   IOverlayRenderer,
   ISvgUtilityService,
-} from "../contracts/pictograph-interfaces";
+} from "$contracts/pictograph-interfaces";
 import type {
   IArrowPositioningOrchestrator,
   IGridModeDeriver,
-} from "../contracts/positioning-interfaces";
+} from "$contracts/positioning-interfaces";
+import type { MotionData, PictographData } from "$domain";
+import { GridMode, MotionColor } from "$domain";
 import { resolve, TYPES } from "../inversify/container";
 
 /**

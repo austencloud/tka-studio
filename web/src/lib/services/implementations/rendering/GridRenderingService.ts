@@ -5,9 +5,9 @@
  * Extracted from PictographRenderingService.
  */
 
+import type { ISvgConfiguration } from "$contracts/pictograph-interfaces";
 import { GridMode } from "$domain";
 import { inject, injectable } from "inversify";
-import type { ISvgConfiguration } from "../../contracts/pictograph-interfaces";
 import { TYPES } from "../../inversify/types";
 
 export interface IGridRenderingService {

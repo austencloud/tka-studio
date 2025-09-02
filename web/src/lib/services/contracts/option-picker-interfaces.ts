@@ -10,8 +10,8 @@
 import type {
   OptionPickerLayoutCalculationParams,
   OptionPickerLayoutCalculationResult,
-} from "$lib/domain/build/option-picker/OptionPickerTypes";
-import type { PictographData } from "../../domain/models/core/PictographData";
+  PictographData,
+} from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -98,10 +98,3 @@ export interface IOptionPickerDataService {
   getEndPosition(pictographData: PictographData): string | null;
 }
 
-// ============================================================================
-// RE-EXPORT DOMAIN TYPES
-// ============================================================================
-export type {
-  OptionPickerLayoutCalculationParams,
-  OptionPickerLayoutCalculationResult,
-} from "$lib/domain/build/option-picker/OptionPickerTypes";

@@ -5,9 +5,9 @@
  * Provides a single source of truth for raw CSV content without parsing logic.
  */
 
+import type { ICsvLoader } from "$contracts/data/ICsvLoader";
+import type { CsvDataSet } from "$domain";
 import { injectable } from "inversify";
-import type { CsvDataSet } from "../../contracts/data-interfaces";
-import type { ICsvLoader } from "../../contracts/data/ICsvLoader";
 
 @injectable()
 export class CsvLoader implements ICsvLoader {

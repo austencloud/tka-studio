@@ -7,8 +7,7 @@
 
 import { browser } from "$app/environment";
 import type { AppSettings } from "$domain";
-import { GridMode } from "$domain";
-import { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
+import { BackgroundType, GridMode } from "$domain";
 import { updateBodyBackground } from "$lib/utils/background-preloader";
 import type { ISettingsService } from "./state-service-interfaces";
 

@@ -9,7 +9,7 @@ Integrates panel management service with runes for:
 -->
 <script lang="ts">
   import type { SequenceData } from "$domain";
-  import { NavigationMode } from "$domain/browse";
+  import { NavigationMode } from "$domain";
   import type {
     IBrowseService,
     IDeleteService,

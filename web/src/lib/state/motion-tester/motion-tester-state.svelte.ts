@@ -16,12 +16,7 @@ import {
 import { OrientationCalculationService } from "$lib/services/implementations/positioning/OrientationCalculationService";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 
-import {
-  GridMode,
-  Location,
-  MotionColor,
-  MotionType,
-} from "$lib/domain/enums/enums";
+import { GridMode, Location, MotionColor, MotionType } from "$domain";
 
 export interface MotionTesterState {
   // Reactive state getters

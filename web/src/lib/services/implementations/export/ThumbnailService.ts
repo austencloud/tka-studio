@@ -5,7 +5,7 @@
  * Manages caching and provides URLs for thumbnail access.
  */
 
-import type { IThumbnailService } from "$lib/services/contracts/browse-interfaces";
+import type { IThumbnailService } from "$contracts";
 import { injectable } from "inversify";
 
 @injectable()

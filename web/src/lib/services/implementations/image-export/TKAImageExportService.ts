@@ -9,16 +9,15 @@
  * Equivalent to desktop ImageExportManager.
  */
 
-import type { SequenceData } from "$domain";
-import { inject, injectable } from "inversify";
 import type {
   IDimensionCalculationService,
   IFileExportService,
   IImageCompositionService,
   ILayoutCalculationService,
   ITKAImageExportService,
-  TKAImageExportOptions,
-} from "../../contracts/image-export-interfaces";
+} from "$contracts/image-export-interfaces";
+import type { SequenceData, TKAImageExportOptions } from "$domain";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 
 @injectable()

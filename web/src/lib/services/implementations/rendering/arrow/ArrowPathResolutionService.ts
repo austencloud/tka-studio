@@ -6,7 +6,7 @@
  */
 
 import type { MotionData } from "$domain";
-import type { ArrowPlacementData } from "$domain/core/pictograph/ArrowPlacementData";
+import type { ArrowPlacementData } from "$domain";
 import type { IArrowPathResolutionService } from "$lib/services/contracts/positioning-interfaces";
 import { injectable } from "inversify";
 

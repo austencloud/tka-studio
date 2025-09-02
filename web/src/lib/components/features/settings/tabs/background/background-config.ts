@@ -1,5 +1,5 @@
 // background-config.ts - Background metadata configuration
-import { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
+import { BackgroundType } from "$domain";
 
 export interface BackgroundMetadata {
   type: BackgroundType;

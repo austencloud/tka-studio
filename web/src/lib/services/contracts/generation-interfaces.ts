@@ -9,18 +9,15 @@
 // ============================================================================
 import type {
   BeatData,
+  GenerationOptions,
   GridMode,
+  Letter,
+  LetterDerivationResult,
   MotionData,
   PictographData,
   SequenceData,
 } from "$domain";
-import { GenerationMode, GridPosition } from "$domain";
-import type {
-  GenerationOptions,
-  LetterDerivationResult,
-} from "$domain/build/generate/types";
-import { MotionColor } from "$lib/domain/enums/enums";
-import type { Letter } from "../../domain/models/core/Letter";
+import { GenerationMode, GridPosition, MotionColor } from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -74,25 +71,21 @@ export interface IOptionDataService {
   initialize(): Promise<void>;
   getNextOptions(
     sequence: BeatData[]
-  ): Promise<
-    import("$lib/domain/core/pictograph/PictographData").PictographData[]
-  >;
+  ): Promise<PictographData[]>;
   getNextOptionsFromEndPosition(
     endPosition: string,
     gridMode: GridMode,
     options: Record<string, unknown>
-  ): Promise<
-    import("$lib/domain/core/pictograph/PictographData").PictographData[]
-  >;
+  ): Promise<PictographData[]>;
   filterOptionsByLetterTypes(
-    options: import("$lib/domain/core/pictograph/PictographData").PictographData[],
+    options: PictographData[],
     letterTypes: string[]
-  ): import("$lib/domain/core/pictograph/PictographData").PictographData[];
+  ): PictographData[];
   filterOptionsByRotation(
-    options: import("$lib/domain/core/pictograph/PictographData").PictographData[],
+    options: PictographData[],
     blueRotationDirection: string,
     redRotationDirection: string
-  ): import("$lib/domain/core/pictograph/PictographData").PictographData[];
+  ): PictographData[];
 }
 
 export interface IOrientationCalculationService {
@@ -189,8 +182,8 @@ export interface IDirectionCalculator {
     endPosition: GridPosition,
     motionType: string
   ): [
-    import("$lib/domain/enums/enums").Location,
-    import("$lib/domain/enums/enums").Location,
+    import("$domain").Location,
+    import("$domain").Location
   ];
 }
 
@@ -245,7 +238,4 @@ export interface ILetterDeriver {
 // ============================================================================
 
 // Re-export types that other modules need to import
-export type {
-  GenerationOptions,
-  LetterDerivationResult,
-} from "$domain/build/generate/types";
+export type { GenerationOptions, LetterDerivationResult } from "$domain";

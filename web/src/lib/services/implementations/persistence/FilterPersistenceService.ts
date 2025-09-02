@@ -5,18 +5,18 @@
  * following the microservices architecture pattern.
  */
 
+import type {
+  FilterState as BrowseFilterState,
+  BrowseState,
+} from "$contracts/browse-interfaces";
 import type { FilterType, FilterValue } from "$domain";
+import { NavigationMode, SortMethod } from "$domain";
 import {
   safeSessionStorageGet,
   safeSessionStorageRemove,
   safeSessionStorageSet,
 } from "$lib/utils/safe-storage";
 import { injectable } from "inversify";
-import { SortMethod as SortMethodEnum } from "../../../domain/browse/SortMethod";
-import type {
-  FilterState as BrowseFilterState,
-  BrowseState,
-} from "../../contracts/browse-interfaces";
 
 export interface FilterState {
   type: FilterType;
@@ -211,8 +211,8 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       filterValues: null,
       selectedSequence: null,
       selectedVariation: null,
-      navigationMode: "filter_selector" as any, // NavigationMode.FILTER_SELECTION
-      sortMethod: SortMethodEnum.ALPHABETICAL,
+      navigationMode: NavigationMode.FILTER_SELECTION,
+      sortMethod: SortMethod.ALPHABETICAL,
     };
   }
 
@@ -224,8 +224,8 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       filterValues: null,
       selectedSequence: null,
       selectedVariation: null,
-      navigationMode: "filter_selector" as any,
-      sortMethod: SortMethodEnum.ALPHABETICAL,
+      navigationMode: NavigationMode.FILTER_SELECTION,
+      sortMethod: SortMethod.ALPHABETICAL,
     };
     await this.saveBrowseState(browseState);
   }
@@ -245,7 +245,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
         favorites: null,
         recent: null,
       },
-      sortMethod: SortMethodEnum.ALPHABETICAL,
+      sortMethod: SortMethod.ALPHABETICAL,
       searchQuery: "",
     };
   }

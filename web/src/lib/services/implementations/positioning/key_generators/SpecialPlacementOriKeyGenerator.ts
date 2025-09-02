@@ -1,5 +1,5 @@
+import type { ISpecialPlacementOriKeyGenerator } from "$contracts";
 import type { MotionData, PictographData } from "$domain";
-import type { ISpecialPlacementOriKeyGenerator } from "$lib/services/contracts/positioning-interfaces";
 import { injectable } from "inversify";
 
 /**

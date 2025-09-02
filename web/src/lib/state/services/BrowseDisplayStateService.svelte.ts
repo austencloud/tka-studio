@@ -6,10 +6,7 @@
  */
 
 import type { BrowseDisplayState, BrowseLoadingState } from "$domain";
-import {
-  createDefaultDisplayState,
-  createDefaultLoadingState,
-} from "$domain/browse";
+import { createDefaultDisplayState, createDefaultLoadingState } from "$domain";
 
 export interface IBrowseDisplayStateService {
   // Reactive state getters

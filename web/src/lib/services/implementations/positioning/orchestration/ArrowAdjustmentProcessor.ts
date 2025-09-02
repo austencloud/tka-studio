@@ -5,10 +5,9 @@
  * Responsible for computing base adjustments and applying directional transformations.
  */
 
-import type { MotionData } from "$domain";
-import { Location, MotionType } from "$lib/domain/enums/enums";
-import type { IArrowLocationCalculator } from "$lib/services/contracts/positioning-interfaces";
-import type { Point } from "../types";
+import type { IArrowLocationCalculator } from "$contracts";
+import type { MotionData, Point } from "$domain";
+import { Location, MotionType } from "$domain";
 import { ArrowQuadrantCalculator } from "./ArrowQuadrantCalculator";
 
 export class ArrowAdjustmentProcessor {
@@ -20,7 +19,6 @@ export class ArrowAdjustmentProcessor {
 
   getBasicAdjustment(
     motion: MotionData,
-    letter: string,
     locationCalculator: IArrowLocationCalculator
   ): Point {
     /**

@@ -6,11 +6,9 @@
  */
 
 import type { SequenceData } from "$domain";
+import { Letter, createBeatData, createPictographData } from "$domain";
 import { SequenceStateService } from "$lib/services/implementations/sequence/SequenceStateService";
 import { beforeEach, describe, expect, it } from "vitest";
-import { createBeatData } from "../../../src/lib/domain/models/build/workbench/BeatData";
-import { Letter } from "../../../src/lib/domain/models/core/Letter";
-import { createPictographData } from "../../../src/lib/domain/models/core/PictographData";
 
 describe("SequenceStateService", () => {
   let service: SequenceStateService;

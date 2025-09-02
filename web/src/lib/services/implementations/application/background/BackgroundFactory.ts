@@ -3,12 +3,12 @@
 
 import {
   BackgroundType,
+  detectAppropriateQuality,
   type AccessibilitySettings,
   type BackgroundFactoryParams,
   type BackgroundSystem,
   type QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
-import { detectAppropriateQuality } from "$domain/core/ui/backgrounds/configs/config";
+} from "$domain";
 import { AuroraBackgroundSystem } from "./systems/AuroraBackgroundSystem";
 import { BubblesBackgroundSystem } from "./systems/BubblesBackgroundSystem";
 import { DeepOceanBackgroundSystem } from "./systems/DeepOceanBackgroundSystem";

@@ -5,7 +5,7 @@
  * enabling proper dependency injection and testability.
  */
 
-import type { TextRenderOptions, UserInfo } from "./image-export-interfaces";
+import type { TextRenderOptions, UserInfo } from "$domain";
 
 /**
  * Word text rendering interface

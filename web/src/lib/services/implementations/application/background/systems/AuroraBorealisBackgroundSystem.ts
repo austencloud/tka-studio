@@ -5,7 +5,7 @@ import type {
   Dimensions,
   PerformanceMetrics,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+} from "$domain";
 
 export class AuroraBorealisBackgroundSystem implements BackgroundSystem {
   private quality: QualityLevel = "medium";

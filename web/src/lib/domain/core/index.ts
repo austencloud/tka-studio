@@ -5,11 +5,11 @@
  */
 
 // Export from new models directory
-export * from "../models/core/ApplicationTypes";
-export * from "../models/core/CsvModels";
-export * from "../models/core/DeviceTypes";
-export * from "../models/core/Letter";
-export * from "../models/core/SequenceData";
+export * from "../enums/Letter";
+export * from "../models/core/application/ApplicationTypes";
+export * from "../models/core/csv-handling/CsvModels";
+export * from "../models/core/device-recognition/DeviceTypes";
+export * from "../models/core/sequence/SequenceData";
 export * from "./AppSettings";
 export * from "./pictograph";
 export * from "./ui";

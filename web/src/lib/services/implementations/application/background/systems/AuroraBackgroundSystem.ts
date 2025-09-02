@@ -1,11 +1,11 @@
 // src/lib/components/backgrounds/aurora/AuroraBackgroundSystem.ts
+import type { IBackgroundSystem } from "$contracts";
 import type {
   AccessibilitySettings,
   Dimensions,
   PerformanceMetrics,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
-import type { IBackgroundSystem } from "$lib/services/contracts/background/IBackgroundSystem";
+} from "$domain";
 
 interface Blob {
   x: number;

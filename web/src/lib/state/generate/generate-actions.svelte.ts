@@ -11,7 +11,7 @@ import {
   GenerationMode,
   GridMode,
   PropContinuity,
-} from "$lib/domain/enums/enums";
+} from "$domain";
 import type {
   GenerationOptions,
   ISequenceGenerationService,

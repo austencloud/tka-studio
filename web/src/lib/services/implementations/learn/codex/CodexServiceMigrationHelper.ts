@@ -5,7 +5,7 @@
  * to the new clean implementation.
  */
 
-import type { PictographData } from "../../../../domain/models/core/PictographData";
+import type { PictographData } from "$domain";
 import { CodexService } from "./CodexService";
 
 export class CodexServiceMigrationHelper {

@@ -7,8 +7,7 @@
  * Based on desktop application's printable_layout.py functionality.
  */
 
-import type { IPrintablePageLayoutService } from "$lib/services/contracts/sequence-interfaces";
-import { injectable } from "inversify";
+import type { IPrintablePageLayoutService } from "$contracts";
 import type {
   DPIConfiguration,
   GridCalculationOptions,
@@ -25,7 +24,8 @@ import type {
   Rectangle,
   SequenceCardGridConfig,
   SequenceCardPaperSize,
-} from "../../../domain/sequence-card/PageLayoutTypes";
+} from "$domain";
+import { injectable } from "inversify";
 
 @injectable()
 export class PrintablePageLayoutService implements IPrintablePageLayoutService {

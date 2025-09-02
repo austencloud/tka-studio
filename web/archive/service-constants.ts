@@ -5,7 +5,7 @@
  * These constants help avoid circular dependencies in the bootstrap process.
  */
 
-import { defineService } from "$domain/core";
+import { defineService } from "$domain";
 import type {
   IEnhancedExportService,
   ISequenceCardBatchService,

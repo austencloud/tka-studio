@@ -7,23 +7,7 @@
 // ============================================================================
 // EXPORT OPTIONS AND CONFIGURATION
 // ============================================================================
-import type { SequenceData } from "$domain";
-import type { TKAImageExportOptions } from "$domain/build/image-export/core";
-
-// Re-export the imported types so other services can use them
-export type {
-  BeatRenderOptions,
-  CompositionOptions,
-  ExportError,
-  ExportProgress,
-  ExportResult,
-  LayoutConstraints,
-  LayoutData,
-  RenderQualitySettings,
-  TextRenderOptions,
-  TKAImageExportOptions,
-  UserInfo,
-} from "$domain/build/image-export/core";
+import type { SequenceData, TKAImageExportOptions } from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -78,5 +62,5 @@ export interface ITKAImageExportService {
   getDefaultOptions(): TKAImageExportOptions;
 }
 
-// Note: Import types directly from $domain/build/image-export/core
+// Note: Import types directly from $domain
 // instead of re-exporting them from service contracts

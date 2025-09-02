@@ -9,7 +9,7 @@ import type {
   BackgroundFactoryParams,
   BackgroundSystem,
   BackgroundType,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+} from "$domain";
 
 export interface IBackgroundFactory {
   /**

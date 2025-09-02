@@ -1,15 +1,15 @@
 /**
- * Device Detection Service Implementation
- * Uses modern detection methods based on research from W3C, Material Design, and iOS guidelines
- */
-
 import type {
   DeviceCapabilities,
   ResponsiveSettings,
-} from "../../../domain/models/core/DeviceTypes";
+} from "$domain";evice Detection Service Implementation
+ * Uses modern detection methods based on research from W3C, Material Design, and iOS guidelines
+ */
 
+import type { DeviceCapabilities, ResponsiveSettings } from "$domain";
+
+import type { IDeviceDetector } from "$contracts/application/IDeviceDetector";
 import { injectable } from "inversify";
-import type { IDeviceDetector } from "../../contracts/application/IDeviceDetector";
 
 @injectable()
 export class DeviceDetector implements IDeviceDetector {

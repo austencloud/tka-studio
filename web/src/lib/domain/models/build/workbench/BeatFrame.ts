@@ -19,8 +19,12 @@ export interface BeatFrameConfig {
   beatSize: number;
   gap: number;
   gridMode: GridMode;
+  cellSize: number;
+  showBeatNumbers: boolean;
   /** Whether to reserve the first column for the Start Position tile */
   hasStartTile: boolean;
+  enableHover: boolean;
+  enableDrag: boolean;
 }
 
 export interface ContainerDimensions {

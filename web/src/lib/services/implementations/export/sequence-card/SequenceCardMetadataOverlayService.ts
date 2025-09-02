@@ -7,11 +7,11 @@
 
 import type { SequenceData } from "$domain";
 import { injectable } from "inversify";
-import type {
-  ISequenceCardMetadataOverlayService,
-  SequenceCardDimensions,
-  SequenceCardMetadata,
-} from "../../../contracts/sequence-card-export-interfaces";
+// Domain types
+import type { SequenceCardDimensions, SequenceCardMetadata } from "$domain";
+
+// Behavioral contracts
+import type { ISequenceCardMetadataOverlayService } from "../../../contracts/sequence-card-export-interfaces";
 
 @injectable()
 export class SequenceCardMetadataOverlayService

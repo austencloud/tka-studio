@@ -11,24 +11,26 @@
  * while maintaining the same public interface contracts.
  */
 
-import type { SequenceData } from "$domain";
 import type {
-  CompositionOptions,
   IBeatRenderingService,
   IDimensionCalculationService,
   IImageCompositionService,
   ILayoutCalculationService,
+} from "$contracts/image-export-interfaces";
+import type {
+  CompositionOptions,
   LayoutData,
+  SequenceData,
   TKAImageExportOptions,
-} from "../../contracts/image-export-interfaces";
+} from "$domain";
 
-import { inject, injectable } from "inversify";
 import type {
   IDifficultyBadgeRenderer,
   ITextRenderingUtils,
   IUserInfoRenderer,
   IWordTextRenderer,
-} from "../../contracts/text-rendering-interfaces";
+} from "$contracts";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 
 // Internal composition components

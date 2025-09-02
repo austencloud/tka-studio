@@ -1,10 +1,10 @@
+import type { IBackgroundService } from "$contracts";
 import {
   BackgroundType,
   type BackgroundSystem,
   type PerformanceMetrics,
   type QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
-import type { IBackgroundService } from "$lib/services/contracts/background/IBackgroundService";
+} from "$domain";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 
 export function createBackgroundState() {

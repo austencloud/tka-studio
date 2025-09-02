@@ -5,8 +5,8 @@
  * Takes current motion tester parameters and identifies the corresponding TKA letter.
  */
 
+import type { LetterMapping } from "$domain";
 import { GridMode } from "$domain";
-import type { LetterMapping } from "$domain/learn/codex/types";
 import { injectable } from "inversify";
 import type { MotionTestParams } from "./MotionParameterService";
 

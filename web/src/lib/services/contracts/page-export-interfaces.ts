@@ -6,13 +6,11 @@
  */
 
 import type {
+  BatchExportResult,
   ExportProgress,
   ExportResult,
-} from "$domain/build/image-export/core";
-import type {
-  BatchExportResult,
   ImageExportOptions,
-} from "$domain/sequence-card/export";
+} from "$domain";
 
 // ============================================================================
 // PAGE IMAGE EXPORT SERVICES

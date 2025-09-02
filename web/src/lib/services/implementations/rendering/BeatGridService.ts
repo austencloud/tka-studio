@@ -3,14 +3,14 @@
  * Embeds SVG grid data directly - no file loading needed
  */
 
-import { GridMode } from "$domain";
-import { injectable } from "inversify";
 import type {
   CombinedGridOptions,
   GridDrawOptions,
   GridValidationResult,
   IBeatGridService,
-} from "../../contracts/beat-grid-interfaces";
+} from "$contracts/beat-grid-interfaces";
+import { GridMode } from "$domain";
+import { injectable } from "inversify";
 
 @injectable()
 export class BeatGridService implements IBeatGridService {

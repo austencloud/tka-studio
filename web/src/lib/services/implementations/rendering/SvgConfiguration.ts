@@ -5,8 +5,8 @@
  * Extracted from PictographRenderingService for reusability.
  */
 
+import type { ISvgConfiguration } from "$contracts/pictograph-interfaces";
 import { injectable } from "inversify";
-import type { ISvgConfiguration } from "../../contracts/pictograph-interfaces";
 
 @injectable()
 export class SvgConfiguration implements ISvgConfiguration {

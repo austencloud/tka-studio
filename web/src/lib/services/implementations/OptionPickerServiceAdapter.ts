@@ -8,11 +8,13 @@
 import type {
   IOptionPickerDataService,
   IOptionPickerLayoutService,
+} from "$contracts";
+import type {
   OptionPickerLayoutCalculationParams,
   OptionPickerLayoutCalculationResult,
-} from "$lib/services/contracts/option-picker-interfaces";
+  PictographData,
+} from "$domain";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { PictographData } from "../../domain/models/core/PictographData";
 
 export interface OptionPickerServices {
   layout: IOptionPickerLayoutService;

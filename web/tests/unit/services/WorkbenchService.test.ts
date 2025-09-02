@@ -5,13 +5,16 @@
  * after extraction from the mixed reactive service.
  */
 
-import type { BeatData, SequenceData } from "$domain";
-import { GridMode } from "$domain";
-import type { WorkbenchMode } from "$domain/build/workbench/workbench-types";
+import {
+  GridMode,
+  Letter,
+  createPictographData,
+  type BeatData,
+  type SequenceData,
+  type WorkbenchMode,
+} from "$domain";
 import { WorkbenchService } from "$lib/services/implementations/workbench/WorkbenchService";
 import { beforeEach, describe, expect, it } from "vitest";
-import { Letter } from "../../../src/lib/domain/models/core/Letter";
-import { createPictographData } from "../../../src/lib/domain/models/core/PictographData";
 
 describe("WorkbenchService", () => {
   let service: WorkbenchService;

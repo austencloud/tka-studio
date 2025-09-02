@@ -5,11 +5,12 @@
  * Extracted from StartPositionPicker component to follow clean architecture.
  */
 
-import type { IStartPositionSelectionService } from "$lib/services/contracts/application/IStartPositionSelectionService";
-import type { IStartPositionService } from "$services/contracts/application/IStartPositionService";
-import { TYPES } from "$services/inversify/types";
-import { inject, injectable } from "inversify";
-import type { PictographData } from "../../domain/models/core/PictographData";
+import type {
+  IStartPositionSelectionService,
+  IStartPositionService,
+} from "$contracts";
+import type { PictographData } from "$domain";
+import { injectable } from "inversify";
 
 interface StartPositionData {
   endPosition: string;
@@ -23,10 +24,7 @@ interface StartPositionData {
 export class StartPositionSelectionService
   implements IStartPositionSelectionService
 {
-  constructor(
-    @inject(TYPES.IStartPositionService)
-    private readonly utilityStartPositionService: IStartPositionService
-  ) {}
+  constructor() {}
 
   /**
    * Handle the complete start position selection process
@@ -46,8 +44,6 @@ export class StartPositionSelectionService
       );
 
       // Create start position beat data for internal use
-      const startPositionBeat =
-        this.createStartPositionBeat(startPosPictograph);
 
       // Save to localStorage in the format OptionPicker expects
       this.storeStartPositionData(
@@ -96,18 +92,6 @@ export class StartPositionSelectionService
     return {
       endPosition,
       pictographData: pictograph,
-    };
-  }
-
-  /**
-   * Create start position beat data for internal use
-   */
-  private createStartPositionBeat(pictograph: PictographData): any {
-    // Convert pictograph to beat data format
-    return {
-      beat: 1,
-      pictographData: pictograph,
-      // Add other required beat properties as needed
     };
   }
 

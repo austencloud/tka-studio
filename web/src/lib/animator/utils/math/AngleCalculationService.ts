@@ -5,8 +5,7 @@
  * position mapping, and orientation mapping.
  */
 
-import { Orientation } from "$domain";
-import { Location } from "$lib/domain/enums/enums.js";
+import { Location, Orientation } from "$domain";
 import { HALF_PI, LOCATION_ANGLES, PI, TWO_PI } from "./MathConstants.js";
 
 /**

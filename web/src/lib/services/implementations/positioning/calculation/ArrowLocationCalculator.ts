@@ -13,7 +13,7 @@
  */
 
 import type { MotionData, PictographData } from "$domain";
-import { Location, MotionType } from "$lib/domain/enums/enums";
+import { Location, MotionType } from "$domain";
 import type { IArrowLocationCalculator } from "$lib/services/contracts/positioning-interfaces";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../inversify/types";

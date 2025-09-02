@@ -119,12 +119,6 @@ export enum GridMode {
 }
 
 export enum PositionSystem {
-  // Simple position systems
-  ALPHA = "alpha",
-  BETA = "beta",
-  GAMMA = "gamma",
-
-  // Complex position systems
   ALPHA_TO_ALPHA = "alpha_to_alpha",
   ALPHA_TO_BETA = "alpha_to_beta",
   ALPHA_TO_GAMMA = "alpha_to_gamma",
@@ -223,12 +217,7 @@ export enum CAPType {
   MIRRORED_COMPLEMENTARY_ROTATED = "mirroredComplementaryRotated",
 }
 
-export enum OptionPickerReversalFilter {
-  CONTINUOUS = "continuous",
-  ONE_REVERSAL = "oneReversal",
-  TWO_REVERSALS = "twoReversals",
-  ALL = "all",
-}
+// OptionPickerReversalFilter removed - use ReversalFilter instead
 
 export enum OptionPickerSortMethod {
   LETTER_TYPE = "letterType",

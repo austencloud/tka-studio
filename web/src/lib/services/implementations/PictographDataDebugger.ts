@@ -5,10 +5,10 @@
  * where data corruption or missing information occurs.
  */
 
-import type { IGridModeDeriver } from "$lib/services/contracts/positioning-interfaces";
+import type { IGridModeDeriver } from "$contracts";
+import type { PictographData } from "$domain";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 import { endsWithBeta } from "$lib/utils/betaDetection";
-import type { PictographData } from "../../domain/models/core/PictographData";
 
 export interface DataFlowTrace {
   step: string;

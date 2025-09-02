@@ -2,15 +2,15 @@
  * Basic types and data structures for arrow positioning services.
  */
 
-import { MotionColor } from "$lib/domain/enums/enums";
+import { MotionColor } from "$domain";
 
 // Enhanced type definitions with comprehensive coverage
-export type { Location, MotionType, RotationDirection } from "$domain";
+export { Location, MotionType, RotationDirection } from "$domain";
 export type ArrowColor = MotionColor;
 
 // Basic types
 // Note: Point is now exported from positioning-interfaces.ts
-import type { Point } from "../../contracts/positioning-interfaces";
+import type { Point } from "$contracts/positioning-interfaces";
 
 // Re-export Point for backward compatibility
 export type { Point };

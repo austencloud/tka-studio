@@ -5,12 +5,12 @@
  * Follows TKA architecture: services handle logic, runes handle reactivity.
  */
 
-import { ResizeDirection } from "$domain/layout/LayoutTypes";
 import type {
   IPanelManagementService,
   PanelState,
   ResizeOperation,
-} from "$lib/services/contracts/panel-interfaces";
+} from "$contracts";
+import { ResizeDirection } from "$domain";
 
 export interface PanelStateManager {
   // Panel state getters (reactive)

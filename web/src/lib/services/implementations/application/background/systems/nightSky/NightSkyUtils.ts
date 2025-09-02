@@ -1,9 +1,5 @@
 // src/lib/components/backgrounds/systems/nightSky/NightSkyUtils.ts
-import type {
-  AccessibilitySettings,
-  Dimensions,
-  Star,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+import type { AccessibilitySettings, Dimensions, Star } from "$domain";
 
 export interface StarConfig {
   minSize: number;

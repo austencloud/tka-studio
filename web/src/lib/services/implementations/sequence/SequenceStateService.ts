@@ -5,16 +5,21 @@
  * Contains only pure functions with no reactive state.
  */
 
-import type { BeatData, Letter, SequenceData, ValidationResult } from "$domain";
-import type { SequenceStatistics } from "$domain/models/browse/SequenceState";
-import type { ISequenceStateService } from "$lib/services/contracts/sequence/ISequenceStateService";
-import { injectable } from "inversify";
+import type { ISequenceStateService } from "$contracts";
+import type {
+  BeatData,
+  Letter,
+  SequenceData,
+  SequenceStatistics,
+  ValidationResult,
+} from "$domain";
 import {
   addBeatToSequence,
   createSequenceData,
   removeBeatFromSequence,
   updateSequenceData,
-} from "../../../domain/models/core/SequenceData";
+} from "$domain";
+import { injectable } from "inversify";
 @injectable()
 export class SequenceStateService implements ISequenceStateService {
   // ============================================================================

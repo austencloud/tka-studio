@@ -11,7 +11,7 @@ without the complex BackgroundContext system.
     BackgroundType,
     PerformanceMetrics,
     QualityLevel,
-  } from "$domain/core/ui/backgrounds/BackgroundTypes";
+  } from "$domain";
   import { BackgroundFactory } from "$lib/services/implementations/application/background/BackgroundFactory";
   import { onDestroy, onMount } from "svelte";
 

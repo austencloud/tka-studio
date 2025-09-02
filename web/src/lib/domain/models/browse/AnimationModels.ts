@@ -1,5 +1,5 @@
 import type { PropState } from "../../../components/tabs/browse-tab/animator/types/PropState";
-import type { BeatData } from "../core/BeatData";
+import type { BeatData } from "../build/workbench/BeatModels";
 
 export interface InterpolationResult {
   blueAngles: {

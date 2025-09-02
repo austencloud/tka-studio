@@ -7,10 +7,7 @@
  * PageImageExportService, and others.
  */
 
-import type {
-  ImageFormatOptions,
-  OptimizationSettings,
-} from "$domain/build/image-export/format";
+import type { ImageFormatOptions, OptimizationSettings } from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

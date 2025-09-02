@@ -5,7 +5,7 @@
   Focused on component coordination and state management.
 -->
 <script lang="ts">
-  import type { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
+  import type { BackgroundType } from "$domain";
   import { backgroundsConfig } from "./background-config";
   import "./background-thumbnail-animations.css";
   import BackgroundThumbnail from "./BackgroundThumbnail.svelte";

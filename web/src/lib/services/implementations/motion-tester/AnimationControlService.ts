@@ -1,18 +1,20 @@
+import type { IAnimationControlService } from "$contracts/motion-tester-interfaces";
 import type { MotionData, SequenceData } from "$domain";
 import {
   createBeatData,
   createMotionData,
   createPictographData,
   createSequenceData,
+  Location,
+  MotionColor,
+  MotionType,
   Orientation,
   PropType,
   RotationDirection,
 } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator";
-import { Location, MotionColor, MotionType } from "$lib/domain/enums/enums";
 import type { ISequenceAnimationEngine } from "$lib/services/contracts/animation";
 import { inject, injectable } from "inversify";
-import type { IAnimationControlService } from "../../contracts/motion-tester-interfaces";
 import { TYPES } from "../../inversify/types";
 import type { MotionTestParams } from "./MotionParameterService";
 

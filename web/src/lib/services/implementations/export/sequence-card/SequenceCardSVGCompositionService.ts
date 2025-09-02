@@ -6,10 +6,11 @@
  */
 
 import { injectable } from "inversify";
-import type {
-  ISequenceCardSVGCompositionService,
-  SequenceCardDimensions,
-} from "../../../contracts/sequence-card-export-interfaces";
+// Domain types
+import type { SequenceCardDimensions } from "$domain";
+
+// Behavioral contracts
+import type { ISequenceCardSVGCompositionService } from "../../../contracts/sequence-card-export-interfaces";
 
 interface BeatLayout {
   rows: number;

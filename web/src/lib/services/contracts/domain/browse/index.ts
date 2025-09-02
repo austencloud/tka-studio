@@ -1,17 +1,19 @@
-/**
+  /**
  * Browse Service Interfaces
  *
  * Interfaces for browsing, filtering, searching, and managing sequences.
  * This includes navigation, thumbnails, and search functionality.
  */
 
-import type { SequenceData } from "$domain";
 import type {
   BrowseState,
+  BrowseDeleteConfirmationData as DeleteConfirmationData,
+  BrowseDeleteResult as DeleteResult,
   FilterType,
   FilterValue,
+  SequenceData,
   SortMethod,
-} from "$domain/browse";
+} from "$domain";
 
 // ============================================================================
 // BROWSE SERVICE INTERFACES
@@ -167,34 +169,10 @@ export interface ISectionService {
 }
 
 // ============================================================================
-// BROWSE DATA TYPES
+// BROWSE DATA TYPES - MOVED TO DOMAIN
 // ============================================================================
-
-export interface DeleteConfirmationData {
-  sequence: SequenceData;
-  relatedSequences: SequenceData[];
-  hasVariations: boolean;
-  willFixVariationNumbers: boolean;
-}
-
-export interface DeleteResult {
-  success: boolean;
-  deletedSequence: SequenceData | null;
-  affectedSequences: SequenceData[];
-  error?: string;
-}
-
-export interface BrowseDisplayState {
-  currentView: "filter_selection" | "sequence_browser";
-  selectedSequence: SequenceData | null;
-  isSequenceDetailOpen: boolean;
-}
-
-export interface BrowseLoadingState {
-  isLoading: boolean;
-  hasError: boolean;
-  errorMessage: string | null;
-}
+// These data models have been moved to domain/models/browse/BrowseModels.ts
+// Import them from $domain instead
 
 export interface FilterState {
   activeFilters: Record<FilterType, FilterValue>;

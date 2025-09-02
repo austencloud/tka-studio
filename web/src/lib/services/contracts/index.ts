@@ -25,23 +25,36 @@ export * from "./application/IDeviceDetector";
 export * from "./application/IEnumMapper";
 export * from "./application/IOptionDataService";
 export * from "./application/ISettingsService";
+export * from "./application/IStartPositionSelectionService";
 export * from "./application/IStartPositionService";
 
 // Background Domain
 export * from "./background/IBackgroundFactory";
 export * from "./background/IBackgroundService";
 export * from "./background/IBackgroundSystem";
-// Browse Domain - TODO: Move to individual interface files
-// TEMPORARILY REMOVED: export * from "./browse-interfaces"; (conflicts with DeleteConfirmationData, DeleteResult, IDeleteService)
+
+
 
 // Build Domain - TODO: Move to individual interface files
 export * from "./build-interfaces";
 
+// Data Domain - TODO: Move to individual interface files
+// TEMPORARILY REMOVED: export * from "./data-interfaces"; (conflicts with ICSVLoader, ICSVParser)
+
 // Generation Domain - TODO: Move to individual interface files
-// TEMPORARILY REMOVED: export * from "./generation-interfaces"; (conflicts with IOptionDataService)
+// Generation Domain - Explicit exports to avoid IOptionDataService conflict
+export type {
+  ILetterDeriver,
+  IPictographGenerator,
+  ISequenceGenerationService,
+} from "./generation-interfaces";
 
 // TODO: Replace these consolidated interface files with individual domain-organized interfaces
 // Following the one-to-one interface-to-implementation pattern
+
+// Learn Domain - Individual interfaces (correct pattern)
+export * from "./learn/ILessonRepository";
+export * from "./learn/ILetterMappingRepository";
 
 // Sequence Domain - Individual interface (correct pattern)
 export * from "./sequence/ISequenceStateService";
@@ -51,10 +64,29 @@ export * from "./sequence/ISequenceStateService";
 export * from "./option-picker-interfaces";
 export * from "./panel-interfaces";
 // TEMPORARILY REMOVED: export * from "./pictograph-interfaces"; (conflicts with IArrowPathResolutionService, IArrowPositioningService)
-// TEMPORARILY REMOVED: export * from "./positioning-interfaces"; (conflicts with pictograph services)
+// Positioning Domain - Explicit exports to avoid conflicts
+export * from "./positioning-interfaces";
 export * from "./responsive-layout-interfaces";
-export * from "./sequence-interfaces";
+
+// Export sequence-interfaces but exclude conflicting types that are now in browse domain
+// Only export service interfaces, not data models (which belong in domain)
+export {
+  type IPageFactoryService,
+  type IPersistenceService,
+  type IPrintablePageLayoutService,
+  type ISequenceCardExportIntegrationService,
+  type ISequenceDeletionService,
+  type ISequenceDomainService,
+  type ISequenceImportService,
+  // Service interfaces (excluding conflicting IDeleteService)
+  type ISequenceService,
+  type IWorkbenchBeatOperationsService,
+} from "./sequence-interfaces";
+
 // TEMPORARILY REMOVED: export * from "./sequence-state-interfaces"; (conflicts with ISequenceStateService)
 export * from "./svg-conversion-interfaces";
 export * from "./text-rendering-interfaces";
 export * from "./workbench-interfaces";
+
+// Movement Domain - Individual interfaces (correct pattern)
+export * from "./movement/ICSVPictographParserService";

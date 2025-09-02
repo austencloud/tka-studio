@@ -10,12 +10,18 @@
 /**
  * Export settings management service
  */
-import type { SequenceData } from "$domain";
 import type {
-  ExportValidationResult,
-  MemoryEstimate,
-} from "$domain/build/image-export/utilities";
-import type { TKAImageExportOptions } from "./image-export-core-interfaces";
+  SequenceData,
+  TKAImageExportOptions,
+  ValidationResult,
+} from "$domain";
+import type { MemoryEstimate } from "$implementations/image-export/composition/internal/CompositionTypes";
+
+// Export validation result for image export operations (internal to contracts)
+interface ExportValidationResult extends ValidationResult {
+  memoryEstimate?: MemoryEstimate;
+  recommendedOptions?: Partial<TKAImageExportOptions>;
+}
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -105,13 +111,3 @@ export interface IImagePreviewGenerator {
   ): Promise<string>;
   generateThumbnail(sequence: SequenceData, maxSize?: number): Promise<string>;
 }
-
-// ============================================================================
-// RE-EXPORT TYPES FOR EXTERNAL USE
-// ============================================================================
-
-// Re-export types that other modules need to import
-export type {
-  ExportValidationResult,
-  MemoryEstimate,
-} from "$domain/build/image-export/utilities";

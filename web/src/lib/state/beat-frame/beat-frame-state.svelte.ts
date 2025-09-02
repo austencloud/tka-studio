@@ -5,11 +5,7 @@
  * Follows the established TKA state factory pattern.
  */
 
-import type { BeatData } from "$domain";
-import type {
-  BeatFrameConfig,
-  ContainerDimensions,
-} from "$domain/build/workbench/beat-frame";
+import type { BeatData, BeatFrameConfig, ContainerDimensions } from "$domain";
 import type { IBeatFrameService } from "$lib/services/contracts/beat-frame-interfaces";
 
 /**

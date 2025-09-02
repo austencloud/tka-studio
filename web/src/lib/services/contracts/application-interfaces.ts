@@ -8,7 +8,6 @@
 // Re-export from individual interface files
 export type { IApplicationInitializer } from "./application/IApplicationInitializer";
 export type { IDeviceDetector } from "./application/IDeviceDetector";
-// ResponsiveSettings is now a domain type, import from $domain/core/DeviceTypes
 export type { ISettingsService } from "./application/ISettingsService";
 
 // Additional interfaces that may be referenced

@@ -5,9 +5,8 @@
  * Contains the business logic functions that were in FilterType.ts
  */
 
-import { FilterType } from "../../enums/enums";
-import type { FilterValue } from "../../types/BrowseTypes";
-import type { FilterConfig } from "./FilterModels";
+import type { FilterConfig, FilterValue } from "$domain";
+import { FilterType } from "$domain";
 
 // Helper functions for filter operations
 export function createFilterConfig(

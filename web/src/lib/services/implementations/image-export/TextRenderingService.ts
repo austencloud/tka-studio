@@ -12,19 +12,16 @@
  * - ITextRenderingUtils for text utilities
  */
 
-import type {
-  ITextRenderingService,
-  TextRenderOptions,
-  UserInfo,
-} from "../../contracts/image-export-interfaces";
+import type { ITextRenderingService } from "$contracts/image-export-interfaces";
+import type { TextRenderOptions, UserInfo } from "$domain";
 
-import { inject, injectable } from "inversify";
 import type {
   IDifficultyBadgeRenderer,
   ITextRenderingUtils,
   IUserInfoRenderer,
   IWordTextRenderer,
-} from "../../contracts/text-rendering-interfaces";
+} from "$contracts/text-rendering-interfaces";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 
 @injectable()

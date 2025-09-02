@@ -5,8 +5,13 @@
  * all data services. Eliminates duplication of mapping logic.
  */
 
-import { GridPosition, Orientation, RotationDirection } from "$domain";
-import { Location, MotionType } from "$lib/domain/enums/enums";
+import {
+  GridPosition,
+  Location,
+  MotionType,
+  Orientation,
+  RotationDirection,
+} from "$domain";
 import { injectable } from "inversify";
 
 export interface IEnumMapper {

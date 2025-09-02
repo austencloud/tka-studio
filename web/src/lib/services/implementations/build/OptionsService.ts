@@ -5,18 +5,18 @@
  * Complete port from legacy system without any stores - pure runes and functions.
  */
 
+import type { PictographData } from "$domain";
 import {
-    getLetterType,
-    GridPosition,
-    GridPositionGroup,
-    Letter,
-    LetterType,
-    OptionPickerReversalFilter,
-    OptionPickerSortMethod,
+  getLetterType,
+  GridPosition,
+  GridPositionGroup,
+  Letter,
+  LetterType,
+  OptionPickerSortMethod,
+  ReversalFilter,
 } from "$domain";
 import type { IPositionMapper } from "$lib/services/contracts/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { PictographData } from "../../../domain/models/core/PictographData";
 
 /**
  * Helper function to compute endPosition from motion data
@@ -40,7 +40,7 @@ export type OptionPickerGroupKey =
   | LetterType
   | GridPosition
   | GridPositionGroup
-  | OptionPickerReversalFilter
+  | ReversalFilter
   | "Unknown"
   | "all";
 
@@ -50,19 +50,19 @@ export type OptionPickerGroupKey =
 export function determineReversalCategory(
   sequence: PictographData[],
   option: PictographData
-): OptionPickerReversalFilter {
+): ReversalFilter {
   // Simplified reversal detection
   if (!sequence || sequence.length === 0) {
-    return OptionPickerReversalFilter.ALL;
+    return ReversalFilter.ALL;
   }
 
   const lastBeat = sequence[sequence.length - 1];
   if (!lastBeat?.motions?.red || !lastBeat?.motions?.blue) {
-    return OptionPickerReversalFilter.ALL;
+    return ReversalFilter.ALL;
   }
 
   if (!option?.motions?.red || !option?.motions?.blue) {
-    return OptionPickerReversalFilter.ALL;
+    return ReversalFilter.ALL;
   }
 
   // Check if rotation directions continue or reverse
@@ -74,11 +74,11 @@ export function determineReversalCategory(
     option.motions.blue.rotationDirection;
 
   if (redContinuous && blueContinuous) {
-    return OptionPickerReversalFilter.CONTINUOUS;
+    return ReversalFilter.CONTINUOUS;
   } else if (redContinuous || blueContinuous) {
-    return OptionPickerReversalFilter.ONE_REVERSAL;
+    return ReversalFilter.ONE_REVERSAL;
   } else {
-    return OptionPickerReversalFilter.TWO_REVERSALS;
+    return ReversalFilter.TWO_REVERSALS;
   }
 }
 
@@ -149,14 +149,14 @@ export function getSortedGroupKeys(
     case OptionPickerSortMethod.REVERSALS:
       return keys.sort((a, b) => {
         const order = [
-          OptionPickerReversalFilter.CONTINUOUS,
-          OptionPickerReversalFilter.ONE_REVERSAL,
-          OptionPickerReversalFilter.TWO_REVERSALS,
-          OptionPickerReversalFilter.ALL,
+          ReversalFilter.CONTINUOUS,
+          ReversalFilter.ONE_REVERSAL,
+          ReversalFilter.TWO_REVERSALS,
+          ReversalFilter.ALL,
         ];
         return (
-          order.indexOf(a as OptionPickerReversalFilter) -
-          order.indexOf(b as OptionPickerReversalFilter)
+          order.indexOf(a as ReversalFilter) -
+          order.indexOf(b as ReversalFilter)
         );
       });
     default:
@@ -224,9 +224,9 @@ export function getSorter(
 export function filterByReversals(
   options: PictographData[],
   sequence: PictographData[],
-  filter: OptionPickerReversalFilter
+  filter: ReversalFilter
 ): PictographData[] {
-  if (filter === OptionPickerReversalFilter.ALL) {
+  if (filter === ReversalFilter.ALL) {
     return options;
   }
 
@@ -265,11 +265,11 @@ export function getGroupDisplayName(
       return `End Position: ${groupKey}`;
     case OptionPickerSortMethod.REVERSALS:
       switch (groupKey) {
-        case OptionPickerReversalFilter.CONTINUOUS:
+        case ReversalFilter.CONTINUOUS:
           return "Continuous";
-        case OptionPickerReversalFilter.ONE_REVERSAL:
+        case ReversalFilter.ONE_REVERSAL:
           return "One Reversal";
-        case OptionPickerReversalFilter.TWO_REVERSALS:
+        case ReversalFilter.TWO_REVERSALS:
           return "Two Reversals";
         default:
           return String(groupKey);

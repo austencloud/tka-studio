@@ -1,12 +1,12 @@
 // src/lib/components/backgrounds/systems/nightSky/CometSystem.ts
-import { NightSkyUtils, type StarConfig } from "./NightSkyUtils";
 import type {
   AccessibilitySettings,
   Dimensions,
   EasterEggState,
-  Star,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+  Star,
+} from "$domain";
+import { NightSkyUtils, type StarConfig } from "./NightSkyUtils";
 
 export interface CometConfig {
   size: number;

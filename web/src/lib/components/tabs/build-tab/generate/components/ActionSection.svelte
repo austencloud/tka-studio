@@ -4,7 +4,7 @@ Updated to convert config format and handle real generation
 -->
 <script lang="ts">
   import { GenerationMode, GridMode, LetterType } from "$domain";
-  import { DifficultyLevel, PropContinuity } from "$domain/enums";
+  import { DifficultyLevel, PropContinuity } from "$domain";
   import type { GenerationConfig as ActionsGenerationConfig } from "$lib/state/generate/generate-actions.svelte";
   import type { GenerationConfig } from "$lib/state/generate/generate-config.svelte";
 

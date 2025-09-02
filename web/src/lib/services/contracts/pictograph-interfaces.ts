@@ -8,20 +8,18 @@
 // SHARED TYPES (imported from core-types to avoid duplication)
 // ============================================================================
 import type {
+  ArrowPlacementData,
+  ArrowSvgData,
   BeatData,
   GridData,
   GridMode,
   MotionData,
   PictographData,
-} from "$domain";
-import type { ArrowPlacementData } from "$domain/core/pictograph/ArrowPlacementData";
-import type {
-  ArrowSvgData,
+  Position,
+  GridPointData as RawGridData,
   SVGDimensions,
-} from "$domain/core/pictograph/SvgTypes";
-import type { GridPointData as RawGridData } from "../../domain/core/pictograph/gridCoordinates.js";
-import { MotionColor } from "../../domain/enums/enums.js";
-import type { ArrowPosition } from "../implementations/positioning/types.js";
+} from "$domain";
+import { MotionColor } from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -50,7 +48,7 @@ export interface IArrowRenderer {
   renderArrowAtPosition(
     svg: SVGElement,
     color: MotionColor,
-    position: ArrowPosition,
+    position: Position,
     motionData: MotionData | undefined
   ): Promise<void>;
 
@@ -80,7 +78,7 @@ export interface IOverlayRenderer {
   renderDebugInfo(
     svg: SVGElement,
     data: PictographData,
-    positions: Map<string, ArrowPosition>
+    positions: Map<string, Position>
   ): void;
 }
 
@@ -96,25 +94,26 @@ export interface IArrowPositioningService {
   renderArrowAtPosition(
     svg: SVGElement,
     color: MotionColor,
-    position: ArrowPosition,
+    position: Position,
     motionData: MotionData | undefined
   ): Promise<void>;
 }
 
-export interface IArrowPathResolutionService {
-  /**
-   * Get arrow SVG path based on motion type and properties
-   */
-  getArrowPath(
-    arrowData: ArrowPlacementData,
-    motionData: MotionData
-  ): string | null;
+// MOVED TO positioning-interfaces.ts to avoid duplication
+// export interface IArrowPathResolutionService {
+//   /**
+//    * Get arrow SVG path based on motion type and properties
+//    */
+//   getArrowPath(
+//     arrowData: ArrowPlacementData,
+//     motionData: MotionData
+//   ): string | null;
 
-  /**
-   * Get the correct arrow SVG path based on motion data (optimized version)
-   */
-  getArrowSvgPath(motionData: MotionData | undefined): string;
-}
+//   /**
+//    * Get the correct arrow SVG path based on motion data (optimized version)
+//    */
+//   getArrowSvgPath(motionData: MotionData | undefined): string;
+// }
 
 export interface ISvgColorTransformer {
   /**
@@ -161,7 +160,7 @@ export interface IFallbackArrowService {
   renderFallbackArrow(
     svg: SVGElement,
     color: MotionColor,
-    position: ArrowPosition
+    position: Position
   ): void;
 
   /**
@@ -181,13 +180,3 @@ export interface ISvgParser {
    */
   extractSvgContent(svgText: string): string;
 }
-
-// ============================================================================
-// RE-EXPORT DOMAIN TYPES FOR SERVICE USE
-// ============================================================================
-
-// Re-export SVG domain types for service implementations
-export type {
-  ArrowSvgData,
-  SVGDimensions,
-} from "$domain/core/pictograph/SvgTypes";

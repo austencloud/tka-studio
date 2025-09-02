@@ -4,15 +4,15 @@
  * Used for testing to provide predictable data without external dependencies.
  */
 
-import type { ILetterMappingRepository } from "$domain/learn/codex/LetterMappingRepository";
 import type {
+  ILessonRepository,
+  ILetterMappingRepository,
   LessonConfiguration,
   LetterCategory,
   LetterMapping,
   LetterRow,
-} from "$domain/learn/codex/types";
-import type { ILessonRepository } from "$domain/learn/LessonRepository";
-import { MotionType } from "$lib/domain/enums/enums";
+} from "$domain";
+import { MotionType } from "$domain";
 
 /**
  * Mock Letter Mapping Repository for testing

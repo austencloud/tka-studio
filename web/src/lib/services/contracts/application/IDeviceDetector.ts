@@ -4,10 +4,7 @@
  * Service contract for device detection and responsive settings management.
  */
 
-import type {
-  DeviceCapabilities,
-  ResponsiveSettings,
-} from "$domain/core/DeviceTypes";
+import type { DeviceCapabilities, ResponsiveSettings } from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACT (Behavioral Interface)

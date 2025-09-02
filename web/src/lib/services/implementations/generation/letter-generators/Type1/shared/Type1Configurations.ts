@@ -5,8 +5,7 @@
  * They are organized by position system transitions.
  */
 
-import { Direction, Timing } from "$domain";
-import { MotionType } from "$lib/domain/enums/enums";
+import { Direction, MotionType, Timing } from "$domain";
 
 export enum Type1MotionPattern {
   // Type 1 only uses PRO and ANTI

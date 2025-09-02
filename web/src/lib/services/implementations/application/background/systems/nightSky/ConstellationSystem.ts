@@ -1,10 +1,6 @@
 // src/lib/components/backgrounds/systems/nightSky/ConstellationSystem.ts
+import type { AccessibilitySettings, QualityLevel, Star } from "$domain";
 import { NightSkyUtils } from "./NightSkyUtils";
-import type {
-  AccessibilitySettings,
-  Star,
-  QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface ConstellationConfig {
   maxLines: number;

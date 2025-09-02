@@ -1,6 +1,6 @@
 <!-- BackgroundTab.svelte - Refactored using modular components -->
 <script lang="ts">
-  import { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
+  import { BackgroundType } from "$domain";
   import { updateBodyBackground } from "$lib/utils/background-preloader";
   import SettingCard from "../SettingCard.svelte";
   import BackgroundSelector from "./background/BackgroundSelector.svelte";

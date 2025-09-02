@@ -9,7 +9,7 @@
  * ============================================================================
  */
 
-// Note: Import types directly from $domain/sequence-card/export
+// Note: Import types directly from $domain
 // instead of re-exporting them from service contracts
 
 // Page export services (image generation, printing)
@@ -41,22 +41,14 @@ export type { IBatchExportService } from "./IBatchExportService";
 // MAIN ORCHESTRATOR SERVICES (kept in this file)
 // ============================================================================
 
-import type { ExportResult } from "$domain";
 import type {
   BatchExportOptions,
   BatchExportResult,
+  ExportResult,
   ImageExportOptions,
   PDFExportOptions,
-} from "$domain/sequence-card/export";
-import type { Page } from "../../domain/sequence-card/PageLayoutTypes";
-
-// Re-export the imported types so other services can use them
-export type {
-  BatchExportOptions,
-  BatchExportResult,
-  ImageExportOptions,
-  PDFExportOptions,
-} from "$domain/sequence-card/export";
+  Page,
+} from "$domain";
 
 /**
  * Main export service for handling different export types

@@ -5,8 +5,7 @@
  * Generates pictograph data for Type 1 letters using logical rules.
  */
 
-import { Direction, PositionSystem, Timing } from "$domain";
-import { Letter } from "../../../../../domain/models/core/Letter";
+import { Direction, Letter, PositionSystem, Timing } from "$domain";
 import { BaseType1Generator } from "./shared/BaseType1Generator";
 import {
   TYPE1_ALPHA_TO_ALPHA_LETTERS,

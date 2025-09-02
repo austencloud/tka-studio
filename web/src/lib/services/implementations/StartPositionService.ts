@@ -1,29 +1,126 @@
 /**
  * StartPositionService.ts - Complete start position service implementation
  */
-
-import type { ValidationResult } from "$domain";
-import { GridMode, Orientation, PropType, RotationDirection } from "$domain";
-import type { ValidationError } from "$domain/sequence-card/SequenceCard";
-import { Location, MotionColor, MotionType } from "$lib/domain/enums/enums";
-import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
-import { injectable } from "inversify";
-import type { BeatData } from "../../domain/models/build/workbench/BeatData";
-import { Letter } from "../../domain/models/core/Letter";
-import { createMotionData } from "../../domain/models/core/MotionData";
-import type { PictographData } from "../../domain/models/core/PictographData";
-import { createPictographData } from "../../domain/models/core/PictographData";
+import type { IPositionMapper } from "$contracts";
+import type { IStartPositionService } from "$contracts/application/IStartPositionService";
+import type { BeatData, PictographData } from "$domain";
+import {
+  type ValidationError,
+  type ValidationResult,
+  GridMode,
+  Letter,
+  Location,
+  MotionColor,
+  MotionType,
+  Orientation,
+  PropType,
+  RotationDirection,
+  createMotionData,
+  createPictographData,
+} from "$domain";
+import { TYPES } from "$lib/services/inversify/types";
+import { inject, injectable } from "inversify";
 
 @injectable()
 export class StartPositionService implements IStartPositionService {
-  getAvailableStartPositions(
+  constructor(
+    @inject(TYPES.IPositionMapper)
+    private positionMapper: IPositionMapper
+  ) {}
+
+  async getAvailableStartPositions(
     propType: string,
     gridMode: GridMode
   ): Promise<BeatData[]> {
-    throw new Error("Method not implemented.");
+    console.log(
+      `📍 Getting available start positions for ${propType} in ${gridMode} mode`
+    );
+
+    try {
+      // For SKEWED mode, default to diamond positions
+      const actualGridMode =
+        gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+      const startPositionKeys = this.DEFAULT_START_POSITIONS[actualGridMode];
+
+      if (!startPositionKeys) {
+        console.error(
+          `❌ Unsupported grid mode: ${gridMode}. Supported modes: ${Object.keys(this.DEFAULT_START_POSITIONS).join(", ")}`
+        );
+        // Fallback to diamond mode
+        const fallbackKeys = this.DEFAULT_START_POSITIONS[GridMode.DIAMOND];
+        console.log(`🔄 Falling back to diamond mode`);
+
+        const beatData: BeatData[] = fallbackKeys.map((key, index) => {
+          return {
+            beatNumber: 0,
+            isBlank: false,
+            pictographData: this.createStartPositionPictograph(key, index),
+          } as BeatData;
+        });
+
+        console.log(
+          `✅ Generated ${beatData.length} available start positions (fallback)`
+        );
+        return beatData;
+      }
+
+      const beatData: BeatData[] = startPositionKeys.map((key, index) => {
+        return {
+          beatNumber: 0,
+          isBlank: false,
+          pictographData: this.createStartPositionPictograph(key, index),
+        } as BeatData;
+      });
+
+      console.log(`✅ Generated ${beatData.length} available start positions`);
+      return beatData;
+    } catch (error) {
+      console.error("❌ Error getting available start positions:", error);
+      throw new Error(
+        `Failed to get available start positions: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
   }
-  setStartPosition(startPosition: BeatData): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async setStartPosition(startPosition: BeatData): Promise<void> {
+    console.log("🎯 Setting start position:", startPosition);
+
+    try {
+      if (!startPosition.pictographData) {
+        throw new Error("Start position must have pictograph data");
+      }
+
+      // Update selected position
+      this._selectedPosition = startPosition.pictographData;
+
+      // Create data in the format option picker expects
+      const { pictographData, ...beatWithoutPictographData } = startPosition;
+
+      // Compute endPosition from motion data
+      const endPosition =
+        pictographData.motions?.blue && pictographData.motions?.red
+          ? this.positionMapper.getPositionFromLocations(
+              pictographData.motions.blue.endLocation,
+              pictographData.motions.red.endLocation
+            )
+          : null;
+
+      const optionPickerFormat = {
+        endPosition,
+        pictographData,
+        letter: pictographData.letter,
+        gridMode: GridMode.DIAMOND, // Default
+        isStartPosition: true,
+        ...beatWithoutPictographData,
+      };
+
+      localStorage.setItem("startPosition", JSON.stringify(optionPickerFormat));
+    } catch (error) {
+      console.error("Error setting start position:", error);
+      throw new Error(
+        `Failed to set start position: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
   }
   // Clean constructor - no debug logging needed
   // Default start positions for each grid mode

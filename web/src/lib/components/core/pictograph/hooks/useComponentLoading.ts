@@ -8,7 +8,7 @@
  */
 
 import type { PictographData } from "$domain";
-import { MotionColor } from "$lib/domain/enums/enums";
+import { MotionColor } from "$domain";
 
 export interface ComponentLoadingProps {
   /** Current pictograph data to determine required components */

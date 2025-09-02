@@ -1,4 +1,3 @@
-// src/lib/domain/background/configs/config.ts
 import { NightSkyConfig } from "./nightSky";
 import type { QualityLevel } from "../BackgroundTypes";
 

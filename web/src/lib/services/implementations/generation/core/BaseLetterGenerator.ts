@@ -5,12 +5,16 @@
  * Handles pattern creation, movement generation, and caching.
  */
 
-import { Direction, PositionSystem, RotationDirection, Timing } from "$domain";
-import { MotionType } from "$lib/domain/enums/enums";
-import { Letter } from "../../../../domain/models/core/Letter";
-import type { MotionData } from "../../../../domain/models/core/MotionData";
-import type { PictographData } from "../../../../domain/models/core/PictographData";
-import { createPictographData } from "../../../../domain/models/core/PictographData";
+import type { MotionData, PictographData } from "$domain";
+import {
+  Direction,
+  Letter,
+  MotionType,
+  PositionSystem,
+  RotationDirection,
+  Timing,
+  createPictographData,
+} from "$domain";
 import type { ILetterGenerator } from "../../../contracts/generation-interfaces";
 
 export abstract class BaseLetterGenerator implements ILetterGenerator {
@@ -90,9 +94,7 @@ export abstract class BaseLetterGenerator implements ILetterGenerator {
    */
   private generateMotionsFromPattern(
     pattern: PictographData
-  ): Partial<
-    Record<import("$lib/domain/enums/enums").MotionColor, MotionData>
-  > {
+  ): Partial<Record<import("$domain").MotionColor, MotionData>> {
     // Default implementation - subclasses should override
     return pattern.motions;
   }

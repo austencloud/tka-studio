@@ -5,14 +5,13 @@
  * Extracted from the monolithic TKAImageExportService to focus solely on validation concerns.
  */
 
-import type { SequenceData } from "$domain";
+import type { SequenceData, TKAImageExportOptions } from "$domain";
 import { inject, injectable } from "inversify";
+
 import type {
-  ExportValidationResult,
   IExportMemoryCalculator,
   IExportOptionsValidator,
-  TKAImageExportOptions,
-} from "../../contracts/image-export-interfaces";
+} from "$contracts/image-export-utility-interfaces";
 import { TYPES } from "../../inversify/types";
 
 @injectable()

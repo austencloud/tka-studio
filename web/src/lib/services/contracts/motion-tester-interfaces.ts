@@ -7,12 +7,12 @@
 import type {
   Location,
   MotionColor,
+  MotionData,
   MotionType,
   RotationDirection,
 } from "$domain";
-import type { MotionData } from "$domain/core/pictograph/MotionData";
-import type { PropStates } from "../implementations/motion-tester/AnimationControlService";
-import type { MotionTestParams } from "../implementations/motion-tester/MotionParameterService";
+import type { PropStates } from "$implementations/motion-tester/AnimationControlService";
+import type { MotionTestParams } from "$implementations/motion-tester/MotionParameterService";
 
 /**
  * Interface for motion parameter calculations and conversions

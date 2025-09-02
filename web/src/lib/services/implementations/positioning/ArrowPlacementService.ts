@@ -5,8 +5,7 @@
  * Ports the exact functionality from desktop DefaultPlacementService.
  */
 
-import { GridMode } from "$domain";
-import { MotionType } from "$lib/domain/enums/enums"; // ✅ Import from centralized enums
+import { GridMode, MotionType } from "$domain";
 import { injectable } from "inversify";
 import { jsonCache } from "./SimpleJsonCache";
 

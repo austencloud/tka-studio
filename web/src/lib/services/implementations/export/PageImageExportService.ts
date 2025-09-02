@@ -5,19 +5,19 @@
  * Supports PNG, JPEG, and WebP formats with quality and scaling options.
  */
 
+import type { IPageImageExportService } from "$contracts/page-export-interfaces";
 import type {
   BatchExportResult,
   ExportResult,
   ImageExportOptions,
-} from "$domain/sequence-card/export";
+} from "$domain";
 import { injectable } from "inversify";
-import type { IPageImageExportService } from "../../contracts/page-export-interfaces";
 
 import type {
+  ExportProgress,
   Html2CanvasFunction,
   WindowWithHtml2Canvas,
-} from "$domain/build/image-export/canvas";
-import type { ExportProgress } from "$domain/build/image-export/core";
+} from "$domain";
 
 @injectable()
 export class PageImageExportService implements IPageImageExportService {
@@ -73,7 +73,7 @@ export class PageImageExportService implements IPageImageExportService {
 
       return {
         success: true,
-        blob,
+        data: blob,
         filename: "page-export.png",
         metadata: {
           format: options.format,
@@ -89,12 +89,7 @@ export class PageImageExportService implements IPageImageExportService {
       return {
         success: false,
         filename: "page-export.png",
-        error: {
-          name: error instanceof Error ? error.name : "Error",
-          message: error instanceof Error ? error.message : String(error),
-          stage: "export",
-          details: error,
-        },
+        error: error instanceof Error ? error.message : String(error),
         metadata: {
           format: options.format,
           size: 0,
@@ -155,7 +150,7 @@ export class PageImageExportService implements IPageImageExportService {
           } else {
             failureCount++;
             if (result.error) {
-              errors.push(result.error);
+              errors.push(new Error(result.error));
             }
           }
         } catch (error) {
@@ -166,12 +161,7 @@ export class PageImageExportService implements IPageImageExportService {
           results.push({
             success: false,
             filename: `page-${i + 1}.png`,
-            error: {
-              name: err instanceof Error ? err.name : "Error",
-              message: err instanceof Error ? err.message : String(err),
-              stage: "export",
-              details: err,
-            },
+            error: err instanceof Error ? err.message : String(err),
             metadata: {
               format: options.format,
               size: 0,
@@ -308,7 +298,7 @@ export class PageImageExportService implements IPageImageExportService {
       // Try to load from CDN
       if (
         typeof window !== "undefined" &&
-        !(window as WindowWithHtml2Canvas).html2canvas
+        !(window as unknown as WindowWithHtml2Canvas).html2canvas
       ) {
         // Dynamically load html2canvas from CDN
         const script = document.createElement("script");
@@ -322,7 +312,8 @@ export class PageImageExportService implements IPageImageExportService {
         });
       }
 
-      const html2canvas = (window as WindowWithHtml2Canvas).html2canvas;
+      const html2canvas = (window as unknown as WindowWithHtml2Canvas)
+        .html2canvas;
       if (!html2canvas) {
         throw new Error("html2canvas failed to load");
       }
@@ -451,7 +442,7 @@ export class PageImageExportService implements IPageImageExportService {
 
       return {
         success: true,
-        blob,
+        data: blob,
         filename: `page-${pageNumber}.png`,
         metadata: {
           format: "PNG",
@@ -467,12 +458,7 @@ export class PageImageExportService implements IPageImageExportService {
       return {
         success: false,
         filename: `page-${pageNumber}.png`,
-        error: {
-          name: error instanceof Error ? error.name : "Error",
-          message: error instanceof Error ? error.message : String(error),
-          stage: "export",
-          details: error,
-        },
+        error: error instanceof Error ? error.message : String(error),
         metadata: {
           format: "PNG",
           size: 0,

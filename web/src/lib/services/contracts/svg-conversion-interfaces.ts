@@ -6,10 +6,7 @@
  * across 4+ different services in the image export system.
  */
 
-import type {
-  RenderQualitySettings,
-  SVGConversionOptions,
-} from "$domain/models/core/rendering/SvgConversion";
+import type { RenderQualitySettings, SVGConversionOptions } from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -78,7 +75,4 @@ export interface ISVGToCanvasConverterService {
 // ============================================================================
 
 // Re-export types that other modules need to import
-export type {
-  RenderQualitySettings,
-  SVGConversionOptions,
-} from "$domain/models/core/rendering/SvgConversion";
+export type { RenderQualitySettings, SVGConversionOptions } from "$domain";

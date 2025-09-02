@@ -1,7 +1,5 @@
-import { createMotionData, createPictographData, Letter } from "$domain";
+import { createMotionData, createPictographData, Letter, MotionType, Orientation } from "$domain";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-
-import { MotionType, Orientation } from "$lib/domain/enums/enums";
 import { SpecialPlacementService } from "./SpecialPlacementService";
 
 describe("SpecialPlacementService", () => {

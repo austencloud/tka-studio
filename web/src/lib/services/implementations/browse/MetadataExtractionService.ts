@@ -5,13 +5,13 @@
  * Provides a clean interface for metadata extraction operations.
  */
 
+import type { IMetadataExtractionService } from "$contracts/browse/IMetadataExtractionService";
 import type {
   MetadataAnalysisResult,
   SequenceMetadata,
   ThumbnailFile,
-} from "$domain/browse/metadata";
+} from "$domain";
 import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
-import type { IMetadataExtractionService } from "../../contracts/browse/IMetadataExtractionService";
 
 export class MetadataExtractionService implements IMetadataExtractionService {
   async extractMetadataFromFiles(

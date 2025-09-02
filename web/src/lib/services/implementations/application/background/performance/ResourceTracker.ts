@@ -1,4 +1,4 @@
-import type { ResourceTracker as ResourceTrackerInterface } from "$domain/core/ui/backgrounds/BackgroundTypes";
+import type { ResourceTracker as ResourceTrackerInterface } from "$domain";
 
 interface Disposable {
   dispose?(): void;

@@ -11,7 +11,7 @@
  */
 
 // Import required state factories
-import type { ISequenceService } from "$lib/services/contracts/sequence-interfaces";
+import type { ISequenceService } from "$contracts";
 import type { ActiveBuildSubTab } from "$lib/state/services/state-service-interfaces";
 import { createSequenceState } from "./sequence-state.svelte";
 

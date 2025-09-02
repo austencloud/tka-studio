@@ -6,7 +6,7 @@
  */
 
 import { Letter, getLetterType } from "$domain";
-import { LetterType } from "../../enums/enums";
+import { LetterType } from "$domain";
 
 /**
  * Letter type border color mapping from desktop app

@@ -5,17 +5,12 @@
  * rotation, mirroring, and color swapping.
  */
 
-import type { PictographData } from "../../../../domain/models/core/PictographData";
-import type {
-  IPictographOperationsService,
-  PictographTransformOperation,
-} from "../../../contracts/codex-interfaces";
+import type { PictographData, PictographTransformOperation } from "$domain";
+import type { IPictographOperationsService } from "../../../contracts/codex-interfaces";
 
 // Re-export types for convenience
-export type {
-  IPictographOperationsService,
-  PictographTransformOperation,
-} from "../../../contracts/codex-interfaces";
+export type { PictographTransformOperation } from "$domain";
+export type { IPictographOperationsService } from "../../../contracts/codex-interfaces";
 
 export class PictographOperationsService
   implements IPictographOperationsService

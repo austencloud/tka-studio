@@ -10,7 +10,7 @@ import type {
   Dimensions,
   PerformanceMetrics,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+} from "$domain";
 
 export interface IBackgroundSystem {
   /**

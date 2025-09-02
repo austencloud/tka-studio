@@ -5,11 +5,7 @@
  * Provides factory methods for background systems and quality detection.
  */
 
-import type {
-  BackgroundSystem,
-  BackgroundType,
-  QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+import type { BackgroundSystem, BackgroundType, QualityLevel } from "$domain";
 
 export interface IBackgroundService {
   /**

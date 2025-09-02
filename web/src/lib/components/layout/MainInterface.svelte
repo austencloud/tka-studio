@@ -8,7 +8,7 @@
     switchTab,
   } from "$lib/state/app-state.svelte";
   // Import background types
-  import { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
+  import { BackgroundType } from "$domain";
 
   // Import transition utilities
   import { fade } from "$lib/utils/simple-fade";

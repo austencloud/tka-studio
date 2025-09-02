@@ -5,10 +5,10 @@
  * Each component gets its own isolated state through factory function.
  */
 
+import type { ISequenceService } from "$contracts";
 import type { BeatData, SequenceData } from "$domain";
 import { GridMode } from "$domain";
 import type { ArrowPosition } from "$lib/services/implementations/positioning/types";
-import type { ISequenceService } from "$services/contracts/sequence-interfaces";
 
 // ============================================================================
 // FACTORY FUNCTION

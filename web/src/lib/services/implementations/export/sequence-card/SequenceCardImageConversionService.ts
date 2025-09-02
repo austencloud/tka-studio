@@ -6,10 +6,11 @@
  */
 
 import { injectable } from "inversify";
-import type {
-  ISequenceCardImageConversionService,
-  SequenceCardDimensions,
-} from "../../../contracts/sequence-card-export-interfaces";
+// Domain types
+import type { SequenceCardDimensions } from "$domain";
+
+// Behavioral contracts
+import type { ISequenceCardImageConversionService } from "../../../contracts/sequence-card-export-interfaces";
 
 @injectable()
 export class SequenceCardImageConversionService

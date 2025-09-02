@@ -5,13 +5,13 @@
  * Follows microservices architecture with clean business logic separation.
  */
 
-import { injectable } from "inversify";
 import type {
   IPanelManagementService,
   PanelConfiguration,
   PanelState,
   ResizeOperation,
-} from "../../contracts/panel-interfaces";
+} from "$contracts/panel-interfaces";
+import { injectable } from "inversify";
 
 @injectable()
 export class PanelManagementService implements IPanelManagementService {

@@ -5,9 +5,9 @@
  * Matches desktop WordDrawer exactly.
  */
 
+import type { IWordTextRenderer } from "$contracts";
+import type { TextRenderOptions } from "$domain";
 import { injectable } from "inversify";
-import type { TextRenderOptions } from "../../../../contracts/image-export-interfaces";
-import type { IWordTextRenderer } from "../../../../contracts/text-rendering-interfaces";
 import {
   createFont,
   measureTextWithKerning,

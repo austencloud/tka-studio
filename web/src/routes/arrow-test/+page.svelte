@@ -11,7 +11,7 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
     Orientation,
     RotationDirection,
   } from "$domain";
-  import { Location, MotionColor, MotionType } from "$domain/enums";
+  import { Location, MotionColor, MotionType } from "$domain";
   import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
   import { onMount } from "svelte";
 

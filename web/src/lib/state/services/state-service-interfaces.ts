@@ -6,6 +6,7 @@
  */
 
 import type { AppSettings } from "$domain";
+import type { IBrowseStatePersister } from "$lib/services/implementations/browse/BrowseStatePersister";
 
 // ============================================================================
 // SHARED TYPES
@@ -85,6 +86,7 @@ export interface ISettingsService {
 export interface ItabStateService {
   // State getters
   readonly activeTab: TabId;
+  readonly browseStatePersistence: IBrowseStatePersister;
 
   // Actions
   switchTab(tab: TabId): Promise<void>;

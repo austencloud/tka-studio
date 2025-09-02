@@ -5,7 +5,8 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import type { PictographData } from "$domain";
+import type { CSVRow, ICSVPictographParserService } from "$contracts";
+import type { ParsedCsvRow, PictographData } from "$domain";
 import { GridMode } from "$domain";
 import type {
   ICsvLoader,
@@ -13,12 +14,8 @@ import type {
   IMotionQueryHandler,
 } from "$lib/services/contracts/data-interfaces";
 import { inject, injectable } from "inversify";
-import type { ParsedCsvRow } from "../../../domain/core/csv-types";
 import { TYPES } from "../../inversify/types";
-import type {
-  CSVRow,
-  ICSVPictographParserService,
-} from "../movement/CSVPictographParserService";
+import type { CSVRow, ICSVPictographParserService } from "$contracts";
 
 @injectable()
 export class MotionQueryHandler implements IMotionQueryHandler {
@@ -151,7 +148,7 @@ export class MotionQueryHandler implements IMotionQueryHandler {
         this.parsedData[gridMode as keyof typeof this.parsedData] || [];
       for (const row of csvRows.slice(0, 100)) {
         // Limit for performance
-        const data = row.data as any;
+        const data = row;
         // Search in letter, motion types, and locations
         if (
           data.letter?.toLowerCase().includes(lowerPattern) ||
@@ -161,7 +158,7 @@ export class MotionQueryHandler implements IMotionQueryHandler {
           data.redStartLocation?.toLowerCase().includes(lowerPattern)
         ) {
           const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
-            data as CSVRow
+            row as CSVRow
           );
           if (pictograph) {
             pictographs.push(pictograph);

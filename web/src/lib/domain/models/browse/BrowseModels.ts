@@ -1,6 +1,4 @@
-import type { FilterType, SortMethod } from "../../enums/enums";
-import type { FilterValue } from "../../types/BrowseTypes";
-import type { SequenceData } from "../core/SequenceData";
+import type { FilterType, FilterValue, SortMethod, SequenceData } from "$domain";
 
 export interface SequenceMetadata {
   word: string;

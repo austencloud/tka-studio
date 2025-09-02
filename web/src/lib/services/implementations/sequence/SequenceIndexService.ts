@@ -5,6 +5,7 @@
  * Provides search capabilities across sequence metadata.
  */
 
+import type { ISequenceIndexService } from "$contracts";
 import type { SequenceData } from "$domain";
 import {
   createSequenceData,
@@ -12,7 +13,6 @@ import {
   GridPositionGroup,
   PropType,
 } from "$domain";
-import type { ISequenceIndexService } from "$lib/services/contracts/browse-interfaces";
 import { injectable } from "inversify";
 
 interface SearchIndex {

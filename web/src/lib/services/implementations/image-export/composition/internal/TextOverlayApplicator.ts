@@ -5,20 +5,20 @@
  * Manages text positioning and rendering within the composition layout.
  */
 
-import type { SequenceData } from "$domain";
 import type {
   LayoutData,
+  SequenceData,
   TKAImageExportOptions,
   TextRenderOptions,
   UserInfo,
-} from "../../../../contracts/image-export-interfaces";
+} from "$domain";
 
 import type {
   IDifficultyBadgeRenderer,
   ITextRenderingUtils,
   IUserInfoRenderer,
   IWordTextRenderer,
-} from "../../../../contracts/text-rendering-interfaces";
+} from "$contracts/text-rendering-interfaces";
 
 export class TextOverlayApplicator {
   constructor(

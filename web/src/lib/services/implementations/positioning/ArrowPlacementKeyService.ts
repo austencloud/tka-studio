@@ -6,7 +6,7 @@
  */
 
 import type { MotionData, PictographData } from "$domain";
-import { MotionType } from "$lib/domain/enums/enums";
+import { MotionType } from "$domain";
 import { injectable } from "inversify";
 
 export interface IArrowPlacementKeyService {

@@ -5,13 +5,14 @@
  * Contains only pure functions with no reactive state.
  */
 
-import type { BeatData, Position } from "$domain";
-import { GridMode } from "$domain";
 import type {
+  BeatData,
   BeatFrameConfig,
   ContainerDimensions,
   LayoutInfo,
-} from "$domain/build/workbench/beat-frame";
+  Position,
+} from "$domain";
+import { GridMode } from "$domain";
 import type { IBeatFrameService } from "$lib/services/contracts/beat-frame-interfaces";
 import { injectable } from "inversify";
 

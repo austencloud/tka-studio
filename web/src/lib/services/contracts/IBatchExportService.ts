@@ -5,14 +5,14 @@
  * progress monitoring, cancellation, and resource management.
  */
 
-import type { ExportProgress } from "$domain/build/image-export/core";
 import type {
+  ExportProgress,
   BatchExportOptions,
   BatchExportResult,
   ImageExportOptions,
   PDFExportOptions,
-} from "$domain/sequence-card/export";
-import type { Page } from "../../domain/sequence-card/PageLayoutTypes";
+  Page,
+} from "$domain";
 
 // ============================================================================
 // BATCH EXPORT SERVICES

@@ -5,13 +5,13 @@
  * Extracted from the monolithic TKAImageExportService to focus solely on memory calculations.
  */
 
-import type { SequenceData } from "$domain";
-import { injectable } from "inversify";
+import type { IExportMemoryCalculator } from "$contracts/image-export-interfaces";
 import type {
-  IExportMemoryCalculator,
   MemoryEstimate,
+  SequenceData,
   TKAImageExportOptions,
-} from "../../contracts/image-export-interfaces";
+} from "$domain";
+import { injectable } from "inversify";
 
 @injectable()
 export class ExportMemoryCalculator implements IExportMemoryCalculator {
@@ -54,11 +54,7 @@ export class ExportMemoryCalculator implements IExportMemoryCalculator {
 
     return {
       estimatedMB,
-      width,
-      height: finalHeight,
-      pixelCount,
-      colorDepth,
-      compressionFactor,
+      safe: estimatedMB < 100, // Consider safe if under 100MB
     };
   }
 

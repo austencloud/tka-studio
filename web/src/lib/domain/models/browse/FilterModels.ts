@@ -4,8 +4,7 @@
  * Interface definitions for browse filtering functionality.
  */
 
-import type { FilterType } from "../../enums/enums";
-import type { FilterValue } from "../../types/BrowseTypes";
+import type { FilterType, FilterValue } from "$domain";
 
 export interface FilterConfig {
   type: FilterType;

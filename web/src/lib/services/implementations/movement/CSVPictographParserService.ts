@@ -5,38 +5,22 @@
  * Uses the correct position mapping based on hand location combinations.
  */
 
-import { GridPosition } from "$domain";
-import { MotionColor } from "$lib/domain/enums/enums";
+import type {
+  CSVRow,
+  ICSVPictographParserService,
+} from "$contracts/movement/ICSVPictographParserService";
+import type { IPositionMapper } from "$contracts/positioning-interfaces";
+import type { PictographData } from "$domain";
+import {
+  GridPosition,
+  Letter,
+  MotionColor,
+  createMotionData,
+  createPictographData,
+} from "$domain";
 import { inject, injectable } from "inversify";
-import { Letter } from "../../../domain/models/core/Letter";
-import { createMotionData } from "../../../domain/models/core/MotionData";
-import type { PictographData } from "../../../domain/models/core/PictographData";
-import { createPictographData } from "../../../domain/models/core/PictographData";
-import type { IPositionMapper } from "../../contracts/positioning-interfaces";
 import { TYPES } from "../../inversify/types";
 import type { IEnumMapper } from "../data/EnumMapper";
-
-export interface CSVRow {
-  letter: string;
-  startPosition: string;
-  endPosition: string;
-  timing: string;
-  direction: string;
-  blueMotionType: string;
-  blueRotationDirection: string;
-  blueStartLocation: string;
-  blueEndLocation: string;
-  redMotionType: string;
-  redRotationDirection: string;
-  redStartLocation: string;
-  redEndLocation: string;
-}
-
-export interface ICSVPictographParserService {
-  parseCSVRowToPictograph(row: CSVRow): PictographData;
-  parseLetterPictographs(letterRows: CSVRow[]): PictographData[];
-  validateCSVRow(row: unknown): row is CSVRow;
-}
 
 @injectable()
 export class CSVPictographParserService implements ICSVPictographParserService {

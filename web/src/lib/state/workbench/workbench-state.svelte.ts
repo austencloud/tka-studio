@@ -5,15 +5,12 @@
  * Follows the established TKA state factory pattern.
  */
 
-import { GridMode } from "$domain";
-import type {
-  WorkbenchConfig,
-  WorkbenchMode,
-} from "$domain/build/workbench/workbench-types";
 import type {
   IWorkbenchCoordinationService,
   IWorkbenchService,
-} from "$lib/services/contracts/workbench-interfaces";
+} from "$contracts";
+import type { WorkbenchConfig, WorkbenchMode } from "$domain";
+import { GridMode } from "$domain";
 
 /**
  * Creates component-scoped workbench state

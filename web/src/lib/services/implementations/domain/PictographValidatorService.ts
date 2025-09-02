@@ -5,12 +5,16 @@
  * Ensures generated pictographs conform to TKA rules and constraints.
  */
 
-import { GridPosition, RotationDirection } from "$domain";
-import { Location, MotionColor, MotionType } from "$lib/domain/enums/enums";
+import type { IPictographValidatorService } from "$contracts/generation-interfaces";
+import type { MotionData, PictographData } from "$domain";
+import {
+  GridPosition,
+  Location,
+  MotionColor,
+  MotionType,
+  RotationDirection,
+} from "$domain";
 import { injectable } from "inversify";
-import type { MotionData } from "../../../domain/models/core/MotionData";
-import type { PictographData } from "../../../domain/models/core/PictographData";
-import type { IPictographValidatorService } from "../../contracts/generation-interfaces";
 
 @injectable()
 export class PictographValidatorService implements IPictographValidatorService {

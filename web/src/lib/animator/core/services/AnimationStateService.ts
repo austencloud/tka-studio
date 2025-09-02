@@ -5,14 +5,11 @@
  * Single responsibility: Prop state management and coordinate transformations.
  */
 
-import { injectable } from "inversify";
+import type { IAnimationStateService, InterpolationResult } from "$contracts";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
+import type { PropStates } from "$lib/services/contracts/animation";
+import { injectable } from "inversify";
 import { calculateCoordinatesFromAngle } from "../../utils/math/index.js";
-import type {
-  IAnimationStateService,
-  PropStates,
-  InterpolationResult,
-} from "$lib/services/contracts/animation";
 
 @injectable()
 export class AnimationStateService implements IAnimationStateService {

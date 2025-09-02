@@ -5,7 +5,7 @@ Replaces dropdown with styled button group showing motion types
 with intuitive icons and better visual feedback.
 -->
 <script lang="ts">
-  import { MotionType } from "$domain/enums";
+  import { MotionType } from "$domain";
 
   interface Props {
     selectedMotionType: MotionType;

@@ -9,5 +9,5 @@ export { default as OptionPickerSection } from "./OptionPickerSection.svelte";
 export { default as OptionPickerSectionHeader } from "./OptionPickerSectionHeader.svelte";
 
 // Service exports - Use these for business logic
-export * from "$lib/services/contracts/option-picker-interfaces";
+export * from "$contracts";
 export { OptionPickerServiceAdapter } from "$lib/services/implementations/OptionPickerServiceAdapter";

@@ -7,6 +7,22 @@
 
 import { browser } from "$app/environment";
 
+declare global {
+  interface Window {
+    TKADevUtils: {
+      clearAllTKAStorage: () => void;
+      clearSequenceData: () => void;
+      clearSettingsData: () => void;
+      listTKAStorageKeys: () => void;
+      getStorageStats: () => {
+        localStorage: number;
+        sessionStorage: number;
+        totalKeys: number;
+      };
+    };
+  }
+}
+
 /**
  * Clear all TKA-related localStorage data
  */
@@ -213,7 +229,7 @@ export function getStorageStats(): {
 
 // Make functions available globally for console access
 if (browser && typeof window !== "undefined") {
-  (window as any).TKADevUtils = {
+  window.TKADevUtils = {
     clearAllTKAStorage,
     clearSequenceData,
     clearSettingsData,

@@ -2,7 +2,7 @@
 <script lang="ts">
   import type { BeatData, SequenceData } from "$domain";
   import { GridMode } from "$domain";
-  import { MotionColor } from "$domain/enums";
+  import { MotionColor } from "$domain";
   import type { IGridModeDeriver } from "$lib/services/contracts/positioning-interfaces";
   import { resolve, TYPES } from "$lib/services/inversify/container";
   import { onMount } from "svelte";

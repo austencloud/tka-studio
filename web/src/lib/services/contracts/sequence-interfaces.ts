@@ -9,39 +9,106 @@
 // ============================================================================
 // SEQUENCE REQUEST TYPES
 // ============================================================================
-import type { SequenceData, ValidationResult } from "$domain";
-import type { BeatData } from "../../domain/models/build/workbench/BeatData";
-// Page layout types from sequence-card domain
 import type {
-  DPIConfiguration,
-  GridCalculationOptions,
-  LayoutCalculationRequest,
-  LayoutCalculationResult,
-  LayoutValidationResult,
+  BeatData,
   Page,
-  PageCreationOptions,
-  PageDimensions,
-  PageLayoutConfig,
-  PageMargins,
-  PageOrientation,
-  Rectangle,
-  SequenceCardGridConfig,
-  SequenceCardPaperSize,
-} from "$domain/sequence-card/PageLayoutTypes";
-
-// Sequence-specific types from build workbench models
-import type {
-  DeleteConfirmationData,
-  DeleteResult,
   SequenceCreateRequest,
-} from "$domain/models/build/workbench/SequenceOperations";
+  SequenceData,
+  ValidationResult,
+} from "$domain";
 
-// Re-export sequence-specific domain types
-export type {
-  DeleteConfirmationData,
-  DeleteResult,
-  SequenceCreateRequest,
-} from "$domain/models/build/workbench/SequenceOperations";
+// ============================================================================
+// LOCAL TYPE DEFINITIONS (TODO: Move to domain)
+// ============================================================================
+
+// SequenceCreateRequest is now imported from $domain
+
+export interface DeleteConfirmationData {
+  sequenceId: string;
+  sequenceName: string;
+  hasVariations: boolean;
+  variationCount: number;
+  affectedSequences: string[];
+  warnings: string[];
+}
+
+export interface DeleteResult {
+  success: boolean;
+  deletedSequenceId: string;
+  affectedSequences: string[];
+  errors?: string[];
+}
+
+// Page layout types (TODO: Move to domain)
+export type SequenceCardPaperSize = "A4" | "Letter" | "Legal" | "A3";
+export type PageOrientation = "portrait" | "landscape";
+
+export interface PageDimensions {
+  width: number;
+  height: number;
+}
+
+export interface PageMargins {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
+export interface Rectangle {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+export interface DPIConfiguration {
+  dpi: number;
+  scale: number;
+}
+
+export interface GridCalculationOptions {
+  includeMargins: boolean;
+  optimizeSpacing: boolean;
+}
+
+export interface LayoutCalculationRequest {
+  paperSize: SequenceCardPaperSize;
+  orientation: PageOrientation;
+  margins: PageMargins;
+  gridOptions: GridCalculationOptions;
+}
+
+export interface LayoutCalculationResult {
+  success: boolean;
+  layout: PageLayoutConfig;
+  contentArea: Rectangle;
+  errors?: string[];
+}
+
+export interface LayoutValidationResult {
+  isValid: boolean;
+  errors: string[];
+  warnings: string[];
+}
+
+export interface PageCreationOptions {
+  paperSize: SequenceCardPaperSize;
+  orientation: PageOrientation;
+  margins?: PageMargins;
+}
+
+export interface PageLayoutConfig {
+  columns: number;
+  rows: number;
+  spacing: number;
+}
+
+export interface SequenceCardGridConfig {
+  beatSize: number;
+  spacing: number;
+  margins: PageMargins;
+}
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

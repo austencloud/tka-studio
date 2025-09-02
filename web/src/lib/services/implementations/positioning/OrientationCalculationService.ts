@@ -8,12 +8,18 @@
  * - Complete handpath calculation for all location pairs
  */
 
-import { HandPath, Orientation, PropType, RotationDirection } from "$domain";
-import { Location, MotionColor, MotionType } from "$lib/domain/enums/enums";
+import type { BeatData, MotionData } from "$domain";
+import {
+  createMotionData,
+  HandPath,
+  Location,
+  MotionColor,
+  MotionType,
+  Orientation,
+  PropType,
+  RotationDirection,
+} from "$domain";
 import { injectable } from "inversify";
-import type { BeatData } from "../../../domain/models/build/workbench/BeatData";
-import type { MotionData } from "../../../domain/models/core/MotionData";
-import { createMotionData } from "../../../domain/models/core/MotionData";
 
 export interface OrientationCalculationServiceInterface {
   calculateEndOrientation(motion: MotionData, color: MotionColor): Orientation;

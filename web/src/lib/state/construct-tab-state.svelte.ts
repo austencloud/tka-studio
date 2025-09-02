@@ -10,10 +10,9 @@
  * ✅ Component-scoped state (not global singleton)
  */
 
+import type { IBuildTabService, IStartPositionService } from "$contracts";
+import type { PictographData } from "$domain";
 import { GridMode } from "$domain";
-import type { PictographData } from "$domain/core/pictograph/PictographData";
-import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
-import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
 
 /**
  * Creates construct tab state for construct-specific concerns

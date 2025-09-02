@@ -6,7 +6,7 @@
   import LoadingOverlay from "./shared/LoadingOverlay.svelte";
 
   import { GridMode } from "$domain";
-  import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
+  import type { IStartPositionService } from "$contracts";
   import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
   import type { ISequenceService } from "$lib/services/contracts/sequence-interfaces";
   import { resolve, TYPES } from "$lib/services/inversify/container";

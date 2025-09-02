@@ -5,12 +5,12 @@
  * Centralizes deletion logic for better consistency and maintainability.
  */
 
-import type { SequenceData } from "$domain";
 import type {
   IPersistenceService,
   ISequenceDeletionService,
   ISequenceService,
-} from "$lib/services/contracts/sequence-interfaces";
+} from "$contracts";
+import type { SequenceData } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 

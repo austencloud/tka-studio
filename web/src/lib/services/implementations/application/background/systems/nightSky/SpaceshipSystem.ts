@@ -1,12 +1,12 @@
 // src/lib/components/backgrounds/systems/nightSky/SpaceshipSystem.ts
-import { NightSkyUtils } from "./NightSkyUtils";
 import type {
   AccessibilitySettings,
   Dimensions,
   EasterEggState,
-  Spaceship,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+  Spaceship,
+} from "$domain";
+import { NightSkyUtils } from "./NightSkyUtils";
 
 export interface SpaceshipConfig {
   size: number;

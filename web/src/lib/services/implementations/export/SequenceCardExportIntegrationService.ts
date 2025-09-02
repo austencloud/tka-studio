@@ -5,7 +5,12 @@
  * Handles DOM element selection, export orchestration, and file downloads.
  */
 
-import type { ISequenceCardExportIntegrationService } from "$lib/services/contracts/sequence-interfaces";
+// Domain types
+import type { ImageExportOptions } from "$domain";
+
+// Behavioral contracts
+import type { ISequenceCardExportIntegrationService } from "$contracts";
+import type { IPageImageExportService } from "$contracts/export-interfaces";
 import { injectable } from "inversify";
 import {
   downloadBlobBatch,
@@ -13,10 +18,6 @@ import {
   sanitizeFilename,
   supportsFileDownload,
 } from "../../../utils/file-download";
-import type {
-  IPageImageExportService,
-  ImageExportOptions,
-} from "../../contracts/export-interfaces";
 
 @injectable()
 export class SequenceCardExportIntegrationService
@@ -89,21 +90,23 @@ export class SequenceCardExportIntegrationService
       for (let i = 0; i < batchResult.results.length; i++) {
         const result = batchResult.results[i];
 
-        if (result.success && result.blob) {
+        if (result.success && result.data) {
           const pageNumber = i + 1;
           const filename = this.generatePageFilename(
             options.filenamePrefix || "sequence-cards",
             pageNumber,
             exportOptions.format,
-            result.metadata?.dimensions
+            result.metadata?.dimensions as
+              | { width: number; height: number }
+              | undefined
           );
 
           downloadData.push({
-            blob: result.blob,
+            blob: result.data as Blob,
             filename,
           });
         } else if (result.error) {
-          errors.push(result.error);
+          errors.push(new Error(result.error));
         }
       }
 

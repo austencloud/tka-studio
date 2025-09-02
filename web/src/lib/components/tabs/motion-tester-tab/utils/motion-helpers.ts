@@ -2,8 +2,7 @@
  * Motion parameter utilities and helper functions
  */
 
-import { Orientation } from "$domain";
-import { Location, MotionType } from "$lib/domain/enums/enums";
+import { Location, MotionType, Orientation } from "$domain";
 
 // Helper function to determine motion type based on start/end locations
 export function getMotionType(

@@ -11,12 +11,11 @@
  * Note: Uses ArrowQuadrantCalculator for quadrant index calculations to avoid duplication.
  */
 
-import type { MotionData } from "$domain";
-import { Location } from "$lib/domain/enums/enums";
+import type { MotionData, Point } from "$domain";
+import { Location } from "$domain";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 import { ArrowQuadrantCalculator } from "../orchestration/ArrowQuadrantCalculator";
-import type { Point } from "../types";
 
 export interface IDirectionalTupleCalculator {
   calculateDirectionalTuple(

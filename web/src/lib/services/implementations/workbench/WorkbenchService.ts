@@ -5,21 +5,23 @@
  * Contains only pure functions with no reactive state.
  */
 
+import type { IWorkbenchService } from "$contracts";
 import type {
   BeatData,
+  BeatEditOperation,
   PictographData,
+  SequenceCreationParams,
   SequenceData,
   ValidationResult,
-} from "$domain";
-import { createBeatData, createPictographData, GridMode } from "$domain";
-import type {
-  BeatEditOperation,
-  SequenceCreationParams,
   WorkbenchConfig,
   WorkbenchMode,
-} from "$domain/build/workbench/workbench-types";
-import { Letter } from "$domain/core/Letter";
-import type { IWorkbenchService } from "$lib/services/contracts/workbench/IWorkbenchService";
+} from "$domain";
+import {
+  createBeatData,
+  createPictographData,
+  GridMode,
+  Letter,
+} from "$domain";
 import { injectable } from "inversify";
 @injectable()
 export class WorkbenchService implements IWorkbenchService {

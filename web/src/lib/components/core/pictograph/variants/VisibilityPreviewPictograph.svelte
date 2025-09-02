@@ -12,7 +12,7 @@ with real-time opacity changes based on visibility settings.
     Orientation,
     RotationDirection,
   } from "$domain";
-  import { Location, MotionColor, MotionType } from "$domain/enums";
+  import { Location, MotionColor, MotionType } from "$domain";
   import { getVisibilityStateManager } from "$lib/services/implementations/ui/VisibilityStateManager";
   import { onMount } from "svelte";
   import PictographWithVisibility from "./PictographWithVisibility.svelte";

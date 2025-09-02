@@ -5,19 +5,24 @@
  * Single responsibility: Coordinate focused services for export workflow.
  */
 
-import type { SequenceData } from "$domain";
+// Domain types
 import type {
   BatchExportProgress,
   BatchOperationConfig,
+  SequenceCardDimensions,
+  SequenceCardExportResult,
+  SequenceCardMetadata,
+  SequenceData,
+} from "$domain";
+
+// Behavioral contracts
+import type {
   ISequenceCardBatchProcessingService,
   ISequenceCardCacheService,
   ISequenceCardExportOrchestrator,
   ISequenceCardExportProgressTracker,
   ISequenceCardImageConversionService,
   ISequenceCardImageGenerationService,
-  SequenceCardDimensions,
-  SequenceCardExportResult,
-  SequenceCardMetadata,
 } from "../../../contracts/sequence-card-export-interfaces";
 
 export class SequenceCardExportOrchestrator

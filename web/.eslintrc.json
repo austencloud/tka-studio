@@ -22,8 +22,126 @@
       { "argsIgnorePattern": "^_" }
     ],
     "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/no-non-null-assertion": "warn"
+    "@typescript-eslint/no-non-null-assertion": "warn",
+
+    // Enforce architectural boundaries with path aliases
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          // Prevent relative imports TO domain FROM outside domain
+          {
+            "group": [
+              "../domain/**",
+              "../../domain/**",
+              "../../../domain/**",
+              "../../../../domain/**"
+            ],
+            "message": "❌ Use '$domain' alias instead of relative paths to import from domain layer. This enforces clean architecture boundaries."
+          },
+          // Prevent $domain/specific/path patterns
+          {
+            "group": ["$domain/**"],
+            "message": "❌ Use '$domain' directly, not '$domain/specific/path'. All domain exports are available from the main index."
+          },
+          // Prevent $implementations/specific/path patterns
+          {
+            "group": ["$implementations/**"],
+            "message": "❌ Use '$implementations' directly, not '$implementations/specific/path'. All implementation exports are available from the main index."
+          },
+          // Prevent $contracts/specific/path patterns
+          {
+            "group": ["$contracts/**"],
+            "message": "❌ Use '$contracts' directly, not '$contracts/specific/path'. All contract exports are available from the main index."
+          },
+          // Prevent relative imports TO implementations FROM outside implementations
+          {
+            "group": [
+              "../services/implementations/**",
+              "../../services/implementations/**",
+              "../../../services/implementations/**",
+              "../../../../services/implementations/**"
+            ],
+            "message": "❌ Use '$implementations' alias instead of relative paths. This prevents tight coupling to implementation details."
+          },
+          // Prevent relative imports TO contracts FROM outside contracts
+          {
+            "group": [
+              "../services/contracts/**",
+              "../../services/contracts/**",
+              "../../../services/contracts/**",
+              "../../../../services/contracts/**"
+            ],
+            "message": "❌ Use '$contracts' alias instead of relative paths. This enforces dependency inversion principle."
+          }
+        ]
+      }
+    ]
   },
+
+  "overrides": [
+    {
+      // Allow relative imports WITHIN the domain layer itself
+      "files": ["src/lib/domain/**/*"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["$domain/**"],
+                "message": "❌ Within domain layer, use relative imports, not '$domain/specific/path'."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      // Allow relative imports WITHIN the services/implementations layer
+      "files": ["src/lib/services/implementations/**/*"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../domain/**",
+                  "../../domain/**",
+                  "../../../domain/**",
+                  "../../../../domain/**"
+                ],
+                "message": "❌ Use '$domain' alias instead of relative paths to import from domain layer."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      // Allow relative imports WITHIN the services/contracts layer
+      "files": ["src/lib/services/contracts/**/*"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../domain/**",
+                  "../../domain/**",
+                  "../../../domain/**",
+                  "../../../../domain/**"
+                ],
+                "message": "❌ Use '$domain' alias instead of relative paths to import from domain layer."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
 
   "ignorePatterns": [
     "build/",

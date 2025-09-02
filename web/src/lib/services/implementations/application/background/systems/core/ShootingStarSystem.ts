@@ -1,10 +1,6 @@
 // src/lib/services/implementations/background/systems/core/ShootingStarSystem.ts
-import type {
-  Dimensions,
-  ShootingStar,
-  ShootingStarState,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
-import { SnowfallConfig } from "$domain/core/ui/backgrounds/configs/config";
+import type { Dimensions, ShootingStar, ShootingStarState } from "$domain";
+import { SnowfallConfig } from "$domain";
 
 export const createShootingStarSystem = () => {
   const config = SnowfallConfig.shootingStar;

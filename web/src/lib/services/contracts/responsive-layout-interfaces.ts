@@ -7,11 +7,11 @@
 
 // Import missing types
 import type {
-  GridConfiguration,
   LayoutCalculationParams,
   LayoutCalculationResult,
+  OptionPickerGridConfiguration,
+  ResponsiveLayoutConfig,
 } from "$domain";
-import type { ResponsiveLayoutConfig } from "$lib/domain/build/option-picker/OptionPickerTypes";
 
 // ============================================================================
 // LAYOUT TYPES
@@ -30,7 +30,7 @@ export interface IResponsiveLayoutService {
     count: number,
     containerWidth: number,
     containerHeight: number
-  ): GridConfiguration;
+  ): OptionPickerGridConfiguration;
 
   /** Calculate optimal item size for container */
   calculateOptimalItemSize(

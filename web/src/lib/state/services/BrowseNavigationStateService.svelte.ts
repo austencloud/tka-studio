@@ -5,8 +5,8 @@
  * Handles navigation mode and sections without business logic.
  */
 
-import { NavigationMode } from "$domain/browse";
-import type { NavigationSection } from "$lib/services/contracts/browse-interfaces";
+import type { NavigationSection } from "$contracts";
+import { NavigationMode } from "$domain";
 
 export interface IBrowseNavigationStateService {
   // Reactive state getters

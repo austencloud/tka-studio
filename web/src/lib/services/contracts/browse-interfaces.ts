@@ -159,4 +159,4 @@ export type {
   NavigationSection,
   SectionConfiguration,
   SequenceSection,
-} from "$domain/browse";
+} from "$domain";

@@ -6,9 +6,9 @@
  */
 
 import type {
-  BeatFrameConfig,
-  ContainerDimensions,
-} from "$domain/build/workbench/beat-frame";
+    BeatFrameConfig,
+    ContainerDimensions,
+} from "$domain";
 
 /**
  * Service for managing beat frame configuration

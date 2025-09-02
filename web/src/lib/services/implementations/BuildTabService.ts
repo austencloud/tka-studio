@@ -8,9 +8,8 @@
  * across components, providing a clean separation of concerns.
  */
 
+import type { IBuildTabService, IStartPositionService } from "$contracts";
 import type { BeatData, PictographData } from "$domain";
-import type { IStartPositionService } from "$lib/services/contracts/application/IStartPositionService";
-import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../inversify/types";
 // IStartPositionSelectionService removed - using unified service

@@ -4,11 +4,21 @@
  * This test suite verifies the beta detection approach works correctly.
  */
 
-import { GridPosition } from "$domain";
+import {
+  GridPosition,
+  Location,
+  MotionColor,
+  MotionType,
+  Orientation,
+  PropType,
+  RotationDirection,
+  Letter,
+  createArrowPlacementData,
+  createPropPlacementData,
+} from "$domain";
+import type { PictographData } from "$domain";
 import { endsWithBeta, isBetaPosition } from "$lib/utils/betaDetection";
 import { describe, expect, it } from "vitest";
-import { Letter } from "../../../src/lib/domain/models/core/Letter";
-import type { PictographData } from "../../../src/lib/domain/models/core/PictographData";
 
 describe("Beta Detection System", () => {
   describe("isBetaPosition", () => {
@@ -45,19 +55,19 @@ describe("Beta Detection System", () => {
         endPosition: GridPosition.BETA3,
         motions: {
           blue: {
-            motionType: "pro" as any,
-            startLocation: "n" as any,
-            endLocation: "e" as any,
+            motionType: MotionType.PRO,
+            startLocation: Location.NORTH,
+            endLocation: Location.EAST,
             turns: 0,
-            rotationDirection: "cw" as any,
-            startOrientation: "in" as any,
-            endOrientation: "out" as any,
+            rotationDirection: RotationDirection.CLOCKWISE,
+            startOrientation: Orientation.IN,
+            endOrientation: Orientation.OUT,
             isVisible: true,
-            color: "blue" as any,
-            propType: "fan" as any,
-            arrowLocation: "n" as any,
-            arrowPlacementData: {} as any,
-            propPlacementData: {} as any,
+            color: MotionColor.BLUE,
+            propType: PropType.FAN,
+            arrowLocation: Location.NORTH,
+            arrowPlacementData: createArrowPlacementData(),
+            propPlacementData: createPropPlacementData(),
           },
           // Missing red motion
         },

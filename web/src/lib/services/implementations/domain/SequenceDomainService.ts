@@ -12,10 +12,11 @@ import type {
   ValidationResult,
 } from "$domain";
 import { GridMode } from "$domain";
-import type {
-  ISequenceDomainService,
-  SequenceCreateRequest,
-} from "$lib/services/contracts/sequence-interfaces";
+// Domain types
+import type { SequenceCreateRequest } from "$domain";
+
+// Behavioral contracts
+import type { ISequenceDomainService } from "$contracts";
 import { injectable } from "inversify";
 
 @injectable()
@@ -92,7 +93,8 @@ export class SequenceDomainService implements ISequenceDomainService {
 
     // Create beats with proper numbering (desktop logic)
     const beats: BeatData[] = [];
-    for (let i = 1; i <= request.length; i++) {
+    const length = request.length || 0;
+    for (let i = 1; i <= length; i++) {
       beats.push(this.createEmptyBeat(i));
     }
 

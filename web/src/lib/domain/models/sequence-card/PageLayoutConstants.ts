@@ -9,8 +9,8 @@ import type {
   MeasurementUnit,
   PageMargins,
   PaperSpecification,
-} from "./PageLayoutModels";
-import type { SequenceCardPaperSize } from "../../types/PageLayoutTypes";
+  SequenceCardPaperSize,
+} from "$domain";
 
 // ============================================================================
 // CONSTANTS
@@ -51,9 +51,8 @@ export const DEFAULT_MARGINS: PageMargins = {
 };
 
 export const DEFAULT_DPI_CONFIG: DPIConfiguration = {
-  screenDPI: 96,
-  printDPI: 300,
-  scaleFactor: 96 / 72, // Convert points to pixels for screen display
+  screen: 96,
+  print: 300,
 };
 
 export const MEASUREMENT_UNITS: Record<string, MeasurementUnit> = {

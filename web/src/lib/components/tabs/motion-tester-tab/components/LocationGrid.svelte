@@ -6,7 +6,7 @@ Much more intuitive than dropdown for spatial location selection.
 -->
 <script lang="ts">
   import { GridMode } from "$domain";
-  import { Location } from "$domain/enums";
+  import { Location } from "$domain";
 
   interface Props {
     selectedLocation: string;

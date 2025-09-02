@@ -17,20 +17,7 @@
 // ============================================================================
 
 // Core interfaces (main orchestrator & fundamental types)
-export type {
-  BeatRenderOptions,
-  CompositionOptions,
-  ExportError,
-  ExportProgress,
-  ExportResult,
-  ITKAImageExportService,
-  LayoutConstraints,
-  LayoutData,
-  RenderQualitySettings,
-  TextRenderOptions,
-  TKAImageExportOptions,
-  UserInfo,
-} from "./image-export-core-interfaces";
+export type { ITKAImageExportService } from "./image-export-core-interfaces";
 
 // Rendering interfaces (beat, image, canvas, visual effects)
 export type {
@@ -71,14 +58,12 @@ export { IFileExportServiceInterface } from "./image-export-file-interfaces";
 
 // Utility interfaces (configuration, memory, validation)
 export type {
-  ExportValidationResult,
   IExportConfigurationManager,
   IExportMemoryCalculator,
   IExportOptionsValidator,
   IExportSettingsService,
   IFilenameGeneratorService,
   IImagePreviewGenerator,
-  MemoryEstimate,
 } from "./image-export-utility-interfaces";
 
 // Text rendering component interface symbols (from existing text-rendering-interfaces.ts)

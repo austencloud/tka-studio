@@ -4,50 +4,13 @@
  * Service contracts for data handling, CSV parsing, and query operations.
  */
 
-import type { PictographData } from "../../domain/models/core/PictographData";
+import type { PictographData } from "$domain";
 
 // ============================================================================
-// DATA CONTRACTS
+// DATA CONTRACTS - MOVED TO DOMAIN
 // ============================================================================
-
-export interface CsvDataSet {
-  headers: string[];
-  rows: string[][];
-  metadata?: Record<string, any>;
-  diamondData?: string;
-  boxData?: string;
-}
-
-export interface ParsedCsvRow {
-  letter: string;
-  startPosition: string;
-  endPosition: string;
-  timing: string;
-  direction: string;
-  blueMotionType: string;
-  blueRotationDirection: string;
-  blueStartLocation: string;
-  blueEndLocation: string;
-  redMotionType: string;
-  redRotationDirection: string;
-  redStartLocation: string;
-  redEndLocation: string;
-  [key: string]: string; // Allow additional properties
-}
-
-export interface CsvParseResult {
-  headers: string[];
-  rows: ParsedCsvRow[];
-  totalRows: number;
-  successfulRows: number;
-  errors: Array<{
-    error: string;
-    rawRow: string;
-    lineNumber: number;
-    rowIndex?: number;
-  }>;
-  isValid: boolean;
-}
+// CSV data models have been moved to domain/models/core/csv-handling/CsvModels.ts
+// Import them from $domain instead
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -106,23 +69,8 @@ export interface IMotionQueryHandler {
   getNextOptionsForSequence(sequence: unknown[]): Promise<PictographData[]>;
 }
 
-export interface ICSVPictographParserService {
-  /**
-   * Parse CSV data into pictographs
-   */
-  parseCsv(csvData: string): Promise<CsvParseResult>;
-
-  /**
-   * Validate CSV format
-   */
-  validateCsvFormat(csvData: string): boolean;
-
-  /**
-   * Get supported CSV columns
-   */
-  getSupportedColumns(): string[];
-}
+// ICSVPictographParserService moved to dedicated contract file
 
 // Re-export from data interfaces for backward compatibility
 export type { ICsvLoader as ICSVLoader, ICsvLoader } from "./data/ICsvLoader";
-export type { ICSVParser } from "./data/ICsvParser";
+// ICSVParser moved to application/ICSVParser.ts

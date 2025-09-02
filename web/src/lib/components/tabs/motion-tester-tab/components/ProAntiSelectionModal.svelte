@@ -5,7 +5,7 @@ Appears when user moves away from float motion and needs to choose
 between Pro (natural) or Anti (reverse) circular motion direction.
 -->
 <script lang="ts">
-  import { MotionType } from "$domain/enums";
+  import { MotionType } from "$domain";
   import "$lib/styles/modal-animations.css";
   import { onMount } from "svelte";
 

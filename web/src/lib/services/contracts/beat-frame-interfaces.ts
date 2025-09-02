@@ -7,12 +7,13 @@
 // ============================================================================
 // CONFIGURATION TYPES
 // ============================================================================
-import type { BeatData, Position } from "$domain";
 import type {
+  BeatData,
   BeatFrameConfig,
   ContainerDimensions,
   LayoutInfo,
-} from "$domain/build/workbench/beat-frame";
+  Position,
+} from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

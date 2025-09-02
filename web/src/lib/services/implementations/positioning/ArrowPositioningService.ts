@@ -9,12 +9,17 @@
  */
 
 import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
-import { GridMode, Orientation } from "$domain";
-import { Location, MotionColor, MotionType } from "$lib/domain/enums/enums";
+import {
+  GridMode,
+  Letter,
+  Location,
+  MotionColor,
+  MotionType,
+  Orientation,
+} from "$domain";
 import type { IArrowPositioningOrchestrator } from "$lib/services/contracts/positioning-interfaces";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
-import type { Letter } from "../../../domain/models/core/Letter";
 
 export interface ArrowPositionResult {
   x: number;
@@ -57,7 +62,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
    * Calculate arrow position using the sophisticated positioning pipeline
    */
   async calculatePosition(
-    arrowPlacementData: ArrowPlacementData,
+    _arrowPlacementData: ArrowPlacementData,
     motionData: MotionData,
     pictographData: PictographData
   ): Promise<ArrowPositionResult> {

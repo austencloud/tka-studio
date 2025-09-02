@@ -4,9 +4,12 @@
  * Interface for managing sequence state operations.
  */
 
-import type { SequenceData, ValidationResult } from "$domain";
-import type { SequenceStatistics } from "../../../domain/models/browse/SequenceState";
-import type { BeatData } from "../../../domain/models/build/workbench/BeatData";
+import type {
+  BeatData,
+  SequenceData,
+  SequenceStatistics,
+  ValidationResult,
+} from "$domain";
 
 export interface ISequenceStateService {
   // Sequence management

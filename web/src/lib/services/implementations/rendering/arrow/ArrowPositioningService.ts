@@ -7,7 +7,7 @@
  */
 
 import type { MotionData } from "$domain";
-import { MotionColor } from "$lib/domain/enums/enums";
+import { MotionColor } from "$domain";
 import type {
   IArrowPositioningService,
   ISvgColorTransformer,

@@ -10,8 +10,8 @@ import type { ActiveBuildSubTab } from "$lib/state/services/state-service-interf
 
 // Simplified transition service without complex fade orchestrator
 
+import type { IBuildTabTransitionService } from "$contracts/build-interfaces";
 import { injectable } from "inversify";
-import type { IBuildTabTransitionService } from "../../contracts/build-interfaces";
 
 @injectable()
 export class BuildTabTransitionService implements IBuildTabTransitionService {

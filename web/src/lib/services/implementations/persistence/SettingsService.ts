@@ -4,10 +4,8 @@
  * Manages application settings with persistence and reactive updates.
  */
 
-import { GridMode } from "$domain";
-import type { AppSettings } from "$domain/core/AppSettings";
-import type { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
-import type { ISettingsService } from "$lib/services/contracts/application-interfaces";
+import type { ISettingsService } from "$contracts";
+import { GridMode, type AppSettings, type BackgroundType } from "$domain";
 import { updateBodyBackground } from "$lib/utils/background-preloader";
 import { injectable } from "inversify";
 

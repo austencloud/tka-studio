@@ -12,17 +12,14 @@ export type {
   LetterCategory,
   LetterMapping,
   LetterRow,
-} from "$domain/learn/codex/types";
+} from "$domain";
 
-// Repositories
-export {
-  LetterMappingRepository,
-  type ILetterMappingRepository,
-} from "$domain/learn/codex/LetterMappingRepository";
-export {
-  LessonRepository,
-  type ILessonRepository,
-} from "$domain/learn/LessonRepository";
+// Repository interfaces
+export type { ILessonRepository, ILetterMappingRepository } from "$domain";
+
+// Repository implementations
+export { LessonRepository } from "../LessonRepository";
+export { LetterMappingRepository } from "../LetterMappingRepository";
 
 // Services
 // TODO: Re-enable when PictographQueryService is implemented

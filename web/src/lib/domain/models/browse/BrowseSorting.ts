@@ -4,9 +4,7 @@
  * Interface definitions and business logic for browse sorting functionality.
  * Contains the business logic functions that were in SortMethod.ts
  */
-
-import { SortMethod } from "../../enums/enums";
-import type { SortConfig } from "./SortModels";
+import { SortMethod, type SortConfig } from "$domain";
 
 // Predefined sort configurations
 export const SORT_CONFIGS: Record<SortMethod, SortConfig> = {

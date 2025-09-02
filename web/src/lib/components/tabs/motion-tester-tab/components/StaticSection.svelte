@@ -12,8 +12,8 @@ This is the left 2/3 section of the new layout.
     Orientation,
     RotationDirection,
   } from "$domain";
-  import { Letter } from "$domain/core/Letter";
-  import { Location, MotionColor, MotionType } from "$domain/enums";
+  import { Letter } from "$domain";
+  import { Location, MotionColor, MotionType } from "$domain";
   import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
   import type { MotionTesterState } from "$lib/state/motion-tester/motion-tester-state.svelte";
   import PropPanel from "./PropPanel.svelte";

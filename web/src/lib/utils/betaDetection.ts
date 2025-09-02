@@ -4,10 +4,10 @@
  * Functions to detect beta conditions based on GridPosition enum values
  */
 
+import type { PictographData } from "$domain";
 import { GridPosition } from "$domain";
 import type { IPositionMapper } from "$lib/services/contracts/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import type { PictographData } from "../domain/models/core/PictographData";
 
 /**
  * Check if a grid position is a beta position

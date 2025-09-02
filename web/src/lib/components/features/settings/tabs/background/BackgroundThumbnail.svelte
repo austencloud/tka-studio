@@ -5,7 +5,7 @@
   animated preview, metadata, and selection state.
 -->
 <script lang="ts">
-  import type { BackgroundType } from "$domain/core/ui/backgrounds/BackgroundTypes";
+  import type { BackgroundType } from "$domain";
   import type { BackgroundMetadata } from "./background-config";
 
   interface Props {

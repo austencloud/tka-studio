@@ -5,11 +5,7 @@
  * Supports both individual page and multi-page PDF generation.
  */
 
-import type {
-  ExportResult,
-  PDFExportOptions,
-} from "$domain/sequence-card/export";
-import type { Page } from "../../domain/sequence-card/PageLayoutTypes";
+import type { ExportResult, PDFExportOptions, Page } from "$domain";
 
 // ============================================================================
 // PDF EXPORT SERVICES

@@ -7,15 +7,15 @@
  * FIXED: Added proper state synchronization to resolve start position selection getting stuck
  */
 
-import type { BeatData, SequenceData } from "$domain";
-import { GridMode } from "$domain";
-import { inject, injectable } from "inversify";
-import type { IConstructTabCoordinator as IConstructSubTabCoordinationService } from "../../contracts/application/IConstructTabCoordinator";
-import type { IStartPositionService } from "../../contracts/application/IStartPositionService";
 import type {
     ISequenceService,
     IWorkbenchBeatOperationsService,
-} from "../../contracts/sequence-interfaces";
+} from "$contracts";
+import type { IConstructTabCoordinator as IConstructSubTabCoordinationService } from "$contracts/application/IConstructTabCoordinator";
+import type { IStartPositionService } from "$contracts/application/IStartPositionService";
+import type { BeatData, SequenceData } from "$domain";
+import { GridMode } from "$domain";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 
 // Note: This service will need to be updated to use the new DI pattern

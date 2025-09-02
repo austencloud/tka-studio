@@ -5,10 +5,10 @@
  * This service ensures all required services are ready before the app starts.
  */
 
-import type { IPersistenceService } from "$lib/services/contracts/sequence-interfaces";
+import type { IPersistenceService } from "$contracts";
+import type { IApplicationInitializer } from "$contracts/application/IApplicationInitializer";
+import type { ISettingsService } from "$contracts/application/ISettingsService";
 import { inject, injectable } from "inversify";
-import type { IApplicationInitializer } from "../../contracts/application/IApplicationInitializer";
-import type { ISettingsService } from "../../contracts/application/ISettingsService";
 import { TYPES } from "../../inversify/types";
 
 @injectable()

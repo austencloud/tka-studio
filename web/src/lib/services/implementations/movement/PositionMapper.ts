@@ -5,10 +5,9 @@
  * A position represents the combination of (blue_hand_location, red_hand_location).
  */
 
-import { GridPosition } from "$domain";
-import { Location } from "$lib/domain/enums/enums";
+import type { IPositionMapper } from "$contracts/positioning-interfaces";
+import { GridPosition, Location } from "$domain";
 import { injectable } from "inversify";
-import type { IPositionMapper } from "../../contracts/positioning-interfaces";
 
 @injectable()
 export class PositionMapper implements IPositionMapper {

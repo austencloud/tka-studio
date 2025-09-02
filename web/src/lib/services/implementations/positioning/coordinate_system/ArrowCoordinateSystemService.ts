@@ -13,10 +13,9 @@
  * No UI dependencies, completely testable in isolation.
  */
 
-import type { MotionData } from "$domain";
-import { Location } from "$lib/domain/enums/enums";
+import type { MotionData, Point } from "$domain";
+import { Location } from "$domain";
 import { injectable } from "inversify";
-import type { Point } from "../types";
 
 export interface IArrowCoordinateSystemService {
   getInitialPosition(motion: MotionData, location: Location): Point;

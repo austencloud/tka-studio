@@ -5,7 +5,7 @@
  * and positioning logic in the TKA image export system.
  */
 
-import type { TKAImageExportOptions } from "./image-export-core-interfaces";
+import type { TKAImageExportOptions } from "$domain";
 
 // ============================================================================
 // LAYOUT AND DIMENSION SERVICES

@@ -1,13 +1,12 @@
-import type { BeatData, SequenceData } from "$domain";
-import type { IBeatFallbackRenderer } from "$lib/services/contracts/beat-fallback-interfaces";
-import { inject, injectable } from "inversify";
-import type { IBeatGridService } from "../../contracts/beat-grid-interfaces";
+import type { ISVGToCanvasConverterService } from "$contracts";
+import type { IBeatGridService } from "$contracts/beat-grid-interfaces";
 import type {
-  BeatRenderOptions,
   IBeatRenderingService,
   ICanvasManagementService,
-} from "../../contracts/image-export-interfaces";
-import type { ISVGToCanvasConverterService } from "../../contracts/svg-conversion-interfaces";
+} from "$contracts/image-export-interfaces";
+import type { BeatData, BeatRenderOptions, SequenceData } from "$domain";
+import type { IBeatFallbackRenderer } from "$lib/services/contracts/beat-fallback-interfaces";
+import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 
 @injectable()
@@ -112,7 +111,7 @@ export class BeatRenderingService implements IBeatRenderingService {
    */
   async renderStartPositionToCanvas(
     sequence: SequenceData,
-    size: number,
+    _size: number,
     _options: BeatRenderOptions
   ): Promise<HTMLCanvasElement> {
     if (!sequence) {

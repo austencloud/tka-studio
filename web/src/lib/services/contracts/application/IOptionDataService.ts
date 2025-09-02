@@ -8,16 +8,18 @@
 import type {
   DifficultyLevel,
   MotionType,
-  OptionFilters,
   PictographData,
   SequenceData,
   ValidationResult,
 } from "$domain";
 
+// Import FilterCriteria from the OptionFilterer implementation
+import type { FilterCriteria } from "$implementations/data/OptionFilterer";
+
 export interface IOptionDataService {
   getNextOptions(
     currentSequence: SequenceData,
-    filters?: OptionFilters
+    filters?: FilterCriteria
   ): Promise<PictographData[]>;
   filterOptionsByDifficulty(
     options: PictographData[],

@@ -5,25 +5,31 @@
  * No placeholders, no simplified versions - complete algorithm from legacy desktop app.
  */
 
-import type { BeatData, SequenceData } from "$domain";
-import { createSequenceData, GridMode, PropType } from "$domain";
-import type { ILetterQueryHandler } from "$lib/services/contracts/data-interfaces";
+import {
+  createMotionData,
+  createSequenceData,
+  DifficultyLevel,
+  GenerationMode,
+  GridMode,
+  Location,
+  MotionType,
+  Orientation,
+  PropContinuity,
+  PropType,
+  RotationDirection,
+  type BeatData,
+  type PictographData,
+  type SequenceData,
+} from "$domain";
+
 import type {
   GenerationOptions,
   IOrientationCalculationService,
   ISequenceGenerationService,
-} from "../../contracts/generation-interfaces";
+} from "$contracts/generation-interfaces";
+import type { ILetterQueryHandler } from "$lib/services/contracts/data-interfaces";
 
-import { GenerationMode, Orientation, RotationDirection } from "$domain";
-import {
-  DifficultyLevel,
-  Location,
-  MotionType,
-  PropContinuity,
-} from "$lib/domain/enums/enums";
 import { inject, injectable } from "inversify";
-import { createMotionData } from "../../../domain/models/core/MotionData";
-import type { PictographData } from "../../../domain/models/core/PictographData";
 import { TYPES } from "../../inversify/types";
 
 // Legacy constants for rotation directions - using enum values

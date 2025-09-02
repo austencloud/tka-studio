@@ -6,7 +6,7 @@ Uses pure runes instead of stores for reactivity.
 -->
 <script lang="ts">
   import { GridMode } from "$domain";
-  import { createGridPointData } from "$lib/domain/core/pictograph/gridCoordinates";
+  import { createGridPointData } from "$domain";
 
   interface Props {
     /** Grid mode - diamond or box */

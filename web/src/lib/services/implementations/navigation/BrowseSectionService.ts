@@ -5,14 +5,14 @@
  * following the microservices architecture pattern.
  */
 
+import type { IBrowseSectionService } from "$contracts/browse/IBrowseSectionService";
 import type {
   SectionConfiguration,
   SequenceData,
   SequenceSection,
+  SortMethod,
 } from "$domain";
-import type { SortMethod } from "$domain/browse";
 import { injectable } from "inversify";
-import type { IBrowseSectionService } from "../../contracts/browse/IBrowseSectionService";
 
 @injectable()
 export class BrowseSectionService implements IBrowseSectionService {

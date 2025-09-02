@@ -5,12 +5,12 @@
  * NO REDUNDANT LOGIC - uses BrowseService for data, PageLayoutService for layout.
  */
 
-import type { SequenceData } from "$domain";
-import type { IBrowseService } from "$services/contracts/browse-interfaces";
 import type {
+  IBrowseService,
   IPageFactoryService,
   IPrintablePageLayoutService,
-} from "$services/contracts/sequence-interfaces";
+} from "$contracts";
+import type { SequenceData } from "$domain";
 import { createPageLayoutState } from "../page-layout-state.svelte";
 import {
   displayState,

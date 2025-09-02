@@ -5,22 +5,19 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import type { PictographData } from "$domain";
-import { GridMode, Letter } from "$domain";
-import { MotionType } from "$lib/domain/enums/enums";
+import type { CSVRow } from "$contracts/movement/ICSVPictographParserService";
+import type { ParsedCsvRow, PictographData } from "$domain";
+import { GridMode, Letter, MotionType } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
-import type { CSVRow } from "../movement/CSVPictographParserService";
 
-import type { ILetterMappingRepository } from "$domain/learn/codex/LetterMappingRepository";
-import type { LetterMapping } from "$domain/learn/codex/types";
 import type {
   ICSVParser,
-  ILetterQueryHandler,
-  ParsedCsvRow,
-} from "$lib/services/contracts/data-interfaces";
-import type { ICsvLoader } from "../../contracts/data/ICsvLoader";
-import type { ICSVPictographParserService as ICSVPictographParser } from "../movement/CSVPictographParserService";
+  ICSVPictographParserService as ICSVPictographParser,
+} from "$contracts";
+import type { ICsvLoader } from "$contracts/data/ICsvLoader";
+import type { ILetterMappingRepository, LetterMapping } from "$domain";
+import type { ILetterQueryHandler } from "$lib/services/contracts/data-interfaces";
 
 @injectable()
 export class LetterQueryHandler implements ILetterQueryHandler {

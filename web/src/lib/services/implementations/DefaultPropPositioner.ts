@@ -1,9 +1,9 @@
-import { GridMode } from "$domain";
 import {
-  type GridPointData,
   createGridPointData,
-} from "$domain/core/pictograph/gridCoordinates.js";
-import { Location } from "$lib/domain/enums/enums";
+  GridMode,
+  Location,
+  type GridPointData,
+} from "$domain";
 
 /**
  * DefaultPropPositioner - Calculates default prop positions using grid coordinates

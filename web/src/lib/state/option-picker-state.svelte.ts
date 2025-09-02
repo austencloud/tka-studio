@@ -10,8 +10,10 @@
  * ✅ Component-scoped state (not global singleton)
  */
 
-import type { PictographData } from "$domain/core/pictograph/PictographData";
-import type { OptionPickerLayoutCalculationResult } from "$lib/services/contracts/option-picker-interfaces";
+import type {
+  OptionPickerLayoutCalculationResult,
+  PictographData,
+} from "$domain";
 import { OptionPickerServiceAdapter } from "$lib/services/implementations/OptionPickerServiceAdapter";
 
 export function createOptionPickerState() {

@@ -5,13 +5,11 @@
  * Provides memory estimation, parameter validation, and test composition capabilities.
  */
 
-import type { SequenceData } from "$domain";
 import type {
   IDimensionCalculationService,
   ILayoutCalculationService,
-  LayoutData,
-  TKAImageExportOptions,
-} from "../../../../contracts/image-export-interfaces";
+} from "$contracts/image-export-interfaces";
+import type { LayoutData, SequenceData, TKAImageExportOptions } from "$domain";
 import {
   CompositionUtils,
   type CompositionStats,

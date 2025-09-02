@@ -9,9 +9,9 @@ import {
   GenerationMode,
   GridMode,
   LetterType,
+  PropContinuity,
   SliceSize,
 } from "$domain";
-import { PropContinuity } from "$lib/domain/enums/enums";
 
 export interface GenerationConfig {
   mode: GenerationMode;

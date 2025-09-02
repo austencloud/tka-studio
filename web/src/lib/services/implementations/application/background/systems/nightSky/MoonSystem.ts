@@ -1,11 +1,11 @@
 // src/lib/components/backgrounds/systems/nightSky/MoonSystem.ts
-import { NightSkyUtils } from "./NightSkyUtils";
 import type {
   AccessibilitySettings,
-  Moon,
   Dimensions,
+  Moon,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+} from "$domain";
+import { NightSkyUtils } from "./NightSkyUtils";
 
 export interface MoonConfig {
   radiusPercent: number;

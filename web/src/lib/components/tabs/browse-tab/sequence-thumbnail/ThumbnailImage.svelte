@@ -5,7 +5,7 @@ Handles image loading, error states, and placeholders for sequence thumbnails.
 Extracted from SequenceThumbnail.svelte for better separation of concerns.
 -->
 <script lang="ts">
-  import type { IThumbnailService } from "$lib/services/contracts/browse-interfaces";
+  import type { IThumbnailService } from "$contracts";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

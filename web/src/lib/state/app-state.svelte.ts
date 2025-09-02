@@ -245,8 +245,7 @@ export function debugSettings(): void {
 export function getBrowseStatePersistence() {
   // This function exists in the original but uses internal persistence service
   // For now, we'll keep this as a compatibility layer
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (tabStateService as any).browseStatePersistence;
+  return tabStateService.browseStatePersistence;
 }
 
 // ============================================================================

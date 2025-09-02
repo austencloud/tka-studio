@@ -9,7 +9,7 @@ import type {
   MetadataAnalysisResult,
   SequenceMetadata,
   ThumbnailFile,
-} from "$domain/browse/metadata";
+} from "$domain";
 
 export interface IMetadataExtractionService {
   /**

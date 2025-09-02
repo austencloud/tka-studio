@@ -1,10 +1,6 @@
 // src/lib/components/backgrounds/systems/nightSky/ParallaxStarSystem.ts
+import type { AccessibilitySettings, Dimensions, Star } from "$domain";
 import { NightSkyUtils, type StarConfig } from "./NightSkyUtils";
-import type {
-  AccessibilitySettings,
-  Dimensions,
-  Star,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
 
 export interface ParallaxConfig {
   far: { density: number; drift: number };

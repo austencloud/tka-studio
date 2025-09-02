@@ -10,179 +10,210 @@ import "reflect-metadata";
 
 // Import service types
 import { TYPES } from "./types";
-
 // Import service implementations
-import { LetterMappingRepository } from "../../domain/learn/codex/LetterMappingRepository";
-import { LessonRepository } from "../../domain/learn/LessonRepository";
-import { CsvLoader } from "../implementations/data/CsvLoader";
-import { CSVParser } from "../implementations/data/CSVParser";
-import { LetterQueryHandler } from "../implementations/data/LetterQueryHandler";
-import { CodexService } from "../implementations/learn/codex/CodexService";
-import { PictographOperationsService } from "../implementations/learn/codex/PictographOperationsService";
+import {
+  CodexService,
+  CsvLoader,
+  CSVParser,
+  LessonRepository,
+  LetterMappingRepository,
+  LetterQueryHandler,
+  PictographOperationsService,
+} from "$implementations";
 
 // Import application services
-import { ApplicationInitializer } from "../implementations/application/ApplicationInitializer";
-import { DeviceDetector } from "../implementations/application/DeviceDetector";
-import { LocalStoragePersistenceService } from "../implementations/persistence/LocalStoragePersistenceService";
-import { SettingsService } from "../implementations/persistence/SettingsService";
+import {
+  ApplicationInitializer,
+  DeviceDetector,
+  LocalStoragePersistenceService,
+  SettingsService,
+} from "$implementations";
 
 // Import sequence services
-import { SequenceDomainService } from "../implementations/domain/SequenceDomainService";
-import { SequenceImportService } from "../implementations/sequence/SequenceImportService";
-import { SequenceService } from "../implementations/sequence/SequenceService";
-import { SequenceStateService } from "../implementations/sequence/SequenceStateService";
+import {
+  SequenceDomainService,
+  SequenceImportService,
+  SequenceService,
+  SequenceStateService,
+} from "$implementations";
 
 // Import build tab services
-import { BuildTabService } from "../implementations/BuildTabService";
+import { BuildTabService } from "$implementations";
 
 // Import layout services
-import { BeatFrameService } from "../implementations/layout/BeatFrameService";
+import { BeatFrameService } from "$implementations";
 
 // Import workbench services
-import { WorkbenchBeatOperationsService } from "../implementations/sequence/WorkbenchBeatOperationsService";
-import { WorkbenchCoordinationService } from "../implementations/workbench/WorkbenchCoordinationService";
-import { WorkbenchService } from "../implementations/workbench/WorkbenchService";
+import {
+  WorkbenchBeatOperationsService,
+  WorkbenchCoordinationService,
+  WorkbenchService,
+} from "$implementations";
 
 // Import domain services
-import { GridModeDeriver } from "../implementations/domain/GridModeDeriver";
+import { GridModeDeriver } from "$implementations";
 
 // Import rendering services
-import { PropCoordinator } from "../implementations/rendering/PropCoordinator";
+import { PropCoordinator } from "$implementations";
 
 // Import browse services
-import { BrowseService } from "../implementations/browse/BrowseService";
-import { FavoritesService } from "../implementations/browse/FavoritesService";
+import { BrowseService, FavoritesService } from "$implementations";
 
 // Import additional data services
-import { DataTransformer } from "../implementations/data/DataTransformer";
-import { EnumMapper } from "../implementations/data/EnumMapper";
-import { MotionQueryHandler } from "../implementations/data/MotionQueryHandler";
-import { OptionFilterer } from "../implementations/data/OptionFilterer";
-import { ArrowPlacementService } from "../implementations/positioning/ArrowPlacementService";
+import {
+  ArrowPlacementService,
+  DataTransformer,
+  EnumMapper,
+  MotionQueryHandler,
+  OptionFilterer,
+} from "$implementations";
 
 // Import additional domain services
-import { LetterDeriver } from "../implementations/domain/LetterDeriver";
-import { PictographValidatorService } from "../implementations/domain/PictographValidatorService";
-import { PositionPatternService } from "../implementations/domain/PositionPatternService";
+import {
+  LetterDeriver,
+  PictographValidatorService,
+  PositionPatternService,
+} from "$implementations";
 
 // Import export services
-import { ExportService } from "../implementations/export/ExportService";
-import { PageImageExportService } from "../implementations/export/PageImageExportService";
-import { ThumbnailService } from "../implementations/export/ThumbnailService";
+import {
+  ExportService,
+  PageImageExportService,
+  ThumbnailService,
+} from "$implementations";
 
 // Import generation services
-import { PageFactoryService } from "../implementations/generation/PageFactoryService";
-import { PictographGenerator } from "../implementations/generation/PictographGenerator";
-import { SequenceGenerationService } from "../implementations/generation/SequenceGenerationService";
+import {
+  PageFactoryService,
+  PictographGenerator,
+  SequenceGenerationService,
+} from "$implementations";
 
 // Import background services
-import { BackgroundService } from "../implementations/application/background/BackgroundService";
+import { BackgroundService } from "$implementations";
 
 // Import image export services
-import { BeatRenderingService } from "../implementations/image-export/BeatRenderingService";
-import { CanvasManagementService } from "../implementations/image-export/CanvasManagementService";
-import { ExportConfigurationManager } from "../implementations/image-export/ExportConfigurationManager";
-import { ExportMemoryCalculator } from "../implementations/image-export/ExportMemoryCalculator";
-import { ExportOptionsValidator } from "../implementations/image-export/ExportOptionsValidator";
-import { FileExportService } from "../implementations/image-export/FileExportService";
-import { FilenameGeneratorService } from "../implementations/image-export/FilenameGeneratorService";
-import { GridOverlayService } from "../implementations/image-export/GridOverlayService";
-import { ImageCompositionService } from "../implementations/image-export/ImageCompositionService";
-import { ImagePreviewGenerator } from "../implementations/image-export/ImagePreviewGenerator";
-import { LayoutCalculationService } from "../implementations/image-export/LayoutCalculationService";
-import { TKAImageExportService } from "../implementations/image-export/TKAImageExportService";
-import { BeatFallbackRenderer } from "../implementations/rendering/BeatFallbackRenderer";
+import {
+  BeatFallbackRenderer,
+  BeatRenderingService,
+  CanvasManagementService,
+  ExportConfigurationManager,
+  ExportMemoryCalculator,
+  ExportOptionsValidator,
+  FileExportService,
+  FilenameGeneratorService,
+  GridOverlayService,
+  ImageCompositionService,
+  ImagePreviewGenerator,
+  LayoutCalculationService,
+  TKAImageExportService,
+} from "$implementations";
 
 // Import navigation services
-import { BrowseSectionService } from "../implementations/navigation/BrowseSectionService";
-import { NavigationService } from "../implementations/navigation/NavigationService";
-import { PanelManagementService } from "../implementations/navigation/PanelManagementService";
+import {
+  BrowseSectionService,
+  NavigationService,
+  PanelManagementService,
+} from "$implementations";
 
 // Import additional persistence services
-import { FilterPersistenceService } from "../implementations/persistence/FilterPersistenceService";
+import { FilterPersistenceService } from "$implementations";
 
 // Import positioning services
-import { ArrowLocationService } from "../implementations/positioning/ArrowLocationService";
-import { ArrowPlacementKeyService } from "../implementations/positioning/ArrowPlacementKeyService";
-import { ArrowPositioningService } from "../implementations/positioning/ArrowPositioningService";
-import { BetaOffsetCalculator } from "../implementations/positioning/BetaOffsetCalculator";
-import { PropPlacementService } from "../implementations/positioning/PropPlacementService";
+import {
+  ArrowLocationService,
+  ArrowPlacementKeyService,
+  ArrowPositioningService,
+  BetaOffsetCalculator,
+  PropPlacementService,
+} from "$implementations";
 
 // Import additional rendering services
-import { ArrowRenderer } from "../implementations/rendering/ArrowRenderer";
-import { BeatGridService } from "../implementations/rendering/BeatGridService";
-import { GridRenderingService } from "../implementations/rendering/GridRenderingService";
-import { OverlayRenderer } from "../implementations/rendering/OverlayRenderer";
-import { SvgConfiguration } from "../implementations/rendering/SvgConfiguration";
-import { SvgUtilityService } from "../implementations/rendering/SvgUtilityService";
+import {
+  ArrowRenderer,
+  BeatGridService,
+  GridRenderingService,
+  OverlayRenderer,
+  SvgConfiguration,
+  SvgUtilityService,
+} from "$implementations";
 
 // Import additional sequence services
-import { DeleteService } from "../implementations/sequence/DeleteService";
-import { PrintablePageLayoutService } from "../implementations/sequence/PrintablePageLayoutService";
-import { SequenceDeletionService } from "../implementations/sequence/SequenceDeletionService";
-import { SequenceIndexService } from "../implementations/sequence/SequenceIndexService";
+import {
+  DeleteService,
+  PrintablePageLayoutService,
+  SequenceDeletionService,
+  SequenceIndexService,
+} from "$implementations";
 
 // Import motion tester services
-import { AnimationControlService } from "../implementations/motion-tester/AnimationControlService";
-import { MotionParameterService } from "../implementations/motion-tester/MotionParameterService";
+import {
+  AnimationControlService,
+  MotionParameterService,
+} from "$implementations";
 
 // Import movement services
-import { CSVPictographLoaderService } from "../implementations/movement/CSVPictographLoaderService";
+import { CSVPictographLoaderService } from "$implementations";
 
 // Import missing construct services (these exist)
-import { ConstructSubTabCoordinationService } from "../implementations/build/ConstructSubTabCoordinationService";
+import { ConstructSubTabCoordinationService } from "$implementations";
 
 // Additional services will be added as needed
 
 // Import missing services that have confirmed implementations
-import { MotionLetterIdentificationService } from "../implementations/motion-tester/MotionLetterIdentificationService";
-import { ArrowAdjustmentCalculator } from "../implementations/positioning/calculation/ArrowAdjustmentCalculator";
-import { ArrowLocationCalculator } from "../implementations/positioning/calculation/ArrowLocationCalculator";
-import { ArrowRotationCalculator } from "../implementations/positioning/calculation/ArrowRotationCalculator";
-import { DashLocationCalculator } from "../implementations/positioning/calculation/DashLocationCalculator";
-import { ArrowCoordinateSystemService } from "../implementations/positioning/coordinate_system/ArrowCoordinateSystemService";
-import { AttributeKeyGenerator } from "../implementations/positioning/key_generators/AttributeKeyGenerator";
-import { SpecialPlacementOriKeyGenerator } from "../implementations/positioning/key_generators/SpecialPlacementOriKeyGenerator";
-import { TurnsTupleKeyGenerator } from "../implementations/positioning/key_generators/TurnsTupleKeyGenerator";
-import { ArrowPositionCalculator } from "../implementations/positioning/orchestration/ArrowPositionCalculator";
-import { OrientationCalculationService } from "../implementations/positioning/OrientationCalculationService";
-import { DefaultPlacementService } from "../implementations/positioning/placement/DefaultPlacementService";
-import { SpecialPlacementService } from "../implementations/positioning/placement/SpecialPlacementService";
 import {
+  ArrowAdjustmentCalculator,
+  ArrowCoordinateSystemService,
+  ArrowLocationCalculator,
+  ArrowPathResolutionService,
+  ArrowPositionCalculator,
+  ArrowRotationCalculator,
+  AttributeKeyGenerator,
+  DashLocationCalculator,
+  DefaultPlacementService,
   DirectionalTupleCalculator,
   DirectionalTupleProcessor,
+  MotionLetterIdentificationService,
+  OrientationCalculationService,
   QuadrantIndexCalculator,
-} from "../implementations/positioning/processors/DirectionalTupleProcessor";
-import { ArrowPathResolutionService } from "../implementations/rendering/arrow/ArrowPathResolutionService";
+  SpecialPlacementOriKeyGenerator,
+  SpecialPlacementService,
+  TurnsTupleKeyGenerator,
+} from "$implementations";
 
 // Import additional services with confirmed implementations
+import { CSVPictographParserService, PositionMapper } from "$implementations";
 import { SequenceAnimationEngine } from "../../animator/core/engine/sequence-animation-engine";
 import { AnimationStateService } from "../../animator/core/services/AnimationStateService";
 import { BeatCalculationService } from "../../animator/core/services/BeatCalculationService";
 import { PropInterpolationService } from "../../animator/core/services/PropInterpolationService";
 import { SequenceAnimationOrchestrator } from "../../animator/core/services/SequenceAnimationOrchestrator";
-import { CSVPictographParserService } from "../implementations/movement/CSVPictographParserService";
-import { PositionMapper } from "../implementations/movement/PositionMapper";
 // ValidationService is defined as interface in PictographTransformationService but no implementation found
 
 // Import additional services with confirmed implementations
-import { ImageFormatConverterService } from "../implementations/export/conversion/ImageFormatConverterService";
-import { SVGToCanvasConverterService } from "../implementations/export/conversion/SVGToCanvasConverterService";
-import { DimensionCalculationService } from "../implementations/image-export/DimensionCalculationService";
+import {
+  DimensionCalculationService,
+  ImageFormatConverterService,
+  SVGToCanvasConverterService,
+} from "$implementations";
 
 // Import text rendering services
-import { DifficultyBadgeRenderer } from "../implementations/image-export/text-rendering/internal/DifficultyBadgeRenderer";
-import { TextRenderingUtils } from "../implementations/image-export/text-rendering/internal/TextRenderingUtils";
-import { UserInfoRenderer } from "../implementations/image-export/text-rendering/internal/UserInfoRenderer";
-import { WordTextRenderer } from "../implementations/image-export/text-rendering/internal/WordTextRenderer";
-import { TextRenderingService } from "../implementations/image-export/TextRenderingService";
+import {
+  DifficultyBadgeRenderer,
+  TextRenderingService,
+  TextRenderingUtils,
+  UserInfoRenderer,
+  WordTextRenderer,
+} from "$implementations";
 
 // Import start position service
-import { StartPositionService } from "../implementations/StartPositionService";
+import { StartPositionService } from "$implementations";
 
 // Import option picker services
-import { OptionPickerDataService } from "../implementations/OptionPickerDataService";
-import { OptionPickerLayoutService } from "../implementations/OptionPickerLayoutService";
+import {
+  OptionPickerDataService,
+  OptionPickerLayoutService,
+} from "$implementations";
 
 // Create container
 const container = new Container();

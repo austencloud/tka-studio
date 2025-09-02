@@ -3,7 +3,7 @@ import type {
   Dimensions,
   PerformanceMetrics,
   QualityLevel,
-} from "$domain/core/ui/backgrounds/BackgroundTypes";
+} from "$domain";
 
 export class BackgroundManager {
   public dimensions = $state<Dimensions>({ width: 0, height: 0 });

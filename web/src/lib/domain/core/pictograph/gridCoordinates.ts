@@ -6,7 +6,7 @@
  * Coordinates are in the 950x950 scene coordinate system with center at (475, 475)
  */
 
-import { GridMode } from "../../enums/enums";
+import { GridMode } from "$domain";
 
 export interface GridCoordinateData {
   hand_points: {

@@ -4,21 +4,24 @@
  * Handles exporting sequences to various formats (images, JSON, etc.)
  */
 
+// Domain types
+import type {
+  BatchExportOptions,
+  BatchExportResult,
+  ImageExportOptions,
+  PDFExportOptions,
+} from "$domain";
+
+// Behavioral contracts
+import type { IExportService } from "$contracts/export-interfaces";
 import type {
   BeatData,
   ExportOptions,
   ExportResult,
+  Page,
   SequenceData,
 } from "$domain";
-import type { Page } from "$domain/sequence-card/PageLayoutTypes";
 import { injectable } from "inversify";
-import type {
-  BatchExportOptions,
-  BatchExportResult,
-  IExportService,
-  ImageExportOptions,
-  PDFExportOptions,
-} from "../../contracts/export-interfaces";
 @injectable()
 export class ExportService implements IExportService {
   constructor() {}

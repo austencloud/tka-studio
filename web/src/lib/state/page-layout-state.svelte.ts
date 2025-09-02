@@ -5,7 +5,10 @@
  * and page navigation for the sequence card tab.
  */
 
-import type { SequenceData } from "$domain";
+import type {
+  IPageFactoryService,
+  IPrintablePageLayoutService,
+} from "$contracts";
 import type {
   GridCalculationOptions,
   LayoutCalculationResult,
@@ -15,11 +18,8 @@ import type {
   PageOrientation,
   PrintConfiguration,
   SequenceCardPaperSize,
-} from "$domain/sequence-card/PageLayoutTypes";
-import type {
-  IPageFactoryService,
-  IPrintablePageLayoutService,
-} from "$services/contracts/sequence-interfaces";
+  SequenceData,
+} from "$domain";
 
 export interface PageLayoutState {
   // Page data
@@ -141,6 +141,7 @@ export function createPageLayoutState(
           paperSize,
           orientation,
           margins,
+          gridOptions: defaultGridOptions,
           cardAspectRatio,
           sequenceCount: sequences.length,
           preferredCardsPerPage: sequencesPerPage,

@@ -6,14 +6,6 @@
  */
 
 import type {
-  BrowseDeleteConfirmationData,
-  BrowseLoadingState,
-  FilterType,
-  FilterValue,
-  SequenceData,
-} from "$domain";
-import { NavigationMode } from "$domain/browse";
-import type {
   IBrowseService,
   IDeleteService,
   IFavoritesService,
@@ -23,7 +15,15 @@ import type {
   ISequenceIndexService,
   IThumbnailService,
   NavigationSection,
-} from "$lib/services/contracts/browse-interfaces";
+} from "$contracts";
+import type {
+  BrowseDeleteConfirmationData,
+  BrowseLoadingState,
+  FilterType,
+  FilterValue,
+  SequenceData,
+} from "$domain";
+import { NavigationMode } from "$domain";
 
 import { BrowseDisplayStateService } from "./services/BrowseDisplayStateService.svelte";
 import { BrowseFilterStateService } from "./services/BrowseFilterStateService.svelte";

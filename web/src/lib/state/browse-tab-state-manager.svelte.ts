@@ -12,8 +12,8 @@
  */
 
 import { browser } from "$app/environment";
-// import type { SequenceData } from "$domain/browse";
-import { SortMethod } from "$domain/browse";
+// import type { SequenceData } from "$domain";
+import { SortMethod } from "$domain";
 import type {
   BrowseFilterState,
   BrowseScrollState,
@@ -21,7 +21,7 @@ import type {
   BrowseSortState,
   BrowseViewState,
   CompleteBrowseState,
-} from "../services/implementations/browse/BrowseStatePersister";
+} from "$implementations";
 import { getBrowseStatePersistence } from "./app-state.svelte";
 
 // ============================================================================

@@ -12,18 +12,20 @@
 /**
  * Basic point interface for coordinates
  */
-import type { GridMode, MotionType } from "$domain";
-import { GridPosition, Location, MotionColor } from "../../domain/enums/enums";
-import type { GridData } from "../../domain/models/core/GridData";
-import type { Direction } from "../implementations/positioning/BetaPropDirectionCalculator";
-export type { Location, MotionType };
-
-// Import domain types from their authoritative locations
-import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
 import type {
+  GridMode,
+  MotionType,
+  GridPosition,
+  Location,
+  MotionColor,
+  GridData,
+  Direction,
+  ArrowPlacementData,
+  MotionData,
+  PictographData,
   Point,
   Position,
-} from "../../domain/models/core/PositioningModels";
+} from "$domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -387,13 +389,3 @@ export interface IGridModeDeriver {
   computeGridData(blueMotion: MotionData, redMotion: MotionData): GridData;
 }
 
-// ============================================================================
-// RE-EXPORT TYPES FOR EXTERNAL USE
-// ============================================================================
-
-// Re-export domain types for service implementations
-export type { ArrowPlacementData, MotionData, PictographData } from "$domain";
-export type {
-  Point,
-  Position,
-} from "../../domain/models/core/PositioningModels";
