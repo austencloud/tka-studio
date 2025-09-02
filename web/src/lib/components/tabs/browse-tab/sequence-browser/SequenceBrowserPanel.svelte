@@ -4,7 +4,7 @@
   import { SortMethod } from "$domain";
   import type { IThumbnailService } from "$contracts";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import { getBrowseTabStateManager } from "$lib/state/browse-tab-state-manager.svelte";
+  import { getBrowseTabStateManager } from "$state";
   import { onMount } from "svelte";
   import SequenceBrowserControls from "./SequenceBrowserControls.svelte";
   import SequenceBrowserFooter from "./SequenceBrowserFooter.svelte";

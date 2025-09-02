@@ -45,6 +45,8 @@ const config = {
       "$contracts/*": "./src/lib/services/contracts/*",
       $implementations: "./src/lib/services/implementations",
       "$implementations/*": "./src/lib/services/implementations/*",
+      $inversify: "./src/lib/services/inversify",
+      "$inversify/*": "./src/lib/services/inversify/*",
       $utils: "./src/lib/utils",
       "$utils/*": "./src/lib/utils/*",
       $state: "./src/lib/state",

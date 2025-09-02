@@ -16,13 +16,6 @@ import type {
   SequenceData,
 } from "$domain";
 
-// Re-export domain types for service contracts
-export type {
-  BatchExportProgress,
-  BatchOperationConfig,
-  SequenceCardExportResult,
-};
-
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
 // ============================================================================

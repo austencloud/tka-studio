@@ -9,7 +9,7 @@
   import OptionPickerContainer from "./option-picker/OptionPickerContainer.svelte";
   import StartPositionPicker from "./start-position-picker/StartPositionPicker.svelte";
   // Import fade transition for smooth switching
-  import { getSettings } from "$lib/state/app-state.svelte";
+  import { getSettings } from "$state";
   import { fade } from "svelte/transition";
 
   // Props - simplified with unified service

@@ -10,7 +10,7 @@ Handles data loading, animation engine, and state management.
   import type { PropState } from "$lib/components/tabs/browse-tab/animator";
   import { AnimatorCanvas } from "$lib/components/tabs/browse-tab/animator";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import type { PanelStateManager } from "$lib/state/panel-state.svelte";
+  import type { BrowsePanelStateManager } from "$state";
   import { onDestroy } from "svelte";
   // Sub-components
   import AnimationControls from "./animation/AnimationControls.svelte";
@@ -27,7 +27,7 @@ Handles data loading, animation engine, and state management.
     onClose = () => {},
   } = $props<{
     sequence?: SequenceData | null;
-    panelState: PanelStateManager;
+    panelState: BrowsePanelStateManager;
     onClose?: () => void;
   }>();
 

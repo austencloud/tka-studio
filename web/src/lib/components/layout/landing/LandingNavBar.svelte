@@ -2,7 +2,7 @@
   import {
     setLandingBackground,
     getLandingBackground,
-  } from "$lib/state/app-mode-state.svelte";
+  } from "$state";
   import SettingsModal from "./SettingsModal.svelte";
 
   interface Props {

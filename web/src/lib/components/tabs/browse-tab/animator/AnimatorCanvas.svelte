@@ -5,8 +5,8 @@
   import { svgStringToImage } from "./svgStringToImage";
   import type { PropState } from "./types/PropState";
   // TODO: Fix missing SVGGenerator and CanvasRenderer imports
-  // import { SVGGenerator } from "../../utils/canvas/SVGGenerator.js";
-  // import { CanvasRenderer } from "../../utils/canvas/CanvasRenderer.js";
+    // import { SVGGenerator } from "$utils";
+    // import { CanvasRenderer } from "$utils";
 
   // Modern Svelte 5 props
   let {

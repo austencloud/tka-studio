@@ -15,7 +15,7 @@ This is the left 2/3 section of the new layout.
   import { Letter } from "$domain";
   import { Location, MotionColor, MotionType } from "$domain";
   import Pictograph from "$lib/components/core/pictograph/Pictograph.svelte";
-  import type { MotionTesterState } from "$lib/state/motion-tester/motion-tester-state.svelte";
+  import type { MotionTesterState } from "$state";
   import PropPanel from "./PropPanel.svelte";
   import SimpleGridToggle from "./SimpleGridToggle.svelte";
 

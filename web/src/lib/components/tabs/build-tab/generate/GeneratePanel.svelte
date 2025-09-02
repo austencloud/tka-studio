@@ -19,9 +19,9 @@ Refactored into smaller section components for better maintainability:
   import GeneratePanelHeader from "./components/GeneratePanelHeader.svelte";
   import SettingsContainer from "./components/SettingsContainer.svelte";
   // Import simple state managers
-  import { createGenerationActionsState } from "$lib/state/generate/generate-actions.svelte";
-  import { createGenerationConfigState } from "$lib/state/generate/generate-config.svelte";
-  import { createDeviceState } from "$lib/state/generate/generate-device.svelte";
+  import { createGenerationActionsState } from "$state";
+  import { createGenerationConfigState } from "$state";
+  import { createDeviceState } from "$state";
 
   // ===== State Management =====
   const configState = createGenerationConfigState();

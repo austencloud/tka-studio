@@ -20,8 +20,8 @@ import {
   RotationDirection,
   SequenceDataSchema,
 } from "$domain";
-import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
-import { parseStrict } from "$lib/utils/validation";
+import { PngMetadataExtractor } from "$utils";
+import { parseStrict } from "$utils";
 import { injectable } from "inversify";
 
 // Constants for PNG metadata conversion

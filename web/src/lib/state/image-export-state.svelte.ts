@@ -9,11 +9,11 @@
  */
 
 import type { ITKAImageExportService } from "$contracts";
-import type { SequenceData, TKAImageExportOptions } from "$domain";
+import type { ImageExportOptions, SequenceData } from "$domain";
 
 export interface ImageExportState {
   // Export options state
-  readonly exportOptions: TKAImageExportOptions;
+  readonly exportOptions: ImageExportOptions;
 
   // Preview state
   readonly previewImageUrl: string | null;
@@ -30,7 +30,7 @@ export interface ImageExportState {
   readonly validationErrors: string[];
 
   // Actions
-  updateOptions: (newOptions: Partial<TKAImageExportOptions>) => Promise<void>;
+  updateOptions: (newOptions: Partial<ImageExportOptions>) => Promise<void>;
   generatePreview: (sequence?: SequenceData) => Promise<void>;
   exportSequence: (sequence: SequenceData, filename?: string) => Promise<void>;
   clearPreview: () => void;
@@ -44,10 +44,10 @@ export interface ImageExportState {
  */
 export function createImageExportState(
   exportService: ITKAImageExportService,
-  initialOptions?: Partial<TKAImageExportOptions>
+  initialOptions?: Partial<ImageExportOptions>
 ): ImageExportState {
   // Core export options state
-  let exportOptions = $state<TKAImageExportOptions>(
+  let exportOptions = $state<ImageExportOptions>(
     exportService.getDefaultOptions()
   );
 
@@ -111,7 +111,7 @@ export function createImageExportState(
    * Triggers preview regeneration if sequence is available
    */
   async function updateOptions(
-    newOptions: Partial<TKAImageExportOptions>
+    newOptions: Partial<ImageExportOptions>
   ): Promise<void> {
     try {
       clearErrors();
@@ -277,7 +277,7 @@ export function createPersistentImageExportState(
   storageKey: string = "tka-image-export-options"
 ): ImageExportState {
   // Load saved options from localStorage
-  let savedOptions: Partial<TKAImageExportOptions> = {};
+  let savedOptions: Partial<ImageExportOptions> = {};
   try {
     const saved = localStorage.getItem(storageKey);
     if (saved) {
@@ -293,7 +293,7 @@ export function createPersistentImageExportState(
   // Wrap updateOptions to save to localStorage
   const originalUpdateOptions = state.updateOptions;
   const persistentUpdateOptions = async (
-    newOptions: Partial<TKAImageExportOptions>
+    newOptions: Partial<ImageExportOptions>
   ) => {
     await originalUpdateOptions(newOptions);
 
@@ -333,7 +333,7 @@ export function createQuickExportState(
   purpose: "sharing" | "printing" | "archival"
 ): ImageExportState {
   // Preset options for different purposes
-  const presetOptions: Record<string, Partial<TKAImageExportOptions>> = {
+  const presetOptions: Record<string, Partial<ImageExportOptions>> = {
     sharing: {
       beatScale: 0.8,
       format: "PNG",

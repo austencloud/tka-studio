@@ -150,13 +150,3 @@ export interface ISectionService {
     updates: Partial<SectionConfiguration>
   ): SectionConfiguration;
 }
-
-// Export types for external usage
-export type {
-  BrowseState,
-  FilterState,
-  NavigationItem,
-  NavigationSection,
-  SectionConfiguration,
-  SequenceSection,
-} from "$domain";

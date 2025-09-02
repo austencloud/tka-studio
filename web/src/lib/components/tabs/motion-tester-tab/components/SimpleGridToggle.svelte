@@ -6,7 +6,7 @@ Replaces the overcomplicated GridModeSelector with just essential functionality.
 -->
 <script lang="ts">
   import { GridMode } from "$domain";
-  import type { MotionTesterState } from "$lib/state/motion-tester/motion-tester-state.svelte";
+  import type { MotionTesterState } from "$state";
 
   interface Props {
     state: MotionTesterState;

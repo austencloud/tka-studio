@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { BeatData } from "$domain";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
+  import { createBeatFrameState } from "$state";
   import Beat from "./Beat.svelte";
 
   interface Props {

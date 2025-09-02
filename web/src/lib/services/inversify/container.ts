@@ -61,7 +61,7 @@ import { BrowseService, FavoritesService } from "$implementations";
 
 // Import additional data services
 import {
-  ArrowPlacementService,
+  // ArrowPlacementService, // TODO: Restore when positioning directory is recreated
   DataTransformer,
   EnumMapper,
   MotionQueryHandler,
@@ -73,6 +73,13 @@ import {
   LetterDeriver,
   PictographValidatorService,
   PositionPatternService,
+} from "$implementations";
+
+// Import utility services
+import {
+  BetaDetectionService,
+  ErrorHandlingService,
+  MotionHelperService,
 } from "$implementations";
 
 // Import export services
@@ -97,7 +104,7 @@ import {
   BeatFallbackRenderer,
   BeatRenderingService,
   CanvasManagementService,
-  ExportConfigurationManager,
+  ExportConfig,
   ExportMemoryCalculator,
   ExportOptionsValidator,
   FileExportService,
@@ -111,15 +118,15 @@ import {
 
 // Import navigation services
 import {
+  BrowsePanelManager,
   BrowseSectionService,
   NavigationService,
-  PanelManagementService,
 } from "$implementations";
 
 // Import additional persistence services
 import { FilterPersistenceService } from "$implementations";
 
-// Import positioning services
+// Import positioning services (from core/pictograph/positioning)
 import {
   ArrowLocationService,
   ArrowPlacementKeyService,
@@ -146,7 +153,7 @@ import {
   SequenceIndexService,
 } from "$implementations";
 
-// Import motion tester services
+// Import animator services
 import {
   AnimationControlService,
   MotionParameterService,
@@ -181,8 +188,13 @@ import {
   TurnsTupleKeyGenerator,
 } from "$implementations";
 
+// Import additional positioning services
+
 // Import additional services with confirmed implementations
-import { CSVPictographParserService, PositionMapper } from "$implementations";
+import {
+  CSVPictographParserService,
+  GridPositionDeriver,
+} from "$implementations";
 import { SequenceAnimationEngine } from "../../animator/core/engine/sequence-animation-engine";
 import { AnimationStateService } from "../../animator/core/services/AnimationStateService";
 import { BeatCalculationService } from "../../animator/core/services/BeatCalculationService";
@@ -280,7 +292,7 @@ try {
   container.bind(TYPES.IFavoritesService).to(FavoritesService);
 
   // Bind additional data services
-  container.bind(TYPES.IArrowPlacementService).to(ArrowPlacementService);
+  // container.bind(TYPES.IArrowPlacementService).to(ArrowPlacementService); // TODO: Restore when positioning directory is recreated
   container.bind(TYPES.IDataTransformer).to(DataTransformer);
   container.bind(TYPES.IEnumMapper).to(EnumMapper);
   container.bind(TYPES.IMotionQueryHandler).to(MotionQueryHandler);
@@ -312,9 +324,7 @@ try {
   container.bind(TYPES.IBeatRenderingService).to(BeatRenderingService);
   container.bind(TYPES.IBeatFallbackRenderer).to(BeatFallbackRenderer);
   container.bind(TYPES.ICanvasManagementService).to(CanvasManagementService);
-  container
-    .bind(TYPES.IExportConfigurationManager)
-    .to(ExportConfigurationManager);
+  container.bind(TYPES.IExportConfigurationManager).to(ExportConfig);
   container.bind(TYPES.IExportMemoryCalculator).to(ExportMemoryCalculator);
   container.bind(TYPES.IExportOptionsValidator).to(ExportOptionsValidator);
   container.bind(TYPES.IFileExportService).to(FileExportService);
@@ -340,13 +350,13 @@ try {
 
   // Bind navigation services
   container.bind(TYPES.INavigationService).to(NavigationService);
-  container.bind(TYPES.IPanelManagementService).to(PanelManagementService);
+  container.bind(TYPES.IPanelManagementService).to(BrowsePanelManager);
   container.bind(TYPES.ISectionService).to(BrowseSectionService);
 
   // Bind additional persistence services
   container.bind(TYPES.IFilterPersistenceService).to(FilterPersistenceService);
 
-  // Bind positioning services
+  // Bind positioning services (from core/pictograph/positioning)
   container.bind(TYPES.IArrowLocationService).to(ArrowLocationService);
   container.bind(TYPES.IArrowPlacementKeyService).to(ArrowPlacementKeyService);
   container.bind(TYPES.IArrowPositioningService).to(ArrowPositioningService);
@@ -369,7 +379,7 @@ try {
   container.bind(TYPES.ISequenceDeletionService).to(SequenceDeletionService);
   container.bind(TYPES.ISequenceIndexService).to(SequenceIndexService);
 
-  // Bind motion tester services
+  // Bind animator services
   container.bind(TYPES.IAnimationControlService).to(AnimationControlService);
   container.bind(TYPES.IMotionParameterService).to(MotionParameterService);
 
@@ -383,6 +393,7 @@ try {
     .bind(TYPES.IConstructTabCoordinator)
     .to(ConstructSubTabCoordinationService);
   container.bind(TYPES.IBrowseService).to(BrowseService);
+  // Bind arrow positioning orchestrator
   container
     .bind(TYPES.IArrowPositioningOrchestrator)
     .to(ArrowPositionCalculator);
@@ -394,6 +405,7 @@ try {
   container.bind(TYPES.IDashLocationCalculator).to(DashLocationCalculator);
   container.bind(TYPES.ISpecialPlacementService).to(SpecialPlacementService);
   container.bind(TYPES.IDefaultPlacementService).to(DefaultPlacementService);
+  // Bind key generators and processors
   container
     .bind(TYPES.ISpecialPlacementOriKeyGenerator)
     .to(SpecialPlacementOriKeyGenerator);
@@ -418,7 +430,7 @@ try {
   container
     .bind(TYPES.IArrowPathResolutionService)
     .to(ArrowPathResolutionService);
-  container.bind(TYPES.IPositionMapper).to(PositionMapper);
+  container.bind(TYPES.IPositionMapper).to(GridPositionDeriver);
   container
     .bind(TYPES.ICSVPictographParserService)
     .to(CSVPictographParserService);
@@ -438,6 +450,11 @@ try {
   container
     .bind(TYPES.ISVGToCanvasConverterService)
     .to(SVGToCanvasConverterService);
+
+  // === UTILITY SERVICES ===
+  container.bind(TYPES.IBetaDetectionService).to(BetaDetectionService);
+  container.bind(TYPES.IMotionHelperService).to(MotionHelperService);
+  container.bind(TYPES.IErrorHandlingService).to(ErrorHandlingService);
 } catch (error) {
   console.error("❌ TKA Container: Failed to bind services:", error);
 }

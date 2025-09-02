@@ -6,10 +6,10 @@
  */
 
 // Application Domain
-export * from "./application/ApplicationInitializer";
-export * from "./application/background/BackgroundFactory";
-export * from "./application/background/BackgroundService";
-export * from "./application/DeviceDetector";
+export * from "./core/application/ApplicationInitializer";
+export * from "./core/application/DeviceDetector";
+export * from "./core/ui/background/BackgroundFactory";
+export * from "./core/ui/background/BackgroundService";
 
 // Browse Domain
 export * from "./browse/BrowseService";
@@ -18,62 +18,62 @@ export * from "./browse/FavoritesService";
 export * from "./browse/MetadataExtractionService";
 
 // Build Domain
-export * from "./build/BuildTabEventService";
-export * from "./build/BuildTabTransitionService";
-export * from "./build/ConstructSubTabCoordinationService";
-export * from "./build/StartPositionLoader";
-export * from "./build/StartPositionServiceResolver";
+export * from "./build/construct/ConstructSubTabCoordinationService";
+export * from "./build/construct/StartPositionLoader";
+export * from "./build/construct/StartPositionServiceResolver";
+export * from "./build/core/BuildTabEventService";
+export * from "./build/core/BuildTabTransitionService";
 
 // Data Domain
-export * from "./data/CsvLoader";
-export * from "./data/CsvParser";
-export * from "./data/DataTransformer";
-export * from "./data/EnumMapper";
-export * from "./data/LetterQueryHandler";
-export * from "./data/MotionQueryHandler";
-export * from "./data/OptionFilterer";
+export * from "./core/data/CsvLoader";
+export * from "./core/data/CsvParser";
+export * from "./core/data/DataTransformer";
+export * from "./core/data/EnumMapper";
+export * from "./core/data/LetterQueryHandler";
+export * from "./core/data/MotionQueryHandler";
+export * from "./core/data/OptionFilterer";
 
 // Domain Services
-export * from "./domain/GridModeDeriver";
-export * from "./domain/LetterDeriver";
-export * from "./domain/PictographValidatorService";
-export * from "./domain/PositionPatternService";
-export * from "./domain/SequenceDomainService";
+export * from "./build/generate/PositionPatternService";
+export * from "./build/generate/SequenceDomainService";
+export * from "./core/data/derivers/GridModeDeriver";
+export * from "./core/data/derivers/LetterDeriver";
+export * from "./core/pictograph/PictographValidatorService";
 
 // Export Domain
-export * from "./export/conversion/ImageFormatConverterService";
-export * from "./export/conversion/SVGToCanvasConverterService";
-export * from "./export/ExportService";
-export * from "./export/PageImageExportService";
-export * from "./export/ThumbnailService";
+export * from "./browse/ThumbnailService";
+export * from "./build/export/ImageFormatConverterService";
+export * from "./build/export/SequenceExportService";
+export * from "./build/export/SVGToCanvasConverterService";
+export * from "./sequence-card/PageImageExportService";
 
 // Generation Domain
-export * from "./generation/PageFactoryService";
-export * from "./generation/PictographGenerator";
-export * from "./generation/SequenceGenerationService";
+export * from "./build/generate/PictographGenerator";
+export * from "./build/generate/SequenceGenerationService";
+export * from "./sequence-card/PageFactoryService";
 
 // Image Export Domain
-export * from "./image-export/BeatRenderingService";
-export * from "./image-export/CanvasManagementService";
-export * from "./image-export/DimensionCalculationService";
-export * from "./image-export/ExportConfigurationManager";
-export * from "./image-export/ExportMemoryCalculator";
-export * from "./image-export/ExportOptionsValidator";
-export * from "./image-export/FileExportService";
-export * from "./image-export/FilenameGeneratorService";
-export * from "./image-export/GridOverlayService";
-export * from "./image-export/ImageCompositionService";
-export * from "./image-export/ImagePreviewGenerator";
-export * from "./image-export/LayoutCalculationService";
-export * from "./image-export/text-rendering/internal/DifficultyBadgeRenderer";
-export * from "./image-export/text-rendering/internal/TextRenderingUtils";
-export * from "./image-export/text-rendering/internal/UserInfoRenderer";
-export * from "./image-export/text-rendering/internal/WordTextRenderer";
-export * from "./image-export/TextRenderingService";
-export * from "./image-export/TKAImageExportService";
+export * from "./build/export/BeatRenderingService";
+export * from "./build/export/CanvasManagementService";
+export * from "./build/export/DifficultyBadgeRenderer";
+export * from "./build/export/DimensionCalculationService";
+export * from "./build/export/ExportConfig"; // Correct path
+export * from "./build/export/ExportMemoryCalculator";
+export * from "./build/export/ExportOptionsValidator";
+export * from "./build/export/FileExportService";
+export * from "./build/export/FilenameGeneratorService";
+export * from "./build/export/GridOverlayService";
+export * from "./build/export/ImageCompositionService";
+export * from "./build/export/ImagePreviewGenerator";
+export * from "./build/export/LayoutCalculationService";
+export * from "./build/export/TextRenderingService";
+export * from "./build/export/TextRenderingUtils";
+export * from "./build/export/TKAImageExportService";
+export * from "./build/export/UserInfoRenderer";
+export * from "./build/export/WordTextRenderer";
 
 // Layout Domain
-export * from "./layout/BeatFrameService";
+export * from "./build/workbench/BeatFrameService";
 
 // Learn Domain
 export * from "./learn/codex/CodexService";
@@ -84,20 +84,20 @@ export * from "./learn/LessonRepository";
 export * from "./learn/LetterMappingRepository";
 export * from "./learn/QuestionGeneratorService";
 export * from "./learn/QuizSessionService";
-// Motion Tester Domain
-export * from "./motion-tester/AnimationControlService";
-export * from "./motion-tester/MotionLetterIdentificationService";
-export * from "./motion-tester/MotionParameterService";
+// Animator Domain
+export * from "./animator/AnimationControlService";
+export * from "./animator/MotionLetterIdentificationService";
+export * from "./animator/MotionParameterService";
 
 // Movement Domain
-export * from "./movement/CSVPictographLoaderService";
-export * from "./movement/CSVPictographParserService";
-export * from "./movement/PositionMapper";
+export * from "./build/generate/CSVPictographLoader";
+export * from "./build/generate/CSVPictographParser";
+export * from "./core/data/derivers/GridPositionDeriver";
 
 // Navigation Domain
-export * from "./navigation/BrowseSectionService";
-export * from "./navigation/NavigationService";
-export * from "./navigation/PanelManagementService";
+export * from "./browse/BrowsePanelManager";
+export * from "./browse/BrowseSectionService";
+export * from "./browse/NavigationService";
 
 // Option Picker Domain
 export * from "./OptionPickerDataService";
@@ -105,41 +105,44 @@ export * from "./OptionPickerLayoutService";
 export * from "./OptionPickerServiceAdapter";
 
 // Persistence Domain
-export * from "./persistence/FilterPersistenceService";
-export * from "./persistence/LocalStoragePersistenceService";
-export * from "./persistence/SettingsService";
+export * from "./browse/FilterPersistenceService";
+export * from "./browse/LocalStoragePersistenceService";
+export * from "./core/settings/SettingsService";
 
 // Positioning Domain
-export * from "./positioning/ArrowLocationService";
-export * from "./positioning/ArrowPlacementKeyService";
-export * from "./positioning/ArrowPlacementService";
-export * from "./positioning/ArrowPositioningService";
-export * from "./positioning/BetaOffsetCalculator";
-export * from "./positioning/calculation/ArrowAdjustmentCalculator";
-export * from "./positioning/calculation/ArrowLocationCalculator";
-export * from "./positioning/calculation/ArrowRotationCalculator";
-export * from "./positioning/calculation/DashLocationCalculator";
-export * from "./positioning/coordinate_system/ArrowCoordinateSystemService";
-export * from "./positioning/key_generators/AttributeKeyGenerator";
-export * from "./positioning/key_generators/SpecialPlacementOriKeyGenerator";
-export * from "./positioning/key_generators/TurnsTupleKeyGenerator";
-export * from "./positioning/orchestration/ArrowPositionCalculator";
-export * from "./positioning/OrientationCalculationService";
-export * from "./positioning/placement/DefaultPlacementService";
-export * from "./positioning/placement/SpecialPlacementService";
-export * from "./positioning/processors/DirectionalTupleProcessor";
-export * from "./positioning/PropPlacementService";
+export * from "./core/pictograph/positioning/BetaDetectionService";
+export * from "./core/pictograph/positioning/BetaOffsetCalculator";
+export * from "./core/pictograph/positioning/BetaPropDirectionCalculator";
+export * from "./core/pictograph/positioning/PropPlacementService";
+// Positioning services (found in core/pictograph/positioning)
+export * from "./core/pictograph/positioning/ArrowLocationService";
+export * from "./core/pictograph/positioning/ArrowPlacementKeyService";
+export * from "./core/pictograph/positioning/ArrowPlacementService";
+export * from "./core/pictograph/positioning/ArrowPositioningService";
+export * from "./core/pictograph/positioning/calculation/ArrowAdjustmentCalculator";
+export * from "./core/pictograph/positioning/calculation/ArrowLocationCalculator";
+export * from "./core/pictograph/positioning/calculation/ArrowRotationCalculator";
+export * from "./core/pictograph/positioning/calculation/DashLocationCalculator";
+export * from "./core/pictograph/positioning/coordinate_system/ArrowCoordinateSystemService";
+export * from "./core/pictograph/positioning/key_generators/AttributeKeyGenerator";
+export * from "./core/pictograph/positioning/key_generators/SpecialPlacementOriKeyGenerator";
+export * from "./core/pictograph/positioning/key_generators/TurnsTupleKeyGenerator";
+export * from "./core/pictograph/positioning/orchestration/ArrowPositionCalculator";
+export * from "./core/pictograph/positioning/OrientationCalculationService";
+export * from "./core/pictograph/positioning/placement/DefaultPlacementService";
+export * from "./core/pictograph/positioning/placement/SpecialPlacementService";
+export * from "./core/pictograph/positioning/processors/DirectionalTupleProcessor";
 
 // Rendering Domain
-export * from "./rendering/arrow/ArrowPathResolutionService";
-export * from "./rendering/ArrowRenderer";
-export * from "./rendering/BeatFallbackRenderer";
-export * from "./rendering/BeatGridService";
-export * from "./rendering/GridRenderingService";
-export * from "./rendering/OverlayRenderer";
-export * from "./rendering/PropCoordinator";
-export * from "./rendering/SvgConfiguration";
-export * from "./rendering/SvgUtilityService";
+export * from "./core/pictograph/rendering/arrow/ArrowPathResolutionService";
+export * from "./core/pictograph/rendering/arrow/ArrowRenderer";
+export * from "./core/pictograph/rendering/BeatFallbackRenderer";
+export * from "./core/pictograph/rendering/BeatGridService";
+export * from "./core/pictograph/rendering/GridRenderingService";
+export * from "./core/pictograph/rendering/OverlayRenderer";
+export * from "./core/pictograph/rendering/PropCoordinator";
+export * from "./core/pictograph/rendering/SvgConfiguration";
+export * from "./core/pictograph/rendering/SvgUtilityService";
 
 // Sequence Domain
 export * from "./sequence/DeleteService";
@@ -164,3 +167,8 @@ export * from "./workbench/WorkbenchService";
 
 // Build Tab Service (standalone)
 export * from "./BuildTabService";
+
+// Utility Services
+export * from "./core/pictograph/positioning/BetaDetectionService";
+export * from "./core/pictograph/positioning/MotionHelperService";
+export * from "./ErrorHandlingService";

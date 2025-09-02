@@ -102,14 +102,3 @@ export interface IBeatGridService {
    */
   areGridModesCompatible(primary: GridMode, overlay: GridMode): boolean;
 }
-
-// ============================================================================
-// RE-EXPORT TYPES FOR EXTERNAL USE
-// ============================================================================
-
-// Re-export types that other modules need to import
-export type {
-  CombinedGridOptions,
-  GridDrawOptions,
-  GridValidationResult,
-} from "$domain";

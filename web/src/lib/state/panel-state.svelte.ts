@@ -5,17 +5,17 @@
  * Follows TKA architecture: services handle logic, runes handle reactivity.
  */
 
-import type {
-  IPanelManagementService,
-  PanelState,
-  ResizeOperation,
-} from "$contracts";
-import { ResizeDirection } from "$domain";
+import type { IBrowsePanelManager } from "$contracts";
+import {
+  ResizeDirection,
+  type BrowsePanelState,
+  type ResizeOperation,
+} from "$domain";
 
-export interface PanelStateManager {
+export interface BrowsePanelStateManager {
   // Panel state getters (reactive)
-  readonly navigationPanel: PanelState;
-  readonly animationPanel: PanelState;
+  readonly navigationPanel: BrowsePanelState;
+  readonly animationPanel: BrowsePanelState;
 
   // Current resize operation
   readonly currentResize: ResizeOperation | null;
@@ -49,7 +49,7 @@ export interface PanelStateManager {
 /**
  * Default panel state for unregistered panels
  */
-function getDefaultPanelState(panelId: string): PanelState {
+function getDefaultPanelState(panelId: string): BrowsePanelState {
   return {
     id: panelId,
     width: 300,
@@ -67,14 +67,14 @@ function getDefaultPanelState(panelId: string): PanelState {
  * Creates reactive panel state manager using Svelte 5 runes
  */
 export function createPanelState(
-  panelService: IPanelManagementService
-): PanelStateManager {
+  panelService: IBrowsePanelManager
+): BrowsePanelStateManager {
   // ✅ PURE RUNES: Reactive state for UI with default fallbacks
-  let navigationPanel = $state<PanelState>(
+  let navigationPanel = $state<BrowsePanelState>(
     panelService.getPanelState("navigation") ||
       getDefaultPanelState("navigation")
   );
-  let animationPanel = $state<PanelState>(
+  let animationPanel = $state<BrowsePanelState>(
     panelService.getPanelState("animation") || getDefaultPanelState("animation")
   );
   let currentResize = $state<ResizeOperation | null>(null);
@@ -105,7 +105,7 @@ export function createPanelState(
   const isAnimationVisible = $derived(animationPanel?.isVisible || true);
 
   // ✅ SERVICE INTEGRATION: Listen to service state changes
-  const handleStateChange = (panelId: string, newState: PanelState) => {
+  const handleStateChange = (panelId: string, newState: BrowsePanelState) => {
     if (panelId === "navigation") {
       navigationPanel = newState;
     } else if (panelId === "animation") {

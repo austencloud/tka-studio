@@ -3,7 +3,7 @@
   import type { SequenceData } from "$domain";
   import { onMount } from "svelte";
   // Note: Loading directly from dictionary API
-  import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
+    import { PngMetadataExtractor } from "$utils";
   import SequenceCardNavigation from "./Navigation.svelte";
   import PageDisplay from "./PageDisplay.svelte";
 

@@ -5,7 +5,7 @@
  * Handles navigation mode and sections without business logic.
  */
 
-import type { NavigationSection } from "$contracts";
+import type { NavigationSection } from "$domain";
 import { NavigationMode } from "$domain";
 
 export interface IBrowseNavigationStateService {

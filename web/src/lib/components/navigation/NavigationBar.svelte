@@ -1,7 +1,7 @@
 <!-- Unified Navigation Bar -->
 <script lang="ts">
-  import { showSettingsDialog } from "$lib/state/app-state.svelte";
-  import { foldTransition } from "$lib/utils/fold-transition";
+  import { showSettingsDialog } from "$state";
+    import { foldTransition } from "$utils";
 
   type TabID = string;
   interface TabDef {

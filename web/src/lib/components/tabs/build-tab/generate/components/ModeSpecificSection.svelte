@@ -6,7 +6,7 @@ Shows different options based on generation mode (freeform vs circular)
   import LetterTypeSelector from "../selectors/LetterTypeSelector.svelte";
   import SliceSizeSelector from "../selectors/SliceSizeSelector.svelte";
   import CAPTypeSelector from "../selectors/CAPTypeSelector.svelte";
-  import type { GenerationConfig } from "$lib/state/generate/generate-config.svelte";
+  import type { GenerationConfig } from "$state";
 
   interface Props {
     config: GenerationConfig;

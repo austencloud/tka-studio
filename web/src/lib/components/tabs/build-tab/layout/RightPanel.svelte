@@ -13,10 +13,13 @@
   import ConstructTabContent from "../construct/ConstructTabContent.svelte";
   import GeneratePanel from "../generate/GeneratePanel.svelte";
   // Import Svelte's built-in fade transition for consistency with main tabs
-  import type { ArrowPlacementData, BeatData, PictographData } from "$domain";
-  import type { ActiveBuildSubTab } from "$lib/state/services/state-service-interfaces";
-  import { getAnimationSettings } from "$lib/utils/animation-control";
-  import { shouldAnimate } from "$lib/utils/simple-fade";
+  import type {
+    ActiveBuildSubTab,
+    ArrowPlacementData,
+    BeatData,
+    PictographData,
+  } from "$domain";
+  import { getAnimationSettings, shouldAnimate } from "$utils";
   import { fade } from "svelte/transition";
 
   // Props from parent BuildTab

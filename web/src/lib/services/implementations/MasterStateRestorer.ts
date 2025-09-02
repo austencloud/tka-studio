@@ -6,7 +6,7 @@
  */
 
 import { browser } from "$app/environment";
-import type { ItabStateService } from "$lib/state/services/state-service-interfaces";
+import type { ItabStateService } from "$state";
 import type { BrowseStatePersister } from "./browse/BrowseStatePersister";
 
 // ============================================================================

@@ -137,3 +137,8 @@ export * from "./workbench-interfaces";
 
 // Movement Domain - Individual interfaces (correct pattern)
 export * from "./movement/ICSVPictographParserService";
+
+// Utility Services
+export * from "./IBetaDetectionService";
+export * from "./IErrorHandlingService";
+export * from "./IMotionHelperService";

@@ -9,12 +9,12 @@ Integrates panel management service with runes for:
 -->
 <script lang="ts">
   import type {
+    IBrowsePanelManager,
     IBrowseService,
     IDeleteService,
     IFavoritesService,
     IFilterPersistenceService,
     INavigationService,
-    IPanelManagementService,
     ISectionService,
     ISequenceIndexService,
     IThumbnailService,
@@ -22,11 +22,11 @@ Integrates panel management service with runes for:
   import type { SequenceData } from "$domain";
   import { NavigationMode } from "$domain";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import { createBrowseState } from "$lib/state/browse-state-factory.svelte";
   import {
     BROWSE_TAB_PANEL_CONFIGS,
+    createBrowseState,
     createPanelState,
-  } from "$lib/state/panel-state.svelte";
+  } from "$state";
   import { onDestroy, onMount } from "svelte";
   // Enhanced components
   import AnimationPanel from "./AnimationPanel.svelte";
@@ -63,7 +63,7 @@ Integrates panel management service with runes for:
   );
   const sectionService = resolve(TYPES.ISectionService) as ISectionService;
   const deleteService = resolve(TYPES.IDeleteService) as IDeleteService;
-  const panelManagementService = resolve<IPanelManagementService>(
+  const panelManagementService = resolve<IBrowsePanelManager>(
     TYPES.IPanelManagementService
   );
 

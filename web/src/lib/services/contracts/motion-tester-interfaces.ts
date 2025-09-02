@@ -1,5 +1,5 @@
 /**
- * Motion Tester Service Interfaces
+ * Animator Service Interfaces
  *
  * Clean contracts for dependency injection and testability
  */

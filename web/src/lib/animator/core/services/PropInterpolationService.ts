@@ -16,7 +16,7 @@ import {
   calculateMotionEndpoints,
   lerpAngle,
   type MotionEndpoints,
-} from "../../utils/math/index.js";
+} from "$utils";
 
 @injectable()
 export class PropInterpolationService implements IPropInterpolationService {

@@ -5,10 +5,9 @@
  * where data corruption or missing information occurs.
  */
 
-import type { IGridModeDeriver } from "$contracts";
+import type { IBetaDetectionService, IGridModeDeriver } from "$contracts";
 import type { PictographData } from "$domain";
 import { resolve, TYPES } from "$lib/services/inversify/container";
-import { endsWithBeta } from "$lib/utils/betaDetection";
 
 export interface DataFlowTrace {
   step: string;
@@ -75,14 +74,18 @@ export class PictographDataDebugger {
   /**
    * Get complete debug info for a pictograph
    */
-  getPictographDebugInfo(
+  async getPictographDebugInfo(
     pictographData: PictographData,
     csvRow?: Record<string, string>
-  ): PictographDebugInfo {
+  ): Promise<PictographDebugInfo> {
     const identifier = `${pictographData.letter}_${Date.now()}`;
 
     // Analyze the pictograph data using the new beta detection
-    const endsWithBetaPosition = endsWithBeta(pictographData);
+    const betaDetectionService = resolve<IBetaDetectionService>(
+      TYPES.IBetaDetectionService
+    );
+    const endsWithBetaPosition =
+      betaDetectionService.endsWithBeta(pictographData);
     const hasValidMotionData = this.validateMotionData(pictographData);
     const hasValidPropPlacementData =
       this.validatePropPlacementData(pictographData);

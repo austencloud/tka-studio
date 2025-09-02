@@ -9,7 +9,7 @@
 // PANEL MANAGEMENT TYPES
 // ============================================================================
 
-export interface PanelState {
+export interface BrowsePanelState {
   id: string;
   isVisible: boolean;
   isCollapsed: boolean;
@@ -24,7 +24,7 @@ export interface PanelState {
   isResizing: boolean;
 }
 
-export interface PanelConfiguration {
+export interface BrowsePanelConfiguration {
   id: string;
   title: string;
   defaultWidth: number;

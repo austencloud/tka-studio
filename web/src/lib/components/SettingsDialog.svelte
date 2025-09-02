@@ -5,7 +5,7 @@
     getSettings,
     hideSettingsDialog,
     updateSettings,
-  } from "$lib/state/app-state.svelte";
+  } from "$state";
   import SettingsSidebar from "./settings/SettingsSidebar.svelte";
   import BackgroundTab from "./settings/tabs/BackgroundTab.svelte";
   import CodexExporterTab from "./settings/tabs/CodexExporterTab.svelte";

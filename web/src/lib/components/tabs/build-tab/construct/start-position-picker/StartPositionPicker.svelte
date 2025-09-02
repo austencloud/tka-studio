@@ -4,7 +4,7 @@
   import { GridMode } from "$domain";
   import { resolve } from "$lib/services/inversify/container";
   import { TYPES } from "$lib/services/inversify/types";
-  import { createStartPositionPickerState } from "$lib/state/start-position-state.svelte";
+  import { createStartPositionPickerState } from "$state";
   import { onMount } from "svelte";
   // UI Components
   import ErrorState from "./ErrorState.svelte";

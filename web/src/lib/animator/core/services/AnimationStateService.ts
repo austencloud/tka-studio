@@ -12,7 +12,7 @@ import type {
 } from "$contracts";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
 import { injectable } from "inversify";
-import { calculateCoordinatesFromAngle } from "../../utils/math/index.js";
+import { calculateCoordinatesFromAngle } from "$utils";
 
 @injectable()
 export class AnimationStateService implements IAnimationStateService {

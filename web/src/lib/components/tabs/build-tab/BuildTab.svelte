@@ -12,8 +12,8 @@
   } from "$contracts";
   import { GridMode } from "$domain";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import { createBuildTabState } from "$lib/state/build-tab-state.svelte";
-  import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";
+  import { createBuildTabState } from "$state";
+  import { createConstructTabState } from "$state";
   import { onMount } from "svelte";
 
   // ✅ CLEAN SERVICE RESOLUTION: Resolve services using clean pattern (no 'as any')

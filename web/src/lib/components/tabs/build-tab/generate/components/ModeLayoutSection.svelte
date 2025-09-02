@@ -4,7 +4,7 @@ Contains Grid Mode, Generation Mode, and Prop Continuity selectors
 -->
 <script lang="ts">
   import { GenerationMode } from "$domain";
-  import type { GenerationConfig } from "$lib/state/generate/generate-config.svelte";
+  import type { GenerationConfig } from "$state";
   import GenerationModeToggle from "../selectors/GenerationModeToggle.svelte";
   import GridModeSelector from "../selectors/GridModeSelector.svelte";
   import PropContinuityToggle from "../selectors/PropContinuityToggle.svelte";

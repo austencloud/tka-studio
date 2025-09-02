@@ -23,7 +23,7 @@
     showSettingsDialog,
     switchTab,
     updateSettings,
-  } from "$lib/state/app-state.svelte";
+  } from "$state";
   // Import components
   import ErrorScreen from "$components/ErrorScreen.svelte";
   import MainInterface from "$components/layout/MainInterface.svelte";

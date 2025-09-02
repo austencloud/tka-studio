@@ -60,9 +60,6 @@ import type {
   SequenceCardGridConfig,
 } from "$domain";
 
-// SequenceCardGridConfig now imported from $domain to avoid conflicts
-export type { SequenceCardGridConfig };
-
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
 // ============================================================================

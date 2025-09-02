@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { SequenceState } from "$lib/state/sequence/sequence-state.svelte";
+  import type { SequenceState } from "$state";
   import BeatFrame from "./BeatFrame.svelte";
 
   interface Props {

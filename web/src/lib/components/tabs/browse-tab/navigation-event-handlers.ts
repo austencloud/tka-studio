@@ -1,4 +1,4 @@
-import type { BrowseState } from "$lib/state/browse-state-factory.svelte";
+import type { BrowseState } from "$state";
 
 /**
  * Navigation-specific event handlers for the Browse tab

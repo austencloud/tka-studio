@@ -6,7 +6,7 @@ Contains Level, Length, and Turn Intensity selectors
   import LevelSelector from "../selectors/LevelSelector.svelte";
   import LengthSelector from "../selectors/LengthSelector.svelte";
   import TurnIntensitySelector from "../selectors/TurnIntensitySelector.svelte";
-  import type { GenerationConfig } from "$lib/state/generate/generate-config.svelte";
+  import type { GenerationConfig } from "$state";
 
   interface Props {
     config: GenerationConfig;

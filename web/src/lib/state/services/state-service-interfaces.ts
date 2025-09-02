@@ -5,31 +5,13 @@
  * Consolidated into a single file for simplicity since they're small.
  */
 
-import type { AppSettings } from "$domain";
+import type {
+  ApplicationPerformanceMetrics,
+  AppSettings,
+  TabId,
+  Theme,
+} from "$domain";
 import type { IBrowseStatePersister } from "$implementations";
-
-// ============================================================================
-// SHARED TYPES
-// ============================================================================
-
-export type TabId =
-  | "construct"
-  | "browse"
-  | "sequence_card"
-  | "write"
-  | "learn"
-  | "about"
-  | "motion-tester";
-
-export type ActiveBuildSubTab = "construct" | "generate" | "edit" | "export";
-
-export type Theme = "light" | "dark";
-
-export interface PerformanceMetrics {
-  initializationTime: number;
-  lastRenderTime: number;
-  memoryUsage: number;
-}
 
 // ============================================================================
 // SERVICE INTERFACES
@@ -127,7 +109,7 @@ export interface IInitializationService {
  */
 export interface IPerformanceMetricsService {
   // State getters
-  readonly performanceMetrics: PerformanceMetrics;
+  readonly performanceMetrics: ApplicationPerformanceMetrics;
 
   // Actions
   updateInitializationTime(time: number): void;

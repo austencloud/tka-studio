@@ -13,7 +13,7 @@ import type { BeatData, PictographData } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../inversify/types";
 // IStartPositionSelectionService removed - using unified service
-import { constructTabEventService } from "./build/BuildTabEventService";
+import { constructTabEventService } from "./build/core/BuildTabEventService";
 
 @injectable()
 export class BuildTabService implements IBuildTabService {

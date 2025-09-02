@@ -73,6 +73,21 @@
               "../../../../services/contracts/**"
             ],
             "message": "❌ Use '$contracts' alias instead of relative paths. This enforces dependency inversion principle."
+          },
+          // Prevent $utils/specific/path patterns
+          {
+            "group": ["$utils/**"],
+            "message": "❌ Use '$utils' directly, not '$utils/specific/path'. All utility exports are available from the main index."
+          },
+          // Prevent relative imports TO utils FROM outside utils
+          {
+            "group": [
+              "../utils/**",
+              "../../utils/**",
+              "../../../utils/**",
+              "../../../../utils/**"
+            ],
+            "message": "❌ Use '$utils' alias instead of relative paths. This prevents tight coupling to utility implementations."
           }
         ]
       }
@@ -122,6 +137,28 @@
     {
       // Allow relative imports WITHIN the services/contracts layer
       "files": ["src/lib/services/contracts/**/*"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": [
+                  "../domain/**",
+                  "../../domain/**",
+                  "../../../domain/**",
+                  "../../../../domain/**"
+                ],
+                "message": "❌ Use '$domain' alias instead of relative paths to import from domain layer."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      // Allow relative imports WITHIN the utils layer itself
+      "files": ["src/lib/utils/**/*"],
       "rules": {
         "no-restricted-imports": [
           "error",

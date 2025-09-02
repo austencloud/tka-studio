@@ -7,7 +7,7 @@
 
 import type { IMotionQueryHandler } from "$contracts";
 import type { IOptionPickerDataService } from "$contracts/option-picker-interfaces";
-import type { IPositionMapper } from "$contracts/positioning-interfaces";
+import type { IGridPositionDeriver } from "$contracts/positioning-interfaces";
 import type { PictographData } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../inversify/types";
@@ -15,7 +15,7 @@ import { TYPES } from "../inversify/types";
 @injectable()
 export class OptionPickerDataService implements IOptionPickerDataService {
   constructor(
-    @inject(TYPES.IPositionMapper) private positionMapper: IPositionMapper,
+    @inject(TYPES.IPositionMapper) private positionMapper: IGridPositionDeriver,
     @inject(TYPES.IMotionQueryHandler)
     private MotionQueryHandler: IMotionQueryHandler
   ) {}

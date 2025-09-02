@@ -9,7 +9,7 @@ import { browser } from "$app/environment";
 import {
   safeLocalStorageGet,
   safeLocalStorageSet,
-} from "$lib/utils/safe-storage";
+} from "$utils";
 
 // ============================================================================
 // AUTO-SYNC CONFIGURATION

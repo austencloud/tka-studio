@@ -11,16 +11,16 @@
  * Export settings management service
  */
 import type {
+  ImageExportOptions,
   MemoryEstimate,
   SequenceData,
-  TKAImageExportOptions,
   ValidationResult,
 } from "$domain";
 
 // Export validation result for image export operations
 export interface ExportValidationResult extends ValidationResult {
   memoryEstimate?: MemoryEstimate;
-  recommendedOptions?: Partial<TKAImageExportOptions>;
+  recommendedOptions?: Partial<ImageExportOptions>;
 }
 
 // ============================================================================
@@ -31,12 +31,12 @@ export interface IExportSettingsService {
   /**
    * Get current export settings
    */
-  getCurrentSettings(): TKAImageExportOptions;
+  getCurrentSettings(): ImageExportOptions;
 
   /**
    * Update export settings
    */
-  updateSettings(settings: Partial<TKAImageExportOptions>): Promise<void>;
+  updateSettings(settings: Partial<ImageExportOptions>): Promise<void>;
 
   /**
    * Reset to default settings
@@ -46,12 +46,12 @@ export interface IExportSettingsService {
   /**
    * Save settings preset
    */
-  savePreset(name: string, settings: TKAImageExportOptions): Promise<void>;
+  savePreset(name: string, settings: ImageExportOptions): Promise<void>;
 
   /**
    * Load settings preset
    */
-  loadPreset(name: string): Promise<TKAImageExportOptions | null>;
+  loadPreset(name: string): Promise<ImageExportOptions | null>;
 
   /**
    * Get available presets
@@ -61,27 +61,25 @@ export interface IExportSettingsService {
   /**
    * Validate settings
    */
-  validateSettings(settings: TKAImageExportOptions): boolean;
+  validateSettings(settings: ImageExportOptions): boolean;
 }
 
 export interface IExportConfigurationManager {
-  getDefaultOptions(): TKAImageExportOptions;
-  mergeWithDefaults(
-    options: Partial<TKAImageExportOptions>
-  ): TKAImageExportOptions;
+  getDefaultOptions(): ImageExportOptions;
+  mergeWithDefaults(options: Partial<ImageExportOptions>): ImageExportOptions;
   createPreviewOptions(
-    options: Partial<TKAImageExportOptions>
-  ): TKAImageExportOptions;
+    options: Partial<ImageExportOptions>
+  ): ImageExportOptions;
 }
 
 export interface IExportMemoryCalculator {
   estimateMemoryUsage(
     sequence: SequenceData,
-    options: TKAImageExportOptions
+    options: ImageExportOptions
   ): MemoryEstimate;
   isWithinMemoryLimits(
     sequence: SequenceData,
-    options: TKAImageExportOptions,
+    options: ImageExportOptions,
     limitMB?: number
   ): boolean;
 }
@@ -89,16 +87,16 @@ export interface IExportMemoryCalculator {
 export interface IExportOptionsValidator {
   validateExport(
     sequence: SequenceData,
-    options: TKAImageExportOptions
+    options: ImageExportOptions
   ): ExportValidationResult;
-  validateOptions(options: TKAImageExportOptions): ExportValidationResult;
+  validateOptions(options: ImageExportOptions): ExportValidationResult;
   validateSequence(sequence: SequenceData): ExportValidationResult;
 }
 
 export interface IFilenameGeneratorService {
   generateDefaultFilename(
     sequence: SequenceData,
-    options: Partial<TKAImageExportOptions>
+    options: Partial<ImageExportOptions>
   ): string;
   generateVersionedFilename(word: string, format: string): string;
   sanitizeFilename(filename: string): string;
@@ -107,7 +105,7 @@ export interface IFilenameGeneratorService {
 export interface IImagePreviewGenerator {
   generatePreview(
     sequence: SequenceData,
-    options?: Partial<TKAImageExportOptions>
+    options?: Partial<ImageExportOptions>
   ): Promise<string>;
   generateThumbnail(sequence: SequenceData, maxSize?: number): Promise<string>;
 }

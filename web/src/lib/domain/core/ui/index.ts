@@ -7,3 +7,6 @@
 
 // Background systems
 export * from "./backgrounds";
+
+// Core UI types
+export * from "./UITypes";

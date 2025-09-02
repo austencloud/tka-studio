@@ -1,7 +1,7 @@
 /**
  * StartPositionService.ts - Complete start position service implementation
  */
-import type { IPositionMapper, IStartPositionService } from "$contracts";
+import type { IGridPositionDeriver, IStartPositionService } from "$contracts";
 import type { BeatData, PictographData } from "$domain";
 import {
   type ValidationError,
@@ -24,7 +24,7 @@ import { inject, injectable } from "inversify";
 export class StartPositionService implements IStartPositionService {
   constructor(
     @inject(TYPES.IPositionMapper)
-    private positionMapper: IPositionMapper
+    private positionMapper: IGridPositionDeriver
   ) {}
 
   async getAvailableStartPositions(

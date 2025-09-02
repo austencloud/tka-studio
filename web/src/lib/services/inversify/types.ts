@@ -185,6 +185,11 @@ export const TYPES = {
   IDifficultyBadgeRenderer: Symbol.for("IDifficultyBadgeRenderer"),
   ITextRenderingUtils: Symbol.for("ITextRenderingUtils"),
   ITextRenderingService: Symbol.for("ITextRenderingService"),
+
+  // === UTILITY SERVICES ===
+  IBetaDetectionService: Symbol.for("IBetaDetectionService"),
+  IMotionHelperService: Symbol.for("IMotionHelperService"),
+  IErrorHandlingService: Symbol.for("IErrorHandlingService"),
 } as const;
 
 // Type helper for getting service types

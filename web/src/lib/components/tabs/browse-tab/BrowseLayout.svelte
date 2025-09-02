@@ -7,9 +7,9 @@ Provides three-section layout with:
 - Reactive panel state management using runes + services
 -->
 <script lang="ts">
-  import type { Snippet } from "svelte";
   import Splitter from "$lib/components/ui/Splitter.svelte";
-  import type { PanelStateManager } from "$lib/state/panel-state.svelte";
+  import type { BrowsePanelStateManager } from "$state";
+  import type { Snippet } from "svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
@@ -20,7 +20,7 @@ Provides three-section layout with:
     onNavigationResize = () => {},
     onAnimationResize = () => {},
   } = $props<{
-    panelState: PanelStateManager;
+    panelState: BrowsePanelStateManager;
     navigationSidebar: Snippet;
     centerPanel: Snippet;
     rightPanel?: Snippet;

@@ -1,5 +1,5 @@
-import type { RequestHandler } from "./$types";
 import { PRIMARY_DOMAIN } from "$lib/config/domains";
+import type { RequestHandler } from "./$types";
 
 const pages = [
   // Main Application Pages (High Priority)
@@ -65,7 +65,7 @@ const pages = [
     url: "motion-tester",
     priority: "0.3",
     changefreq: "monthly",
-    description: "Motion Tester - Development Tool",
+    description: "Animator - Development Tool",
   },
 
   {

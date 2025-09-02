@@ -9,7 +9,7 @@ import { injectable } from "inversify";
 import {
   safeSessionStorageGet,
   safeSessionStorageSet,
-} from "$lib/utils/safe-storage";
+} from "$utils";
 
 export interface IFavoritesService {
   /** Toggle favorite status for a sequence */

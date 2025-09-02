@@ -6,7 +6,7 @@ Uses pure runes instead of stores for reactivity.
 -->
 <script lang="ts">
   import { Letter, MotionColor } from "$domain";
-  import { getLetterImagePath } from "$lib/utils/letter-image-getter";
+  import { getLetterImagePath } from "$utils";
 
   interface Props {
     /** The letter to display */

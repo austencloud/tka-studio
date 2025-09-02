@@ -3,7 +3,7 @@
   import AboutTab from "./../../lib/components/tabs/about-tab/AboutTab.svelte";
   import { onMount } from "svelte";
   import { browser } from "$app/environment";
-  import { handleSEORedirect } from "$lib/utils/seo-utils";
+    import { handleSEORedirect } from "$utils";
 
   // Redirect users to main app while preserving SEO benefits
   onMount(() => {

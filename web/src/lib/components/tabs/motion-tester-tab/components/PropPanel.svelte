@@ -11,7 +11,7 @@ Beautiful, intuitive visual controls replacing boring dropdowns:
   import { type Orientation, GridMode } from "$domain";
   import { Location, MotionType } from "$domain";
   import { MotionColor } from "$domain";
-  import { getAvailableMotionTypes } from "../utils/motion-helpers";
+  import { getAvailableMotionTypes } from "$utils";
   import LocationGrid from "./LocationGrid.svelte";
   import MotionTypeButtons from "./MotionTypeButtons.svelte";
   import OrientationButton from "./OrientationButton.svelte";

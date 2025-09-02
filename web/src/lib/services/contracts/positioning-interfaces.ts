@@ -52,7 +52,7 @@ export interface IBetaOffsetCalculator {
   ): { blue: Position; red: Position };
 }
 
-export interface IPositionMapper {
+export interface IGridPositionDeriver {
   /**
    * Get the hand location pair for a given position
    */

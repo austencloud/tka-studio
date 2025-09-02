@@ -5,7 +5,7 @@
  * and positioning logic in the TKA image export system.
  */
 
-import type { TKAImageExportOptions } from "$domain";
+import type { ImageExportOptions } from "$domain";
 
 // ============================================================================
 // LAYOUT AND DIMENSION SERVICES
@@ -56,7 +56,7 @@ export interface IDimensionCalculationService {
    * Returns [topHeight, bottomHeight]
    */
   determineAdditionalHeights(
-    options: TKAImageExportOptions,
+    options: ImageExportOptions,
     beatCount: number,
     beatScale: number
   ): [number, number];
@@ -77,7 +77,7 @@ export interface IDimensionCalculationService {
   validateDimensions(
     beatCount: number,
     beatScale: number,
-    options: TKAImageExportOptions
+    options: ImageExportOptions
   ): boolean;
 }
 

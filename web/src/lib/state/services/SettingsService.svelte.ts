@@ -8,7 +8,7 @@
 import { browser } from "$app/environment";
 import type { AppSettings } from "$domain";
 import { BackgroundType, GridMode } from "$domain";
-import { updateBodyBackground } from "$lib/utils/background-preloader";
+import { updateBodyBackground } from "$utils";
 import type { ISettingsService } from "./state-service-interfaces";
 
 const SETTINGS_STORAGE_KEY = "tka-modern-web-settings";

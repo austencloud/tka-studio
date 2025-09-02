@@ -1,8 +1,8 @@
 <script lang="ts">
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import { createBeatFrameState } from "$lib/state/beat-frame/beat-frame-state.svelte";
-  import { createSequenceState } from "$lib/state/sequence/sequence-state.svelte";
-  import { createWorkbenchState } from "$lib/state/workbench/workbench-state.svelte";
+  import { createBeatFrameState } from "$state";
+  import { createSequenceState } from "$state";
+  import { createWorkbenchState } from "$state";
   import { onMount } from "svelte";
   import ButtonPanel from "./ButtonPanel.svelte";
   import SequenceContent from "./SequenceContent.svelte";

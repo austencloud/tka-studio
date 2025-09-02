@@ -6,12 +6,12 @@
     getShowSettings,
     isTabActive,
     switchTab,
-  } from "$lib/state/app-state.svelte";
+  } from "$state";
   // Import background types
   import { BackgroundType } from "$domain";
 
   // Import transition utilities
-  import { fade } from "$lib/utils/simple-fade";
+  import { fade } from "$utils";
 
   // Import components - App Interface
   import NavigationBar from "$components/navigation/NavigationBar.svelte";
@@ -54,7 +54,7 @@
     { id: "about", label: "About", icon: "ℹ️", isMain: true },
     { id: "sequence_card", label: "Sequence Card", icon: "🎴", isMain: false },
     { id: "write", label: "Write", icon: "✍️", isMain: false },
-    { id: "motion-tester", label: "Motion Tester", icon: "🎯", isMain: false },
+    { id: "motion-tester", label: "Animator", icon: "🎯", isMain: false },
   ] as const;
 
   // Filter tabs based on developer mode

@@ -8,10 +8,10 @@ Composed of smaller, focused components following SRP:
 - AnimationProgressSlider: Progress scrubbing
 - KeyboardShortcutHandler: Keyboard shortcuts and hints
 
-This is the right 1/3 section of the motion tester layout.
+This is the right 1/3 section of the animator layout.
 -->
 <script lang="ts">
-  import type { MotionTesterState } from "$lib/state/motion-tester/motion-tester-state.svelte";
+  import type { MotionTesterState } from "$state";
 
   // Import focused components
   import AnimationStatusIndicator from "./animation/AnimationStatusIndicator.svelte";

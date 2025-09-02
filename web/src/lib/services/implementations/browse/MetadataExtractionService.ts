@@ -11,7 +11,7 @@ import type {
   SequenceMetadata,
   ThumbnailFile,
 } from "$domain";
-import { PngMetadataExtractor } from "$lib/utils/png-metadata-extractor";
+import { PngMetadataExtractor } from "$utils";
 
 export class MetadataExtractionService implements IMetadataExtractionService {
   async extractMetadataFromFiles(

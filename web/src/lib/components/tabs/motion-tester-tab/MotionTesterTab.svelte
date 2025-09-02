@@ -1,11 +1,8 @@
 <script lang="ts">
-  import PictographVisualizationPanel from "./PictographVisualizationPanel.svelte";
-  import { getContext } from "svelte";
+  import { createMotionTesterState, type MotionTesterState } from "$state";
   import type { Container } from "inversify";
-  import {
-    createMotionTesterState,
-    type MotionTesterState,
-  } from "$lib/state/motion-tester/motion-tester-state.svelte";
+  import { getContext } from "svelte";
+  import PictographVisualizationPanel from "./PictographVisualizationPanel.svelte";
 
   // Get DI container from context
   const getContainer = getContext<() => Container | null>("di-container");
@@ -41,7 +38,7 @@
 
 <div class="motion-tester-tab">
   <header class="tester-header">
-    <h1>🎯 Motion Tester</h1>
+    <h1>🎯 Animator</h1>
     <p>Test individual motion sequences with visual feedback and debugging</p>
   </header>
 
@@ -49,12 +46,12 @@
     {#if initializationError}
       <div class="error-state">
         <h2>⚠️ Initialization Error</h2>
-        <p>Failed to initialize motion tester: {initializationError}</p>
+        <p>Failed to initialize animator: {initializationError}</p>
       </div>
     {:else if !state}
       <div class="loading-state">
         <h2>🔄 Loading...</h2>
-        <p>Initializing motion tester services...</p>
+        <p>Initializing animator services...</p>
       </div>
     {:else}
       <PictographVisualizationPanel {state} />

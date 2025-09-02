@@ -25,15 +25,15 @@ export * from "./models/core/csv-handling/CsvModels";
 export * from "./models/core/device-recognition/DeviceTypes";
 
 // Pictograph exports (specific to avoid conflicts)
-export * from "./core/pictograph/ArrowPlacementData";
-export * from "./core/pictograph/gridCoordinates";
-export * from "./core/pictograph/LetterBorderUtils";
-export * from "./core/pictograph/PropPlacementData";
-export * from "./core/pictograph/SvgTypes";
+export * from "./models/core/pictograph/ArrowPlacementData";
+export * from "./models/core/pictograph/gridCoordinates";
 export * from "./models/core/pictograph/GridData";
+export * from "./models/core/pictograph/LetterBorderUtils";
 export * from "./models/core/pictograph/MotionData";
 export * from "./models/core/pictograph/PictographData";
 export * from "./models/core/pictograph/PositioningModels";
+export * from "./models/core/pictograph/PropPlacementData";
+export * from "./models/core/pictograph/SvgTypes";
 
 // Enum exports (specific to avoid conflicts)
 export * from "./enums/enums";
@@ -80,8 +80,8 @@ export type {
   CompositionOptions,
   ExportError,
   ExportProgress,
+  TKAImageExportOptions as ImageExportOptions,
   LayoutData,
-  TKAImageExportOptions,
   TextRenderOptions,
   UserInfo,
 } from "./models/build/export/ImageExport";
@@ -94,8 +94,8 @@ export type {
 
 // Export panel management types (browse-specific)
 export type {
-  PanelConfiguration,
-  PanelState,
+  BrowsePanelConfiguration as BrowsePanelConfig,
+  BrowsePanelState as BrowsePanelState,
   ResizeOperation,
   SplitterConfig,
 } from "./models/browse/PanelManagement";
@@ -169,19 +169,19 @@ export {
 } from "./models/browse/BrowseFilters";
 
 export {
-  SORT_CONFIGS,
   createCustomSortConfig,
   getAvailableSortConfigs,
   getAvailableSortMethods,
   getSortConfig,
   getSortDisplayName,
+  SORT_CONFIGS,
 } from "./models/browse/BrowseSorting";
 
 export {
-  NavigationMode,
   createDefaultBrowseState,
   createDefaultDisplayState,
   createDefaultLoadingState,
+  NavigationMode,
   updateBrowseState,
 } from "./models/browse/BrowseState";
 

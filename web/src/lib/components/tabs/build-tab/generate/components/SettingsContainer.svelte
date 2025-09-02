@@ -5,7 +5,7 @@ All individual controls are evenly spaced throughout the container
 -->
 <script lang="ts">
   import { GenerationMode } from "$domain";
-  import type { GenerationConfig } from "$lib/state/generate/generate-config.svelte";
+  import type { GenerationConfig } from "$state";
   import CAPTypeSelector from "../selectors/CAPTypeSelector.svelte";
   import GenerationModeToggle from "../selectors/GenerationModeToggle.svelte";
   import GridModeSelector from "../selectors/GridModeSelector.svelte";

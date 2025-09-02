@@ -1,7 +1,7 @@
 /**
- * Motion Tester Components Index
+ * Animator Components Index
  *
- * Centralized exports for all motion tester components organized by category
+ * Centralized exports for all animator components organized by category
  */
 
 // Animation components

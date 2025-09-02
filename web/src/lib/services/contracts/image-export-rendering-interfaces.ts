@@ -9,10 +9,10 @@ import type {
   BeatData,
   BeatRenderOptions,
   CompositionOptions,
+  ImageExportOptions,
   LayoutData,
   SequenceData,
   TextRenderOptions,
-  TKAImageExportOptions,
   UserInfo,
 } from "$domain";
 
@@ -126,7 +126,7 @@ export interface IImageCompositionService {
    */
   composeSequenceImage(
     sequence: SequenceData,
-    options: TKAImageExportOptions
+    options: ImageExportOptions
   ): Promise<HTMLCanvasElement>;
 
   /**
