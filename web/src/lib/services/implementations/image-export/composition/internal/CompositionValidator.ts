@@ -8,7 +8,7 @@
 import type {
   IDimensionCalculationService,
   ILayoutCalculationService,
-} from "$contracts/image-export-interfaces";
+} from "$contracts";
 import type { LayoutData, SequenceData, TKAImageExportOptions } from "$domain";
 import {
   CompositionUtils,

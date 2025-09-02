@@ -7,10 +7,7 @@
  * From 582 lines → ~100 lines by extracting letter-specific logic into microservices.
  */
 
-import type {
-  ILetterGeneratorFactory,
-  IPictographGenerator,
-} from "$contracts/generation-interfaces";
+import type { IPictographGenerator } from "$contracts";
 import type { PictographData } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
@@ -18,7 +15,7 @@ import { LetterGeneratorFactory } from "./letter-generators/LetterGeneratorFacto
 
 @injectable()
 export class PictographGenerator implements IPictographGenerator {
-  private readonly letterGeneratorFactory: ILetterGeneratorFactory;
+  private readonly letterGeneratorFactory: LetterGeneratorFactory;
 
   constructor(
     @inject(TYPES.IPositionPatternService)

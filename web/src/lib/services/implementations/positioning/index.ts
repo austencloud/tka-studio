@@ -6,6 +6,6 @@
  */
 
 // Re-export all types and interfaces
-export * from "$lib/services/contracts/positioning-interfaces";
+export * from "$contracts";
 // export * from "./factory"; // Temporarily disabled due to missing exports
 export * from "./types";

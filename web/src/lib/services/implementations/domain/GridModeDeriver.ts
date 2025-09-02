@@ -6,7 +6,7 @@
  * - Box locations (NE, SE, SW, NW) in start/end positions = BOX mode
  */
 
-import type { IGridModeDeriver } from "$contracts/positioning-interfaces";
+import type { IGridModeDeriver } from "$contracts";
 import type { GridData, MotionData } from "$domain";
 import { GridMode, Location, createGridData } from "$domain";
 import { injectable } from "inversify";

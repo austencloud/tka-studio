@@ -7,10 +7,7 @@
 
 import type { SequenceData } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState";
-import type {
-  PropStates,
-  SequenceMetadata,
-} from "$lib/services/contracts/animation/ISequenceAnimationEngine";
+import type { PropStates, SequenceMetadata } from "./ISequenceAnimationEngine";
 
 export interface ISequenceAnimationOrchestrator {
   initializeWithDomainData(sequenceData: SequenceData): boolean;

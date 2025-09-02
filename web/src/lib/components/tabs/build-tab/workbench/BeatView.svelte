@@ -24,9 +24,9 @@
     onLeave,
   }: Props = $props();
 
-  const beatFrameService = resolve<
-    import("$lib/services/contracts/beat-frame-interfaces").IBeatFrameService
-  >(TYPES.IBeatFrameService);
+  const beatFrameService = resolve<import("$contracts").IBeatFrameService>(
+    TYPES.IBeatFrameService
+  );
   const beatFrameState = createBeatFrameState(beatFrameService);
 
   const config = $derived(beatFrameState.config);

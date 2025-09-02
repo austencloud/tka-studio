@@ -5,10 +5,7 @@
  * following the microservices architecture pattern.
  */
 
-import type {
-  FilterState as BrowseFilterState,
-  BrowseState,
-} from "$contracts/browse-interfaces";
+import type { FilterState as BrowseFilterState, BrowseState } from "$contracts";
 import type { FilterType, FilterValue } from "$domain";
 import { NavigationMode, SortMethod } from "$domain";
 import {

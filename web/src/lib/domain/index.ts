@@ -46,10 +46,11 @@ export type {
 
 export type {
   LayoutCalculationParams,
-  LayoutCalculationResult,
   OptionPickerLayoutCalculationResult,
   ResponsiveLayoutConfig,
 } from "./models/build/construct/OptionPicker";
+
+// Note: LayoutCalculationResult now exported from sequence-card-models (the correct version)
 
 export type {
   BeatClickResult,
@@ -80,8 +81,8 @@ export type {
   ExportError,
   ExportProgress,
   LayoutData,
-  TextRenderOptions,
   TKAImageExportOptions,
+  TextRenderOptions,
   UserInfo,
 } from "./models/build/export/ImageExport";
 
@@ -109,17 +110,24 @@ export type {
 // Export page layout types (sequence-card-specific)
 export type {
   DPIConfiguration,
-  GridCalculationOptions,
   GridConfig,
-  LayoutCalculationRequest,
   LayoutValidationResult,
   Margins,
-  Page,
-  PageCreationOptions,
   PageDimensions,
-  PageLayoutConfig,
+  LayoutCalculationResult as PageLayoutCalculationResult,
   Rectangle,
 } from "./models/sequence-card/PageLayout";
+
+// Export the correct GridCalculationOptions and related types from sequence-card-models
+export type {
+  GridCalculationOptions,
+  LayoutCalculationRequest,
+  LayoutCalculationResult,
+  Page,
+  PageCreationOptions,
+  PageLayoutConfig,
+  SequenceCardGridConfig,
+} from "./models/sequence-card/sequence-card-models";
 
 // Export sequence-card types except conflicting ones
 // Export sequence card types directly (no intermediate exports)
@@ -161,19 +169,19 @@ export {
 } from "./models/browse/BrowseFilters";
 
 export {
+  SORT_CONFIGS,
   createCustomSortConfig,
   getAvailableSortConfigs,
   getAvailableSortMethods,
   getSortConfig,
   getSortDisplayName,
-  SORT_CONFIGS,
 } from "./models/browse/BrowseSorting";
 
 export {
+  NavigationMode,
   createDefaultBrowseState,
   createDefaultDisplayState,
   createDefaultLoadingState,
-  NavigationMode,
   updateBrowseState,
 } from "./models/browse/BrowseState";
 

@@ -39,76 +39,29 @@ export interface DeleteResult {
   errors?: string[];
 }
 
-// Page layout types (TODO: Move to domain)
-export type SequenceCardPaperSize = "A4" | "Letter" | "Legal" | "A3";
-export type PageOrientation = "portrait" | "landscape";
+// Import page layout types from domain
+import type {
+  DPIConfiguration,
+  GridCalculationOptions,
+  PageDimensions,
+  PageMargins,
+  PageOrientation,
+  Rectangle,
+  SequenceCardPaperSize,
+} from "$domain";
 
-export interface PageDimensions {
-  width: number;
-  height: number;
-}
+// Import additional layout types from domain
+import type {
+  LayoutCalculationRequest,
+  LayoutCalculationResult,
+  LayoutValidationResult,
+  PageCreationOptions,
+  PageLayoutConfig,
+  SequenceCardGridConfig,
+} from "$domain";
 
-export interface PageMargins {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
-
-export interface Rectangle {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-}
-
-export interface DPIConfiguration {
-  dpi: number;
-  scale: number;
-}
-
-export interface GridCalculationOptions {
-  includeMargins: boolean;
-  optimizeSpacing: boolean;
-}
-
-export interface LayoutCalculationRequest {
-  paperSize: SequenceCardPaperSize;
-  orientation: PageOrientation;
-  margins: PageMargins;
-  gridOptions: GridCalculationOptions;
-}
-
-export interface LayoutCalculationResult {
-  success: boolean;
-  layout: PageLayoutConfig;
-  contentArea: Rectangle;
-  errors?: string[];
-}
-
-export interface LayoutValidationResult {
-  isValid: boolean;
-  errors: string[];
-  warnings: string[];
-}
-
-export interface PageCreationOptions {
-  paperSize: SequenceCardPaperSize;
-  orientation: PageOrientation;
-  margins?: PageMargins;
-}
-
-export interface PageLayoutConfig {
-  columns: number;
-  rows: number;
-  spacing: number;
-}
-
-export interface SequenceCardGridConfig {
-  beatSize: number;
-  spacing: number;
-  margins: PageMargins;
-}
+// SequenceCardGridConfig now imported from $domain to avoid conflicts
+export type { SequenceCardGridConfig };
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

@@ -5,11 +5,8 @@
  * Replaces 300+ lines of over-engineered conversion logic with ~50 lines.
  */
 
-import type {
-  ISVGToCanvasConverterService,
-  RenderQualitySettings,
-  SVGConversionOptions,
-} from "$contracts";
+import type { ISVGToCanvasConverterService } from "$contracts";
+import type { RenderQualitySettings, SVGConversionOptions } from "$domain";
 import { Canvas, loadSVGFromString, util } from "fabric";
 import { injectable } from "inversify";
 

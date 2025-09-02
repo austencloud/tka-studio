@@ -1,4 +1,10 @@
-import { createMotionData, createPictographData, Letter, MotionType, Orientation } from "$domain";
+import {
+  createMotionData,
+  createPictographData,
+  Letter,
+  MotionType,
+  Orientation,
+} from "$domain";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SpecialPlacementService } from "./SpecialPlacementService";
 

@@ -289,6 +289,7 @@ export enum ResizeDirection {
   HORIZONTAL = "horizontal",
   VERTICAL = "vertical",
   BOTH = "both",
+  RIGHT = "right",
 }
 
 export enum ResizeOperation {

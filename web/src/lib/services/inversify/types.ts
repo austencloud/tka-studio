@@ -119,12 +119,12 @@ export const TYPES = {
 
   // === SHARED SERVICES ===
   IEnumMapper: Symbol.for("IEnumMapper"),
-  ICSVParser: Symbol.for("ICSVParsingService"),
+  ICSVParser: Symbol.for("ICSVParser"),
 
   // === ADDITIONAL SERVICES ===
   IMotionQueryHandler: Symbol.for("IMotionQueryHandler"),
   ILetterDeriver: Symbol.for("ILetterDeriver"),
-  ICsvLoader: Symbol.for("ICsvLoaderService"),
+  ICSVLoader: Symbol.for("ICsvLoader"),
 
   // === MISSING SERVICES ===
   ILessonRepository: Symbol.for("ILessonRepository"),
@@ -148,7 +148,6 @@ export const TYPES = {
     "IMotionLetterIdentificationService"
   ),
   ICSVPictographLoaderService: Symbol.for("ICSVPictographLoaderService"),
-  ICSVPictographParser: Symbol.for("ICSVPictographParserService"),
   IArrowLocationService: Symbol.for("IArrowLocationService"),
   IArrowPlacementKeyService: Symbol.for("IArrowPlacementKeyService"),
   IPropPlacementService: Symbol.for("IPropPlacementService"),

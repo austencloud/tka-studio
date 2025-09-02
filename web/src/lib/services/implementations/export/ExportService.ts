@@ -13,7 +13,7 @@ import type {
 } from "$domain";
 
 // Behavioral contracts
-import type { IExportService } from "$contracts/export-interfaces";
+import type { IExportService } from "$contracts";
 import type {
   BeatData,
   ExportOptions,

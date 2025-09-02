@@ -10,13 +10,11 @@ import type {
   IBeatCalculationService,
   IPropInterpolationService,
   ISequenceAnimationOrchestrator,
+  PropStates,
+  SequenceMetadata,
 } from "$contracts";
 import type { BeatData, SequenceData } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState.js";
-import type {
-  PropStates,
-  SequenceMetadata,
-} from "$lib/services/contracts/animation";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 

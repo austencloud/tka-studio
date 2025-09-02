@@ -5,15 +5,10 @@
  * Handles lesson types, configurations, and category management.
  */
 
-import type { ILessonRepository } from "$contracts/learn/ILessonRepository";
-import type { ILetterMappingRepository } from "$contracts/learn/ILetterMappingRepository";
+import type { ILessonRepository, ILetterMappingRepository } from "$contracts";
 import type { LessonConfiguration, LetterCategory } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
-
-interface LessonConfigurationFile {
-  lessons: LessonConfiguration[];
-}
 
 @injectable()
 export class LessonRepository implements ILessonRepository {
@@ -93,25 +88,31 @@ export class LessonRepository implements ILessonRepository {
       const defaultLessons: LessonConfiguration[] = [
         {
           id: "basic-letters",
+          type: "basic-letters",
           name: "Basic Letters",
           description: "Learn the basic letter formations",
+          includedCategories: ["basic" as LetterCategory],
           letters: ["A", "B", "C", "D", "E"],
-          categories: ["BASIC" as LetterCategory],
+          categories: ["basic" as LetterCategory],
           difficulty: 1,
         },
         {
           id: "advanced-letters",
+          type: "advanced-letters",
           name: "Advanced Letters",
           description: "Master advanced letter combinations",
+          includedCategories: ["extended" as LetterCategory],
           letters: ["F", "G", "H", "I", "J"],
-          categories: ["ADVANCED" as LetterCategory],
+          categories: ["extended" as LetterCategory],
           difficulty: 2,
         },
       ];
 
       // Store configurations
       for (const lesson of defaultLessons) {
-        this.configurations.set(lesson.id, lesson);
+        if (lesson.id) {
+          this.configurations.set(lesson.id, lesson);
+        }
       }
     } catch (error) {
       console.error("Failed to load lesson configurations:", error);

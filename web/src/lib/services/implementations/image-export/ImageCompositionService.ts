@@ -16,7 +16,7 @@ import type {
   IDimensionCalculationService,
   IImageCompositionService,
   ILayoutCalculationService,
-} from "$contracts/image-export-interfaces";
+} from "$contracts";
 import type {
   CompositionOptions,
   LayoutData,

@@ -1,4 +1,4 @@
-import type { IMotionParameterService } from "$contracts/motion-tester-interfaces";
+import type { IMotionParameterService } from "$contracts";
 import type { MotionData } from "$domain";
 import {
   createMotionData,

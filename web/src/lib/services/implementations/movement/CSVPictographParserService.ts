@@ -5,10 +5,7 @@
  * Uses the correct position mapping based on hand location combinations.
  */
 
-import type {
-  CSVRow,
-  ICSVPictographParserService,
-} from "$contracts/movement/ICSVPictographParserService";
+import type { CSVRow, ICSVPictographParserService } from "$contracts";
 import type { IPositionMapper } from "$contracts/positioning-interfaces";
 import type { PictographData } from "$domain";
 import {

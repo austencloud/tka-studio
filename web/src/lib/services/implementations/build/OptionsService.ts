@@ -5,17 +5,17 @@
  * Complete port from legacy system without any stores - pure runes and functions.
  */
 
+import type { IPositionMapper } from "$contracts";
 import type { PictographData } from "$domain";
 import {
-  getLetterType,
-  GridPosition,
-  GridPositionGroup,
-  Letter,
-  LetterType,
-  OptionPickerSortMethod,
-  ReversalFilter,
+    getLetterType,
+    GridPosition,
+    GridPositionGroup,
+    Letter,
+    LetterType,
+    OptionPickerSortMethod,
+    ReversalFilter,
 } from "$domain";
-import type { IPositionMapper } from "$lib/services/contracts/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 
 /**

@@ -1,9 +1,5 @@
 import { PerformanceTracker } from "./performance/PerformanceTracker";
-import type {
-  Dimensions,
-  PerformanceMetrics,
-  QualityLevel,
-} from "$domain";
+import type { Dimensions, PerformanceMetrics, QualityLevel } from "$domain";
 
 export class BackgroundManager {
   public dimensions = $state<Dimensions>({ width: 0, height: 0 });

@@ -5,19 +5,24 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import type { CSVRow } from "$contracts/movement/ICSVPictographParserService";
-import type { ParsedCsvRow, PictographData } from "$domain";
-import { GridMode, Letter, MotionType } from "$domain";
+import type {
+  CSVRow,
+  ICSVLoader,
+  ICSVParser,
+  ICSVPictographParserService,
+  ILetterMappingRepository,
+  ILetterQueryHandler,
+} from "$contracts";
+import type {
+  Letter,
+  LetterMapping,
+  MotionType,
+  ParsedCsvRow,
+  PictographData,
+} from "$domain";
+import { GridMode } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
-
-import type {
-  ICSVParser,
-  ICSVPictographParserService as ICSVPictographParser,
-} from "$contracts";
-import type { ICsvLoader } from "$contracts/data/ICsvLoader";
-import type { ILetterMappingRepository, LetterMapping } from "$domain";
-import type { ILetterQueryHandler } from "$lib/services/contracts/data-interfaces";
 
 @injectable()
 export class LetterQueryHandler implements ILetterQueryHandler {
@@ -30,12 +35,12 @@ export class LetterQueryHandler implements ILetterQueryHandler {
   constructor(
     @inject(TYPES.ILetterMappingRepository)
     private letterMappingRepository: ILetterMappingRepository,
-    @inject(TYPES.ICsvLoader)
-    private csvLoaderService: ICsvLoader,
+    @inject(TYPES.ICSVLoader)
+    private csvLoaderService: ICSVLoader,
     @inject(TYPES.ICSVParser)
     private CSVParser: ICSVParser,
-    @inject(TYPES.ICSVPictographParser)
-    private csvPictographParser: ICSVPictographParser
+    @inject(TYPES.ICSVPictographLoaderService)
+    private csvPictographParser: ICSVPictographParserService
   ) {}
 
   /**
@@ -56,13 +61,15 @@ export class LetterQueryHandler implements ILetterQueryHandler {
       }
 
       // Load raw CSV data
-      const csvData = await this.csvLoaderService.loadCsvData();
+      const csvData = await this.csvLoaderService.loadCSVDataSet();
 
       // Parse CSV data using shared service
       const diamondParseResult = this.CSVParser.parseCSV(
-        csvData.diamondData || ""
+        csvData.data?.diamondData || ""
       );
-      const boxParseResult = this.CSVParser.parseCSV(csvData.boxData || "");
+      const boxParseResult = this.CSVParser.parseCSV(
+        csvData.data?.boxData || ""
+      );
 
       // Only log significant parsing errors (not empty row issues)
       const significantDiamondErrors = diamondParseResult.errors.filter(

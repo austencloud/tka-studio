@@ -9,11 +9,7 @@ export { Location, MotionType, RotationDirection } from "$domain";
 export type ArrowColor = MotionColor;
 
 // Basic types
-// Note: Point is now exported from positioning-interfaces.ts
-import type { Point } from "$contracts/positioning-interfaces";
-
-// Re-export Point for backward compatibility
-export type { Point };
+import type { Point } from "$domain";
 
 export interface ArrowPosition extends Point {
   rotation: number;

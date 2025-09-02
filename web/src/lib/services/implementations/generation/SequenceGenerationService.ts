@@ -23,11 +23,11 @@ import {
 } from "$domain";
 
 import type {
-  GenerationOptions,
+  ILetterQueryHandler,
   IOrientationCalculationService,
   ISequenceGenerationService,
-} from "$contracts/generation-interfaces";
-import type { ILetterQueryHandler } from "$lib/services/contracts/data-interfaces";
+} from "$contracts";
+import type { GenerationOptions } from "$domain";
 
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";

@@ -6,7 +6,7 @@
  */
 
 import type { PropState } from "$lib/components/tabs/browse-tab/animator/types/PropState";
-import type { PropStates } from "$lib/services/contracts/animation/ISequenceAnimationEngine";
+import type { PropStates } from "./ISequenceAnimationEngine";
 
 export interface IAnimationStateService {
   getBluePropState(): PropState;

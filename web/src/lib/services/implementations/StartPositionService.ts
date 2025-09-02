@@ -1,8 +1,7 @@
 /**
  * StartPositionService.ts - Complete start position service implementation
  */
-import type { IPositionMapper } from "$contracts";
-import type { IStartPositionService } from "$contracts/application/IStartPositionService";
+import type { IPositionMapper, IStartPositionService } from "$contracts";
 import type { BeatData, PictographData } from "$domain";
 import {
   type ValidationError,

@@ -13,6 +13,7 @@ export * from "./animation/IAnimationControlService";
 export * from "./animation/IAnimationStateService";
 export * from "./animation/IBeatCalculationService";
 export * from "./animation/IPropInterpolationService";
+export * from "./animation/ISequenceAnimationEngine";
 export * from "./animation/ISequenceAnimationOrchestrator";
 
 // Application Domain
@@ -33,21 +34,62 @@ export * from "./background/IBackgroundFactory";
 export * from "./background/IBackgroundService";
 export * from "./background/IBackgroundSystem";
 
-
-
 // Build Domain - TODO: Move to individual interface files
 export * from "./build-interfaces";
 
-// Data Domain - TODO: Move to individual interface files
-// TEMPORARILY REMOVED: export * from "./data-interfaces"; (conflicts with ICSVLoader, ICSVParser)
+// Browse Domain
+export * from "./browse-interfaces";
+export * from "./browse/IBrowseSectionService";
+export * from "./browse/IMetadataExtractionService";
 
-// Generation Domain - TODO: Move to individual interface files
-// Generation Domain - Explicit exports to avoid IOptionDataService conflict
+// Beat Frame Domain
+export * from "./beat-frame-interfaces";
+
+// Beat Grid Domain
+export * from "./beat-grid-interfaces";
+
+// Beat Fallback Domain
+export * from "./beat-fallback-interfaces";
+
+// Data Domain - Selective exports to avoid conflicts
 export type {
+  ILetterQueryHandler,
+  IMotionQueryHandler,
+} from "./data-interfaces";
+
+// Export Domain
+export * from "./export-interfaces";
+export * from "./IBatchExportService";
+
+// Generation Domain - Selective exports to avoid conflicts
+export type {
+  IDirectionCalculator,
   ILetterDeriver,
+  ILetterGenerator,
+  IOrientationCalculationService,
   IPictographGenerator,
+  IPictographValidatorService,
+  IPositionPatternService,
   ISequenceGenerationService,
 } from "./generation-interfaces";
+
+// NOTE: Domain types should be imported directly from $domain, not re-exported from contracts
+
+// Image Export Domain
+export * from "./image-export-interfaces";
+
+// Pictograph Domain - Selective exports to avoid conflicts
+export type {
+  IArrowRenderer,
+  IFallbackArrowService,
+  IGridRenderingService,
+  IOverlayRenderer,
+  ISvgColorTransformer,
+  ISvgConfiguration,
+  ISvgLoader,
+  ISvgParser,
+  ISvgUtilityService,
+} from "./pictograph-interfaces";
 
 // TODO: Replace these consolidated interface files with individual domain-organized interfaces
 // Following the one-to-one interface-to-implementation pattern
@@ -61,6 +103,7 @@ export * from "./sequence/ISequenceStateService";
 
 // Temporary exports until migration to individual interfaces is complete
 // TEMPORARILY REMOVED: export * from "./motion-tester-interfaces"; (conflicts with IAnimationControlService)
+export type { IMotionParameterService } from "./motion-tester-interfaces";
 export * from "./option-picker-interfaces";
 export * from "./panel-interfaces";
 // TEMPORARILY REMOVED: export * from "./pictograph-interfaces"; (conflicts with IArrowPathResolutionService, IArrowPositioningService)
@@ -81,7 +124,11 @@ export {
   // Service interfaces (excluding conflicting IDeleteService)
   type ISequenceService,
   type IWorkbenchBeatOperationsService,
+  // Domain types re-exported for service contracts
+  type SequenceCardGridConfig,
 } from "./sequence-interfaces";
+
+// NOTE: Domain types should be imported directly from $domain, not re-exported from contracts
 
 // TEMPORARILY REMOVED: export * from "./sequence-state-interfaces"; (conflicts with ISequenceStateService)
 export * from "./svg-conversion-interfaces";

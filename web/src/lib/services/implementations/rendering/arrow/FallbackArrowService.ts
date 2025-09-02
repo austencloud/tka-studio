@@ -5,8 +5,8 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
+import type { IFallbackArrowService } from "$contracts";
 import { MotionColor } from "$domain";
-import type { IFallbackArrowService } from "$lib/services/contracts/pictograph-interfaces";
 import type { ArrowPosition } from "$lib/services/implementations/positioning/types";
 import { injectable } from "inversify";
 

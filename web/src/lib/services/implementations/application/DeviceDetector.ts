@@ -8,7 +8,7 @@ import type {
 
 import type { DeviceCapabilities, ResponsiveSettings } from "$domain";
 
-import type { IDeviceDetector } from "$contracts/application/IDeviceDetector";
+import type { IDeviceDetector } from "$contracts";
 import { injectable } from "inversify";
 
 @injectable()

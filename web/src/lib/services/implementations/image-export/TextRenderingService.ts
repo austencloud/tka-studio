@@ -12,7 +12,7 @@
  * - ITextRenderingUtils for text utilities
  */
 
-import type { ITextRenderingService } from "$contracts/image-export-interfaces";
+import type { ITextRenderingService } from "$contracts";
 import type { TextRenderOptions, UserInfo } from "$domain";
 
 import type {

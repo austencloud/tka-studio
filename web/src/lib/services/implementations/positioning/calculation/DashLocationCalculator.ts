@@ -25,9 +25,9 @@
 	}ation mappings for different scenarios
  */
 
+import type { IGridModeDeriver } from "$contracts";
 import type { LetterType, MotionData, PictographData } from "$domain";
 import { GridMode, Location } from "$domain";
-import type { IGridModeDeriver } from "$lib/services/contracts/positioning-interfaces";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 import { injectable } from "inversify";
 

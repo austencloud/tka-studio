@@ -23,6 +23,12 @@ export const PAPER_SIZES: Record<SequenceCardPaperSize, PaperSpecification> = {
     displayName: "A4",
     description: '210mm × 297mm (8.27" × 11.69")',
   },
+  A3: {
+    name: "A3",
+    dimensions: { width: 842, height: 1191 }, // 297mm x 420mm at 72 DPI
+    displayName: "A3",
+    description: '297mm × 420mm (11.69" × 16.54")',
+  },
   Letter: {
     name: "Letter",
     dimensions: { width: 612, height: 792 }, // 8.5" x 11" at 72 DPI

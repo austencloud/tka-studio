@@ -6,6 +6,7 @@
  */
 
 import { browser } from "$app/environment";
+import type { IBrowseStatePersister } from "$lib/services/implementations/browse/BrowseStatePersister";
 import type { ItabStateService, TabId } from "./state-service-interfaces";
 
 class TabStateService implements ItabStateService {
@@ -22,8 +23,12 @@ class TabStateService implements ItabStateService {
     return this.#activeTab;
   }
 
-  get browseStatePersistence() {
-    return this.browseStatePersistence;
+  get browseStatePersistence(): IBrowseStatePersister {
+    // TODO: Inject the actual browse state persistence service
+    // For now, return a placeholder that matches the interface
+    throw new Error(
+      "browseStatePersistence not implemented - needs dependency injection"
+    );
   }
 
   // ============================================================================

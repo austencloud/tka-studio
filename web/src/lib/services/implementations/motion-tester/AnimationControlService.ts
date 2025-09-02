@@ -1,3 +1,4 @@
+import type { ISequenceAnimationEngine } from "$contracts";
 import type { IAnimationControlService } from "$contracts/motion-tester-interfaces";
 import type { MotionData, SequenceData } from "$domain";
 import {
@@ -13,7 +14,6 @@ import {
   RotationDirection,
 } from "$domain";
 import type { PropState } from "$lib/components/tabs/browse-tab/animator";
-import type { ISequenceAnimationEngine } from "$lib/services/contracts/animation";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 import type { MotionTestParams } from "./MotionParameterService";

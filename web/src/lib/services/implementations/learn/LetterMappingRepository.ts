@@ -5,10 +5,9 @@
  * Handles letter mappings, categories, and validation.
  */
 
-import type { ILetterMappingRepository } from "$contracts/learn/ILetterMappingRepository";
+import type { ILetterMappingRepository } from "$contracts";
 import {
   createLetterMapping,
-  createLetterRow,
   type CodexConfiguration,
   type LetterCategory,
   type LetterMapping,
@@ -45,11 +44,9 @@ export class LetterMappingRepository implements ILetterMappingRepository {
     }
 
     // Find letter mapping in configuration
-    for (const row of this.configuration.letterRows) {
-      const mapping = row.letters.find((l) => l.letter === letter);
-      if (mapping) {
-        return mapping;
-      }
+    const letterMapping = this.configuration.letters[letter];
+    if (letterMapping) {
+      return letterMapping;
     }
 
     return null;
@@ -64,12 +61,9 @@ export class LetterMappingRepository implements ILetterMappingRepository {
     }
 
     const letters: string[] = [];
-    for (const row of this.configuration.letterRows) {
-      for (const letterMapping of row.letters) {
-        if (letterMapping.category === category) {
-          letters.push(letterMapping.letter);
-        }
-      }
+    const categoryLetters = this.configuration.categories[category];
+    if (categoryLetters) {
+      return categoryLetters;
     }
 
     return letters;
@@ -83,7 +77,7 @@ export class LetterMappingRepository implements ILetterMappingRepository {
       return [];
     }
 
-    return this.configuration.letterRows;
+    return this.configuration.rows;
   }
 
   getAllLetters(): string[] {
@@ -95,10 +89,8 @@ export class LetterMappingRepository implements ILetterMappingRepository {
     }
 
     const letters: string[] = [];
-    for (const row of this.configuration.letterRows) {
-      for (const letterMapping of row.letters) {
-        letters.push(letterMapping.letter);
-      }
+    for (const letterKey in this.configuration.letters) {
+      letters.push(letterKey);
     }
 
     return letters;
@@ -114,44 +106,53 @@ export class LetterMappingRepository implements ILetterMappingRepository {
       // For now, create a default configuration
       const defaultConfiguration: CodexConfiguration = {
         version: "1.0.0",
-        letterRows: [
-          createLetterRow({
-            id: "row-1",
-            name: "Basic Letters Row 1",
-            letters: [
-              createLetterMapping({
-                letter: "A",
-                category: "BASIC" as LetterCategory,
-                difficulty: 1,
-                description: "Basic letter A",
-              }),
-              createLetterMapping({
-                letter: "B",
-                category: "BASIC" as LetterCategory,
-                difficulty: 1,
-                description: "Basic letter B",
-              }),
-            ],
+        letters: {
+          A: createLetterMapping({
+            startPosition: "alpha1",
+            endPosition: "alpha3",
+            blueMotionType: "PRO" as any,
+            redMotionType: "PRO" as any,
           }),
-          createLetterRow({
-            id: "row-2",
-            name: "Advanced Letters Row 1",
-            letters: [
-              createLetterMapping({
-                letter: "F",
-                category: "ADVANCED" as LetterCategory,
-                difficulty: 2,
-                description: "Advanced letter F",
-              }),
-              createLetterMapping({
-                letter: "G",
-                category: "ADVANCED" as LetterCategory,
-                difficulty: 2,
-                description: "Advanced letter G",
-              }),
-            ],
+          B: createLetterMapping({
+            startPosition: "alpha1",
+            endPosition: "alpha3",
+            blueMotionType: "ANTI" as any,
+            redMotionType: "ANTI" as any,
           }),
+          F: createLetterMapping({
+            startPosition: "beta1",
+            endPosition: "alpha3",
+            blueMotionType: "ANTI" as any,
+            redMotionType: "PRO" as any,
+          }),
+          G: createLetterMapping({
+            startPosition: "beta3",
+            endPosition: "beta5",
+            blueMotionType: "PRO" as any,
+            redMotionType: "PRO" as any,
+          }),
+        },
+        rows: [
+          {
+            index: 0,
+            category: "basic" as LetterCategory,
+            letters: ["A", "B"],
+          },
+          {
+            index: 1,
+            category: "extended" as LetterCategory,
+            letters: ["F", "G"],
+          },
         ],
+        categories: {
+          basic: ["A", "B"],
+          extended: ["F", "G"],
+          greek: [],
+          dash: [],
+          special: [],
+          dual_dash: [],
+          static: [],
+        },
       };
 
       this.configuration = defaultConfiguration;

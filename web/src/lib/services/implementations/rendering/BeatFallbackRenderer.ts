@@ -3,14 +3,14 @@
  * Just handles the basic cases without overengineering
  */
 
-import type { BeatData } from "$domain";
 import type {
   EmptyBeatOptions,
   ErrorBeatOptions,
   FallbackRenderOptions,
   FallbackRenderResult,
   IBeatFallbackRenderer,
-} from "$lib/services/contracts/beat-fallback-interfaces";
+} from "$contracts";
+import type { BeatData } from "$domain";
 import { injectable } from "inversify";
 
 @injectable()

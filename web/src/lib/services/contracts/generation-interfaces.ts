@@ -69,9 +69,7 @@ export interface ITurnIntensityManagerService {
 
 export interface IOptionDataService {
   initialize(): Promise<void>;
-  getNextOptions(
-    sequence: BeatData[]
-  ): Promise<PictographData[]>;
+  getNextOptions(sequence: BeatData[]): Promise<PictographData[]>;
   getNextOptionsFromEndPosition(
     endPosition: string,
     gridMode: GridMode,
@@ -181,10 +179,7 @@ export interface IDirectionCalculator {
     startPosition: GridPosition,
     endPosition: GridPosition,
     motionType: string
-  ): [
-    import("$domain").Location,
-    import("$domain").Location
-  ];
+  ): [import("$domain").Location, import("$domain").Location];
 }
 
 export interface IPictographValidatorService {
@@ -237,5 +232,5 @@ export interface ILetterDeriver {
 // RE-EXPORT TYPES FOR EXTERNAL USE
 // ============================================================================
 
-// Re-export types that other modules need to import
-export type { GenerationOptions, LetterDerivationResult } from "$domain";
+// REMOVED: Domain model re-exports. Import directly from $domain instead.
+// Contracts should only contain service interface definitions.

@@ -5,7 +5,7 @@
  * Ensures generated pictographs conform to TKA rules and constraints.
  */
 
-import type { IPictographValidatorService } from "$contracts/generation-interfaces";
+import type { IPictographValidatorService } from "$contracts";
 import type { MotionData, PictographData } from "$domain";
 import {
   GridPosition,

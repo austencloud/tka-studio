@@ -13,8 +13,12 @@ import type {
   LayoutValidationResult,
   LayoutValidationWarning,
   Page,
+  PageCreationOptions,
+  PageLayoutConfig,
+  PageOrientation,
   Rectangle,
   SequenceCardGridConfig,
+  SequenceCardPaperSize,
   SequenceData,
 } from "$domain";
 
@@ -22,13 +26,7 @@ import type {
 import type {
   IPageFactoryService,
   IPrintablePageLayoutService,
-  PageOrientation,
 } from "$contracts";
-import type {
-  PageCreationOptions,
-  PageLayoutConfig,
-} from "$domain/models/sequence-card/sequence-card-models";
-import type { SequenceCardPaperSize } from "$lib/services/contracts/sequence-interfaces";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
 

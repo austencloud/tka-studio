@@ -17,8 +17,8 @@ import type {
 } from "$domain";
 import type { MemoryEstimate } from "$implementations/image-export/composition/internal/CompositionTypes";
 
-// Export validation result for image export operations (internal to contracts)
-interface ExportValidationResult extends ValidationResult {
+// Export validation result for image export operations
+export interface ExportValidationResult extends ValidationResult {
   memoryEstimate?: MemoryEstimate;
   recommendedOptions?: Partial<TKAImageExportOptions>;
 }

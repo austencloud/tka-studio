@@ -6,7 +6,7 @@
  * Provides simple AI-friendly functions like generateA(), generateB(), etc.
  */
 
-import type { IPictographGenerator } from "$contracts/generation-interfaces";
+import type { IPictographGenerator } from "$contracts";
 import type { PictographData } from "$domain";
 
 export class CSVPictographGenerator implements IPictographGenerator {

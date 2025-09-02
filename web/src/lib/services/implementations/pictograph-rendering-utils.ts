@@ -10,7 +10,7 @@ import type {
   IGridRenderingService,
   IOverlayRenderer,
   ISvgUtilityService,
-} from "$contracts/pictograph-interfaces";
+} from "$contracts";
 import type {
   IArrowPositioningOrchestrator,
   IGridModeDeriver,

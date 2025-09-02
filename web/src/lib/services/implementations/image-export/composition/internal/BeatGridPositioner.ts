@@ -5,7 +5,7 @@
  * Manages the rendering and placement of beats within the composition layout.
  */
 
-import type { IBeatRenderingService } from "$contracts/image-export-interfaces";
+import type { IBeatRenderingService } from "$contracts";
 import type {
   CompositionOptions,
   LayoutData,

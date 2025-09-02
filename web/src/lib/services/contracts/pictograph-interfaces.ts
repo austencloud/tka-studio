@@ -20,6 +20,7 @@ import type {
   SVGDimensions,
 } from "$domain";
 import { MotionColor } from "$domain";
+import type { ArrowPosition } from "$lib/services/implementations/positioning/types";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -48,7 +49,7 @@ export interface IArrowRenderer {
   renderArrowAtPosition(
     svg: SVGElement,
     color: MotionColor,
-    position: Position,
+    position: ArrowPosition,
     motionData: MotionData | undefined
   ): Promise<void>;
 
@@ -94,7 +95,7 @@ export interface IArrowPositioningService {
   renderArrowAtPosition(
     svg: SVGElement,
     color: MotionColor,
-    position: Position,
+    position: ArrowPosition,
     motionData: MotionData | undefined
   ): Promise<void>;
 }
@@ -160,7 +161,7 @@ export interface IFallbackArrowService {
   renderFallbackArrow(
     svg: SVGElement,
     color: MotionColor,
-    position: Position
+    position: ArrowPosition
   ): void;
 
   /**

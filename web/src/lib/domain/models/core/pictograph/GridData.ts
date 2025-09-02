@@ -74,21 +74,31 @@ export function gridDataFromObject(data: Record<string, unknown>): GridData {
   return createGridData(gridData as Partial<GridData>);
 }
 
-// Beat grid specific types
+// Canvas-based grid drawing options (for BeatGridService)
 export interface GridDrawOptions {
+  size?: number; // Grid size for canvas drawing
+  opacity?: number; // Grid opacity (0-1)
+  lineWidth?: number; // Line width for grid lines
+  strokeStyle?: string; // Line color/style
+  padding?: number; // Padding around grid
+}
+
+// Combined grid options for overlay rendering
+export interface CombinedGridOptions {
+  primaryGridMode: GridMode; // Primary grid type
+  overlayGridMode?: GridMode; // Optional overlay grid type
+  primaryOpacity?: number; // Primary grid opacity
+  overlayOpacity?: number; // Overlay grid opacity
+}
+
+// Legacy generic grid display options (kept for backward compatibility)
+export interface GenericGridDisplayOptions {
   showGrid: boolean;
   gridColor: string;
   gridOpacity: number;
   showLabels: boolean;
   labelColor: string;
   labelSize: number;
-}
-
-export interface CombinedGridOptions extends GridDrawOptions {
-  beatSpacing: number;
-  beatCount: number;
-  highlightCurrentBeat: boolean;
-  currentBeatColor: string;
 }
 
 export interface GridValidationResult {

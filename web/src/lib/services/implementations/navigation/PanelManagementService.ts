@@ -10,7 +10,7 @@ import type {
   PanelConfiguration,
   PanelState,
   ResizeOperation,
-} from "$contracts/panel-interfaces";
+} from "$contracts";
 import { injectable } from "inversify";
 
 @injectable()
@@ -250,11 +250,6 @@ export class PanelManagementService implements IPanelManagementService {
   private loadPanelWidth(persistKey: string, defaultWidth: number): number {
     const saved = this.savedStates[persistKey];
     return saved?.width ?? defaultWidth;
-  }
-
-  private loadPanelCollapsed(persistKey: string): boolean {
-    const saved = this.savedStates[persistKey];
-    return saved?.isCollapsed ?? false;
   }
 
   // Event handling

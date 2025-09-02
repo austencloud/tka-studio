@@ -5,10 +5,12 @@
   import ErrorBanner from "./shared/ErrorBanner.svelte";
   import LoadingOverlay from "./shared/LoadingOverlay.svelte";
 
+  import type {
+    IBuildTabService,
+    ISequenceService,
+    IStartPositionService,
+  } from "$contracts";
   import { GridMode } from "$domain";
-  import type { IStartPositionService } from "$contracts";
-  import type { IBuildTabService } from "$lib/services/contracts/build-interfaces";
-  import type { ISequenceService } from "$lib/services/contracts/sequence-interfaces";
   import { resolve, TYPES } from "$lib/services/inversify/container";
   import { createBuildTabState } from "$lib/state/build-tab-state.svelte";
   import { createConstructTabState } from "$lib/state/construct-tab-state.svelte";

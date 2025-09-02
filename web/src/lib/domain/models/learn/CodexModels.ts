@@ -4,8 +4,8 @@
  * Interface definitions for the codex system.
  */
 
-import { MotionType } from "$domain";
 import type { LetterCategory } from "$domain";
+import { MotionType } from "$domain";
 
 export interface LetterMapping {
   startPosition: string;
@@ -29,18 +29,23 @@ export interface LetterRow {
 }
 
 export interface CodexConfiguration {
+  version: string;
   letters: Record<string, LetterMapping>;
   rows: LetterRow[];
   categories: Record<LetterCategory, string[]>;
 }
 
 export interface LessonConfiguration {
+  id?: string; // Added for LessonRepository usage
   type: string;
   name: string;
   description: string;
   includedCategories: LetterCategory[];
   includedLetters?: string[];
   excludedLetters?: string[];
+  categories?: LetterCategory[]; // Added for LessonRepository usage
+  letters?: string[]; // Added for LessonRepository usage
+  difficulty?: number; // Added for LessonRepository usage
 }
 
 // Factory functions

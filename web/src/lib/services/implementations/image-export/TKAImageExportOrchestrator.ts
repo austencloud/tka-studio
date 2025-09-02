@@ -18,7 +18,7 @@ import type {
   IImagePreviewGenerator,
   ILayoutCalculationService,
   ITKAImageExportService,
-} from "$contracts/image-export-interfaces";
+} from "$contracts";
 import type { SequenceData, TKAImageExportOptions } from "$domain";
 
 export class TKAImageExportOrchestrator implements ITKAImageExportService {
@@ -50,7 +50,7 @@ export class TKAImageExportOrchestrator implements ITKAImageExportService {
 
     // Validate export parameters
     const validation = this.validator.validateExport(sequence, fullOptions);
-    if (!validation.valid) {
+    if (!validation.isValid) {
       throw new Error(
         `Export validation failed: ${validation.errors.join(", ")}`
       );
@@ -141,7 +141,11 @@ export class TKAImageExportOrchestrator implements ITKAImageExportService {
     sequence: SequenceData,
     options: TKAImageExportOptions
   ): { valid: boolean; errors: string[] } {
-    return this.validator.validateExport(sequence, options);
+    const result = this.validator.validateExport(sequence, options);
+    return {
+      valid: result.isValid,
+      errors: result.errors.map((e) => (typeof e === "string" ? e : e.message)),
+    };
   }
 
   /**
@@ -245,7 +249,7 @@ export class TKAImageExportOrchestrator implements ITKAImageExportService {
       };
 
       const validation = this.validator.validateExport(testSequence, defaults);
-      validationTest = validation.valid;
+      validationTest = validation.isValid;
 
       // Test preview generation
       const preview = await this.generatePreview(testSequence);

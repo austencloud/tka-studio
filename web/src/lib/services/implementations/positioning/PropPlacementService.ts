@@ -10,7 +10,7 @@ import type { MotionData, PictographData, PropPlacementData } from "$domain";
 import { createPropPlacementFromPosition, GridMode } from "$domain";
 import { endsWithBeta } from "$lib/utils/betaDetection";
 
-import type { IGridModeDeriver } from "$contracts/positioning-interfaces";
+import type { IGridModeDeriver } from "$contracts";
 import { injectable } from "inversify";
 import { DefaultPropPositioner } from "../DefaultPropPositioner";
 import { PropRotAngleManager } from "../PropRotAngleManager";

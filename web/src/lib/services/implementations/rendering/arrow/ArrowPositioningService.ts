@@ -6,14 +6,12 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import type { MotionData } from "$domain";
-import { MotionColor } from "$domain";
 import type {
+  IArrowPathResolutionService,
   IArrowPositioningService,
   ISvgColorTransformer,
-} from "$lib/services/contracts/pictograph-interfaces";
-import type { IArrowPathResolutionService } from "$lib/services/contracts/positioning-interfaces";
-import type { ArrowPosition } from "$lib/services/implementations/positioning/types";
+} from "$contracts";
+import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
 import { injectable } from "inversify";
 
 @injectable()
@@ -22,16 +20,32 @@ export class ArrowPositioningService implements IArrowPositioningService {
     private pathResolver: IArrowPathResolutionService,
     private colorTransformer: ISvgColorTransformer
   ) {}
+  calculatePosition(
+    _arrowData: ArrowPlacementData,
+    _motionData: MotionData,
+    _pictographData: PictographData
+  ): Promise<{ x: number; y: number; rotation: number }> {
+    throw new Error("Method not implemented.");
+  }
+  shouldMirror(
+    _arrowData: ArrowPlacementData,
+    _motionData: MotionData,
+    _pictographData: PictographData
+  ): boolean {
+    throw new Error("Method not implemented.");
+  }
 
   /**
    * Render arrow at sophisticated calculated position using real SVG assets
    */
   async renderArrowAtPosition(
     svg: SVGElement,
-    color: MotionColor,
-    position: ArrowPosition,
-    motionData: MotionData | undefined
+    arrowPosition: { x: number; y: number; rotation: number },
+    motionData: MotionData
   ): Promise<void> {
+    // Extract color from motionData (outside try block for error handling)
+    const color = motionData.color || "blue";
+
     try {
       // Get the correct arrow SVG path
       const arrowSvgPath = this.pathResolver.getArrowSvgPath(motionData);
@@ -45,6 +59,7 @@ export class ArrowPositioningService implements IArrowPositioningService {
       const svgContent = await response.text();
 
       // Create arrow group with metadata
+
       const arrowGroup = document.createElementNS(
         "http://www.w3.org/2000/svg",
         "g"
@@ -54,11 +69,17 @@ export class ArrowPositioningService implements IArrowPositioningService {
         `arrow-${color} sophisticated-positioning`
       );
       arrowGroup.setAttribute("data-color", color);
-      arrowGroup.setAttribute("data-position", `${position.x},${position.y}`);
-      arrowGroup.setAttribute("data-rotation", position.rotation.toString());
+      arrowGroup.setAttribute(
+        "data-position",
+        `${arrowPosition.x},${arrowPosition.y}`
+      );
+      arrowGroup.setAttribute(
+        "data-rotation",
+        arrowPosition.rotation.toString()
+      );
 
       // Apply sophisticated position and rotation transform
-      const transform = `translate(${position.x}, ${position.y}) rotate(${position.rotation})`;
+      const transform = `translate(${arrowPosition.x}, ${arrowPosition.y}) rotate(${arrowPosition.rotation})`;
       arrowGroup.setAttribute("transform", transform);
 
       // Parse and insert the SVG content

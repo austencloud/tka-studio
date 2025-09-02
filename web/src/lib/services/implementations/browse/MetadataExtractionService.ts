@@ -5,7 +5,7 @@
  * Provides a clean interface for metadata extraction operations.
  */
 
-import type { IMetadataExtractionService } from "$contracts/browse/IMetadataExtractionService";
+import type { IMetadataExtractionService } from "$contracts";
 import type {
   MetadataAnalysisResult,
   SequenceMetadata,

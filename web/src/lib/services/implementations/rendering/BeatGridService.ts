@@ -8,7 +8,7 @@ import type {
   GridDrawOptions,
   GridValidationResult,
   IBeatGridService,
-} from "$contracts/beat-grid-interfaces";
+} from "$contracts";
 import { GridMode } from "$domain";
 import { injectable } from "inversify";
 
@@ -52,10 +52,11 @@ export class BeatGridService implements IBeatGridService {
     options: GridDrawOptions
   ): void {
     const img = this.getGridImage(gridMode);
+    const size = options.size || 120; // Default size if not provided
 
     ctx.save();
     ctx.globalAlpha = options.opacity || 0.6;
-    ctx.drawImage(img, 0, 0, options.size, options.size);
+    ctx.drawImage(img, 0, 0, size, size);
     ctx.restore();
   }
 

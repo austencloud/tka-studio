@@ -95,6 +95,7 @@ export interface IBrowseStatePersister {
   clearBrowseState(): Promise<void>;
   clearAllState(): Promise<void>;
   isStateValid(state: CompleteBrowseState): boolean;
+  createDefaultBrowseState(): CompleteBrowseState;
 }
 
 @injectable()

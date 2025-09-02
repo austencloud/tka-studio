@@ -74,5 +74,5 @@ export interface ISVGToCanvasConverterService {
 // RE-EXPORT TYPES FOR EXTERNAL USE
 // ============================================================================
 
-// Re-export types that other modules need to import
-export type { RenderQualitySettings, SVGConversionOptions } from "$domain";
+// REMOVED: Domain model re-exports. Import directly from $domain instead.
+// Contracts should only contain service interface definitions.

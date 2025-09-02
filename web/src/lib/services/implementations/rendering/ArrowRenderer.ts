@@ -7,7 +7,14 @@
 
 import type { ISvgConfiguration } from "$contracts/pictograph-interfaces";
 import type { ArrowPlacementData, MotionData } from "$domain";
-import { MotionColor } from "$domain";
+import {
+  createMotionData,
+  Location,
+  MotionColor,
+  MotionType,
+  Orientation,
+  RotationDirection,
+} from "$domain";
 import { inject, injectable } from "inversify";
 
 // Import the microservices
@@ -17,7 +24,7 @@ import type {
   ISvgColorTransformer,
   ISvgLoader,
   ISvgParser,
-} from "$lib/services/contracts/pictograph-interfaces";
+} from "$contracts";
 import type { ArrowPosition } from "$lib/services/implementations/positioning/types";
 import { TYPES } from "../../inversify/types";
 import {
@@ -94,15 +101,29 @@ export class ArrowRenderer implements IArrowRenderer {
    */
   async renderArrowAtPosition(
     svg: SVGElement,
-    color: MotionColor,
+    _color: MotionColor,
     position: ArrowPosition,
     motionData: MotionData | undefined
   ): Promise<void> {
+    // Handle undefined motionData by creating a default one with the provided color
+    const safeMotionData: MotionData =
+      motionData ||
+      createMotionData({
+        color: _color,
+        motionType: MotionType.STATIC,
+        rotationDirection: RotationDirection.NO_ROTATION,
+        startLocation: Location.NORTH,
+        endLocation: Location.NORTH,
+        turns: 0,
+        startOrientation: Orientation.IN,
+        endOrientation: Orientation.IN,
+        isVisible: true,
+      });
+
     return this.positioningService.renderArrowAtPosition(
       svg,
-      color,
       position,
-      motionData
+      safeMotionData
     );
   }
 

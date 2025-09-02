@@ -1,6 +1,6 @@
 /**
  * Letter Mapping Repository Interface
- * 
+ *
  * Contract for letter mapping management and codex configuration.
  * Handles letter mappings, categories, and validation.
  */

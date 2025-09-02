@@ -5,6 +5,7 @@
  * Contains only pure functions with no reactive state.
  */
 
+import type { IBeatFrameService } from "$contracts";
 import type {
   BeatData,
   BeatFrameConfig,
@@ -13,7 +14,6 @@ import type {
   Position,
 } from "$domain";
 import { GridMode } from "$domain";
-import type { IBeatFrameService } from "$lib/services/contracts/beat-frame-interfaces";
 import { injectable } from "inversify";
 
 @injectable()
@@ -75,7 +75,7 @@ export class BeatFrameService implements IBeatFrameService {
   }
 
   calculateStartPosition(
-    beatCount: number,
+    _beatCount: number,
     config?: BeatFrameConfig
   ): Position {
     const effectiveConfig = config ?? this.getDefaultConfig();
@@ -180,7 +180,7 @@ export class BeatFrameService implements IBeatFrameService {
   }
 
   calculateCellSize(
-    beatCount: number,
+    _beatCount: number,
     containerWidth: number,
     containerHeight: number,
     rows: number,

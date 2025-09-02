@@ -9,8 +9,10 @@
 import type { ImageExportOptions } from "$domain";
 
 // Behavioral contracts
-import type { ISequenceCardExportIntegrationService } from "$contracts";
-import type { IPageImageExportService } from "$contracts/export-interfaces";
+import type {
+  IPageImageExportService,
+  ISequenceCardExportIntegrationService,
+} from "$contracts";
 import { injectable } from "inversify";
 import {
   downloadBlobBatch,

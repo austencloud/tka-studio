@@ -16,4 +16,4 @@ export type {
   ISequenceAnimationEngine,
   PropStates,
   SequenceMetadata,
-} from "$lib/services/contracts/animation/ISequenceAnimationEngine";
+} from "./ISequenceAnimationEngine";

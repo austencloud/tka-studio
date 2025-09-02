@@ -5,7 +5,7 @@
  * Extracted from the monolithic TKAImageExportService to focus solely on memory calculations.
  */
 
-import type { IExportMemoryCalculator } from "$contracts/image-export-interfaces";
+import type { IExportMemoryCalculator } from "$contracts";
 import type {
   MemoryEstimate,
   SequenceData,

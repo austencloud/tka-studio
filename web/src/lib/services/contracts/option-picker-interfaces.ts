@@ -97,4 +97,3 @@ export interface IOptionPickerDataService {
    */
   getEndPosition(pictographData: PictographData): string | null;
 }
-

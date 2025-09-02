@@ -13,7 +13,6 @@ import type {
   GridCalculationOptions,
   LayoutCalculationRequest,
   LayoutCalculationResult,
-  LayoutSuggestion,
   LayoutValidationError,
   LayoutValidationResult,
   LayoutValidationWarning,
@@ -31,6 +30,7 @@ import { injectable } from "inversify";
 export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   private readonly paperSizes = {
     A4: { width: 595, height: 842 },
+    A3: { width: 842, height: 1191 },
     Letter: { width: 612, height: 792 },
     Legal: { width: 612, height: 1008 },
     Tabloid: { width: 792, height: 1224 },
@@ -44,9 +44,8 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   };
 
   private readonly dpiConfig: DPIConfiguration = {
-    screenDPI: 96,
-    printDPI: 300,
-    scaleFactor: 96 / 72,
+    screen: 96,
+    print: 300,
   };
 
   calculatePageDimensions(
@@ -55,7 +54,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   ): PageDimensions {
     const dimensions = this.paperSizes[paperSize];
 
-    if (orientation === "Landscape") {
+    if (orientation === "landscape") {
       return {
         width: dimensions.height,
         height: dimensions.width,
@@ -187,7 +186,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   getPageSizeInPixels(
     paperSize: SequenceCardPaperSize,
     orientation: PageOrientation,
-    dpi: number = this.dpiConfig.screenDPI
+    dpi: number = this.dpiConfig.screen
   ): PageDimensions {
     const pointDimensions = this.calculatePageDimensions(
       paperSize,
@@ -255,17 +254,6 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
   validateLayout(config: PageLayoutConfig): LayoutValidationResult {
     const errors: LayoutValidationError[] = [];
     const warnings: LayoutValidationWarning[] = [];
-    const suggestions: LayoutSuggestion[] = [];
-
-    // Validate paper size
-    if (!this.paperSizes[config.printConfiguration.paperSize]) {
-      errors.push({
-        code: "INVALID_PAPER_SIZE",
-        message: `Invalid paper size: ${config.printConfiguration.paperSize}`,
-        field: "paperSize",
-        severity: "error" as const,
-      });
-    }
 
     // Validate margins
     const margins = config.printConfiguration.margins;
@@ -329,9 +317,8 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
 
     return {
       isValid: errors.length === 0,
-      errors,
-      warnings,
-      suggestions,
+      errors: errors.map((e) => e.message),
+      warnings: warnings.map((w) => w.message),
     };
   }
 

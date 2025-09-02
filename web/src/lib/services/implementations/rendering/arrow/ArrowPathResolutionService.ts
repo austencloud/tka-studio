@@ -5,9 +5,8 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import type { MotionData } from "$domain";
-import type { ArrowPlacementData } from "$domain";
-import type { IArrowPathResolutionService } from "$lib/services/contracts/positioning-interfaces";
+import type { IArrowPathResolutionService } from "$contracts";
+import type { ArrowPlacementData, MotionData } from "$domain";
 import { injectable } from "inversify";
 
 @injectable()

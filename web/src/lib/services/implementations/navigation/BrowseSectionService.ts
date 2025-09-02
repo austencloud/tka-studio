@@ -5,7 +5,7 @@
  * following the microservices architecture pattern.
  */
 
-import type { IBrowseSectionService } from "$contracts/browse/IBrowseSectionService";
+import type { IBrowseSectionService } from "$contracts";
 import type {
   SectionConfiguration,
   SequenceData,

@@ -5,13 +5,13 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import type { ArrowPlacementData, ArrowSvgData, MotionData } from "$domain";
 import type {
   IArrowPathResolutionService,
   ISvgColorTransformer,
   ISvgLoader,
   ISvgParser,
-} from "$lib/services/contracts/pictograph-interfaces";
+} from "$contracts";
+import type { ArrowPlacementData, ArrowSvgData, MotionData } from "$domain";
 
 export class SvgLoader implements ISvgLoader {
   constructor(

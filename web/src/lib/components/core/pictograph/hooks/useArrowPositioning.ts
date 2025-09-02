@@ -7,7 +7,7 @@
 
 import type { PictographData } from "$domain";
 // Re-enabled after fixing circular dependency
-import type { IArrowPositioningOrchestrator } from "$lib/services/contracts/positioning-interfaces";
+import type { IArrowPositioningOrchestrator } from "$contracts";
 import { resolve, TYPES } from "$lib/services/inversify/container";
 
 export interface ArrowPositioningProps {

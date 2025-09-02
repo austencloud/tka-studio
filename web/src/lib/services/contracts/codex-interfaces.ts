@@ -12,7 +12,6 @@
  */
 import type { PictographTransformOperation, PictographData } from "$domain";
 
-
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
 // ============================================================================

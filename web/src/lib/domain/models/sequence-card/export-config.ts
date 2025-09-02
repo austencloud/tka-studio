@@ -53,7 +53,6 @@ export interface BatchExportOptions {
 
 import type { ExportResult } from "$domain";
 
-
 // Extended result with additional service-level metadata
 export interface ExportResultWithMetadata extends ExportResult {
   fileName?: string;

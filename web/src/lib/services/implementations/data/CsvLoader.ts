@@ -5,12 +5,42 @@
  * Provides a single source of truth for raw CSV content without parsing logic.
  */
 
-import type { ICsvLoader } from "$contracts/data/ICsvLoader";
-import type { CsvDataSet } from "$domain";
+import type { ICSVLoader } from "$contracts";
+import type { CsvDataSet, GridMode } from "$domain";
 import { injectable } from "inversify";
 
 @injectable()
-export class CsvLoader implements ICsvLoader {
+export class CsvLoader implements ICSVLoader {
+  loadCSVFile(_filename: string): Promise<{
+    success: boolean;
+    data?: string;
+    error?: string;
+    source: "fetch" | "window" | "cache";
+  }> {
+    throw new Error("Method not implemented.");
+  }
+  loadCSVDataSet(): Promise<{
+    success: boolean;
+    data?: { diamondData: string; boxData: string };
+    error?: string;
+    sources: {
+      diamond: "fetch" | "window" | "cache";
+      box: "fetch" | "window" | "cache";
+    };
+  }> {
+    throw new Error("Method not implemented.");
+  }
+  loadCSVForGridMode(_gridMode: GridMode): Promise<{
+    success: boolean;
+    data?: string;
+    error?: string;
+    source: "fetch" | "window" | "cache";
+  }> {
+    throw new Error("Method not implemented.");
+  }
+  isDataCached(): boolean {
+    throw new Error("Method not implemented.");
+  }
   private static readonly CSV_FILES = {
     DIAMOND: "/DiamondPictographDataframe.csv",
     BOX: "/BoxPictographDataframe.csv",
@@ -84,8 +114,6 @@ export class CsvLoader implements ICsvLoader {
     ]);
 
     return {
-      headers: [],
-      rows: [],
       diamondData,
       boxData,
     };

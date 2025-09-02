@@ -13,19 +13,21 @@
  * Basic point interface for coordinates
  */
 import type {
+  ArrowPlacementData,
+  GridData,
   GridMode,
-  MotionType,
   GridPosition,
   Location,
   MotionColor,
-  GridData,
-  Direction,
-  ArrowPlacementData,
   MotionData,
+  MotionType,
   PictographData,
   Point,
   Position,
 } from "$domain";
+
+// Import spatial Direction type from BetaPropDirectionCalculator (not domain Direction enum)
+import type { Direction } from "../implementations/positioning/BetaPropDirectionCalculator";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -76,6 +78,11 @@ export interface IArrowPositioningService {
     motionData: MotionData,
     pictographData: PictographData
   ): boolean;
+  renderArrowAtPosition(
+    svg: SVGElement,
+    arrowPosition: { x: number; y: number; rotation: number },
+    motionData: MotionData
+  ): Promise<void>;
 }
 
 export interface IArrowLocationService {
@@ -388,4 +395,3 @@ export interface IGridModeDeriver {
    */
   computeGridData(blueMotion: MotionData, redMotion: MotionData): GridData;
 }
-

@@ -1,4 +1,4 @@
-  /**
+/**
  * Browse Service Interfaces
  *
  * Interfaces for browsing, filtering, searching, and managing sequences.

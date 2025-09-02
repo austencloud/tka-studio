@@ -225,7 +225,7 @@ try {
   container.bind(TYPES.ILessonRepository).to(LessonRepository);
 
   // Bind data services (dependencies of LetterQueryHandler)
-  container.bind(TYPES.ICsvLoader).to(CsvLoader);
+  container.bind(TYPES.ICSVLoader).to(CsvLoader);
   container.bind(TYPES.ICSVParser).to(CSVParser);
 
   // Bind services
@@ -419,7 +419,9 @@ try {
     .bind(TYPES.IArrowPathResolutionService)
     .to(ArrowPathResolutionService);
   container.bind(TYPES.IPositionMapper).to(PositionMapper);
-  container.bind(TYPES.ICSVPictographParser).to(CSVPictographParserService);
+  container
+    .bind(TYPES.ICSVPictographLoaderService)
+    .to(CSVPictographParserService);
   container.bind(TYPES.ISequenceAnimationEngine).to(SequenceAnimationEngine);
   container
     .bind(TYPES.ISequenceAnimationOrchestrator)

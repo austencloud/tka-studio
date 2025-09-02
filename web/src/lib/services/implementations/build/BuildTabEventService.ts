@@ -12,7 +12,7 @@ import { resolve, TYPES } from "$lib/services/inversify/container";
 
 import type { IConstructTabCoordinator as IConstructSubTabCoordinationService } from "$contracts";
 
-import type { IBuildTabEventService } from "$contracts/build-interfaces";
+import type { IBuildTabEventService } from "$contracts";
 import { injectable } from "inversify";
 
 @injectable()

@@ -6,7 +6,7 @@
  * leaks and improve performance during image export operations.
  */
 
-import type { ICanvasManagementService } from "$contracts/image-export-interfaces";
+import type { ICanvasManagementService } from "$contracts";
 import { injectable } from "inversify";
 
 interface CanvasPoolEntry {

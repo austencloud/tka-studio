@@ -6,7 +6,7 @@
  */
 
 import type { GridMode } from "$domain";
-import { MotionType } from "$domain"; 
+import { MotionType } from "$domain";
 import { injectable } from "inversify";
 import { ArrowPlacementService } from "../ArrowPlacementService";
 

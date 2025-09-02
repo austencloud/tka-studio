@@ -58,6 +58,7 @@ export { IFileExportServiceInterface } from "./image-export-file-interfaces";
 
 // Utility interfaces (configuration, memory, validation)
 export type {
+  ExportValidationResult,
   IExportConfigurationManager,
   IExportMemoryCalculator,
   IExportOptionsValidator,

@@ -8,11 +8,11 @@
  */
 
 import type {
+    IConstructTabCoordinator as IConstructSubTabCoordinationService,
     ISequenceService,
+    IStartPositionService,
     IWorkbenchBeatOperationsService,
 } from "$contracts";
-import type { IConstructTabCoordinator as IConstructSubTabCoordinationService } from "$contracts/application/IConstructTabCoordinator";
-import type { IStartPositionService } from "$contracts/application/IStartPositionService";
 import type { BeatData, SequenceData } from "$domain";
 import { GridMode } from "$domain";
 import { inject, injectable } from "inversify";

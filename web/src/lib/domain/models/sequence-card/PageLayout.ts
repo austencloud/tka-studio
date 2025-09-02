@@ -5,8 +5,6 @@ import type {
 } from "$domain";
 
 // Type alias for backward compatibility
-type PaperSize = SequenceCardPaperSize;
-
 export interface PageDimensions {
   width: number;
   height: number;
@@ -20,7 +18,7 @@ export interface Margins {
 }
 
 export interface PageLayoutConfig {
-  paperSize: PaperSize;
+  paperSize: SequenceCardPaperSize;
   orientation: PageOrientation;
   margins: Margins;
   sequencesPerPage: number;
@@ -55,7 +53,7 @@ export interface GridConfig {
 }
 
 export interface LayoutCalculationRequest {
-  paperSize: PaperSize;
+  paperSize: SequenceCardPaperSize;
   orientation: PageOrientation;
   cardCount: number;
   cardAspectRatio: number;

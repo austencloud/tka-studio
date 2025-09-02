@@ -1,4 +1,9 @@
-import type { FilterType, FilterValue, SortMethod, SequenceData } from "$domain";
+import type {
+  FilterType,
+  FilterValue,
+  SortMethod,
+  SequenceData,
+} from "$domain";
 
 export interface SequenceMetadata {
   word: string;

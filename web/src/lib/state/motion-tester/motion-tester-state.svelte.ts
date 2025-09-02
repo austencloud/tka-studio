@@ -1,4 +1,4 @@
-import type { ISequenceAnimationEngine } from "$lib/services/contracts/animation";
+import type { ISequenceAnimationEngine } from "$contracts";
 import {
   AnimationControlService,
   type AnimationState,

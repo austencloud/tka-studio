@@ -5,17 +5,17 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import type { CSVRow, ICSVPictographParserService } from "$contracts";
+import type {
+  CSVRow,
+  ICSVLoader,
+  ICSVParser,
+  ICSVPictographParserService,
+  IMotionQueryHandler,
+} from "$contracts";
 import type { ParsedCsvRow, PictographData } from "$domain";
 import { GridMode } from "$domain";
-import type {
-  ICsvLoader,
-  ICSVParser,
-  IMotionQueryHandler,
-} from "$lib/services/contracts/data-interfaces";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";
-import type { CSVRow, ICSVPictographParserService } from "$contracts";
 
 @injectable()
 export class MotionQueryHandler implements IMotionQueryHandler {
@@ -26,11 +26,11 @@ export class MotionQueryHandler implements IMotionQueryHandler {
   private isInitialized = false;
 
   constructor(
-    @inject(TYPES.ICsvLoader)
-    private csvLoaderService: ICsvLoader,
+    @inject(TYPES.ICSVLoader)
+    private csvLoaderService: ICSVLoader,
     @inject(TYPES.ICSVParser)
     private CSVParser: ICSVParser,
-    @inject(TYPES.ICSVPictographParser)
+    @inject(TYPES.ICSVPictographLoaderService)
     private csvPictographParser: ICSVPictographParserService
   ) {}
 
@@ -44,13 +44,15 @@ export class MotionQueryHandler implements IMotionQueryHandler {
 
     try {
       // Load raw CSV data
-      const csvData = await this.csvLoaderService.loadCsvData();
+      const csvData = await this.csvLoaderService.loadCSVDataSet();
 
       // Parse CSV data using shared service
       const diamondParseResult = this.CSVParser.parseCSV(
-        csvData.diamondData || ""
+        csvData.data?.diamondData || ""
       );
-      const boxParseResult = this.CSVParser.parseCSV(csvData.boxData || "");
+      const boxParseResult = this.CSVParser.parseCSV(
+        csvData.data?.boxData || ""
+      );
 
       this.parsedData = {
         [GridMode.DIAMOND]: diamondParseResult.rows,

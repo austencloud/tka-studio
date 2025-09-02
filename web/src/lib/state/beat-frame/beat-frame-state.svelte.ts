@@ -5,8 +5,8 @@
  * Follows the established TKA state factory pattern.
  */
 
+import type { IBeatFrameService } from "$contracts";
 import type { BeatData, BeatFrameConfig, ContainerDimensions } from "$domain";
-import type { IBeatFrameService } from "$lib/services/contracts/beat-frame-interfaces";
 
 /**
  * Creates component-scoped beat frame state

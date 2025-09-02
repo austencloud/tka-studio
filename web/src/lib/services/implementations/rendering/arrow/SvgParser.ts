@@ -5,10 +5,8 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import type {
-  ISvgParser,
-  SVGDimensions,
-} from "$lib/services/contracts/pictograph-interfaces";
+import type { ISvgParser } from "$contracts";
+import type { SVGDimensions } from "$domain";
 
 export class SvgParser implements ISvgParser {
   /**

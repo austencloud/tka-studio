@@ -8,6 +8,7 @@
  * REFACTORED: Removed singleton pattern, now uses DI container.
  */
 
+import type { IArrowPositioningOrchestrator } from "$contracts";
 import type { ArrowPlacementData, MotionData, PictographData } from "$domain";
 import {
   GridMode,
@@ -17,7 +18,6 @@ import {
   MotionType,
   Orientation,
 } from "$domain";
-import type { IArrowPositioningOrchestrator } from "$lib/services/contracts/positioning-interfaces";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 

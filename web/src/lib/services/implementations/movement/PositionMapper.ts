@@ -5,7 +5,7 @@
  * A position represents the combination of (blue_hand_location, red_hand_location).
  */
 
-import type { IPositionMapper } from "$contracts/positioning-interfaces";
+import type { IPositionMapper } from "$contracts";
 import { GridPosition, Location } from "$domain";
 import { injectable } from "inversify";
 

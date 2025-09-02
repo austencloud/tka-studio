@@ -15,7 +15,7 @@ import type {
   IImageCompositionService,
   ILayoutCalculationService,
   ITKAImageExportService,
-} from "$contracts/image-export-interfaces";
+} from "$contracts";
 import type { SequenceData, TKAImageExportOptions } from "$domain";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";

@@ -8,7 +8,7 @@
  * Uses the existing file-download utility for consistency with the app.
  */
 
-import type { IFileExportService } from "$contracts/image-export-interfaces";
+import type { IFileExportService } from "$contracts";
 import { injectable } from "inversify";
 
 @injectable()

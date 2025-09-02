@@ -18,7 +18,7 @@ import type {
   ITextRenderingUtils,
   IUserInfoRenderer,
   IWordTextRenderer,
-} from "$contracts/text-rendering-interfaces";
+} from "$contracts";
 
 export class TextOverlayApplicator {
   constructor(

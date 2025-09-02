@@ -7,7 +7,7 @@ import { injectable } from "inversify";
  * Extracted from the monolithic TKAImageExportService to focus solely on configuration concerns.
  */
 
-import type { IExportConfigurationManager } from "$contracts/image-export-interfaces";
+import type { IExportConfigurationManager } from "$contracts";
 import type { TKAImageExportOptions } from "$domain";
 
 @injectable()

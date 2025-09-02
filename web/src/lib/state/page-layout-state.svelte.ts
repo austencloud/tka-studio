@@ -69,7 +69,7 @@ export function createPageLayoutState(
 
   // Layout configuration state
   let paperSize = $state<SequenceCardPaperSize>("A4");
-  let orientation = $state<PageOrientation>("Portrait");
+  let orientation = $state<PageOrientation>("portrait");
   let sequencesPerPage = $state(6);
   let enableOptimization = $state(true);
   let showPageNumbers = $state(true);
@@ -169,7 +169,7 @@ export function createPageLayoutState(
       const validation = pageFactoryService.validatePageOptions(options);
       if (!validation.isValid) {
         throw new Error(
-          `Invalid page options: ${validation.errors.map((e) => e.message).join(", ")}`
+          `Invalid page options: ${validation.errors.join(", ")}`
         );
       }
 
@@ -277,7 +277,7 @@ export function createPageLayoutState(
 
   function resetToDefaults(): void {
     paperSize = "A4";
-    orientation = "Portrait";
+    orientation = "portrait";
     sequencesPerPage = 6;
     enableOptimization = true;
     showPageNumbers = true;

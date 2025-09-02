@@ -1,10 +1,12 @@
 <!-- Main Application Layout -->
 <script lang="ts">
-  import type { IApplicationInitializer } from "$lib/services/contracts/application/IApplicationInitializer";
-  import type { IDeviceDetector } from "$lib/services/contracts/application/IDeviceDetector";
+  import type {
+    IApplicationInitializer,
+    IDeviceDetector,
+    ISequenceService,
+    ISettingsService,
+  } from "$contracts";
   import { resolve, TYPES } from "$lib/services/inversify/container";
-  import type { ISettingsService } from "$services/contracts/application-interfaces";
-  import type { ISequenceService } from "$services/contracts/sequence-interfaces";
   import type { Container } from "inversify";
   import { getContext, onMount } from "svelte";
   // Import app state management

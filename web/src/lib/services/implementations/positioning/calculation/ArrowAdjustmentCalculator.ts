@@ -11,8 +11,6 @@
  * - Better TypeScript organization
  */
 
-import type { MotionData, PictographData } from "$domain";
-import { GridMode, MotionColor } from "$domain";
 import type {
   IArrowAdjustmentCalculator,
   IAttributeKeyGenerator,
@@ -21,10 +19,15 @@ import type {
   ISpecialPlacementOriKeyGenerator,
   ISpecialPlacementService,
   ITurnsTupleKeyGenerator,
+} from "$contracts";
+import type {
   Location,
+  MotionData,
   MotionType as MotionTypeType,
+  PictographData,
   Point,
-} from "$lib/services/contracts/positioning-interfaces";
+} from "$domain";
+import { GridMode, MotionColor } from "$domain";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 import { ArrowPlacementKeyService } from "../ArrowPlacementKeyService";

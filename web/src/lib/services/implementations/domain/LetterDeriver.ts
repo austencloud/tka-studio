@@ -5,10 +5,8 @@
  * This service reverse-engineers the letter from motion parameters.
  */
 
-import type {
-  ILetterDeriver,
-  LetterDerivationResult,
-} from "$contracts/generation-interfaces";
+import type { ILetterDeriver } from "$contracts";
+import type { LetterDerivationResult } from "$domain";
 import {
   GridMode,
   Letter,

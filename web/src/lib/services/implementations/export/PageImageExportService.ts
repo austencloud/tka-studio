@@ -5,7 +5,7 @@
  * Supports PNG, JPEG, and WebP formats with quality and scaling options.
  */
 
-import type { IPageImageExportService } from "$contracts/page-export-interfaces";
+import type { IPageImageExportService } from "$contracts";
 import type {
   BatchExportResult,
   ExportResult,

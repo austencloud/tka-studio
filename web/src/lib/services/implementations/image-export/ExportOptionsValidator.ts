@@ -9,9 +9,10 @@ import type { SequenceData, TKAImageExportOptions } from "$domain";
 import { inject, injectable } from "inversify";
 
 import type {
+  ExportValidationResult,
   IExportMemoryCalculator,
   IExportOptionsValidator,
-} from "$contracts/image-export-utility-interfaces";
+} from "$contracts";
 import { TYPES } from "../../inversify/types";
 
 @injectable()
@@ -32,14 +33,22 @@ export class ExportOptionsValidator implements IExportOptionsValidator {
 
     // Validate sequence
     const sequenceValidation = this.validateSequence(sequence);
-    errors.push(...sequenceValidation.errors);
+    errors.push(
+      ...sequenceValidation.errors.map((e) =>
+        typeof e === "string" ? e : e.message
+      )
+    );
 
     // Validate options
     const optionsValidation = this.validateOptions(options);
-    errors.push(...optionsValidation.errors);
+    errors.push(
+      ...optionsValidation.errors.map((e) =>
+        typeof e === "string" ? e : e.message
+      )
+    );
 
     // Memory estimation validation
-    if (sequenceValidation.valid && optionsValidation.valid) {
+    if (sequenceValidation.isValid && optionsValidation.isValid) {
       if (!this.memoryCalculator.isWithinMemoryLimits(sequence, options)) {
         const memoryEstimate = this.memoryCalculator.estimateMemoryUsage(
           sequence,
@@ -52,8 +61,13 @@ export class ExportOptionsValidator implements IExportOptionsValidator {
     }
 
     return {
-      valid: errors.length === 0,
-      errors,
+      isValid: errors.length === 0,
+      errors: errors.map((msg) => ({
+        message: msg,
+        code: "VALIDATION_ERROR",
+        severity: "error" as const,
+      })),
+      warnings: [],
     };
   }
 
@@ -101,8 +115,13 @@ export class ExportOptionsValidator implements IExportOptionsValidator {
     }
 
     return {
-      valid: errors.length === 0,
-      errors,
+      isValid: errors.length === 0,
+      errors: errors.map((msg) => ({
+        message: msg,
+        code: "VALIDATION_ERROR",
+        severity: "error" as const,
+      })),
+      warnings: [],
     };
   }
 
@@ -114,7 +133,15 @@ export class ExportOptionsValidator implements IExportOptionsValidator {
 
     if (!sequence) {
       errors.push("Sequence data is required");
-      return { valid: false, errors };
+      return {
+        isValid: false,
+        errors: errors.map((msg) => ({
+          message: msg,
+          code: "VALIDATION_ERROR",
+          severity: "error" as const,
+        })),
+        warnings: [],
+      };
     }
 
     if (!sequence.beats) {
@@ -134,8 +161,13 @@ export class ExportOptionsValidator implements IExportOptionsValidator {
     }
 
     return {
-      valid: errors.length === 0,
-      errors,
+      isValid: errors.length === 0,
+      errors: errors.map((msg) => ({
+        message: msg,
+        code: "VALIDATION_ERROR",
+        severity: "error" as const,
+      })),
+      warnings: [],
     };
   }
 }
