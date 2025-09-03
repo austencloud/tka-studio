@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\beat_data.py
+# hypothesis_version: 6.135.26
+
+[1.0, 'BeatData', 'PictographData', 'beat_number', 'blue', 'blue_motion', 'blue_reversal', 'duration', 'glyph_data', 'id', 'is_blank', 'letter', 'metadata', 'red', 'red_motion', 'red_reversal']

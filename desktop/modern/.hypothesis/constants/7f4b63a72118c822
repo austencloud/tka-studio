@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\testing\simple_ui_tester.py
+# hypothesis_version: 6.135.26
+
+['TEST', 'UI Test Sequence', 'alpha', 'author', 'beat', 'blue_attributes', 'end_loc', 'failed_tests', 'letter', 'level', 'motion_type', 'n', 'prop_type', 'r', 'red_attributes', 's', 'staff', 'start_loc', 'static', 'successful_tests', 'tester', 'total_tests', 'word', 'α']

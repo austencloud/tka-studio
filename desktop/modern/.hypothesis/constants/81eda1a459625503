@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\types\__init__.py
+# hypothesis_version: 6.135.9
+
+['Point', 'PointType', 'Rect', 'RectType', 'Size', 'SizeType']

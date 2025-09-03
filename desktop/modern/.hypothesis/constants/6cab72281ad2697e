@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\performance\storage.py
+# hypothesis_version: 6.135.9
+
+[':memory:', 'end_time', 'function_metrics', 'metadata', 'session_id', 'start_time', 'system_metrics']

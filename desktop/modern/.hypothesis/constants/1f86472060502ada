@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\animation\animation_engine.py
+# hypothesis_version: 6.135.26
+
+[0.0, 0.1, 0.25, 0.5, 0.8, 1.0, 'animation.*', 'animation.completed', 'animation.failed', 'animation.frame', 'animation.started', 'animation_type', 'error', 'property', 'value']

@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\letter_condition.py
+# hypothesis_version: 6.135.26
+
+['alpha_ending', 'alpha_starting', 'anti', 'beta_ending', 'beta_starting', 'dash', 'eight_variations', 'four_variations', 'gamma_ending', 'gamma_starting', 'hybrid', 'non_hybrid', 'pro', 'sixteen_variations', 'static', 'type1', 'type1_hybrids', 'type1_non_hybrids', 'type2', 'type3', 'type4', 'type5', 'type6']

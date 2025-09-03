@@ -1,0 +1,4 @@
+# file: c:\Users\Austen\.vscode\extensions\ms-python.debugpy-2025.8.0-win32-x64\bundled\libs\debugpy\_vendored\pydevd\_pydevd_bundle\pydevd_command_line_handling.py
+# hypothesis_version: 6.135.9
+
+['$py.class', '%s', '--%s', '--DEBUG', '--file', '--qt-support', '--qt-support=', '.py', '.pyc', 'access-token', 'auto', 'client', 'client-access-token', 'cmd-line', 'debug-mode', 'file', 'json-dap', 'json-dap-http', 'log-file', 'log-level', 'module', 'multiproc', 'multiprocess', 'none', 'port', 'ppid', 'preimport', 'protocol-http', 'protocol-quoted-line', 'pyqt4', 'pyqt5', 'pyside', 'pyside2', 'qt-support', 'save-asyncio', 'save-signatures', 'save-threading', 'server', 'skip-notify-stdin', 'vm_type']

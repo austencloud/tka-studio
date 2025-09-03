@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\sequence\loader.py
+# hypothesis_version: 6.135.26
+
+['Loaded Sequence', 'PictographData', '_beat_frame_section', 'alpha1', 'beat', 'diamond', 'end_pos', 'error_fallback', 'get_sequence', 'is_placeholder', 'letter', 'sequence_loading', 'source', 'word']

@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\testing\graph_editor_tester.py
+# hypothesis_version: 6.135.26
+
+[0.05, 0.1, 'A', 'C', 'Control is disabled', 'D', 'Move down', 'Move left', 'Move right', 'Move up', 'S', 'Special command C', 'Special command X', 'Special command Z', 'W', 'X', 'Z', 'click_test', 'clicks_performed', 'common_issues', 'control_name', 'controls_tested', 'description', 'expected_behavior', 'failed_test_suites', 'final_state', 'geometry', 'graph_editor_visible', 'guidance_provided', 'has_focus', 'individual_results', 'initial_state', 'key', 'keyboard_shortcuts', 'keyboard_test', 'left_click_test', 'mouse_button', 'orientation_picker', 'right_click_test', 'shortcuts_tested', 'state_changed', 'successful_controls', 'successful_shortcuts', 'test_method', 'timestamp', 'total_test_suites', 'turn_adjustment_left']

@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\testing\component_initializer.py
+# hypothesis_version: 6.135.26
+
+[600, 800, 'add_beat', 'add_beat_button', 'add_to_dictionary', 'clone_beat', 'clone_beat_button', 'delete_beat', 'delete_beat_button', 'export_image', 'export_image_button', 'fullscreen', 'fullscreen_button', 'generate_beat', 'generate_beat_button', 'grid_mode_selector', 'mirror_beat', 'mirror_beat_button', 'orientation_picker', 'reset_beat', 'reset_beat_button', 'rotate_beat', 'rotate_beat_button', 'settings', 'settings_button', 'turn_adjustment_left']

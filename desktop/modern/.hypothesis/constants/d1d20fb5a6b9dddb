@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\positioning\arrows\calculation\orientation_calculator.py
+# hypothesis_version: 6.135.9
+
+[0.5, 1.5, 2.5, 'ccw_handpath', 'clock', 'clockwise', 'counter', 'counter_clockwise', 'cw_handpath', 'dash', 'fl', 'in', 'out', 'static']

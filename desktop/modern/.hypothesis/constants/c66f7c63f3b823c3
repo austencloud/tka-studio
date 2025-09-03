@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\graph_editor\graph_editor_state_manager.py
+# hypothesis_version: 6.135.26
+
+['beat_count', 'has_sequence', 'selected_arrow', 'selected_beat_index', 'selected_beat_letter', 'sequence_name']

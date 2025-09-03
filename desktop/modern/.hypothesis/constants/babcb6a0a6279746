@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\layout\layout_manager.py
+# hypothesis_version: 6.135.26
+
+[0.1, 200, 900, 1400, 'default_padding', 'default_spacing', 'dictionary_browser', 'max_beat_size', 'min_beat_size', 'mobile_view', 'sequence_editor']

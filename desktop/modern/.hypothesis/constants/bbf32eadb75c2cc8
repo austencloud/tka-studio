@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\data\data_service.py
+# hypothesis_version: 6.135.26
+
+['box', 'box_exists', 'box_path', 'box_size_bytes', 'data_dir', 'data_dir_exists', 'diamond', 'diamond_exists', 'diamond_path', 'diamond_size_bytes']

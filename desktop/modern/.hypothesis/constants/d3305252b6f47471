@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\window_discovery_service.py
+# hypothesis_version: 6.135.26
+
+[0.8, 100, 600, 800, 1200, 'MainWindow', 'class_name', 'current_size', 'discovered_window', 'error', 'exists', 'hidden', 'is_fallback_size', 'menuBar', 'registered_window', 'same_as_registered', 'size', 'validation_passed']

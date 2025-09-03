@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\testing\ui_test_runner.py
+# hypothesis_version: 6.135.26
+
+['buttons', 'graph_editor', 'headless', 'quick', 'verbose']

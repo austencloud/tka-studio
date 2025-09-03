@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\performance\profiler.py
+# hypothesis_version: 6.135.9
+
+[0.0, 'P', 'T', '_profiling_enabled', 'config', 'inf', 'memory_threshold', 'overhead_threshold', 'platform', 'process_id', 'python_version']

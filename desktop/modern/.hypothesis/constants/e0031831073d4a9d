@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\prop_data.py
+# hypothesis_version: 6.135.26
+
+[0.0, 'PropData', 'blue', 'color', 'cw', 'id', 'in', 'is_selected', 'is_visible', 'location', 'orientation', 'position_x', 'position_y', 'prop_type', 'rotation_direction', 'staff', 'value']

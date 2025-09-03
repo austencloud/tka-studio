@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\events\domain_events.py
+# hypothesis_version: 6.135.9
+
+['arrow.positioned', 'command.executed', 'command.redone', 'command.undone', 'motion.validated', 'sequence.beat_added', 'sequence.created']

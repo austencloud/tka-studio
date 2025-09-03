@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\pictograph_pool_manager.py
+# hypothesis_version: 6.135.26
+
+[100, 1000, 'checked_out', 'pool_size', 'scene', 'total_capacity', 'utilization_percent']

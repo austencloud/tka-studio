@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\infrastructure\test_doubles\mock_services.py
+# hypothesis_version: 6.135.26
+
+[0.0, 1.0, 100.0, 150, 200, 480, 1080, 1440, 1920, '2024-01-01T00:00:00', 'active_tab', 'arrows', 'auto_save', 'beat_frame', 'beats', 'component_1', 'component_2', 'component_3', 'created_at', 'current_sequence_id', 'default', 'diamond', 'frame_size', 'grid_mode', 'grid_size', 'id', 'layout_ratio', 'length', 'name', 'pictograph', 'positions', 'selected_beat_index', 'sequence_builder', 'spacing', 'theme', 'total_frames', 'window_height', 'window_width']

@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\application\services\analysis\import_standardization_service.py
+# hypothesis_version: 6.135.9
+
+[0.0, 20.0, 25.0, 'Invalid file path', '^from \\.\\.\\.\\.+', '^from modern\\.', '^from modern\\.src\\.', '^from src\\.', 'actual', 'changes', 'changes_count', 'dry_run', 'error', 'errors', 'expected', 'file_path', 'files_fixed', 'from ', 'from ...', 'has_changes', 'issues', 'line_number', 'modified', 'original', 'passed', 'preview_lines', 'test_results', 'total_fixes', 'valid']

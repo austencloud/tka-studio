@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\motion_models.py
+# hypothesis_version: 6.135.26
+
+[0.0, 180, 270, 'MotionData', 'anti', 'ccw', 'clock', 'counter', 'cw', 'dash', 'e', 'end_loc', 'end_ori', 'float', 'in', 'motion_type', 'n', 'ne', 'no_rot', 'no_rotation', 'nw', 'out', 'pro', 'prop_rot_dir', 's', 'se', 'start_loc', 'start_ori', 'static', 'sw', 'turns', 'value', 'w']

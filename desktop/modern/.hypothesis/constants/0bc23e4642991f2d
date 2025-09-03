@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\letter_type_classifier.py
+# hypothesis_version: 6.135.26
+
+['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'Type 1', 'Type 2', 'Type 3', 'Type 4', 'Type 5', 'Type 6', 'Type ?', 'Type1', 'Type2', 'Type3', 'Type4', 'Type5', 'Type6', 'U', 'Unknown', 'V', 'W', 'W-', 'X', 'X-', 'Y', 'Y-', 'Z', 'Z-', 'Γ', 'Δ', 'Δ-', 'Λ', 'Λ-', 'Σ', 'Σ-', 'Φ', 'Φ-', 'Ψ', 'Ψ-', 'Ω', 'Ω-', 'α', 'β', 'θ', 'θ-']

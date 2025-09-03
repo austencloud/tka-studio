@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\presentation\components\workbench\workbench.py
+# hypothesis_version: 6.135.26
+
+[2000, 3000, 'BeatSelectionService', 'PictographData', '_beat_frame', '_beat_frame_section', '_restoring_sequence', '_start_position_view', 'add_to_dictionary', 'clear_sequence', 'copy_json', 'delete_beat', 'mirror_sequence', 'refresh_display', 'rotate_sequence', 'save_image', 'sequence_data', 'start_position', 'start_position_data', 'swap_colors', 'update_beat_at_index', 'view_fullscreen']

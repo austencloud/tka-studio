@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\state\option_picker_state_manager.py
+# hypothesis_version: 6.135.26
+
+['all_filters', 'filter_key', 'filter_removed', 'filters', 'filters_cleared', 'filters_updated', 'option_picker', 'previous_filters', 'previous_selection', 'previous_value', 'selection', 'selection_changed', 'state_reset']

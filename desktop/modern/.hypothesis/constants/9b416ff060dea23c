@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\grid_data.py
+# hypothesis_version: 6.135.26
+
+[0.0, 100.0, 'GridData', 'center_x', 'center_y', 'diamond', 'grid_mode', 'grid_points', 'radius']

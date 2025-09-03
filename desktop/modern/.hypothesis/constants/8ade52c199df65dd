@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\arrow_item_pool_manager.py
+# hypothesis_version: 6.135.26
+
+[1.0, 1000, 'arrow_color', 'blue', 'blue_active', 'blue_available', 'cleanup', 'initialized', 'red', 'red_active', 'red_available', 'setSharedRenderer', 'time', 'total_active', 'total_available', 'unknown']

@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\layout\layout_types.py
+# hypothesis_version: 6.135.26
+
+[100, 300, 'fit_both', 'fit_height', 'fit_width', 'fixed', 'flow', 'grid', 'horizontal_scroll', 'maintain_aspect', 'no_scaling', 'vertical_scroll']

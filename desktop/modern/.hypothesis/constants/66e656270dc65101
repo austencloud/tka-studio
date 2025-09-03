@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\motion\orientation_calculator.py
+# hypothesis_version: 6.135.26
+
+[0.5, 1.5, 2.5, 180, 270, 'special_cases']

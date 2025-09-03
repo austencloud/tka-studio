@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\core\application\application_factory.py
+# hypothesis_version: 6.135.9
+
+['--headless', '--record', '--test', 'headless', 'production', 'recording', 'test']

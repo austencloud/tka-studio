@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\glyph_models.py
+# hypothesis_version: 6.135.26
+
+['GlyphData', '__origin__', 'elemental_type', 'end_position', 'has_dash', 'letter_type', 'show_elemental', 'show_positions', 'show_tka', 'show_vtg', 'start_position', 'turns_data', 'vtg_mode']

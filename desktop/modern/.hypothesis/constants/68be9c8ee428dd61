@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\api\exceptions.py
+# hypothesis_version: 6.135.9
+
+[400, 404, 422, 500, 503, 'CONVERSION_ERROR', 'OPERATION_ERROR', 'RESOURCE_NOT_FOUND', 'SERVICE_UNAVAILABLE', 'TKA_ERROR', 'VALIDATION_ERROR', 'details', 'error', 'error_code', 'path', 'status_code']

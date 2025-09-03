@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\option_picker\option_picker_size_calculator.py
+# hypothesis_version: 6.135.26
+
+[0.015, 100, 300, 400, 10000, 'border_ratio_percent', 'border_width', 'columns', 'component_size', 'default_columns', 'default_spacing', 'empty_cells', 'error', 'fallback', 'frame_size', 'grouped', 'individual', 'item_count', 'min_frame_size', 'padding', 'rows', 'section_type', 'total_cells', 'width']

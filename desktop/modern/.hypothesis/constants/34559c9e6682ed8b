@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\config\data_config.py
+# hypothesis_version: 6.135.26
+
+['TKA', 'TKA_DATA_DIR', 'box_exists', 'box_path', 'data', 'data_dir', 'diamond_exists', 'diamond_path']

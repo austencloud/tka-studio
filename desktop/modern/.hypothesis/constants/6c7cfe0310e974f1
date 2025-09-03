@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\assets\asset_manager.py
+# hypothesis_version: 6.135.26
+
+[100, 128, '#2E3192', '#ED1C24', '(fill:\\s*)([^;]*)(;)', '(fill=")([^"]*)(")', 'arrows/float.svg', 'blue', 'cache_clear', 'cache_info', 'height="([^"]*)"', 'hits', 'misses', 'not found', 'props/staff.svg', 'r', 'red', 'staff', 'total_files_cached', 'utf-8', 'viewBox="([^"]*)"', 'width="([^"]*)"']

@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\registrars\sequence_service_registrar.py
+# hypothesis_version: 6.135.26
+
+['BeatFactory', 'DIContainer', 'Sequence Services', 'SequenceLoader', 'SequencePersister', 'SequenceRepository', 'SequenceValidator']

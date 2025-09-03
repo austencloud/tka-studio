@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\application\services\data\pictograph_dataset_service.py
+# hypothesis_version: 6.135.9
+
+[0.0, 1.0, '_', 'alpha1_alpha1', 'alpha2_alpha2', 'anti', 'beta4_beta4', 'beta5_beta5', 'blue_end_loc', 'blue_motion_type', 'blue_prop_rot_dir', 'blue_start_loc', 'box_entries', 'box_exists', 'box_loaded', 'ccw', 'cw', 'dash', 'diamond', 'diamond_entries', 'diamond_exists', 'diamond_loaded', 'e', 'end_pos', 'gamma11_gamma11', 'gamma12_gamma12', 'in', 'letter', 'n', 'ne', 'no_rot', 'nw', 'out', 'pro', 'red_end_loc', 'red_motion_type', 'red_prop_rot_dir', 'red_start_loc', 's', 'se', 'start_pos', 'static', 'sw', 'total_entries', 'w']

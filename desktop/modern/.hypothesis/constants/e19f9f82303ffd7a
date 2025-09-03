@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\sequence\sequence_generator.py
+# hypothesis_version: 6.135.26
+
+['auto_complete', 'circular', 'continuous', 'freeform', 'mirror']

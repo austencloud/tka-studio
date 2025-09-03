@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\pictograph_data.py
+# hypothesis_version: 6.135.26
+
+['PictographData', 'arrows', 'blue', 'end_position', 'grid_data', 'id', 'is_blank', 'is_mirrored', 'letter', 'metadata', 'props', 'red', 'start_position']

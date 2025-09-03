@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\workbench\workbench_session_manager.py
+# hypothesis_version: 6.135.26
+
+['completed', 'current_phase', 'error_count', 'errors', 'event_bus_available', 'failed', 'finalizing', 'has_pending_data', 'is_in_progress', 'not_started', 'original_event_data', 'preparing', 'restoring_sequence', 'sequence_data', 'start_position', 'start_position_data', 'state_data']

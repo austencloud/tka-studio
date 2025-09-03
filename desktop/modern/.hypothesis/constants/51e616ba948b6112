@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\data\legacy_to_modern_converter.py
+# hypothesis_version: 6.135.26
+
+[1.0, 'PictographData', 'blue', 'blue_attributes', 'duration', 'end_loc', 'end_ori', 'end_pos', 'legacy_conversion', 'letter', 'motion_type', 'prop_rot_dir', 'red', 'red_attributes', 'source', 'start_loc', 'start_ori', 'start_pos', 'turns']

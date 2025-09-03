@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\service_registration_manager.py
+# hypothesis_version: 6.135.26
+
+['DIContainer', 'Services configured', '_', 'arrow_positioning', 'availability', 'availability_summary', 'available_count', 'available_services', 'coordinator_status', 'critical_registrars', 'event_system', 'is_critical', 'missing_services', 'optional_registrars', 'position_matching', 'prop_management', 'prop_orchestration', 'registrar_count', 'registrars', 'service_count', 'services', 'services_registered', 'total_services']

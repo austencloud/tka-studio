@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\state\hotkey_registry.py
+# hypothesis_version: 6.135.26
+
+['__name__', 'cleared', 'error', 'executed', 'hotkey', 'hotkey_registry', 'key_combination', 'registered', 'unregistered']

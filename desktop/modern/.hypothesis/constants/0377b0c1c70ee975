@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\core\dependency_injection\debugging_tools.py
+# hypothesis_version: 6.135.9
+
+[-1000, 100, 1000, 'Performance Metrics:', 'Potential Issues:', '__args__', '__module__', '__origin__', '_empty', 'builtins', 'count', 'dependency_count', 'dependency_counts', 'failed_resolutions', 'instance_services', 'max_resolution_time', 'message', 'min_resolution_time', 'orphaned_services', 'potentially_unused', 'resolution_time', 'self', 'service', 'service_type', 'services_by_module', 'singleton_services', 'success', 'success_rate', 'timestamp', 'total_resolutions', 'total_services', 'transient_services', 'type', 'unknown']

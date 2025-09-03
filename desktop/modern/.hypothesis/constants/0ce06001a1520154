@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\__init__.py
+# hypothesis_version: 6.135.9
+
+['__all__', 'domain.models']

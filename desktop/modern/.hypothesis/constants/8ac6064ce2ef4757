@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\sequence\sequence_transformer.py
+# hypothesis_version: 6.135.26
+
+[180, 270, 'color_swap', 'horizontal_flip', 'reverse_sequence', 'rotation_180', 'rotation_270', 'rotation_90', 'vertical_flip', 'vertical_reflection']

@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\storage\file_based_sequence_data_service.py
+# hypothesis_version: 6.135.9
+
+['*.json', '.tmp', '_', 'beats', 'created_at', 'data/sequences', 'id', 'last_modified', 'length', 'name', 'r', 'seq_*.json', 'utf-8', 'w']

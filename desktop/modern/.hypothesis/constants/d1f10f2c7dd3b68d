@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\arrow_data.py
+# hypothesis_version: 6.135.26
+
+[0.0, 'ArrowData', 'arrow_type', 'blue', 'color', 'id', 'is_mirrored', 'is_selected', 'is_visible', 'location', 'position_x', 'position_y', 'rotation_angle', 'turns', 'value']

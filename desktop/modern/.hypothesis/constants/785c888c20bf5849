@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\api\routers\arrows.py
+# hypothesis_version: 6.135.9
+
+[0.0, 100.0, 400, 500, '/api', '/arrows/check-mirror', 'Arrows', 'alpha', 'blue', 'blue_motion', 'color', 'diamond', 'grid_mode', 'horizontal', 'is_mirrored', 'location', 'mirror_type', 'motion_data', 'red_motion', 'rotation', 'start_loc', 'x', 'y']

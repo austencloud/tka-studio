@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\infrastructure\file_system\file_system_service.py
+# hypothesis_version: 6.135.26
+
+[500, '*.py', '.py', '.pyc', '.pyd', '.pyo', 'File does not exist', '__init__.py', '__pycache__', '_test.py', 'error', 'extension', 'is_readable', 'modified_time', 'name', 'parent', 'r', 'size_bytes', 'test_', 'utf-8', 'w']

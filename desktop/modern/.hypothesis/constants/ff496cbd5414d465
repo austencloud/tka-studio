@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\layout\ui_layout_provider.py
+# hypothesis_version: 6.135.9
+
+[0.15, 0.8, 0.85, 0.9, 100, 120, 'beat_frame', 'button_panel', 'option_picker', 'pictograph']

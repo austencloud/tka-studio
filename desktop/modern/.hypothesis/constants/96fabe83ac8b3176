@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\generation_models.py
+# hypothesis_version: 6.135.9
+
+[0.5, 1.0, 3.0, 'CAPType', 'GenerationConfig', 'GenerationMetadata', 'GenerationMode', 'GenerationState', 'LetterType', 'PropContinuity', 'SliceSize', 'Type1', 'Type2', 'Type3', 'Type4', 'Type5', 'Type6', 'cap_type', 'circular', 'continuous', 'freeform', 'halved', 'letter_types', 'mode', 'prop_continuity', 'quartered', 'random', 'slice_size', 'strict_rotated', 'validation_errors', 'warnings']

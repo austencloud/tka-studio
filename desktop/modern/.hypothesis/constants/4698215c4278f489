@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\application\services\core\sequence_management_service.py
+# hypothesis_version: 6.135.9
+
+[1.0, 180, 270, 'Circular Sequence', 'Continuous Sequence', 'Freeform Sequence', 'Mirror Sequence', 'No active sequence', 'add_beat', 'auto_complete', 'beat_addition', 'beat_number', 'beat_removal', 'beats', 'calculate_difficulty', 'circular', 'color_swap', 'continuous', 'create_sequence', 'created_by', 'delete_sequence', 'freeform', 'generate_sequence', 'get_sequence_by_id', 'horizontal_flip', 'max_length', 'min_length', 'mirror', 'name', 'position', 'remove_beat', 'required_fields', 'reverse_sequence', 'rotation_180', 'rotation_270', 'rotation_90', 'save_sequence', 'sequence_creation', 'sequence_deletion', 'sequence_generation', 'sequence_retrieval', 'sequence_save', 'sequence_update', 'update_sequence', 'vertical_flip', 'vertical_reflection', 'workbench_operation']

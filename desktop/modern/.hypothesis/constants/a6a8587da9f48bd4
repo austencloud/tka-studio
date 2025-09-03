@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\presentation\components\option_picker\types\letter_types.py
+# hypothesis_version: 6.135.26
+
+['A', 'B', 'C', 'Cross-Shift', 'D', 'Dash', 'Dual-Dash', 'Dual-Shift', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'Shift', 'Static', 'T', 'Type ?', 'Type1', 'Type2', 'Type3', 'Type4', 'Type5', 'Type6', 'U', 'Unknown', 'V', 'W', 'W-', 'X', 'X-', 'Y', 'Y-', 'Z', 'Z-', 'Γ', 'Δ', 'Δ-', 'Λ', 'Λ-', 'Σ', 'Σ-', 'Φ', 'Φ-', 'Ψ', 'Ψ-', 'Ω', 'Ω-', 'α', 'β', 'θ', 'θ-']

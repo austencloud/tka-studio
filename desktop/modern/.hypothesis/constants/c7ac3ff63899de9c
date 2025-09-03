@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\option_picker\frame_pool_service.py
+# hypothesis_version: 6.135.26
+
+['Frame pool is empty', 'available_frames', 'clear_pictograph', 'initialized', 'option_selected', 'total_checkins', 'total_checkouts', 'total_frames', 'visible_frames']

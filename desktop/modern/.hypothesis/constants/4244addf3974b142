@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\sequence\sequence_state_tracker.py
+# hypothesis_version: 6.135.26
+
+['AddBeatCommand', 'ClearSequenceCommand', 'RemoveBeatCommand', 'command.executed', 'command.redone', 'command.undone', 'result', '🗑️ All state cleared']

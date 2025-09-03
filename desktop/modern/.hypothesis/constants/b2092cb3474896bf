@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\state\tab_state_manager.py
+# hypothesis_version: 6.135.26
+
+['active_tab', 'changed', 'new_tab', 'previous_tab', 'sequence_builder', 'state', 'state_cleared', 'state_updated', 'states_reset', 'tab', 'tab_name', 'tab_state_manager', 'tab_states']

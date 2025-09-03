@@ -1,0 +1,82 @@
+{
+    "id": "b624d941-f74a-40d8-8795-cf5a411c4d3d",
+    "name": "New Sequence",
+    "word": "",
+    "beats": [
+        {
+            "id": "97d5c9ef-da78-4591-9edc-1bc27eeb2496",
+            "beat_number": 1,
+            "duration": 1.0,
+            "blue_reversal": false,
+            "red_reversal": false,
+            "is_blank": false,
+            "metadata": {
+                "start_position": "alpha1",
+                "end_position": "gamma7",
+                "created_from_pictograph": true,
+                "pictograph_source": "position_matching_service",
+                "pictograph_original_data": {
+                    "letter": "Σ",
+                    "start_pos": "alpha1",
+                    "end_pos": "gamma7",
+                    "blue_attributes": {
+                        "motion_type": "static",
+                        "prop_rot_dir": "no_rot",
+                        "start_loc": "s",
+                        "end_loc": "s",
+                        "start_ori": "in",
+                        "end_ori": "in"
+                    },
+                    "red_attributes": {
+                        "motion_type": "pro",
+                        "prop_rot_dir": "ccw",
+                        "start_loc": "n",
+                        "end_loc": "w",
+                        "start_ori": "out",
+                        "end_ori": "out"
+                    }
+                }
+            },
+            "pictograph_data": {
+                "id": "49dcfdf3-96f4-4b0a-be1c-f2585d3296d0",
+                "grid_data": {
+                    "grid_mode": "diamond",
+                    "center_x": 0.0,
+                    "center_y": 0.0,
+                    "radius": 100.0,
+                    "grid_points": {}
+                },
+                "arrows": {
+                    "blue": {
+                        "id": "0942068c-a1fa-4e5e-8bf0-03e5c0b3401f",
+                        "arrow_type": "blue",
+                        "color": "blue",
+                        "turns": 0.0,
+                        "is_mirrored": false,
+                        "location": null,
+                        "position_x": 0.0,
+                        "position_y": 0.0,
+                        "rotation_angle": 0.0,
+                        "is_visible": true,
+                        "is_selected": false
+                    },
+                    "red": {
+                        "id": "259e387f-11bb-4e9a-8ee4-83fe88c91d0c",
+                        "arrow_type": "blue",
+                        "color": "red",
+                        "turns": 0.0,
+                        "is_mirrored": false,
+                        "location": null,
+                        "position_x": 0.0,
+                        "position_y": 0.0,
+                        "rotation_angle": 0.0,
+                        "is_visible": true,
+                        "is_selected": false
+                    }
+                },
+                "props": {
+                    "blue": {
+                        "id": "3bc21e83-8ee3-487e-953d-6db5a7852cf0",
+                        "prop_type": "staff",
+                        "color": "blue",
+                        "orientation": 

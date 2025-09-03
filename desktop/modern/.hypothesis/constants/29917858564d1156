@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\performance\memory_tracker.py
+# hypothesis_version: 6.135.9
+
+[0.0, 100, 200, 1000, 1024, 10000, 25000, 50000, 100000, 'High memory usage', 'High object count', '_cached_process', '_creation_stats', 'available_mb', 'avg_gc_objects', 'avg_rss_mb', 'count_increase', 'current', 'duration_seconds', 'error', 'gc_collected', 'gc_objects', 'general', 'high', 'is_active', 'issue', 'leaks', 'low', 'max_gc_objects', 'max_rss_mb', 'medium', 'memory_leak', 'memory_usage', 'min_gc_objects', 'min_rss_mb', 'object_type', 'objects_after', 'objects_before', 'objects_collected', 'percent', 'priority', 'python_objects', 'recommendation', 'recommendations', 'rss_mb', 'severity', 'snapshot_count', 'statistics', 'tracking', 'tracking_duration', 'type', 'vms_mb']

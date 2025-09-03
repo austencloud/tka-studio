@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\registrars\core_service_registrar.py
+# hypothesis_version: 6.135.26
+
+['Core Services', 'DIContainer', 'LayoutManager', 'UICoordinator']

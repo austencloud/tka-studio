@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\performance\api.py
+# hypothesis_version: 6.135.9
+
+[100, 400, 404, 500, '/api/performance', '/cleanup', '/metrics/live', '/sessions', '/sessions/start', '/status', '/summary', 'Session not found', 'active_sessions', 'avg_time', 'call_count', 'deleted_records', 'efficiency_score', 'end_time', 'event_metrics', 'function', 'function_count', 'function_metrics', 'function_name', 'get_memory_summary', 'history', 'is_profiling', 'is_tracking', 'memory_mb', 'memory_usage', 'metadata', 'not_found', 'performance', 'profiling_active', 'qt_events', 'qt_performance', 'qt_profiling_active', 'recommendations', 'saved', 'session_id', 'start_time', 'started', 'status', 'stopped', 'system_metrics', 'timestamp', 'top_bottlenecks', 'total_functions', 'total_time']

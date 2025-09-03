@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\data\dataset_manager.py
+# hypothesis_version: 6.135.26
+
+['categories', 'category_counts', 'letter', 'max_results', 'motion_type', 'start_position', 'total_categories', 'total_pictographs', 'user_created']

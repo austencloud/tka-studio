@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\sequence\sequence_manager.py
+# hypothesis_version: 6.135.26
+
+[1.0, '0123456789', '?', 'Loaded Sequence', 'Type1', 'alpha', 'alpha1', 'beat', 'beta', 'blue', 'blue_attributes', 'direction', 'duration', 'end_loc', 'end_ori', 'end_pos', 'gamma', 'get_sequence', 'in', 'is_placeholder', 'is_start_position', 'letter', 'letter_type', 'loaded_sequence', 'motion_type', 'no_rot', 'none', 'opp', 'original_beat_number', 'prop_rot_dir', 'red', 'red_attributes', 's', 'same', 'set_start_position', 'start_loc', 'start_ori', 'start_pos', 'static', 'timing', 'tog', 'turns', 'word', 'α']

@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\api\routers\sequences.py
+# hypothesis_version: 6.135.9
+
+[1.0, 200, 400, 404, 500, '/api', '/sequences', '/sequences/current', 'Create New Sequence', 'E', 'EXAMPLE', 'Get Sequence by ID', 'My Sequence', 'Sequences', 'Update Sequence', 'alpha', 'api_create_sequence', 'api_get_sequence', 'api_update_sequence', 'application/json', 'beat_001', 'beat_number', 'beats', 'beta', 'blue_motion', 'blue_reversal', 'content', 'created_at', 'cw', 'description', 'duration', 'end_loc', 'end_ori', 'error', 'example', 'id', 'in', 'is_blank', 'letter', 'metadata', 'modified_at', 'motion_type', 'name', 'out', 'pro', 'prop_rot_dir', 'red_motion', 'red_reversal', 'seq_123456', 'start_loc', 'start_ori', 'start_position', 'status_code', 'turns', 'word']

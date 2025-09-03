@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\interfaces\generation_services.py
+# hypothesis_version: 6.135.9
+
+['Type1', 'Type2', 'Type3', 'Type4', 'Type5', 'Type6', 'circular', 'continuous', 'freeform', 'halved', 'mirrored_rotated', 'mirrored_swapped', 'quartered', 'random', 'rotated_swapped', 'strict_complementary', 'strict_mirrored', 'strict_rotated', 'strict_swapped']

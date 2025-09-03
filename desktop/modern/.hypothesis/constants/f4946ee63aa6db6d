@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\layout\responsive_scaling_calculator.py
+# hypothesis_version: 6.135.26
+
+[0.1, 0.2, 0.3, 0.4, 0.5, 0.8, 1.0, 1.2, 1.5, 1.8, 2.0, 3.0, 100, 120, 200, 250, 300, 800, 1200, 'beat_frame', 'dictionary_browser', 'extra_high', 'high', 'low', 'max_scale', 'min_scale', 'normal', 'pictograph_viewer', 'preferred_scale', 'sequence_editor']

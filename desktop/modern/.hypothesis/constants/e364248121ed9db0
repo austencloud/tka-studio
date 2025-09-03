@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\window_management_service.py
+# hypothesis_version: 6.135.26
+
+[0.9, 100, 900, 1400, ',', 'No screens detected', 'available_geometry', 'error', 'geometry', 'height', 'index', 'is_primary', 'left', 'multi_monitor', 'name', 'primary', 'primary_screen', 'right', 'screen_count', 'screens', 'secondary', 'valid', 'width', 'x', 'y']

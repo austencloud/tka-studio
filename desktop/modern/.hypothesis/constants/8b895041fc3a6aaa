@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\types\result.py
+# hypothesis_version: 6.135.9
+
+[', ', 'E', 'T', 'config_error', 'configuration_error', 'data_error', 'file_system_error', 'initialization_error', 'network_error', 'performance_error', 'positioning_error', 'profiling_error', 'shutdown_error', 'storage_error', 'validation_error']

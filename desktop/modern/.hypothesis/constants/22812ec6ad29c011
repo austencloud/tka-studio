@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\session_restoration_coordinator.py
+# hypothesis_version: 6.135.26
+
+['active_tab', 'selected_beat_index', 'sequence_data', 'sequence_id', 'sequence_restored', 'session_restoration', 'start_position_data', 'tab_restored']

@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\positioning_models.py
+# hypothesis_version: 6.135.9
+
+['ArrowPositionResult', 'PropPositionResult', 'location', 'rotation', 'separation_applied', 'x', 'y']

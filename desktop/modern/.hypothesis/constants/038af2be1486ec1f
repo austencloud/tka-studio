@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\application\services\analysis\component_hierarchy_analysis_service.py
+# hypothesis_version: 6.135.9
+
+[0.0, 100.0, 'Analysis failed', '__', 'build', 'business_logic', 'calculate', 'check', 'class_count', 'complexity_score', 'component_path', 'components', 'computation', 'compute', 'create', 'data_loading', 'data_persistence', 'draw', 'error', 'event_handling', 'fetch', 'get', 'handle', 'hierarchy_depth', 'issues', 'load', 'make', 'method_count', 'needs_refactoring', 'object_creation', 'on_', 'option_picker', 'paint', 'persist', 'presentation', 'process', 'recommendations', 'refresh', 'render', 'rendering', 'responsibilities', 'save', 'sequence_widget', 'src', 'state_management', 'store', 'sync', 'top_recommendations', 'update', 'valid', 'validate', 'validation', 'verify', 'workbench']

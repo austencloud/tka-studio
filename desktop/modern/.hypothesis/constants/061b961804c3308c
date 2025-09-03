@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\data\csv_data_service.py
+# hypothesis_version: 6.135.9
+
+['A', 'B', 'C', 'alpha1_alpha1', 'alpha2_alpha2', 'anti', 'beat_number', 'beta4_beta4', 'beta5_beta5', 'blue_end_loc', 'blue_motion_type', 'blue_prop_rot_dir', 'blue_start_loc', 'ccw', 'cw', 'dash', 'data', 'diamond', 'e', 'float', 'gamma11_gamma11', 'gamma12_gamma12', 'letter', 'n', 'ne', 'no_rot', 'nw', 'pro', 'red_end_loc', 'red_motion_type', 'red_prop_rot_dir', 'red_start_loc', 's', 'se', 'static', 'sw', 'w']

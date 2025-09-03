@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\presentation\components\sequence_workbench\sequence_beat_frame\sequence_beat_frame.py
+# hypothesis_version: 6.135.26
+
+['BeatSelectionService', 'IEventBus', 'PictographData', 'beat_frame', 'columns', 'layout_data', 'layout_type', 'rows', 'sequence.beat_added', 'sequence.created', 'sequence_id']

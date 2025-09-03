@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\object_pool_manager.py
+# hypothesis_version: 6.135.26
+
+[0.0, 1.0, 'created_objects', 'error', 'exists', 'factory', 'initialized', 'initialized_pools', 'max_objects', 'pools', 'size', 'total_objects', 'total_pools']

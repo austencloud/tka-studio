@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\pictograph\scaling_service.py
+# hypothesis_version: 6.135.26
+
+[0.015, 0.9, 0.95, 1.05, 100, 800, 1200, 'advanced_start_pos', 'beat_frame', 'beat_view', 'codex_view', 'default', 'graph_editor', 'graph_editor_view', 'main_window_width', 'option_picker', 'option_picker_width', 'option_view', 'preview', 'sequence_viewer', 'spacing', 'start_pos_picker', 'unknown']

@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\testing\button_tester.py
+# hypothesis_version: 6.135.26
+
+[0.1, 'Button is disabled', '_on_add_beat_clicked', '_on_settings_clicked', 'add_beat', 'add_to_dictionary', 'button_enabled', 'button_name', 'button_visible', 'click_successful', 'clone_beat', 'common_issues', 'delete_beat', 'export_image', 'failed_buttons', 'file', 'fullscreen', 'generate_beat', 'hover_successful', 'individual_results', 'method', 'mirror_beat', 'reset_beat', 'rotate_beat', 'settings', 'signal', 'successful_buttons', 'timestamp', 'total_buttons', 'workbench_visible']

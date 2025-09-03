@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\interfaces\animation_core_interfaces.py
+# hypothesis_version: 6.135.26
+
+[0.0, 0.25, 1.0, 'cancelled', 'color', 'completed', 'cubic-bezier', 'custom', 'ease-in', 'ease-in-out', 'ease-out', 'failed', 'linear', 'opacity', 'paused', 'pending', 'position', 'rotation', 'running', 'scale', 'spring', 'transform', 'x', 'y']

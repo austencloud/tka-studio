@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\coordination\ui_coordinator.py
+# hypothesis_version: 6.135.26
+
+['active_tab', 'beat_layout', 'component_visibility', 'graph_editor_state', 'hotkey_registry', 'option_picker_state', 'r', 'tab_state', 'ui_state', 'ui_state.json', 'utf-8', 'w', 'window_state']

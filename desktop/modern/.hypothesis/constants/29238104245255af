@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\domain\models\pictograph_models.py
+# hypothesis_version: 6.135.9
+
+[0.0, 100.0, 'ArrowData', 'GridData', 'PictographData', 'PropData', 'arrow_type', 'arrows', 'bigbuugeng', 'bigdoublestar', 'bigeightrings', 'bighoop', 'bigstaff', 'blue', 'box', 'buugeng', 'center_x', 'center_y', 'chicken', 'club', 'color', 'cw', 'diamond', 'doublestar', 'eightrings', 'end_position', 'fan', 'fractalgeng', 'grid_data', 'grid_mode', 'grid_points', 'guitar', 'hand', 'id', 'in', 'is_blank', 'is_mirrored', 'is_selected', 'is_visible', 'letter', 'location', 'metadata', 'minihoop', 'motion_data', 'orientation', 'position_x', 'position_y', 'prop_type', 'props', 'quiad', 'radius', 'red', 'rotation_angle', 'rotation_direction', 'simplestaff', 'staff', 'start_position', 'sword', 'to_dict', 'triad', 'triquetra', 'triquetra2', 'turns', 'ukulele', 'value']

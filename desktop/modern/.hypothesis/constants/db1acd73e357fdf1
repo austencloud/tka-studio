@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\api\routers\commands.py
+# hypothesis_version: 6.135.9
+
+[500, '/api', '/commands/redo', '/commands/status', '/commands/undo', 'Commands', 'Get Command Status', 'Undo Last Action', 'api_command_status', 'api_redo_command', 'api_undo_command', 'can_redo', 'can_undo', 'processor_active', 'timestamp']

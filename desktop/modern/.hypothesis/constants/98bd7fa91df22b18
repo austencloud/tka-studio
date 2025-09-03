@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\presentation\components\workbench\button_interface.py
+# hypothesis_version: 6.135.26
+
+['Operation completed', 'Operation failed', '_handle_clear', '_handle_color_swap', '_handle_copy_json', '_handle_delete_beat', '_handle_fullscreen', '_handle_reflection', '_handle_rotation', '_handle_save_image']

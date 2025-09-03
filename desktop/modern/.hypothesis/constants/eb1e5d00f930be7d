@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\performance\qt_profiler.py
+# hypothesis_version: 6.135.9
+
+[0.0, 0.016, 0.033, 'Paint', 'Unknown', '_creation_stats', 'active', 'avg_time', 'call_count', 'count', 'created', 'destroyed', 'eventFilter', 'event_performance', 'high', 'issue', 'max_time', 'medium', 'name', 'object_lifecycle', 'paint_performance', 'peak', 'priority', 'qt_event', 'qt_paint', 'recommendation', 'recommendations', 'total_time', 'type']

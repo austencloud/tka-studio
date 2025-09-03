@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\core\monitoring.py
+# hypothesis_version: 6.135.9
+
+[0.0, 50.0, 200.0, 1000.0, 5000.0, 100, 1000, 1024, 10000, '__class__', 'args_count', 'avg_duration_ms', 'avg_memory_mb', 'count', 'duration_ms', 'error', 'function', 'inf', 'kwargs_count', 'max_duration_ms', 'max_memory_mb', 'memory_mb', 'monitoring_enabled', 'operation', 'slowest_operations', 'summary', 'thresholds', 'total_metrics', 'total_operations', 'unique_operations', 'warning']

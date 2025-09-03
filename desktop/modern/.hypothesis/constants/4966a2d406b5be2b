@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\state\window_state_manager.py
+# hypothesis_version: 6.135.26
+
+['geometry', 'geometry_changed', 'maximized', 'maximized_changed', 'state_reset', 'window', 'window_geometry', 'window_maximized', 'window_state_service']

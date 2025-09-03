@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\registrars\workbench_service_registrar.py
+# hypothesis_version: 6.135.26
+
+['BeatSelectionService', 'DIContainer', 'EventBus', 'IFullScreenViewer', 'SequencePersister', 'SequenceStateTracker', 'SequenceTransformer', 'Workbench Services']

@@ -1,0 +1,2 @@
+2025-07-03 13:50:39,583 - core.dependency_injection.config_registration - INFO - Successfully registered extracted services in DI container
+2025-07-03 13:50:39,583 - core.application.application_factory - INFO - Created test application container

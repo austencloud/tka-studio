@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\models\sequence_data.py
+# hypothesis_version: 6.135.26
+
+['SequenceData', 'beats', 'id', 'is_start_position', 'metadata', 'name', 'start_position', 'word']

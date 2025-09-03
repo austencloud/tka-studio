@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\core\dependency_injection\service_registry.py
+# hypothesis_version: 6.135.9
+
+['T', 'request', 'session', 'singleton', 'transient']

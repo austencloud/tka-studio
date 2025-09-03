@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\workbench\beat_selection_service.py
+# hypothesis_version: 6.135.26
+
+['beat', 'beat_count', 'has_selection', 'none', 'selected_index', 'selected_indices', 'selection_count', 'start_position', 'state_valid']

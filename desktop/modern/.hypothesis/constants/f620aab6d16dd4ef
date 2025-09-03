@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\sequence\sequence_orchestrator.py
+# hypothesis_version: 6.135.26
+
+[0.0, 1.0, '?', 'Loaded Sequence', '_beat_frame_section', '_start_position_data', 'arrows', 'beat', 'blue', 'conversion_error', 'duration', 'end_position', 'get_sequence', 'is_placeholder', 'is_start_position', 'letter', 'loaded_sequence', 'location', 'motion_type', 'orientation', 'red', 'set_start_position', 'start_position', 'word']

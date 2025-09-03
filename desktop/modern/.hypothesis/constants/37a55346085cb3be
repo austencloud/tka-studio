@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\presentation\components\sequence_workbench\beat_frame_section.py
+# hypothesis_version: 6.135.26
+
+[400, 2000, 'BeatSelectionService', 'PictographData', 'add_to_dictionary', 'clear_sequence', 'copy_json', 'delete_beat', 'mirror_sequence', 'rotate_sequence', 'save_image', 'swap_colors']

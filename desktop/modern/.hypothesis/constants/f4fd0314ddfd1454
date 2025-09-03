@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\core\dependency_injection\lifecycle_manager.py
+# hypothesis_version: 6.135.9
+
+['All scopes disposed', 'active_scopes', 'cleanup', 'cleanup_handlers', 'current_scope', 'initialize', 'initialized_services', 'scope_details']

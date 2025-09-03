@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\domain\serialization\camel_case.py
+# hypothesis_version: 6.135.26
+
+['(.)([A-Z][a-z]+)', '([a-z0-9])([A-Z])', '\\1_\\2', '_']

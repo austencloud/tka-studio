@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\sequence\sequence_validator.py
+# hypothesis_version: 6.135.26
+
+[255, '"', '*', '/', ':', '<', '>', '?', 'Beat cannot be None', 'Beats must be a list', '\\', 'allow_empty_beats', 'allowed_beat_letters', 'beats', 'blue', 'id', 'max_length', 'max_name_length', 'max_turns_per_beat', 'min_length', 'motion_type', 'name', 'red', 'required_fields', '|']

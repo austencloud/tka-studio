@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\pictograph\global_visibility_service.py
+# hypothesis_version: 6.135.26
+
+['active_registrations', 'component_type', 'component_types', 'error', 'failed_instances', 'failed_updates', 'failure_count', 'id', 'is_alive', 'metadata', 'skipped_count', 'success_count', 'total_registrations', 'unknown', 'update_calls', 'update_method', 'update_visibility', 'updated_instances']

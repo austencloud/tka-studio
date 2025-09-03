@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\interfaces\__init__.py
+# hypothesis_version: 6.135.26
+
+['IBeatLayoutService', 'IImageExporter', 'ILayoutService', 'IObjectPoolManager', 'IObjectPoolService', 'IPictographManager', 'ISequenceDataService', 'ISequenceManager', 'ISettingsCoordinator', 'IUIStateManager', 'IUserProfileService', 'IValidationService', 'IVisibilityService']

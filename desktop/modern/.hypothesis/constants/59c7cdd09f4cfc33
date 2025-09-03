@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\positioning\arrows\key_generators\placement_key_generator.py
+# hypothesis_version: 6.135.26
+
+['NONRADIAL_', 'RADIAL_', 'W-', 'X-', 'Y-', 'Z-', '_alpha', '_beta', '_gamma', '_to_', 'diamond', 'layer1', 'layer2', 'layer3', 'start_ori', 'static', 'Δ-', 'Λ-', 'Σ-', 'Φ-', 'Ψ-', 'Ω-', 'θ-']

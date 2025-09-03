@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\core\session_state_service.py
+# hypothesis_version: 6.135.9
+
+[300, 2000, 'Auto-save failed', '__dataclass_fields__', '__dict__', 'active_tab', 'beat_layout', 'beats', 'component_visibility', 'created_at', 'current_sequence', 'graph_editor_state', 'height', 'last_interaction', 'modern', 'name', 'selected_arrow', 'selected_beat_data', 'selected_beat_index', 'sequence_builder', 'sequence_data', 'sequence_id', 'session_id', 'session_metadata', 'session_state.json', 'start_position_data', 'tka_version', 'to_dict', 'ui_state', 'visible', 'workbench_state']

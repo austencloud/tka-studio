@@ -1,0 +1,206 @@
+:root {
+	/* Focus */
+	--color-focus-ring: white;
+	--focus-ring-width: 2px;
+	--focus-ring-offset: 2px;
+
+	/* Colors - Text */
+	--color-text-on-primary: white;
+	--color-text-on-dark: white;
+	--color-text-on-success: white;
+	--color-text-on-danger: white;
+	--color-text-disabled: rgba(255, 255, 255, 0.5);
+	--color-text-disabled-dark: rgba(255, 255, 255, 0.4);
+
+	/* Colors - Borders */
+	--color-border-primary-light: rgba(255, 255, 255, 0.5);
+	--color-border-primary-lighter: rgba(255, 255, 255, 1);
+	--color-border-dark-light: rgba(255, 255, 255, 0.3);
+	--color-border-dark-lighter: rgba(255, 255, 255, 0.6);
+	--color-border-ghost: rgba(255, 255, 255, 0.5);
+	--color-border-ghost-hover: rgba(255, 255, 255, 0.7);
+	--color-border-ghost-active: rgba(255, 255, 255, 0.8);
+	--color-border-success: rgba(255, 255, 255, 0.5);
+	--color-border-success-hover: rgba(255, 255, 255, 0.8);
+	--color-border-success-active: rgba(255, 255, 255, 0.9);
+	--color-border-danger: rgba(255, 255, 255, 0.5);
+	--color-border-danger-hover: rgba(255, 255, 255, 0.8);
+	--color-border-danger-active: rgba(255, 255, 255, 0.9);
+	--color-border-disabled: rgba(255, 255, 255, 0.3);
+	--color-border-dark-disabled: rgba(255, 255, 255, 0.2);
+
+	/* Gradients - Blue */
+	--gradient-blue-normal: linear-gradient(
+		135deg,
+		#1e3c72 0%,
+		#6c9ce9 30%,
+		#4a77d4 60%,
+		#2a52be 100%
+	);
+	--gradient-blue-hover: linear-gradient(
+		135deg,
+		#264f94 0%,
+		#7baafb 30%,
+		#5584e1 60%,
+		#3563cf 100%
+	);
+	--gradient-blue-active: linear-gradient(
+		135deg,
+		#16295a 0%,
+		#517bbd 30%,
+		#3a62ab 60%,
+		#1d3b8c 100%
+	);
+	--gradient-blue-loading: linear-gradient(
+		135deg,
+		#1e3c72 0%,
+		#6c9ce9 30%,
+		#4a77d4 60%,
+		#2a52be 100%
+	);
+
+	/* Gradients - Dark */
+	--gradient-dark-normal: linear-gradient(
+		135deg,
+		rgba(40, 40, 40, 0.9) 0%,
+		rgba(55, 55, 55, 0.9) 50%,
+		rgba(70, 70, 70, 0.9) 100%
+	);
+	--gradient-dark-hover: linear-gradient(
+		135deg,
+		rgba(80, 80, 80, 0.9) 0%,
+		rgba(160, 160, 160, 0.9) 30%,
+		rgba(120, 120, 120, 0.9) 60%,
+		rgba(40, 40, 40, 0.9) 100%
+	);
+	--gradient-dark-active: linear-gradient(
+		135deg,
+		#1e3c72 0%,
+		#6c9ce9 30%,
+		#4a77d4 60%,
+		#2a52be 100%
+	);
+	--gradient-dark-loading: linear-gradient(
+		135deg,
+		rgba(40, 40, 40, 0.9) 0%,
+		rgba(55, 55, 55, 0.9) 50%,
+		rgba(70, 70, 70, 0.9) 100%
+	);
+
+	/* Gradients - Ghost */
+	--gradient-ghost-normal: rgba(70, 70, 70, 0.7);
+	--gradient-ghost-hover: rgba(100, 100, 100, 0.8);
+	--gradient-ghost-active: linear-gradient(
+		135deg,
+		#1e3c72 0%,
+		#6c9ce9 30%,
+		#4a77d4 60%,
+		#2a52be 100%
+	);
+	--gradient-ghost-loading: rgba(70, 70, 70, 0.7);
+
+	/* Gradients - Success */
+	--gradient-success-normal: linear-gradient(
+		135deg,
+		#0b4d26 0%,
+		#2e8c50 30%,
+		#1f7a3d 60%,
+		#0d5e2f 100%
+	);
+	--gradient-success-hover: linear-gradient(
+		135deg,
+		#0d5e2f 0%,
+		#34a05c 30%,
+		#24904a 60%,
+		#0f6f35 100%
+	);
+	--gradient-success-active: linear-gradient(
+		135deg,
+		#07341a 0%,
+		#206d3c 30%,
+		#155c2a 60%,
+		#093d20 100%
+	);
+	--gradient-success-loading: linear-gradient(
+		135deg,
+		#0b4d26 0%,
+		#2e8c50 30%,
+		#1f7a3d 60%,
+		#0d5e2f 100%
+	);
+
+	/* Gradients - Danger */
+	--gradient-danger-normal: linear-gradient(
+		135deg,
+		#8b0000 0%,
+		#d32f2f 30%,
+		#b71c1c 60%,
+		#7f0000 100%
+	);
+	--gradient-danger-hover: linear-gradient(
+		135deg,
+		#a50000 0%,
+		#ef5350 30%,
+		#d32f2f 60%,
+		#9a0000 100%
+	);
+	--gradient-danger-active: linear-gradient(
+		135deg,
+		#6d0000 0%,
+		#b71c1c 30%,
+		#8b0000 60%,
+		#5d0000 100%
+	);
+	--gradient-danger-loading: linear-gradient(
+		135deg,
+		#8b0000 0%,
+		#d32f2f 30%,
+		#b71c1c 60%,
+		#7f0000 100%
+	);
+
+	/* Shadows */
+	--shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+	--shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+	--shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+	--shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+	--shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+	--shadow-outline: 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	/* Reduce or eliminate transitions for users with reduced motion preference */
+	.metallic-button {
+		transition: none !important;
+	}
+
+	.spinner-svg {
+		animation-duration: 2s;
+	}
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-focus-ring: rgba(255, 255, 255, 0.8);
+	}
+}
+
+/* High Contrast Mode Adjustments */
+@media screen and (forced-colors: active) {
+	.metallic-button {
+		border: 2px solid ButtonText;
+		color: ButtonText;
+		background: ButtonFace;
+	}
+
+	.metallic-button:hover,
+	.metallic-button:focus {
+		border-color: Highlight;
+		color: Highlight;
+	}
+
+	.metallic-button:disabled {
+		border-color: GrayText;
+		color: GrayText;
+	}
+}

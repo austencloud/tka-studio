@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\decorators.py
+# hypothesis_version: 6.135.26
+
+[1.0, 2.0, 1000, 1024, '__class__', 'args', 'args_count', 'context', 'duration_ms', 'error', 'error_type', 'kwargs', 'kwargs_keys', 'memory_mb', 'operation', 'result_type', 'service']

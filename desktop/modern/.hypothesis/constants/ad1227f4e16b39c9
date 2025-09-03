@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\performance\config.py
+# hypothesis_version: 6.135.9
+
+[1.0, 5.0, 50.0, 80.0, 100.0, 200.0, 500.0, 100, 1000, '1.0', '1000', '200.0', '30', '5.0', '50.0', '60', '7', 'PerformanceConfig', 'StorageConfig', 'TKA_ENV', 'alert_thresholds', 'cpu_percent', 'critical_functions', 'data/performance', 'development', 'function_time_ms', 'memory_mb', 'true']

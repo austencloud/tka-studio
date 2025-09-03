@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\config\app_config.py
+# hypothesis_version: 6.135.26
+
+['10', '5', 'AppConfig', 'CRITICAL', 'DEBUG', 'ERROR', 'INFO', 'TKA_BACKGROUND_TYPE', 'TKA_CONSOLE_LOGGING', 'TKA_DEBUG_BORDERS', 'TKA_DEFAULT_FALLBACK', 'TKA_DEFAULT_SCREEN', 'TKA_FILE_LOGGING', 'TKA_LOG_BACKUP_COUNT', 'TKA_LOG_DIR', 'TKA_LOG_LEVEL', 'TKA_MAX_LOG_SIZE_MB', 'TKA_THEME', 'WARNING', 'aurora', 'auto', 'box', 'dark', 'diamond', 'false', 'gradient', 'logs', 'none', 'primary', 'secondary', 'solid', 'true']

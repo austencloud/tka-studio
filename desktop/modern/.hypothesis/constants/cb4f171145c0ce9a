@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\data\position_attribute_mapper.py
+# hypothesis_version: 6.135.26
+
+[180, 270, '0123456789', '__str__', 'alpha', 'beta', 'clock', 'counter', 'end_loc', 'end_ori', 'gamma', 'in', 'motion_type', 'n', 'no_rot', 'out', 'prop_rot_dir', 'start_loc', 'start_ori', 'static', 'turns', 'value']

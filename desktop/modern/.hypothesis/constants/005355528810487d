@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\layout\layout_event_handler.py
+# hypothesis_version: 6.135.26
+
+[120, 'beat_added', 'beat_frame', 'beat_removed', 'event_bus', 'positions', 'sequence.beat_added', 'sequence.created', 'sequence_created', 'sizes', 'total_size']

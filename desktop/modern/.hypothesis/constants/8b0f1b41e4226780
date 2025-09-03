@@ -1,0 +1,4 @@
+# file: c:\Users\Austen\.vscode\extensions\ms-python.debugpy-2025.8.0-win32-x64\bundled\libs\debugpy\launcher/../..\debugpy/..\debugpy\__init__.py
+# hypothesis_version: 6.135.9
+
+['__version__', 'breakpoint', 'configure', 'connect', 'debug_this_thread', 'is_client_connected', 'listen', 'log_to', 'trace_this_thread', 'wait_for_client']

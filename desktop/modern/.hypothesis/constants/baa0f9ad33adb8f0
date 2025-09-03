@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\core\serialization\type_safe_serializer.py
+# hypothesis_version: 6.135.26
+
+['.', '1.0', 'T', '__', '__batch_type__', '__count__', '__eq__', '__item_type__', '__serialized_at__', '__type__', '__version__', 'from_dict', 'items', 'list', 'to_dict']

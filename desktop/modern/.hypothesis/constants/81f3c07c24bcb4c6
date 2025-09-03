@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\positioning\props\orchestration\prop_orchestrator.py
+# hypothesis_version: 6.135.9
+
+['IEventBus', 'PropOrchestrator', 'algorithmic', 'beta_positioning', 'blue', 'blue_direction', 'blue_end_location', 'blue_motion_type', 'blue_offset', 'letter', 'overlap_detected', 'positioning_method', 'prop_type', 'red', 'red_direction', 'red_end_location', 'red_motion_type', 'red_offset', 'separation', 'swap_override', 'x', 'y']

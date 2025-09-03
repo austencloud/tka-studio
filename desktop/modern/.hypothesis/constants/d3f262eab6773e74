@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\core\exceptions.py
+# hypothesis_version: 6.135.9
+
+[' -> ', ', ', 'actual', 'config_file', 'data_type', 'dependency_chain', 'field', 'interface', 'metric_type', 'operation', 'service', 'setting', 'stage', 'threshold', 'value']

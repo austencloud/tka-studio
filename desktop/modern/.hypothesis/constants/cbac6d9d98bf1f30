@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\presentation\components\pictograph\renderers\prop_renderer.py
+# hypothesis_version: 6.135.26
+
+[-143.1, 0.707, 143.1, 475, '#2E3192', '#ED1C24', '(fill:\\s*)([^;]*)(;)', '(fill=")([^"]*)(")', 'PictographScene', 'blue', 'clock', 'counter', 'in', 'n', 'out', 'props/staff.svg', 'r', 'red', 'start_ori', 'utf-8', 'value']

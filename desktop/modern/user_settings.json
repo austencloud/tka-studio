@@ -1,0 +1,8 @@
+{
+  "graph_editor_visible": true,
+  "image_export/add_beat_numbers": true,
+  "image_export/add_reversal_symbols": true,
+  "image_export/add_user_info": true,
+  "image_export/add_word": true,
+  "image_export/add_difficulty_level": true
+}

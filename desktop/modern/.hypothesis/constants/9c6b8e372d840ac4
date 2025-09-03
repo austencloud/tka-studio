@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\api\routers\beats.py
+# hypothesis_version: 6.135.9
+
+[404, 500, '/api', 'Beats', 'Failed to add beat', 'api_add_beat', 'api_remove_beat', 'api_update_beat']

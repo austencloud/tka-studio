@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\state\graph_editor_state_manager.py
+# hypothesis_version: 6.135.26
+
+[100, 300, 800, 'graph_editor', 'graph_editor_height', 'graph_editor_visible', 'height', 'height_changed', 'previous_height', 'previous_state', 'state_reset', 'visibility_changed', 'visible']

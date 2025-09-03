@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\workbench\workbench_state_manager.py
+# hypothesis_version: 6.135.26
+
+['both_set', 'clear_op', 'empty', 'export_ops', 'has_sequence', 'has_start_position', 'is_empty', 'is_restoring', 'letter', 'operations_enabled', 'restoration_complete', 'restoring', 'sequence_length', 'sequence_loaded', 'sequence_ops', 'start_position_set', 'state_valid', 'transform_ops', 'validation_issues', 'workbench_state']

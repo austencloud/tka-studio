@@ -1,0 +1,4 @@
+# file: f:\CODE\TKA\src\desktop\modern\src\infrastructure\test_doubles\headless_services.py
+# hypothesis_version: 6.135.9
+
+[1.0, 150, 200, 1080, 1920, 'active', 'animation_player', 'auto_save', 'beat_frame', 'container_size', 'default', 'frame_size', 'grid_size', 'last_sequence', 'length', 'pictograph', 'pictograph_editor', 'playing', 'scroll_position', 'selected_pictograph', 'sequence_builder', 'spacing', 'theme', 'total_frames']

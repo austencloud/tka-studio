@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\ui\animation\adapters\qt_adapters.py
+# hypothesis_version: 6.135.26
+
+[0.0, 0.25, 1.0, 1000, '_qt_widget_ref', 'animation.*', 'animations_enabled', 'class_name', 'default_duration', 'default_easing', 'ease-in-out', 'effect_manager', 'enabled', 'geometry', 'height', 'object_name', 'opacity', 'qt_widget', 'reduced_motion', 'renderer', 'scale', 'scheduler', 'setGraphicsEffect', 'settings_integration', 'stack_adapter', 'target_adapter', 'visible', 'width', 'x', 'y']

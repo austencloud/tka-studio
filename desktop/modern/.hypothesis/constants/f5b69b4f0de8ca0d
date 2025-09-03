@@ -1,0 +1,4 @@
+# file: F:\CODE\TKA\src\desktop\modern\src\application\services\layout\beat_resizer.py
+# hypothesis_version: 6.135.26
+
+[0.8, 200, 1000, 'BeatFrame', 'GraphEditor', 'SequenceBeatFrame', '_beat_views', '_start_position_view', 'button_panel', 'graph_editor', 'height', 'is_visible', 'setMinimumSize', 'width']
