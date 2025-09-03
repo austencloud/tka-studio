@@ -6,7 +6,7 @@
  */
 
 import type { SequenceData } from "$domain";
-import type { PropState } from "$lib/components/animator/types/PropState";
+import type { PropState } from "$lib/domain/animator/types/PropState";
 
 export interface ISequenceAnimationEngine {
   initializeWithDomainData(sequenceData: SequenceData): boolean;

@@ -12,7 +12,7 @@ import type {
   SequenceMetadata,
 } from "$contracts";
 import type { SequenceData } from "$domain";
-import type { PropState } from "$lib/components/animator/types/PropState.js";
+import type { PropState } from "$lib/domain/animator/types/PropState.js";
 import { TYPES } from "$lib/services/inversify/types";
 import { inject, injectable } from "inversify";
 

@@ -1,5 +1,5 @@
 import type { ISequenceAnimationEngine } from "$contracts";
-import type { MotionData, SequenceData } from "$domain";
+import type { MotionData, PropState, SequenceData } from "$domain";
 import {
   createBeatData,
   createMotionData,
@@ -12,7 +12,6 @@ import {
   PropType,
   RotationDirection,
 } from "$domain";
-import type { PropState } from "$lib/components/animator";
 import type { IAnimationControlService } from "$lib/services/contracts/animator/animator-interfaces";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../inversify/types";

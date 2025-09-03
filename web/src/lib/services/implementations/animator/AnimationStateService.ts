@@ -10,7 +10,7 @@ import type {
   InterpolationResult,
   PropStates,
 } from "$contracts";
-import type { PropState } from "$lib/components/animator/types/PropState.js";
+import type { PropState } from "$lib/domain/animator/types/PropState.js";
 import { calculateCoordinatesFromAngle } from "$utils";
 import { injectable } from "inversify";
 

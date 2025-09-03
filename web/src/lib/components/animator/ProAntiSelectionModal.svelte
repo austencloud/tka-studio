@@ -6,7 +6,6 @@ between Pro (natural) or Anti (reverse) circular motion direction.
 -->
 <script lang="ts">
   import { MotionType } from "$domain";
-  import "$styles/modal-animations.css";
   import { onMount } from "svelte";
 
   interface Props {

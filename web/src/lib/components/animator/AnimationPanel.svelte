@@ -12,6 +12,7 @@ Handles data loading, animation engine, and state management.
   import type { BrowsePanelStateManager } from "$state";
   import { onDestroy } from "svelte";
   // Sub-components - all in animator directory
+  import type { PropState } from "$domain";
   import AnimationControls from "../animator/AnimationControls.svelte";
   import AnimationPanelHeader from "../animator/AnimationPanelHeader.svelte";
   import AnimationStates from "../animator/AnimationStates.svelte";
@@ -19,7 +20,6 @@ Handles data loading, animation engine, and state management.
   import BeatSelector from "../animator/BeatSelector.svelte";
   import CurrentBeatDisplay from "../animator/CurrentBeatDisplay.svelte";
   import SequenceInfo from "../animator/SequenceInfo.svelte";
-  import type { PropState } from "../animator/types/PropState";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

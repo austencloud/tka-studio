@@ -7,13 +7,19 @@
 
 import { browser } from "$app/environment";
 import type { IBrowseStatePersister } from "$implementations";
+import { resolve, TYPES } from "../../services/inversify";
 import type { ItabStateService, TabId } from "./state-service-interfaces";
 
 class TabStateService implements ItabStateService {
   // Tab state
   #activeTab = $state<TabId>("construct");
 
-  constructor() {}
+  // Lazy-loaded services to avoid circular dependency
+  private _browseStatePersister: IBrowseStatePersister | null = null;
+
+  constructor() {
+    // Services will be resolved lazily when first accessed
+  }
 
   // ============================================================================
   // GETTERS
@@ -24,11 +30,13 @@ class TabStateService implements ItabStateService {
   }
 
   get browseStatePersistence(): IBrowseStatePersister {
-    // TODO: Inject the actual browse state persistence service
-    // For now, return a placeholder that matches the interface
-    throw new Error(
-      "browseStatePersistence not implemented - needs dependency injection"
-    );
+    if (!this._browseStatePersister) {
+      this._browseStatePersister = resolve<IBrowseStatePersister>(
+        TYPES.IBrowseStatePersister
+      );
+    }
+    // TypeScript knows this is not null after the check above
+    return this._browseStatePersister as IBrowseStatePersister;
   }
 
   // ============================================================================

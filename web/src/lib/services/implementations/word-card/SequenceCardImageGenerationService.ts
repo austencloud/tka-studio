@@ -13,7 +13,7 @@ import type {
   ISequenceCardImageGenerationService,
   ISequenceCardMetadataOverlayService,
   ISequenceCardSVGCompositionService,
-} from "../../contracts/build/export/word-card-export-interfaces";
+} from "$contracts";
 
 import { injectable } from "inversify";
 import { renderPictograph } from "../core/pictograph/rendering/pictograph-rendering-utils";

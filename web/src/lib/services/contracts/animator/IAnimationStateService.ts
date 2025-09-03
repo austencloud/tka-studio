@@ -5,7 +5,7 @@
  * Handles prop state updates and management.
  */
 
-import type { PropState } from "$lib/components/animator/types/PropState";
+import type { PropState } from "$lib/domain/animator/types/PropState";
 import type { PropStates } from "./ISequenceAnimationEngine";
 
 export interface IAnimationStateService {

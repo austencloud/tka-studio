@@ -229,6 +229,8 @@ export type {
   AnimationState,
 } from "./animator/models/AnimationModels";
 
+export type { PropState } from "./animator/types/PropState";
+
 export type {
   BeatOperationResult,
   SequenceStatistics,

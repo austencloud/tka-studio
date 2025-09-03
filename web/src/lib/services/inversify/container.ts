@@ -116,6 +116,7 @@ import {
 import {
   BrowsePanelManager,
   BrowseSectionService,
+  BrowseStatePersister,
   NavigationService,
 } from "$implementations";
 
@@ -188,14 +189,14 @@ import {
 
 // Import additional services with confirmed implementations
 import {
+  AnimationStateService,
+  BeatCalculationService,
   CSVPictographParserService,
   GridPositionDeriver,
+  PropInterpolationService,
+  SequenceAnimationEngine,
+  SequenceAnimationOrchestrator,
 } from "$implementations";
-import { AnimationStateService } from "../implementations/animator/AnimationStateService";
-import { BeatCalculationService } from "../implementations/animator/BeatCalculationService";
-import { PropInterpolationService } from "../implementations/animator/PropInterpolationService";
-import { SequenceAnimationEngine } from "../implementations/animator/sequence-animation-engine";
-import { SequenceAnimationOrchestrator } from "../implementations/animator/SequenceAnimationOrchestrator";
 // ValidationService is defined as interface in PictographTransformationService but no implementation found
 
 // Import additional services with confirmed implementations
@@ -350,6 +351,7 @@ try {
   container.bind(TYPES.ISectionService).to(BrowseSectionService);
 
   // Bind additional persistence services
+  container.bind(TYPES.IBrowseStatePersister).to(BrowseStatePersister);
   container.bind(TYPES.IFilterPersistenceService).to(FilterPersistenceService);
 
   // Bind positioning services (from core/pictograph/positioning)

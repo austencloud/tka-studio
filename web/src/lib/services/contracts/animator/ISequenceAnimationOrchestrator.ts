@@ -6,7 +6,7 @@
  */
 
 import type { SequenceData } from "$domain";
-import type { PropState } from "$lib/components/animator/types/PropState";
+import type { PropState } from "$lib/domain/animator/types/PropState";
 import type { PropStates, SequenceMetadata } from "./ISequenceAnimationEngine";
 
 export interface ISequenceAnimationOrchestrator {

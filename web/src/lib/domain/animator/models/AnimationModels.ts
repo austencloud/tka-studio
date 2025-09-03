@@ -1,5 +1,5 @@
 import type { BeatData } from "$domain";
-import type { PropState } from "../../../components/animator/types/PropState";
+import type { PropState } from "../types/PropState";
 
 export interface InterpolationResult {
   blueAngles: {

@@ -11,8 +11,8 @@ export { default as NavigationSidebar } from "./NavigationSidebar.svelte";
 export { default as PanelContainer } from "./PanelContainer.svelte";
 
 // Content components
+export { default as AnimationPanel } from "../animator/AnimationPanel.svelte";
 export { default as AccordionSection } from "./AccordionSection.svelte";
-export { default as AnimationPanel } from "./AnimationPanel.svelte";
 export { default as CategoryButton } from "./CategoryButton.svelte";
 export { default as FilterSelectionPanel } from "./FilterSelectionPanel.svelte";
 export { default as QuickAccessSection } from "./QuickAccessSection.svelte";

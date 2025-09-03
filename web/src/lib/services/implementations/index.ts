@@ -57,7 +57,7 @@ export * from "./build/export/BeatRenderingService";
 export * from "./build/export/CanvasManagementService";
 export * from "./build/export/DifficultyBadgeRenderer";
 export * from "./build/export/DimensionCalculationService";
-export * from "./build/export/ExportConfig"; // Correct path
+export * from "./build/export/ExportConfig";
 export * from "./build/export/ExportMemoryCalculator";
 export * from "./build/export/ExportOptionsValidator";
 export * from "./build/export/FileExportService";
@@ -85,9 +85,19 @@ export * from "./learn/LetterMappingRepository";
 export * from "./learn/QuestionGeneratorService";
 export * from "./learn/QuizSessionService";
 // Animator Domain
+export * from "./animator/AngleCalculationService";
 export * from "./animator/AnimationControlService";
+export * from "./animator/AnimationStateService";
+export * from "./animator/BeatCalculationService";
+export * from "./animator/CanvasRenderer";
+export * from "./animator/CoordinateUpdateService";
+export * from "./animator/EndpointCalculationService";
 export * from "./animator/MotionLetterIdentificationService";
 export * from "./animator/MotionParameterService";
+export * from "./animator/PropInterpolationService";
+export * from "./animator/sequence-animation-engine";
+export * from "./animator/SequenceAnimationOrchestrator";
+export * from "./animator/SVGGenerator";
 
 // Movement Domain
 export * from "./build/generate/CSVPictographLoader";
@@ -124,6 +134,7 @@ export * from "./core/pictograph/positioning/calculation/ArrowLocationCalculator
 export * from "./core/pictograph/positioning/calculation/ArrowRotationCalculator";
 export * from "./core/pictograph/positioning/calculation/DashLocationCalculator";
 export * from "./core/pictograph/positioning/coordinate_system/ArrowCoordinateSystemService";
+export * from "./core/pictograph/positioning/DefaultPropPositioner";
 export * from "./core/pictograph/positioning/key_generators/AttributeKeyGenerator";
 export * from "./core/pictograph/positioning/key_generators/SpecialPlacementOriKeyGenerator";
 export * from "./core/pictograph/positioning/key_generators/TurnsTupleKeyGenerator";
@@ -141,8 +152,14 @@ export * from "./core/pictograph/rendering/BeatGridService";
 export * from "./core/pictograph/rendering/GridRenderingService";
 export * from "./core/pictograph/rendering/OverlayRenderer";
 export * from "./core/pictograph/rendering/PropCoordinator";
+export * from "./core/pictograph/rendering/PropRotAngleManager";
 export * from "./core/pictograph/rendering/SvgConfiguration";
 export * from "./core/pictograph/rendering/SvgUtilityService";
+
+// Pictograph Hooks (Svelte 5 runes-based)
+export * from "./core/pictograph/useArrowPositioning";
+export * from "./core/pictograph/useComponentLoading";
+export * from "./core/pictograph/usePictographData";
 
 // Sequence Domain
 export * from "./build/workbench/DeleteService";

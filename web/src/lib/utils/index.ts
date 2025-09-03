@@ -38,8 +38,6 @@ export * from "./png-parser";
 export * from "./letter-image-getter";
 
 // UI utilities
-export * from "./glass-scrollbars";
-export * from "./quick-glass-scrollbars";
 export * from "./seo-utils";
 
 // Performance utilities
@@ -49,15 +47,15 @@ export * from "./memoizationUtils";
 export * from "./validation";
 
 // Math utilities (pure functions from animator services)
-export { lerpAngle } from "../services/implementations/animator/AngleCalculationService";
-export { calculateCoordinatesFromAngle } from "../services/implementations/animator/CoordinateUpdateService";
 export {
+  calculateCoordinatesFromAngle,
   calculateMotionEndpoints,
+  lerpAngle,
   type MotionEndpoints,
-} from "../services/implementations/animator/EndpointCalculationService";
+} from "$implementations";
 
 // Motion utilities (pure functions)
-export * from "../components/animator/motion-helpers";
+export * from "../services/contracts/animator/motion-helpers";
 
 // NOTE: The following have been moved to services:
 // - betaDetection -> BetaDetectionService

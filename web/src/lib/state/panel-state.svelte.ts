@@ -259,15 +259,4 @@ export const BROWSE_TAB_PANEL_CONFIGS = {
     resizable: true,
     collapsible: true,
   },
-  animation: {
-    id: "animation",
-    title: "Animation",
-    defaultWidth: 400,
-    minWidth: 300,
-    maxWidth: 600,
-    collapsedWidth: 60,
-    persistKey: "browse-animation-panel",
-    resizable: true,
-    collapsible: true,
-  },
 } as const;

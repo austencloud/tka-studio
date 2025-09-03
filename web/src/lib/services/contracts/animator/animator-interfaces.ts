@@ -4,17 +4,14 @@
  * Clean contracts for dependency injection and testability
  */
 
-import type { MotionData } from "$domain";
 import type {
-  MotionType,
   Location,
-  RotationDirection,
   MotionColor,
+  MotionData,
+  MotionType,
+  RotationDirection,
 } from "$domain";
-import type { MotionTestParams } from "$implementations/animator/MotionParameterService";
-import type {
-  PropStates,
-} from "$implementations/animator/AnimationControlService";
+import type { MotionTestParams, PropStates } from "$implementations";
 
 /**
  * Interface for motion parameter calculations and conversions

@@ -3,14 +3,9 @@
  * Main entry point for the animation system
  */
 
-// Core types (refactored into focused modules)
-export * from "./types/index.js";
-
-// Constants
-export * from "./constants/index.js";
 
 // Animation engine
-export { SequenceAnimationEngine as StandalonePortedEngine } from "$lib/services/implementations/animator/sequence-animation-engine.js";
+export { SequenceAnimationEngine as StandalonePortedEngine } from "$implementations";
 
 // Math services are now in services/implementations/animator/
 // Import them from $utils for convenience
@@ -20,11 +15,10 @@ export { SequenceAnimationEngine as StandalonePortedEngine } from "$lib/services
 // export type { PNGParseResult } from "../../../animator/src/lib/animator/utils/file/png-parser.js";
 
 // Canvas utilities
-export { CanvasRenderer } from "$lib/services/implementations/animator/CanvasRenderer.js";
-export { SVGGenerator } from "$lib/services/implementations/animator/SVGGenerator.js";
+export { CanvasRenderer, SVGGenerator } from "$implementations";
 
 // SVG utilities
-export { svgStringToImage } from "./svgStringToImage.js";
+export { svgStringToImage } from "../../utils/svgStringToImage.js";
 
 // Components (based on standalone_animator.html reference implementation)
 export { default as AnimatorCanvas } from "./AnimatorCanvas.svelte";

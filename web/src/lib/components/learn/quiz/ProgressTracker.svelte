@@ -173,7 +173,6 @@
 </div>
 
 <style>
-  @import "$styles/desktop-theme.css";
 
   .progress-tracker {
     background: var(--desktop-bg-secondary);

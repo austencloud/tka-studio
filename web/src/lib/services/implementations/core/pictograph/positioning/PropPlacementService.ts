@@ -10,8 +10,7 @@ import type { MotionData, PictographData, PropPlacementData } from "$domain";
 import { createPropPlacementFromPosition, GridMode } from "$domain";
 
 import type { IBetaDetectionService, IGridModeDeriver } from "$contracts";
-import { DefaultPropPositioner } from "$lib/services/implementations/core/pictograph/positioning/DefaultPropPositioner";
-import { PropRotAngleManager } from "$lib/services/implementations/core/pictograph/rendering/PropRotAngleManager";
+import { DefaultPropPositioner, PropRotAngleManager } from "$implementations";
 import { injectable } from "inversify";
 import { BetaOffsetCalculator } from "./BetaOffsetCalculator";
 import { BetaPropDirectionCalculator } from "./BetaPropDirectionCalculator";

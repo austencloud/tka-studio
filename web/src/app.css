@@ -1,5 +1,11 @@
 /* TKA V2 Modern - Base Styles */
 
+/* Import Desktop Theme for Learn Tab Compatibility */
+
+
+/* Import Enhanced Panel System Variables - TEMPORARILY DISABLED FOR DEBUGGING */
+/* @import './styles/enhanced-panel-system.css'; */
+
 /* CSS Reset and Base Styles */
 *,
 *::before,

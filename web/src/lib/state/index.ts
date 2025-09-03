@@ -93,7 +93,7 @@ export * from "./services/BrowseSelectionStateService.svelte";
 export * from "./services/BrowseStateCoordinator.svelte";
 
 // Service interfaces and implementations
-export * from "./services/implementations/ApplicationStateService";
+export * from "./services/ApplicationStateService.svelte";
 export * from "./services/state-service-interfaces";
 
 // ============================================================================

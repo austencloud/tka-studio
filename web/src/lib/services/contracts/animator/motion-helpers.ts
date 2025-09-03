@@ -2,19 +2,19 @@
  * Motion parameter utilities and helper functions
  */
 
-import { Location, MotionType, Orientation } from "$domain";
+import { HandMotionType, Location, MotionType, Orientation } from "$domain";
 
 // Helper function to determine motion type based on start/end locations
-export function getMotionType(
+export function getHandpath(
   startLocation: string,
   endLocation: string
-): string {
+): HandMotionType {
   // Normalize to lowercase for case-insensitive comparison
   const start = startLocation.toLowerCase();
   const end = endLocation.toLowerCase();
 
   if (start === end) {
-    return MotionType.STATIC; // Same location = static
+    return HandMotionType.STATIC; // Same location = static
   }
 
   // Check if it's a dash motion (opposite locations)
@@ -27,12 +27,12 @@ export function getMotionType(
 
   for (const [startOpp, endOpp] of opposites) {
     if (start === startOpp && end === endOpp) {
-      return MotionType.DASH;
+      return HandMotionType.DASH;
     }
   }
 
   // Adjacent locations = shift motion (pro/anti/float)
-  return MotionType.PRO; // Default to pro for shift motions
+  return HandMotionType.SHIFT;
 }
 
 // Helper function to get available motion types for a start/end pair
@@ -40,14 +40,13 @@ export function getAvailableMotionTypes(
   startLocation: string,
   endLocation: string
 ): string[] {
-  const motionType = getMotionType(startLocation, endLocation);
+  const motionType = getHandpath(startLocation, endLocation);
 
-  if (motionType === MotionType.STATIC) {
+  if (motionType === HandMotionType.STATIC) {
     return [MotionType.STATIC];
-  } else if (motionType === MotionType.DASH) {
+  } else if (motionType === HandMotionType.DASH) {
     return [MotionType.DASH];
   } else {
-    // Shift motions can be pro, anti, or float
     return [MotionType.PRO, MotionType.ANTI, MotionType.FLOAT];
   }
 }

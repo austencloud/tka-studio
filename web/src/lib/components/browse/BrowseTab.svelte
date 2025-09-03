@@ -29,7 +29,6 @@ Integrates panel management service with runes for:
   } from "$state";
   import { onDestroy, onMount } from "svelte";
   // Enhanced components
-  import AnimationPanel from "./AnimationPanel.svelte";
   import BrowseLayout from "./BrowseLayout.svelte";
   import NavigationSidebar from "./NavigationSidebar.svelte";
   // Existing components
@@ -72,10 +71,6 @@ Integrates panel management service with runes for:
     "navigation",
     BROWSE_TAB_PANEL_CONFIGS.navigation
   );
-  panelManagementService.registerPanel(
-    "animation",
-    BROWSE_TAB_PANEL_CONFIGS.animation
-  );
 
   // ✅ CREATE STATE MANAGERS: Runes-based reactive state
   const browseState = createBrowseState(
@@ -95,7 +90,6 @@ Integrates panel management service with runes for:
   let currentPanelIndex = $state(0); // 0 = filter selection, 1 = sequence browser
   let showFullscreenViewer = $state(false); // Fullscreen sequence viewer state
   let fullscreenSequence = $state<SequenceData | undefined>(undefined); // Current sequence for fullscreen
-  let animationSequence = $state<SequenceData | null>(null); // Current sequence for animation
 
   // ✅ DERIVED RUNES: Computed UI state from browse state
   let selectedFilter = $derived(browseState.currentFilter);
@@ -170,17 +164,9 @@ Integrates panel management service with runes for:
     fullscreenSequence = undefined;
   }
 
-  // ✅ SEQUENCE ACTION HANDLER: Enhanced with animation panel integration
+  // ✅ SEQUENCE ACTION HANDLER: Handle sequence actions
   function handleSequenceAction(action: string, sequence: SequenceData) {
-    if (action === "animate") {
-      // Show animation panel and set sequence
-      animationSequence = sequence;
-      panelState.setAnimationVisible(true);
-      // Expand panel if it's collapsed
-      if (panelState.isAnimationCollapsed) {
-        panelState.toggleAnimationCollapse();
-      }
-    } else if (action === "edit") {
+    if (action === "edit") {
       // Close fullscreen and handle edit
       handleCloseFullscreen();
       originalHandleSequenceAction(action, sequence);
@@ -201,19 +187,9 @@ Integrates panel management service with runes for:
     }
   }
 
-  // ✅ ANIMATION PANEL HANDLERS
-  function handleCloseAnimationPanel() {
-    panelState.setAnimationVisible(false);
-    animationSequence = null;
-  }
-
   // ✅ RESIZE HANDLERS: For panel width changes
   function handleNavigationResize(width: number) {
     // Additional logic if needed when navigation panel is resized
-  }
-
-  function handleAnimationResize(width: number) {
-    // Additional logic if needed when animation panel is resized
   }
 </script>
 
@@ -229,7 +205,6 @@ Integrates panel management service with runes for:
   <BrowseLayout
     {panelState}
     onNavigationResize={handleNavigationResize}
-    onAnimationResize={handleAnimationResize}
   >
     {#snippet navigationSidebar()}
       <NavigationSidebar
@@ -259,15 +234,6 @@ Integrates panel management service with runes for:
           />
         </PanelContainer>
       {/if}
-    {/snippet}
-
-    {#snippet rightPanel()}
-      <!-- Enhanced Animation Panel with unified panel management -->
-      <AnimationPanel
-        sequence={animationSequence}
-        {panelState}
-        onClose={handleCloseAnimationPanel}
-      />
     {/snippet}
   </BrowseLayout>
 
