@@ -93,11 +93,8 @@
           }
         });
 
-        // Wait for all metadata extractions to complete and filter out skipped sequences
-        const allSequences = await Promise.all(sequencePromises);
-        sequences = allSequences.filter(
-          (seq) => seq !== null && seq !== undefined
-        );
+        // Wait for all metadata extractions to complete
+        sequences = await Promise.all(sequencePromises);
       } else {
         throw new Error(data.error || "Failed to load sequences");
       }
