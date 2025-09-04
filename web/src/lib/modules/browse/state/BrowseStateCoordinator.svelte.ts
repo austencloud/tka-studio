@@ -9,8 +9,8 @@ import { NavigationMode } from "$browse/domain";
 import type {
   FilterType,
   FilterValue,
+  GallerySortMethod,
   SequenceData,
-  SortMethod,
 } from "$shared/domain";
 import type {
   IBrowseService,
@@ -32,7 +32,7 @@ interface IBrowseFilterState {
   isFilterActive: boolean;
 }
 
-interface IBrowseDisplayState {
+interface IGalleryDisplayState {
   setLoading(loading: boolean, operation?: string): void;
   setError(error: string | null): void;
 }
@@ -42,7 +42,7 @@ export interface IBrowseStateCoordinator {
   loadAllSequences(): Promise<void>;
   applyFilter(type: FilterType, value: FilterValue): Promise<void>;
   searchSequences(query: string): Promise<void>;
-  updateSort(sortMethod: SortMethod): Promise<void>;
+  updateSort(sortMethod: GallerySortMethod): Promise<void>;
   backToFilters(): Promise<void>;
 
   // Selection operations
@@ -66,13 +66,13 @@ export class BrowseStateCoordinator implements IBrowseStateCoordinator {
   #allSequences = $state<SequenceData[]>([]);
   #filteredSequences = $state<SequenceData[]>([]);
   #displayedSequences = $state<SequenceData[]>([]);
-  #currentSort = $state<SortMethod>("ALPHABETICAL" as SortMethod);
+  #currentSort = $state<GallerySortMethod>("ALPHABETICAL" as GallerySortMethod);
 
   constructor(
     private filterState: IBrowseFilterState,
     private navigationState: IBrowseNavigationState,
     private selectionState: IBrowseSelectionState,
-    private displayState: IBrowseDisplayState,
+    private displayState: IGalleryDisplayState,
     private searchState: IBrowseSearchState,
     private browseService: IBrowseService,
     private navigationService: INavigationService,
@@ -190,7 +190,7 @@ export class BrowseStateCoordinator implements IBrowseStateCoordinator {
     }
   }
 
-  async updateSort(sortMethod: SortMethod): Promise<void> {
+  async updateSort(sortMethod: GallerySortMethod): Promise<void> {
     try {
       this.#currentSort = sortMethod;
 

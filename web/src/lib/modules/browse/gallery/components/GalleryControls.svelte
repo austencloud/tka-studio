@@ -1,32 +1,32 @@
 <script lang="ts">
-  import { SortMethod } from "$shared/domain";
+  import { GallerySortMethod } from "$shared/domain";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
-    sortBy = SortMethod.ALPHABETICAL,
+    sortBy = GallerySortMethod.ALPHABETICAL,
     viewMode = "grid",
     onSortChange = () => {},
     onViewModeChange = () => {},
   } = $props<{
-    sortBy?: SortMethod;
+    sortBy?: GallerySortMethod;
     viewMode?: "grid" | "list";
-    onSortChange?: (sortBy: SortMethod) => void;
+    onSortChange?: (sortBy: GallerySortMethod) => void;
     onViewModeChange?: (viewMode: "grid" | "list") => void;
   }>();
 
   // Sort options
   const sortOptions = [
-    { value: SortMethod.ALPHABETICAL, label: "Name A-Z" },
-    { value: SortMethod.difficultyLevel, label: "Difficulty" },
-    { value: SortMethod.sequenceLength, label: "Length" },
-    { value: SortMethod.dateAdded, label: "Recently Added" },
-    { value: SortMethod.AUTHOR, label: "Author" },
+    { value: GallerySortMethod.ALPHABETICAL, label: "Name A-Z" },
+    { value: GallerySortMethod.difficultyLevel, label: "Difficulty" },
+    { value: GallerySortMethod.sequenceLength, label: "Length" },
+    { value: GallerySortMethod.dateAdded, label: "Recently Added" },
+    { value: GallerySortMethod.AUTHOR, label: "Author" },
   ];
 
   // Handle sort change
   function handleSortChange(event: Event) {
     const target = event.target as HTMLSelectElement;
-    const newSortBy = target.value as SortMethod;
+    const newSortBy = target.value as GallerySortMethod;
     onSortChange(newSortBy);
   }
 

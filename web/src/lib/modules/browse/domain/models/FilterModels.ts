@@ -5,10 +5,8 @@
  * Ported from desktop app's FilterType enum.
  */
 
-import { FilterType } from "../enums/browse-enums";
+import { FilterType } from "../../gallery/domain/enums/gallery-enums";
 import type { FilterValue } from "../types";
-
-
 
 export interface FilterConfig {
   type: FilterType;

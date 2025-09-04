@@ -7,7 +7,11 @@
 
 import { MotionType } from "$shared/domain";
 import { injectable } from "inversify";
-import type { CodexConfig, CodexLetterMapping, CodexLetterRow } from "../../codex/domain";
+import type {
+  CodexConfig,
+  CodexLetterMapping,
+  CodexLetterRow,
+} from "../../codex/domain";
 import { createLetterMapping } from "../../codex/domain";
 import type { ICodexLetterMappingRepository } from "../../codex/services/contracts/ICodexLetterMappingRepository";
 

@@ -21,7 +21,14 @@
     "emitDecoratorMetadata": true,
     "types": ["reflect-metadata"]
   },
-  "include": ["global.d.ts", "src/**/*.ts", "src/**/*.svelte", "tests/**/*.ts"],
+  "include": [
+    "global.d.ts",
+    "src/**/*.ts",
+    "src/**/*.svelte",
+    "tests/**/*.ts",
+    "src/lib/modules/browse/domain/models/gallery-sorting-models.ts",
+    "src/lib/modules/browse/domain/models/gallery-sorting-models.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",

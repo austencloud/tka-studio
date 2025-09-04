@@ -32,12 +32,12 @@ Integrates panel management service with runes for:
 
   // Import layout and UI components
   import BrowseLayout from "./BrowseLayout.svelte";
-  import NavigationSidebar from "./NavigationSidebar.svelte";
-  import PanelContainer from "./PanelContainer.svelte";
+  import NavigationSidebar from "../../gallery/components/NavigationSidebar.svelte";
+  import PanelContainer from "../../gallery/components/PanelContainer.svelte";
   import BrowseLoadingOverlay from "./BrowseLoadingOverlay.svelte";
   import DeleteConfirmationDialog from "./DeleteConfirmationDialog.svelte";
   import ErrorBanner from "./ErrorBanner.svelte";
-  import FullscreenSequenceViewer from "./FullscreenSequenceViewer.svelte";
+  import FullscreenSequenceViewer from "../../components/FullscreenSequenceViewer.svelte";
 
   // ============================================================================
   // SERVICE RESOLUTION - TEMPORARY DISABLED

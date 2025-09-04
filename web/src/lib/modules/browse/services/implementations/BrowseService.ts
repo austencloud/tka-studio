@@ -9,10 +9,10 @@ import type { FilterValue } from "$shared/domain";
 import {
   createSequenceData,
   FilterType,
+  GallerySortMethod,
   GridMode,
   GridPositionGroup,
   PropType,
-  SortMethod,
   type SequenceData,
 } from "$shared/domain";
 import { injectable } from "inversify";
@@ -165,34 +165,34 @@ export class BrowseService implements IBrowseService {
 
   async sortSequences(
     sequences: SequenceData[],
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): Promise<SequenceData[]> {
     const sorted = [...sequences];
 
     switch (sortMethod) {
-      case SortMethod.ALPHABETICAL:
+      case GallerySortMethod.ALPHABETICAL:
         return sorted.sort((a, b) => a.word.localeCompare(b.word));
-      case SortMethod.dateAdded:
+      case GallerySortMethod.dateAdded:
         return sorted.sort((a, b) => {
           const dateA = a.dateAdded || new Date(0);
           const dateB = b.dateAdded || new Date(0);
           return dateB.getTime() - dateA.getTime();
         });
-      case SortMethod.difficultyLevel:
+      case GallerySortMethod.difficultyLevel:
         return sorted.sort((a, b) => {
           const levelA = this.getDifficultyOrder(a.difficultyLevel);
           const levelB = this.getDifficultyOrder(b.difficultyLevel);
           return levelA - levelB;
         });
-      case SortMethod.sequenceLength:
+      case GallerySortMethod.sequenceLength:
         return sorted.sort(
           (a, b) => (a.sequenceLength || 0) - (b.sequenceLength || 0)
         );
-      case SortMethod.AUTHOR:
+      case GallerySortMethod.AUTHOR:
         return sorted.sort((a, b) =>
           (a.author || "").localeCompare(b.author || "")
         );
-      case SortMethod.POPULARITY:
+      case GallerySortMethod.POPULARITY:
         return sorted.sort(
           (a, b) => Number(b.isFavorite) - Number(a.isFavorite)
         );
@@ -203,7 +203,7 @@ export class BrowseService implements IBrowseService {
 
   async groupSequencesIntoSections(
     sequences: SequenceData[],
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): Promise<Record<string, SequenceData[]>> {
     const sections: Record<string, SequenceData[]> = {};
 
@@ -486,16 +486,16 @@ export class BrowseService implements IBrowseService {
 
   private getSectionKey(
     sequence: SequenceData,
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): string {
     switch (sortMethod) {
-      case SortMethod.ALPHABETICAL:
+      case GallerySortMethod.ALPHABETICAL:
         return sequence.word[0]?.toUpperCase() || "#";
-      case SortMethod.difficultyLevel:
+      case GallerySortMethod.difficultyLevel:
         return sequence.difficultyLevel || "Unknown";
-      case SortMethod.AUTHOR:
+      case GallerySortMethod.AUTHOR:
         return sequence.author || "Unknown";
-      case SortMethod.sequenceLength: {
+      case GallerySortMethod.sequenceLength: {
         const length = sequence.sequenceLength || 0;
         if (length <= 4) return "3-4 beats";
         if (length <= 6) return "5-6 beats";

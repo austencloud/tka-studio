@@ -6,7 +6,7 @@
  */
 
 import type { SectionConfig, SequenceSection } from "$browse/domain";
-import { SortMethod } from "$browse/domain/enums/browse-enums";
+import { GallerySortMethod } from "$lib/modules/browse/gallery/domain/enums/gallery-enums";
 import type { SequenceData } from "$shared/domain";
 import { injectable } from "inversify";
 import type { IBrowseSectionService } from "../contracts";
@@ -50,7 +50,7 @@ export class BrowseSectionService implements IBrowseSectionService {
   getDefaultSectionConfig(): SectionConfig {
     return {
       groupBy: "letter",
-      sortMethod: "alphabetical" as SortMethod,
+      sortMethod: "alphabetical" as GallerySortMethod,
       showEmptySections: false,
     };
   }
@@ -208,7 +208,7 @@ export class BrowseSectionService implements IBrowseSectionService {
 
   private sortSequencesInSection(
     sequences: SequenceData[],
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): SequenceData[] {
     const sorted = [...sequences];
 
@@ -340,7 +340,7 @@ export class BrowseSectionService implements IBrowseSectionService {
   }
 
   async getSectionConfig(
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): Promise<SectionConfig> {
     // Return a basic configuration based on sort method
     return {

@@ -6,15 +6,15 @@
  */
 
 import type {
-  FilterState as BrowseFilterState,
+  GalleryFilterState as BrowseFilterState,
   BrowseState,
 } from "$browse/domain";
+import type { FilterValue } from "$browse/domain/types";
 import {
   FilterType,
+  GallerySortMethod,
   NavigationMode,
-  SortMethod,
-} from "$browse/domain/enums/browse-enums";
-import type { FilterValue } from "$browse/domain/types";
+} from "$lib/modules/browse/gallery/domain/enums/gallery-enums";
 import {
   safeSessionStorageGet,
   safeSessionStorageRemove,
@@ -22,7 +22,7 @@ import {
 } from "$shared/utils";
 import { injectable } from "inversify";
 
-export interface FilterState {
+export interface GalleryFilterState {
   type: FilterType;
   value: FilterValue;
   appliedAt: Date;
@@ -36,16 +36,16 @@ export interface IFilterPersistenceService {
   loadBrowseState(): Promise<BrowseState | null>;
 
   /** Save filter history */
-  saveFilterToHistory(filter: FilterState): Promise<void>;
+  saveFilterToHistory(filter: GalleryFilterState): Promise<void>;
 
   /** Get filter history */
-  getFilterHistory(): Promise<FilterState[]>;
+  getFilterHistory(): Promise<GalleryFilterState[]>;
 
   /** Clear filter history */
   clearFilterHistory(): Promise<void>;
 
   /** Get recently used filters */
-  getRecentFilters(limit?: number): Promise<FilterState[]>;
+  getRecentFilters(limit?: number): Promise<GalleryFilterState[]>;
 
   /** Clear all saved state */
   clearAllState(): Promise<void>;
@@ -109,7 +109,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
     }
   }
 
-  async saveFilterToHistory(filter: FilterState): Promise<void> {
+  async saveFilterToHistory(filter: GalleryFilterState): Promise<void> {
     try {
       const history = await this.getFilterHistory();
 
@@ -134,7 +134,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
     }
   }
 
-  async getFilterHistory(): Promise<FilterState[]> {
+  async getFilterHistory(): Promise<GalleryFilterState[]> {
     try {
       const parsed = safeSessionStorageGet<unknown[]>(
         this.FILTER_HISTORY_KEY,
@@ -164,7 +164,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
     safeSessionStorageRemove(this.FILTER_HISTORY_KEY);
   }
 
-  async getRecentFilters(limit: number = 10): Promise<FilterState[]> {
+  async getRecentFilters(limit: number = 10): Promise<GalleryFilterState[]> {
     const history = await this.getFilterHistory();
     return history.slice(0, limit);
   }
@@ -187,12 +187,12 @@ export class FilterPersistenceService implements IFilterPersistenceService {
     return frequency;
   }
 
-  async getMostUsedFilters(limit: number = 5): Promise<FilterState[]> {
+  async getMostUsedFilters(limit: number = 5): Promise<GalleryFilterState[]> {
     const history = await this.getFilterHistory();
     const frequency = await this.getFilterFrequency();
 
     // Group filters by type:value and find most frequent
-    const filterMap = new Map<string, FilterState>();
+    const filterMap = new Map<string, GalleryFilterState>();
     history.forEach((filter) => {
       const key = `${filter.type}:${JSON.stringify(filter.value)}`;
       if (!filterMap.has(key)) {
@@ -216,7 +216,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       selectedSequence: null,
       selectedVariation: null,
       navigationMode: NavigationMode.FILTER_SELECTION,
-      sortMethod: SortMethod.ALPHABETICAL,
+      sortMethod: GallerySortMethod.ALPHABETICAL,
     };
   }
 
@@ -229,7 +229,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       selectedSequence: null,
       selectedVariation: null,
       navigationMode: NavigationMode.FILTER_SELECTION,
-      sortMethod: SortMethod.ALPHABETICAL,
+      sortMethod: GallerySortMethod.ALPHABETICAL,
     };
     await this.saveBrowseState(browseState);
   }
@@ -249,7 +249,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
         favorites: null,
         recent: null,
       },
-      sortMethod: SortMethod.ALPHABETICAL,
+      sortMethod: GallerySortMethod.ALPHABETICAL,
       searchQuery: "",
     };
   }

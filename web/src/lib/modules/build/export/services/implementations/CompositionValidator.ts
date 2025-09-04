@@ -5,11 +5,12 @@
  * Provides memory estimation, parameter validation, and test composition capabilities.
  */
 
+import type { SequenceData } from "$shared/domain";
+import type { LayoutData, SequenceExportOptions } from "../../domain";
 import type {
   IDimensionCalculationService,
   ILayoutCalculationService,
-} from "$services";
-import type { LayoutData, SequenceData, SequenceExportOptions } from "$shared/domain";
+} from "../contracts";
 import {
   CompositionUtils,
   type CompositionStats,

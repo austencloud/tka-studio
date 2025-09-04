@@ -5,7 +5,6 @@
  * Handles pattern creation, movement generation, and caching.
  */
 
-import type { MotionData, PictographData } from "$domain";
 import {
   Direction,
   Letter,
@@ -21,6 +20,7 @@ import type {
   IPictographValidatorService,
   IPositionPatternService
 } from "$services";
+import type { MotionData, PictographData } from "$shared/domain";
 
 export abstract class BaseLetterGenerator implements ILetterGenerator {
   private static readonly movementCache = new Map<string, PictographData>();

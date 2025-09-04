@@ -7,13 +7,13 @@
 
 import type {
   BrowseDeleteConfirmationData,
-  BrowseLoadingState,
+  GalleryLoadingState,
   NavigationItem,
   NavigationSectionConfig,
 } from "$browse/domain";
 import { NavigationMode } from "$browse/domain";
-import { FilterType } from "$browse/domain/enums/browse-enums";
 import type { FilterValue } from "$browse/domain/types";
+import { FilterType } from "$lib/modules/browse/gallery/domain/enums/gallery-enums";
 import type { SequenceData } from "$shared/domain";
 import type {
   IBrowseService,
@@ -25,19 +25,19 @@ import type {
   ISequenceIndexService,
   IThumbnailService,
 } from "../services/contracts";
-import { BrowseDisplayStateService } from "./BrowseDisplayState.svelte";
 import { BrowseFilterState } from "./BrowseFilterState.svelte";
 import { BrowseNavigationState } from "./BrowseNavigationState.svelte";
 import { BrowseSearchState } from "./BrowseSearchState.svelte";
 import { BrowseSelectionState } from "./BrowseSelectionState.svelte";
 import { BrowseStateCoordinator } from "./BrowseStateCoordinator.svelte";
+import { GalleryDisplayStateService } from "./GalleryDisplayState.svelte";
 
 export interface BrowseState {
   // State microservices (reactive)
   readonly filterState: BrowseFilterState;
   readonly navigationState: BrowseNavigationState;
   readonly selectionState: BrowseSelectionState;
-  readonly displayState: BrowseDisplayStateService;
+  readonly displayState: GalleryDisplayStateService;
   readonly searchState: BrowseSearchState;
 
   // Coordinator (orchestration)
@@ -55,7 +55,7 @@ export interface BrowseState {
   // Additional properties needed by BrowseTab
   readonly allSequences: SequenceData[];
   readonly filteredSequences: SequenceData[];
-  readonly loadingState: BrowseLoadingState; // From displayState
+  readonly loadingState: GalleryLoadingState; // From displayState
   readonly searchQuery: string;
 
   // Delegation methods (common operations)
@@ -104,7 +104,7 @@ export function createBrowseState(
   const filterStateImpl = new BrowseFilterState();
   const navigationState = new BrowseNavigationState();
   const selectionState = new BrowseSelectionState();
-  const displayStateImpl = new BrowseDisplayStateService();
+  const displayStateImpl = new GalleryDisplayStateService();
   const searchState = new BrowseSearchState();
 
   // Create adapter for filter state to match coordinator interface

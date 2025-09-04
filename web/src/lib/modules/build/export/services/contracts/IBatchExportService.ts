@@ -1,17 +1,16 @@
 
+import type { SequenceData } from "$shared/domain";
 import type {
-  BatchExportOptions,
-  BatchExportResult,
-  ExportProgress,
-  ImageExportOptions,
-  PDFExportOptions,
-  Page,
-} from "$shared/domain";
+    ExportProgress,
+    SequenceExportOptions,
+    SequenceExportResult
+} from "../../domain";
+
 export interface IBatchExportService {
   exportInBatches(
-    pages: Page[],
-    options: BatchExportOptions & (ImageExportOptions | PDFExportOptions)
-  ): Promise<BatchExportResult>;
+    sequences: SequenceData[],
+    options: SequenceExportOptions
+  ): Promise<SequenceExportResult[]>;
   onProgress(callback: (progress: ExportProgress) => void): void;
   cancelBatchExport(): Promise<void>;
   getBatchStatus(): {

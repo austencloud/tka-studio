@@ -57,7 +57,9 @@ export function createCodexLetter(data: Partial<CodexLetter>): CodexLetter {
   };
 }
 
-export function createCodexLetterRow(data: Partial<CodexLetterRow>): CodexLetterRow {
+export function createCodexLetterRow(
+  data: Partial<CodexLetterRow>
+): CodexLetterRow {
   return {
     index: data.index ?? 0,
     category: data.category ?? ("basic" as LetterCategory),

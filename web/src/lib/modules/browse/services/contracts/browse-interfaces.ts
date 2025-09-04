@@ -15,7 +15,7 @@ import type {
   BrowseDeleteConfirmationData,
   BrowseDeleteResult,
   BrowseState,
-  FilterState,
+  GalleryFilterState,
   NavigationItem,
   NavigationSectionConfig,
   SectionConfig,
@@ -24,8 +24,8 @@ import type {
 import type {
   FilterType,
   FilterValue,
+  GallerySortMethod,
   SequenceData,
-  SortMethod,
 } from "$shared/domain";
 
 // ============================================================================
@@ -41,11 +41,11 @@ export interface IBrowseService {
   ): Promise<SequenceData[]>;
   sortSequences(
     sequences: SequenceData[],
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): Promise<SequenceData[]>;
   groupSequencesIntoSections(
     sequences: SequenceData[],
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): Promise<Record<string, SequenceData[]>>;
   getUniqueValues(field: keyof SequenceData): Promise<string[]>;
   getFilterOptions(filterType: FilterType): Promise<string[]>;
@@ -91,8 +91,8 @@ export interface IFavoritesService {
 }
 
 export interface IFilterPersistenceService {
-  saveFilterState(state: FilterState): Promise<void>;
-  loadFilterState(): Promise<FilterState>;
+  saveFilterState(state: GalleryFilterState): Promise<void>;
+  loadFilterState(): Promise<GalleryFilterState>;
   saveBrowseState(state: BrowseState): Promise<void>;
   loadBrowseState(): Promise<BrowseState | null>;
 }
@@ -136,9 +136,7 @@ export interface ISectionService {
     sequences: SequenceData[],
     config: SectionConfig
   ): Promise<SequenceSection[]>;
-  getSectionConfig(
-    sortMethod: SortMethod
-  ): Promise<SectionConfig>;
+  getSectionConfig(sortMethod: GallerySortMethod): Promise<SectionConfig>;
   organizeSections(
     sequences: SequenceData[],
     config: SectionConfig

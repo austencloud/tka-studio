@@ -3,8 +3,8 @@
  */
 
 // Re-export all generate components
-export * from "./selectors";
-export * from "./utils";
+// Note: selectors directory doesn't have index.ts yet
+// export * from "./selectors";
 
 // Direct component exports (when files are moved here)
 export { default as GeneratePanel } from "./GeneratePanel.svelte";

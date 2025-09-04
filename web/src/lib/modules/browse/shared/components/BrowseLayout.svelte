@@ -8,7 +8,7 @@ Provides three-section layout with:
 -->
 <script lang="ts">
   import Splitter from "$shared/components/ui/Splitter.svelte";
-  import type { BrowsePanelStateManager } from "../state";
+  import type { BrowsePanelStateManager } from "../../state";
   import type { Snippet } from "svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes

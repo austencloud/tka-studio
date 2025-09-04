@@ -5,8 +5,8 @@
  * Can be enhanced with actual CSV loading functionality as needed.
  */
 
-import type { PictographData } from "$domain";
-import { Letter } from "$domain";
+import type { PictographData } from "$shared/domain";
+import { Letter } from "$shared/domain";
 import { injectable } from "inversify";
 
 export interface ICSVPictographLoaderService {

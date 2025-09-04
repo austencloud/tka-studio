@@ -168,7 +168,7 @@ export class BrowseTabStateManager {
   /**
    * Save sort state
    */
-  async saveSortState(method: SortMethod): Promise<void> {
+  async saveSortState(method: GallerySortMethod): Promise<void> {
     if (!browser) return;
 
     const sortState: BrowseSortState = {
@@ -324,21 +324,21 @@ export class BrowseTabStateManager {
   // ============================================================================
 
   /**
-   * Map SortMethod enum to string for persistence
+   * Map GallerySortMethod enum to string for persistence
    */
   private mapSortMethodToString(
-    method: SortMethod
+    method: GallerySortMethod
   ): "name_asc" | "name_desc" | "difficulty" | "length" | "recent" | "author" {
     switch (method) {
-      case SortMethod.ALPHABETICAL:
+      case GallerySortMethod.ALPHABETICAL:
         return "name_asc";
-      case SortMethod.difficultyLevel:
+      case GallerySortMethod.difficultyLevel:
         return "difficulty";
-      case SortMethod.sequenceLength:
+      case GallerySortMethod.sequenceLength:
         return "length";
-      case SortMethod.dateAdded:
+      case GallerySortMethod.dateAdded:
         return "recent";
-      case SortMethod.AUTHOR:
+      case GallerySortMethod.AUTHOR:
         return "author";
       default:
         return "name_asc";
@@ -346,23 +346,23 @@ export class BrowseTabStateManager {
   }
 
   /**
-   * Map string back to SortMethod enum
+   * Map string back to GallerySortMethod enum
    */
-  mapStringToSortMethod(method: string): SortMethod {
+  mapStringToSortMethod(method: string): GallerySortMethod {
     switch (method) {
       case "name_asc":
       case "name_desc":
-        return SortMethod.ALPHABETICAL;
+        return GallerySortMethod.ALPHABETICAL;
       case "difficulty":
-        return SortMethod.difficultyLevel;
+        return GallerySortMethod.difficultyLevel;
       case "length":
-        return SortMethod.sequenceLength;
+        return GallerySortMethod.sequenceLength;
       case "recent":
-        return SortMethod.dateAdded;
+        return GallerySortMethod.dateAdded;
       case "author":
-        return SortMethod.AUTHOR;
+        return GallerySortMethod.AUTHOR;
       default:
-        return SortMethod.ALPHABETICAL;
+        return GallerySortMethod.ALPHABETICAL;
     }
   }
 

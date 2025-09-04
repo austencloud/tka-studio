@@ -1,10 +1,10 @@
 <script lang="ts">
   import type { FilterType, FilterValue, SequenceData } from "$shared/domain";
-  import { SortMethod } from "$shared/domain";
+  import { GallerySortMethod } from "$shared/domain";
   import { resolve, TYPES } from "$shared/inversify";
+  import { onMount } from "svelte";
   import type { IThumbnailService } from "../../services/contracts";
   import { getBrowseTabStateManager } from "../../state";
-  import { onMount } from "svelte";
   import SequenceBrowserControls from "./SequenceBrowserControls.svelte";
   import SequenceBrowserFooter from "./SequenceBrowserFooter.svelte";
   import SequenceGrid from "./SequenceBrowserGrid.svelte";
@@ -29,7 +29,7 @@
   const stateManager = getBrowseTabStateManager();
 
   // ✅ PURE RUNES: State using runes with persistence
-  let sortBy = $state<SortMethod>(SortMethod.ALPHABETICAL);
+  let sortBy = $state<GallerySortMethod>(GallerySortMethod.ALPHABETICAL);
   let viewMode: "grid" | "list" = $state("grid");
   let error = $state<string | null>(null);
   let scrollContainer: HTMLElement | null = $state(null);
@@ -50,9 +50,9 @@
 
     const sorted = [...sequences].sort((a, b) => {
       switch (sortBy) {
-        case SortMethod.ALPHABETICAL:
+        case GallerySortMethod.ALPHABETICAL:
           return a.word.localeCompare(b.word);
-        case SortMethod.difficultyLevel: {
+        case GallerySortMethod.difficultyLevel: {
           // Fix: Use difficultyLevel instead of difficulty
           const getDifficultyOrder = (level?: string) => {
             switch (level) {
@@ -71,12 +71,12 @@
             getDifficultyOrder(b.difficultyLevel)
           );
         }
-        case SortMethod.sequenceLength:
+        case GallerySortMethod.sequenceLength:
           // Fix: Use sequenceLength instead of length
           return (a.sequenceLength || 0) - (b.sequenceLength || 0);
-        case SortMethod.dateAdded:
+        case GallerySortMethod.dateAdded:
           return (b.dateAdded?.getTime() || 0) - (a.dateAdded?.getTime() || 0);
-        case SortMethod.AUTHOR:
+        case GallerySortMethod.AUTHOR:
           return (a.author || "").localeCompare(b.author || "");
         default:
           return 0;
@@ -151,7 +151,7 @@
   });
 
   // ✅ RUNES METHODS: Event handlers with state persistence
-  function handleSortChange(newSortBy: SortMethod) {
+  function handleSortChange(newSortBy: GallerySortMethod) {
     console.log("🔄 Sort changed to:", newSortBy);
     sortBy = newSortBy;
     // Save sort state

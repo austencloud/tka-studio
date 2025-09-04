@@ -1,12 +1,13 @@
-import type {
-  IBeatFallbackRenderer,
-  IBeatRenderingService,
-  ICanvasManagementService,
-  ISVGToCanvasConverterService,
-} from "$services";
-import type { BeatData, BeatRenderOptions, SequenceData } from "$shared/domain";
+import type { BeatData, SequenceData } from "$shared/domain";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
+import type { BeatRenderOptions } from "../../domain";
+import type {
+    IBeatFallbackRenderer,
+    IBeatRenderingService,
+    ICanvasManagementService,
+    ISVGToCanvasConverterService,
+} from "../contracts";
 
 @injectable()
 export class BeatRenderingService implements IBeatRenderingService {

@@ -9,7 +9,7 @@
 
 import type { Page } from "@sveltejs/kit";
 import type { SequenceData, ValidationResult } from "../../../../../shared/domain";
-import type { GridCalculationOptions, LayoutCalculationRequest, LayoutCalculationResult, LayoutValidationResult, PageCreationOptions, PageDimensions, PageLayoutConfig, PageMargins, PageOrientation, Rectangle, WordCardGridConfig, WordCardPaperSize, DPIConfiguration } from "../../../../word-card";
+import type { DPIConfiguration, GridCalculationOptions, LayoutCalculationRequest, LayoutCalculationResult, LayoutValidationResult, PageCreationOptions, PageDimensions, PageLayoutConfig, PageMargins, PageOrientation, Rectangle, WordCardGridConfig, WordCardPaperSize } from "../../../../word-card";
 import type { BeatData, DeleteConfirmationData, DeleteResult, SequenceCreateRequest } from "../../domain";
 
 // ============================================================================

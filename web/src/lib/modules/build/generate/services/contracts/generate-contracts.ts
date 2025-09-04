@@ -7,7 +7,6 @@
 // ============================================================================
 // GENERATION OPTIONS
 // ============================================================================
-import type { GenerationOptions, LetterDerivationResult } from "$build/domain";
 import type {
   BeatData,
   GridMode,
@@ -17,6 +16,7 @@ import type {
   SequenceData
 } from "$shared/domain";
 import { GenerationMode, GridPosition, MotionColor } from "$shared/domain";
+import type { GenerationOptions, LetterDerivationResult } from "../../domain";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

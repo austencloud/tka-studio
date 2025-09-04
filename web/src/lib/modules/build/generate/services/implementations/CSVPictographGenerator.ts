@@ -6,8 +6,8 @@
  * Provides simple AI-friendly functions like generateA(), generateB(), etc.
  */
 
-import type { PictographData } from "$domain";
-import type { IPictographGenerator } from "$services";
+import type { PictographData } from "$shared/domain";
+import type { IPictographGenerator } from "$shared/services/core/contracts";
 import { injectable } from "inversify";
 
 @injectable()

@@ -15,7 +15,7 @@ export enum FilterType {
   RECENT = "recent",
 }
 
-export enum SortMethod {
+export enum GallerySortMethod {
   ALPHABETICAL = "alphabetical",
   dateAdded = "dateAdded",
   difficultyLevel = "difficultyLevel",

@@ -13,8 +13,8 @@ import type {
 import type {
   FilterType,
   FilterValue,
+  GallerySortMethod,
   SequenceData,
-  SortMethod,
 } from "$shared/domain";
 
 // Export interfaces from other contract files
@@ -38,11 +38,11 @@ export interface IBrowseService {
   ): Promise<SequenceData[]>;
   sortSequences(
     sequences: SequenceData[],
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): Promise<SequenceData[]>;
   groupSequencesIntoSections(
     sequences: SequenceData[],
-    sortMethod: SortMethod
+    sortMethod: GallerySortMethod
   ): Promise<Record<string, SequenceData[]>>;
   getUniqueValues(field: keyof SequenceData): Promise<string[]>;
   getFilterOptions(filterType: FilterType): Promise<string[]>;
@@ -107,8 +107,8 @@ export interface IFavoritesService {
  * Service for persisting filter and browse state
  */
 export interface IFilterPersistenceService {
-  saveFilterState(state: FilterState): Promise<void>;
-  loadFilterState(): Promise<FilterState>;
+  saveFilterState(state: GalleryFilterState): Promise<void>;
+  loadFilterState(): Promise<GalleryFilterState>;
   saveBrowseState(state: BrowseState): Promise<void>;
   loadBrowseState(): Promise<BrowseState | null>;
 }
@@ -158,9 +158,7 @@ export interface ISectionService {
     sequences: SequenceData[],
     config: SectionConfig
   ): Promise<SequenceSection[]>;
-  getSectionConfig(
-    sortMethod: SortMethod
-  ): Promise<SectionConfig>;
+  getSectionConfig(sortMethod: GallerySortMethod): Promise<SectionConfig>;
   organizeSections(
     sequences: SequenceData[],
     config: SectionConfig
@@ -181,9 +179,9 @@ export interface ISectionService {
 // These data models have been moved to domain/models/browse/BrowseModels.ts
 // Import them from $domain instead
 
-export interface FilterState {
+export interface GalleryFilterState {
   activeFilters: Record<FilterType, FilterValue>;
-  sortMethod: SortMethod;
+  sortMethod: GallerySortMethod;
   searchQuery: string;
 }
 
@@ -215,7 +213,7 @@ export interface SectionConfig {
     | "difficulty"
     | "date"
     | "none";
-  sortMethod: SortMethod;
+  sortMethod: GallerySortMethod;
   showEmptySections: boolean;
   expandedSections?: Set<string>;
   sortOrder?: "asc" | "desc";

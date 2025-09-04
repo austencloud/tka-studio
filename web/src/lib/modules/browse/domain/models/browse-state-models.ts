@@ -5,10 +5,12 @@
  * Ported from desktop app's browse models.
  */
 
-import type { SequenceData } from "$shared/domain";
-import { SortMethod, type FilterType } from "../enums/browse-enums";
+import type { SequenceData } from "../../../../shared/domain";
+import {
+  GallerySortMethod,
+  type FilterType,
+} from "../../gallery/domain/enums/gallery-enums";
 import type { FilterValue } from "../types";
-
 
 export interface BrowseState {
   filterType: FilterType | null;
@@ -16,7 +18,7 @@ export interface BrowseState {
   selectedSequence: string | null;
   selectedVariation: number | null;
   navigationMode: NavigationMode;
-  sortMethod: SortMethod;
+  sortMethod: GallerySortMethod;
 }
 
 export enum NavigationMode {
@@ -27,16 +29,8 @@ export enum NavigationMode {
 // SequenceData eliminated - using SequenceData directly
 // This eliminates 95% duplication and clarifies starting position types
 
-export interface SequenceFilterResult {
-  sequences: SequenceData[];
-  totalCount: number;
-  filterApplied: {
-    type: FilterType;
-    value: FilterValue;
-  };
-}
 
-export interface BrowseLoadingState {
+export interface GalleryLoadingState {
   isLoading: boolean;
   loadedCount: number;
   totalCount: number;
@@ -44,7 +38,7 @@ export interface BrowseLoadingState {
   error: string | null;
 }
 
-export interface BrowseDisplayState {
+export interface GalleryDisplayState {
   sequences: SequenceData[];
   sortedSections: Record<string, SequenceData[]>;
   currentSection: string | null;
@@ -59,15 +53,14 @@ export function createDefaultBrowseState(): BrowseState {
     filterValues: null,
     selectedSequence: null,
     selectedVariation: null,
-    navigationMode: NavigationMode.FILTER_SELECTION,
-    sortMethod: SortMethod.ALPHABETICAL,
+    sortMethod: GallerySortMethod.ALPHABETICAL,
   };
 }
 
 // createSequenceData function removed - using SequenceData directly
 // No conversion needed since SequenceData was eliminated
 
-export function createDefaultLoadingState(): BrowseLoadingState {
+export function createDefaultLoadingState(): GalleryLoadingState {
   return {
     isLoading: false,
     loadedCount: 0,
@@ -77,7 +70,7 @@ export function createDefaultLoadingState(): BrowseLoadingState {
   };
 }
 
-export function createDefaultDisplayState(): BrowseDisplayState {
+export function createDefaultDisplayState(): GalleryDisplayState {
   return {
     sequences: [],
     sortedSections: {},

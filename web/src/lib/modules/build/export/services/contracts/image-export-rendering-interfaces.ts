@@ -5,16 +5,15 @@
  * and visual effects in the TKA image export system.
  */
 
+import type { SequenceData } from "$shared/domain";
 import type {
-  BeatData,
-  BeatRenderOptions,
-  CompositionOptions,
-  ImageExportOptions,
-  LayoutData,
-  SequenceData,
-  TextRenderOptions,
-  UserInfo,
-} from "$shared/domain";
+    BeatData,
+    BeatRenderOptions,
+    CompositionOptions,
+    LayoutData,
+    TextRenderOptions,
+    UserInfo,
+} from "../../domain";
 
 // ============================================================================
 // RENDERING SERVICES

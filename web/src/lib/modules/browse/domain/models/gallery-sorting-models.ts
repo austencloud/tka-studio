@@ -1,18 +1,12 @@
 /**
- * Browse Sort Methods
+ * Browse Sorting Models
  *
- * Defines the different ways to sort sequences in the browse tab.
- * Ported from desktop app's GallerySortMethod enum.
+ * Interface definitions and business logic for browse sorting functionality.
+ * Contains the business logic functions that were in GallerySortMethod.ts
  */
-
 import { SORT_CONFIGS } from "../../gallery/domain/constants/gallery-constants";
-import { GallerySortMethod } from "../../gallery/domain/enums/gallery-enums";
-
-export interface SortConfig {
-  method: GallerySortMethod;
-  direction: "asc" | "desc";
-  displayName: string;
-}
+import { GallerySortMethod } from "../../gallery/domain/enums";
+import type { SortConfig } from "./SortModels";
 
 // Helper functions
 export function getSortConfig(method: GallerySortMethod): SortConfig {

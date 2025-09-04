@@ -9,9 +9,9 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
 <script lang="ts">
   import type { SequenceData } from "$shared/domain";
   import type { IThumbnailService } from "../../services/contracts";
-  import ThumbnailActions from "./ThumbnailActions.svelte";
-  import ThumbnailImage from "./ThumbnailImage.svelte";
-  import ThumbnailMetadata from "./ThumbnailMetadata.svelte";
+  import ThumbnailActions from "./GalleryThumbnailActions.svelte";
+  import ThumbnailImage from "../thumbnail/ThumbnailImage.svelte";
+  import ThumbnailMetadata from "../thumbnail/ThumbnailMetadata.svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

@@ -5,16 +5,16 @@
  * Handles loading, error, and display settings without business logic.
  */
 
-import type { BrowseDisplayState, BrowseLoadingState } from "$browse/domain";
+import type { GalleryDisplayState, GalleryLoadingState } from "$browse/domain";
 import {
   createDefaultDisplayState,
   createDefaultLoadingState,
 } from "$browse/domain";
 
-export interface IBrowseDisplayState {
+export interface IGalleryDisplayState {
   // Reactive state getters
-  readonly loadingState: BrowseLoadingState;
-  readonly displayState: BrowseDisplayState;
+  readonly loadingState: GalleryLoadingState;
+  readonly displayState: GalleryDisplayState;
   readonly isLoading: boolean;
   readonly hasError: boolean;
 
@@ -24,14 +24,14 @@ export interface IBrowseDisplayState {
   clearError(): void;
 
   // Display actions
-  updateDisplaySettings(settings: Partial<BrowseDisplayState>): void;
+  updateDisplaySettings(settings: Partial<GalleryDisplayState>): void;
   resetDisplayState(): void;
 }
 
-export class BrowseDisplayStateService implements IBrowseDisplayState {
+export class GalleryDisplayStateService implements IGalleryDisplayState {
   // Private reactive state
-  #loadingState = $state<BrowseLoadingState>(createDefaultLoadingState());
-  #displayState = $state<BrowseDisplayState>(createDefaultDisplayState());
+  #loadingState = $state<GalleryLoadingState>(createDefaultLoadingState());
+  #displayState = $state<GalleryDisplayState>(createDefaultDisplayState());
 
   // Reactive getters
   get loadingState() {
@@ -48,7 +48,7 @@ export class BrowseDisplayStateService implements IBrowseDisplayState {
 
   get hasError() {
     return (
-      (this.#loadingState as BrowseLoadingState & { error: string | null })
+      (this.#loadingState as GalleryLoadingState & { error: string | null })
         .error !== null
     );
   }
@@ -58,31 +58,31 @@ export class BrowseDisplayStateService implements IBrowseDisplayState {
     this.#loadingState.isLoading = loading;
     if (operation) {
       (
-        this.#loadingState as BrowseLoadingState & { currentOperation: string }
+        this.#loadingState as GalleryLoadingState & { currentOperation: string }
       ).currentOperation = operation;
     }
     if (loading) {
       (
-        this.#loadingState as BrowseLoadingState & { error: string | null }
+        this.#loadingState as GalleryLoadingState & { error: string | null }
       ).error = null; // Clear error when starting new operation
     }
   }
 
   setError(error: string | null): void {
     (
-      this.#loadingState as BrowseLoadingState & { error: string | null }
+      this.#loadingState as GalleryLoadingState & { error: string | null }
     ).error = error;
     this.#loadingState.isLoading = false; // Stop loading on error
   }
 
   clearError(): void {
     (
-      this.#loadingState as BrowseLoadingState & { error: string | null }
+      this.#loadingState as GalleryLoadingState & { error: string | null }
     ).error = null;
   }
 
   // Display actions
-  updateDisplaySettings(settings: Partial<BrowseDisplayState>): void {
+  updateDisplaySettings(settings: Partial<GalleryDisplayState>): void {
     this.#displayState = { ...this.#displayState, ...settings };
   }
 
