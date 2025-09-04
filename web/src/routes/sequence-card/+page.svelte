@@ -1,8 +1,8 @@
 <!-- SEO-Optimized SEQUENCE-CARD Page with Enhanced Meta Data -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import MainApplication from "$lib/components/core/MainApplication.svelte";
-  import { handleSEORedirect } from "$utils";
+  import MainApplication from "$shared/core/MainApplication.svelte";
+  import { handleSEORedirect } from "$shared/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
 

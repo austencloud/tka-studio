@@ -6,8 +6,8 @@
  */
 
 import type { BeatFrameConfig } from "$domain";
-import { GridMode } from "$domain";
 import { BeatFrameService } from "$implementations";
+import { GridMode } from "$shared/domain";
 import { beforeEach, describe, expect, it } from "vitest";
 
 describe("BeatFrameService", () => {
@@ -17,7 +17,7 @@ describe("BeatFrameService", () => {
     service = new BeatFrameService();
   });
 
-  describe("Configuration", () => {
+  describe("Config", () => {
     it("should provide default configuration", () => {
       const config = service.getDefaultConfig();
 

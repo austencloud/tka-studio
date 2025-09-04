@@ -1,5 +1,5 @@
 /**
- * Domain Configuration for TKA
+ * Domain Config for TKA
  *
  * Handles multiple domains and SEO settings
  */

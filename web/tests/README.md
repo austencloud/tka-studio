@@ -76,16 +76,16 @@ npm run test:seo:debug     # Run SEO tests in debug mode
 - **Speed**: 10+ seconds per test
 - **Dependencies**: Real browser, real services
 
-## 🔧 Configuration
+## 🔧 Config
 
-### Vitest Configuration
+### Vitest Config
 
 - **Config File**: `vitest.config.ts`
 - **Setup File**: `tests/setup/vitest-setup.ts`
 - **Environment**: jsdom
 - **Aliases**: `$lib` and `$app` for imports
 
-### Playwright Configuration
+### Playwright Config
 
 - **Config File**: `playwright.config.ts`
 - **Test Directory**: `tests/e2e/`

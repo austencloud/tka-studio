@@ -173,7 +173,7 @@ describe("WorkbenchService", () => {
     });
   });
 
-  describe("Configuration Operations", () => {
+  describe("Config Operations", () => {
     it("should validate grid mode changes", () => {
       expect(
         service.validateGridModeChange(GridMode.DIAMOND, GridMode.BOX)

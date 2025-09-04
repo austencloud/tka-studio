@@ -1,8 +1,8 @@
 <!-- SEO-Optimized About Page with User Redirect -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import AboutTab from "$lib/components/about/AboutTab.svelte";
-  import { handleSEORedirect } from "$utils";
+  import AboutTab from "$about/components/AboutTab.svelte";
+  import { handleSEORedirect } from "$shared/utils";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
 

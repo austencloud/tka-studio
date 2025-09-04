@@ -1,7 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 /**
- * Playwright Configuration for SEO Integration Tests
+ * Playwright Config for SEO Integration Tests
  *
  * This configuration sets up Playwright to:
  * 1. Start the SvelteKit dev server before running tests

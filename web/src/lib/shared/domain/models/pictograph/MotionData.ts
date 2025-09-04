@@ -1,0 +1,68 @@
+/**
+ * Motion Data Domain Model
+ *
+ * Immutable motion data for props and arrows with embedded placement data.
+ * Represents complete motion information including positioning and rendering data.
+ */
+
+import {
+  Location,
+  MotionColor,
+  MotionType,
+  Orientation,
+  PropType,
+  RotationDirection,
+} from "../../enums";
+import type { ArrowPlacementData } from "./ArrowPlacementData";
+import { createArrowPlacementData } from "./ArrowPlacementData";
+import type { PropPlacementData } from "./PropPlacementData";
+import { createPropPlacementData } from "./PropPlacementData";
+
+export interface MotionData {
+  readonly motionType: MotionType;
+  readonly rotationDirection: RotationDirection;
+  readonly startLocation: Location;
+  readonly endLocation: Location;
+  readonly turns: number | "fl"; // Can be 'fl' for float motions
+  readonly startOrientation: Orientation;
+  readonly endOrientation: Orientation;
+  readonly isVisible: boolean;
+  readonly propType: PropType;
+  readonly arrowLocation: Location;
+  readonly color: MotionColor;
+
+  // EMBEDDED PLACEMENT DATA: Everything accessible through motion data
+  readonly arrowPlacementData: ArrowPlacementData;
+  readonly propPlacementData: PropPlacementData;
+
+  // Prefloat attributes for letter determination
+  readonly prefloatMotionType?: MotionType | null;
+  readonly prefloatRotationDirection?: RotationDirection | null;
+}
+
+// TODO: add derivation functions to get the motion type if you know start to end + rotation direction and vica versa
+// TODO: import derivation functionality (already exists somewhere) To get the end orientation based upon the details of the start orientation, the motion type, and the number of turns
+// TODO: Add a derivation function which automatically updates the arrow location based upon the start and end location and the number of turns and the rotation direction
+// TODO: ensure that the arrow and prop placement data get properly updated with the corresponding functions that already exist
+
+export function createMotionData(data: Partial<MotionData> = {}): MotionData {
+  return {
+    motionType: data.motionType ?? MotionType.STATIC,
+    rotationDirection: data.rotationDirection ?? RotationDirection.NO_ROTATION,
+    startLocation: data.startLocation ?? Location.NORTH,
+    endLocation: data.endLocation ?? Location.NORTH,
+    turns: data.turns ?? 0.0,
+    startOrientation: data.startOrientation ?? Orientation.IN,
+    endOrientation: data.endOrientation ?? Orientation.IN,
+    isVisible: data.isVisible ?? true,
+    propType: data.propType ?? PropType.STAFF, // Default prop type
+    arrowLocation: data.arrowLocation ?? Location.NORTH, // Must be calculated by ArrowLocationCalculator - NEVER default to startLocation!
+    color: data.color ?? MotionColor.BLUE, // Single source of truth for color
+
+    arrowPlacementData: data.arrowPlacementData ?? createArrowPlacementData(),
+    propPlacementData: data.propPlacementData ?? createPropPlacementData(),
+
+    prefloatMotionType: data.prefloatMotionType ?? null,
+    prefloatRotationDirection: data.prefloatRotationDirection ?? null,
+  };
+}
