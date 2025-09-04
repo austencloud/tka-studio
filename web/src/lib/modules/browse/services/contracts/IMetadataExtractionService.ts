@@ -5,23 +5,23 @@
  * Essential for Browse tab functionality.
  */
 
+import type { SequenceMetadata } from "../../../../shared/domain";
 import type {
+  GalleryThumbnailFile,
   MetadataAnalysisResult,
-  SequenceMetadata,
-  ThumbnailFile,
-} from "$browse/domain";
+} from "../../gallery/domain/models/metadata-models";
 
 export interface IMetadataExtractionService {
   /**
    * Extract metadata from a thumbnail file
    */
-  extractMetadata(thumbnail: ThumbnailFile): Promise<SequenceMetadata>;
+  extractMetadata(thumbnail: GalleryThumbnailFile): Promise<SequenceMetadata>;
 
   /**
    * Extract metadata from multiple files
    */
   extractMetadataFromFiles(
-    files: ThumbnailFile[]
+    files: GalleryThumbnailFile[]
   ): Promise<MetadataAnalysisResult[]>;
 
   /**

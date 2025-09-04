@@ -12,7 +12,7 @@ import type {
 } from "$browse/domain";
 import type {
   FilterType,
-  FilterValue,
+  GalleryFilterValue,
   GallerySortMethod,
   SequenceData,
 } from "$shared/domain";
@@ -29,12 +29,12 @@ export * from "./IMetadataExtractionService";
 /**
  * Main browse service for sequence discovery and filtering
  */
-export interface IBrowseService {
+export interface IGalleryService {
   loadSequenceMetadata(): Promise<SequenceData[]>;
   applyFilter(
     sequences: SequenceData[],
     filterType: FilterType,
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): Promise<SequenceData[]>;
   sortSequences(
     sequences: SequenceData[],
@@ -180,7 +180,7 @@ export interface ISectionService {
 // Import them from $domain instead
 
 export interface GalleryFilterState {
-  activeFilters: Record<FilterType, FilterValue>;
+  activeFilters: Record<FilterType, GalleryFilterValue>;
   sortMethod: GallerySortMethod;
   searchQuery: string;
 }

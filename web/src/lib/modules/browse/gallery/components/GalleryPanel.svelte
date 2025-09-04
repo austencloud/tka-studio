@@ -1,5 +1,9 @@
 <script lang="ts">
-  import type { FilterType, FilterValue, SequenceData } from "$shared/domain";
+  import type {
+    FilterType,
+    GalleryFilterValue,
+    SequenceData,
+  } from "$shared/domain";
   import { GallerySortMethod } from "$shared/domain";
   import { resolve, TYPES } from "$shared/inversify";
   import { onMount } from "svelte";
@@ -17,7 +21,7 @@
     onBackToFilters = () => {},
     onAction = () => {},
   } = $props<{
-    filter?: { type: FilterType; value: FilterValue } | null;
+    filter?: { type: FilterType; value: GalleryFilterValue } | null;
     sequences?: SequenceData[];
     isLoading?: boolean;
     onBackToFilters?: () => void;

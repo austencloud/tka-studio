@@ -1,5 +1,5 @@
-import type { SortConfig } from "../../../domain/models";
 import { GallerySortMethod } from "../enums";
+import type { SortConfig } from "../models/sort-models";
 
 // Predefined sort configurations
 export const SORT_CONFIGS: Record<GallerySortMethod, SortConfig> = {

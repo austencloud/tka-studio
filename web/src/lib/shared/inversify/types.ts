@@ -50,7 +50,7 @@ export const TYPES = {
   IPictographGenerator: Symbol.for("IPictographGenerator"),
 
   // === BROWSE SERVICES ===
-  IBrowseService: Symbol.for("IBrowseService"),
+  IGalleryService: Symbol.for("IGalleryService"),
   IThumbnailService: Symbol.for("IThumbnailService"),
   INavigationService: Symbol.for("INavigationService"),
   IFavoritesService: Symbol.for("IFavoritesService"),

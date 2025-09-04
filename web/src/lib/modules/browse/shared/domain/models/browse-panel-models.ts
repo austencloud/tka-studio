@@ -38,7 +38,7 @@ export interface BrowsePanelConfig {
   persistKey: string;
 }
 
-export interface ResizeOperation {
+export interface BrowsePanelResizeOperation {
   panelId: string;
   direction: ResizeDirection;
   startPosition: { x: number; y: number };
@@ -47,7 +47,7 @@ export interface ResizeOperation {
 
 import { ResizeDirection } from "$shared/domain/enums/enums";
 
-export interface SplitterConfig {
+export interface BrowsePanelSplitterConfig {
   orientation: "horizontal" | "vertical";
   initialPosition: number;
   minPosition: number;

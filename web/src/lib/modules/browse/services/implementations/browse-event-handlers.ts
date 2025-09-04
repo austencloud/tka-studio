@@ -1,4 +1,8 @@
-import type { FilterType, FilterValue, SequenceData } from "$shared/domain";
+import type {
+  FilterType,
+  GalleryFilterValue,
+  SequenceData,
+} from "$shared/domain";
 import type { BrowseState } from "../../state/browse-state-types";
 
 /**
@@ -12,7 +16,10 @@ export function createBrowseEventHandlers(
   // Filter and navigation handlers
   function handleFilterSelected(data: { type: string; value: unknown }) {
     console.log("🔍 Filter selected:", data);
-    browseState.applyFilter(data.type as FilterType, data.value as FilterValue);
+    browseState.applyFilter(
+      data.type as FilterType,
+      data.value as GalleryFilterValue
+    );
     setPanelIndex(1);
   }
 

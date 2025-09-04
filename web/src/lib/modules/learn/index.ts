@@ -6,7 +6,8 @@
  */
 
 // Re-export everything from all layers
-export * from "./components";
+// Note: components directory doesn't exist yet
+// export * from "./components";
 export * from "./domain";
 export * from "./services";
 export * from "./state";

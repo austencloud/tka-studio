@@ -303,7 +303,7 @@ try {
   container
     .bind(TYPES.IConstructTabCoordinator)
     .to(ConstructSubTabCoordinationService);
-  container.bind(TYPES.IBrowseService).to(BrowseService);
+  container.bind(TYPES.IGalleryService).to(GalleryService);
   // Bind arrow positioning orchestrator
   container
     .bind(TYPES.IArrowPositioningOrchestrator)

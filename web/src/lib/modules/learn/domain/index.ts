@@ -3,4 +3,5 @@
  */
 
 // All learn domain will be re-exported here
-export * from "./*";
+export * from "./models";
+export * from "./types";

@@ -199,7 +199,7 @@ export interface IPrintablePageLayoutService {
  * Browse Service Interface
  * Handles browsing and sequence retrieval
  */
-export interface IBrowseService {
+export interface IGalleryService {
   getSequences(): Promise<SequenceData[]>;
   getSequenceById(id: string): Promise<SequenceData | null>;
 }

@@ -9,7 +9,6 @@
 // Core browse services
 export { BrowsePanelManager } from "./BrowsePanelManager";
 export { BrowseSectionService } from "./BrowseSectionService";
-export { BrowseService } from "./BrowseService";
 export { BrowseStatePersister } from "./BrowseStatePersister";
 export type {
   BrowseScrollState,
@@ -18,6 +17,7 @@ export type {
 } from "./BrowseStatePersister";
 export { FavoritesService } from "./FavoritesService";
 export { FilterPersistenceService } from "./FilterPersistenceService";
+export { GalleryService } from "./GalleryService";
 export { LocalStoragePersistenceService } from "./LocalStoragePersistenceService";
 export { MetadataExtractionService } from "./MetadataExtractionService";
 export { NavigationService } from "./NavigationService";

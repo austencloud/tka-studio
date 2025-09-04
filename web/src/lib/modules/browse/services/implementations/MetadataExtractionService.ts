@@ -5,17 +5,17 @@
  * Provides a clean interface for metadata extraction operations.
  */
 
-import type {
-  MetadataAnalysisResult,
-  SequenceMetadata,
-  ThumbnailFile,
-} from "$browse/domain";
 import { PngMetadataExtractor } from "$shared/utils";
+import type { SequenceMetadata } from "../../../../shared/domain";
+import type {
+  GalleryThumbnailFile,
+  MetadataAnalysisResult,
+} from "../../gallery/domain/models/metadata-models";
 import type { IMetadataExtractionService } from "../contracts";
 
 export class MetadataExtractionService implements IMetadataExtractionService {
   async extractMetadataFromFiles(
-    _files: ThumbnailFile[]
+    _files: GalleryThumbnailFile[]
   ): Promise<MetadataAnalysisResult[]> {
     // Placeholder implementation - extract metadata from multiple files
     return [];
@@ -30,7 +30,9 @@ export class MetadataExtractionService implements IMetadataExtractionService {
     // Return supported metadata fields
     return ["word", "beats", "startPosition", "difficulty"];
   }
-  async extractMetadata(thumbnail: ThumbnailFile): Promise<SequenceMetadata> {
+  async extractMetadata(
+    thumbnail: GalleryThumbnailFile
+  ): Promise<SequenceMetadata> {
     console.log(
       `🔍 Extracting metadata for: ${thumbnail.metadata?.word || thumbnail.name}`
     );

@@ -5,7 +5,7 @@
  */
 
 import { MotionType } from "$shared/domain";
-import type { LetterCategory } from "../types/CodexTypes";
+import type { LetterCategory } from "../types";
 
 export interface CodexLetterMapping {
   startPosition: string;

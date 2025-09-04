@@ -1,5 +1,5 @@
 import type { SequenceData } from "../../../../../shared/domain";
-import type { FilterValue } from "../../../domain/types";
+import type { GalleryFilterValue } from "../../../domain/types";
 import type { FilterType, GallerySortMethod } from "../enums";
 
 export interface GallerySection {
@@ -23,7 +23,7 @@ export interface GalleryLoadingState {
 }
 
 export interface GalleryFilterState {
-  activeFilters: Record<FilterType, FilterValue>;
+  activeFilters: Record<FilterType, GalleryFilterValue>;
   sortMethod: GallerySortMethod;
   searchQuery: string;
 }
@@ -92,4 +92,9 @@ export interface GallerySortOption {
   label: string;
   field: string;
   direction: "asc" | "desc";
+}
+export interface GalleryFilterConfig {
+  type: FilterType;
+  value: GalleryFilterValue;
+  displayName: string;
 }

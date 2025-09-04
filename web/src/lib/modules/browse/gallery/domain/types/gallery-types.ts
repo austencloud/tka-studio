@@ -6,5 +6,5 @@
  */
 
 // Type aliases only - interfaces belong in models/
-export type FilterValue = string | number | string[] | null;
+export type GalleryFilterValue = string | number | string[] | null;
 export type SortDirection = "asc" | "desc";

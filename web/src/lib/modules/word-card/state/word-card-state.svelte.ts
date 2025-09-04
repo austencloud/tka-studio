@@ -2,12 +2,12 @@
  * Word Card State Factory
  *
  * Connects word card display state with existing microservices.
- * NO REDUNDANT LOGIC - uses BrowseService for data, PageLayoutService for layout.
+ * NO REDUNDANT LOGIC - uses GalleryService for data, PageLayoutService for layout.
  */
 
 import type { SequenceData } from "$shared/domain";
 import type {
-  IBrowseService,
+  IGalleryService,
   IPageFactoryService,
   IPrintablePageLayoutService,
 } from "../services/contracts";
@@ -38,7 +38,7 @@ import createPageLayoutState from "./page-layout-state.svelte";
 // ============================================================================
 
 export function createWordCardState(
-  _browseService: IBrowseService,
+  _browseService: IGalleryService,
   layoutService: IPrintablePageLayoutService,
   pageFactoryService: IPageFactoryService
 ) {
@@ -54,7 +54,7 @@ export function createWordCardState(
   const isLoadingSequences = $state(false);
   const sequenceLoadError = $state<string | null>(null);
 
-  // Filtered sequences using EXISTING BrowseService
+  // Filtered sequences using EXISTING GalleryService
   const filteredSequences = $derived(() => {
     if (displayState.selectedLength === 0) {
       return allSequences;

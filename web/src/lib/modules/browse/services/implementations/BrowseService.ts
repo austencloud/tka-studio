@@ -2,10 +2,10 @@
  * Browse Service Implementation
  *
  * Handles loading, filtering, and sorting of sequence metadata for the browse tab.
- * Ported and adapted from desktop app's BrowseService.
+ * Ported and adapted from desktop app's GalleryService.
  */
 
-import type { FilterValue } from "$shared/domain";
+import type { GalleryFilterValue } from "$shared/domain";
 import {
   createSequenceData,
   FilterType,
@@ -16,10 +16,10 @@ import {
   type SequenceData,
 } from "$shared/domain";
 import { injectable } from "inversify";
-import type { IBrowseService } from "../contracts";
+import type { IGalleryService } from "../contracts";
 
 @injectable()
-export class BrowseService implements IBrowseService {
+export class GalleryService implements IGalleryService {
   private cachedSequences: SequenceData[] | null = null;
 
   /**
@@ -37,7 +37,7 @@ export class BrowseService implements IBrowseService {
   }
 
   async loadSequenceMetadata(): Promise<SequenceData[]> {
-    console.log("🔍 BrowseService.loadSequenceMetadata() called");
+    console.log("🔍 GalleryService.loadSequenceMetadata() called");
 
     if (this.cachedSequences !== null) {
       console.log(
@@ -104,9 +104,9 @@ export class BrowseService implements IBrowseService {
   async applyFilter(
     sequences: SequenceData[],
     filterType: FilterType,
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): Promise<SequenceData[]> {
-    console.log("🔍 BrowseService.applyFilter() called with:");
+    console.log("🔍 GalleryService.applyFilter() called with:");
     console.log("  - filterType:", filterType);
     console.log("  - filterValue:", filterValue);
     console.log("  - input sequences:", sequences.length, "items");
@@ -302,7 +302,7 @@ export class BrowseService implements IBrowseService {
           id: String(seq.word || seq.id || crypto.randomUUID()), // Use word for ID to preserve casing
           name: String(seq.name || seq.word || "Unnamed Sequence"),
           word: String(seq.word || seq.name || ""),
-          beats: [], // BrowseService doesn't load full beat data
+          beats: [], // GalleryService doesn't load full beat data
           thumbnails: Array.isArray(seq.thumbnails)
             ? (seq.thumbnails as string[])
             : [],
@@ -382,7 +382,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByStartingLetter(
     sequences: SequenceData[],
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): SequenceData[] {
     if (!filterValue || typeof filterValue !== "string") return sequences;
 
@@ -407,7 +407,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByContainsLetters(
     sequences: SequenceData[],
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): SequenceData[] {
     if (!filterValue || typeof filterValue !== "string") return sequences;
     return sequences.filter((s) =>
@@ -417,7 +417,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByLength(
     sequences: SequenceData[],
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): SequenceData[] {
     if (!filterValue) return sequences;
 
@@ -433,7 +433,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByDifficulty(
     sequences: SequenceData[],
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): SequenceData[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.difficultyLevel === filterValue);
@@ -441,7 +441,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByStartingPosition(
     sequences: SequenceData[],
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): SequenceData[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.startingPositionGroup === filterValue);
@@ -449,7 +449,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByAuthor(
     sequences: SequenceData[],
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): SequenceData[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.author === filterValue);
@@ -457,7 +457,7 @@ export class BrowseService implements IBrowseService {
 
   private filterByGridMode(
     sequences: SequenceData[],
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): SequenceData[] {
     if (!filterValue) return sequences;
     return sequences.filter((s) => s.gridMode === filterValue);

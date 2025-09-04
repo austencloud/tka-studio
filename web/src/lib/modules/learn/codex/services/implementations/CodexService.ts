@@ -13,9 +13,8 @@ import {
 } from "../../../../../shared/domain";
 import { TYPES } from "../../../../../shared/inversify";
 import type { ILetterQueryHandler } from "../../../../../shared/services";
-import type { IQuizRepoManager } from "../../../quiz/services/contracts/IQuizRepoManager";
+import type { IQuizRepoManager } from "../../../quiz/services/contracts";
 import type { CodexLetterRow } from "../../domain";
-import type { ICodexCodexLetterMappingRepo } from "../contracts/ICodexCodexLetterMappingRepo";
 import type { ICodexPictographUpdater } from "../contracts/ICodexPictographUpdater";
 import type { ICodexService } from "../contracts/ICodexService";
 
@@ -24,8 +23,8 @@ export class CodexService implements ICodexService {
   private initialized = false;
 
   constructor(
-    @inject(TYPES.ICodexCodexLetterMappingRepo)
-    private letterMappingRepository: ICodexCodexLetterMappingRepo,
+    @inject(TYPES.ICodexLetterMappingRepository)
+    private letterMappingRepository: ICodexLetterMappingRepository,
     @inject(TYPES.IQuizRepoManager)
     private lessonRepository: IQuizRepoManager,
     @inject(TYPES.ICodexPictographUpdater)

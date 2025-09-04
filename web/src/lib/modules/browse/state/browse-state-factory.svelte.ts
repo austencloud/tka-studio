@@ -12,14 +12,14 @@ import type {
   NavigationSectionConfig,
 } from "$browse/domain";
 import { NavigationMode } from "$browse/domain";
-import type { FilterValue } from "$browse/domain/types";
+import type { GalleryFilterValue } from "$browse/domain/types";
 import { FilterType } from "$lib/modules/browse/gallery/domain/enums/gallery-enums";
 import type { SequenceData } from "$shared/domain";
 import type {
-  IBrowseService,
   IDeleteService,
   IFavoritesService,
   IFilterPersistenceService,
+  IGalleryService,
   INavigationService,
   ISectionService,
   ISequenceIndexService,
@@ -44,7 +44,10 @@ export interface BrowseState {
   readonly coordinator: BrowseStateCoordinator;
 
   // Convenience getters (derived from microservices)
-  readonly currentFilter: { type: FilterType; value: FilterValue } | null;
+  readonly currentFilter: {
+    type: FilterType;
+    value: GalleryFilterValue;
+  } | null;
   readonly isLoading: boolean;
   readonly hasError: boolean;
   readonly displayedSequences: SequenceData[];
@@ -60,7 +63,7 @@ export interface BrowseState {
 
   // Delegation methods (common operations)
   loadAllSequences(): Promise<void>;
-  applyFilter(type: FilterType, value: FilterValue): Promise<void>;
+  applyFilter(type: FilterType, value: GalleryFilterValue): Promise<void>;
   searchSequences(query: string): Promise<void>;
   selectSequence(sequence: SequenceData): Promise<void>;
   backToFilters(): Promise<void>;
@@ -91,7 +94,7 @@ export interface BrowseState {
 }
 
 export function createBrowseState(
-  browseService: IBrowseService,
+  browseService: IGalleryService,
   thumbnailService: IThumbnailService,
   sequenceIndexService: ISequenceIndexService,
   favoritesService: IFavoritesService,
@@ -116,7 +119,10 @@ export function createBrowseState(
       return filterStateImpl.isFilterActive;
     },
     setFilter(type: string, value: unknown) {
-      filterStateImpl.setFilter(type as FilterType, value as FilterValue);
+      filterStateImpl.setFilter(
+        type as FilterType,
+        value as GalleryFilterValue
+      );
     },
     clearFilter() {
       filterStateImpl.clearFilter();
@@ -226,7 +232,7 @@ export function createBrowseState(
       await coordinator.loadAllSequences();
     },
 
-    async applyFilter(type: FilterType, value: FilterValue) {
+    async applyFilter(type: FilterType, value: GalleryFilterValue) {
       await coordinator.applyFilter(type, value);
     },
 

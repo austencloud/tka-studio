@@ -9,7 +9,7 @@ import type {
   GalleryFilterState as BrowseFilterState,
   BrowseState,
 } from "$browse/domain";
-import type { FilterValue } from "$browse/domain/types";
+import type { GalleryFilterValue } from "$browse/domain/types";
 import {
   FilterType,
   GallerySortMethod,
@@ -24,7 +24,7 @@ import { injectable } from "inversify";
 
 export interface GalleryFilterState {
   type: FilterType;
-  value: FilterValue;
+  value: GalleryFilterValue;
   appliedAt: Date;
 }
 
@@ -146,7 +146,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       return parsed.map((filter: unknown) => {
         const f = filter as {
           type: FilterType;
-          value: FilterValue;
+          value: GalleryFilterValue;
           appliedAt: string;
         };
         return {

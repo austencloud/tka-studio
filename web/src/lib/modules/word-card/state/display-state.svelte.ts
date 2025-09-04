@@ -2,7 +2,7 @@
  * Word Card Display State
  *
  * Focused state management for word card display settings only.
- * Delegates data loading to BrowseService and page layout to PageLayoutService.
+ * Delegates data loading to GalleryService and page layout to PageLayoutService.
  */
 
 import type { DeviceCapabilities } from "$shared/domain";

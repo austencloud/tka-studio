@@ -4,7 +4,7 @@
  * Config constants and static data for the learn module.
  */
 
-import type { QuizConfig, QuizInfo } from "../../../domain/models";
+import type { QuizConfig, QuizInfo } from "../../../domain/models/QuizModels";
 import {
   QuizAnswerFormat,
   QuizMode,

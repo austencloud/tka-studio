@@ -7,9 +7,9 @@
 
 import type {
   BrowsePanelConfig,
+  BrowsePanelResizeOperation,
   BrowsePanelState,
-  ResizeOperation,
-} from "$browse/domain";
+} from "../../shared/domain/models/browse-panel-models";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
@@ -20,7 +20,7 @@ export interface IBrowsePanelManager {
   unregisterPanel(id: string): void;
   getPanelState(id: string): BrowsePanelState | null;
   updatePanelState(id: string, state: Partial<BrowsePanelState>): void;
-  startResize(operation: ResizeOperation): void;
+  startResize(operation: BrowsePanelResizeOperation): void;
   endResize(): void;
   isResizing(): boolean;
 

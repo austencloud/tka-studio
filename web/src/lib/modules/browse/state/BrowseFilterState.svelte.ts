@@ -5,30 +5,38 @@
  * Handles reactive filter state without business logic.
  */
 
-import type { FilterType, FilterValue, SequenceData } from "$shared/domain";
-import type { IBrowseService } from "../services/contracts";
+import type {
+  FilterType,
+  GalleryFilterValue,
+  SequenceData,
+} from "$shared/domain";
+import type { IGalleryService } from "../services/contracts";
 
 export interface IBrowseFilterState {
   // Reactive state getters
-  readonly currentFilter: { type: FilterType; value: FilterValue } | null;
+  readonly currentFilter: {
+    type: FilterType;
+    value: GalleryFilterValue;
+  } | null;
   readonly isFilterActive: boolean;
 
   // Actions
-  setFilter(type: FilterType, value: FilterValue): void;
+  setFilter(type: FilterType, value: GalleryFilterValue): void;
   clearFilter(): void;
 
   // Apply filter using service (reactive)
   applyCurrentFilter(
     sequences: SequenceData[],
-    browseService: IBrowseService
+    browseService: IGalleryService
   ): Promise<SequenceData[]>;
 }
 
 export class BrowseFilterState implements IBrowseFilterState {
   // Private reactive state
-  #currentFilter = $state<{ type: FilterType; value: FilterValue } | null>(
-    null
-  );
+  #currentFilter = $state<{
+    type: FilterType;
+    value: GalleryFilterValue;
+  } | null>(null);
 
   // Reactive getters
   get currentFilter() {
@@ -40,7 +48,7 @@ export class BrowseFilterState implements IBrowseFilterState {
   }
 
   // Actions
-  setFilter(type: FilterType, value: FilterValue): void {
+  setFilter(type: FilterType, value: GalleryFilterValue): void {
     this.#currentFilter = { type, value };
   }
 
@@ -51,7 +59,7 @@ export class BrowseFilterState implements IBrowseFilterState {
   // Apply filter using business service
   async applyCurrentFilter(
     sequences: SequenceData[],
-    browseService: IBrowseService
+    browseService: IGalleryService
   ): Promise<SequenceData[]> {
     if (!this.#currentFilter) {
       return sequences;

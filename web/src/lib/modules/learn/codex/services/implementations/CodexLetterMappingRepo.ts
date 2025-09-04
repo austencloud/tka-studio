@@ -13,10 +13,10 @@ import type {
   CodexLetterRow,
 } from "../../domain";
 import { createLetterMapping } from "../../domain";
-import type { ICodexCodexLetterMappingRepo as ICodexLetterMappingRepo } from "../contracts/ICodexCodexLetterMappingRepo";
+import type { ICodexLetterMappingRepository } from "../contracts/ICodexLetterMappingRepository";
 
 @injectable()
-export class CodexLetterMappingRepo implements ICodexLetterMappingRepo {
+export class CodexLetterMappingRepo implements ICodexLetterMappingRepository {
   private configuration: CodexConfig | null = null;
   private initialized = false;
 

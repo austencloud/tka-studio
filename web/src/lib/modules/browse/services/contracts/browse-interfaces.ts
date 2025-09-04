@@ -11,33 +11,23 @@
  * Main browse service for sequence discovery and filtering
  */
 
-import type {
-  BrowseDeleteConfirmationData,
-  BrowseDeleteResult,
-  BrowseState,
-  GalleryFilterState,
-  NavigationItem,
-  NavigationSectionConfig,
-  SectionConfig,
-  SequenceSection,
-} from "$browse/domain";
-import type {
-  FilterType,
-  FilterValue,
-  GallerySortMethod,
-  SequenceData,
-} from "$shared/domain";
+import type { GalleryFilterState, NavigationSectionConfig, NavigationItem, SectionConfig, SequenceSection } from ".";
+import type { SequenceData } from "../../../../shared/domain";
+import type { FilterType, GallerySortMethod } from "../../gallery/domain/enums";
+import type { GalleryFilterValue } from "../../gallery/domain/types/gallery-types";
+import type { BrowseDeleteConfirmationData, BrowseDeleteResult } from "../../shared/domain/models/browse-models";
+import type { BrowseState } from "../../state";
 
-// ============================================================================
+
 // SERVICE CONTRACTS (Behavioral Interfaces)
 // ============================================================================
 
-export interface IBrowseService {
+export interface IGalleryService {
   loadSequenceMetadata(): Promise<SequenceData[]>;
   applyFilter(
     sequences: SequenceData[],
     filterType: FilterType,
-    filterValue: FilterValue
+    filterValue: GalleryFilterValue
   ): Promise<SequenceData[]>;
   sortSequences(
     sequences: SequenceData[],

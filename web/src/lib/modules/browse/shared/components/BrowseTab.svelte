@@ -9,12 +9,10 @@ Integrates panel management service with runes for:
 -->
 <script lang="ts">
   import type { SequenceData } from "$shared/domain/core/models/sequence/SequenceData";
-  import { NavigationMode } from "$shared/domain/enums/enums";
-  import { resolve, TYPES } from "$shared/inversify/container";
   // TEMPORARY: Service interfaces commented out until container is restored
   // import type {
   //   IBrowsePanelManager,
-  //   IBrowseService,
+  //   IGalleryService,
   //   IDeleteService,
   //   IFavoritesService,
   //   IFilterPersistenceService,
@@ -23,28 +21,19 @@ Integrates panel management service with runes for:
   //   ISequenceIndexService,
   //   IThumbnailService,
   // } from "$services";
-  import {
-    BROWSE_TAB_PANEL_CONFIGS,
-    createBrowseState,
-    createPanelState,
-  } from "$shared/state/browse/browse-state-factory.svelte";
   import { onDestroy, onMount } from "svelte";
-
   // Import layout and UI components
-  import BrowseLayout from "./BrowseLayout.svelte";
-  import NavigationSidebar from "../../gallery/components/NavigationSidebar.svelte";
-  import PanelContainer from "../../gallery/components/PanelContainer.svelte";
+  import FullscreenSequenceViewer from "../../components/FullscreenSequenceViewer.svelte";
   import BrowseLoadingOverlay from "./BrowseLoadingOverlay.svelte";
   import DeleteConfirmationDialog from "./DeleteConfirmationDialog.svelte";
   import ErrorBanner from "./ErrorBanner.svelte";
-  import FullscreenSequenceViewer from "../../components/FullscreenSequenceViewer.svelte";
 
   // ============================================================================
   // SERVICE RESOLUTION - TEMPORARY DISABLED
   // ============================================================================
 
   // TEMPORARY: All service resolution commented out until container is restored
-  // const browseService = resolve(TYPES.IBrowseService) as IBrowseService;
+  // const browseService = resolve(TYPES.IGalleryService) as IGalleryService;
   // const thumbnailService = resolve(TYPES.IThumbnailService) as IThumbnailService;
   // const sequenceIndexService = resolve(TYPES.ISequenceIndexService) as ISequenceIndexService;
   // const favoritesService = resolve(TYPES.IFavoritesService) as IFavoritesService;

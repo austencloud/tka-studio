@@ -8,14 +8,14 @@
 import { NavigationMode } from "$browse/domain";
 import type {
   FilterType,
-  FilterValue,
+  GalleryFilterValue,
   GallerySortMethod,
   SequenceData,
 } from "$shared/domain";
 import type {
-  IBrowseService,
   IFavoritesService,
   IFilterPersistenceService,
+  IGalleryService,
   INavigationService,
   ISequenceIndexService,
   IThumbnailService,
@@ -40,7 +40,7 @@ interface IGalleryDisplayState {
 export interface IBrowseStateCoordinator {
   // Core operations
   loadAllSequences(): Promise<void>;
-  applyFilter(type: FilterType, value: FilterValue): Promise<void>;
+  applyFilter(type: FilterType, value: GalleryFilterValue): Promise<void>;
   searchSequences(query: string): Promise<void>;
   updateSort(sortMethod: GallerySortMethod): Promise<void>;
   backToFilters(): Promise<void>;
@@ -74,7 +74,7 @@ export class BrowseStateCoordinator implements IBrowseStateCoordinator {
     private selectionState: IBrowseSelectionState,
     private displayState: IGalleryDisplayState,
     private searchState: IBrowseSearchState,
-    private browseService: IBrowseService,
+    private browseService: IGalleryService,
     private navigationService: INavigationService,
     private sequenceIndexService: ISequenceIndexService,
     private favoritesService: IFavoritesService,
@@ -119,7 +119,10 @@ export class BrowseStateCoordinator implements IBrowseStateCoordinator {
     }
   }
 
-  async applyFilter(type: FilterType, value: FilterValue): Promise<void> {
+  async applyFilter(
+    type: FilterType,
+    value: GalleryFilterValue
+  ): Promise<void> {
     try {
       this.displayState.setLoading(true, "Applying filter...");
 
@@ -245,7 +248,7 @@ export class BrowseStateCoordinator implements IBrowseStateCoordinator {
    */
   private async saveCurrentFilterState(
     type: FilterType,
-    value: FilterValue
+    value: GalleryFilterValue
   ): Promise<void> {
     try {
       // Create a browse state with the current filter
@@ -295,7 +298,7 @@ export class BrowseStateCoordinator implements IBrowseStateCoordinator {
    */
   private async applySavedFilter(
     type: FilterType,
-    value: FilterValue
+    value: GalleryFilterValue
   ): Promise<void> {
     try {
       this.displayState.setLoading(true, "Restoring filter...");

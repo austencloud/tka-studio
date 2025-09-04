@@ -10,8 +10,8 @@ import type { PictographData } from "$shared/domain";
 import { TYPES } from "$shared/inversify/types";
 
 // CRITICAL: Import container to ensure it loads
-import type { ICodexService } from "$services";
 import { container } from "$shared/inversify/container";
+import type { ICodexService } from "../services/contracts";
 
 // Container is now loaded successfully - debug messages removed
 

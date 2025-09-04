@@ -5,19 +5,19 @@
  * Follows microservices architecture with clean business logic separation.
  */
 
+import { injectable } from "inversify";
 import type {
   BrowsePanelConfig,
+  BrowsePanelResizeOperation,
   BrowsePanelState,
-  ResizeOperation,
-} from "$browse/domain";
-import { injectable } from "inversify";
+} from "../../shared/domain/models/browse-panel-models";
 import type { IBrowsePanelManager } from "../contracts";
 
 @injectable()
 export class BrowsePanelManager implements IBrowsePanelManager {
   private panels = new Map<string, BrowsePanelState>();
   private configurations = new Map<string, BrowsePanelConfig>();
-  private currentResize: ResizeOperation | null = null;
+  private currentResize: BrowsePanelResizeOperation | null = null;
   private stateChangeCallbacks: Array<
     (panelId: string, state: BrowsePanelState) => void
   > = [];
@@ -136,7 +136,7 @@ export class BrowsePanelManager implements IBrowsePanelManager {
   }
 
   // Resize operations
-  startResize(operation: ResizeOperation): void {
+  startResize(operation: BrowsePanelResizeOperation): void {
     const state = this.panels.get(operation.panelId);
     if (!state || !this.canResize(operation.panelId)) {
       return;
@@ -169,7 +169,10 @@ export class BrowsePanelManager implements IBrowsePanelManager {
   }
 
   // Legacy methods for backward compatibility (can be removed later)
-  updateResize(operation: ResizeOperation, currentX: number): BrowsePanelState {
+  updateResize(
+    operation: BrowsePanelResizeOperation,
+    currentX: number
+  ): BrowsePanelState {
     const state = this.panels.get(operation.panelId);
     if (!state) {
       throw new Error(`Panel not found during resize: ${operation.panelId}`);
@@ -191,7 +194,7 @@ export class BrowsePanelManager implements IBrowsePanelManager {
   }
 
   // Legacy method - use endResize() instead
-  endResizeOperation(_operation: ResizeOperation): void {
+  endResizeOperation(_operation: BrowsePanelResizeOperation): void {
     this.endResize();
   }
 
