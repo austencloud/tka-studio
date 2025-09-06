@@ -6,15 +6,14 @@ without the complex BackgroundContext system.
 -->
 <script lang="ts">
   import { browser } from "$app/environment";
+  import { onDestroy, onMount } from "svelte";
   import type {
     BackgroundSystem,
     BackgroundType,
     PerformanceMetrics,
     QualityLevel,
   } from "../../domain/ui/backgrounds/BackgroundTypes";
-  // TEMPORARY: BackgroundFactory commented out until container is restored
-  // import { BackgroundFactory } from "$implementations";
-  import { onDestroy, onMount } from "svelte";
+  import { BackgroundFactory } from "../../foundation/services/implementations/background/BackgroundFactory";
 
   // Props
   const {
@@ -45,12 +44,12 @@ without the complex BackgroundContext system.
       currentBackgroundSystem.cleanup();
     }
 
-    // TEMPORARY: BackgroundFactory usage commented out until container is restored
-    // currentBackgroundSystem = BackgroundFactory.createBackgroundSystem({
-    //   type: backgroundType,
-    //   initialQuality: quality,
-    // });
-    currentBackgroundSystem = null; // Temporary placeholder
+    // Create background system using BackgroundFactory
+    currentBackgroundSystem = BackgroundFactory.createBackgroundSystem({
+      type: backgroundType,
+      quality: quality,
+      initialQuality: quality,
+    });
 
     // Set up canvas dimensions properly
     setupCanvasDimensions();

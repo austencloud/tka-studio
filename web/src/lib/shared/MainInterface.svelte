@@ -9,10 +9,8 @@
   } from "./state/app-state.svelte";
   // Import background types - BULLETPROOF RELATIVE IMPORTS
   import { BackgroundType } from "./domain/ui/backgrounds/BackgroundTypes";
-
   // Import transition utilities - BULLETPROOF RELATIVE IMPORTS
   import { fade } from "./utils/simple-fade";
-
   // Cross-module imports: Direct component imports (bulletproof default imports)
   import AboutTab from "../modules/about/components/AboutTab.svelte";
   import AnimatorTab from "../modules/animator/components/AnimatorTab.svelte";
@@ -31,6 +29,11 @@
   let showSettings = $derived(getShowSettings());
   let settings = $derived(getSettings());
 
+  // Debug the active tab
+  $effect(() => {
+    console.log("🎯 MainInterface: activeTab changed to:", activeTab);
+  });
+
   // Simple transition functions that respect animation settings
   const tabOut = (node: Element) => {
     const animationsEnabled = settings.animationsEnabled !== false;
@@ -47,9 +50,9 @@
     });
   };
 
-  // App tab configuration
+  // App tab configuration - using correct TabId values that match content switching logic
   const allTabs = [
-    { id: "build", label: "Build", icon: "🔧", isMain: true },
+    { id: "construct", label: "Build", icon: "🔧", isMain: true },
     { id: "browse", label: "Browse", icon: "🔍", isMain: true },
     { id: "learn", label: "Learn", icon: "🧠", isMain: true },
     { id: "about", label: "About", icon: "ℹ️", isMain: true },
@@ -95,11 +98,12 @@
   });
 
   function handleTabSelect(tabId: string) {
+    console.log("🎭 Tab selected:", tabId);
     switchTab(
       tabId as
         | "construct"
         | "browse"
-        | "word-card"
+        | "sequence_card"
         | "write"
         | "learn"
         | "about"
@@ -133,12 +137,7 @@
   <main class="content-area" class:about-active={isTabActive("about")}>
     <!-- App Content with reliable transitions -->
     {#key activeTab}
-      <div
-        class="tab-content"
-        class:about-tab={isTabActive("about")}
-        in:tabIn
-        out:tabOut
-      >
+      <div class="tab-content" class:about-tab={isTabActive("about")}>
         {#if isTabActive("construct")}
           <BuildTab />
         {:else if isTabActive("browse")}
@@ -159,7 +158,7 @@
   </main>
 
   <!-- Settings Dialog - moved inside BackgroundProvider -->
-  {#if showSettings}
+  {#if showSettings && settings}
     <SettingsDialog />
   {/if}
 </div>

@@ -110,8 +110,8 @@ export function getInitializationComplete() {
 // UI STATE
 // ============================================================================
 
-// UI state - using ReactiveStore for reactivity
-const uiState = new ReactiveStore({
+// UI state - using Svelte 5 runes for proper reactivity
+const uiState = $state({
   activeTab: "construct" as TabId,
   showSettings: false,
   theme: "dark" as Theme,
@@ -120,23 +120,23 @@ const uiState = new ReactiveStore({
 });
 
 export function getActiveTab() {
-  return uiState.value.activeTab;
+  return uiState.activeTab;
 }
 
 export function getShowSettings() {
-  return uiState.value.showSettings;
+  return uiState.showSettings;
 }
 
 export function getTheme() {
-  return uiState.value.theme;
+  return uiState.theme;
 }
 
 export function getIsFullScreen() {
-  return uiState.value.isFullScreen;
+  return uiState.isFullScreen;
 }
 
 export function getIsTransitioning() {
-  return uiState.value.isTransitioning;
+  return uiState.isTransitioning;
 }
 
 // ============================================================================
@@ -175,7 +175,7 @@ export function getIsReady() {
 }
 
 export function getCanUseApp() {
-  return getIsReady() && !uiState.value.showSettings;
+  return getIsReady() && !uiState.showSettings;
 }
 
 // ============================================================================
@@ -184,42 +184,51 @@ export function getCanUseApp() {
 
 // Tab management
 export async function switchTab(tab: TabId): Promise<void> {
-  if (uiState.value.activeTab === tab) return;
+  console.log("🔄 switchTab called with:", tab, "current:", uiState.activeTab);
+  if (uiState.activeTab === tab) {
+    console.log("🔄 switchTab: Already on tab", tab, "- skipping");
+    return;
+  }
 
   // Handle transition UI
-  uiState.value = { ...uiState.value, isTransitioning: true };
+  uiState.isTransitioning = true;
+  console.log("🔄 switchTab: Set transitioning to true");
 
   // Update active tab
-  uiState.value = { ...uiState.value, activeTab: tab };
+  uiState.activeTab = tab;
+  console.log(
+    "🔄 switchTab: Updated activeTab to",
+    tab,
+    "new state:",
+    uiState.activeTab
+  );
 
   // Brief delay to allow transition to complete
   setTimeout(() => {
-    uiState.value = { ...uiState.value, isTransitioning: false };
+    uiState.isTransitioning = false;
+    console.log("🔄 switchTab: Set transitioning to false");
   }, 300);
 }
 
 export function isTabActive(tab: string): boolean {
-  return uiState.value.activeTab === tab;
+  return uiState.activeTab === tab;
 }
 
 export function setFullScreen(fullScreen: boolean): void {
-  uiState.value = { ...uiState.value, isFullScreen: fullScreen };
+  uiState.isFullScreen = fullScreen;
 }
 
 // Settings management
 export function showSettingsDialog(): void {
-  uiState.value = { ...uiState.value, showSettings: true };
+  uiState.showSettings = true;
 }
 
 export function hideSettingsDialog(): void {
-  uiState.value = { ...uiState.value, showSettings: false };
+  uiState.showSettings = false;
 }
 
 export function toggleSettingsDialog(): void {
-  uiState.value = {
-    ...uiState.value,
-    showSettings: !uiState.value.showSettings,
-  };
+  uiState.showSettings = !uiState.showSettings;
 }
 
 export function updateSettings(newSettings: Partial<AppSettings>): void {
@@ -227,12 +236,12 @@ export function updateSettings(newSettings: Partial<AppSettings>): void {
 
   // Update theme in UI state if theme changed
   if (newSettings.theme) {
-    uiState.value = { ...uiState.value, theme: newSettings.theme };
+    uiState.theme = newSettings.theme;
   }
 }
 
 export function setTheme(theme: Theme): void {
-  uiState.value = { ...uiState.value, theme };
+  uiState.theme = theme;
   settingsService.updateSettings({ theme });
 }
 
@@ -282,10 +291,10 @@ export function createPerformanceSnapshot(): PerformanceSnapshot {
     timestamp: Date.now(),
     metrics: performanceMetrics.value,
     appState: {
-      isFullScreen: uiState.value.isFullScreen,
-      isTransitioning: uiState.value.isTransitioning,
-      showSettings: uiState.value.showSettings,
-      theme: uiState.value.theme,
+      isFullScreen: uiState.isFullScreen,
+      isTransitioning: uiState.isTransitioning,
+      showSettings: uiState.showSettings,
+      theme: uiState.theme,
     },
     memoryUsage: performanceMetrics.value.memoryUsage,
   };
@@ -310,13 +319,11 @@ export function debugSettings(): void {
 // Reset all application state to defaults
 export function resetAppState(): void {
   // Reset UI state
-  uiState.value = {
-    activeTab: "construct",
-    showSettings: false,
-    theme: "dark",
-    isFullScreen: false,
-    isTransitioning: false,
-  };
+  uiState.activeTab = "construct";
+  uiState.showSettings = false;
+  uiState.theme = "dark";
+  uiState.isFullScreen = false;
+  uiState.isTransitioning = false;
 
   // Reset initialization state
   initializationState.value = {

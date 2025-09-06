@@ -5,6 +5,9 @@
 /* Import Enhanced Panel System Variables - TEMPORARILY DISABLED FOR DEBUGGING */
 /* @import './styles/enhanced-panel-system.css'; */
 
+/* Import Background Animations */
+@import "./lib/shared/settings/components/tabs/background/background-thumbnail-animations.css";
+
 /* CSS Reset and Base Styles */
 *,
 *::before,
@@ -192,6 +195,201 @@ body {
   100% {
     background-position: 0% 50%;
   }
+}
+
+/* Background Animation System - Apply animations to body */
+body.star-twinkle {
+  position: relative;
+}
+
+body.star-twinkle::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(1px 1px at 25px 25px, #ffffff, transparent),
+    radial-gradient(2px 2px at 75px 50px, #ffeb3b, transparent),
+    radial-gradient(1px 1px at 125px 75px, #ffffff, transparent),
+    radial-gradient(1px 1px at 175px 25px, #81c784, transparent),
+    radial-gradient(2px 2px at 200px 100px, #ffffff, transparent),
+    radial-gradient(1px 1px at 50px 120px, #ffcdd2, transparent),
+    radial-gradient(1px 1px at 150px 140px, #ffffff, transparent),
+    radial-gradient(2px 2px at 250px 60px, #e1bee7, transparent);
+  background-repeat: repeat;
+  background-size: 280px 180px;
+  animation: star-twinkle-animation 3s ease-in-out infinite;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.star-twinkle::after {
+  content: "";
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  width: 40px;
+  height: 40px;
+  background: radial-gradient(
+    circle,
+    #ffd54f 30%,
+    rgba(255, 213, 79, 0.3) 70%,
+    transparent
+  );
+  border-radius: 50%;
+  animation: moon-glow 6s ease-in-out infinite;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.aurora-flow {
+  background: linear-gradient(
+    45deg,
+    #667eea,
+    #764ba2,
+    #f093fb,
+    #f5576c,
+    #4facfe,
+    #00f2fe
+  );
+  background-size: 400% 400%;
+  animation: aurora-animation 8s ease-in-out infinite;
+}
+
+body.snow-fall {
+  position: relative;
+}
+
+body.snow-fall::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(2px 2px at 20px 30px, white, transparent),
+    radial-gradient(2px 2px at 40px 70px, white, transparent),
+    radial-gradient(1px 1px at 90px 40px, white, transparent),
+    radial-gradient(1px 1px at 130px 80px, white, transparent),
+    radial-gradient(2px 2px at 160px 30px, white, transparent),
+    radial-gradient(1px 1px at 200px 60px, white, transparent),
+    radial-gradient(2px 2px at 240px 90px, white, transparent),
+    radial-gradient(1px 1px at 280px 40px, white, transparent);
+  background-repeat: repeat;
+  background-size: 300px 150px;
+  animation: snowfall 12s linear infinite;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.snow-fall::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  background-size: 400px 400px;
+  animation: shooting-star 15s ease-in-out infinite;
+  opacity: 0.4;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.bubble-float {
+  position: relative;
+  overflow: hidden;
+}
+
+body.bubble-float::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    radial-gradient(
+      circle at 30px 140px,
+      rgba(255, 255, 255, 0.4) 3px,
+      transparent 4px
+    ),
+    radial-gradient(
+      circle at 80px 160px,
+      rgba(255, 255, 255, 0.3) 5px,
+      transparent 6px
+    ),
+    radial-gradient(
+      circle at 120px 120px,
+      rgba(255, 255, 255, 0.35) 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 170px 180px,
+      rgba(255, 255, 255, 0.4) 4px,
+      transparent 5px
+    ),
+    radial-gradient(
+      circle at 220px 140px,
+      rgba(255, 255, 255, 0.25) 3px,
+      transparent 4px
+    ),
+    radial-gradient(
+      circle at 60px 100px,
+      rgba(255, 255, 255, 0.3) 2px,
+      transparent 3px
+    ),
+    radial-gradient(
+      circle at 200px 60px,
+      rgba(255, 255, 255, 0.4) 6px,
+      transparent 7px
+    );
+  background-size: 250px 200px;
+  animation: bubble-rise 8s ease-in-out infinite;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: -1;
+}
+
+body.bubble-float::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(64, 224, 208, 0.1) 30%,
+      transparent 50%
+    ),
+    linear-gradient(
+      60deg,
+      transparent 20%,
+      rgba(135, 206, 250, 0.15) 60%,
+      transparent 80%
+    );
+  background-size:
+    200px 100%,
+    300px 100%;
+  animation: underwater-light 10s ease-in-out infinite;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Glass Surface Utilities */

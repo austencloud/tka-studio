@@ -243,15 +243,61 @@
                 "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
             };
 
+            // Background animation mapping - same as background-config.ts
+            const backgroundAnimations = {
+              aurora: "aurora-flow",
+              snowfall: "snow-fall",
+              nightSky: "star-twinkle",
+              bubbles: "bubble-float",
+              deepOcean: "bubble-float", // Use bubble-float for deep ocean
+            };
+
             const selectedGradient =
               backgroundGradients[backgroundType] ||
               backgroundGradients.nightSky;
+
+            const selectedAnimation =
+              backgroundAnimations[backgroundType] ||
+              backgroundAnimations.nightSky;
 
             // Update the CSS custom property immediately
             document.documentElement.style.setProperty(
               "--gradient-cosmic",
               selectedGradient
             );
+
+            // Apply animation class to body when DOM is ready
+            function applyBackgroundAnimation() {
+              const body = document.body;
+              if (body) {
+                // Remove any existing background animation classes
+                body.classList.remove(
+                  "aurora-flow",
+                  "snow-fall",
+                  "star-twinkle",
+                  "bubble-float"
+                );
+                // Add the selected animation class
+                body.classList.add(selectedAnimation);
+                console.log(
+                  "🌟 Background animation applied:",
+                  selectedAnimation
+                );
+              } else {
+                // If body isn't ready yet, try again in a moment
+                setTimeout(applyBackgroundAnimation, 10);
+              }
+            }
+
+            // Apply animation immediately if DOM is ready, otherwise wait
+            if (document.body) {
+              applyBackgroundAnimation();
+            } else {
+              document.addEventListener(
+                "DOMContentLoaded",
+                applyBackgroundAnimation
+              );
+            }
 
             console.log("🎨 Background preloaded:", backgroundType);
           } else {

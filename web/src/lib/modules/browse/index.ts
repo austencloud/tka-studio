@@ -24,7 +24,7 @@ export * from "./gallery/state/gallery-state-factory.svelte";
 // Export GalleryFilterState class from state (not the interface from domain)
 export { GalleryFilterState as GalleryFilterStateService } from "./gallery/state/GalleryFilterState.svelte";
 export * from "./gallery/state/GallerySearchState.svelte";
-export * from "./gallery/state/GalleryState";
+export * from "./gallery/state/GalleryState.svelte";
 export type { BrowseState } from "./shared/state/browse-state-models";
 export * from "./shared/state/BrowseDisplayState.svelte";
 export * from "./shared/state/BrowseNavigationState.svelte";

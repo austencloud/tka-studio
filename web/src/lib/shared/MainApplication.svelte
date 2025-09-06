@@ -21,6 +21,8 @@
   } from "./state/app-state.svelte";
   // Import components - BULLETPROOF RELATIVE IMPORTS
   import type { ISequenceService } from "../modules/build/workbench";
+  import BackgroundCanvas from "./background/components/BackgroundCanvas.svelte";
+  import { BackgroundType } from "./domain/ui/backgrounds/BackgroundTypes";
   import type { IApplicationInitializer } from "./foundation/services/contracts/application/IApplicationInitializer";
   import type { IDeviceDetector } from "./foundation/services/contracts/device/IDeviceDetector";
   import type { ISettingsService } from "./foundation/services/contracts/settings/ISettingsService";
@@ -181,6 +183,14 @@
 
 <!-- Application Container -->
 <div class="tka-app" data-testid="tka-application">
+  <!-- Background Canvas - Sophisticated night sky with nebula, constellations, moon, spaceship, comets -->
+  <BackgroundCanvas
+    backgroundType={BackgroundType.NIGHT_SKY}
+    quality="medium"
+    onReady={() => console.log("🌌 Sophisticated night sky background ready!")}
+
+  />
+
   {#if initializationError}
     <ErrorScreen
       error={initializationError}

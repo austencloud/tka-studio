@@ -34,7 +34,7 @@ import type {
 } from "../services/contracts";
 import { GalleryFilterState } from "./GalleryFilterState.svelte";
 import { GallerySearchState } from "./GallerySearchState.svelte";
-import { GalleryState } from "./GalleryState";
+import { GalleryState } from "./GalleryState.svelte";
 
 export interface BrowseState {
   // State microservices (reactive)

@@ -13,13 +13,21 @@
   import PropTypeTab from "./tabs/PropTypeTab.svelte";
   import VisibilityTab from "./tabs/VisibilityTab.svelte";
 
-  // Current settings state
+  // Current settings state with null safety
   let settings = $state(getSettings());
   let activeTab = $state("General");
 
+  // Check if settings are loaded
+  const isSettingsLoaded = $derived(
+    () =>
+      settings &&
+      typeof settings === "object" &&
+      Object.keys(settings).length > 0
+  );
+
   // Simplified background settings for new BackgroundTab
   const backgroundSettings = $derived(() => ({
-    backgroundType: settings.backgroundType || BackgroundType.NIGHT_SKY,
+    backgroundType: settings?.backgroundType || BackgroundType.NIGHT_SKY,
   }));
 
   // Simplified tab configuration
@@ -129,16 +137,20 @@
 
       <!-- Content Area -->
       <main class="settings-content">
-        {#if activeTab === "General"}
-          <GeneralTab />
+        {#if !isSettingsLoaded}
+          <div class="loading-state">
+            <p>Loading settings...</p>
+          </div>
+        {:else if activeTab === "General"}
+          <GeneralTab {settings} onUpdate={handlePropUpdate} />
         {:else if activeTab === "PropType"}
           <PropTypeTab {settings} onUpdate={handlePropUpdate} />
         {:else if activeTab === "Visibility"}
           <VisibilityTab {settings} onUpdate={handlePropUpdate} />
         {:else if activeTab === "Background"}
-          <BackgroundTab />
+          <BackgroundTab {settings} onUpdate={handlePropUpdate} />
         {:else if activeTab === "CodexExporter"}
-          <CodexExporterTab />
+          <CodexExporterTab {settings} onUpdate={handlePropUpdate} />
         {/if}
       </main>
     </div>

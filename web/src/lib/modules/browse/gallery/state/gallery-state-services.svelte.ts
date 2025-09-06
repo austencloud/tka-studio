@@ -12,6 +12,7 @@
  */
 
 import { browser } from "$app/environment";
+import { resolve, TYPES } from "$lib/shared/inversify/container";
 import { GallerySortMethod } from "../domain";
 // import type { SequenceData } from "$shared/domain";
 import type {
