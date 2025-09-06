@@ -4,7 +4,7 @@ A compact control using segmented control for selecting between Diamond and Box 
 -->
 <script lang="ts">
   import { GridMode } from "$shared/domain";
-  import IOSToggle from "$shared/components/ui/IOSToggle.svelte";
+  import IOSToggle from "$shared/foundation/ui/IOSToggle.svelte";
 
   interface Props {
     initialMode?: GridMode;

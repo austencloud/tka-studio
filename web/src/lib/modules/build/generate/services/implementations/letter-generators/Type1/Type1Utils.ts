@@ -5,8 +5,8 @@
  * Type 1 letters only use PRO/ANTI motion types with matching rotations.
  */
 
-import { RotationDirection } from "$domain";
-import type { Type1LetterConfig } from "./Type1Configs";
+import { RotationDirection } from "$shared/domain";
+// import type { Type1LetterConfig } from "./Type1Configs";
 
 /**
  * Generate matching rotation pairs (CW/CW and CCW/CCW) for Type 1 letters
@@ -49,7 +49,7 @@ export function getAllRotationCombinations(): [
  * Get supported letters for a Type 1 position system configuration
  */
 export function getType1SupportedLetters(
-  config: Record<string, Type1LetterConfig>
+  config: Record<string, any>
 ): string[] {
   return Object.keys(config);
 }
@@ -59,7 +59,7 @@ export function getType1SupportedLetters(
  */
 export function isType1LetterSupported(
   letter: string,
-  config: Record<string, Type1LetterConfig>
+  config: Record<string, any>
 ): boolean {
   return letter in config;
 }

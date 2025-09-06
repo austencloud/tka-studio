@@ -1,13 +1,11 @@
-<!  import type { SequenceData } from "$shared/domain";
-  import type { IGalleryThumbnailService } from "../services/contracts";
-  import { slide } from "svelte/transition";FullscreenSequenceViewer.svelte - Fullscreen sequence viewer with actions -->
+<!-- SpotlightViewer.svelte - Fullscreen sequence viewer with actions -->
 <script lang="ts">
-  import type { SequenceData } from "$shared/domain";
-  import type { IGalleryThumbnailService } from "$browse/services";
+  import SpotlightImage from './SpotlightImage.svelte';
+  import SpotlightActionButtons from './SpotlightActionButtons.svelte';
   import { fade } from "svelte/transition";
-  // Import subcomponents
-  import FullscreenActionButtons from "./fullscreen/FullscreenActionButtons.svelte";
-  import FullscreenImageViewer from "./fullscreen/FullscreenImageViewer.svelte";
+  import type { SequenceData } from "../../../../shared/domain";
+  import type { IGalleryThumbnailService } from "../../gallery/services/contracts";
+
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
@@ -45,7 +43,6 @@
 
       if (navBar) {
         const rect = navBar.getBoundingClientRect();
-        // Position button below the header with some margin
         closeButtonTopOffset = rect.bottom + 16; // Add 1rem margin
       } else {
         // Fallback if no header found
@@ -146,7 +143,7 @@
       </div>
 
       <!-- Image viewer (centered) -->
-      <FullscreenImageViewer
+      <SpotlightImage
         {sequence}
         {thumbnailService}
         bind:currentVariationIndex
@@ -154,7 +151,7 @@
 
       <!-- Centered bottom panel -->
       <div class="bottom-panel">
-        <FullscreenActionButtons {sequence} {onAction} />
+        <SpotlightActionButtons {sequence} {onAction} />
       </div>
 
       <!-- Dismissal hint -->

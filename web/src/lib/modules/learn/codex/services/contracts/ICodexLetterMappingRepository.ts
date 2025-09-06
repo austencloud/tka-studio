@@ -1,6 +1,6 @@
 import type { CodexLetterMapping, CodexLetterRow } from "../../domain";
 
-export interface ICodexCodexLetterMappingRepo {
+export interface ICodexLetterMappingRepo {
   initialize(): Promise<void>;
 
   getLetterMapping(letter: string): CodexLetterMapping | null;

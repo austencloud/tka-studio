@@ -14,4 +14,4 @@ export * from "./enums";
 export * from "./models/quiz-models";
 
 // Types
-export * from "./types";
+// export * from "./types";

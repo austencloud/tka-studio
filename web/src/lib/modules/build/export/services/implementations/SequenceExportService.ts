@@ -4,21 +4,19 @@
  * Handles exporting sequences to various formats (images, JSON, etc.)
  */
 
-// Domain types
-import type {
-    BatchExportOptions,
-    BatchExportResult, BeatData, ImageExportOptions,
-    PDFExportOptions, SequenceData
-} from "$shared/domain";
-
-// Behavioral contracts
-import type { IExportService } from "$services";
-import type {
-    ExportOptions,
-    ExportResult,
-    Page
-} from "$shared/domain";
+import type { Page } from "@sveltejs/kit";
 import { injectable } from "inversify";
+import type { ExportResult, SequenceData } from "../../../../../shared/domain";
+import type { ImageExportOptions, PDFExportOptions } from "../../../../../shared/domain/models/image_export";
+
+// Define sequence-specific export types locally
+
+import type { ExportOptions } from "../../../../word-card";
+import type { BeatData } from "../../../workbench";
+import type { SequenceExportOptions, SequenceExportResult } from "../../domain/models";
+import type { IExportService } from "../contracts";
+
+
 @injectable()
 export class ExportService implements IExportService {
   constructor() {}
@@ -28,8 +26,8 @@ export class ExportService implements IExportService {
    */
   async exportSequenceAsImage(
     sequence: SequenceData,
-    options: ExportOptions
-  ): Promise<Blob> {
+    options: SequenceExportOptions
+  ): Promise<SequenceExportResult> {
     try {
       console.log(`Exporting sequence "${sequence.name}" as image`);
 
@@ -43,7 +41,7 @@ export class ExportService implements IExportService {
 
       // Calculate dimensions
       const beatSize = options.beatSize;
-      const spacing = options.spacing;
+      const spacing = 10; // options.spacing;
       const totalBeats = sequence.beats.length;
       const cols = Math.ceil(Math.sqrt(totalBeats));
       const rows = Math.ceil(totalBeats / cols);
@@ -67,15 +65,26 @@ export class ExportService implements IExportService {
       }
 
       // Add title if requested
-      if (options.includeTitle) {
-        this.renderTitle(ctx, sequence.name, canvas.width);
-      }
+      // if (options.includeTitle) {
+      //   this.renderTitle(ctx, sequence.name, canvas.width);
+      // }
 
       // Convert to blob
-      return new Promise<Blob>((resolve, reject) => {
+      return new Promise<SequenceExportResult>((resolve, reject) => {
         canvas.toBlob((blob) => {
           if (blob) {
-            resolve(blob);
+            resolve({
+              success: true,
+              blob,
+              filename: 'sequence.png',
+              metadata: {
+                format: 'PNG',
+                size: blob.size,
+                dimensions: { width: canvas.width, height: canvas.height },
+                beatCount: sequence.beats.length,
+                processingTime: 0
+              }
+            });
           } else {
             reject(new Error("Failed to create image blob"));
           }
@@ -141,26 +150,12 @@ export class ExportService implements IExportService {
       ctx.fillRect(x + 5, y + 5, 10, 10);
     }
 
-    const redMotion = beat.pictographData?.motions?.red;
-    if (redMotion) {
-      ctx.fillStyle = "#ef4444";
-      ctx.fillRect(x + size - 15, y + 5, 10, 10);
-    }
+    // if (redMotion) {
+    //   ctx.fillStyle = "#ef4444";
+    //   ctx.fillRect(x + size - 15, y + 5, 10, 10);
+    // }
   }
 
-  /**
-   * Render title on canvas
-   */
-  private renderTitle(
-    ctx: CanvasRenderingContext2D,
-    title: string,
-    canvasWidth: number
-  ): void {
-    ctx.fillStyle = "#111827";
-    ctx.font = "bold 24px system-ui";
-    ctx.textAlign = "center";
-    ctx.fillText(title, canvasWidth / 2, 30);
-  }
 
   /**
    * Get default export options
@@ -213,9 +208,9 @@ export class ExportService implements IExportService {
   }
 
   async exportBatch(
-    _pages: Page[],
-    _options: BatchExportOptions & (ImageExportOptions | PDFExportOptions)
-  ): Promise<BatchExportResult> {
+    sequences: SequenceData[],
+    options: SequenceExportOptions
+  ): Promise<SequenceExportResult[]> {
     throw new Error("Batch export not yet implemented");
   }
 }

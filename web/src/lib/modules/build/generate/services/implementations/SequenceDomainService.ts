@@ -5,18 +5,17 @@
  * and desktop.modern.domain.models for actual validation and business rules.
  */
 
-import type { ValidationError, ValidationResult } from "$build/domain";
-import type { BeatData, SequenceData } from "$shared/domain";
+import type { BeatData, SequenceData, ValidationError, ValidationResult } from "$shared/domain";
 import { GridMode } from "$shared/domain";
 // Domain types
-import type { SequenceCreateRequest } from "$build/domain";
+// import type { SequenceCreateRequest } from "../../domain";
 
 // Behavioral contracts
 import { injectable } from "inversify";
-import type { ISequenceDomainService } from "../../contracts";
+// import type { ISequenceDomainService } from "../contracts";
 
 @injectable()
-export class SequenceDomainService implements ISequenceDomainService {
+export class SequenceDomainService {
 
   validateSequence(sequence: any): boolean {
     // TODO: Implement sequence validation
@@ -33,7 +32,7 @@ export class SequenceDomainService implements ISequenceDomainService {
   /**
    * Validate sequence creation request - REAL validation from desktop
    */
-  validateCreateRequest(request: SequenceCreateRequest): ValidationResult {
+  validateCreateRequest(request: any): ValidationResult {
     const errors: ValidationError[] = [];
 
     // Validation from desktop SequenceData.__post_init__
@@ -92,7 +91,7 @@ export class SequenceDomainService implements ISequenceDomainService {
   /**
    * Create sequence with proper beat numbering - from desktop SequenceData
    */
-  createSequence(request: SequenceCreateRequest): SequenceData {
+  createSequence(request: any): SequenceData {
     const validation = this.validateCreateRequest(request);
     if (!validation.isValid) {
       throw new Error(

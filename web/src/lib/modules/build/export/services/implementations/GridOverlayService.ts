@@ -8,9 +8,10 @@
  * Critical: Must match desktop overlay opacity and positioning exactly.
  */
 
-import type { IGridOverlayService } from "$services";
-import type { GridMode } from "$shared/domain";
 import { injectable } from "inversify";
+import { GridMode } from "../../../../../shared/domain";
+import type { IGridOverlayService } from "../contracts";
+
 
 @injectable()
 export class GridOverlayService implements IGridOverlayService {

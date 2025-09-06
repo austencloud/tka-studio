@@ -2,12 +2,12 @@
 // BROWSE ENUMS
 // ============================================================================
 
-export enum FilterType {
+export enum GalleryFilterType {
   STARTING_LETTER = "starting_letter",
   CONTAINS_LETTERS = "contains_letters",
   LENGTH = "length",
   DIFFICULTY = "difficulty",
-  startPosition = "startPosition",
+  START_POSITION = "startPosition",
   AUTHOR = "author",
   GRID_MODE = "gridMode",
   ALL_SEQUENCES = "all_sequences",
@@ -24,7 +24,7 @@ export enum GallerySortMethod {
   POPULARITY = "popularity",
 }
 
-export enum NavigationMode {
+export enum GalleryNavigationMode {
   FILTER_SELECTION = "filter_selection",
   SEQUENCE_BROWSER = "sequence_browser",
 }

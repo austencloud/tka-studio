@@ -6,17 +6,17 @@ Combines static pictograph display (no card wrapper) with motion designer contro
 This is the left 2/3 section of the new layout.
 -->
 <script lang="ts">
-  import Pictograph from "$shared/components/pictograph/Pictograph.svelte";
   import {
     createMotionData,
     createPictographData,
+    GridLocation,
     Letter,
-    Location,
     MotionColor,
     MotionType,
     Orientation,
     RotationDirection,
   } from "$shared/domain";
+  import Pictograph from "$shared/pictograph/components/Pictograph.svelte";
   import type { AnimatorState } from "../state";
   import PropPanel from "./PropPanel.svelte";
   import SimpleGridToggle from "./SimpleGridToggle.svelte";
@@ -36,9 +36,9 @@ This is the left 2/3 section of the new layout.
 
       // Get current motion parameters
       const blueEndLocation = motionState.blueMotionParams
-        .endLocation as Location;
+        .endLocation as GridLocation;
       const redEndLocation = motionState.redMotionParams
-        .endLocation as Location;
+        .endLocation as GridLocation;
 
       // TODO: Enhance with letter detection logic
       let letter: Letter = Letter.A;
@@ -49,7 +49,7 @@ This is the left 2/3 section of the new layout.
         motions: {
           blue: createMotionData({
             startLocation: motionState.blueMotionParams
-              .startLocation as Location,
+              .startLocation as GridLocation,
             endLocation: blueEndLocation,
             startOrientation: motionState.blueMotionParams
               .startOrientation as Orientation,
@@ -64,7 +64,7 @@ This is the left 2/3 section of the new layout.
           }),
           red: createMotionData({
             startLocation: motionState.redMotionParams
-              .startLocation as Location,
+              .startLocation as GridLocation,
             endLocation: redEndLocation,
             startOrientation: motionState.redMotionParams
               .startOrientation as Orientation,

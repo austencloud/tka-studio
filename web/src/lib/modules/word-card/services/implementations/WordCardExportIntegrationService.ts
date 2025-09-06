@@ -6,13 +6,17 @@
  */
 
 // Domain types
-import type { ImageExportOptions as SequenceExportOptions } from "$shared/domain";
+// import type { ImageExportOptions as SequenceExportOptions } from "$shared/domain";
+
+// Temporary interface definition
+interface SequenceExportOptions {
+  format: string;
+  quality: number;
+  includeMetadata: boolean;
+  scale?: number;
+}
 
 // Behavioral contracts
-import type {
-  IPageImageExportService,
-  IWordCardExportIntegrationService,
-} from "$services";
 import {
   downloadBlobBatch,
   generateTimestampedFilename,
@@ -20,6 +24,34 @@ import {
   supportsFileDownload,
 } from "$shared/utils";
 import { injectable } from "inversify";
+// import type {
+//   IPageImageExportService,
+//   IWordCardExportIntegrationService,
+// } from "../contracts";
+
+// Temporary interface definitions
+interface BatchExportResult {
+  success: boolean;
+  totalPages: number;
+  successCount: number;
+  failureCount: number;
+  results: any[];
+  errors: Error[];
+  totalProcessingTime: number;
+}
+
+interface IPageImageExportService {
+  exportPagesAsImages?(
+    sequences: any[],
+    options: any
+  ): Promise<BatchExportResult>;
+  cancelExport?(): Promise<void>;
+}
+
+interface IWordCardExportIntegrationService {
+  exportWordCards(sequences: any[], options: any): Promise<any[]>;
+  cancelExport(): Promise<void>;
+}
 
 @injectable()
 export class WordCardExportIntegrationService
@@ -31,6 +63,12 @@ export class WordCardExportIntegrationService
   constructor(
     private readonly pageImageExportService: IPageImageExportService
   ) {}
+
+  async exportWordCards(sequences: any[], options: any): Promise<any[]> {
+    // Delegate to the main export method
+    const result = await this.exportPrintablePagesAsImages(options);
+    return [result]; // Return as array to match interface
+  }
 
   async exportPrintablePagesAsImages(
     options: {
@@ -76,17 +114,22 @@ export class WordCardExportIntegrationService
 
       // Export pages to blobs
       onProgress?.(0, totalCount, "Starting page export...");
-      const batchResult = await this.pageImageExportService.exportPagesAsImages(
-        pageElements,
-        exportOptions
-      );
+      const batchResult =
+        await this.pageImageExportService.exportPagesAsImages?.(
+          pageElements,
+          exportOptions
+        );
+
+      if (!batchResult) {
+        throw new Error("Export service not available");
+      }
 
       console.log("📊 Batch export result:", batchResult);
 
       // Prepare download data
       const downloadData: Array<{ blob: Blob; filename: string }> = [];
-      const errors: Error[] = batchResult.errors.map((err: any) =>
-        err instanceof Error ? err : err.error
+      const errors: Error[] = (batchResult.errors || []).map((err: any) =>
+        err instanceof Error ? err : new Error(err.error || String(err))
       );
 
       for (let i = 0; i < batchResult.results.length; i++) {
@@ -296,11 +339,11 @@ export class WordCardExportIntegrationService
     };
   }
 
-  cancelExport(): void {
+  async cancelExport(): Promise<void> {
     if (this.isExporting && this.abortController) {
       console.log("🛑 Cancelling export operation");
       this.abortController.abort();
-      this.pageImageExportService.cancelExport();
+      this.pageImageExportService.cancelExport?.();
       this.isExporting = false;
       this.abortController = null;
     }
@@ -337,6 +380,7 @@ export class WordCardExportIntegrationService
       format: options.format || defaults.format,
       quality: options.quality ?? defaults.quality,
       scale: options.scale ?? defaults.scale,
+      includeMetadata: true, // Add required property
     };
   }
 

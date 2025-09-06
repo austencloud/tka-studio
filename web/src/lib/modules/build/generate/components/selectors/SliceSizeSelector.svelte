@@ -4,7 +4,7 @@ Beautiful iOS-style toggle between halved and quartered slice sizes for circular
 -->
 <script lang="ts">
   import { SliceSize } from "$shared/domain";
-  import IOSToggle from "$shared/components/ui/IOSToggle.svelte";
+  import IOSToggle from "$shared/foundation/ui/IOSToggle.svelte";
 
   interface Props {
     initialValue?: SliceSize;

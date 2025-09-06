@@ -7,11 +7,11 @@
  */
 
 import type { PictographData } from "$shared/domain";
-import type { IPictographGenerator } from "$shared/services/core/contracts";
+// import type { IPictographGenerator } from "$shared/services/core/contracts";
 import { injectable } from "inversify";
 
 @injectable()
-export class CSVPictographGenerator implements IPictographGenerator {
+export class CSVPictographGenerator {
   private readonly pictographCache = new Map<string, PictographData[]>();
 
   constructor() {

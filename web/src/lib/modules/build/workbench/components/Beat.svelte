@@ -11,7 +11,7 @@ This component wraps the Pictograph component and handles all beat-specific conc
 The wrapped Pictograph component focuses purely on rendering pictograph data.
 -->
 <script lang="ts">
-  import Pictograph from "$shared/components/pictograph/Pictograph.svelte";
+  import Pictograph from "$shared/pictograph/components/Pictograph.svelte";
   import type { BeatData } from "../domain";
 
   interface Props {

@@ -5,7 +5,7 @@
  * position mapping, and orientation mapping.
  */
 
-import { Location, Orientation } from "$shared/domain";
+import { GridLocation, Orientation } from "$shared/domain";
 import { HALF_PI, LOCATION_ANGLES, PI, TWO_PI } from "./MathConstants.js";
 
 /**
@@ -27,7 +27,7 @@ export function normalizeAngleSigned(angle: number): number {
 /**
  * Map grid position to angle using centralized enums
  */
-export function mapPositionToAngle(loc: Location): number {
+export function mapPositionToAngle(loc: GridLocation): number {
   return LOCATION_ANGLES[loc] ?? 0;
 }
 

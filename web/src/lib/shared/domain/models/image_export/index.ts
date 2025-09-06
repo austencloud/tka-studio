@@ -1,1 +1,1 @@
-export * from "./image-export-config";
+export * from "../../../../modules/word-card/domain/models/word-card-export";

@@ -5,8 +5,9 @@
 	Handles the 4-tab navigation (Build/Generate/Edit/Export) with active state management.
 -->
 <script lang="ts">
-  import type { ActiveBuildSubTab as ActiveBuildTab } from "$build/domain";
-  import { constructTabTransitionService } from "./services/implementations";
+  import type { ActiveBuildTab } from "../../../../shared/domain";
+  import { constructTabTransitionService } from "../services/implementations/BuildTabTransitionService";
+
 
   // Props from parent
   interface Props {

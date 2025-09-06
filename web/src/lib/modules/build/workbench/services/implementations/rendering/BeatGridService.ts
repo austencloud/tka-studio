@@ -4,13 +4,13 @@
  */
 
 import {
-    GridMode,
-    type CombinedGridOptions,
-    type GridDrawOptions,
-    type GridValidationResult,
+  GridMode,
+  type CombinedGridOptions,
+  type GridDrawOptions,
+  type GridValidationResult,
 } from "$shared/domain";
 import { injectable } from "inversify";
-import type { IBeatGridService } from "../contracts";
+import type { IBeatGridService } from "../../contracts";
 
 @injectable()
 export class BeatGridService implements IBeatGridService {

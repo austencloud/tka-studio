@@ -58,7 +58,7 @@ export enum Orientation {
   COUNTER = "counter",
 }
 
-export enum Location {
+export enum GridLocation {
   NORTH = "n",
   EAST = "e",
   SOUTH = "s",
@@ -254,7 +254,6 @@ export enum LayoutCategory {
   MEDIUM_ITEMS = "mediumItems",
   MANY_ITEMS = "manyItems",
 }
-
 
 // ============================================================================
 // LAYOUT ENUMS

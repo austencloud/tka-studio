@@ -5,7 +5,7 @@
  * Consolidated into a single file for simplicity since they're small.
  */
 
-import type { IBrowseStatePersister } from "../../modules/browse/services";
+import type { IBrowseStatePersister } from "../../modules/browse/gallery/services/implementations/BrowseStatePersister";
 import type { AppSettings } from "../domain/models/application/AppSettings";
 import type { TabId, Theme, UIPerformanceMetrics } from "../domain/ui/UITypes";
 

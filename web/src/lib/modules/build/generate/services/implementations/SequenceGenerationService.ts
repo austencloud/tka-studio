@@ -5,32 +5,15 @@
  * No placeholders, no simplified versions - complete algorithm from legacy desktop app.
  */
 
-import {
-  createMotionData,
-  createSequenceData,
-  DifficultyLevel,
-  GenerationMode,
-  GridMode,
-  Location,
-  MotionType,
-  Orientation,
-  PropContinuity,
-  PropType,
-  RotationDirection,
-  type BeatData,
-  type PictographData,
-  type SequenceData,
-} from "$domain";
-
-import type { GenerationOptions } from "$domain";
-import type {
-  ILetterQueryHandler,
-  IOrientationCalculationService,
-  ISequenceGenerationService,
-} from "$services";
-
-import { TYPES } from "$shared/inversify/types";
+import type { ILetterQueryHandler } from "$shared/foundation/services/contracts/data/data-interfaces";
 import { inject, injectable } from "inversify";
+import { createMotionData, createSequenceData, DifficultyLevel, GenerationMode, GridLocation, GridMode, MotionType, Orientation, PropContinuity, PropType, RotationDirection, type PictographData, type SequenceData } from "../../../../../shared/domain";
+import { TYPES } from "../../../../../shared/inversify";
+import type { BeatData } from "../../../workbench";
+import type { GenerationOptions } from "../../domain";
+import type { IOrientationCalculationService, ISequenceGenerationService } from "../contracts/generate-contracts";
+
+
 
 // Legacy constants for rotation directions - using enum values
 const ROTATION_DIRS = {
@@ -285,8 +268,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
         createMotionData({
           motionType: MotionType.STATIC,
           rotationDirection: RotationDirection.NO_ROTATION,
-          startLocation: Location.NORTH,
-          endLocation: Location.NORTH,
+          startLocation: GridLocation.NORTH,
+          endLocation: GridLocation.NORTH,
           turns: 0,
           startOrientation: Orientation.IN,
           endOrientation: Orientation.IN,
@@ -296,8 +279,8 @@ export class SequenceGenerationService implements ISequenceGenerationService {
         createMotionData({
           motionType: MotionType.STATIC,
           rotationDirection: RotationDirection.NO_ROTATION,
-          startLocation: Location.NORTH,
-          endLocation: Location.NORTH,
+          startLocation: GridLocation.NORTH,
+          endLocation: GridLocation.NORTH,
           turns: 0,
           startOrientation: Orientation.IN,
           endOrientation: Orientation.IN,

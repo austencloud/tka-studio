@@ -5,22 +5,12 @@
  * Generates pictograph data for Type 1 letters using logical rules.
  */
 
-import { Direction, Letter, PositionSystem, Timing } from "$domain";
-import type {
-  IDirectionCalculator,
-  IPictographValidatorService,
-  IPositionPatternService
-} from "$services";
+import { Direction, Letter, PositionSystem, Timing } from "$shared/domain";
+import type { IDirectionCalculator, IPictographValidatorService, IPositionPatternService } from "../../../contracts/generate-contracts";
 import { BaseType1Generator } from "./BaseType1Generator";
-import {
-  TYPE1_ALPHA_TO_ALPHA_LETTERS,
-  TYPE1_ALPHA_TO_BETA_LETTERS,
-  TYPE1_BETA_TO_ALPHA_LETTERS,
-  TYPE1_BETA_TO_BETA_LETTERS,
-  TYPE1_GAMMA_TO_GAMMA_LETTERS,
-  type Type1LetterConfig,
-  getType1LetterConfig,
-} from "./Type1Configs";
+import { TYPE1_ALPHA_TO_ALPHA_LETTERS, TYPE1_ALPHA_TO_BETA_LETTERS, TYPE1_BETA_TO_ALPHA_LETTERS, TYPE1_BETA_TO_BETA_LETTERS, TYPE1_GAMMA_TO_GAMMA_LETTERS, getType1LetterConfig, type Type1LetterConfig } from "./Type1Configurations";
+
+
 
 /**
  * Position system configuration for Type 1 letters

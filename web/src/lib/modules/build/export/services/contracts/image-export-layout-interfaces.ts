@@ -5,7 +5,7 @@
  * and positioning logic in the TKA image export system.
  */
 
-import type { ImageExportOptions } from "../../../../word-card/domain";
+// import type { ImageExportOptions } from "$shared/domain";
 
 
 // ============================================================================
@@ -57,7 +57,7 @@ export interface IDimensionCalculationService {
    * Returns [topHeight, bottomHeight]
    */
   determineAdditionalHeights(
-    options: ImageExportOptions,
+    options: any,
     beatCount: number,
     beatScale: number
   ): [number, number];
@@ -78,7 +78,7 @@ export interface IDimensionCalculationService {
   validateDimensions(
     beatCount: number,
     beatScale: number,
-    options: ImageExportOptions
+    options: any
   ): boolean;
 }
 

@@ -8,19 +8,12 @@
  * Refactored from the monolithic TKAImageExportService to focus solely on orchestration.
  */
 
-import type { SequenceExportOptions } from "$build/domain";
-import type {
-  IDimensionCalculationService,
-  IExportConfig,
-  IExportOptionsValidator,
-  IFileExportService,
-  IFilenameGeneratorService,
-  IImageCompositionService,
-  IImagePreviewGenerator,
-  ILayoutCalculationService,
-  ITKAImageExportService,
-} from "$services";
-import type { SequenceData } from "$shared/domain";
+import type { SequenceData } from "../../../../../shared/domain";
+import type { SequenceExportOptions } from "../../domain/models";
+import type { IDimensionCalculationService, IExportOptionsValidator, IFilenameGeneratorService, IImageCompositionService, IImagePreviewGenerator, ILayoutCalculationService, ITKAImageExportService } from "../contracts";
+import type { IFileExportService } from "../contracts/image-export-file-interfaces";
+import type { IExportConfig } from "../contracts/image-export-interfaces";
+
 
 export class TKAImageExportOrchestrator implements ITKAImageExportService {
   constructor(

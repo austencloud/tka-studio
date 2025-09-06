@@ -1,5 +1,8 @@
 <script lang="ts">
-  import { getLandingBackground, setLandingBackground } from "../state";
+  import {
+    getLandingBackground,
+    setLandingBackground,
+  } from "$shared/state/app-mode-state.svelte";
   import SettingsModal from "./SettingsModal.svelte";
 
   interface Props {

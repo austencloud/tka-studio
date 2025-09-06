@@ -5,16 +5,16 @@
  * after extraction from the mixed reactive service.
  */
 
+import { WorkbenchService } from "$lib/modules/build/workbench/services/implementations/WorkbenchService";
 import {
   GridMode,
   Letter,
   createPictographData,
   type BeatData,
   type SequenceData,
-  type WorkbenchMode,
-} from "$domain";
-import { WorkbenchService } from "$implementations";
+} from "$shared/domain";
 import { beforeEach, describe, expect, it } from "vitest";
+import type { WorkbenchMode } from "../../../src/lib/modules/build/workbench";
 
 describe("WorkbenchService", () => {
   let service: WorkbenchService;

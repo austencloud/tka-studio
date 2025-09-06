@@ -7,7 +7,7 @@ Provides three-section layout with:
 - Reactive panel state management using runes + services
 -->
 <script lang="ts">
-  import Splitter from "$shared/components/ui/Splitter.svelte";
+  import Splitter from "$shared/foundation/ui/Splitter.svelte";
   import type { Snippet } from "svelte";
   import type { GalleryPanelStateManager } from "../../state";
 

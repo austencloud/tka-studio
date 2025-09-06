@@ -6,11 +6,11 @@
 	Now featuring beautiful glass scrollbars.
 -->
 <script lang="ts">
-  import SimpleGlassScroll from "$shared/components/ui/SimpleGlassScroll.svelte";
   import type { PictographData } from "$shared/domain";
+  import SimpleGlassScroll from "$shared/foundation/ui/SimpleGlassScroll.svelte";
   import { createCodexState } from "$shared/state";
-  import CodexControlPanel from "../../components/codex/CodexControlPanel.svelte";
-  import CodexPictographGrid from "../../components/codex/CodexPictographGrid.svelte";
+  import CodexControlPanel from "./CodexControlPanel.svelte";
+  import CodexPictographGrid from "./CodexPictographGrid.svelte";
 
   // Props
   interface Props {

@@ -8,61 +8,77 @@ Integrates panel management service with runes for:
 - Reactive UI updates
 -->
 <script lang="ts">
-  import type { SequenceData } from "$shared/domain/core/models/sequence/SequenceData";
-  // TEMPORARY: Service interfaces commented out until container is restored
-  // import type {
-  //   IBrowsePanelManager,
-  //   IGalleryService,
-  //   IDeleteService,
-  //   IFavoritesService,
-  //   IFilterPersistenceService,
-  //   INavigationService,
-  //   ISectionService,
-  //   ISequenceIndexService,
-  //   IGalleryThumbnailService,
-  // } from "$services";
   import { onDestroy, onMount } from "svelte";
+  import SpotlightViewer from "./../../spotlight/components/SpotlightViewer.svelte";
   // Import layout and UI components
-  import FullscreenSequenceViewer from "../../components/FullscreenSequenceViewer.svelte";
+  import type { SequenceData } from "../../../../shared/domain";
+  import { resolve, TYPES } from "../../../../shared/inversify";
+  import GalleryPanel from "../../gallery/components/GalleryPanel.svelte";
+  import NavigationSidebar from "../../gallery/components/NavigationSidebar.svelte";
+  import type {
+    IDeleteService,
+    IFavoritesService,
+    IFilterPersistenceService,
+    IGalleryPanelManager,
+    IGalleryService,
+    IGalleryThumbnailService,
+    INavigationService,
+    ISectionService,
+    ISequenceIndexService,
+  } from "../../gallery/services/contracts";
+  import { createPanelState } from "../../gallery/state/gallery-panel-state.svelte";
+  import { createBrowseState } from "../../gallery/state/gallery-state-factory.svelte";
+  import type { BrowseDeleteConfirmationData } from "../domain/models";
+  import BrowseLayout from "./BrowseLayout.svelte";
   import BrowseLoadingOverlay from "./BrowseLoadingOverlay.svelte";
   import DeleteConfirmationDialog from "./DeleteConfirmationDialog.svelte";
   import ErrorBanner from "./ErrorBanner.svelte";
 
   // ============================================================================
-  // SERVICE RESOLUTION - TEMPORARY DISABLED
+  // SERVICE RESOLUTION
   // ============================================================================
 
-  // TEMPORARY: All service resolution commented out until container is restored
-  // const browseService = resolve(TYPES.IGalleryService) as IGalleryService;
-  // const thumbnailService = resolve(TYPES.IGalleryThumbnailService) as IGalleryThumbnailService;
-  // const sequenceIndexService = resolve(TYPES.ISequenceIndexService) as ISequenceIndexService;
-  // const favoritesService = resolve(TYPES.IFavoritesService) as IFavoritesService;
-  // const navigationService = resolve(TYPES.INavigationService) as INavigationService;
-  // const filterPersistenceService = resolve(TYPES.IFilterPersistenceService) as IFilterPersistenceService;
-  // const sectionService = resolve(TYPES.ISectionService) as ISectionService;
-  // const deleteService = resolve(TYPES.IDeleteService) as IDeleteService;
-  // const panelManager = resolve(TYPES.IBrowsePanelManager) as IBrowsePanelManager;
+  const browseService = resolve(TYPES.IGalleryService) as IGalleryService;
+  const thumbnailService = resolve(
+    TYPES.IGalleryThumbnailService
+  ) as IGalleryThumbnailService;
+  const sequenceIndexService = resolve(
+    TYPES.ISequenceIndexService
+  ) as ISequenceIndexService;
+  const favoritesService = resolve(
+    TYPES.IFavoritesService
+  ) as IFavoritesService;
+  const navigationService = resolve(
+    TYPES.INavigationService
+  ) as INavigationService;
+  const filterPersistenceService = resolve(
+    TYPES.IFilterPersistenceService
+  ) as IFilterPersistenceService;
+  const sectionService = resolve(TYPES.ISectionService) as ISectionService;
+  const deleteService = resolve(TYPES.IDeleteService) as IDeleteService;
+  const panelManager = resolve(
+    TYPES.IGalleryPanelManager
+  ) as IGalleryPanelManager;
 
   // ============================================================================
-  // STATE MANAGEMENT - TEMPORARY DISABLED
+  // STATE MANAGEMENT
   // ============================================================================
 
-  // TEMPORARY: State creation commented out until services are restored
-  // const browseState = createBrowseState(
-  //   browseService,
-  //   thumbnailService,
-  //   sequenceIndexService,
-  //   favoritesService,
-  //   navigationService,
-  //   filterPersistenceService,
-  //   sectionService,
-  //   deleteService
-  // );
+  const browseState = createBrowseState(
+    browseService,
+    thumbnailService,
+    sequenceIndexService,
+    favoritesService,
+    navigationService,
+    filterPersistenceService,
+    sectionService,
+    deleteService
+  );
 
-  // const panelState = createPanelState(panelManager, BROWSE_TAB_PANEL_CONFIGS);
+  const panelState = createPanelState(panelManager);
 
   // ============================================================================
-  // COMPONENT STATE - TEMPORARY PLACEHOLDERS
+  // COMPONENT STATE
   // ============================================================================
 
   let isLoading = $state(false);
@@ -70,43 +86,86 @@ Integrates panel management service with runes for:
   let showDeleteDialog = $state(false);
   let showFullscreenViewer = $state(false);
   let selectedSequence = $state<SequenceData | null>(null);
+  let deleteConfirmationData = $state<BrowseDeleteConfirmationData | null>(
+    null
+  );
 
   // ============================================================================
-  // EVENT HANDLERS - TEMPORARY DISABLED
+  // EVENT HANDLERS
   // ============================================================================
 
   function handleSequenceSelect(sequence: SequenceData) {
     selectedSequence = sequence;
-    console.log(
-      "✅ BrowseTab: Sequence selected (services disabled):",
-      sequence
-    );
+    browseState.selectSequence(sequence);
+    console.log("✅ BrowseTab: Sequence selected:", sequence);
   }
 
-  function handleSequenceDelete(sequence: SequenceData) {
+  function handleSequenceAction(action: string, sequence: SequenceData) {
+    switch (action) {
+      case "select":
+        handleSequenceSelect(sequence);
+        break;
+      case "delete":
+        handleSequenceDelete(sequence);
+        break;
+      case "fullscreen":
+        handleFullscreenView(sequence);
+        break;
+      case "favorite":
+        browseState.toggleFavorite(sequence.id);
+        break;
+      default:
+        console.warn("✅ BrowseTab: Unknown action:", action);
+    }
+  }
+
+  async function handleSequenceDelete(sequence: SequenceData) {
     selectedSequence = sequence;
-    showDeleteDialog = true;
-    console.log(
-      "✅ BrowseTab: Delete requested (services disabled):",
-      sequence
-    );
+    try {
+      // Use the delete service to prepare confirmation data
+      const allSequences = browseState.allSequences || [];
+      deleteConfirmationData = {
+        sequence: sequence,
+        relatedSequences: [], // TODO: Calculate related sequences properly
+        hasVariations: false, // TODO: Check for variations properly
+        willFixVariationNumbers: false, // TODO: Check if variation number fixing is needed
+      };
+      showDeleteDialog = true;
+      console.log("✅ BrowseTab: Delete requested:", sequence);
+    } catch (err) {
+      console.error(
+        "❌ BrowseTab: Failed to prepare delete confirmation:",
+        err
+      );
+      error =
+        err instanceof Error
+          ? err.message
+          : "Failed to prepare delete confirmation";
+    }
   }
 
-  function handleDeleteConfirm() {
-    if (selectedSequence) {
-      console.log(
-        "✅ BrowseTab: Delete confirmed (services disabled):",
-        selectedSequence
-      );
-      // deleteService.deleteSequence(selectedSequence.id);
+  async function handleDeleteConfirm() {
+    if (selectedSequence && deleteConfirmationData) {
+      try {
+        console.log("✅ BrowseTab: Delete confirmed:", selectedSequence);
+        // TODO: Implement proper delete service call
+        // await deleteService.deleteSequence(selectedSequence, browseState.sequences || []);
+        // await browseState.loadSequences(); // Reload sequences after delete
+      } catch (err) {
+        console.error("❌ BrowseTab: Delete failed:", err);
+        error =
+          err instanceof Error ? err.message : "Failed to delete sequence";
+      }
     }
     showDeleteDialog = false;
     selectedSequence = null;
+    deleteConfirmationData = null;
   }
 
   function handleDeleteCancel() {
     showDeleteDialog = false;
     selectedSequence = null;
+    deleteConfirmationData = null;
   }
 
   function handleFullscreenView(sequence: SequenceData) {
@@ -120,37 +179,35 @@ Integrates panel management service with runes for:
   }
 
   function handleNavigationResize(width: number) {
-    console.log("✅ BrowseTab: Navigation resized (services disabled):", width);
-    // panelState.updateNavigationWidth(width);
+    console.log("✅ BrowseTab: Navigation resized:", width);
+    panelState.setNavigationWidth(width);
   }
 
   // ============================================================================
-  // LIFECYCLE - TEMPORARY DISABLED
+  // LIFECYCLE
   // ============================================================================
 
   onMount(async () => {
-    console.log("✅ BrowseTab: Mounted (services temporarily disabled)");
+    console.log("✅ BrowseTab: Mounted");
+    isLoading = true;
 
-    // TEMPORARY: All initialization commented out
     try {
-      // Initialize browse state
-      // await browseState.initialize();
-
       // Load initial data
-      // await browseState.loadSequences();
+      await browseState.loadAllSequences();
 
-      console.log("✅ BrowseTab: Initialization complete (placeholder)");
+      console.log("✅ BrowseTab: Initialization complete");
     } catch (err) {
       console.error("❌ BrowseTab: Initialization failed:", err);
       error =
         err instanceof Error ? err.message : "Failed to initialize browse tab";
+    } finally {
+      isLoading = false;
     }
   });
 
   onDestroy(() => {
-    console.log("✅ BrowseTab: Cleanup (services disabled)");
-    // browseState?.cleanup();
-    // panelState?.cleanup();
+    console.log("✅ BrowseTab: Cleanup");
+    panelState?.cleanup();
   });
 </script>
 
@@ -166,46 +223,24 @@ Integrates panel management service with runes for:
 
   <!-- Main layout with panels -->
   <div class="browse-content">
-    <!-- TEMPORARY: Simplified layout message -->
-    <div class="temporary-message">
-      <h2>📚 Browse Tab</h2>
-      <p><strong>Status:</strong> Import paths fixed ✅</p>
-      <p>Services temporarily disabled during import migration.</p>
-      <p>This tab will be fully functional once the container is restored.</p>
-      <div class="feature-list">
-        <h3>Features (will be restored):</h3>
-        <ul>
-          <li>✅ Sequence browsing and filtering</li>
-          <li>✅ Thumbnail grid with metadata</li>
-          <li>✅ Fullscreen sequence viewer</li>
-          <li>✅ Favorites management</li>
-          <li>✅ Advanced search and sorting</li>
-          <li>✅ Panel resizing and state persistence</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- ORIGINAL LAYOUT (commented out until services restored) -->
-    <!-- <BrowseLayout
-      {panelState}
-      onNavigationResize={handleNavigationResize}
-    >
+    <BrowseLayout {panelState} onNavigationResize={handleNavigationResize}>
       {#snippet navigationSidebar()}
         <NavigationSidebar
-          navigationState={browseState.navigation}
-          onNavigationChange={browseState.handleNavigationChange}
+          sections={browseState.navigationSections}
+          onSectionToggle={browseState.toggleNavigationSection}
+          onItemClick={browseState.setActiveGalleryNavigationItem}
         />
       {/snippet}
 
       {#snippet centerPanel()}
-        <PanelContainer
-          browseState={browseState}
-          onSequenceSelect={handleSequenceSelect}
-          onSequenceDelete={handleSequenceDelete}
-          onFullscreenView={handleFullscreenView}
+        <GalleryPanel
+          sequences={browseState.displayedSequences}
+          isLoading={browseState.isLoading}
+          onBackToFilters={browseState.backToFilters}
+          onAction={handleSequenceAction}
         />
       {/snippet}
-    </BrowseLayout> -->
+    </BrowseLayout>
   </div>
 
   <!-- Loading overlay -->
@@ -214,9 +249,10 @@ Integrates panel management service with runes for:
   {/if}
 
   <!-- Delete confirmation dialog -->
-  {#if showDeleteDialog && selectedSequence}
+  {#if showDeleteDialog && deleteConfirmationData}
     <DeleteConfirmationDialog
-      sequence={selectedSequence}
+      confirmationData={deleteConfirmationData}
+      show={showDeleteDialog}
       onConfirm={handleDeleteConfirm}
       onCancel={handleDeleteCancel}
     />
@@ -224,7 +260,7 @@ Integrates panel management service with runes for:
 
   <!-- Fullscreen viewer -->
   {#if showFullscreenViewer && selectedSequence}
-    <FullscreenSequenceViewer
+    <SpotlightViewer
       sequence={selectedSequence}
       onClose={handleFullscreenClose}
     />
@@ -251,52 +287,5 @@ Integrates panel management service with runes for:
     overflow: hidden;
     justify-content: center;
     align-items: center;
-  }
-
-  .temporary-message {
-    text-align: center;
-    padding: 2rem;
-    background: var(--color-surface-secondary, #f5f5f5);
-    border-radius: 8px;
-    border: 2px dashed var(--color-border, #ccc);
-    max-width: 600px;
-    margin: 2rem;
-  }
-
-  .temporary-message h2 {
-    color: var(--color-text-primary, #333);
-    margin-bottom: 1rem;
-  }
-
-  .temporary-message p {
-    color: var(--color-text-secondary, #666);
-    margin-bottom: 0.5rem;
-  }
-
-  .feature-list {
-    margin-top: 1.5rem;
-    text-align: left;
-  }
-
-  .feature-list h3 {
-    color: var(--color-text-primary, #333);
-    margin-bottom: 0.5rem;
-  }
-
-  .feature-list ul {
-    color: var(--color-text-secondary, #666);
-    padding-left: 1.5rem;
-  }
-
-  .feature-list li {
-    margin-bottom: 0.25rem;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .temporary-message {
-      margin: 1rem;
-      padding: 1.5rem;
-    }
   }
 </style>

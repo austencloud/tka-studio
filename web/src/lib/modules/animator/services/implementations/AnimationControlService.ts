@@ -4,7 +4,7 @@ import {
   createMotionData,
   createPictographData,
   createSequenceData,
-  Location,
+  GridLocation,
   MotionColor,
   MotionType,
   Orientation,
@@ -123,8 +123,8 @@ export class AnimationControlService implements IAnimationControlService {
 
   private convertToMotionData(params: AnimatedMotionParams): MotionData {
     return createMotionData({
-      startLocation: params.startLocation as Location,
-      endLocation: params.endLocation as Location,
+      startLocation: params.startLocation as GridLocation,
+      endLocation: params.endLocation as GridLocation,
       startOrientation: params.startOrientation as Orientation,
       endOrientation: params.endOrientation as Orientation,
       motionType: params.motionType as MotionType,
@@ -133,7 +133,7 @@ export class AnimationControlService implements IAnimationControlService {
       isVisible: true,
       color: MotionColor.BLUE,
       propType: PropType.STAFF, // Default prop type
-      arrowLocation: params.startLocation as Location, // Will be calculated later
+      arrowLocation: params.startLocation as GridLocation, // Will be calculated later
     });
   }
 

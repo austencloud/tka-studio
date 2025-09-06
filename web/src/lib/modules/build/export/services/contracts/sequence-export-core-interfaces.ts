@@ -7,8 +7,8 @@
 // ============================================================================
 // EXPORT OPTIONS AND CONFIGURATION
 // ============================================================================
-import type { SequenceExportOptions } from "$build/domain";
 import type { SequenceData } from "$shared/domain";
+import type { SequenceExportOptions } from "../../domain/models";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

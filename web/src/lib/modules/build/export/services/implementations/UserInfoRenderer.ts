@@ -5,9 +5,9 @@
  * Matches desktop UserInfoDrawer exactly.
  */
 
-import type { TextRenderOptions, UserInfo } from "$build/domain";
-import type { IUserInfoRenderer } from "$services";
 import { injectable } from "inversify";
+import type { TextRenderOptions, UserInfo } from "../../domain/models";
+import type { IUserInfoRenderer } from "../contracts";
 import { createFont } from "./TextRenderingTypes";
 
 @injectable()

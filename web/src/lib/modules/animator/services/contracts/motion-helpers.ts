@@ -3,8 +3,8 @@
  */
 
 import {
+  GridLocation,
   HandMotionType,
-  Location,
   MotionType,
   Orientation,
 } from "$shared/domain";
@@ -107,10 +107,10 @@ export function getRotationDirection(
 
 // Constants for motion parameters - using proper enums
 export const LOCATIONS = [
-  Location.NORTH,
-  Location.EAST,
-  Location.SOUTH,
-  Location.WEST,
+  GridLocation.NORTH,
+  GridLocation.EAST,
+  GridLocation.SOUTH,
+  GridLocation.WEST,
 ] as const;
 export const MOTION_TYPES = [
   MotionType.PRO,

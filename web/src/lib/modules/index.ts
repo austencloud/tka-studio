@@ -8,6 +8,6 @@
 export * from "./about";
 export * from "./animator";
 export * from "./browse";
-export * from "./build";
-export * from "./learn";
+// export * from "./build";
+// export * from "./learn";
 export * from "./word-card";

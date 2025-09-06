@@ -12,14 +12,14 @@ Refactored into smaller section components for better maintainability:
 -->
 <script lang="ts">
   import { resolve, TYPES } from "$shared/inversify";
-  import type { IDeviceDetector } from "$services";
   import { onMount } from "svelte";
 // Import section components
-  import ActionSection from "./components/ActionSection.svelte";
-  import GeneratePanelHeader from "./components/GeneratePanelHeader.svelte";
-  import SettingsContainer from "./components/SettingsContainer.svelte";
+  import ActionSection from "./ActionSection.svelte";
+  import GeneratePanelHeader from "./GeneratePanelHeader.svelte";
+  import SettingsContainer from "./SettingsContainer.svelte";
+  import { createGenerationConfigState, createGenerationActionsState, createDeviceState } from "../state";
+  import type { IDeviceDetector } from "../../../../shared/services";
 // Import simple state managers
-  import { createDeviceState, createGenerationActionsState, createGenerationConfigState } from "../../state";
 
   // ===== State Management =====
   const configState = createGenerationConfigState();

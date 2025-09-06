@@ -1,30 +1,18 @@
 /**
  * StartPositionService.ts - Complete start position service implementation
  */
-import type { BeatData, PictographData } from "$domain";
-import type { IGridPositionDeriver, IStartPositionService } from "$services";
-import {
-  type ValidationError,
-  type ValidationResult,
-  GridMode,
-  Letter,
-  Location,
-  MotionColor,
-  MotionType,
-  Orientation,
-  PropType,
-  RotationDirection,
-  createMotionData,
-  createPictographData,
-} from "$shared/domain";
-import { TYPES } from "$shared/inversify/types";
+
+import { createMotionData, createPictographData, GridLocation, GridMode, Letter, MotionColor, MotionType, Orientation, PropType, RotationDirection, type PictographData, type ValidationError, type ValidationResult } from "$shared/domain";
+import { TYPES } from "$shared/inversify";
 import { inject, injectable } from "inversify";
+import type { BeatData } from "../../../../workbench";
+import type { IStartPositionService } from "../contracts";
 
 @injectable()
 export class StartPositionService implements IStartPositionService {
   constructor(
-    @inject(TYPES.IPositionMapper)
-    private positionMapper: IGridPositionDeriver
+    @inject(TYPES.IGridPositionDeriver)
+    private positionMapper: any
   ) {}
 
   async getAvailableStartPositions(
@@ -347,16 +335,16 @@ export class StartPositionService implements IStartPositionService {
     key: string,
     index: number
   ): PictographData {
-    // Map position keys to actual Location enum values (matching domain service)
-    const positionMappings: Record<string, { blue: Location; red: Location }> =
+    // Map position keys to actual GridLocation enum values (matching domain service)
+    const positionMappings: Record<string, { blue: GridLocation; red: GridLocation }> =
       {
-        alpha1_alpha1: { blue: Location.SOUTH, red: Location.NORTH },
-        beta5_beta5: { blue: Location.SOUTH, red: Location.SOUTH },
-        gamma11_gamma11: { blue: Location.SOUTH, red: Location.EAST },
+        alpha1_alpha1: { blue: GridLocation.SOUTH, red: GridLocation.NORTH },
+        beta5_beta5: { blue: GridLocation.SOUTH, red: GridLocation.SOUTH },
+        gamma11_gamma11: { blue: GridLocation.SOUTH, red: GridLocation.EAST },
         // Box mode positions
-        alpha2_alpha2: { blue: Location.SOUTHWEST, red: Location.NORTHEAST },
-        beta4_beta4: { blue: Location.SOUTHEAST, red: Location.SOUTHEAST },
-        gamma12_gamma12: { blue: Location.SOUTHWEST, red: Location.SOUTHEAST },
+        alpha2_alpha2: { blue: GridLocation.SOUTHWEST, red: GridLocation.NORTHEAST },
+        beta4_beta4: { blue: GridLocation.SOUTHEAST, red: GridLocation.SOUTHEAST },
+        gamma12_gamma12: { blue: GridLocation.SOUTHWEST, red: GridLocation.SOUTHEAST },
       };
 
     const mapping = positionMappings[key];
@@ -364,8 +352,8 @@ export class StartPositionService implements IStartPositionService {
       console.warn(`No position mapping found for ${key}, using fallback`);
     }
 
-    const blueLocation = mapping?.blue || Location.SOUTH;
-    const redLocation = mapping?.red || Location.NORTH;
+    const blueLocation = mapping?.blue || GridLocation.SOUTH;
+    const redLocation = mapping?.red || GridLocation.NORTH;
 
     // Map position to letter
     const letterMap: Record<string, Letter> = {

@@ -6,12 +6,12 @@
 import type { BeatData } from "$shared/domain";
 import { injectable } from "inversify";
 import type {
-    EmptyBeatOptions,
-    ErrorBeatOptions,
-    FallbackRenderOptions,
-    FallbackRenderResult,
-    IBeatFallbackRenderer,
-} from "../contracts";
+  EmptyBeatOptions,
+  ErrorBeatOptions,
+  FallbackRenderOptions,
+  FallbackRenderResult,
+  IBeatFallbackRenderer,
+} from "../../contracts";
 
 @injectable()
 export class BeatFallbackRenderer implements IBeatFallbackRenderer {

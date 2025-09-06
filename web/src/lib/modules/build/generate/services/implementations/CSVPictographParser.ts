@@ -5,23 +5,24 @@
  * Uses the correct position mapping based on hand location combinations.
  */
 
-import type { PictographData } from "$shared/domain";
 import {
   GridPosition,
   Letter,
   MotionColor,
   createMotionData,
   createPictographData,
+  type PictographData,
 } from "$shared/domain";
+import type { CSVRow, ICSVPictographParserService } from "$shared/foundation/services/contracts/data/ICsvPictographParserService";
+import type { IEnumMapper } from "$shared/foundation/services/contracts/data/IEnumMapper";
 import { TYPES } from "$shared/inversify/types";
-import type { CSVRow, ICSVPictographParserService, IEnumMapper, IGridPositionDeriver } from "$shared/services/core/contracts";
 import { inject, injectable } from "inversify";
 
 @injectable()
 export class CSVPictographParserService implements ICSVPictographParserService {
   constructor(
-    @inject(TYPES.IPositionMapper)
-    private readonly positionMapper: IGridPositionDeriver,
+    @inject(TYPES.IGridPositionDeriver)
+    private readonly positionMapper: any,
     @inject(TYPES.IEnumMapper)
     private readonly enumMapper: IEnumMapper
   ) {}

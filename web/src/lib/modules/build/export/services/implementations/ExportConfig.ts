@@ -1,4 +1,6 @@
 import { injectable } from "inversify";
+import type { SequenceExportOptions } from "../../domain/models";
+import type { IExportConfig } from "../contracts/image-export-interfaces";
 
 /**
  * Export Config Manager
@@ -7,8 +9,6 @@ import { injectable } from "inversify";
  * Extracted from the monolithic TKAImageExportService to focus solely on configuration concerns.
  */
 
-import type { IExportConfig } from "$services";
-import type { SequenceExportOptions } from "$shared/domain";
 
 @injectable()
 export class ExportConfig implements IExportConfig {

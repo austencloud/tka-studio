@@ -4,7 +4,26 @@
  * Config constants and static data for the learn module.
  */
 
-import type { QuizConfig, QuizInfo } from "../../../domain/models/QuizModels";
+// import type { QuizConfig, QuizInfo } from "../../../domain/models/QuizModels";
+
+// Temporary interface definitions
+interface QuizConfig {
+  type: string;
+  difficulty: string;
+  timeLimit?: number;
+  lessonType: any;
+  questionFormat: string;
+  answerFormat: string;
+  quizDescription: string;
+  questionPrompt?: string;
+}
+
+interface QuizInfo {
+  id: string;
+  name: string;
+  description: string;
+  lessonType: any;
+}
 import {
   QuizAnswerFormat,
   QuizMode,
@@ -17,6 +36,8 @@ import {
  */
 export const LESSON_CONFIGS: Record<QuizType, QuizConfig> = {
   [QuizType.PICTOGRAPH_TO_LETTER]: {
+    type: "pictograph_to_letter",
+    difficulty: "beginner",
     lessonType: QuizType.PICTOGRAPH_TO_LETTER,
     questionFormat: QuizQuestionFormat.PICTOGRAPH,
     answerFormat: QuizAnswerFormat.BUTTON,
@@ -24,6 +45,8 @@ export const LESSON_CONFIGS: Record<QuizType, QuizConfig> = {
     questionPrompt: "Choose the letter for:",
   },
   [QuizType.LETTER_TO_PICTOGRAPH]: {
+    type: "letter_to_pictograph",
+    difficulty: "intermediate",
     lessonType: QuizType.LETTER_TO_PICTOGRAPH,
     questionFormat: QuizQuestionFormat.LETTER,
     answerFormat: QuizAnswerFormat.PICTOGRAPH,
@@ -31,6 +54,8 @@ export const LESSON_CONFIGS: Record<QuizType, QuizConfig> = {
     questionPrompt: "Choose the pictograph for:",
   },
   [QuizType.VALID_NEXT_PICTOGRAPH]: {
+    type: "valid_next_pictograph",
+    difficulty: "advanced",
     lessonType: QuizType.VALID_NEXT_PICTOGRAPH,
     questionFormat: QuizQuestionFormat.PICTOGRAPH,
     answerFormat: QuizAnswerFormat.PICTOGRAPH,
@@ -44,16 +69,19 @@ export const LESSON_CONFIGS: Record<QuizType, QuizConfig> = {
  */
 export const LESSON_INFO: QuizInfo[] = [
   {
+    id: "lesson-1",
     name: "Lesson 1",
     description: "Match the correct letter to the given pictograph",
     lessonType: QuizType.PICTOGRAPH_TO_LETTER,
   },
   {
+    id: "lesson-2",
     name: "Lesson 2",
     description: "Identify the correct pictograph for the displayed letter",
     lessonType: QuizType.LETTER_TO_PICTOGRAPH,
   },
   {
+    id: "lesson-3",
     name: "Lesson 3",
     description: "Choose the pictograph that logically follows",
     lessonType: QuizType.VALID_NEXT_PICTOGRAPH,

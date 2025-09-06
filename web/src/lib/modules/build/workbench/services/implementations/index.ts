@@ -1,6 +1,6 @@
 // Workbench Service Implementations
 export * from './BeatFrameService';
-export * from './DeleteService';
+export * from './WorkbenchDeleteService';
 export * from './PrintablePageLayoutService';
 export * from './SequenceDeletionService';
 export * from './SequenceImportService';

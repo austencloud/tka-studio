@@ -1,6 +1,6 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
-  import LoadingSpinner from "../LoadingSpinner.svelte";
+  import LoadingSpinner from "../../shared/components/LoadingSpinner.svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

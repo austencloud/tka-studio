@@ -28,7 +28,19 @@ export class QuizConfigurator {
     if (!config) {
       throw new Error(`No configuration found for lesson type: ${lessonType}`);
     }
-    return config;
+    // Convert to domain QuizConfig format
+    return {
+      id: config.type,
+      type: config.type,
+      name: config.quizDescription,
+      description: config.questionPrompt || "",
+      includedCategories: [], // Default empty array
+      lessonType: config.lessonType,
+      questionFormat: config.questionFormat as any,
+      answerFormat: config.answerFormat as any,
+      quizDescription: config.quizDescription,
+      questionPrompt: config.questionPrompt || "",
+    };
   }
 
   /**

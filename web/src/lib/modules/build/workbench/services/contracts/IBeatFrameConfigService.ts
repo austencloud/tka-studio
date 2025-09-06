@@ -5,10 +5,8 @@
  * One-to-one mapping with BeatFrameConfigService implementation.
  */
 
-import type {
-    BeatFrameConfig,
-    ContainerDimensions,
-} from "$domain";
+import type { BeatFrameConfig, ContainerDimensions } from "../../domain";
+
 
 /**
  * Service for managing beat frame configuration

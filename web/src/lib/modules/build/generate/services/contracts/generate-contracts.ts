@@ -178,7 +178,7 @@ export interface IDirectionCalculator {
     startPosition: GridPosition,
     endPosition: GridPosition,
     motionType: string
-  ): [import("$shared/domain").Location, import("$shared/domain").Location];
+  ): [import("$shared/domain").GridLocation, import("$shared/domain").GridLocation];
 }
 
 export interface IPictographValidatorService {

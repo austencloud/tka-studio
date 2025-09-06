@@ -7,7 +7,7 @@
  * PageImageExportService, and others.
  */
 
-import type { ImageFormatOptions, OptimizationSettings } from "../../domain";
+import type { ImageFormatOptions, OptimizationSettings } from "../../domain/models";
 
 
 // ============================================================================

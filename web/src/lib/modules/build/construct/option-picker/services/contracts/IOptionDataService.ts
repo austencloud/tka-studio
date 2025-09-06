@@ -6,13 +6,13 @@
  */
 
 import type {
-  DifficultyLevel,
-  MotionType,
-  PictographData,
-  SequenceData,
-  ValidationResult,
+    DifficultyLevel,
+    MotionType,
+    PictographData,
+    SequenceData,
+    ValidationResult,
 } from "$shared/domain";
-import type { FilterCriteria } from "$shared/services";
+import type { FilterCriteria } from "$shared/foundation/services/implementations/data/OptionFilterer";
 
 // Import FilterCriteria from the OptionFilterer implementation
 

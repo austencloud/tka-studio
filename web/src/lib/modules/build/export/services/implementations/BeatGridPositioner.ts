@@ -7,10 +7,10 @@
 
 import type { SequenceData } from "$shared/domain";
 import type {
-  CompositionOptions,
-  LayoutData,
-  SequenceExportOptions,
-} from "../../domain";
+    CompositionOptions,
+    LayoutData,
+    SequenceExportOptions,
+} from "../../domain/models";
 import type { IBeatRenderingService } from "../contracts";
 
 export class BeatGridPositioner {

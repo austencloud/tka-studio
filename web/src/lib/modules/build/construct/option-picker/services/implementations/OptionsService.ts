@@ -16,14 +16,13 @@ import {
   ReversalFilter,
 } from "$shared/domain";
 import { resolve, TYPES } from "$shared/inversify/container";
-import type { IGridPositionDeriver } from "../../contracts";
 
 /**
  * Helper function to compute endPosition from motion data
  */
 function getEndPosition(option: PictographData): string | null {
   if (option.motions?.blue && option.motions?.red) {
-    const positionService = resolve(TYPES.IPositionMapper) as IGridPositionDeriver;
+    const positionService = resolve(TYPES.IGridPositionDeriver) as any;
     const position = positionService.getPositionFromLocations(
       option.motions.blue.endLocation,
       option.motions.red.endLocation

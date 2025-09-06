@@ -5,10 +5,10 @@
  * Extracted from the monolithic TKAImageExportService to focus solely on filename concerns.
  */
 
-import type { SequenceExportOptions } from "$build/domain";
 import type { SequenceData } from "$shared/domain";
 import { injectable } from "inversify";
-import type { IFilenameGeneratorService } from "../../contracts";
+import type { SequenceExportOptions } from "../../domain/models";
+import type { IFilenameGeneratorService } from "../contracts";
 
 @injectable()
 export class FilenameGeneratorService implements IFilenameGeneratorService {

@@ -2,8 +2,8 @@
  * StartPositionLoader.ts - Data loading utilities for start positions
  */
 
-import type { GridMode, PictographData } from "$shared/domain";
-import type { IStartPositionService } from "../../contracts";
+import { GridMode, type PictographData } from "$shared/domain";
+import type { IStartPositionService } from "../contracts";
 
 /**
  * Handles loading and caching of start position data

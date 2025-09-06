@@ -5,9 +5,9 @@
  * Replaces 400+ lines of over-engineered conversion logic with ~30 lines.
  */
 
-import type { IImageFormatConverterService } from "$services";
 import * as pkg from "file-saver";
 import { injectable } from "inversify";
+import type { IImageFormatConverterService } from "../contracts";
 // Define missing types locally for now
 interface ImageFormatOptions {
   format: "png" | "jpeg" | "webp";

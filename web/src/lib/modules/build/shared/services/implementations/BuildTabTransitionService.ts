@@ -6,12 +6,12 @@
  * embedded in the massive ConstructTab component.
  */
 
-import type { ActiveBuildSubTab } from "$shared/domain";
+import type { ActiveBuildTab } from "$shared/domain";
 
 // Simplified transition service without complex fade orchestrator
 
-import type { IBuildTabTransitionService } from "$services";
 import { injectable } from "inversify";
+import type { IBuildTabTransitionService } from "../contracts";
 
 @injectable()
 export class BuildTabTransitionService implements IBuildTabTransitionService {
@@ -22,9 +22,9 @@ export class BuildTabTransitionService implements IBuildTabTransitionService {
    * @param setActiveRightPanel - Function to update the active tab state
    */
   async handleMainTabTransition(
-    targetTab: ActiveBuildSubTab,
-    currentTab: ActiveBuildSubTab,
-    setActiveRightPanel: (tab: ActiveBuildSubTab) => void
+    targetTab: ActiveBuildTab,
+    currentTab: ActiveBuildTab,
+    setActiveRightPanel: (tab: ActiveBuildTab) => void
   ): Promise<void> {
     if (currentTab === targetTab) {
       return; // Already on this tab

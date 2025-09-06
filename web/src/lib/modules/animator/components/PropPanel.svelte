@@ -8,15 +8,15 @@ Beautiful, intuitive visual controls replacing boring dropdowns:
 - Enhanced turns control
 -->
 <script lang="ts">
+  import { getAvailableMotionTypes } from "$lib/modules/animator/services/contracts/motion-helpers";
   import {
     type Orientation,
+    GridLocation,
     GridMode,
-    Location,
     MotionColor,
     MotionType,
   } from "$shared/domain";
-  import { getAvailableMotionTypes } from "$lib/modules/animator/services/contracts/motion-helpers";
-  import LocationGrid from "./LocationGrid.svelte";
+  import GridLocationPicker from "./GridLocationPicker.svelte";
   import MotionTypeButtons from "./MotionTypeButtons.svelte";
   import OrientationButton from "./OrientationButton.svelte";
   import StyledTurnsControl from "./StyledTurnsControl.svelte";
@@ -31,8 +31,8 @@ Beautiful, intuitive visual controls replacing boring dropdowns:
     turns: number | "fl";
     motionType: MotionType;
     gridMode?: GridMode;
-    onStartLocationChange: (location: Location) => void;
-    onEndLocationChange: (location: Location) => void;
+    onStartLocationChange: (location: GridLocation) => void;
+    onEndLocationChange: (location: GridLocation) => void;
     onStartOrientationChange: (orientation: Orientation) => void;
     onEndOrientationChange: (orientation: Orientation) => void;
     onTurnsChange: (turns: number | "fl") => void;
@@ -88,9 +88,9 @@ Beautiful, intuitive visual controls replacing boring dropdowns:
   </div>
 
   <div class="prop-controls">
-    <!-- Location Controls -->
+    <!-- GridLocation Controls -->
     <div class="control-row location-row">
-      <LocationGrid
+      <GridLocationPicker
         selectedLocation={startLocation}
         onLocationChange={onStartLocationChange}
         label="Start"
@@ -98,7 +98,7 @@ Beautiful, intuitive visual controls replacing boring dropdowns:
         {gridMode}
       />
       <div class="arrow-connector">→</div>
-      <LocationGrid
+      <GridLocationPicker
         selectedLocation={endLocation}
         onLocationChange={onEndLocationChange}
         label="End"

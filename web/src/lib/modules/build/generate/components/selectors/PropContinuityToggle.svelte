@@ -4,7 +4,7 @@ Toggle between random and continuous prop behavior using modern segmented contro
 -->
 <script lang="ts">
   import { PropContinuity } from "$shared/domain";
-  import IOSToggle from "$shared/components/ui/IOSToggle.svelte";
+  import IOSToggle from "$shared/foundation/ui/IOSToggle.svelte";
 
   interface Props {
     initialValue?: PropContinuity;

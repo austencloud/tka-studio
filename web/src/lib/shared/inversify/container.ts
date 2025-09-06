@@ -9,137 +9,165 @@ import { Container } from "inversify";
 import "reflect-metadata";
 
 // Import service types
-// Import service implementations using new tab-first structure
+import {
+  AnimationControlService,
+  AnimationStateService,
+  BeatCalculationService,
+  MotionLetterIdentificationService,
+  MotionParameterService,
+  PropInterpolationService,
+  SequenceAnimationEngine,
+  SequenceAnimationOrchestrator,
+} from "../../modules/animator/services";
+import { FilterPersistenceService } from "../../modules/browse/gallery/services/implementations/FilterPersistenceService";
+import { OptionPickerDataService } from "../../modules/build/construct/option-picker/services/implementations/OptionPickerDataService";
+import { OptionPickerLayoutService } from "../../modules/build/construct/option-picker/services/implementations/OptionPickerLayoutService";
+import { ConstructCoordinator } from "../../modules/build/construct/shared/services/implementations/ConstructCoordinator";
+import { StartPositionService } from "../../modules/build/construct/start-position-picker/services/implementations/StartPositionService";
+import { CanvasManagementService } from "../../modules/build/export/services/implementations/CanvasManagementService";
+import { DifficultyBadgeRenderer } from "../../modules/build/export/services/implementations/DifficultyBadgeRenderer";
+import { DimensionCalculationService } from "../../modules/build/export/services/implementations/DimensionCalculationService";
+import { ExportConfig } from "../../modules/build/export/services/implementations/ExportConfig";
+import { ExportMemoryCalculator } from "../../modules/build/export/services/implementations/ExportMemoryCalculator";
+import { ExportOptionsValidator } from "../../modules/build/export/services/implementations/ExportOptionsValidator";
+import { FileExportService } from "../../modules/build/export/services/implementations/FileExportService";
+import { FilenameGeneratorService } from "../../modules/build/export/services/implementations/FilenameGeneratorService";
+import { GridOverlayService } from "../../modules/build/export/services/implementations/GridOverlayService";
+import { ImageCompositionService } from "../../modules/build/export/services/implementations/ImageCompositionService";
+import { ImageFormatConverterService } from "../../modules/build/export/services/implementations/ImageFormatConverterService";
+import { ImagePreviewGenerator } from "../../modules/build/export/services/implementations/ImagePreviewGenerator";
+import { LayoutCalculationService } from "../../modules/build/export/services/implementations/LayoutCalculationService";
+import { SVGToCanvasConverterService } from "../../modules/build/export/services/implementations/SVGToCanvasConverterService";
+import { TextRenderingService } from "../../modules/build/export/services/implementations/TextRenderingService";
+import { TextRenderingUtils } from "../../modules/build/export/services/implementations/TextRenderingUtils";
+import { TKAImageExportService } from "../../modules/build/export/services/implementations/TKAImageExportService";
+import { UserInfoRenderer } from "../../modules/build/export/services/implementations/UserInfoRenderer";
+import { WordTextRenderer } from "../../modules/build/export/services/implementations/WordTextRenderer";
+import { CSVPictographLoaderService } from "../../modules/build/generate/services/implementations/CSVPictographLoader";
+import { CSVPictographParserService } from "../../modules/build/generate/services/implementations/CSVPictographParser";
+import { PictographGenerator } from "../../modules/build/generate/services/implementations/PictographGenerator";
+import { PositionPatternService } from "../../modules/build/generate/services/implementations/PositionPatternService";
+import { SequenceDomainService } from "../../modules/build/generate/services/implementations/SequenceDomainService";
+import { SequenceGenerationService } from "../../modules/build/generate/services/implementations/SequenceGenerationService";
+import { BuildTabService } from "../../modules/build/shared/services/implementations/BuildTabService";
+import {
+  BeatFrameService,
+  BeatRenderingService,
+  PrintablePageLayoutService,
+  SequenceDeletionService,
+  SequenceImportService,
+  SequenceIndexService,
+  SequenceService,
+  SequenceStateService,
+  WorkbenchBeatOperationsService,
+  WorkbenchCoordinationService,
+  WorkbenchDeleteService,
+  WorkbenchService,
+} from "../../modules/build/workbench";
+import {
+  CodexLetterMappingRepo,
+  CodexPictographUpdater,
+  CodexService,
+} from "../../modules/learn/codex/services/implementations";
+import { QuizRepoManager } from "../../modules/learn/quiz/services/implementations/QuizRepoManager";
+import {
+  PageFactoryService,
+  PageImageExportService,
+} from "../../modules/word-card/services/implementations";
+// Foundation services (core infrastructure)
+import {
+  ApplicationInitializer,
+  BackgroundService,
+  CsvLoader,
+  CSVParser,
+  DataTransformer,
+  DeviceDetector,
+  EnumMapper,
+  ErrorHandlingService,
+  GridModeDeriver,
+  GridPositionDeriver,
+  LetterDeriver,
+  LetterQueryHandler,
+  MotionQueryHandler,
+  OptionFilterer,
+  ResourceTracker,
+  SettingsService,
+} from "../foundation/services";
 
-// TEMPORARY: NO SERVICE IMPORTS - JUST BASIC CONTAINER
-// All services commented out until import paths are fixed
-// import { SettingsService } from "../services/core/implementations";
-// import { BuildTabService } from "../../modules/build/services/implementations";
+// Pictograph services (pictograph-specific logic)
+import {
+  ArrowAdjustmentCalculator,
+  ArrowCoordinateSystemService,
+  ArrowLocationCalculator,
+  ArrowLocationService,
+  ArrowPathResolutionService,
+  ArrowPlacementKeyService,
+  ArrowPositionCalculator,
+  ArrowPositioningService,
+  ArrowRenderer,
+  ArrowRotationCalculator,
+  AttributeKeyGenerator,
+  BeatFallbackRenderer,
+  BeatGridService,
+  BetaDetectionService,
+  BetaOffsetCalculator,
+  DashLocationCalculator,
+  DefaultPlacementService,
+  DirectionalTupleProcessor,
+  GridRenderingService,
+  OrientationCalculationService,
+  OverlayRenderer,
+  PictographValidatorService,
+  PropCoordinator,
+  PropPlacementService,
+  SpecialPlacementOriKeyGenerator,
+  SpecialPlacementService,
+  SvgConfig,
+  SvgUtilityService,
+  TurnsTupleKeyGenerator,
+} from "../pictograph/services";
+import {
+  DirectionalTupleCalculator,
+  QuadrantIndexCalculator,
+} from "../pictograph/services/implementations/positioning/processors/DirectionalTupleProcessor";
+import { TYPES } from "./types";
 
-// Learn services - OLD LAYER-FIRST STRUCTURE (Commented out for now)
-// import {
-//   CodexService,
-//   QuizRepoManager,
-//   CodexLetterMappingRepo,
-//   CodexPictographUpdater,
-// } from "../../modules/learn/services/implementations";
+// Temporary service stubs for missing services
+class FavoritesService {
+  // Stub implementation
+}
 
-// Word Card services - OLD LAYER-FIRST STRUCTURE (Commented out for now)
-// import {
-//   PageFactoryService,
-//   PageImageExportService,
-// } from "../../services/word-card/implementations";
+class GalleryThumbnailService {
+  // Stub implementation
+}
 
-// Additional Build services (Commented out for now)
-// import {
-//   BeatRenderingService,
-//   CanvasManagementService,
-//   ConstructSubTabCoordinationService,
-//   CSVPictographLoaderService,
-//   DeleteService,
-//   ExportConfig,
-//   ExportMemoryCalculator,
-//   ExportOptionsValidator,
-//   FileExportService,
-//   FilenameGeneratorService,
-//   GridOverlayService,
-//   ImageCompositionService,
-//   ImagePreviewGenerator,
-//   LayoutCalculationService,
-//   PrintablePageLayoutService,
-//   SequenceDeletionService,
-//   SequenceIndexService,
-//   TKAImageExportService,
-// } from "../../modules/build/services/implementations";
+class NavigationService {
+  // Stub implementation
+}
 
-// Additional services (Commented out for now)
-// import { BeatFallbackRenderer } from "../../services/core/implementations";
-// import {
-//   BrowsePanelManager,
-//   BrowseSectionService,
-//   BrowseStatePersister,
-//   FilterPersistenceService,
-//   NavigationService,
-// } from "../../modules/browse/services/implementations";
-// import {
-//   ArrowLocationService,
-//   ArrowPlacementKeyService,
-//   ArrowPositioningService,
-//   ArrowRenderer,
-//   BeatGridService,
-//   BetaOffsetCalculator,
-//   GridRenderingService,
-//   OverlayRenderer,
-//   PropPlacementService,
-//   SvgConfig,
-//   SvgUtilityService,
-// } from "../../services/core/implementations";
+class GalleryPanelManager {
+  // Stub implementation
+}
 
-// Animator services - NEW MODULE-FIRST STRUCTURE (Commented out)
-// import {
-//   AnimationControlService,
-//   MotionParameterService,
-// } from "../../modules/animator/services/implementations";
+class BrowseSectionService {
+  // Stub implementation
+}
 
-// Additional services will be added as needed
+class BrowseStatePersister {
+  // Stub implementation
+}
 
-// Additional Core services (positioning, calculation, parsing) - Commented out
-// import {
-//   ArrowAdjustmentCalculator,
-//   ArrowCoordinateSystemService,
-//   ArrowLocationCalculator,
-//   ArrowPathResolutionService,
-//   ArrowPositionCalculator,
-//   ArrowRotationCalculator,
-//   AttributeKeyGenerator,
-//   DashLocationCalculator,
-//   DefaultPlacementService,
-//   DirectionalTupleProcessor,
-//   GridPositionDeriver,
-//   OrientationCalculationService,
-//   PropCoordinator,
-//   SpecialPlacementOriKeyGenerator,
-//   SpecialPlacementService,
-//   TurnsTupleKeyGenerator,
-// } from "../core/implementations";
-
-// All remaining imports commented out
-// import {
-//   DirectionalTupleCalculator,
-//   QuadrantIndexCalculator,
-// } from "../core/implementations/pictograph/positioning/processors/DirectionalTupleProcessor";
-// import { CSVPictographParserService } from "../../modules/build/services/implementations";
-// import {
-//   AnimationStateService,
-//   BeatCalculationService,
-//   MotionLetterIdentificationService,
-//   PropInterpolationService,
-//   SequenceAnimationEngine,
-//   SequenceAnimationOrchestrator,
-// } from "../../modules/animator/services/implementations";
-// import {
-//   DifficultyBadgeRenderer,
-//   DimensionCalculationService,
-//   ImageFormatConverterService,
-//   OptionPickerDataService,
-//   OptionPickerLayoutService,
-//   StartPositionService,
-//   SVGToCanvasConverterService,
-//   TextRenderingService,
-//   TextRenderingUtils,
-//   UserInfoRenderer,
-//   WordTextRenderer,
-// } from "../../modules/build/services/implementations";
+class GalleryService {
+  // Stub implementation
+}
 
 // Create container
 const container = new Container();
 
-// TEMPORARY: All service bindings commented out until import paths are fixed
-/*
 // Bind all required dependencies for CodexService
 try {
   // Bind repositories
-  container.bind(TYPES.ICodexCodexLetterMappingRepo).to(CodexLetterMappingRepo);
+  container.bind(TYPES.ICodexLetterMappingRepo).to(CodexLetterMappingRepo);
   container.bind(TYPES.IQuizRepoManager).to(QuizRepoManager);
 
   // Bind data services (dependencies of LetterQueryHandler)
@@ -147,9 +175,7 @@ try {
   container.bind(TYPES.ICSVParser).to(CSVParser);
 
   // Bind services
-  container
-    .bind(TYPES.ICodexPictographUpdater)
-    .to(CodexPictographUpdater);
+  container.bind(TYPES.ICodexPictographUpdater).to(CodexPictographUpdater);
   container.bind(TYPES.ILetterQueryHandler).to(LetterQueryHandler);
 
   // Finally bind CodexService
@@ -159,6 +185,7 @@ try {
   container.bind(TYPES.ISettingsService).to(SettingsService);
   container.bind(TYPES.IPersistenceService).to(FilterPersistenceService);
   container.bind(TYPES.IDeviceDetector).to(DeviceDetector);
+  container.bind(TYPES.IResourceTracker).to(ResourceTracker);
   container.bind(TYPES.IApplicationInitializer).to(ApplicationInitializer);
 
   // Bind sequence services
@@ -167,8 +194,6 @@ try {
   container.bind(TYPES.ISequenceService).to(SequenceService);
   container.bind(TYPES.ISequenceStateService).to(SequenceStateService);
 
-  // TEMPORARY: All remaining service bindings commented out
-  /*
   // Bind build tab services
   container.bind(TYPES.IBuildTabService).to(BuildTabService);
 
@@ -260,7 +285,7 @@ try {
 
   // Bind navigation services
   container.bind(TYPES.INavigationService).to(NavigationService);
-  container.bind(TYPES.IPanelManagementService).to(BrowsePanelManager);
+  container.bind(TYPES.IPanelManagementService).to(GalleryPanelManager);
   container.bind(TYPES.ISectionService).to(BrowseSectionService);
 
   // Bind additional persistence services
@@ -283,7 +308,7 @@ try {
   container.bind(TYPES.ISvgUtilityService).to(SvgUtilityService);
 
   // Bind additional sequence services
-  container.bind(TYPES.IDeleteService).to(DeleteService);
+  container.bind(TYPES.IDeleteService).to(WorkbenchDeleteService);
   container
     .bind(TYPES.IPrintablePageLayoutService)
     .to(PrintablePageLayoutService);
@@ -300,9 +325,7 @@ try {
     .to(CSVPictographLoaderService);
 
   // Bind construct services
-  container
-    .bind(TYPES.IConstructTabCoordinator)
-    .to(ConstructSubTabCoordinationService);
+  container.bind(TYPES.IConstructTabCoordinator).to(ConstructCoordinator);
   container.bind(TYPES.IGalleryService).to(GalleryService);
   // Bind arrow positioning orchestrator
   container
@@ -341,7 +364,7 @@ try {
   container
     .bind(TYPES.IArrowPathResolutionService)
     .to(ArrowPathResolutionService);
-  container.bind(TYPES.IPositionMapper).to(GridPositionDeriver);
+  container.bind(TYPES.IGridPositionDeriver).to(GridPositionDeriver);
   container
     .bind(TYPES.ICSVPictographParserService)
     .to(CSVPictographParserService);
@@ -365,10 +388,9 @@ try {
   // === UTILITY SERVICES ===
   container.bind(TYPES.IBetaDetectionService).to(BetaDetectionService);
   container.bind(TYPES.IErrorHandlingService).to(ErrorHandlingService);
-  */
-// } catch (error) {
-//   console.error("❌ TKA Container: Failed to bind services:", error);
-// }
+} catch (error) {
+  console.error("❌ TKA Container: Failed to bind services:", error);
+}
 
 // Export container
 export { container };

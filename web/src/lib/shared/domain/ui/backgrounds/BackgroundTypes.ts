@@ -262,9 +262,3 @@ export type BackgroundEvent =
   | { type: "performanceReport"; metrics: PerformanceMetrics }
   | { type: "qualityChanged"; quality: QualityLevel }
   | { type: "error"; message: string; stack?: string };
-
-export interface ResourceTracker {
-  trackResource: (resource: unknown) => void;
-  untrackResource: (resource: unknown) => void;
-  disposeAll: () => void;
-}

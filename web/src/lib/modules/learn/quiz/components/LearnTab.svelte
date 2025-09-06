@@ -2,37 +2,39 @@
 Learn Tab - Interactive learning and quiz system
 
 Provides educational content and quizzes for learning TKA notation:
-- Lesson selection and progress tracking
+- Quiz selection and progress tracking
 - Interactive quizzes with pictograph recognition
 - Progress tracking and results
 - Codex integration for reference
 -->
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  // TEMPORARY: All service resolution commented out until container is restored
-  // import type {
-  //   ICodexService,
-  //   IQuizRepoManager,
-  //   IQuizSessionService,
-  // } from "$services";
+  import { ProgressTracker } from ".";
+  import { resolve, TYPES } from "../../../../shared/inversify";
+  import type { ICodexService } from "../../codex/services/contracts";
+  import type { IQuizRepoManager, IQuizSessionService } from "../services/contracts";
+  import QuizControls from "./QuizControls.svelte";
+  import QuizResultsView from "./QuizResultsView.svelte";
+  import QuizSelectorView from "./QuizSelectorView.svelte";
+  import QuizWorkspaceView from "./QuizWorkspaceView.svelte";
+
 
   // Import learn components
 
   // ============================================================================
-  // SERVICE RESOLUTION - TEMPORARY DISABLED
+  // SERVICE RESOLUTION
   // ============================================================================
 
-  // TEMPORARY: All service resolution commented out until container is restored
-  // const codexService = resolve(TYPES.ICodexService) as ICodexService;
-  // const lessonRepository = resolve(TYPES.IQuizRepoManager) as IQuizRepoManager;
-  // const quizSessionService = resolve(TYPES.IQuizSessionService) as IQuizSessionService;
+  const codexService = resolve(TYPES.ICodexService) as ICodexService;
+  const lessonRepository = resolve(TYPES.IQuizRepoManager) as IQuizRepoManager;
+  const quizSessionService = resolve(TYPES.IQuizSessionService) as IQuizSessionService;
 
   // ============================================================================
-  // COMPONENT STATE - TEMPORARY PLACEHOLDERS
+  // COMPONENT STATE
   // ============================================================================
 
   let currentView = $state<"selector" | "workspace" | "results">("selector");
-  let selectedLessonId = $state<string | null>(null);
+  let selectedQuizId = $state<string | null>(null);
   let currentQuestionIndex = $state(0);
   let totalQuestions = $state(10);
   let score = $state(0);
@@ -40,76 +42,110 @@ Provides educational content and quizzes for learning TKA notation:
   let error = $state<string | null>(null);
 
   // ============================================================================
-  // EVENT HANDLERS - TEMPORARY DISABLED
+  // EVENT HANDLERS
   // ============================================================================
 
-  function handleLessonSelect(lessonId: string) {
-    selectedLessonId = lessonId;
-    currentView = "workspace";
-    console.log("✅ LearnTab: Lesson selected (services disabled):", lessonId);
-    // quizSessionService.startLesson(lessonId);
-  }
-
-  function handleAnswerSubmit(answer: any) {
-    console.log("✅ LearnTab: Answer submitted (services disabled):", answer);
-    // const isCorrect = quizSessionService.submitAnswer(answer);
-    // if (isCorrect) score++;
-
-    if (currentQuestionIndex < totalQuestions - 1) {
-      currentQuestionIndex++;
-    } else {
-      currentView = "results";
+  async function handleQuizSelect(lessonId: string) {
+    try {
+      isLoading = true;
+      selectedQuizId = lessonId;
+      await quizSessionService.startQuiz(lessonId);
+      const sessionData = quizSessionService.getCurrentSession();
+      totalQuestions = sessionData?.totalQuestions || 10;
+      currentQuestionIndex = 0;
+      score = 0;
+      currentView = "workspace";
+      console.log("✅ LearnTab: Quiz selected:", lessonId);
+    } catch (err) {
+      console.error("❌ LearnTab: Failed to start lesson:", err);
+      error = err instanceof Error ? err.message : "Failed to start lesson";
+    } finally {
+      isLoading = false;
     }
   }
 
-  function handleLessonComplete() {
-    currentView = "results";
-    console.log("✅ LearnTab: Lesson completed (services disabled)");
-    // quizSessionService.completeLesson();
+  async function handleAnswerSubmit(answer: any) {
+    try {
+      console.log("✅ LearnTab: Answer submitted:", answer);
+      const isCorrect = await quizSessionService.submitAnswer(answer);
+      if (isCorrect) score++;
+
+      if (currentQuestionIndex < totalQuestions - 1) {
+        currentQuestionIndex++;
+      } else {
+        currentView = "results";
+      }
+    } catch (err) {
+      console.error("❌ LearnTab: Failed to submit answer:", err);
+      error = err instanceof Error ? err.message : "Failed to submit answer";
+    }
+  }
+
+  async function handleQuizComplete() {
+    try {
+      await quizSessionService.completeQuiz();
+      currentView = "results";
+      console.log("✅ LearnTab: Quiz completed");
+    } catch (err) {
+      console.error("❌ LearnTab: Failed to complete lesson:", err);
+      error = err instanceof Error ? err.message : "Failed to complete lesson";
+    }
   }
 
   function handleReturnToSelector() {
     currentView = "selector";
-    selectedLessonId = null;
+    selectedQuizId = null;
     currentQuestionIndex = 0;
     score = 0;
-    console.log("✅ LearnTab: Returned to selector (services disabled)");
+    error = null;
+    console.log("✅ LearnTab: Returned to selector");
   }
 
-  function handleRestartLesson() {
-    currentView = "workspace";
-    currentQuestionIndex = 0;
-    score = 0;
-    console.log("✅ LearnTab: Lesson restarted (services disabled)");
-    // quizSessionService.restartLesson();
+  async function handleRestartQuiz() {
+    try {
+      isLoading = true;
+      await quizSessionService.restartQuiz();
+      currentView = "workspace";
+      currentQuestionIndex = 0;
+      score = 0;
+      error = null;
+      console.log("✅ LearnTab: Quiz restarted");
+    } catch (err) {
+      console.error("❌ LearnTab: Failed to restart lesson:", err);
+      error = err instanceof Error ? err.message : "Failed to restart lesson";
+    } finally {
+      isLoading = false;
+    }
   }
 
   // ============================================================================
-  // LIFECYCLE - TEMPORARY DISABLED
+  // LIFECYCLE
   // ============================================================================
 
   onMount(async () => {
-    console.log("✅ LearnTab: Mounted (services temporarily disabled)");
+    console.log("✅ LearnTab: Mounted");
 
-    // TEMPORARY: All initialization commented out
     try {
+      isLoading = true;
+      
       // Initialize codex service
-      // await codexService.initialize();
+      await codexService.initialize();
 
       // Load available lessons
-      // const lessons = await lessonRepository.getAllLessons();
+      const lessons = await lessonRepository.getAllQuizs();
 
-      console.log("✅ LearnTab: Initialization complete (placeholder)");
+      console.log("✅ LearnTab: Initialization complete, loaded", lessons.length, "lessons");
     } catch (err) {
       console.error("❌ LearnTab: Initialization failed:", err);
-      error =
-        err instanceof Error ? err.message : "Failed to initialize learn tab";
+      error = err instanceof Error ? err.message : "Failed to initialize learn tab";
+    } finally {
+      isLoading = false;
     }
   });
 
   onDestroy(() => {
-    console.log("✅ LearnTab: Cleanup (services disabled)");
-    // quizSessionService?.cleanup();
+    console.log("✅ LearnTab: Cleanup");
+    quizSessionService?.cleanup();
   });
 </script>
 
@@ -127,102 +163,45 @@ Provides educational content and quizzes for learning TKA notation:
   {/if}
 
   <div class="learn-layout">
-    <!-- TEMPORARY: Simplified layout message -->
-    <div class="temporary-message">
-      <h2>🎓 Learn Tab</h2>
-      <p><strong>Status:</strong> Import paths fixed ✅</p>
-      <p>Services temporarily disabled during import migration.</p>
-      <p>This tab will be fully functional once the container is restored.</p>
-      <div class="feature-list">
-        <h3>Features (will be restored):</h3>
-        <ul>
-          <li>✅ Interactive lessons and quizzes</li>
-          <li>✅ Pictograph recognition training</li>
-          <li>✅ Progress tracking and scoring</li>
-          <li>✅ Codex integration for reference</li>
-          <li>✅ Multiple lesson types and difficulties</li>
-          <li>✅ Results analysis and improvement suggestions</li>
-        </ul>
-      </div>
-
-      <!-- Placeholder interface -->
-      <div class="placeholder-interface">
-        <h3>Learning Interface (placeholder):</h3>
-        <div class="view-selector">
-          <button
-            onclick={() => (currentView = "selector")}
-            class:active={currentView === "selector"}
-          >
-            Lesson Selector
-          </button>
-          <button
-            onclick={() => (currentView = "workspace")}
-            class:active={currentView === "workspace"}
-          >
-            Quiz Workspace
-          </button>
-          <button
-            onclick={() => (currentView = "results")}
-            class:active={currentView === "results"}
-          >
-            Results
-          </button>
-        </div>
-
-        <div class="current-view">
-          <strong>Current View:</strong>
-          {currentView}
-        </div>
-
-        {#if currentView === "workspace"}
-          <div class="quiz-info">
-            <span>Question: {currentQuestionIndex + 1} / {totalQuestions}</span>
-            <span>Score: {score}</span>
-          </div>
-        {/if}
-      </div>
-    </div>
-
-    <!-- ORIGINAL LAYOUT (commented out until services restored) -->
     <!-- Progress Tracker -->
-    <!-- <div class="progress-section">
+    <div class="progress-section">
       <ProgressTracker
         currentQuestion={currentQuestionIndex}
         totalQuestions={totalQuestions}
         score={score}
       />
-    </div> -->
+    </div>
 
     <!-- Main Content Area -->
-    <!-- <div class="content-area">
+    <div class="content-area">
       {#if currentView === 'selector'}
-        <LessonSelectorView
-          onLessonSelect={handleLessonSelect}
+        <QuizSelectorView
+          onQuizSelect={handleQuizSelect}
         />
       {:else if currentView === 'workspace'}
-        <LessonWorkspaceView
-          lessonId={selectedLessonId}
+        <QuizWorkspaceView
+          lessonId={selectedQuizId}
           questionIndex={currentQuestionIndex}
           onAnswerSubmit={handleAnswerSubmit}
-          onLessonComplete={handleLessonComplete}
+          onQuizComplete={handleQuizComplete}
         />
       {:else if currentView === 'results'}
-        <LessonResultsView
+        <QuizResultsView
           score={score}
           totalQuestions={totalQuestions}
           onReturnToSelector={handleReturnToSelector}
-          onRestartLesson={handleRestartLesson}
+          onRestartQuiz={handleRestartQuiz}
         />
       {/if}
-    </div> -->
+    </div>
 
     <!-- Controls -->
-    <!-- <div class="controls-section">
-      <LessonControls
+    <div class="controls-section">
+      <QuizControls
         currentView={currentView}
         onReturnToSelector={handleReturnToSelector}
       />
-    </div> -->
+    </div>
   </div>
 
   <!-- Loading overlay -->
@@ -251,11 +230,8 @@ Provides educational content and quizzes for learning TKA notation:
   .learn-layout {
     flex: 1;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Original layout: */
-    /* flex-direction: column;
-    overflow: hidden; */
+    flex-direction: column;
+    overflow: hidden;
   }
 
   .error-banner {
@@ -275,95 +251,23 @@ Provides educational content and quizzes for learning TKA notation:
     cursor: pointer;
   }
 
-  .temporary-message {
-    text-align: center;
-    padding: 2rem;
-    background: var(--color-surface-secondary, #f5f5f5);
-    border-radius: 8px;
-    border: 2px dashed var(--color-border, #ccc);
-    max-width: 600px;
-    margin: 2rem;
-  }
-
-  .temporary-message h2 {
-    color: var(--color-text-primary, #333);
-    margin-bottom: 1rem;
-  }
-
-  .temporary-message p {
-    color: var(--color-text-secondary, #666);
-    margin-bottom: 0.5rem;
-  }
-
-  .feature-list {
-    margin-top: 1.5rem;
-    text-align: left;
-  }
-
-  .feature-list h3 {
-    color: var(--color-text-primary, #333);
-    margin-bottom: 0.5rem;
-  }
-
-  .feature-list ul {
-    color: var(--color-text-secondary, #666);
-    padding-left: 1.5rem;
-  }
-
-  .feature-list li {
-    margin-bottom: 0.25rem;
-  }
-
-  .placeholder-interface {
-    margin-top: 1.5rem;
+  .progress-section {
     padding: 1rem;
+    border-bottom: 1px solid var(--color-border, #ddd);
     background: var(--color-surface, #fff);
-    border-radius: 4px;
-    border: 1px solid var(--color-border, #ddd);
   }
 
-  .placeholder-interface h3 {
-    color: var(--color-text-primary, #333);
-    margin-bottom: 0.5rem;
+  .content-area {
+    flex: 1;
+    overflow: auto;
+    padding: 1rem;
+    background: var(--color-surface-secondary, #f8f9fa);
   }
 
-  .view-selector {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    justify-content: center;
-  }
-
-  .view-selector button {
-    padding: 0.5rem 1rem;
-    border: 1px solid var(--color-border, #ddd);
+  .controls-section {
+    padding: 1rem;
+    border-top: 1px solid var(--color-border, #ddd);
     background: var(--color-surface, #fff);
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.9rem;
-  }
-
-  .view-selector button.active {
-    background: var(--color-primary, #007acc);
-    color: white;
-    border-color: var(--color-primary, #007acc);
-  }
-
-  .view-selector button:hover:not(.active) {
-    background: var(--color-surface-hover, #f0f0f0);
-  }
-
-  .current-view {
-    color: var(--color-text-secondary, #666);
-    margin-bottom: 1rem;
-  }
-
-  .quiz-info {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    color: var(--color-text-secondary, #666);
-    font-size: 0.9rem;
   }
 
   .loading-overlay {
@@ -378,6 +282,7 @@ Provides educational content and quizzes for learning TKA notation:
     justify-content: center;
     align-items: center;
     gap: 1rem;
+    z-index: 1000;
   }
 
   .loading-spinner {
@@ -400,19 +305,18 @@ Provides educational content and quizzes for learning TKA notation:
 
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    .temporary-message {
-      margin: 1rem;
-      padding: 1.5rem;
+    .progress-section,
+    .content-area,
+    .controls-section {
+      padding: 0.75rem;
     }
+  }
 
-    .view-selector {
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .quiz-info {
-      flex-direction: column;
-      gap: 0.5rem;
+  @media (max-width: 480px) {
+    .progress-section,
+    .content-area,
+    .controls-section {
+      padding: 0.5rem;
     }
   }
 </style>

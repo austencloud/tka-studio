@@ -7,22 +7,10 @@
 // ============================================================================
 // WORKBENCH TYPES
 // ============================================================================
-import type {
-  BeatClickResult,
-  BeatData,
-  BeatEditOperation,
-  BeatEditResult,
-  ConfigurationResult,
-  Letter,
-  PictographData,
-  SequenceCreationParams,
-  SequenceCreationResult,
-  SequenceData,
-  ValidationResult,
-  WorkbenchConfig,
-  WorkbenchMode,
-} from "$domain";
-import { GridMode } from "$domain";
+
+import type { SequenceData, Letter, PictographData, ValidationResult, GridMode } from "../../../../../shared/domain";
+import type { WorkbenchConfig, WorkbenchMode, BeatEditOperation, BeatData, SequenceCreationParams, BeatClickResult, BeatEditResult, SequenceCreationResult, ConfigurationResult } from "../../domain";
+
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

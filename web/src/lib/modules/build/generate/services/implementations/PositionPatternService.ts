@@ -5,9 +5,11 @@
  * Provides standard position sequences for alpha, beta, and gamma systems.
  */
 
-import { GridPosition } from "$domain";
-import type { IPositionPatternService } from "$services";
 import { injectable } from "inversify";
+import { GridPosition } from "../../../../../shared/domain";
+import type { IPositionPatternService } from "../contracts/generate-contracts";
+
+
 
 @injectable()
 export class PositionPatternService implements IPositionPatternService {

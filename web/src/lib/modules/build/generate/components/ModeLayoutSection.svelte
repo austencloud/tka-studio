@@ -4,10 +4,10 @@ Contains Grid Mode, Generation Mode, and Prop Continuity selectors
 -->
 <script lang="ts">
   import { GenerationMode } from "$shared/domain";
-  import type { GenerationConfig } from "../../../state";
-  import GenerationModeToggle from "../selectors/GenerationModeToggle.svelte";
-  import GridModeSelector from "../selectors/GridModeSelector.svelte";
-  import PropContinuityToggle from "../selectors/PropContinuityToggle.svelte";
+  import type { GenerationConfig } from "../state";
+  import GenerationModeToggle from "./selectors/GenerationModeToggle.svelte";
+  import GridModeSelector from "./selectors/GridModeSelector.svelte";
+  import PropContinuityToggle from "./selectors/PropContinuityToggle.svelte";
 
   interface Props {
     config: GenerationConfig;

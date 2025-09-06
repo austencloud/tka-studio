@@ -44,7 +44,7 @@ import type { SequenceData } from "$shared/domain";
 import type {
     SequenceExportOptions,
     SequenceExportResult
-} from "../../domain";
+} from "../../domain/models";
 
 /**
  * Main export service for handling different export types

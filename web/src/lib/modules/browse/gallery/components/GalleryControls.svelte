@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { GallerySortMethod } from "$shared/domain";
+  import { GallerySortMethod } from "../domain";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

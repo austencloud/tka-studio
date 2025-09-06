@@ -7,11 +7,26 @@
 
 import type { SequenceData } from "$shared/domain";
 import { injectable } from "inversify";
+import type { IWordCardMetadataOverlayService } from "../../../build/export/services/contracts";
 // Domain types
-import type { WordCardDimensions, WordCardMetadata } from "$wordcard/domain";
+// import type { WordCardDimensions, WordCardMetadata } from "$wordcard/domain";
+
+// Temporary interface definitions
+interface WordCardDimensions {
+  width: number;
+  height: number;
+  scale?: number;
+}
+
+interface WordCardMetadata {
+  title?: string;
+  author?: string;
+  beatNumbers?: boolean;
+  timestamp?: boolean;
+  backgroundColor?: string;
+}
 
 // Behavioral contracts
-import type { IWordCardMetadataOverlayService } from "$services";
 
 @injectable()
 export class WordCardMetadataOverlayService

@@ -5,26 +5,14 @@
  * Single responsibility: Cache storage and retrieval.
  */
 
-import type { IWordCardCacheService } from "$services";
-import type { SequenceData } from "$shared/domain";
-import type { ExportOptions } from "$wordcard/domain";
 import { injectable } from "inversify";
+import type { SequenceData } from "../../../../shared/domain";
+import type { IWordCardCacheService } from "../contracts";
+import type { CacheEntry, CacheStats } from "../../domain/models/cache-models";
+import type { ExportOptions } from "../../domain";
 
-interface CacheEntry {
-  data: Blob | SequenceData;
-  timestamp: Date;
-  size: number;
-  accessCount: number;
-  lastAccessed: Date;
-  options?: ExportOptions;
-}
 
-interface CacheStats {
-  entryCount: number;
-  totalSize: number;
-  hitRate: number;
-  lastCleanup: Date;
-}
+
 
 @injectable()
 export class WordCardCacheService implements IWordCardCacheService {

@@ -1,7 +1,7 @@
 <!-- FullscreenImageViewer.svelte - Image display and navigation for fullscreen viewer -->
 <script lang="ts">
   import type { SequenceData } from "$shared/domain";
-  import type { IGalleryThumbnailService } from "../../services/contracts";
+  import type { IGalleryThumbnailService } from "../../gallery/services/contracts";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   let {

@@ -8,11 +8,10 @@
  * Uses the existing file-download utility for consistency with the app.
  */
 
-import type { IFileExportService } from "$services";
 import { injectable } from "inversify";
 
 @injectable()
-export class FileExportService implements IFileExportService {
+export class FileExportService {
   /**
    * Convert canvas to blob
    * Handles both PNG and JPEG formats with quality control

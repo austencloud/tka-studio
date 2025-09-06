@@ -4,7 +4,7 @@ Toggle between freeform and circular generation modes using modern segmented con
 -->
 <script lang="ts">
   import { GenerationMode } from "$shared/domain";
-  import IOSToggle from "$shared/components/ui/IOSToggle.svelte";
+  import IOSToggle from "$shared/foundation/ui/IOSToggle.svelte";
 
   interface Props {
     initialMode?: GenerationMode;

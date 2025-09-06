@@ -5,17 +5,24 @@
  * Handles lesson types, configurations, and category management.
  */
 
+import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import { TYPES } from "../../../../../shared/inversify";
 import type { LetterCategory } from "../../../codex";
-import type { ICodexCodexLetterMappingRepo } from "../../../codex/services/contracts/ICodexCodexLetterMappingRepo";
 import {
   QuizAnswerFormat,
   QuizQuestionFormat,
   QuizType,
   type QuizConfig,
 } from "../../domain";
-import type { IQuizRepoManager } from "../contracts/IQuizRepoManager";
+import type { IQuizRepoManager } from "../contracts";
+// import type { ICodexLetterMappingRepo } from "../../../codex/services/contracts/ICodexLetterMappingRepo";
+
+// Temporary interface definition
+interface ICodexLetterMappingRepo {
+  getMapping(letter: string): Promise<any>;
+  getAllMappings(): Promise<any[]>;
+  initialize(): Promise<void>;
+}
 
 @injectable()
 export class QuizRepoManager implements IQuizRepoManager {
@@ -23,8 +30,8 @@ export class QuizRepoManager implements IQuizRepoManager {
   private initialized = false;
 
   constructor(
-    @inject(TYPES.ICodexCodexLetterMappingRepo)
-    private letterMappingRepository: ICodexCodexLetterMappingRepo
+    @inject(TYPES.ICodexLetterMappingRepo)
+    private letterMappingRepository: ICodexLetterMappingRepo
   ) {}
 
   async initialize(): Promise<void> {

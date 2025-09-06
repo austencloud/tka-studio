@@ -1,15 +1,21 @@
-import type { BeatData, BeatRenderOptions, SequenceData } from "$shared/domain";
+import type { BeatData, SequenceData } from "$shared/domain";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import type {
-    IBeatFallbackRenderer,
-    IBeatRenderingService,
-    ICanvasManagementService,
-    ISVGToCanvasConverterService,
-} from "../contracts";
+// import type { BeatRenderOptions } from "../../../../export/domain";
+import type { ICanvasManagementService, ISVGToCanvasConverterService } from "../../../../export/services/contracts";
+import type { IBeatFallbackRenderer } from "../../contracts";
+
+// Temporary type definition
+interface BeatRenderOptions {
+  addBeatNumbers: boolean;
+  redVisible: boolean;
+  blueVisible: boolean;
+  combinedGrids: boolean;
+  beatScale: number;
+}
 
 @injectable()
-export class BeatRenderingService implements IBeatRenderingService {
+export class BeatRenderingService {
   constructor(
     @inject(TYPES.ISVGToCanvasConverterService)
     private svgToCanvasConverter: ISVGToCanvasConverterService,

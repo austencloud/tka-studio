@@ -1,7 +1,7 @@
 import type { MotionData } from "$shared/domain";
 import {
   createMotionData,
-  Location,
+  GridLocation,
   MotionColor,
   MotionType,
   Orientation,
@@ -19,21 +19,24 @@ import type { IMotionParameterService } from "../contracts";
 @injectable()
 export class MotionParameterService implements IMotionParameterService {
   // Helper function to determine motion type based on start/end locations
-  getMotionType(startLocation: Location, endLocation: Location): MotionType {
+  getMotionType(
+    startLocation: GridLocation,
+    endLocation: GridLocation
+  ): MotionType {
     if (startLocation === endLocation) {
       return MotionType.STATIC; // Same location = static
     }
 
     // Check if it's a dash motion (opposite locations)
     const opposites = [
-      [Location.NORTH, Location.SOUTH],
-      [Location.SOUTH, Location.NORTH],
-      [Location.EAST, Location.WEST],
-      [Location.WEST, Location.EAST],
-      [Location.NORTHEAST, Location.SOUTHWEST],
-      [Location.SOUTHWEST, Location.NORTHEAST],
-      [Location.NORTHWEST, Location.SOUTHEAST],
-      [Location.SOUTHEAST, Location.NORTHWEST],
+      [GridLocation.NORTH, GridLocation.SOUTH],
+      [GridLocation.SOUTH, GridLocation.NORTH],
+      [GridLocation.EAST, GridLocation.WEST],
+      [GridLocation.WEST, GridLocation.EAST],
+      [GridLocation.NORTHEAST, GridLocation.SOUTHWEST],
+      [GridLocation.SOUTHWEST, GridLocation.NORTHEAST],
+      [GridLocation.NORTHWEST, GridLocation.SOUTHEAST],
+      [GridLocation.SOUTHEAST, GridLocation.NORTHWEST],
     ];
 
     for (const [startOpp, endOpp] of opposites) {
@@ -48,8 +51,8 @@ export class MotionParameterService implements IMotionParameterService {
 
   // Helper function to get available motion types for a start/end pair
   getAvailableMotionTypes(
-    startLocation: Location,
-    endLocation: Location
+    startLocation: GridLocation,
+    endLocation: GridLocation
   ): MotionType[] {
     const motionType = this.getMotionType(startLocation, endLocation);
 
@@ -66,15 +69,15 @@ export class MotionParameterService implements IMotionParameterService {
   // Helper function to calculate rotation direction based on motion type and locations
   calculateRotationDirection(
     motionType: MotionType,
-    startLocation: Location,
-    endLocation: Location
+    startLocation: GridLocation,
+    endLocation: GridLocation
   ): RotationDirection {
-    // Location order for clockwise movement: N -> E -> S -> W -> N
+    // GridLocation order for clockwise movement: N -> E -> S -> W -> N
     const locationOrder = [
-      Location.NORTH,
-      Location.EAST,
-      Location.SOUTH,
-      Location.WEST,
+      GridLocation.NORTH,
+      GridLocation.EAST,
+      GridLocation.SOUTH,
+      GridLocation.WEST,
     ];
     const startIndex = locationOrder.indexOf(startLocation);
     const endIndex = locationOrder.indexOf(endLocation);
@@ -141,8 +144,8 @@ export class MotionParameterService implements IMotionParameterService {
   // Create default motion parameters
   createDefaultParams(): AnimatedMotionParams {
     return {
-      startLocation: Location.NORTH,
-      endLocation: Location.EAST,
+      startLocation: GridLocation.NORTH,
+      endLocation: GridLocation.EAST,
       motionType: MotionType.PRO,
       turns: 0,
       rotationDirection: RotationDirection.CLOCKWISE,

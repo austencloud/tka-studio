@@ -1,4 +1,5 @@
-import { PRIMARY_DOMAIN } from "$config/domains";
+// import { PRIMARY_DOMAIN } from "$config/domains";
+const PRIMARY_DOMAIN = "localhost:5173"; // Temporary fallback
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async () => {

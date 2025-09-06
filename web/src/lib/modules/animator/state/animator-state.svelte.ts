@@ -1,5 +1,5 @@
 import { resolve, TYPES } from "$shared/inversify/container";
-import { OrientationCalculationService } from "$shared/services/core/implementations/pictograph/positioning";
+import { OrientationCalculationService } from "$shared/pictograph/services/implementations/positioning/OrientationCalculationService";
 import type {
   AnimatedMotionParams,
   AnimationState,
@@ -14,7 +14,12 @@ import {
   MotionParameterService,
 } from "../services/implementations";
 
-import { GridMode, Location, MotionColor, MotionType } from "$shared/domain";
+import {
+  GridLocation,
+  GridMode,
+  MotionColor,
+  MotionType,
+} from "$shared/domain";
 
 export interface AnimatorState {
   // Reactive state getters
@@ -28,16 +33,16 @@ export interface AnimatorState {
   get identifiedLetter(): LetterIdentificationResult;
 
   // Blue prop methods
-  setBlueStartLocation: (location: Location) => void;
-  setBlueEndLocation: (location: Location) => void;
+  setBlueStartLocation: (location: GridLocation) => void;
+  setBlueEndLocation: (location: GridLocation) => void;
   updateBlueMotionParam: <K extends keyof AnimatedMotionParams>(
     param: K,
     value: AnimatedMotionParams[K]
   ) => void;
 
   // Red prop methods
-  setRedStartLocation: (location: Location) => void;
-  setRedEndLocation: (location: Location) => void;
+  setRedStartLocation: (location: GridLocation) => void;
+  setRedEndLocation: (location: GridLocation) => void;
   updateRedMotionParam: <K extends keyof AnimatedMotionParams>(
     param: K,
     value: AnimatedMotionParams[K]
@@ -69,8 +74,8 @@ export function createAnimatorState(): AnimatorState {
   );
   let redMotionParams = $state<AnimatedMotionParams>({
     ...motionService.createDefaultParams(),
-    startLocation: Location.EAST,
-    endLocation: Location.WEST,
+    startLocation: GridLocation.EAST,
+    endLocation: GridLocation.WEST,
     motionType: MotionType.DASH,
   });
 
@@ -219,14 +224,14 @@ export function createAnimatorState(): AnimatorState {
     },
 
     // Blue prop methods
-    setBlueStartLocation: (location: Location) => {
+    setBlueStartLocation: (location: GridLocation) => {
       blueMotionParams.startLocation = location;
       const updatedParams =
         motionService.updateMotionTypeForLocations(blueMotionParams);
       blueMotionParams = updatedParams;
     },
 
-    setBlueEndLocation: (location: Location) => {
+    setBlueEndLocation: (location: GridLocation) => {
       console.log(
         `🔵 Blue end location changing from ${blueMotionParams.endLocation} to ${location}`
       );
@@ -245,14 +250,14 @@ export function createAnimatorState(): AnimatorState {
     },
 
     // Red prop methods
-    setRedStartLocation: (location: Location) => {
+    setRedStartLocation: (location: GridLocation) => {
       redMotionParams.startLocation = location;
       const updatedParams =
         motionService.updateMotionTypeForLocations(redMotionParams);
       redMotionParams = updatedParams;
     },
 
-    setRedEndLocation: (location: Location) => {
+    setRedEndLocation: (location: GridLocation) => {
       console.log(
         `🔴 Red end location changing from ${redMotionParams.endLocation} to ${location}`
       );

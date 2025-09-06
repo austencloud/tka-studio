@@ -7,17 +7,17 @@
 
 import type { BeatData, Letter, SequenceData } from "$shared/domain";
 import {
-    createMotionData,
-    createPictographData,
-    createSequenceData,
-    GridMode,
-    Location,
-    MotionColor,
-    MotionType,
-    Orientation,
-    PngMetadataArraySchema,
-    PropType,
-    RotationDirection
+  createMotionData,
+  createPictographData,
+  createSequenceData,
+  GridLocation,
+  GridMode,
+  MotionColor,
+  MotionType,
+  Orientation,
+  PngMetadataArraySchema,
+  PropType,
+  RotationDirection
 } from "$shared/domain";
 import { parseStrict, PngMetadataExtractor } from "$shared/utils";
 import { injectable } from "inversify";
@@ -99,10 +99,10 @@ export class SequenceImportService implements ISequenceImportService {
               MotionType.STATIC,
             startLocation:
               this.convertLocation(step.blue_attributes?.start_loc) ||
-              Location.NORTH,
+              GridLocation.NORTH,
             endLocation:
               this.convertLocation(step.blue_attributes?.end_loc) ||
-              Location.NORTH,
+              GridLocation.NORTH,
             startOrientation:
               this.convertOrientation(step.blue_attributes?.start_ori) ||
               Orientation.IN,
@@ -118,7 +118,7 @@ export class SequenceImportService implements ISequenceImportService {
             propType: PropType.STAFF,
             arrowLocation:
               this.convertLocation(step.blue_attributes?.start_loc) ||
-              Location.NORTH,
+              GridLocation.NORTH,
           }),
           red: createMotionData({
             color: MotionColor.RED,
@@ -127,10 +127,10 @@ export class SequenceImportService implements ISequenceImportService {
               MotionType.STATIC,
             startLocation:
               this.convertLocation(step.red_attributes?.start_loc) ||
-              Location.SOUTH,
+              GridLocation.SOUTH,
             endLocation:
               this.convertLocation(step.red_attributes?.end_loc) ||
-              Location.SOUTH,
+              GridLocation.SOUTH,
             startOrientation:
               this.convertOrientation(step.red_attributes?.start_ori) ||
               Orientation.IN,
@@ -146,7 +146,7 @@ export class SequenceImportService implements ISequenceImportService {
             propType: PropType.STAFF,
             arrowLocation:
               this.convertLocation(step.red_attributes?.start_loc) ||
-              Location.SOUTH,
+              GridLocation.SOUTH,
           }),
         },
         letter: step.letter as Letter, // Guaranteed valid string
@@ -234,28 +234,28 @@ export class SequenceImportService implements ISequenceImportService {
   }
 
   /**
-   * Convert PNG location string to Location enum
+   * Convert PNG location string to GridLocation enum
    */
-  private convertLocation(location?: string): Location | undefined {
+  private convertLocation(location?: string): GridLocation | undefined {
     if (!location) return undefined;
 
     switch (location.toLowerCase()) {
       case "n":
-        return Location.NORTH;
+        return GridLocation.NORTH;
       case "e":
-        return Location.EAST;
+        return GridLocation.EAST;
       case "s":
-        return Location.SOUTH;
+        return GridLocation.SOUTH;
       case "w":
-        return Location.WEST;
+        return GridLocation.WEST;
       case "ne":
-        return Location.NORTHEAST;
+        return GridLocation.NORTHEAST;
       case "se":
-        return Location.SOUTHEAST;
+        return GridLocation.SOUTHEAST;
       case "sw":
-        return Location.SOUTHWEST;
+        return GridLocation.SOUTHWEST;
       case "nw":
-        return Location.NORTHWEST;
+        return GridLocation.NORTHWEST;
       default:
         return undefined;
     }

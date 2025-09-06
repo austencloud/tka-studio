@@ -5,13 +5,40 @@
  * Single responsibility: Efficient batch processing with memory management.
  */
 
-import type { IWordCardBatchProcessingService } from "$services";
-import type {
-  BatchExportProgress,
-  BatchOperationConfig,
-  WordCardExportResult,
-} from "$wordcard/domain";
 import { injectable } from "inversify";
+import type { IWordCardBatchProcessingService } from "../../../build/export/services/contracts";
+// import type {
+//   BatchExportProgress,
+//   BatchOperationConfig,
+//   WordCardExportResult,
+// } from "../../domain";
+
+// Temporary interface definitions
+interface BatchExportProgress {
+  completed: number;
+  total: number;
+  currentItem?: string;
+  stage?: string;
+  current?: number;
+  percentage?: number;
+  message?: string;
+  errorCount?: number;
+  warningCount?: number;
+  startTime?: number;
+}
+
+interface BatchOperationConfig {
+  batchSize: number;
+  memoryThreshold: number;
+  enableProgressReporting: boolean;
+  enableCancellation: boolean;
+}
+
+interface WordCardExportResult {
+  success: boolean;
+  sequenceId: string;
+  error?: Error;
+}
 
 @injectable()
 export class WordCardBatchProcessingService
@@ -75,6 +102,7 @@ export class WordCardBatchProcessingService
           (itemProgress) => {
             if (onProgress && config.enableProgressReporting) {
               const overallProgress: BatchExportProgress = {
+                completed: batchStart + itemProgress + 1,
                 current: batchStart + itemProgress + 1,
                 total: items.length,
                 percentage:
@@ -83,7 +111,7 @@ export class WordCardBatchProcessingService
                 stage: "processing",
                 errorCount: results.filter((r) => !r.success).length,
                 warningCount: 0,
-                startTime,
+                startTime: startTime.getTime(),
               };
               onProgress(overallProgress);
             }
@@ -117,6 +145,7 @@ export class WordCardBatchProcessingService
       // Final progress update
       if (onProgress && config.enableProgressReporting) {
         const finalProgress: BatchExportProgress = {
+          completed: items.length,
           current: items.length,
           total: items.length,
           percentage: 100,
@@ -124,7 +153,7 @@ export class WordCardBatchProcessingService
           stage: "finalizing",
           errorCount: failureCount,
           warningCount: 0,
-          startTime,
+          startTime: startTime.getTime(),
         };
         onProgress(finalProgress);
       }
@@ -239,7 +268,8 @@ export class WordCardBatchProcessingService
         console.error(`❌ Failed to process item ${startIndex + i}:`, error);
         results.push({
           success: false,
-          error: error instanceof Error ? error.message : String(error),
+          sequenceId: `unknown-${startIndex + i}`,
+          error: error instanceof Error ? error : new Error(String(error)),
         });
       }
     }

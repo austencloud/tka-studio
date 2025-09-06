@@ -1,7 +1,11 @@
-
 import { resolve, TYPES } from "$shared/inversify";
-import { BackgroundType, type BackgroundSystem, type PerformanceMetrics, type QualityLevel } from "../domain/ui/backgrounds/BackgroundTypes";
-import type { IBackgroundService } from "../services";
+import {
+  BackgroundType,
+  type BackgroundSystem,
+  type PerformanceMetrics,
+  type QualityLevel,
+} from "../domain/ui/backgrounds/BackgroundTypes";
+import type { IBackgroundService } from "../foundation/services/contracts/background/IBackgroundService";
 
 export function createBackgroundState() {
   // Get services from DI container

@@ -161,7 +161,11 @@ export function createPageLayoutState(
           preferredCardsPerPage: sequencesPerPage,
         };
 
-        layoutResult = layoutService.calculateLayout(calculationRequest);
+        const requestWithCardCount = {
+          ...calculationRequest,
+          cardCount: calculationRequest.sequenceCount,
+        };
+        layoutResult = layoutService.calculateLayout(requestWithCardCount);
 
         // Update sequences per page based on optimization
         if (layoutResult.isOptimal) {
@@ -277,7 +281,11 @@ export function createPageLayoutState(
         preferredCardsPerPage: sequencesPerPage,
       };
 
-      return layoutService.calculateLayout(calculationRequest);
+      const requestWithCardCount = {
+        ...calculationRequest,
+        cardCount: calculationRequest.sequenceCount,
+      };
+      return layoutService.calculateLayout(requestWithCardCount);
     } catch (err) {
       console.error("Layout calculation failed:", err);
       return null;

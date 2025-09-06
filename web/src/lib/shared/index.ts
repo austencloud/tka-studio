@@ -5,5 +5,5 @@
  * These represent the fundamental concepts of the TKA system.
  */
 
-export * from "./components/pictograph";
-export * from "./components/ui";
+export * from "./foundation";
+export * from "./pictograph/components";

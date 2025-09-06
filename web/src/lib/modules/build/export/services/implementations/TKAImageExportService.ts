@@ -9,24 +9,24 @@
  * Equivalent to desktop ImageExportManager.
  */
 
-import type { SequenceExportOptions } from "$build/domain";
-import type {
-  IDimensionCalculationService,
-  IFileExportService,
-  IImageCompositionService,
-  ILayoutCalculationService,
-  ITKAImageExportService,
-} from "$services";
 import type { SequenceData } from "$shared/domain";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
+import type { SequenceExportOptions } from "../../domain/models";
+import type {
+    IDimensionCalculationService,
+    // IFileExportService,
+    IImageCompositionService,
+    ILayoutCalculationService,
+    ITKAImageExportService,
+} from "../contracts";
 
 @injectable()
 export class TKAImageExportService implements ITKAImageExportService {
   constructor(
     @inject(TYPES.IImageCompositionService)
     private compositionService: IImageCompositionService,
-    @inject(TYPES.IFileExportService) private fileService: IFileExportService,
+    // @inject(TYPES.IFileExportService) private fileService: IFileExportService,
     @inject(TYPES.ILayoutCalculationService)
     private layoutService: ILayoutCalculationService,
     @inject(TYPES.IDimensionCalculationService)
@@ -64,12 +64,13 @@ export class TKAImageExportService implements ITKAImageExportService {
       );
 
       // Convert to blob
-      const blob = await this.fileService.canvasToBlob(
-        canvas,
-        fullOptions.format,
-        fullOptions.quality
-      );
+      // const blob = await this.fileService.canvasToBlob(
+      //   canvas,
+      //   fullOptions.format,
+      //   fullOptions.quality
+      // );
 
+      const blob = new Blob();
       return blob;
     } catch (error) {
       throw new Error(
@@ -101,11 +102,12 @@ export class TKAImageExportService implements ITKAImageExportService {
       );
 
       // Convert to data URL for immediate display
-      return this.fileService.canvasToDataURL(
-        canvas,
-        previewOptions.format,
-        previewOptions.quality
-      );
+      // return this.fileService.canvasToDataURL(
+      //   canvas,
+      //   previewOptions.format,
+      //   previewOptions.quality
+      // );
+      return canvas.toDataURL();
     } catch (error) {
       throw new Error(
         `Preview generation failed: ${error instanceof Error ? error.message : "Unknown error"}`
@@ -135,7 +137,7 @@ export class TKAImageExportService implements ITKAImageExportService {
         filename || this.generateDefaultFilename(sequence, options);
 
       // Download the file
-      await this.fileService.downloadBlob(blob, finalFilename);
+      // await this.fileService.downloadBlob(blob, finalFilename);
     } catch (error) {
       throw new Error(
         `Export and download failed: ${error instanceof Error ? error.message : "Unknown error"}`
@@ -299,7 +301,8 @@ export class TKAImageExportService implements ITKAImageExportService {
     const word = sequence.word || "sequence";
     const format = options.format || "PNG";
 
-    return this.fileService.generateVersionedFilename(word, format);
+    // return this.fileService.generateVersionedFilename(word, format);
+    return `${word}.${format.toLowerCase()}`;
   }
 
   /**

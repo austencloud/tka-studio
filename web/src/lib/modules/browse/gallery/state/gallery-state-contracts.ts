@@ -1,5 +1,5 @@
 import type { SequenceData } from "../../../../shared/domain";
-import type { FilterType, GallerySortMethod } from "../domain/enums";
+import type { GalleryFilterType, GallerySortMethod } from "../domain/enums";
 import type { GalleryFilterValue } from "../domain/types/gallery-types";
 
 export interface IGalleryFilterState {
@@ -17,7 +17,10 @@ export interface IGalleryDisplayState {
 export interface IGalleryState {
   // Core operations
   loadAllSequences(): Promise<void>;
-  applyFilter(type: FilterType, value: GalleryFilterValue): Promise<void>;
+  applyFilter(
+    type: GalleryFilterType,
+    value: GalleryFilterValue
+  ): Promise<void>;
   searchSequences(query: string): Promise<void>;
   updateSort(sortMethod: GallerySortMethod): Promise<void>;
   backToFilters(): Promise<void>;

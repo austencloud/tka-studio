@@ -5,8 +5,8 @@
 	Matches desktop CodexPictographGrid functionality with proper row organization.
 -->
 <script lang="ts">
-  import Pictograph from "$shared/components/pictograph/Pictograph.svelte";
-  import type { PictographData } from "../../domain";
+  import type { PictographData } from "$shared/domain";
+  import Pictograph from "$shared/pictograph/components/Pictograph.svelte";
 
   // Props
   interface Props {

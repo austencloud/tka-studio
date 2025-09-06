@@ -4,8 +4,8 @@
   import { resolve } from "$shared/inversify";
   import { TYPES } from "$shared/inversify/types";
   import { onMount } from "svelte";
-  import type { IStartPositionService } from "../../../services/contracts";
-  import { createStartPositionPickerState } from "../../../state";
+  import type { IStartPositionService } from "../services/contracts";
+  import { createStartPositionPickerState } from "../state/start-position-picker-state.svelte";
 // UI Components
   import ErrorState from "./ErrorState.svelte";
   import LoadingState from "./LoadingState.svelte";

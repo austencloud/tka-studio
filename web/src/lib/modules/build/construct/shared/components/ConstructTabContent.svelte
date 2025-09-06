@@ -5,10 +5,10 @@
   based on the current sequence state. Receives all state and handlers as props.
 -->
 <script lang="ts">
-	import OptionPickerContainer from '../../components/construct/option-picker/OptionPickerContainer.svelte';
-	import StartPositionPicker from './start-position-picker/StartPositionPicker.svelte';
-  import type { PictographData } from "../../domain";
-  // Import fade transition for smooth switching
+	import type { PictographData } from "$shared/domain";
+	import OptionPickerContainer from '../../option-picker/components/OptionPickerContainer.svelte';
+	import StartPositionPicker from '../../start-position-picker/components/StartPositionPicker.svelte';
+// Import fade transition for smooth switching
   import { getSettings } from "$shared/state";
   import { fade } from "svelte/transition";
 

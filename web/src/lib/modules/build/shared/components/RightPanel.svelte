@@ -14,7 +14,7 @@
   import ConstructTabNavigation from "../BuildSubTabNavigation.svelte";
 // Import Svelte's built-in fade transition for consistency with main tabs
   import type {
-    ActiveBuildSubTab,
+    ActiveBuildTab,
     ArrowPlacementData,
     BeatData,
     PictographData,
@@ -31,13 +31,13 @@
       readonly isTransitioning: boolean;
       readonly hasError: boolean;
       readonly hasSequence: boolean;
-      readonly activeSubTab: ActiveBuildSubTab;
+      readonly activeSubTab: ActiveBuildTab;
       readonly sequenceState: any; // TODO: Fix typing
       setLoading: (loading: boolean) => void;
       setTransitioning: (transitioning: boolean) => void;
       setError: (errorMessage: string | null) => void;
       clearError: () => void;
-      setActiveRightPanel: (panel: ActiveBuildSubTab) => void;
+      setActiveRightPanel: (panel: ActiveBuildTab) => void;
     };
     // Construct sub-tab state (construct-specific)
     constructTabState: {

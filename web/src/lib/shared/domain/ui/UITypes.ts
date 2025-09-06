@@ -21,7 +21,7 @@ export type TabId =
 /**
  * Available build tab sub-sections
  */
-export type ActiveBuildSubTab = "construct" | "generate" | "edit" | "export";
+export type ActiveBuildTab = "construct" | "generate" | "edit" | "export";
 
 /**
  * Application theme options

@@ -5,15 +5,13 @@
  * Extracted from the monolithic TKAImageExportService to focus solely on validation concerns.
  */
 
-import type { SequenceData, SequenceExportOptions } from "$shared/domain";
 import { inject, injectable } from "inversify";
+import type { SequenceData } from "../../../../../shared/domain";
+import { TYPES } from "../../../../../shared/inversify";
+import type { SequenceExportOptions } from "../../domain/models";
+import type { ExportValidationResult, IExportMemoryCalculator, IExportOptionsValidator } from "../contracts";
 
-import type {
-  IExportMemoryCalculator,
-  IExportOptionsValidator,
-} from "$services";
-import type { ValidationResult as ExportValidationResult } from "$shared/domain";
-import { TYPES } from "$shared/inversify/types";
+
 
 @injectable()
 export class ExportOptionsValidator implements IExportOptionsValidator {

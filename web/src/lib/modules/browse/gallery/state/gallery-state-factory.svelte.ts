@@ -1,11 +1,27 @@
 /**
- * Browse State Factory - Clean Architecture
+ * Browse State Factory Architecture
  *
  * Creates a clean, focused browse state using microservices.
  * Replaces the 738-line monolith with focused, testable services.
  */
 
 import type { SequenceData } from "$shared/domain";
+import type { BrowseDeleteConfirmationData } from "../../shared/domain/models/browse-models";
+import {
+  GalleryDisplayStateService,
+  type IGalleryDisplayState,
+} from "../../shared/state/BrowseDisplayState.svelte";
+import { BrowseNavigationState } from "../../shared/state/BrowseNavigationState.svelte";
+import { BrowseSelectionState } from "../../shared/state/BrowseSelectionState.svelte";
+import {
+  GalleryFilterType,
+  GalleryNavigationMode,
+} from "../domain/enums/gallery-enums";
+import type {
+  GalleryNavigationItem,
+  NavigationSectionConfig,
+} from "../domain/models/gallery-models";
+import type { GalleryFilterValue } from "../domain/types/gallery-types";
 import type {
   IDeleteService,
   IFavoritesService,
@@ -15,18 +31,10 @@ import type {
   INavigationService,
   ISectionService,
   ISequenceIndexService,
-  NavigationSectionConfig,
-} from "../../services/contracts";
-import type { BrowseDeleteConfirmationData } from "../../shared/domain/models/browse-models";
-import type { IGalleryDisplayState } from "../../state/BrowseDisplayState.svelte";
-import { BrowseNavigationState } from "../../state/BrowseNavigationState.svelte";
-import { BrowseSearchState } from "../../state/BrowseSearchState.svelte";
-import { BrowseSelectionState } from "../../state/BrowseSelectionState.svelte";
-import { GalleryFilterState } from "../../state/GalleryFilterState.svelte";
-import { FilterType, NavigationMode } from "../domain/enums/gallery-enums";
-import type { GalleryNavigationItem } from "../domain/models/gallery-models";
-import type { GalleryFilterValue } from "../domain/types/gallery-types";
-import type { GalleryLoadingState } from "./gallery-state-models";
+} from "../services/contracts";
+import { GalleryFilterState } from "./GalleryFilterState.svelte";
+import { GallerySearchState } from "./GallerySearchState.svelte";
+import { GalleryState } from "./GalleryState";
 
 export interface BrowseState {
   // State microservices (reactive)
@@ -34,32 +42,35 @@ export interface BrowseState {
   readonly navigationState: BrowseNavigationState;
   readonly selectionState: BrowseSelectionState;
   readonly displayState: IGalleryDisplayState;
-  readonly searchState: BrowseSearchState;
+  readonly searchState: GallerySearchState;
 
   // Coordinator (orchestration)
-  readonly coordinator: GalleryStateCoordinator;
+  readonly coordinator: GalleryState;
 
   // Convenience getters (derived from microservices)
   readonly currentFilter: {
-    type: FilterType;
+    type: GalleryFilterType;
     value: GalleryFilterValue;
   } | null;
   readonly isLoading: boolean;
   readonly hasError: boolean;
   readonly displayedSequences: SequenceData[];
-  readonly navigationMode: NavigationMode;
+  readonly GalleryNavigationMode: GalleryNavigationMode;
   readonly navigationSections: NavigationSectionConfig[]; // NavigationSectionConfig type not available
   readonly selectedSequence: SequenceData | null;
 
   // Additional properties needed by BrowseTab
   readonly allSequences: SequenceData[];
   readonly filteredSequences: SequenceData[];
-  readonly loadingState: GalleryLoadingState; // From displayState
+  readonly loadingState: import("../domain/models/gallery-models").GalleryLoadingState; // From displayState
   readonly searchQuery: string;
 
   // Delegation methods (common operations)
   loadAllSequences(): Promise<void>;
-  applyFilter(type: FilterType, value: GalleryFilterValue): Promise<void>;
+  applyFilter(
+    type: GalleryFilterType,
+    value: GalleryFilterValue
+  ): Promise<void>;
   searchSequences(query: string): Promise<void>;
   selectSequence(sequence: SequenceData): Promise<void>;
   backToFilters(): Promise<void>;
@@ -103,8 +114,8 @@ export function createBrowseState(
   const filterStateImpl = new GalleryFilterState();
   const navigationState = new BrowseNavigationState();
   const selectionState = new BrowseSelectionState();
-  const displayStateImpl = new GalleryDisplayStateService();
-  const searchState = new BrowseSearchState();
+  const displayState = new GalleryDisplayStateService();
+  const searchState = new GallerySearchState();
 
   // Create adapter for filter state to match coordinator interface
   const filterState = {
@@ -116,7 +127,7 @@ export function createBrowseState(
     },
     setFilter(type: string, value: unknown) {
       filterStateImpl.setFilter(
-        type as FilterType,
+        type as GalleryFilterType,
         value as GalleryFilterValue
       );
     },
@@ -128,30 +139,8 @@ export function createBrowseState(
     },
   };
 
-  // Create adapter for display state to match coordinator interface
-  const displayState = {
-    get isLoading() {
-      return displayStateImpl.isLoading;
-    },
-    get hasError() {
-      return displayStateImpl.hasError;
-    },
-    get loadingState() {
-      return displayStateImpl.loadingState;
-    },
-    setLoading(loading: boolean, operation?: string) {
-      displayStateImpl.setLoading(loading, operation);
-    },
-    setError(error: string | null) {
-      displayStateImpl.setError(error);
-    },
-    clearError() {
-      displayStateImpl.clearError();
-    },
-  };
-
-  // Create coordinator with proper dependencies
-  const coordinator = new GalleryStateCoordinator(
+  // Create coordinator with proper dependencies - no adapter needed!
+  const coordinator = new GalleryState(
     filterState,
     navigationState,
     selectionState,
@@ -174,7 +163,7 @@ export function createBrowseState(
     filterState: filterStateImpl,
     navigationState,
     selectionState,
-    displayState: displayStateImpl,
+    displayState: displayState,
     searchState,
     coordinator,
 
@@ -228,7 +217,7 @@ export function createBrowseState(
       await coordinator.loadAllSequences();
     },
 
-    async applyFilter(type: FilterType, value: GalleryFilterValue) {
+    async applyFilter(type: GalleryFilterType, value: GalleryFilterValue) {
       await coordinator.applyFilter(type, value);
     },
 
@@ -319,8 +308,7 @@ export function createBrowseState(
       console.log("🔍 Filter by navigation:", item, sectionType);
 
       // Cast item to GalleryNavigationItem type
-      const navigationItem =
-        item as import("../services").GalleryNavigationItem;
+      const navigationItem = item as import("../domain").NavigationItem;
 
       if (!navigationItem) {
         console.warn("No navigation item provided");
@@ -328,18 +316,17 @@ export function createBrowseState(
       }
 
       // Use NavigationService to get sequences for this item
-      const filteredSequences =
-        navigationService.getSequencesForGalleryNavigationItem(
-          navigationItem,
-          sectionType as
-            | "date"
-            | "length"
-            | "letter"
-            | "level"
-            | "author"
-            | "favorites",
-          coordinator.allSequences
-        );
+      const filteredSequences = navigationService.getSequencesForNavigationItem(
+        navigationItem,
+        sectionType as
+          | "date"
+          | "length"
+          | "letter"
+          | "level"
+          | "author"
+          | "favorites",
+        coordinator.allSequences
+      );
 
       console.log(
         `✅ Navigation filter applied: ${filteredSequences.length} sequences found`
@@ -348,11 +335,14 @@ export function createBrowseState(
       // Update the filter state
       const filterType =
         sectionType === "letter" ? "starting_letter" : sectionType;
-      filterState.setFilter(filterType as FilterType, navigationItem.value);
+      filterState.setFilter(
+        filterType as GalleryFilterType,
+        navigationItem.value
+      );
 
       // Update the coordinator's displayed sequences
       await coordinator.applyFilter(
-        filterType as FilterType,
+        filterType as GalleryFilterType,
         navigationItem.value
       );
 

@@ -5,7 +5,8 @@
  * Supports both individual page and multi-page PDF generation.
  */
 
-import type { ExportResult, PDFExportOptions, Page } from "$shared/domain";
+import type { ExportResult } from "$shared/domain";
+import type { Page } from "../../../../word-card/domain";
 
 // ============================================================================
 // PDF EXPORT SERVICES
@@ -20,13 +21,13 @@ export interface IPDFExportService {
    */
   exportPagesToPDF(
     pages: Page[],
-    options: PDFExportOptions
+    options: any
   ): Promise<ExportResult>;
 
   /**
    * Export individual page as PDF
    */
-  exportPageToPDF(page: Page, options: PDFExportOptions): Promise<ExportResult>;
+  exportPageToPDF(page: Page, options: any): Promise<ExportResult>;
 
   /**
    * Get PDF generation capabilities
@@ -40,10 +41,10 @@ export interface IPDFExportService {
   /**
    * Validate PDF export options
    */
-  validatePDFOptions(options: PDFExportOptions): boolean;
+  validatePDFOptions(options: any): boolean;
 
   /**
    * Get recommended PDF settings
    */
-  getRecommendedPDFSettings(pageCount: number): PDFExportOptions;
+  getRecommendedPDFSettings(pageCount: number): any;
 }

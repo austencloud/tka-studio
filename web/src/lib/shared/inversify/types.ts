@@ -16,11 +16,15 @@ export const TYPES = {
   IPersistenceService: Symbol.for("IPersistenceService"),
   ISettingsService: Symbol.for("ISettingsService"),
   IDeviceDetector: Symbol.for("IDeviceDetector"),
+  IResourceTracker: Symbol.for("IResourceTracker"),
   IPanelManagementService: Symbol.for("IPanelManagementService"),
 
   // === BUILD TAB SERVICES ===
   IBuildTabService: Symbol.for("IBuildTabService"),
-
+  IQuizSessionService: Symbol.for("IQuizSessionService"),
+  // === WRITE TAB SERVICES ===
+  IActService: Symbol.for("IActService"),
+  IMusicPlayerService: Symbol.for("IMusicPlayerService"),
   // === OPTION PICKER SERVICES ===
   IOptionPickerLayoutService: Symbol.for("IOptionPickerLayoutService"),
   IOptionPickerDataService: Symbol.for("IOptionPickerDataService"),
@@ -38,7 +42,7 @@ export const TYPES = {
   IArrowPositioningOrchestrator: Symbol.for("IArrowPositioningOrchestrator"),
   IArrowPositioningService: Symbol.for("IArrowPositioningService"),
   IArrowAdjustmentCalculator: Symbol.for("IArrowAdjustmentCalculator"),
-  IPositionMapper: Symbol.for("IPositionMapper"),
+  IGridPositionDeriver: Symbol.for("IGridPositionDeriver"),
   IPositionCalculatorService: Symbol.for("IPositionCalculatorService"),
   IBetaOffsetCalculator: Symbol.for("IBetaOffsetCalculator"),
   IOrientationCalculationService: Symbol.for("IOrientationCalculationService"),
@@ -58,7 +62,7 @@ export const TYPES = {
   ISectionService: Symbol.for("ISectionService"),
   ISequenceIndexService: Symbol.for("ISequenceIndexService"),
   IFilterPersistenceService: Symbol.for("IFilterPersistenceService"),
-
+  IGalleryPanelManager: Symbol.for("IGalleryPanelManager"),
   // === WORKBENCH SERVICES ===
   IWorkbenchService: Symbol.for("IWorkbenchService"),
   IWorkbenchCoordinationService: Symbol.for("IWorkbenchCoordinationService"),
@@ -108,7 +112,7 @@ export const TYPES = {
   IPictographTransformationService: Symbol.for(
     "IPictographTransformationService"
   ),
-  ICodexCodexLetterMappingRepo: Symbol.for("ICodexCodexLetterMappingRepo"),
+  ICodexLetterMappingRepo: Symbol.for("ICodexLetterMappingRepo"),
   IOptionFilterer: Symbol.for("IOptionFilterer"),
 
   // === ANIMATOR SERVICES ===
@@ -212,7 +216,7 @@ export const RenderingTypes = {
 
 export const PositioningTypes = {
   IArrowPositioningOrchestrator: TYPES.IArrowPositioningOrchestrator,
-  IPositionMapper: TYPES.IPositionMapper,
+  IGridPositionDeriver: TYPES.IGridPositionDeriver,
   IPositionCalculatorService: TYPES.IPositionCalculatorService,
   IArrowPositioningService: TYPES.IArrowPositioningService,
   IBetaOffsetCalculator: TYPES.IBetaOffsetCalculator,

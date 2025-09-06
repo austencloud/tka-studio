@@ -1,18 +1,15 @@
 <script lang="ts">
-  import type {
-    FilterType,
-    GalleryFilterValue,
-    SequenceData,
-  } from "$shared/domain";
-  import { GallerySortMethod } from "$shared/domain";
+  import type { SequenceData } from "$shared/domain";
   import { resolve, TYPES } from "$shared/inversify";
   import { onMount } from "svelte";
-  import type { IGalleryThumbnailService } from "../../services/contracts";
-  import { getBrowseTabStateManager } from "../../state";
-  import SequenceBrowserControls from "./SequenceBrowserControls.svelte";
-  import SequenceBrowserFooter from "./SequenceBrowserFooter.svelte";
-  import SequenceGrid from "./SequenceBrowserGrid.svelte";
-  import SequenceBrowserStates from "./SequenceBrowserStates.svelte";
+  import type { GalleryFilterType, GalleryFilterValue } from "../domain";
+  import { GallerySortMethod } from "../domain";
+  import type { IGalleryThumbnailService } from "../services/contracts";
+  import { getGalleryStateManager } from "../state/gallery-state-services.svelte";
+  import SequenceBrowserControls from "./GalleryControls.svelte";
+  import SequenceBrowserFooter from "./GalleryFooter.svelte";
+  import SequenceGrid from "./GalleryGrid.svelte";
+  import SequenceBrowserStates from "./GalleryStates.svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {
@@ -21,7 +18,7 @@
     onBackToFilters = () => {},
     onAction = () => {},
   } = $props<{
-    filter?: { type: FilterType; value: GalleryFilterValue } | null;
+    filter?: { type: GalleryFilterType; value: GalleryFilterValue } | null;
     sequences?: SequenceData[];
     isLoading?: boolean;
     onBackToFilters?: () => void;
@@ -32,7 +29,7 @@
   const thumbnailService = resolve<IGalleryThumbnailService>(
     TYPES.IGalleryThumbnailService
   );
-  const stateManager = getBrowseTabStateManager();
+  const stateManager = getGalleryStateManager();
 
   // ✅ PURE RUNES: State using runes with persistence
   let sortBy = $state<GallerySortMethod>(GallerySortMethod.ALPHABETICAL);

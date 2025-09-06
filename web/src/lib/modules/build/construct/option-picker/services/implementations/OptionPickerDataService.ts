@@ -5,15 +5,16 @@
  * for the option picker component.
  */
 
-import type { IGridPositionDeriver, IMotionQueryHandler, IOptionPickerDataService } from "$services";
 import type { PictographData } from "$shared/domain";
+import type { IMotionQueryHandler } from "$shared/foundation/services/contracts/data/data-interfaces";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
+import type { IOptionPickerDataService } from "../contracts";
 
 @injectable()
 export class OptionPickerDataService implements IOptionPickerDataService {
   constructor(
-    @inject(TYPES.IPositionMapper) private positionMapper: IGridPositionDeriver,
+    @inject(TYPES.IGridPositionDeriver) private positionMapper: any,
     @inject(TYPES.IMotionQueryHandler)
     private MotionQueryHandler: IMotionQueryHandler
   ) {}

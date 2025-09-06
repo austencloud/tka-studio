@@ -1,0 +1,471 @@
+# The Kinetic Alphabet Knowledge Base
+# Version 0.5 - Based on Austen Cloud's notation system
+
+metadata:
+  version: "0.5"
+  author: "Austen Cloud"
+  description: "Notation system for choreographing flow arts movements with staves/double staves"
+  grid_system: "4-point diamond/box grid"
+
+# Core Concepts
+grid:
+  modes:
+    diamond: "Primary mode used in this guide"
+    box: "Alternative mode, everything translates"
+    eight_point: "Combination of diamond and box"
+  
+  points:
+    center: "Hub that everything revolves around"
+    hand_points: "Four points halfway between center and outer points"
+    outer_points: "Depict outer edges of the grid"
+
+# Hand Positions (Alpha, Beta, Gamma)
+positions:
+  alpha:
+    symbol: "α"
+    description: "Hands occupy points across from each other"
+    variations: ["vertical", "horizontal", "diagonal rotations"]
+    
+  beta:
+    symbol: "β" 
+    description: "Hands occupy the same point"
+    variations: ["top", "bottom", "left", "right"]
+    
+  gamma:
+    symbol: "Γ"
+    description: "Hands form a right angle"
+    variations: ["quarter-opp", "quarter-same"]
+    modes:
+      quarter_opp:
+        parallel: true
+        antiparallel: true
+      quarter_same:
+        parallel: false
+        antiparallel: false
+
+# Motion Types (6 fundamental types)
+motion_types:
+  type_1:
+    name: "Dual-Shift"
+    description: "Both hands travel to adjacent points"
+    timing_modes: ["Split-Same", "Tog-Same", "Split-Opp", "Tog-Opp"]
+    
+  type_2:
+    name: "Shift"
+    description: "One hand travels to adjacent point, other remains static"
+    categories: ["opening", "closing"]
+    
+  type_3:
+    name: "Cross-Shift"
+    description: "One hand shifts, other dashes"
+    note: "Dash moves slightly faster due to longer distance"
+    
+  type_4:
+    name: "Dash"
+    description: "One hand travels to opposite point, other remains static"
+    
+  type_5:
+    name: "Dual-Dash"
+    description: "Both hands travel to opposite points"
+    
+  type_6:
+    name: "Static"
+    description: "Both hands remain still for a beat"
+    note: "Becomes complex when adding prop rotations"
+
+# Staff Motions
+staff_motions:
+  prospin:
+    description: "Prop rotates same direction as handpath"
+    base_unit: "90 degree isolation"
+    thumb_orientation: "remains same"
+    
+  antispin:
+    description: "Prop rotates opposite direction of handpath"
+    base_unit: "90 degree antispin"
+    thumb_orientation: "ends swap (in->out, out->in)"
+
+# Letters by Type
+letters:
+  type_1:
+    # Alpha->Alpha (Split-Same)
+    A:
+      motion_type: "Dual-Shift"
+      start_position: "alpha"
+      end_position: "alpha"
+      handpath: "Split-Same"
+      rotation: "prospin"
+      pattern: "Pro - Anti - Hybrid"
+      
+    B:
+      motion_type: "Dual-Shift"
+      start_position: "alpha"
+      end_position: "alpha"
+      handpath: "Split-Same"
+      rotation: "antispin"
+      
+    C:
+      motion_type: "Dual-Shift"
+      start_position: "alpha"
+      end_position: "alpha"
+      handpath: "Split-Same"
+      rotation: "hybrid"
+      note: "Either hand can be prospin or antispin"
+      
+    # Beta->Beta (Tog-Same)
+    G:
+      motion_type: "Dual-Shift"
+      start_position: "beta"
+      end_position: "beta"
+      handpath: "Tog-Same"
+      rotation: "prospin"
+      
+    H:
+      motion_type: "Dual-Shift"
+      start_position: "beta"
+      end_position: "beta"
+      handpath: "Tog-Same"
+      rotation: "antispin"
+      
+    I:
+      motion_type: "Dual-Shift"
+      start_position: "beta"
+      end_position: "beta"
+      handpath: "Tog-Same"
+      rotation: "hybrid"
+      
+    # Compound Letters (Alpha<->Beta)
+    D:
+      motion_type: "Dual-Shift"
+      start_position: "beta"
+      end_position: "alpha"
+      handpath: "Tog-Opp"
+      rotation: "isolation"
+      combines_with: ["J"]
+      
+    E:
+      motion_type: "Dual-Shift"
+      start_position: "beta"
+      end_position: "alpha"
+      handpath: "Tog-Opp"
+      rotation: "antispin"
+      combines_with: ["K"]
+      
+    F:
+      motion_type: "Dual-Shift"
+      start_position: "beta"
+      end_position: "alpha"
+      handpath: "Tog-Opp"
+      rotation: "hybrid"
+      combines_with: ["L"]
+      
+    J:
+      motion_type: "Dual-Shift"
+      start_position: "alpha"
+      end_position: "beta"
+      handpath: "Split-Opp"
+      rotation: "isolation"
+      combines_with: ["D"]
+      
+    K:
+      motion_type: "Dual-Shift"
+      start_position: "alpha"
+      end_position: "beta"
+      handpath: "Split-Opp"
+      rotation: "antispin"
+      combines_with: ["E"]
+      
+    L:
+      motion_type: "Dual-Shift"
+      start_position: "alpha"
+      end_position: "beta"
+      handpath: "Split-Opp"
+      rotation: "hybrid"
+      combines_with: ["F"]
+      
+    # Gamma Letters (Quarter-Opp)
+    M:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Opp"
+      rotation: "isolation"
+      combines_with: ["P", "N", "Q", "O", "R"]
+      
+    N:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Opp"
+      rotation: "antispin"
+      combines_with: ["Q", "M", "P", "O", "R"]
+      
+    O:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Opp"
+      rotation: "hybrid"
+      combines_with: ["R", "M", "P", "N", "Q"]
+      
+    P:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Opp"
+      rotation: "isolation"
+      combines_with: ["M", "N", "Q", "O", "R"]
+      
+    Q:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Opp"
+      rotation: "antispin"
+      combines_with: ["N", "M", "P", "O", "R"]
+      
+    R:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Opp"
+      rotation: "hybrid"
+      combines_with: ["O", "M", "P", "N", "Q"]
+      
+    # Gamma Letters (Quarter-Same)
+    S:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Same"
+      rotation: "isolation"
+      leading_hand: "isolation"
+      self_combines: true
+      
+    T:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Same"
+      rotation: "antispin"
+      leading_hand: "antispin"
+      self_combines: true
+      
+    U:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Same"
+      rotation: "isolation"
+      leading_hand: "isolation"
+      note: "Round motion like letter U"
+      self_combines: true
+      
+    V:
+      motion_type: "Dual-Shift"
+      start_position: "gamma"
+      end_position: "gamma"
+      handpath: "Quarter-Same"
+      rotation: "antispin"
+      leading_hand: "antispin"
+      note: "Spiky motion like letter V"
+      self_combines: true
+
+  type_2:
+    # Shift motions
+    W:
+      motion_type: "Shift"
+      start_position: "gamma"
+      end_position: "alpha"
+      category: "open"
+      
+    X:
+      motion_type: "Shift"
+      start_position: "gamma"
+      end_position: "alpha"
+      category: "open"
+      
+    Y:
+      motion_type: "Shift"
+      start_position: "gamma"
+      end_position: "beta"
+      category: "close"
+      
+    Z:
+      motion_type: "Shift"
+      start_position: "gamma"
+      end_position: "beta"
+      category: "close"
+      
+    Sigma:
+      symbol: "Σ"
+      motion_type: "Shift"
+      start_position: "alpha"
+      end_position: "gamma"
+      category: "close"
+      
+    Delta:
+      symbol: "Δ"
+      motion_type: "Shift"
+      start_position: "alpha"
+      end_position: "gamma"
+      category: "close"
+      
+    Theta:
+      symbol: "θ"
+      motion_type: "Shift"
+      start_position: "beta"
+      end_position: "gamma"
+      category: "open"
+      
+    Omega:
+      symbol: "Ω"
+      motion_type: "Shift"
+      start_position: "beta"
+      end_position: "gamma"
+      category: "open"
+
+  type_3:
+    # Cross-Shift (use same letters as Type 2 with dash suffix)
+    note: "Cross-shifts use Type 2 letters followed by dash (-)"
+    examples: ["W-", "X-", "Σ-", "Δ-", "Y-", "Z-", "θ-", "Ω-"]
+
+  type_4:
+    # Dash
+    Phi:
+      symbol: "Φ"
+      motion_type: "Dash"
+      start_position: "beta"
+      end_position: "alpha"
+      
+    Psi:
+      symbol: "Ψ"
+      motion_type: "Dash"
+      start_position: "alpha"
+      end_position: "beta"
+      
+    Lambda:
+      symbol: "Λ"
+      motion_type: "Dash"
+      start_position: "gamma"
+      end_position: "gamma"
+      short_name: "Lam"
+
+  type_5:
+    # Dual-Dash (use Type 4 letters with dash suffix)
+    examples: ["Φ-", "Ψ-", "Λ-"]
+
+  type_6:
+    # Static
+    static_alpha:
+      symbol: "α"
+      motion_type: "Static"
+      position: "alpha"
+      
+    static_beta:
+      symbol: "β"
+      motion_type: "Static"
+      position: "beta"
+      
+    static_gamma:
+      symbol: "Γ"
+      motion_type: "Static"
+      position: "gamma"
+
+# Word Combinations
+words:
+  simple_alpha_beta:
+    - name: "AA"
+      description: "Split-Same prospin sequence"
+    - name: "BB"
+      description: "Split-Same antispin sequence"
+    - name: "CC"
+      description: "Split-Same hybrid sequence"
+    - name: "GG"
+      description: "Tog-Same prospin sequence"
+    - name: "HH"
+      description: "Tog-Same antispin sequence"
+    - name: "II"
+      description: "Tog-Same hybrid sequence"
+      
+  compound_words:
+    - name: "DJ"
+      mnemonic: "Disco Jam"
+      type: "compound"
+    - name: "EK"
+      mnemonic: "Exploding Kitten"
+      type: "compound"
+    - name: "FL"
+      mnemonic: "Fruity Loops"
+      type: "compound"
+      
+  gamma_words:
+    - name: "MP"
+      mnemonic: "Magic Potion"
+    - name: "NQ"
+      mnemonic: "Never Quit"
+    - name: "OR"
+      mnemonic: "Open Road"
+
+# CAPs (Continuous Assembly Patterns)
+caps:
+  types:
+    mirrored:
+      description: "Second repetition reflects the first"
+      changes: "rotation direction"
+      
+    rotated:
+      description: "Each repetition ends in rotated variation"
+      typical_rotation: "90 degrees"
+      
+    swapped:
+      description: "Each repetition swaps roles of right/left hands"
+      effect: "Changes body motion significantly"
+
+# Reversals
+reversals:
+  hand_reversal:
+    description: "Hand returns to previous point, prop continues direction"
+    effect: "Changes prospin to antispin and vice-versa"
+    disruption: "Least disruptive"
+    
+  prop_reversal:
+    description: "Hand continues to next point, prop reverses direction"
+    notation: "R/R in corresponding color"
+    effect: "Changes prospin to antispin and vice-versa"
+    
+  full_reversal:
+    description: "Both prop and hand retrace paths"
+    notation: "R/R indicates prop reversal component"
+    effect: "Return to previous position like going backwards in time"
+
+# Execution Notes
+execution:
+  negative_space:
+    description: "Pass prop through space around body"
+    benefit: "Face audience, reduce body movement"
+    
+  body_turns:
+    description: "Turn torso to execute patterns"
+    benefit: "Add movement, handle longer staves"
+    
+  thumb_orientation:
+    importance: "Track rotations and check position on every beat"
+    variations: ["thumbs in", "thumbs out", "mixed"]
+    
+  finger_spinning:
+    recommendation: "Avoid - use negative space and body turns instead"
+    reason: "Maintains precision and tracking ability"
+
+# Technical References
+vtg_references:
+  - "VTG 1:1 motions"
+  - "360° Isolation"
+  - "4-Petal Antispin"
+  - "Zan's Diamond variations (created by Cross-Shifts)"
+
+siteswap_influence:
+  description: "Juggling notation influence on timing and sequence structure"
+
+musical_notation_influence:
+  description: "Beat-based structure and timing concepts"

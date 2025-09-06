@@ -6,19 +6,19 @@
  * Follows TKA architecture: services handle business logic, runes handle reactivity.
  */
 
-import type { PictographData } from "$domain";
-import { Letter } from "$domain";
-import type { IPictographGenerator } from "$services";
-import { resolve, TYPES } from "$shared/inversify/container";
+import { container } from "../../../../shared/inversify";
+import { type PictographData, Letter } from "../../../../shared/domain";
+import { TYPES } from "../../../../shared/inversify";
+import type { IPictographGenerator } from "../services/contracts/generate-contracts";
 
 /**
  * Creates reactive state for pictograph generation
  */
 export function createPictographGenerationState() {
   // Get services from DI container
-  const pictographGenerator = resolve(
+  const pictographGenerator = container.get<IPictographGenerator>(
     TYPES.IPictographGenerator
-  ) as IPictographGenerator;
+  );
 
   // Core reactive state
   let isGenerating = $state(false);

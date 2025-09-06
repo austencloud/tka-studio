@@ -4,12 +4,9 @@
  * Interface for managing sequence state operations.
  */
 
-import type {
-  BeatData,
-  SequenceData,
-  SequenceStatistics,
-  ValidationResult,
-} from "$domain";
+import type { SequenceData, ValidationResult } from "../../../../../shared/domain";
+import type { BeatData } from "../../domain";
+
 
 export interface ISequenceStateService {
   // Sequence management
@@ -56,5 +53,5 @@ export interface ISequenceStateService {
   // Validation and utilities
   generateSequenceWord(sequence: SequenceData): string;
   calculateSequenceDuration(sequence: SequenceData): number;
-  getSequenceStatistics(sequence: SequenceData): SequenceStatistics;
+  getSequenceStatistics(sequence: SequenceData): any;
 }

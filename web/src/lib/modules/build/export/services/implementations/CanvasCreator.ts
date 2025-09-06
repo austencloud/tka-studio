@@ -5,12 +5,12 @@
  * Provides centralized canvas management functionality.
  */
 
-import type {
-  IDimensionCalculationService,
-  ILayoutCalculationService,
-} from "$services";
-import type { LayoutData, SequenceData, SequenceExportOptions } from "$shared/domain";
-import { CompositionUtils, type ValidationResult } from "./CompositionTypes";
+import type { SequenceData } from "../../../../../shared/domain";
+import type { LayoutData, SequenceExportOptions } from "../../domain/models";
+import type { IDimensionCalculationService, ILayoutCalculationService } from "../contracts";
+import type { ValidationResult } from "./CompositionTypes";
+import { CompositionUtils } from "./CompositionTypes";
+
 
 export class CanvasCreator {
   constructor(

@@ -9,8 +9,8 @@
  * ensure identical image dimensions and beat positioning.
  */
 
-import type { ILayoutCalculationService } from "$services";
 import { injectable } from "inversify";
+import type { ILayoutCalculationService } from "../contracts";
 
 @injectable()
 export class LayoutCalculationService implements ILayoutCalculationService {

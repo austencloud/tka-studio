@@ -8,10 +8,10 @@
  * across components, providing a clean separation of concerns.
  */
 
-import type { IBuildTabService, IStartPositionService } from "$services";
 import type { BeatData, PictographData } from "$shared/domain";
-import { TYPES } from "$shared/inversify/types";
-import { inject, injectable } from "inversify";
+import { injectable } from "inversify";
+// import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
+import type { IBuildTabService } from "../contracts";
 // IStartPositionSelectionService removed - using unified service
 import { constructTabEventService } from "./BuildTabEventService";
 
@@ -21,8 +21,8 @@ export class BuildTabService implements IBuildTabService {
   private tabStates: Map<string, unknown> = new Map();
 
   constructor(
-    @inject(TYPES.IStartPositionService)
-    private readonly startPositionService: IStartPositionService
+    // @inject(TYPES.IStartPositionService)
+    // private readonly startPositionService: IStartPositionService
 
     // Start position selection now handled by unified service
   ) {}
@@ -42,7 +42,7 @@ export class BuildTabService implements IBuildTabService {
         redReversal: false,
         isBlank: false,
       };
-      await this.startPositionService.setStartPosition(beatData);
+      // await this.startPositionService.setStartPosition(beatData);
 
       console.log("✅ BuildTabService: Start position selected successfully");
     } catch (error) {

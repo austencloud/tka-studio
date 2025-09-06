@@ -8,20 +8,20 @@
  */
 
 import type {
-    DPIConfiguration,
-    GridCalculationOptions,
-    LayoutCalculationRequest,
-    LayoutCalculationResult,
-    LayoutValidationError,
-    LayoutValidationResult,
-    LayoutValidationWarning,
-    PageDimensions,
-    PageLayoutConfig,
-    PageMargins,
-    PageOrientation,
-    Rectangle,
-    WordCardGridConfig,
-    WordCardPaperSize,
+  DPIConfiguration,
+  GridCalculationOptions,
+  LayoutCalculationRequest,
+  LayoutCalculationResult,
+  LayoutValidationError,
+  LayoutValidationResult,
+  LayoutValidationWarning,
+  PageDimensions,
+  PageLayoutConfig,
+  PageMargins,
+  PageOrientation,
+  Rectangle,
+  WordCardGridConfig,
+  WordCardPaperSize,
 } from "$shared/domain";
 import { injectable } from "inversify";
 import type { IPrintablePageLayoutService } from "../contracts";
@@ -224,11 +224,6 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
     );
 
     const cardsPerPage = gridConfig.rows * gridConfig.columns;
-    const pagesNeeded = Math.ceil((request.sequenceCount || 0) / cardsPerPage);
-    const cardDimensions = {
-      width: gridConfig.cardWidth,
-      height: gridConfig.cardHeight,
-    };
 
     // Calculate utilization
     const cardArea = gridConfig.cardWidth * gridConfig.cardHeight;
@@ -273,7 +268,7 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
     const warnings: LayoutValidationWarning[] = [];
 
     // Validate margins
-    const margins = config.printConfiguration.margins;
+    const margins = config.printConfig.margins;
     if (
       margins.top < 0 ||
       margins.right < 0 ||
@@ -311,8 +306,8 @@ export class PrintablePageLayoutService implements IPrintablePageLayoutService {
 
     // Check if margins are too large
     const pageDimensions = this.calculatePageDimensions(
-      config.printConfiguration.paperSize,
-      config.printConfiguration.orientation
+      config.printConfig.paperSize,
+      config.printConfig.orientation
     );
     const totalMarginWidth = margins.left + margins.right;
     const totalMarginHeight = margins.top + margins.bottom;

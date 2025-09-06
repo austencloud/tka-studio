@@ -5,4 +5,4 @@
  */
 
 // Word card interfaces
-export * from "./word-card-interfaces";
+export * from "./word-card-contracts";

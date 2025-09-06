@@ -4,10 +4,11 @@
  * Tests the new simplified beta positioning architecture
  */
 
+import { PropPlacementService } from "$lib/shared/pictograph/services/implementations/positioning/PropPlacementService";
 import {
+  GridLocation,
   GridPosition,
   Letter,
-  Location,
   MotionColor,
   MotionType,
   Orientation,
@@ -15,8 +16,7 @@ import {
   RotationDirection,
   createMotionData,
   createPictographData,
-} from "$domain";
-import { PropPlacementService } from "$implementations";
+} from "$shared/domain";
 
 // Test the new simplified beta positioning
 async function testBetaPositioning() {
@@ -28,8 +28,8 @@ async function testBetaPositioning() {
     motions: {
       blue: createMotionData({
         motionType: MotionType.STATIC,
-        startLocation: Location.NORTH,
-        endLocation: Location.SOUTH, // Both props end at same location
+        startLocation: GridLocation.NORTH,
+        endLocation: GridLocation.SOUTH, // Both props end at same location
         startOrientation: Orientation.OUT,
         endOrientation: Orientation.IN,
         rotationDirection: RotationDirection.NO_ROTATION,
@@ -37,12 +37,12 @@ async function testBetaPositioning() {
         isVisible: true,
         color: MotionColor.BLUE,
         propType: PropType.STAFF,
-        arrowLocation: Location.NORTH, // Will be calculated by positioning system
+        arrowLocation: GridLocation.NORTH, // Will be calculated by positioning system
       }),
       red: createMotionData({
         motionType: MotionType.STATIC,
-        startLocation: Location.NORTH,
-        endLocation: Location.SOUTH, // Both props end at same location
+        startLocation: GridLocation.NORTH,
+        endLocation: GridLocation.SOUTH, // Both props end at same location
         startOrientation: Orientation.OUT,
         endOrientation: Orientation.IN,
         rotationDirection: RotationDirection.NO_ROTATION,
@@ -50,7 +50,7 @@ async function testBetaPositioning() {
         isVisible: true,
         color: MotionColor.RED,
         propType: PropType.STAFF,
-        arrowLocation: Location.NORTH, // Will be calculated by positioning system
+        arrowLocation: GridLocation.NORTH, // Will be calculated by positioning system
       }),
     },
     startPosition: GridPosition.BETA1,

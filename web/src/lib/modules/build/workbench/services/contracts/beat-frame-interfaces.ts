@@ -8,11 +8,10 @@
 // CONFIGURATION TYPES
 // ============================================================================
 import type {
-    BeatData,
-    BeatFrameConfig,
-    ContainerDimensions,
-    LayoutInfo,
-    Position,
+  BeatData,
+  BeatFrameConfig,
+  ContainerDimensions,
+  LayoutInfo,
 } from "../../domain";
 
 // ============================================================================
@@ -25,8 +24,8 @@ export interface IBeatFrameService {
     index: number,
     beatCount?: number,
     config?: BeatFrameConfig
-  ): Position;
-  calculateStartPosition(beatCount: number, config?: BeatFrameConfig): Position;
+  ): any;
+  calculateStartPosition(beatCount: number, config?: BeatFrameConfig): any;
   calculateFrameDimensions(
     beatCount: number,
     config?: BeatFrameConfig

@@ -2,4 +2,4 @@
  * Construct Contracts
  */
 
-export * from "./IConstructTabCoordinator";
+export * from "./IConstructCoordinator";

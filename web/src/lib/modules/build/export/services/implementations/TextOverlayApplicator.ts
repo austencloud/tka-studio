@@ -5,20 +5,10 @@
  * Manages text positioning and rendering within the composition layout.
  */
 
-import type {
-  LayoutData,
-  SequenceExportOptions,
-  TextRenderOptions,
-  UserInfo,
-} from "$build/domain";
-import type { SequenceData } from "$shared/domain";
+import type { SequenceData } from "../../../../../shared/domain";
+import type { LayoutData, SequenceExportOptions, TextRenderOptions } from "../../domain/models";
+import type { IDifficultyBadgeRenderer, ITextRenderingUtils, IUserInfoRenderer, IWordTextRenderer } from "../contracts";
 
-import type {
-  IDifficultyBadgeRenderer,
-  ITextRenderingUtils,
-  IUserInfoRenderer,
-  IWordTextRenderer,
-} from "$services";
 
 export class TextOverlayApplicator {
   constructor(
@@ -78,7 +68,7 @@ export class TextOverlayApplicator {
     options: SequenceExportOptions,
     textOptions: TextRenderOptions
   ): void {
-    const userInfo: UserInfo = {
+    const userInfo: any = {
       userName: options.userName,
       notes: options.notes,
       exportDate: options.exportDate,

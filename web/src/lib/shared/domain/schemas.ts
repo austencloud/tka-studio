@@ -12,17 +12,17 @@
 
 import { z } from "zod";
 import {
+  GridLocation,
   GridMode,
   GridPosition,
   GridPositionGroup,
-  Letter,
-  Location,
   MotionColor,
   MotionType,
   Orientation,
   PropType,
   RotationDirection,
 } from "./enums/enums";
+import { Letter } from "./enums/Letter";
 
 // ============================================================================
 // COORDINATE AND PLACEMENT SCHEMAS
@@ -61,14 +61,14 @@ const MotionDataSchema = z.object({
   rotationDirection: z
     .nativeEnum(RotationDirection)
     .default(RotationDirection.NO_ROTATION),
-  startLocation: z.nativeEnum(Location).default(Location.NORTH),
-  endLocation: z.nativeEnum(Location).default(Location.NORTH),
+  startLocation: z.nativeEnum(GridLocation).default(GridLocation.NORTH),
+  endLocation: z.nativeEnum(GridLocation).default(GridLocation.NORTH),
   turns: z.union([z.number(), z.literal("fl")]).default(0.0),
   startOrientation: z.nativeEnum(Orientation).default(Orientation.IN),
   endOrientation: z.nativeEnum(Orientation).default(Orientation.IN),
   isVisible: z.boolean().default(true),
   propType: z.nativeEnum(PropType).default(PropType.STAFF),
-  arrowLocation: z.nativeEnum(Location).default(Location.NORTH),
+  arrowLocation: z.nativeEnum(GridLocation).default(GridLocation.NORTH),
   color: z.nativeEnum(MotionColor).default(MotionColor.BLUE),
   arrowPlacementData: ArrowPlacementDataSchema.default({}),
   propPlacementData: PropPlacementDataSchema.default({}),

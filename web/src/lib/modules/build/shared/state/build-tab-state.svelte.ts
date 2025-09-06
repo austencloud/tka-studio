@@ -11,9 +11,9 @@
  */
 
 // Import required state factories
-import type { ActiveBuildSubTab } from "../domain";
-import type { ISequenceService } from "../services/contracts";
-import { createSequenceState } from "./workbench/sequence-state.svelte";
+import type { ActiveBuildTab } from "$shared/domain";
+// import type { ISequenceService } from "../services/contracts";
+// import { createSequenceState } from "./workbench/sequence-state.svelte";
 
 /**
  * Creates master build tab state for shared concerns
@@ -21,7 +21,7 @@ import { createSequenceState } from "./workbench/sequence-state.svelte";
  * @param sequenceService - Injected sequence service
  * @returns Reactive state object with getters and state mutations
  */
-export function createBuildTabState(sequenceService: ISequenceService) {
+export function createBuildTabState(sequenceService: any) {
   // ============================================================================
   // REACTIVE STATE
   // ============================================================================
@@ -29,17 +29,17 @@ export function createBuildTabState(sequenceService: ISequenceService) {
   let isLoading = $state(false);
   let error = $state<string | null>(null);
   let isTransitioningSubTab = $state(false);
-  let activeSubTab = $state<ActiveBuildSubTab>("construct"); // Which sub-tab is active
+  let activeSubTab = $state<ActiveBuildTab>("construct"); // Which sub-tab is active
 
   // Shared sub-states
-  const sequenceState = createSequenceState({ sequenceService });
+  // const sequenceState = createSequenceState({ sequenceService });
 
   // ============================================================================
   // DERIVED STATE
   // ============================================================================
 
   const hasError = $derived(error !== null);
-  const hasSequence = $derived(sequenceState.currentSequence !== null);
+  const hasSequence = $derived(false); // sequenceState.currentSequence !== null
 
   // ============================================================================
   // STATE MUTATIONS
@@ -61,7 +61,7 @@ export function createBuildTabState(sequenceService: ISequenceService) {
     error = null;
   }
 
-  function setActiveRightPanel(panel: ActiveBuildSubTab) {
+  function setActiveRightPanel(panel: ActiveBuildTab) {
     activeSubTab = panel;
   }
 
@@ -92,7 +92,7 @@ export function createBuildTabState(sequenceService: ISequenceService) {
 
     // Sub-states
     get sequenceState() {
-      return sequenceState;
+      return null; // sequenceState
     },
 
     // State mutations

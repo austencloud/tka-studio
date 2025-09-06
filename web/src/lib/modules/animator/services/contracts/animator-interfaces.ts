@@ -5,7 +5,7 @@
  */
 
 import type {
-  Location,
+  GridLocation,
   MotionColor,
   MotionData,
   MotionType,
@@ -25,15 +25,18 @@ export interface IMotionParameterService {
   ): AnimatedMotionParams;
 
   // Motion type calculations - now using enums
-  getMotionType(startLocation: Location, endLocation: Location): MotionType;
+  getMotionType(
+    startLocation: GridLocation,
+    endLocation: GridLocation
+  ): MotionType;
   getAvailableMotionTypes(
-    startLocation: Location,
-    endLocation: Location
+    startLocation: GridLocation,
+    endLocation: GridLocation
   ): MotionType[];
   calculateRotationDirection(
     motionType: MotionType,
-    startLocation: Location,
-    endLocation: Location
+    startLocation: GridLocation,
+    endLocation: GridLocation
   ): RotationDirection;
 
   // Data conversion - no enum mapping needed anymore

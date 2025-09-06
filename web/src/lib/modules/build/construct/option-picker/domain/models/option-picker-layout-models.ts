@@ -158,6 +158,25 @@ export interface ResponsiveLayoutConfig {
   scaleFactor: number;
 }
 
+// Generic layout calculation types
+export interface LayoutCalculationParams {
+  containerWidth: number;
+  containerHeight: number;
+  itemCount: number;
+  targetColumns?: number;
+  deviceType?: DeviceType;
+}
+
+export interface LayoutCalculationResult {
+  columns: number;
+  rows: number;
+  itemSize: number;
+  gap: string;
+  gridClass: string;
+  aspectClass: string;
+  scaleFactor: number;
+}
+
 // Re-export types for convenience
 export type { ContainerAspect, DeviceType, LayoutCategory };
 

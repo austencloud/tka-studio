@@ -5,15 +5,14 @@
  * and visual effects in the TKA image export system.
  */
 
-import type { SequenceData } from "$shared/domain";
+import type { BeatData, SequenceData } from "$shared/domain";
 import type {
-    BeatData,
     BeatRenderOptions,
     CompositionOptions,
     LayoutData,
     TextRenderOptions,
     UserInfo,
-} from "../../domain";
+} from "../../domain/models";
 
 // ============================================================================
 // RENDERING SERVICES
@@ -125,7 +124,7 @@ export interface IImageCompositionService {
    */
   composeSequenceImage(
     sequence: SequenceData,
-    options: ImageExportOptions
+    options: any // ImageExportOptions
   ): Promise<HTMLCanvasElement>;
 
   /**

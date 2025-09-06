@@ -4,7 +4,7 @@ import type {
     ExportProgress,
     SequenceExportOptions,
     SequenceExportResult
-} from "../../domain";
+} from "../../domain/models";
 
 export interface IBatchExportService {
   exportInBatches(

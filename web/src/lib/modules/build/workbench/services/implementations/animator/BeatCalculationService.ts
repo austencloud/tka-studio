@@ -7,7 +7,7 @@
 
 import type { BeatData } from "$shared/domain";
 import { injectable } from "inversify";
-import type { BeatCalculationResult, IBeatCalculationService } from "../contracts/animator/IBeatCalculationService";
+import type { BeatCalculationResult, IBeatCalculationService } from "../../contracts";
 
 @injectable()
 export class BeatCalculationService implements IBeatCalculationService {

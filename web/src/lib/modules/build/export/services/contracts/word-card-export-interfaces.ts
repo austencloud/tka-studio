@@ -6,14 +6,48 @@
 // ============================================================================
 // CORE TYPES
 // ============================================================================
-import type {
-  BatchExportProgress,
-  BatchOperationConfig,
-  WordCardDimensions,
-  WordCardExportResult,
-  WordCardMetadata
-} from "$build/domain";
 import type { SequenceData } from "$shared/domain";
+// import type {
+//   BatchExportProgress,
+//   BatchOperationConfig,
+//   WordCardDimensions,
+//   WordCardExportResult,
+//   WordCardMetadata
+// } from "../../../../word-card/domain";
+
+// Temporary interface definitions
+interface BatchExportProgress {
+  completed: number;
+  total: number;
+  currentItem?: string;
+  stage?: string;
+}
+
+interface BatchOperationConfig {
+  batchSize: number;
+  memoryThreshold: number;
+  enableProgressReporting: boolean;
+  enableCancellation: boolean;
+}
+
+interface WordCardDimensions {
+  width: number;
+  height: number;
+}
+
+interface WordCardExportResult {
+  success: boolean;
+  sequenceId: string;
+  error?: Error;
+}
+
+interface WordCardMetadata {
+  title?: string;
+  author?: string;
+  beatNumbers?: boolean;
+  timestamp?: boolean;
+  backgroundColor?: string;
+}
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)

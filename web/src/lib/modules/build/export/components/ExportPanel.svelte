@@ -3,8 +3,9 @@
   import { browser } from "$app/environment";
   import type { SequenceData } from "$shared/domain";
   import { resolve, TYPES } from "$shared/inversify";
-  import type { ITKAImageExportService } from "$services";
-  import { createImageExportState } from "../../state";
+  import type { ITKAImageExportService } from "../services/contracts";
+  import { createImageExportState } from "../state";
+
 
   import ExportActionsCard from "./ExportActionsCard.svelte";
   import ExportPreviewCard from "./ExportPreviewCard.svelte";

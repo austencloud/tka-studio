@@ -8,9 +8,11 @@
  * Critical: All calculations match desktop determine_additional_heights() exactly.
  */
 
-import type { IDimensionCalculationService } from "$services";
-import type { SequenceExportOptions } from "$shared/domain";
 import { injectable } from "inversify";
+import type { SequenceExportOptions } from "../../domain/models";
+import type { IDimensionCalculationService } from "../contracts";
+
+
 
 @injectable()
 export class DimensionCalculationService

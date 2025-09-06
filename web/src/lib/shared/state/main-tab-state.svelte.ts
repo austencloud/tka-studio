@@ -6,7 +6,7 @@
  */
 
 import { browser } from "$app/environment";
-import type { IBrowseStatePersister } from "$browse/services";
+import type { IBrowseStatePersister } from "../../modules/browse/gallery/services/implementations/BrowseStatePersister";
 import type { TabId } from "../domain";
 // TEMPORARY: Service interfaces commented out until container is restored
 import { resolve, TYPES } from "../inversify/container";

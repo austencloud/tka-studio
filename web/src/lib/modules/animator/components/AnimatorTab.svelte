@@ -9,29 +9,21 @@ Provides animation controls and visualization for sequences:
 -->
 <script lang="ts">
   import { resolve, TYPES } from "$shared/inversify/container";
-  import { onMount, onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
+// TEMPORARY: All service resolution commented out until container is restored
 
-  // TEMPORARY: All service resolution commented out until container is restored
-  // import type {
-  //   IAnimationControlService,
-  //   IMotionParameterService,
-  //   ISequenceAnimationEngine,
-  // } from "$services";
 
   // Import animation components
-  import AnimationControls from "./AnimationControls.svelte";
-  import AnimatorCanvas from "./AnimatorCanvas.svelte";
-  import AnimationPanel from "./AnimationPanel.svelte";
-  import SequenceInfo from "./SequenceInfo.svelte";
+  import type { IAnimationControlService, IMotionParameterService, ISequenceAnimationEngine } from "../services";
 
   // ============================================================================
   // SERVICE RESOLUTION - TEMPORARY DISABLED
   // ============================================================================
 
   // TEMPORARY: All service resolution commented out until container is restored
-  // const animationControlService = resolve(TYPES.IAnimationControlService) as IAnimationControlService;
-  // const motionParameterService = resolve(TYPES.IMotionParameterService) as IMotionParameterService;
-  // const animationEngine = resolve(TYPES.ISequenceAnimationEngine) as ISequenceAnimationEngine;
+  const animationControlService = resolve(TYPES.IAnimationControlService) as IAnimationControlService;
+  const motionParameterService = resolve(TYPES.IMotionParameterService) as IMotionParameterService;
+  const animationEngine = resolve(TYPES.ISequenceAnimationEngine) as ISequenceAnimationEngine;
 
   // ============================================================================
   // COMPONENT STATE - TEMPORARY PLACEHOLDERS
@@ -87,10 +79,11 @@ Provides animation controls and visualization for sequences:
 
     // TEMPORARY: All initialization commented out
     try {
-      // Initialize animation engine
-      // await animationEngine.initialize();
+      // Initialize animation engine with default sequence
+      // Note: Using initializeWithDomainData instead of initialize
+      // await animationEngine.initializeWithDomainData(defaultSequence);
 
-      // Load default sequence for animation
+      // Load default sequence for animation (method doesn't exist)
       // await animationEngine.loadSequence(defaultSequence);
 
       console.log("✅ AnimatorTab: Initialization complete (placeholder)");

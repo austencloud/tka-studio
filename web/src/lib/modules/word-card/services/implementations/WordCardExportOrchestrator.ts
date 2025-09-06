@@ -8,22 +8,65 @@
 // Domain types
 import type { SequenceData } from "$shared/domain";
 import type {
-  BatchExportProgress,
-  BatchOperationConfig,
-  WordCardDimensions,
-  WordCardExportResult,
-  WordCardMetadata,
-} from "$wordcard/domain";
-
-// Behavioral contracts
-import type {
   IWordCardBatchProcessingService,
-  IWordCardCacheService,
-  IWordCardExportOrchestrator,
   IWordCardExportProgressTracker,
   IWordCardImageConversionService,
   IWordCardImageGenerationService,
-} from "$services";
+} from "../../../build/export/services/contracts";
+import type {
+  IWordCardCacheService,
+  IWordCardExportOrchestrator,
+} from "../contracts";
+// import type {
+//   BatchExportProgress,
+//   BatchOperationConfig,
+//   ExportOptions,
+//   WordCardDimensions,
+//   WordCardExportResult,
+//   WordCardMetadata,
+// } from "$wordcard/domain";
+
+// Temporary interface definitions
+interface BatchExportProgress {
+  completed: number;
+  total: number;
+  currentItem?: string;
+  stage?: string;
+  current?: number;
+  message?: string;
+}
+
+interface BatchOperationConfig {
+  batchSize: number;
+  memoryThreshold: number;
+  enableProgressReporting: boolean;
+  enableCancellation: boolean;
+}
+
+interface ExportOptions {
+  format: string;
+  quality: string; // Changed to string to match domain interface
+  includeMetadata: boolean;
+}
+
+interface WordCardDimensions {
+  width: number;
+  height: number;
+}
+
+interface WordCardExportResult {
+  success: boolean;
+  sequenceId: string;
+  error?: Error;
+}
+
+interface WordCardMetadata {
+  title?: string;
+  author?: string;
+  beatNumbers?: boolean;
+  timestamp?: boolean;
+  backgroundColor?: string;
+}
 
 export class WordCardExportOrchestrator implements IWordCardExportOrchestrator {
   private currentOperationId: string | null = null;
@@ -35,6 +78,15 @@ export class WordCardExportOrchestrator implements IWordCardExportOrchestrator {
     private readonly progressTracker: IWordCardExportProgressTracker,
     private readonly cacheService: IWordCardCacheService
   ) {}
+  exportWordCards(
+    _sequences: SequenceData[],
+    _options: ExportOptions
+  ): Promise<WordCardExportResult[]> {
+    throw new Error("Method not implemented.");
+  }
+  getExportProgress(_operationId: string): BatchExportProgress {
+    throw new Error("Method not implemented.");
+  }
 
   /**
    * Export single word card
@@ -56,6 +108,7 @@ export class WordCardExportOrchestrator implements IWordCardExportOrchestrator {
         console.log(`🎯 Cache hit for sequence: ${sequenceId}`);
         return {
           success: true,
+          sequenceId: sequenceId,
           // metrics: { // Not available in WordCardExportResult
           //   processingTime: performance.now() - startTime,
           //   fileSize: cachedBlob.size,
@@ -81,7 +134,7 @@ export class WordCardExportOrchestrator implements IWordCardExportOrchestrator {
       await this.cacheService.storeImage(sequenceId, blob);
 
       const result: WordCardExportResult = {
-        // sequenceId, // Not available in WordCardExportResult
+        sequenceId: sequenceId,
         success: true,
         // blob, // Not available in WordCardExportResult
         // metrics: { // Not available in WordCardExportResult
@@ -98,7 +151,8 @@ export class WordCardExportOrchestrator implements IWordCardExportOrchestrator {
 
       return {
         success: false,
-        error: error instanceof Error ? error.message : String(error),
+        sequenceId: sequenceId,
+        error: error instanceof Error ? error : new Error(String(error)),
       };
     }
   }
@@ -142,9 +196,9 @@ export class WordCardExportOrchestrator implements IWordCardExportOrchestrator {
           // Update progress tracker
           this.progressTracker.updateProgress(
             operationId,
-            progress.current,
-            progress.message,
-            progress.stage
+            progress.current || progress.completed,
+            progress.message || "",
+            progress.stage || ""
           );
         }
       );

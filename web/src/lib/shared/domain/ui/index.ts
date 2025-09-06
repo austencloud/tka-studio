@@ -10,3 +10,16 @@ export * from "./backgrounds";
 
 // Core UI types
 export * from "./UITypes";
+
+// Background types (re-export for convenience)
+export type {
+  AccessibilitySettings,
+  BackgroundSystem,
+  Dimensions,
+  QualityLevel,
+  ShootingStar,
+  ShootingStarState,
+  Star,
+} from "./backgrounds/BackgroundTypes";
+
+export { BackgroundType } from "./backgrounds/BackgroundTypes";

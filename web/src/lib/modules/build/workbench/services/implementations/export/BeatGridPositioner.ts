@@ -5,16 +5,40 @@
  * Manages the rendering and placement of beats within the composition layout.
  */
 
-import type {
-    CompositionOptions,
-    LayoutData,
-    SequenceData,
-    SequenceExportOptions,
-} from "$shared/domain";
-import type { IBeatRenderingService } from "../contracts";
+import type { SequenceData } from "$shared/domain";
+// Temporary type definitions
+interface LayoutData {
+  beatCount: number;
+  canvasSize: [number, number];
+  layoutDimensions: [number, number];
+  beatSize: number;
+  spacing: number;
+  gridSize: [number, number];
+  rows: number;
+  columns: number;
+  additionalHeightTop: number;
+}
+
+interface SequenceExportOptions {
+  addBeatNumbers: boolean;
+  redVisible: boolean;
+  blueVisible: boolean;
+  combinedGrids: boolean;
+  beatScale: number;
+}
+
+interface CompositionOptions {
+  addBeatNumbers: boolean;
+  redVisible: boolean;
+  blueVisible: boolean;
+  combinedGrids: boolean;
+  beatScale: number;
+  includeStartPosition: boolean;
+}
+// import type { IBeatRenderingService } from "../../contracts";
 
 export class BeatGridPositioner {
-  constructor(private beatRenderer: IBeatRenderingService) {}
+  constructor(private beatRenderer: any) {}
 
   /**
    * Render all beats to individual canvases

@@ -1,4 +1,4 @@
-import { Location, Orientation } from "$domain";
+import { GridLocation, Orientation } from "$shared/domain";
 
 /**
  * PropRotAngleManager - Calculates prop rotation angles based on location and orientation
@@ -10,16 +10,16 @@ import { Location, Orientation } from "$domain";
  * @example
  * ```typescript
 * // Static usage (recommended)
- * const angle = PropRotAngleManager.calculateRotation(Location.NORTH, Orientation.IN);
+ * const angle = PropRotAngleManager.calculateRotation(GridLocation.NORTH, Orientation.IN);
  *
  * // Instance usage
- * const manager = new PropRotAngleManager({ location: Location.NORTH, orientation: Orientation.IN });
+ * const manager = new PropRotAngleManager({ location: GridLocation.NORTH, orientation: Orientation.IN });
  * const angle = manager.getRotationAngle();
  *
 ```
  */
 export class PropRotAngleManager {
-  private readonly location: Location;
+  private readonly location: GridLocation;
   private readonly orientation: Orientation;
 
   /**
@@ -28,32 +28,32 @@ export class PropRotAngleManager {
    */
   private static readonly DIAMOND_ANGLE_MAP: Record<
     Orientation,
-    Record<Location, number>
+    Record<GridLocation, number>
   > = {
     [Orientation.IN]: {
-      [Location.NORTH]: 90,
-      [Location.SOUTH]: 270,
-      [Location.WEST]: 0,
-      [Location.EAST]: 180,
-    } as Record<Location, number>,
+      [GridLocation.NORTH]: 90,
+      [GridLocation.SOUTH]: 270,
+      [GridLocation.WEST]: 0,
+      [GridLocation.EAST]: 180,
+    } as Record<GridLocation, number>,
     [Orientation.OUT]: {
-      [Location.NORTH]: 270,
-      [Location.SOUTH]: 90,
-      [Location.WEST]: 180,
-      [Location.EAST]: 0,
-    } as Record<Location, number>,
+      [GridLocation.NORTH]: 270,
+      [GridLocation.SOUTH]: 90,
+      [GridLocation.WEST]: 180,
+      [GridLocation.EAST]: 0,
+    } as Record<GridLocation, number>,
     [Orientation.CLOCK]: {
-      [Location.NORTH]: 0,
-      [Location.SOUTH]: 180,
-      [Location.WEST]: 270,
-      [Location.EAST]: 90,
-    } as Record<Location, number>,
+      [GridLocation.NORTH]: 0,
+      [GridLocation.SOUTH]: 180,
+      [GridLocation.WEST]: 270,
+      [GridLocation.EAST]: 90,
+    } as Record<GridLocation, number>,
     [Orientation.COUNTER]: {
-      [Location.NORTH]: 180,
-      [Location.SOUTH]: 0,
-      [Location.WEST]: 90,
-      [Location.EAST]: 270,
-    } as Record<Location, number>,
+      [GridLocation.NORTH]: 180,
+      [GridLocation.SOUTH]: 0,
+      [GridLocation.WEST]: 90,
+      [GridLocation.EAST]: 270,
+    } as Record<GridLocation, number>,
   };
 
   /**
@@ -62,49 +62,49 @@ export class PropRotAngleManager {
    */
   private static readonly BOX_ANGLE_MAP: Record<
     Orientation,
-    Record<Location, number>
+    Record<GridLocation, number>
   > = {
     [Orientation.IN]: {
-      [Location.NORTHEAST]: 135,
-      [Location.NORTHWEST]: 45,
-      [Location.SOUTHWEST]: 315,
-      [Location.SOUTHEAST]: 225,
-    } as Record<Location, number>,
+      [GridLocation.NORTHEAST]: 135,
+      [GridLocation.NORTHWEST]: 45,
+      [GridLocation.SOUTHWEST]: 315,
+      [GridLocation.SOUTHEAST]: 225,
+    } as Record<GridLocation, number>,
     [Orientation.OUT]: {
-      [Location.NORTHEAST]: 315,
-      [Location.NORTHWEST]: 225,
-      [Location.SOUTHWEST]: 135,
-      [Location.SOUTHEAST]: 45,
-    } as Record<Location, number>,
+      [GridLocation.NORTHEAST]: 315,
+      [GridLocation.NORTHWEST]: 225,
+      [GridLocation.SOUTHWEST]: 135,
+      [GridLocation.SOUTHEAST]: 45,
+    } as Record<GridLocation, number>,
     [Orientation.CLOCK]: {
-      [Location.NORTHEAST]: 45,
-      [Location.NORTHWEST]: 315,
-      [Location.SOUTHWEST]: 225,
-      [Location.SOUTHEAST]: 135,
-    } as Record<Location, number>,
+      [GridLocation.NORTHEAST]: 45,
+      [GridLocation.NORTHWEST]: 315,
+      [GridLocation.SOUTHWEST]: 225,
+      [GridLocation.SOUTHEAST]: 135,
+    } as Record<GridLocation, number>,
     [Orientation.COUNTER]: {
-      [Location.NORTHEAST]: 225,
-      [Location.NORTHWEST]: 135,
-      [Location.SOUTHWEST]: 45,
-      [Location.SOUTHEAST]: 315,
-    } as Record<Location, number>,
+      [GridLocation.NORTHEAST]: 225,
+      [GridLocation.NORTHWEST]: 135,
+      [GridLocation.SOUTHWEST]: 45,
+      [GridLocation.SOUTHEAST]: 315,
+    } as Record<GridLocation, number>,
   };
 
   /**
    * Set of diamond (cardinal) locations for efficient lookup
    */
   private static readonly DIAMOND_LOCATIONS = new Set([
-    Location.NORTH,
-    Location.EAST,
-    Location.SOUTH,
-    Location.WEST,
+    GridLocation.NORTH,
+    GridLocation.EAST,
+    GridLocation.SOUTH,
+    GridLocation.WEST,
   ]);
 
   constructor({
     location,
     orientation,
   }: {
-    location: Location;
+    location: GridLocation;
     orientation: Orientation;
   }) {
     this.location = location;
@@ -118,68 +118,68 @@ export class PropRotAngleManager {
   getRotationAngle(): number {
     // Check if it's a diamond location (cardinal directions)
     const diamondLocationValues = [
-      Location.NORTH,
-      Location.EAST,
-      Location.SOUTH,
-      Location.WEST,
+      GridLocation.NORTH,
+      GridLocation.EAST,
+      GridLocation.SOUTH,
+      GridLocation.WEST,
     ];
     const isDiamondLocation = diamondLocationValues.includes(this.location);
 
     const diamondAngleMap: Partial<
-      Record<Orientation, Partial<Record<Location, number>>>
+      Record<Orientation, Partial<Record<GridLocation, number>>>
     > = {
       [Orientation.IN]: {
-        [Location.NORTH]: 90,
-        [Location.SOUTH]: 270,
-        [Location.WEST]: 0,
-        [Location.EAST]: 180,
+        [GridLocation.NORTH]: 90,
+        [GridLocation.SOUTH]: 270,
+        [GridLocation.WEST]: 0,
+        [GridLocation.EAST]: 180,
       },
       [Orientation.OUT]: {
-        [Location.NORTH]: 270,
-        [Location.SOUTH]: 90,
-        [Location.WEST]: 180,
-        [Location.EAST]: 0,
+        [GridLocation.NORTH]: 270,
+        [GridLocation.SOUTH]: 90,
+        [GridLocation.WEST]: 180,
+        [GridLocation.EAST]: 0,
       },
       [Orientation.CLOCK]: {
-        [Location.NORTH]: 0,
-        [Location.SOUTH]: 180,
-        [Location.WEST]: 270,
-        [Location.EAST]: 90,
+        [GridLocation.NORTH]: 0,
+        [GridLocation.SOUTH]: 180,
+        [GridLocation.WEST]: 270,
+        [GridLocation.EAST]: 90,
       },
       [Orientation.COUNTER]: {
-        [Location.NORTH]: 180,
-        [Location.SOUTH]: 0,
-        [Location.WEST]: 90,
-        [Location.EAST]: 270,
+        [GridLocation.NORTH]: 180,
+        [GridLocation.SOUTH]: 0,
+        [GridLocation.WEST]: 90,
+        [GridLocation.EAST]: 270,
       },
     };
 
     const boxAngleMap: Partial<
-      Record<Orientation, Partial<Record<Location, number>>>
+      Record<Orientation, Partial<Record<GridLocation, number>>>
     > = {
       [Orientation.IN]: {
-        [Location.NORTHEAST]: 135,
-        [Location.NORTHWEST]: 45,
-        [Location.SOUTHWEST]: 315,
-        [Location.SOUTHEAST]: 225,
+        [GridLocation.NORTHEAST]: 135,
+        [GridLocation.NORTHWEST]: 45,
+        [GridLocation.SOUTHWEST]: 315,
+        [GridLocation.SOUTHEAST]: 225,
       },
       [Orientation.OUT]: {
-        [Location.NORTHEAST]: 315,
-        [Location.NORTHWEST]: 225,
-        [Location.SOUTHWEST]: 135,
-        [Location.SOUTHEAST]: 45,
+        [GridLocation.NORTHEAST]: 315,
+        [GridLocation.NORTHWEST]: 225,
+        [GridLocation.SOUTHWEST]: 135,
+        [GridLocation.SOUTHEAST]: 45,
       },
       [Orientation.CLOCK]: {
-        [Location.NORTHEAST]: 45,
-        [Location.NORTHWEST]: 315,
-        [Location.SOUTHWEST]: 225,
-        [Location.SOUTHEAST]: 135,
+        [GridLocation.NORTHEAST]: 45,
+        [GridLocation.NORTHWEST]: 315,
+        [GridLocation.SOUTHWEST]: 225,
+        [GridLocation.SOUTHEAST]: 135,
       },
       [Orientation.COUNTER]: {
-        [Location.NORTHEAST]: 225,
-        [Location.NORTHWEST]: 135,
-        [Location.SOUTHWEST]: 45,
-        [Location.SOUTHEAST]: 315,
+        [GridLocation.NORTHEAST]: 225,
+        [GridLocation.NORTHWEST]: 135,
+        [GridLocation.SOUTHWEST]: 45,
+        [GridLocation.SOUTHEAST]: 315,
       },
     };
 
@@ -193,7 +193,7 @@ export class PropRotAngleManager {
    * Static helper method for quick rotation calculation
    */
   static calculateRotation(
-    location: Location,
+    location: GridLocation,
     orientation: Orientation
   ): number {
     const manager = new PropRotAngleManager({

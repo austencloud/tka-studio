@@ -7,13 +7,22 @@
 
 import type { SequenceData } from "$shared/domain";
 import {
-    createSequenceData,
-    GridMode,
-    GridPositionGroup,
-    PropType,
+  createSequenceData,
+  GridMode,
+  GridPositionGroup,
+  PropType,
 } from "$shared/domain";
 import { injectable } from "inversify";
-import type { ISequenceIndexService } from "../contracts";
+// import type { ISequenceIndexService } from "../contracts";
+
+// Temporary interface definition
+interface ISequenceIndexService {
+  buildIndex(sequences: any[]): Promise<void>;
+  searchSequences(query: string): Promise<any[]>;
+  getSequencesByTag(tag: string): Promise<any[]>;
+  updateIndex(sequence: any): Promise<void>;
+  removeFromIndex(sequenceId: string): Promise<void>;
+}
 
 interface SearchIndex {
   wordIndex: Map<string, Set<string>>; // word -> sequence IDs
@@ -24,6 +33,23 @@ interface SearchIndex {
 
 @injectable()
 export class SequenceIndexService implements ISequenceIndexService {
+
+  async buildIndex(sequences: any[]): Promise<void> {
+    // TODO: Implement build index
+  }
+
+  async getSequencesByTag(tag: string): Promise<any[]> {
+    // TODO: Implement get sequences by tag
+    return [];
+  }
+
+  async updateIndex(sequence: any): Promise<void> {
+    // TODO: Implement update index
+  }
+
+  async removeFromIndex(sequenceId: string): Promise<void> {
+    // TODO: Implement remove from index
+  }
   private sequenceIndex: SequenceData[] | null = null;
   private searchIndex: SearchIndex | null = null;
   private sequenceMap = new Map<string, SequenceData>();

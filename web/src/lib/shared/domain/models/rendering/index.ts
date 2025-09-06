@@ -2,4 +2,4 @@
  * Rendering Models Index
  */
 
-export * from "./SvgConversion";
+export * from "../../../../modules/build/export/domain/models/SvgConversion";

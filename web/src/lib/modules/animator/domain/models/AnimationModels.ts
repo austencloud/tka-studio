@@ -1,6 +1,6 @@
 import type {
   BeatData,
-  Location,
+  GridLocation,
   MotionType,
   Orientation,
   RotationDirection,
@@ -56,8 +56,8 @@ export interface MotionEndpoints {
  * Domain model for motion testing and configuration
  */
 export interface AnimatedMotionParams {
-  startLocation: Location;
-  endLocation: Location;
+  startLocation: GridLocation;
+  endLocation: GridLocation;
   motionType: MotionType;
   turns: number | "fl"; // Support both numeric turns and float
   rotationDirection: RotationDirection;
@@ -91,8 +91,8 @@ export interface LetterIdentificationResult {
 }
 
 export interface LetterMapping {
-  startPosition: Location;
-  endPosition: Location;
+  startPosition: GridLocation;
+  endPosition: GridLocation;
   blueMotionType: MotionType;
   redMotionType: MotionType;
   // Add other motion properties as needed

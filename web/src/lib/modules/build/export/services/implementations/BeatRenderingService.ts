@@ -1,7 +1,7 @@
 import type { BeatData, SequenceData } from "$shared/domain";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import type { BeatRenderOptions } from "../../domain";
+import type { BeatRenderOptions } from "../../domain/models";
 import type {
     IBeatFallbackRenderer,
     IBeatRenderingService,

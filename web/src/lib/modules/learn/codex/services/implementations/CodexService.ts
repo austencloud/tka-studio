@@ -5,26 +5,33 @@
  * No more hardcoded mappings or mixed responsibilities!
  */
 
+import { GridMode, Letter, type PictographData } from "$shared/domain";
+import type { ILetterQueryHandler } from "$shared/foundation/services/contracts/data/data-interfaces";
+import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import {
-  GridMode,
-  Letter,
-  type PictographData,
-} from "../../../../../shared/domain";
-import { TYPES } from "../../../../../shared/inversify";
-import type { ILetterQueryHandler } from "../../../../../shared/services";
 import type { IQuizRepoManager } from "../../../quiz/services/contracts";
 import type { CodexLetterRow } from "../../domain";
 import type { ICodexPictographUpdater } from "../contracts/ICodexPictographUpdater";
 import type { ICodexService } from "../contracts/ICodexService";
+// import type { ICodexLetterMappingRepo } from "../contracts/ICodexLetterMappingRepo";
+
+// Temporary interface definition
+interface ICodexLetterMappingRepo {
+  getMapping(letter: string): Promise<any>;
+  getAllMappings(): Promise<any[]>;
+  initialize(): Promise<void>;
+  getLetterRows(): Promise<any[]>;
+  getAllLetters(): Promise<any[]>;
+  isValidLetter(letter: string): boolean;
+}
 
 @injectable()
 export class CodexService implements ICodexService {
   private initialized = false;
 
   constructor(
-    @inject(TYPES.ICodexLetterMappingRepository)
-    private letterMappingRepository: ICodexLetterMappingRepository,
+    @inject(TYPES.ICodexLetterMappingRepo)
+    private letterMappingRepository: ICodexLetterMappingRepo,
     @inject(TYPES.IQuizRepoManager)
     private lessonRepository: IQuizRepoManager,
     @inject(TYPES.ICodexPictographUpdater)

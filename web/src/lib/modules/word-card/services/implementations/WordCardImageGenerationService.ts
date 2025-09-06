@@ -7,17 +7,22 @@
 
 // Domain types
 import type { BeatData, SequenceData } from "$shared/domain";
-import type { WordCardDimensions } from "$wordcard/domain";
+// import type { WordCardDimensions } from "$wordcard/domain";
 
-// Behavioral contracts
+// Temporary interface definition
+interface WordCardDimensions {
+  width: number;
+  height: number;
+  scale?: number;
+}
+
+import { renderPictograph } from "$shared/pictograph/services/implementations/rendering/pictograph-rendering-utils";
+import { injectable } from "inversify";
 import type {
   IWordCardImageGenerationService,
   IWordCardMetadataOverlayService,
   IWordCardSVGCompositionService,
-} from "$services";
-
-import { renderPictograph } from "$shared/services/core/implementations/pictograph/rendering/pictograph-rendering-utils";
-import { injectable } from "inversify";
+} from "../../../build/export/services/contracts";
 
 @injectable()
 export class WordCardImageGenerationService

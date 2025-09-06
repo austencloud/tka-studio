@@ -3,3 +3,4 @@
  */
 
 export * from "./IQuizRepository";
+export * from "./IQuizSessionService";

@@ -9,23 +9,24 @@
 
 import type { SequenceData } from "$shared/domain";
 import type {
-  GridCalculationOptions,
-  LayoutValidationError,
-  LayoutValidationResult,
-  LayoutValidationWarning,
-  Page,
-  PageCreationOptions,
-  PageLayoutConfig,
-  Rectangle,
-  WordCardGridConfig,
+    GridCalculationOptions,
+    LayoutCalculationResult,
+    LayoutValidationError,
+    LayoutValidationResult,
+    LayoutValidationWarning,
+    Page,
+    PageCreationOptions,
+    PageLayoutConfig,
+    Rectangle,
+    WordCardGridConfig,
 } from "$wordcard/domain";
 
 // Import the correct interfaces from word-card-models
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type {
-  IPageFactoryService,
-  IPrintablePageLayoutService,
+    IPageFactoryService,
+    IPrintablePageLayoutService,
 } from "../contracts";
 
 @injectable()
@@ -35,14 +36,48 @@ export class PageFactoryService implements IPageFactoryService {
     private readonly layoutService: IPrintablePageLayoutService
   ) {}
 
-  createPage(sequences: SequenceData[], config: any): any {
+  createPage(sequences: SequenceData[], config: PageCreationOptions): Page {
     // TODO: Implement single page creation
-    return this.createPages(sequences, config);
+    return this.createPages(sequences, config)[0];
   }
 
-  calculateLayout(sequences: SequenceData[]): any {
-    // TODO: Implement layout calculation
-    return { sequences, layout: "default" };
+  calculateLayout(sequences: SequenceData[]): LayoutCalculationResult {
+    // TODO: Implement layout calculation - this is a placeholder
+    const defaultGridConfig: WordCardGridConfig = {
+      rows: 1,
+      columns: sequences.length || 1,
+      spacing: 10,
+      cardWidth: 100,
+      cardHeight: 140,
+    };
+
+    const defaultPageConfig: PageLayoutConfig = {
+      printConfig: {
+        paperSize: "A4",
+        orientation: "portrait",
+        margins: { top: 36, right: 18, bottom: 36, left: 18 },
+        dpi: 300,
+        enablePageNumbers: false,
+        enableHeader: false,
+        enableFooter: false,
+      },
+      gridOptions: {
+        minCardsPerPage: 1,
+        maxCardsPerPage: 12,
+        preferSquareLayout: false,
+        prioritizeCardSize: true,
+        allowPartialLastPage: true,
+      },
+      sequencesPerPage: sequences.length || 1,
+      enableOptimization: false,
+    };
+
+    return {
+      isOptimal: false,
+      gridConfig: defaultGridConfig,
+      pageConfig: defaultPageConfig,
+      utilization: 0.5,
+    };
   }
 
   createPages(sequences: SequenceData[], options: PageCreationOptions): Page[] {

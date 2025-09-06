@@ -6,22 +6,13 @@
  */
 
 import type { SequenceData } from "$shared/domain";
-
-// Basic export result interface
-export interface WordCardExportResult {
-  success: boolean;
-  data?: Blob | string;
-  filename?: string;
-  mimeType?: string;
-  metadata?: Record<string, unknown>;
-  error?: string;
-}
+import type { CacheEntry } from "./cache-models";
 
 // ============================================================================
 // LAYOUT CONFIGURATION TYPES
 // ============================================================================
 
-export interface LayoutConfig {
+export interface WordCardLayoutConfig {
   columns: number;
   rows: number;
   cardWidth: number;
@@ -123,60 +114,6 @@ export interface PrintLayoutOptions {
 }
 
 type WordCardPaperSize = "A4" | "Letter" | "Legal" | "Tabloid";
-
-// ============================================================================
-// DEVICE CAPABILITIES & RESPONSIVENESS
-// ============================================================================
-
-// Re-export DeviceCapabilities and ResponsiveSettings from core for backward compatibility
-export type {
-  DeviceCapabilities,
-  ResponsiveSettings,
-} from "$shared/domain/models/device-recognition/DeviceTypes";
-
-// ============================================================================
-// CACHE MANAGEMENT TYPES
-// ============================================================================
-
-export interface CacheEntry {
-  id: string;
-  sequence: SequenceData;
-  imageBlob: Blob;
-  metadata: CacheMetadata;
-  createdAt: Date;
-  lastAccessed: Date;
-  accessCount: number;
-}
-
-export interface CacheMetadata {
-  sequenceId: string;
-  sequenceName: string;
-  beatCount: number;
-  fileSize: number;
-  format: string;
-  resolution: string;
-  exportOptions: ExportOptions;
-  version: string; // Cache version for invalidation
-}
-
-export interface CacheConfig {
-  enabled: boolean;
-  maxSize: number; // Maximum number of entries
-  maxSizeBytes: number; // Maximum storage in bytes
-  ttl: number; // Time to live in milliseconds
-  compressionEnabled: boolean;
-  indexedDBName: string;
-  objectStoreName: string;
-}
-
-export interface CacheStats {
-  totalEntries: number;
-  totalSizeBytes: number;
-  hitRate: number; // 0-1
-  oldestEntry?: Date;
-  newestEntry?: Date;
-  lastCleanup?: Date;
-}
 
 // ============================================================================
 // SEQUENCE CARD DISPLAY TYPES
@@ -282,12 +219,12 @@ export interface WordCardEvents {
   // Export events
   exportStarted: { sequences: SequenceData[]; options: ExportOptions };
   exportProgress: { progress: ProgressInfo };
-  exportCompleted: { results: WordCardExportResult[] };
+  exportCompleted: { results: any[] };
   exportCancelled: { reason: string };
   exportError: { error: Error; sequences: SequenceData[] };
 
   // Layout events
-  layoutChanged: { layout: LayoutConfig };
+  layoutChanged: { layout: WordCardLayoutConfig };
   columnCountChanged: { count: number };
   viewModeChanged: { mode: "grid" | "list" | "printable" };
 
@@ -342,10 +279,10 @@ export interface WordCardProps {
 
 export interface WordCardGridProps {
   sequences: SequenceData[];
-  layout: LayoutConfig;
+  layout: WordCardLayoutConfig;
   displayOptions?: Partial<WordCardDisplayOptions>;
   onSequenceSelect?: (sequence: SequenceData) => void;
-  onLayoutChange?: (layout: LayoutConfig) => void;
+  onLayoutChange?: (layout: WordCardLayoutConfig) => void;
 }
 
 export interface WordCardExportDialogProps {

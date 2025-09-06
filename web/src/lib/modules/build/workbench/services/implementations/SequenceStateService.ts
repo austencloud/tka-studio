@@ -6,20 +6,39 @@
  */
 
 import type {
-    BeatData,
-    Letter,
-    SequenceData,
-    SequenceStatistics,
-    ValidationResult,
+  BeatData,
+  Letter,
+  SequenceData,
+  ValidationResult,
 } from "$shared/domain";
 import {
-    addBeatToSequence,
-    createSequenceData,
-    removeBeatFromSequence,
-    updateSequenceData,
+  addBeatToSequence,
+  createSequenceData,
+  removeBeatFromSequence,
+  updateSequenceData,
 } from "$shared/domain";
 import { injectable } from "inversify";
 import type { ISequenceStateService } from "../contracts";
+
+// Temporary interface definition
+interface SequenceStatistics {
+  totalBeats: number;
+  totalMotions: number;
+  averageMotionsPerBeat: number;
+  complexity: number;
+  totalSequences: number;
+  averageLength: number;
+  blankBeats: number;
+  filledBeats: number;
+  totalDuration: number;
+  averageBeatDuration: number;
+  hasStartPosition: boolean;
+  reversalCount?: {
+    blue: number;
+    red: number;
+  };
+  complexityDistribution?: any;
+}
 @injectable()
 export class SequenceStateService implements ISequenceStateService {
   // ============================================================================
@@ -320,6 +339,9 @@ export class SequenceStateService implements ISequenceStateService {
       averageLength: totalBeats,
       complexityDistribution: {}, // Could be calculated based on motion types
       totalBeats,
+      totalMotions: filledBeats, // Approximate - each filled beat has motions
+      averageMotionsPerBeat: filledBeats > 0 ? filledBeats / totalBeats : 0,
+      complexity: filledBeats / totalBeats, // Simple complexity metric
       blankBeats,
       filledBeats,
       totalDuration,

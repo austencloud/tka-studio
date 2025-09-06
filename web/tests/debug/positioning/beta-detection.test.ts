@@ -45,8 +45,8 @@ describe("Beta Detection System", () => {
       //   motions: {
       //     blue: {
       //       motionType: MotionType.PRO,
-      //       startLocation: Location.NORTH,
-      //       endLocation: Location.EAST,
+      //       startLocation: GridLocation.NORTH,
+      //       endLocation: GridLocation.EAST,
       //       turns: 0,
       //       rotationDirection: RotationDirection.CLOCKWISE,
       //       startOrientation: Orientation.IN,
@@ -54,7 +54,7 @@ describe("Beta Detection System", () => {
       //       isVisible: true,
       //       color: MotionColor.BLUE,
       //       propType: PropType.FAN,
-      //       arrowLocation: Location.NORTH,
+      //       arrowLocation: GridLocation.NORTH,
       //       arrowPlacementData: createArrowPlacementData(),
       //       propPlacementData: createPropPlacementData(),
       //     },

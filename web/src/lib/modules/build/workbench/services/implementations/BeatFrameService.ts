@@ -5,15 +5,14 @@
  * Contains only pure functions with no reactive state.
  */
 
-import type {
-    BeatData,
-    BeatFrameConfig,
-    ContainerDimensions,
-    LayoutInfo,
-    Point,
-} from "$shared/domain";
+import type { BeatData, XYCoordinate } from "$shared/domain";
 import { GridMode } from "$shared/domain";
 import { injectable } from "inversify";
+import type {
+  BeatFrameConfig,
+  ContainerDimensions,
+  LayoutInfo,
+} from "../../domain";
 import type { IBeatFrameService } from "../contracts";
 
 @injectable()
@@ -60,7 +59,7 @@ export class BeatFrameService implements IBeatFrameService {
     index: number,
     beatCount?: number,
     config?: BeatFrameConfig
-  ): Point {
+  ): XYCoordinate {
     const effectiveConfig = config ?? this.getDefaultConfig();
 
     // Use the optimal layout for this beat count
@@ -77,7 +76,7 @@ export class BeatFrameService implements IBeatFrameService {
   calculateStartPosition(
     _beatCount: number,
     config?: BeatFrameConfig
-  ): Point {
+  ): XYCoordinate {
     const effectiveConfig = config ?? this.getDefaultConfig();
 
     if (!effectiveConfig.hasStartTile) {

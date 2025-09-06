@@ -6,11 +6,18 @@
  */
 
 import { injectable } from "inversify";
+import type { IWordCardSVGCompositionService } from "../../../build/export/services/contracts";
 // Domain types
-import type { WordCardDimensions } from "$wordcard/domain";
+// import type { WordCardDimensions } from "$wordcard/domain";
+
+// Temporary interface definition
+interface WordCardDimensions {
+  width: number;
+  height: number;
+  scale?: number;
+}
 
 // Behavioral contracts
-import type { IWordCardSVGCompositionService } from "$services";
 
 interface BeatLayout {
   rows: number;

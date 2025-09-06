@@ -6,16 +6,16 @@
  */
 
 import type { SequenceData } from "$shared/domain";
-import type { LayoutData, SequenceExportOptions } from "../../domain";
+import type { LayoutData, SequenceExportOptions } from "../../domain/models";
 import type {
-  IDimensionCalculationService,
-  ILayoutCalculationService,
+    IDimensionCalculationService,
+    ILayoutCalculationService,
 } from "../contracts";
 import {
-  CompositionUtils,
-  type CompositionStats,
-  type MemoryEstimate,
-  type ValidationResult,
+    CompositionUtils,
+    type CompositionStats,
+    type MemoryEstimate,
+    type ValidationResult,
 } from "./CompositionTypes";
 
 export class CompositionValidator {
@@ -60,14 +60,14 @@ export class CompositionValidator {
         layoutData,
         options
       );
-      if (!canvasValidation.valid) {
-        errors.push(...canvasValidation.errors);
+      if (!canvasValidation.isValid) {
+        errors.push(...canvasValidation.errors.map(e => e.message || String(e)));
       }
     }
 
     return {
-      valid: errors.length === 0,
-      errors,
+      isValid: errors.length === 0,
+      errors: errors.map(e => ({ message: e, code: 'VALIDATION_ERROR', severity: 'error' as const })),
     };
   }
 

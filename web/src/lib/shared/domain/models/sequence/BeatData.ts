@@ -4,7 +4,7 @@
  * Core beat data structure used across build and animator modules.
  */
 
-import type { PictographData } from "../pictograph/PictographData";
+import type { PictographData } from "../../../pictograph/domain/models/PictographData";
 
 export interface BeatData {
   readonly id: string;

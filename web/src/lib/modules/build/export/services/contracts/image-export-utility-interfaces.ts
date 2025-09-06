@@ -14,7 +14,7 @@ import type {
     SequenceData,
     ValidationResult,
 } from "$shared/domain";
-import type { MemoryEstimate, SequenceExportOptions } from "../../domain";
+import type { MemoryEstimate, SequenceExportOptions } from "../../domain/models";
 
 // Export validation result for image export operations
 export interface ExportValidationResult extends ValidationResult {

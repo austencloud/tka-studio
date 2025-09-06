@@ -5,19 +5,28 @@
  * Supports PNG, JPEG, and WebP formats with quality and scaling options.
  */
 
-import type { IPageImageExportService } from "$services";
-import type { ExportResult } from "$shared/domain";
-import type {
-  BatchExportResult,
-  ExportProgress,
-  Html2CanvasFunction,
-  SequenceExportOptions,
-  WindowWithHtml2Canvas,
-} from "$wordcard/domain";
 import { injectable } from "inversify";
+import type {
+  ExportResult,
+  Html2CanvasFunction,
+  WindowWithHtml2Canvas,
+} from "../../../../shared/domain";
+import type { BatchExportResult } from "../../../../shared/domain/models/image_export";
+import type {
+  ExportProgress,
+  SequenceExportOptions,
+} from "../../../build/export/domain/models";
+import type { ExportOptions, Page } from "../../domain";
+import type { IPageImageExportService } from "../contracts";
 
 @injectable()
 export class PageImageExportService implements IPageImageExportService {
+  exportPage(_page: Page, _options: ExportOptions): Promise<Blob> {
+    throw new Error("Method not implemented.");
+  }
+  exportPages(_pages: Page[], _options: ExportOptions): Promise<Blob[]> {
+    throw new Error("Method not implemented.");
+  }
   private abortController: AbortController | null = null;
   private currentProgress: ExportProgress | null = null;
 
@@ -181,12 +190,19 @@ export class PageImageExportService implements IPageImageExportService {
 
     const totalProcessingTime = performance.now() - startTime;
 
+    // Map ExportResult[] to WordCardExportResultWithMetadata[]
+    const mappedResults = results.map((result, index) => ({
+      ...result,
+      sequenceId: `page-${index}`, // Add required sequenceId property
+      error: result.error ? new Error(result.error) : undefined, // Convert string to Error
+    }));
+
     return {
       success: errors.length === 0,
       totalPages: pageElements.length,
       successCount,
       failureCount,
-      results,
+      results: mappedResults,
       totalProcessingTime,
       errors,
     };

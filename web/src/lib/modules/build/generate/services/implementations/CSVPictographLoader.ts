@@ -53,7 +53,7 @@ export class CSVPictographLoaderService implements ICSVPictographLoaderService {
   getPictographCounts(): Record<Letter, number> {
     const counts: Record<Letter, number> = {} as Record<Letter, number>;
     for (const letter of this.availableLetters) {
-      counts[letter as string] = this.getPictographsForLetter(letter).length;
+      counts[letter] = this.getPictographsForLetter(letter).length;
     }
     return counts;
   }

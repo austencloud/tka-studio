@@ -5,9 +5,9 @@
  * after extraction from the mixed reactive service.
  */
 
-import type { SequenceData } from "$domain";
-import { Letter, createBeatData, createPictographData } from "$domain";
-import { SequenceStateService } from "$implementations";
+import { SequenceStateService } from "$lib/modules/build/workbench/services/implementations/SequenceStateService";
+import type { SequenceData } from "$shared/domain";
+import { Letter, createBeatData, createPictographData } from "$shared/domain";
 import { beforeEach, describe, expect, it } from "vitest";
 
 describe("SequenceStateService", () => {

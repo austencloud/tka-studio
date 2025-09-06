@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SequenceData } from "$shared/domain";
   import { slide } from "svelte/transition";
-  import type { IGalleryThumbnailService } from "../../services/contracts";
+  import type { IGalleryThumbnailService } from "../services/contracts";
   import SequenceThumbnail from "./GalleryThumbnail.svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes

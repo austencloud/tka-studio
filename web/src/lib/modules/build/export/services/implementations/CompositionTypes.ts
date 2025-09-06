@@ -3,6 +3,7 @@
  */
 
 import type { SequenceData, ValidationResult } from "$shared/domain";
+import type { CompositionOptions, LayoutData, SequenceExportOptions } from "../../domain/models";
 
 export interface CompositionContext {
   sequence: SequenceData;

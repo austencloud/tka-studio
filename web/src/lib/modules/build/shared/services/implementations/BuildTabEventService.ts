@@ -6,14 +6,12 @@
  * that was previously scattered throughout the massive ConstructTab component.
  */
 
-import type { BeatData, PictographData } from "$shared/domain";
-import { createBeatData } from "$shared/domain";
-import { resolve, TYPES } from "$shared/inversify/container";
-
-import type { IConstructTabCoordinator as IConstructSubTabCoordinationService } from "$services";
-
-import type { IBuildTabEventService } from "$services";
 import { injectable } from "inversify";
+import type { PictographData } from "../../../../../shared/domain";
+import { TYPES, resolve } from "../../../../../shared/inversify";
+import { type BeatData, createBeatData } from "../../../workbench";
+import type { IBuildTabEventService, IConstructSubTabCoordinationService } from "../contracts";
+
 
 @injectable()
 export class BuildTabEventService implements IBuildTabEventService {
@@ -30,9 +28,7 @@ export class BuildTabEventService implements IBuildTabEventService {
     }
 
     try {
-      this.constructCoordinator = resolve<IConstructSubTabCoordinationService>(
-        TYPES.IConstructTabCoordinator
-      );
+  this.constructCoordinator = resolve<IConstructSubTabCoordinationService>(TYPES.IConstructTabCoordinator);
       this.initialized = true;
     } catch (error) {
       // This is expected during SSR - services will be resolved once client-side DI container is ready

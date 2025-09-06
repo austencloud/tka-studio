@@ -12,17 +12,12 @@
  * - ITextRenderingUtils for text utilities
  */
 
-import type { TextRenderOptions, UserInfo } from "$build/domain";
-import type { ITextRenderingService } from "$services";
-
-import type {
-  IDifficultyBadgeRenderer,
-  ITextRenderingUtils,
-  IUserInfoRenderer,
-  IWordTextRenderer,
-} from "$services";
-import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
+import { TYPES } from "../../../../../shared/inversify";
+import type { TextRenderOptions } from "../../domain/models";
+import type { IDifficultyBadgeRenderer, ITextRenderingService, ITextRenderingUtils, IUserInfoRenderer, IWordTextRenderer } from "../contracts";
+
+
 
 @injectable()
 export class TextRenderingService implements ITextRenderingService {
@@ -53,7 +48,7 @@ export class TextRenderingService implements ITextRenderingService {
    */
   renderUserInfo(
     canvas: HTMLCanvasElement,
-    userInfo: UserInfo,
+    userInfo: any,
     options: TextRenderOptions
   ): void {
     this.userInfoRenderer.render(canvas, userInfo, options);

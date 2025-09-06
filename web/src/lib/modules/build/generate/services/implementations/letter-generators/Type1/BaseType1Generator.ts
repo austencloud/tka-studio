@@ -6,25 +6,16 @@
  * Generates pictograph data, not just letters.
  */
 
-import {
-  Direction,
-  Letter,
-  PositionSystem,
-  Timing,
-  type PictographData,
-} from "$domain";
-import type {
-  IDirectionCalculator,
-  IPictographValidatorService,
-  IPositionPatternService
-} from "$services";
+
+import { Direction, Letter, PositionSystem, Timing, type PictographData } from "$shared/domain";
+import type { IDirectionCalculator, IPictographValidatorService, IPositionPatternService } from "../../../contracts/generate-contracts";
 import { BaseLetterGenerator } from "../BaseLetterGenerator";
 import {
   calculateDirectionForPositionSystem,
   calculateTimingForPositionSystem,
   getType1MotionPairsFromPattern,
-  type Type1LetterConfig,
-} from "./Type1Configs";
+  type Type1LetterConfig
+} from "./Type1Configurations";
 import {
   getType1MatchingRotationPairs,
   getType1SupportedLetters,

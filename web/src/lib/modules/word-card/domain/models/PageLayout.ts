@@ -1,10 +1,7 @@
-import type {
-  PageOrientation,
-  SequenceData,
-  WordCardPaperSize,
-} from "$shared/domain";
-
 // Type alias for backward compatibility
+
+import type { SequenceData } from "../../../../shared/domain";
+import type { PageOrientation, WordCardPaperSize } from "../types";
 
 export interface Margins {
   top: number;
@@ -213,6 +210,7 @@ export interface LayoutValidationWarning {
   code: string;
   message: string;
   suggestion?: string;
+  severity?: "warning" | "info";
 }
 
 export interface LayoutSuggestion {

@@ -1,13 +1,7 @@
 <!-- Main Application Layout -->
 <script lang="ts">
   import { resolve, TYPES } from "./inversify/container";
-  // TEMPORARY: Service interfaces commented out until container is restored
-  // import type {
-  //   IApplicationInitializer,
-  //   IDeviceDetector,
-  //   ISequenceService,
-  //   ISettingsService,
-  // } from "$services";
+
   import type { Container } from "inversify";
   import { getContext, onMount } from "svelte";
   // Import app state management - BULLETPROOF RELATIVE IMPORTS
@@ -26,19 +20,25 @@
     updateSettings,
   } from "./state/app-state.svelte";
   // Import components - BULLETPROOF RELATIVE IMPORTS
+  import type { ISequenceService } from "../modules/build/workbench";
   import SettingsDialog from "./components/settings/SettingsDialog.svelte";
-  import ErrorScreen from "./components/ui/ErrorScreen.svelte";
-  import LoadingScreen from "./components/ui/LoadingScreen.svelte";
+  import ErrorScreen from "./foundation/ui/ErrorScreen.svelte";
+  import LoadingScreen from "./foundation/ui/LoadingScreen.svelte";
   import MainInterface from "./MainInterface.svelte";
+  import type {
+    IApplicationInitializer,
+    IDeviceDetector,
+    ISettingsService,
+  } from "./services";
 
   // Get DI container from context
   const getContainer = getContext<() => Container | null>("di-container");
 
-  // Services - resolved lazily (TEMPORARY: Types commented out until container is restored)
-  let initService: any | null = $state(null);
-  let settingsService: any | null = $state(null);
-  let sequenceService: any | null = $state(null);
-  let deviceService: any | null = $state(null);
+  // Services - resolved lazily
+  let initService: IApplicationInitializer | null = $state(null);
+  let settingsService: ISettingsService | null = $state(null);
+  let sequenceService: ISequenceService | null = $state(null);
+  let deviceService: IDeviceDetector | null = $state(null);
   let servicesResolved = $state(false);
 
   // App state
@@ -46,24 +46,24 @@
   let initializationError = $derived(getInitializationError());
   let initializationProgress = $derived(getInitializationProgress());
 
-  // DISABLED - Resolve services in onMount instead to prevent infinite loops
-  // $effect(() => {
-  //   const container = getContainer?.();
-  //   if (container && !servicesResolved) {
-  //     try {
-  //       // Use resolve which will use the global container once it's ready
-  //       initService = resolve(TYPES.IApplicationInitializer);
-  //       settingsService = resolve(TYPES.ISettingsService);
-  //       sequenceService = resolve(TYPES.ISequenceService);
-  //       deviceService = resolve(TYPES.IDeviceDetector);
+  // Resolve services when container is available
+  $effect(() => {
+    const container = getContainer?.();
+    if (container && !servicesResolved) {
+      try {
+        // Use resolve which will use the global container once it's ready
+        initService = resolve(TYPES.IApplicationInitializer);
+        settingsService = resolve(TYPES.ISettingsService);
+        sequenceService = resolve(TYPES.ISequenceService);
+        deviceService = resolve(TYPES.IDeviceDetector);
 
-  //       servicesResolved = true;
-  //     } catch (error) {
-  //       console.error("Failed to resolve services:", error);
-  //       setInitializationError(`Service resolution failed: ${error}`);
-  //     }
-  //   }
-  // });
+        servicesResolved = true;
+      } catch (error) {
+        console.error("Failed to resolve services:", error);
+        setInitializationError(`Service resolution failed: ${error}`);
+      }
+    }
+  });
 
   // Initialize application
   onMount(async () => {
@@ -74,19 +74,9 @@
       return;
     }
 
-    // Resolve services directly in onMount to prevent infinite loops
-    try {
-      console.log("🔧 Resolving services...");
-      initService = resolve(TYPES.IApplicationInitializer);
-      settingsService = resolve(TYPES.ISettingsService);
-      sequenceService = resolve(TYPES.ISequenceService);
-      deviceService = resolve(TYPES.IDeviceDetector);
-      servicesResolved = true;
-      console.log("✅ Services resolved successfully");
-    } catch (error) {
-      console.error("❌ Failed to resolve services:", error);
-      setInitializationError(`Service resolution failed: ${error}`);
-      return;
+    // Wait for services to be resolved
+    while (!servicesResolved) {
+      await new Promise((resolve) => setTimeout(resolve, 10));
     }
 
     // Double-check services are available

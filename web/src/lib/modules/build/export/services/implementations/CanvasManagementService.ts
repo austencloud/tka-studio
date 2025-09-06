@@ -6,8 +6,9 @@
  * leaks and improve performance during image export operations.
  */
 
-import type { ICanvasManagementService } from "$services";
 import { injectable } from "inversify";
+import type { ICanvasManagementService } from "../contracts";
+
 
 interface CanvasPoolEntry {
   canvas: HTMLCanvasElement;

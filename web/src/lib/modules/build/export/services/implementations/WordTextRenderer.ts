@@ -5,14 +5,11 @@
  * Matches desktop WordDrawer exactly.
  */
 
-import type { TextRenderOptions } from "$domain";
-import type { IWordTextRenderer } from "$services";
 import { injectable } from "inversify";
-import {
-  createFont,
-  measureTextWithKerning,
-  renderTextWithKerning,
-} from "./TextRenderingTypes";
+import type { TextRenderOptions } from "../../domain/models";
+import type { IWordTextRenderer } from "../contracts";
+import { createFont, measureTextWithKerning, renderTextWithKerning } from "./TextRenderingTypes";
+
 
 @injectable()
 export class WordTextRenderer implements IWordTextRenderer {

@@ -4,7 +4,7 @@
  * Just extracts the device detection logic without over-engineering
  */
 
-import type { DeviceCapabilities, ResponsiveSettings } from "$domain";
+import type { DeviceCapabilities, ResponsiveSettings } from "../../../../shared/domain";
 
 /**
  * Creates simple reactive state for device integration

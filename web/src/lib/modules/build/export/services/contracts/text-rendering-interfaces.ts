@@ -5,7 +5,7 @@
  * enabling proper dependency injection and testability.
  */
 
-import type { TextRenderOptions, UserInfo } from "$build/domain";
+import type { TextRenderOptions, UserInfo } from "../../domain/models";
 
 /**
  * Word text rendering interface

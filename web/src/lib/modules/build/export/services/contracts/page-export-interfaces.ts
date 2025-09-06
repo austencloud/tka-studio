@@ -6,10 +6,9 @@
  */
 
 import type {
-  ExportResult,
+    ExportResult,
 } from "$shared/domain";
-import type { BatchExportResult, ImageExportOptions } from "../../../../word-card/domain";
-import type { ExportProgress } from "../../../domain";
+import type { ExportProgress } from "../../domain/models";
 
 // ============================================================================
 // PAGE IMAGE EXPORT SERVICES
@@ -24,7 +23,7 @@ export interface IPageImageExportService {
    */
   exportPageAsImage(
     pageElement: HTMLElement,
-    options: ImageExportOptions
+    options: any
   ): Promise<ExportResult>;
 
   /**
@@ -32,9 +31,9 @@ export interface IPageImageExportService {
    */
   exportPagesAsImages(
     pageElements: HTMLElement[],
-    options: ImageExportOptions,
+    options: any,
     onProgress?: (progress: ExportProgress) => void
-  ): Promise<BatchExportResult>;
+  ): Promise<any>;
 
   /**
    * Get supported image formats
@@ -44,14 +43,14 @@ export interface IPageImageExportService {
   /**
    * Validate export options
    */
-  validateExportOptions(options: ImageExportOptions): boolean;
+  validateExportOptions(options: any): boolean;
 
   /**
    * Get recommended settings for different use cases
    */
   getRecommendedSettings(
     useCase: "print" | "web" | "archive"
-  ): ImageExportOptions;
+  ): any;
 
   /**
    * Cancel ongoing export operation

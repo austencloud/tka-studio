@@ -5,15 +5,10 @@
  * Handles registration and instantiation of all letter generators.
  */
 
-import type {
-  IDirectionCalculator,
-  ILetterGenerator,
-  ILetterGeneratorFactory,
-  IPictographValidatorService,
-  IPositionPatternService
-} from "$services";
+
 import { Type1Generator } from "./Type1/Type1Generator";
 import type { BaseLetterGenerator } from "./BaseLetterGenerator";
+import type { IPositionPatternService, IDirectionCalculator, IPictographValidatorService, ILetterGeneratorFactory, ILetterGenerator } from "../../contracts/generate-contracts";
 
 type LetterGeneratorConstructor = new (
   letter: string,

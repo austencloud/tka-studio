@@ -11,31 +11,16 @@
  * while maintaining the same public interface contracts.
  */
 
-import type {
-    IBeatRenderingService,
-    IDimensionCalculationService,
-    IImageCompositionService,
-    ILayoutCalculationService,
-} from "$services";
-import type {
-    CompositionOptions,
-    LayoutData, SequenceData, SequenceExportOptions
-} from "$shared/domain";
-
-import type {
-    IDifficultyBadgeRenderer,
-    ITextRenderingUtils,
-    IUserInfoRenderer,
-    IWordTextRenderer,
-} from "$services";
-import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-
-// Internal composition components
+import type { SequenceData } from "../../../../../shared/domain";
+import { TYPES } from "../../../../../shared/inversify";
+import type { CompositionOptions, LayoutData, SequenceExportOptions } from "../../domain/models";
+import type { IBeatRenderingService, IDifficultyBadgeRenderer, IDimensionCalculationService, IImageCompositionService, ILayoutCalculationService, ITextRenderingUtils, IUserInfoRenderer, IWordTextRenderer } from "../contracts";
 import { BeatGridPositioner } from "./BeatGridPositioner";
 import { CanvasCreator } from "./CanvasCreator";
 import { CompositionUtils } from "./CompositionTypes";
 import { TextOverlayApplicator } from "./TextOverlayApplicator";
+
 
 @injectable()
 export class ImageCompositionService implements IImageCompositionService {
