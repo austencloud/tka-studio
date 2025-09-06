@@ -1,9 +1,9 @@
 <!-- SEO-Optimized Features Page with User Redirect -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { handleSEORedirect } from "$utils";
+  import { handleSEORedirect } from "$shared/utils";
   import { onMount } from "svelte";
-  import AboutTab from "./../../lib/components/about/AboutTab.svelte";
+  import AboutTab from "./../../lib/modules/about/components/AboutTab.svelte";
 
   // Redirect users to main app while preserving SEO benefits
   onMount(() => {

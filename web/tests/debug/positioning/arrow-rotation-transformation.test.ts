@@ -1,6 +1,6 @@
-import { Location } from "$domain";
-import { ArrowPositionCalculator } from "$implementations";
+import { GridLocation } from "$shared/domain";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { ArrowPositionCalculator } from "../../../src/lib/shared/pictograph/services/implementations/positioning/orchestration/ArrowPositionCalculator";
 
 // Type for accessing private methods in tests
 interface ArrowPositionCalculatorTestAccess {
@@ -19,7 +19,7 @@ describe("Arrow Rotation Transformation", () => {
   beforeEach(() => {
     // Create mock dependencies for the calculator
     const mockLocationCalculator = {
-      calculateLocation: vi.fn().mockReturnValue(Location.NORTHEAST),
+      calculateLocation: vi.fn().mockReturnValue(GridLocation.NORTHEAST),
     };
     const mockRotationCalculator = {
       calculateRotation: vi.fn().mockReturnValue(225),

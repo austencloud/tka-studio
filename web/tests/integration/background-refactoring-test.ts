@@ -4,9 +4,9 @@
 import {
   backgroundsConfig,
   getBackgroundConfig,
-} from "$components/core/settings/tabs/background/background-config";
-import { BackgroundType } from "$domain";
+} from "$lib/shared/settings/components/tabs/background/background-config";
 import { describe, expect, it } from "vitest";
+import { BackgroundType } from "../../src/lib/shared/domain/ui/backgrounds/BackgroundTypes";
 
 describe("Background Refactoring Tests", () => {
   it("should have background config available", () => {

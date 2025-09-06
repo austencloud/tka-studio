@@ -2,19 +2,19 @@
 Arrow Mirroring Test Route - Simple test for arrow positioning
 -->
 <script lang="ts">
-  import Pictograph from "$components/core/pictograph/Pictograph.svelte";
-  import type { PictographData } from "$domain";
+  import type { PictographData } from "$shared/domain";
   import {
     createMotionData,
     createPictographData,
+    GridLocation,
     GridPosition,
     Letter,
-    Location,
     MotionColor,
     MotionType,
     Orientation,
     RotationDirection,
-  } from "$domain";
+  } from "$shared/domain";
+  import Pictograph from "$shared/pictograph/components/Pictograph.svelte";
   import { onMount } from "svelte";
 
   // Test state
@@ -36,8 +36,8 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
           blue: createMotionData({
             motionType: MotionType.PRO,
             rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
-            startLocation: Location.SOUTH,
-            endLocation: Location.EAST,
+            startLocation: GridLocation.SOUTH,
+            endLocation: GridLocation.EAST,
             startOrientation: Orientation.IN,
             endOrientation: Orientation.OUT,
             turns: 1,
@@ -46,8 +46,8 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
           red: createMotionData({
             motionType: MotionType.PRO,
             rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
-            startLocation: Location.NORTH,
-            endLocation: Location.WEST,
+            startLocation: GridLocation.NORTH,
+            endLocation: GridLocation.WEST,
             startOrientation: Orientation.IN,
             endOrientation: Orientation.OUT,
             turns: 1,
@@ -66,8 +66,8 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
           blue: createMotionData({
             motionType: MotionType.PRO,
             rotationDirection: RotationDirection.CLOCKWISE,
-            startLocation: Location.SOUTH,
-            endLocation: Location.WEST,
+            startLocation: GridLocation.SOUTH,
+            endLocation: GridLocation.WEST,
             startOrientation: Orientation.IN,
             endOrientation: Orientation.OUT,
             turns: 1,
@@ -76,8 +76,8 @@ Arrow Mirroring Test Route - Simple test for arrow positioning
           red: createMotionData({
             motionType: MotionType.PRO,
             rotationDirection: RotationDirection.CLOCKWISE,
-            startLocation: Location.NORTH,
-            endLocation: Location.EAST,
+            startLocation: GridLocation.NORTH,
+            endLocation: GridLocation.EAST,
             startOrientation: Orientation.IN,
             endOrientation: Orientation.OUT,
             turns: 1,

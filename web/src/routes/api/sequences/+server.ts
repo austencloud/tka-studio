@@ -58,41 +58,8 @@ export async function GET() {
       }
     }
 
-    // Also check the thumbnails directory
-    try {
-      const thumbnailsDir = join(staticDir, "thumbnails");
-      const thumbnailFiles = await readdir(thumbnailsDir);
-
-      for (const file of thumbnailFiles) {
-        if (file.endsWith(".png")) {
-          const word = file.replace(/(_ver\d+)?\.png$/, "");
-
-          // Skip test sequences and invalid entries
-          if (
-            word === "A_A" ||
-            word.length < 2 ||
-            word.length > 20 || // ✅ FIXED: Skip extremely long names
-            word.includes("test") ||
-            word.includes("__") || // ✅ FIXED: Skip double underscores
-            word.includes("αααααα") || // ✅ FIXED: Skip repeated Greek letters
-            word.includes("ββββ") || // ✅ FIXED: Skip repeated Greek letters
-            word.includes("HHHH") || // ✅ FIXED: Skip repeated letters
-            word.includes("GGGG") // ✅ FIXED: Skip repeated letters
-          ) {
-            continue;
-          }
-
-          sequences.push({
-            name: file,
-            path: `/thumbnails/${file}`,
-            word: word,
-          });
-        }
-      }
-    } catch (error) {
-      // Thumbnails directory might not exist
-      console.warn("Could not read thumbnails directory:", error);
-    }
+    // Note: Removed thumbnails directory scanning as it was including fake/test sequences
+    // Only use real sequences from dictionary directories
 
     // Sort by word name
     sequences.sort((a, b) => a.word.localeCompare(b.word));

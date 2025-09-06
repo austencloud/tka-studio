@@ -5,9 +5,9 @@
  * after extraction from the mixed reactive service.
  */
 
-import type { SequenceData } from "$domain";
-import { Letter, createBeatData, createPictographData } from "$domain";
-import { SequenceStateService } from "$implementations";
+import { SequenceStateService } from "$lib/modules/build/workbench/services/implementations/SequenceStateService";
+import type { SequenceData } from "$shared/domain";
+import { Letter, createBeatData, createPictographData } from "$shared/domain";
 import { beforeEach, describe, expect, it } from "vitest";
 
 describe("SequenceStateService", () => {
@@ -270,8 +270,11 @@ describe("SequenceStateService", () => {
       expect(stats.totalDuration).toBe(5.0);
       expect(stats.averageBeatDuration).toBe(1.25);
       expect(stats.hasStartPosition).toBe(false);
-      expect(stats.reversalCount.blue).toBe(1);
-      expect(stats.reversalCount.red).toBe(1);
+      expect(stats.reversalCount).toBeDefined();
+      if (stats.reversalCount) {
+        expect(stats.reversalCount.blue).toBe(1);
+        expect(stats.reversalCount.red).toBe(1);
+      }
     });
 
     it("should generate sequence word from pictograph letters", () => {

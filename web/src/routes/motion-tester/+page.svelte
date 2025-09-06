@@ -1,7 +1,7 @@
 <!-- Animator Route - MISSING FILE FIX -->
 <script lang="ts">
-  import MainApplication from "$lib/components/core/MainApplication.svelte";
-  import { switchTab } from "$state";
+  import MainApplication from "$shared/MainApplication.svelte";
+  import { switchTab } from "$shared/state";
   import { onMount } from "svelte";
 
   onMount(async () => {

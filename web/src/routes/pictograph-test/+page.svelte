@@ -7,8 +7,8 @@ The new Type1 system (A-V, 22 letters) is not yet integrated with the UI.
 TODO: Update this page to test the new Type1 generators when ready.
 -->
 <script lang="ts">
-  import Pictograph from "$components/core/pictograph/Pictograph.svelte";
-  import type { PictographData } from "$domain";
+  import type { PictographData } from "$shared/domain";
+  import Pictograph from "$shared/pictograph/components/Pictograph.svelte";
   import { onMount } from "svelte";
 
   // State

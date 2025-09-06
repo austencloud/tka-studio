@@ -5,10 +5,10 @@
  * after extraction from the mixed reactive service.
  */
 
-import type { BeatFrameConfig } from "$domain";
-import { GridMode } from "$domain";
-import { BeatFrameService } from "$implementations";
+import { BeatFrameService } from "$lib/modules/build/workbench/services/implementations/BeatFrameService";
+import { GridMode } from "$shared/domain";
 import { beforeEach, describe, expect, it } from "vitest";
+import type { BeatFrameConfig } from "../../../src/lib/modules/build/workbench";
 
 describe("BeatFrameService", () => {
   let service: BeatFrameService;
@@ -17,7 +17,7 @@ describe("BeatFrameService", () => {
     service = new BeatFrameService();
   });
 
-  describe("Configuration", () => {
+  describe("Config", () => {
     it("should provide default configuration", () => {
       const config = service.getDefaultConfig();
 

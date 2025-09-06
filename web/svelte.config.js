@@ -31,30 +31,40 @@ const config = {
       entries: ["*", "/about", "/features", "/getting-started", "/browse"],
     },
 
-    // Move the path aliases from tsconfig.json to here
+    // Clean domain-bounded aliases - relative imports within domains, barrels for cross-domain
     alias: {
+      // ============================================================================
+      // CORE ALIASES
+      // ============================================================================
       $lib: "./src/lib",
       "$lib/*": "./src/lib/*",
-      $components: "./src/lib/components",
-      "$components/*": "./src/lib/components/*",
-      $domain: "./src/lib/domain",
-      "$domain/*": "./src/lib/domain/*",
-      $services: "./src/lib/services",
-      "$services/*": "./src/lib/services/*",
-      $contracts: "./src/lib/services/contracts",
-      "$contracts/*": "./src/lib/services/contracts/*",
-      $implementations: "./src/lib/services/implementations",
-      "$implementations/*": "./src/lib/services/implementations/*",
-      $inversify: "./src/lib/services/inversify",
-      "$inversify/*": "./src/lib/services/inversify/*",
-      $utils: "./src/lib/utils",
-      "$utils/*": "./src/lib/utils/*",
-      $state: "./src/lib/state",
-      "$state/*": "./src/lib/state/*",
-      $styles: "./src/styles",
-      "$styles/*": "./src/styles/*",
-      $config: "./src/config",
-      "$config/*": "./src/config/*",
+
+      // ============================================================================
+      // SHARED RESOURCES (Cross-domain access)
+      // ============================================================================
+      $shared: "./src/lib/shared",
+      "$shared/*": "./src/lib/shared/*",
+
+      // ============================================================================
+      // MODULE ALIASES (For cross-domain barrel imports)
+      // ============================================================================
+      $build: "./src/lib/modules/build",
+      "$build/*": "./src/lib/modules/build/*",
+
+      $learn: "./src/lib/modules/learn",
+      "$learn/*": "./src/lib/modules/learn/*",
+
+      $browse: "./src/lib/modules/browse",
+      "$browse/*": "./src/lib/modules/browse/*",
+
+      $animator: "./src/lib/modules/animator",
+      "$animator/*": "./src/lib/modules/animator/*",
+
+      $wordcard: "./src/lib/modules/word-card",
+      "$wordcard/*": "./src/lib/modules/word-card/*",
+
+      $write: "./src/lib/modules/write",
+      "$write/*": "./src/lib/modules/write/*",
     },
   },
 };

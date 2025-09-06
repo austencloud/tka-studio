@@ -24,13 +24,13 @@
     try {
       // Clean up problematic sessionStorage values first
       const { cleanupSessionStorage } = await import(
-        "$lib/utils/session-storage-cleanup"
+        "$lib/shared/utils/session-storage-cleanup"
       );
       cleanupSessionStorage();
 
       // Dynamically import container only on client-side to avoid SSR issues
       const { container: inversifyContainer } = await import(
-        "../lib/services/inversify/container"
+        "$lib/shared/inversify/container"
       );
 
       // Set up DI container - this is all we need at root level
