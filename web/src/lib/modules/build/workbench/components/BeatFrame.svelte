@@ -51,18 +51,13 @@
   // Set up crossfade transition for smooth start position transitions
   const [send, receive] = crossfade({
     duration: 400,
-    fallback: (node) => {
-      const style = getComputedStyle(node);
-      const transform = style.transform === 'none' ? '' : style.transform;
-      return {
-        duration: 400,
-        easing: (t) => t,
-        css: (t) => `
-          transform: ${transform} scale(${t});
-          opacity: ${t}
-        `
-      };
-    }
+    // Completely disable the default crossfade transform calculations
+    fallback: () => ({
+      duration: 400,
+      css: (t: number) => `opacity: ${t};`
+    }),
+    // Override the default crossfade function to prevent NaN calculations
+    easing: (t: number) => t
   });
 
   // Use layout info instead of just dimensions for better responsiveness

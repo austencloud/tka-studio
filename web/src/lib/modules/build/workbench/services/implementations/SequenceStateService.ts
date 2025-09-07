@@ -264,10 +264,20 @@ export class SequenceStateService implements ISequenceStateService {
     sequence: SequenceData,
     startPosition: BeatData
   ): SequenceData {
-    return updateSequenceData(sequence, {
+    console.log("🔧 SequenceStateService: setStartPosition called");
+    console.log("🔧 SequenceStateService: input sequence:", sequence);
+    console.log("🔧 SequenceStateService: input startPosition:", startPosition);
+    
+    const result = updateSequenceData(sequence, {
       startingPositionBeat: startPosition,
       startPosition: startPosition, // Also set the startPosition field for workbench
     });
+    
+    console.log("🔧 SequenceStateService: result sequence:", result);
+    console.log("🔧 SequenceStateService: result.startingPositionBeat:", result.startingPositionBeat);
+    console.log("🔧 SequenceStateService: result.startPosition:", result.startPosition);
+    
+    return result;
   }
 
   // ============================================================================

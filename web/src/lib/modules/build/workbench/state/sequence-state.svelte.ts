@@ -2,14 +2,14 @@
 // See that file history for rationale.
 
 import type {
-    ArrowPosition,
-    BeatData,
-    SequenceData,
-    ValidationResult,
+  ArrowPosition,
+  BeatData,
+  SequenceData,
+  ValidationResult,
 } from "$shared";
 import { GridMode } from "$shared";
 import type {
-    ISequenceService,
+  ISequenceService,
 } from "../services/contracts/sequence-interfaces";
 import type { ISequenceStateService } from "../services/contracts/sequence-state-interfaces";
 
@@ -362,14 +362,25 @@ export function createSequenceState(
     }
   }
   function setStartPosition(startPosition: BeatData): void {
-    if (!state.currentSequence || !sequenceStateService) return;
+    console.log("🔧 SequenceState: setStartPosition called with:", startPosition);
+    console.log("🔧 SequenceState: state.currentSequence:", !!state.currentSequence);
+    console.log("🔧 SequenceState: sequenceStateService:", !!sequenceStateService);
+    
+    if (!state.currentSequence || !sequenceStateService) {
+      console.error("❌ SequenceState: Exiting setStartPosition - missing current sequence or service");
+      return;
+    }
+    
     try {
+      console.log("🔧 SequenceState: Calling sequenceStateService.setStartPosition...");
       state.currentSequence = sequenceStateService.setStartPosition(
         state.currentSequence,
         startPosition
       );
+      console.log("✅ SequenceState: sequenceStateService.setStartPosition completed");
       state.error = null;
     } catch (err) {
+      console.error("❌ SequenceState: Error in setStartPosition:", err);
       state.error = err instanceof Error ? err.message : "Failed to set start position";
     }
   }

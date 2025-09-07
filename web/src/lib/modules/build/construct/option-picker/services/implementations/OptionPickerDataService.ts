@@ -5,11 +5,10 @@
  * for the option picker component.
  */
 
-import type { PictographData } from "$shared";
+import type { IMotionQueryHandler, PictographData } from "$shared";
 import { TYPES } from "$shared";
 import { inject, injectable } from "inversify";
 import type { IOptionPickerDataService } from "../contracts";
-import type { IMotionQueryHandler } from "$shared";
 
 @injectable()
 export class OptionPickerDataService implements IOptionPickerDataService {

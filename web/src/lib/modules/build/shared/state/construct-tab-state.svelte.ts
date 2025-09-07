@@ -73,9 +73,26 @@ export function createConstructTabState(
           if (newSequence) {
             // Set the current sequence
             sequenceState.setCurrentSequence(newSequence);
+            console.log("🔧 ConstructTabState: Current sequence set, now calling setStartPosition...");
 
             // Now set the start position
-            sequenceState.setStartPosition(beatData);
+            try {
+              console.log("🔧 ConstructTabState: About to call setStartPosition with beatData:", beatData);
+              console.log("🔧 ConstructTabState: sequenceState object:", sequenceState);
+              
+              sequenceState.setStartPosition(beatData);
+              console.log("✅ ConstructTabState: setStartPosition call completed");
+              
+              // Verify the start position was actually set
+              const updatedSequence = sequenceState.getCurrentSequence();
+              console.log("🔍 ConstructTabState: After setStartPosition, sequence is:", updatedSequence);
+              console.log("🔍 ConstructTabState: After setStartPosition, startingPositionBeat:", updatedSequence?.startingPositionBeat);
+              console.log("🔍 ConstructTabState: After setStartPosition, startPosition:", updatedSequence?.startPosition);
+              
+            } catch (error) {
+              console.error("❌ ConstructTabState: Error setting start position:", error);
+            }
+            
             console.log("✅ ConstructTabState: New sequence created and start position set");
           } else {
             console.error("❌ ConstructTabState: Failed to create new sequence");
@@ -187,41 +204,35 @@ export function createConstructTabState(
     },
     get currentSequenceData() {
       // Convert the current sequence beats to PictographData array for the option picker
-      console.log("🔍 ConstructTabState: currentSequenceData getter called, sequenceState:", sequenceState);
-      
-      if (sequenceState?.getCurrentSequence) {
-        console.log("🔍 ConstructTabState: sequenceState.getCurrentSequence exists, calling it...");
+      if (sequenceState?.getCurrentSequence?.()) {
         const sequence = sequenceState.getCurrentSequence();
-        console.log("🔍 ConstructTabState: getCurrentSequence returned:", sequence);
+        console.log("🔍 ConstructTabState: sequence found:", sequence);
         
-        if (sequence) {
-          const beats = sequence.beats || [];
-          console.log("🔍 ConstructTabState: sequence.beats:", beats);
-          
-          // Check for start position if there are no beats yet
-          const startPosition = sequence.startingPositionBeat || sequence.startPosition;
-          console.log("🔍 ConstructTabState: sequence.startingPositionBeat:", startPosition);
-          
-          let result: PictographData[] = [];
-          
-          // If we have beats, use them
-          if (beats.length > 0) {
-            result = beats.map((beat: any) => beat.pictographData).filter(Boolean);
-          } 
-          // If no beats but we have a start position, include it
-          else if (startPosition?.pictographData) {
-            result = [startPosition.pictographData];
-          }
-          
-          console.log("🔍 ConstructTabState: currentSequenceData getter called, returning:", result);
-          return result;
-        } else {
-          console.log("🔍 ConstructTabState: getCurrentSequence returned null/undefined");
+        const beats = sequence.beats || [];
+        console.log("🔍 ConstructTabState: sequence.beats:", beats);
+        
+        // Check for start position if there are no beats yet
+        const startPosition = sequence.startingPositionBeat || sequence.startPosition;
+        console.log("🔍 ConstructTabState: sequence.startingPositionBeat:", sequence.startingPositionBeat);
+        console.log("🔍 ConstructTabState: sequence.startPosition:", sequence.startPosition);
+        console.log("🔍 ConstructTabState: startPosition (combined):", startPosition);
+        
+        let result: PictographData[] = [];
+        
+        // If we have beats, use them
+        if (beats.length > 0) {
+          result = beats.map((beat: any) => beat.pictographData).filter(Boolean);
+          console.log("🔍 ConstructTabState: using beats, result:", result);
+        } 
+        // If no beats but we have a start position, include it
+        else if (startPosition?.pictographData) {
+          result = [startPosition.pictographData];
+          console.log("🔍 ConstructTabState: using start position, result:", result);
         }
-      } else {
-        console.log("🔍 ConstructTabState: sequenceState.getCurrentSequence does not exist");
+        
+        console.log("🔍 ConstructTabState: currentSequenceData getter called, returning:", result);
+        return result;
       }
-      
       console.log("🔍 ConstructTabState: currentSequenceData getter called, no sequence - returning empty array");
       return [];
     },

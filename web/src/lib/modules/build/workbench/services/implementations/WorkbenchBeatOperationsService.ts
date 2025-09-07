@@ -90,6 +90,7 @@ export class WorkbenchBeatOperationsService
       const updatedSequence = {
         ...sequence,
         startPosition: startPosition,
+        startingPositionBeat: startPosition, // CRITICAL: Set both fields for compatibility
       } as SequenceData;
 
       await this.persistenceService.saveSequence(updatedSequence);
