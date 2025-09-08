@@ -5,11 +5,11 @@
  * No placeholders, no simplified versions - complete algorithm from legacy desktop app.
  */
 
-import type { BeatData, ILetterQueryHandler } from "$shared";
-import { createMotionData, createSequenceData, DifficultyLevel, GenerationMode, GridLocation, GridMode, MotionType, Orientation, PropContinuity, PropType, RotationDirection, TYPES, type PictographData, type SequenceData } from "$shared";
 import { inject, injectable } from "inversify";
-import type { GenerationOptions } from "../../domain/models/generate-models";
+import { DifficultyLevel, GenerationMode, PropContinuity, type GenerationOptions } from "../../domain/models/generate-models";
 import type { IOrientationCalculationService, ISequenceGenerationService } from "../contracts/generate-contracts";
+import { createMotionData, createSequenceData, GridLocation, GridMode, MotionType, Orientation, PropType, RotationDirection, TYPES, type ILetterQueryHandler, type PictographData, type SequenceData } from "../../../../../shared";
+import type { BeatData } from "../../../workbench";
 
 
 

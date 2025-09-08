@@ -1,6 +1,7 @@
 <script lang="ts">
   import { GridMode } from "$shared";
-  import { svgStringToImage } from "../../../shared/pictograph/utils/svgStringToImage";
+  import type { ISvgImageService } from "$shared/foundation/services/contracts";
+  import { resolve, TYPES } from "$shared/inversify";
   import type { PropState } from "../domain";
   import { CanvasRenderer, SVGGenerator } from "../services/implementations";
   // TODO: Fix missing SVGGenerator and CanvasRenderer imports
@@ -38,6 +39,9 @@
   let rafId: number | null = null;
   let needsRender = $state(true);
 
+  // Resolve SVG image service
+  const svgImageService = resolve(TYPES.ISvgImageService) as ISvgImageService;
+
   // Track prop changes to trigger re-renders
   $effect(() => {
     blueProp;
@@ -53,13 +57,13 @@
     const loadImages = async () => {
       try {
         [gridImage, blueStaffImage, redStaffImage] = await Promise.all([
-          svgStringToImage(
+          svgImageService.convertSvgStringToImage(
             SVGGenerator.generateGridSvg(gridMode),
             actualSize,
             actualSize
           ),
-          svgStringToImage(SVGGenerator.generateBlueStaffSvg(), 252.8, 77.8),
-          svgStringToImage(SVGGenerator.generateRedStaffSvg(), 252.8, 77.8),
+          svgImageService.convertSvgStringToImage(SVGGenerator.generateBlueStaffSvg(), 252.8, 77.8),
+          svgImageService.convertSvgStringToImage(SVGGenerator.generateRedStaffSvg(), 252.8, 77.8),
         ]);
 
         ctx = canvasElement.getContext("2d");

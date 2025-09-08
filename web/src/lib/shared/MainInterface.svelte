@@ -13,7 +13,9 @@
   } from "./application/state/app-state.svelte";
   // Import background types - BULLETPROOF RELATIVE IMPORTS
   import { BackgroundType } from "$shared";
-  // Import transition utilities - BULLETPROOF RELATIVE IMPORTS
+  import type { IAnimationService } from "./application/services/contracts";
+  import { resolve, TYPES } from "./inversify";
+// Import transition utilities - BULLETPROOF RELATIVE IMPORTS
   // Cross-module imports: Direct component imports (bulletproof default imports)
   import AboutTab from "../modules/about/components/AboutTab.svelte";
   import AnimatorTab from "../modules/animator/components/AnimatorTab.svelte";
@@ -27,7 +29,6 @@
   import BackgroundCanvas from "./background/components/BackgroundCanvas.svelte";
   import NavigationBar from "./navigation/components/NavigationBar.svelte";
   import SettingsDialog from "./settings/components/SettingsDialog.svelte";
-  import { fade } from "./utils/simple-fade";
 
   // Reactive state for template using proper derived
   let activeTab = $derived(getActiveTab());
@@ -37,6 +38,9 @@
   let spotlightSequence = $derived(getSpotlightSequence());
   let spotlightThumbnailService = $derived(getSpotlightThumbnailService());
 
+  // Resolve animation service
+  const animationService = resolve(TYPES.IAnimationService) as IAnimationService;
+
   // Debug the active tab
   $effect(() => {
     console.log("🎯 MainInterface: activeTab changed to:", activeTab);
@@ -45,14 +49,14 @@
   // Simple transition functions that respect animation settings
   const tabOut = (node: Element) => {
     const animationsEnabled = settings.animationsEnabled !== false;
-    return fade(node, {
+    return animationService.createFadeTransition({
       duration: animationsEnabled ? 250 : 0,
     });
   };
 
   const tabIn = (node: Element) => {
     const animationsEnabled = settings.animationsEnabled !== false;
-    return fade(node, {
+    return animationService.createFadeTransition({
       duration: animationsEnabled ? 300 : 0,
       delay: animationsEnabled ? 250 : 0, // Wait for out transition
     });

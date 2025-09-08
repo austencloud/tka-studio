@@ -7,12 +7,12 @@
 
 import type { SequenceData } from "$shared";
 import {
-  createBeatData,
   createSequenceData,
   updateSequenceData,
 } from "$shared";
 import { injectable } from "inversify";
 import type { ISequenceTransformService } from "../contracts";
+import { createBeatData } from "../../../shared";
 
 @injectable()
 export class SequenceTransformService implements ISequenceTransformService {

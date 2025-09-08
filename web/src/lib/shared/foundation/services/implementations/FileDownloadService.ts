@@ -1,0 +1,150 @@
+/**
+ * File Download Service Implementation
+ * 
+ * Cross-browser utilities for downloading files from Blob objects.
+ * Handles browser compatibility and provides progress feedback.
+ */
+
+import { injectable } from "inversify";
+import type { 
+  IFileDownloadService, 
+  DownloadOptions, 
+  BatchDownloadOptions, 
+  DownloadResult 
+} from "../contracts/IFileDownloadService";
+
+@injectable()
+export class FileDownloadService implements IFileDownloadService {
+  /**
+   * Download a single file from a Blob
+   */
+  async downloadBlob(
+    blob: Blob,
+    filename: string,
+    options: DownloadOptions = {}
+  ): Promise<DownloadResult> {
+    return new Promise((resolve) => {
+      try {
+        // Create object URL for the blob
+        const url = URL.createObjectURL(blob);
+
+        // Create temporary anchor element
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = filename;
+        anchor.style.display = "none";
+
+        // Add to DOM temporarily
+        document.body.appendChild(anchor);
+
+        // Trigger download
+        anchor.click();
+
+        // Cleanup
+        document.body.removeChild(anchor);
+        URL.revokeObjectURL(url);
+
+        resolve({
+          success: true,
+          filename,
+        });
+      } catch (error) {
+        resolve({
+          success: false,
+          filename,
+          error: error as Error,
+        });
+      }
+    });
+  }
+
+  /**
+   * Download multiple files with delay to prevent browser blocking
+   */
+  async downloadBlobBatch(
+    blobs: Array<{ blob: Blob; filename: string }>,
+    options: BatchDownloadOptions = {}
+  ): Promise<DownloadResult[]> {
+    const results: DownloadResult[] = [];
+    const delay = options.delay || 100; // Default 100ms delay
+
+    for (let i = 0; i < blobs.length; i++) {
+      const { blob, filename } = blobs[i];
+
+      // Download the file
+      const result = await this.downloadBlob(blob, filename, options);
+      results.push(result);
+
+      // Add delay between downloads (except for the last one)
+      if (i < blobs.length - 1 && delay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+
+    return results;
+  }
+
+  /**
+   * Generate a safe filename from a string
+   */
+  sanitizeFilename(filename: string): string {
+    return filename
+      .replace(/[^a-z0-9\-_.]/gi, "_") // Replace invalid characters with underscore
+      .replace(/_{2,}/g, "_") // Replace multiple underscores with single
+      .replace(/^_+|_+$/g, "") // Remove leading/trailing underscores
+      .substring(0, 255); // Limit length
+  }
+
+  /**
+   * Generate a timestamped filename
+   */
+  generateTimestampedFilename(
+    baseName: string,
+    extension: string,
+    includeTime: boolean = true
+  ): string {
+    const now = new Date();
+    const date = now.toISOString().slice(0, 10); // YYYY-MM-DD
+    const time = includeTime
+      ? now.toISOString().slice(11, 19).replace(/:/g, "-") // HH-MM-SS
+      : "";
+
+    const timestamp = includeTime ? `${date}_${time}` : date;
+    const sanitizedBaseName = this.sanitizeFilename(baseName);
+
+    return `${sanitizedBaseName}_${timestamp}.${extension}`;
+  }
+
+  /**
+   * Check if browser supports file downloads
+   */
+  supportsFileDownload(): boolean {
+    try {
+      // Check for required APIs
+      return (
+        typeof URL !== "undefined" &&
+        typeof URL.createObjectURL === "function" &&
+        typeof document.createElement === "function" &&
+        "download" in document.createElement("a")
+      );
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Get recommended file extension for a MIME type
+   */
+  getFileExtensionForMimeType(mimeType: string): string {
+    const mimeTypeMap: Record<string, string> = {
+      "image/png": "png",
+      "image/jpeg": "jpg",
+      "image/webp": "webp",
+      "application/pdf": "pdf",
+      "text/plain": "txt",
+      "application/json": "json",
+    };
+
+    return mimeTypeMap[mimeType.toLowerCase()] || "bin";
+  }
+}

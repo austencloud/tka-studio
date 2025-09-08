@@ -3,7 +3,7 @@ SequenceSettingsSection.svelte - Core sequence configuration settings
 Contains Level, Length, and Turn Intensity selectors
 -->
 <script lang="ts">
-  import { DifficultyLevel } from "$shared";
+  import { DifficultyLevel } from "../domain";
   import type { GenerationConfig } from "../state";
   import LengthSelector from "./selectors/LengthSelector.svelte";
   import LevelSelector from "./selectors/LevelSelector.svelte";

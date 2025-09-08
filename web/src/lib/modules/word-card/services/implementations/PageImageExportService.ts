@@ -6,10 +6,8 @@
  */
 
 import type {
-  ExportOptions,
   ExportResult,
   Html2CanvasFunction,
-  Page,
   WindowWithHtml2Canvas,
 } from "$shared";
 import { injectable } from "inversify";
@@ -17,8 +15,9 @@ import type {
   ExportProgress,
   SequenceExportOptions,
 } from "../../../build/export/domain/models";
-import type { BatchExportResult } from "../../domain/models/word-card-export";
+import type { BatchExportResult, ExportOptions } from "../../domain/models/word-card-export";
 import type { IPageImageExportService } from "../contracts";
+import type { Page } from "@sveltejs/kit";
 
 @injectable()
 export class PageImageExportService implements IPageImageExportService {

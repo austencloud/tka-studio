@@ -21,6 +21,17 @@ export const TYPES = {
   IResourceTracker: Symbol.for("IResourceTracker"),
   IPanelManagementService: Symbol.for("IPanelManagementService"),
 
+  // === FOUNDATION SERVICES ===
+  IFileDownloadService: Symbol.for("IFileDownloadService"),
+  IStorageService: Symbol.for("IStorageService"),
+  ISeoService: Symbol.for("ISeoService"),
+  ISvgImageService: Symbol.for("ISvgImageService"),
+
+  // === APPLICATION SERVICES ===
+  IComponentManagementService: Symbol.for("IComponentManagementService"),
+  IDataTransformationService: Symbol.for("IDataTransformationService"),
+  IAnimationService: Symbol.for("IAnimationService"),
+
   // === BUILD TAB SERVICES ===
   IBuildTabService: Symbol.for("IBuildTabService"),
   IQuizSessionService: Symbol.for("IQuizSessionService"),

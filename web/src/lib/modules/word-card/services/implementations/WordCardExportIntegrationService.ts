@@ -8,8 +8,8 @@
 import type { ExportResult, SequenceData } from "$shared";
 import { injectable } from "inversify";
 import type {
-  BatchExportResult,
-  ExportOptions,
+    BatchExportResult,
+    ExportOptions,
 } from "../../domain/models/word-card-export";
 
 // Local type definitions
@@ -27,22 +27,7 @@ interface SequenceExportOptions {
   scale?: number;
 }
 
-// Behavioral contracts
-// import {
-//   downloadBlobBatch,
-//   generateTimestampedFilename,
-//   sanitizeFilename,
-//   supportsFileDownload,
-// } from "$shared"; // These utilities don't exist yet
-
-// Temporary utility implementations
-function downloadBlobBatch(
-  _data: Array<{ blob: Blob; filename: string }>,
-  _options?: Record<string, unknown>
-): Promise<DownloadResult[]> {
-  console.warn("downloadBlobBatch not implemented yet");
-  return Promise.resolve([]);
-}
+// File download functionality provided by FileDownloadService
 
 function generateTimestampedFilename(
   prefix: string,
@@ -93,6 +78,7 @@ export class WordCardExportIntegrationService
   private abortController: AbortController | null = null;
 
   constructor(
+    @inject(TYPES.IFileDownloadService) private fileDownloadService: IFileDownloadService,
     private readonly pageImageExportService: IPageImageExportService
   ) {}
 
@@ -226,7 +212,7 @@ export class WordCardExportIntegrationService
           `Downloading ${downloadData.length} files...`
         );
 
-        const downloadResults = await downloadBlobBatch(downloadData, {
+        const downloadResults = await this.fileDownloadService.downloadBlobBatch(downloadData, {
           delay: 200, // 200ms delay between downloads
         });
 

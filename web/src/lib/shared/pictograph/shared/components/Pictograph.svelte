@@ -13,14 +13,12 @@ ARCHITECTURE:
 -->
 <script lang="ts">
   import type { PictographData } from "$shared";
+  import type { IComponentManagementService, IDataTransformationService } from "$shared/application/services/contracts";
+  import { resolve, TYPES } from "$shared/inversify";
   import { onMount } from "svelte";
   import PictographSvg from "./PictographSvg.svelte";
 // Import our focused hooks
   import { useArrowPositioning } from "../../arrow";
-  import {
-    useComponentLoading,
-    usePictographData,
-  } from "$shared/utils";
 
   // Simplified Props interface - removed beat-specific properties
   interface Props {
@@ -33,17 +31,19 @@ ARCHITECTURE:
   // HOOK-BASED STATE MANAGEMENT
   // =============================================================================
 
-  // Data transformation and derivation
-  const dataState = usePictographData({
-    pictographData,
-  });
+  // Resolve services from DI container
+  const dataTransformationService = resolve(TYPES.IDataTransformationService) as IDataTransformationService;
+  const componentManagementService = resolve(TYPES.IComponentManagementService) as IComponentManagementService;
 
-  // Component loading management factory
-  const loadingFactory = useComponentLoading();
+  // Data transformation and derivation
+  const dataState = $derived(() => dataTransformationService.transformPictographData(pictographData));
+
+  // Component loading management
+  const requiredComponents = $derived(() => componentManagementService.getRequiredComponents(pictographData));
 
   // Arrow positioning factory
   const arrowFactory = useArrowPositioning({
-    pictographData: dataState.effectivePictographData,
+    pictographData: dataState().effectivePictographData,
   });
 
   // =============================================================================
@@ -61,12 +61,7 @@ ARCHITECTURE:
   let arrowMirroring = $state<Record<string, boolean>>({});
   let showArrows = $state(false);
 
-  // Derived states
-  const requiredComponents = $derived(() => {
-    return loadingFactory.getRequiredComponents(
-      dataState.effectivePictographData
-    );
-  });
+  // Derived states - remove duplicate, use the one defined above
 
   const allComponentsLoaded = $derived(() => {
     return requiredComponents().every((component: string) =>
@@ -97,7 +92,7 @@ ARCHITECTURE:
 
   // Clear loading state when data changes (but preserve arrow visibility)
   $effect(() => {
-    if (dataState.effectivePictographData) {
+    if (dataState().effectivePictographData) {
       errorMessage = null;
       loadedComponents.clear();
       // Don't reset showArrows here - let onMount handle arrow positioning
@@ -107,7 +102,7 @@ ARCHITECTURE:
   // Calculate arrow positions when component mounts
   onMount(async () => {
     const result = await arrowFactory.calculateArrowPositions(
-      dataState.effectivePictographData
+      dataState().effectivePictographData
     );
     arrowPositions = result.positions;
     arrowMirroring = result.mirroring;
@@ -132,10 +127,10 @@ ARCHITECTURE:
   class:has-error={errorMessage}
 >
   <PictographSvg
-    pictographData={dataState.effectivePictographData}
-    hasValidData={dataState.hasValidData}
-    displayLetter={dataState.displayLetter}
-    motionsToRender={dataState.motionsToRender}
+    pictographData={dataState().effectivePictographData}
+    hasValidData={dataState().hasValidData}
+    displayLetter={dataState().displayLetter}
+    motionsToRender={dataState().motionsToRender}
     width="100%"
     height="100%"
     {viewBox}
@@ -144,7 +139,7 @@ ARCHITECTURE:
     {showArrows}
     onComponentLoaded={handleComponentLoaded}
     onComponentError={handleComponentError}
-    ariaLabel={dataState.hasValidData ? "Pictograph" : "Empty Pictograph"}
+    ariaLabel={dataState().hasValidData ? "Pictograph" : "Empty Pictograph"}
   />
 </div>
 

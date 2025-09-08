@@ -8,10 +8,15 @@
  * Uses the existing file-download utility for consistency with the app.
  */
 
-import { injectable } from "inversify";
+import type { IFileDownloadService } from "$shared/foundation/services/contracts";
+import { TYPES } from "$shared/inversify";
+import { inject, injectable } from "inversify";
 
 @injectable()
 export class FileExportService {
+  constructor(
+    @inject(TYPES.IFileDownloadService) private fileDownloadService: IFileDownloadService
+  ) {}
   /**
    * Convert canvas to blob
    * Handles both PNG and JPEG formats with quality control
@@ -65,9 +70,11 @@ export class FileExportService {
     }
 
     try {
-      // Use the existing file-download utility for consistency
-            const { downloadBlob } = await import("$shared");
-      await downloadBlob(blob, filename);
+      // Use the FileDownloadService for consistency
+      const result = await this.fileDownloadService.downloadBlob(blob, filename);
+      if (!result.success) {
+        throw new Error(result.error?.message || "Download failed");
+      }
     } catch (error) {
       throw new Error(
         `Download failed: ${error instanceof Error ? error.message : "Unknown error"}`

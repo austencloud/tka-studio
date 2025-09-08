@@ -6,23 +6,18 @@
  */
 
 import type {
-  BeatData,
-  BeatEditOperation,
   PictographData,
-  SequenceCreationParams,
   SequenceData,
   ValidationResult,
-  WorkbenchConfig,
-  WorkbenchMode,
 } from "$shared";
 import {
-  createBeatData,
   createPictographData,
   GridMode,
   Letter,
 } from "$shared";
 import { injectable } from "inversify";
 import type { IWorkbenchService } from "../contracts";
+import { type BeatData, type WorkbenchConfig, type WorkbenchMode, type BeatEditOperation, createBeatData, type SequenceCreationParams } from "../../domain";
 @injectable()
 export class WorkbenchService implements IWorkbenchService {
   private currentBeat: BeatData | null = null;

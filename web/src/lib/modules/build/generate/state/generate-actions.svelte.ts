@@ -5,8 +5,8 @@
  * to create real sequences that update the BeatGrid.
  */
 
-import { DifficultyLevel, GenerationMode, GridMode, PropContinuity, type SequenceData } from "$shared";
-import type { GenerationOptions } from "../domain";
+import type { GridMode, SequenceData } from "../../../../shared";
+import type { DifficultyLevel, GenerationMode, GenerationOptions, PropContinuity } from "../domain";
 import type { ISequenceGenerationService } from "../services/contracts/generate-contracts";
 
 

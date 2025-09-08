@@ -1,6 +1,5 @@
 import type { MotionData, SequenceData } from "$shared";
 import {
-  createBeatData,
   createMotionData,
   createPictographData,
   createSequenceData,
@@ -17,7 +16,8 @@ import type {
   IAnimationControlService,
   ISequenceAnimationEngine,
 } from "../contracts";
-import type { AnimatedMotionParams, PropStates } from "$shared";
+import type { AnimatedMotionParams, PropStates } from "../../domain";
+import { createBeatData } from "../../../build/workbench";
 
 export interface AnimationState {
   isPlaying: boolean;

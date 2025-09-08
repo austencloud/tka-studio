@@ -6,10 +6,10 @@
  * that was previously scattered throughout the massive ConstructTab component.
  */
 
-import type { PictographData } from "$shared";
-import { type BeatData, TYPES, createBeatData, resolve } from "$shared";
+import { resolve, TYPES, type PictographData } from "$shared";
 import { injectable } from "inversify";
 import type { IBuildTabEventService, IConstructSubTabCoordinationService } from "../contracts";
+import {  createBeatData, type BeatData } from "../../../workbench";
 
 
 @injectable()

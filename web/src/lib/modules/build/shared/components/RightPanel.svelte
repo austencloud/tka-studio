@@ -19,8 +19,8 @@
     PictographData,
   } from "$shared";
   import { fade } from "svelte/transition";
-  import { getAnimationSettings } from "../../../../shared/utils";
   import ConstructTabContent from "./ConstructTabContent.svelte";
+  import { getAnimationSettings } from "../build-animation-control";
 
   // Props from parent BuildTab
   interface Props {

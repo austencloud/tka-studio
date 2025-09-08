@@ -1,7 +1,8 @@
 <!-- Unified Navigation Bar -->
 <script lang="ts">
+  import type { IAnimationService } from "../../application/services/contracts";
   import { showSettingsDialog } from "../../application/state/app-state.svelte";
-  import { foldTransition } from "../../utils";
+  import { resolve, TYPES } from "../../inversify";
 
   type TabID = string;
   interface TabDef {
@@ -23,6 +24,12 @@
     onTabSelect,
     onBackgroundChange,
   }: Props = $props();
+
+  // Resolve animation service
+  const animationService = resolve(TYPES.IAnimationService) as IAnimationService;
+
+  // Create fold transition
+  const foldTransition = (node: Element, params: any) => animationService.createFoldTransition({ direction: "fold-in", duration: 300, ...params });
 
   // Separate main and developer tabs for display
   const mainTabs = $derived(() => tabs.filter((tab) => tab.isMain !== false));

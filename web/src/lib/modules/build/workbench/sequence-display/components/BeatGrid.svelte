@@ -1,10 +1,11 @@
 <script lang="ts">
-  import type { BeatData } from "$shared";
-  import { createBeatData, resolve, TYPES } from "$shared";
+  import {  resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { crossfade } from "svelte/transition";
   import { createBeatGridState } from "../state";
   import BeatCellView from "./BeatCellView.svelte";
+  import type { BeatData } from "../../shared";
+  import { createBeatData } from "../../shared/domain/factories";
 
   interface Props {
     beats: ReadonlyArray<BeatData> | BeatData[];

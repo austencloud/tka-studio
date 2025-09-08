@@ -70,6 +70,7 @@ import { WorkbenchCoordinationService } from "../../modules/build/workbench/shar
 import { WorkbenchService } from "../../modules/build/workbench/shared/services/implementations/WorkbenchService";
 import { PrintablePageLayoutService } from "../../modules/build/workbench/shared/services/PrintablePageLayoutService";
 // Sequence toolkit services
+import { PictographValidatorService } from "$build/generate/services";
 import { BeatRenderingService } from "../../modules/build/export/services/implementations/BeatRenderingService";
 import {
   SequenceDeletionService,
@@ -91,8 +92,12 @@ import { WordCardSVGCompositionService } from "../../modules/word-card/services/
 import { ActService } from "../../modules/write/services/implementations/ActService";
 import { MusicPlayerService } from "../../modules/write/services/implementations/MusicPlayerService";
 import {
+  AnimationService,
   ApplicationInitializer,
+  ComponentManagementService,
+  DataTransformationService,
   ErrorHandlingService,
+  ResourceTracker
 } from "../application/services/implementations";
 import { BackgroundService } from "../background";
 import { DeviceDetector } from "../device/services/implementations/DeviceDetector";
@@ -101,29 +106,13 @@ import {
   CSVParser,
   DataTransformer,
   EnumMapper,
-  // GridModeDeriver, // Service doesn't exist
-  // GridPositionDeriver, // Service doesn't exist
-  // LetterDeriver, // Service doesn't exist
-  // LetterQueryHandler, // Service doesn't exist
-  // MotionQueryHandler, // Service doesn't exist
+  FileDownloadService,
+
   OptionFilterer,
+  SeoService,
+  StorageService,
+  SvgImageService
 } from "../foundation";
-import { MotionQueryHandler } from "../pictograph/arrow/services/implementations/MotionQueryHandler";
-import { LetterQueryHandler } from "../pictograph/tka-glyph/services/implementations/LetterQueryHandler";
-// Grid services moved to grid module
-import { GridModeDeriver, GridPositionDeriver, GridRenderingService } from "../pictograph/grid";
-// Prop services moved to prop module
-import {
-  DirectionalTupleCalculator,
-  DirectionalTupleProcessor,
-  QuadrantIndexCalculator,
-} from "../pictograph/arrow/services/implementations/DirectionalTupleProcessor";
-import { SettingsService } from "../settings/services/implementations/SettingsService";
-import { TYPES } from "./types";
-// Prop services moved to prop module
-import { BetaDetectionService, BetaOffsetCalculator, PropCoordinator, PropPlacementService } from "../pictograph/prop";
-// Arrow services moved to arrow module
-import { PictographValidatorService } from "$build/generate/services";
 import {
   ArrowAdjustmentCalculator,
   ArrowCoordinateSystemService,
@@ -142,8 +131,19 @@ import {
   TurnsTupleKeyGenerator
 } from "../pictograph/arrow";
 import { AttributeKeyGenerator } from "../pictograph/arrow/services/implementations/AttributeKeyGenerator";
+import {
+  DirectionalTupleCalculator,
+  DirectionalTupleProcessor,
+  QuadrantIndexCalculator,
+} from "../pictograph/arrow/services/implementations/DirectionalTupleProcessor";
+import { MotionQueryHandler } from "../pictograph/arrow/services/implementations/MotionQueryHandler";
 import { SpecialPlacementOriKeyGenerator } from "../pictograph/arrow/services/implementations/SpecialPlacementOriKeyGenerator";
+import { GridModeDeriver, GridPositionDeriver, GridRenderingService } from "../pictograph/grid";
+import { BetaDetectionService, BetaOffsetCalculator, PropCoordinator, PropPlacementService } from "../pictograph/prop";
 import { OrientationCalculationService } from "../pictograph/prop/services/implementations/OrientationCalculationService";
+import { LetterQueryHandler } from "../pictograph/tka-glyph/services/implementations/LetterQueryHandler";
+import { SettingsService } from "../settings/services/implementations/SettingsService";
+import { TYPES } from "./types";
 
 // Create container
 const container = new Container();
@@ -171,6 +171,16 @@ try {
   container.bind(TYPES.IPersistenceService).to(GalleryPersistenceService);
   container.bind(TYPES.IDeviceDetector).to(DeviceDetector);
   container.bind(TYPES.IApplicationInitializer).to(ApplicationInitializer);
+  container.bind(TYPES.IResourceTracker).to(ResourceTracker);
+  container.bind(TYPES.IComponentManagementService).to(ComponentManagementService);
+  container.bind(TYPES.IDataTransformationService).to(DataTransformationService);
+  container.bind(TYPES.IAnimationService).to(AnimationService);
+
+  // Bind foundation services
+  container.bind(TYPES.IFileDownloadService).to(FileDownloadService);
+  container.bind(TYPES.IStorageService).to(StorageService);
+  container.bind(TYPES.ISeoService).to(SeoService);
+  container.bind(TYPES.ISvgImageService).to(SvgImageService);
 
   // Bind sequence services
   container.bind(TYPES.ISequenceDomainService).to(SequenceDomainService);

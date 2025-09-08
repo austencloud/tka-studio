@@ -6,7 +6,7 @@
  */
 
 import { browser } from "$app/environment";
-import { safeLocalStorageGet, safeLocalStorageSet } from "$shared";
+import { resolve, TYPES, type IStorageService } from "$shared";
 
 // ============================================================================
 // AUTO-SYNC CONFIGURATION
@@ -90,11 +90,8 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
       }
 
       const transformedState = beforeSave(state);
-      const success = safeLocalStorageSet(key, transformedState);
-
-      if (!success) {
-        console.error(`Failed to save state for key "${key}"`);
-      }
+      const storageService = resolve<IStorageService>(TYPES.IStorageService);
+      storageService.safeLocalStorageSet(key, transformedState);
     } catch (error) {
       console.error(`Error saving state for key "${key}":`, error);
     }
@@ -104,7 +101,8 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
     if (!browser) return defaultValue;
 
     try {
-      const stored = safeLocalStorageGet<unknown>(key, null);
+      const storageService = resolve<IStorageService>(TYPES.IStorageService);
+      const stored = storageService.safeLocalStorageGet<unknown>(key, null);
 
       if (stored === null) {
         return defaultValue;

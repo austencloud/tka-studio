@@ -6,20 +6,19 @@
  */
 
 import type {
-  BeatData,
   Letter,
   SequenceData,
   ValidationResult,
 } from "$shared";
 import {
   addBeatToSequence,
-  createBeatData,
   createSequenceData,
   removeBeatFromSequence,
   updateSequenceData,
 } from "$shared";
 import { injectable } from "inversify";
 import type { ISequenceStateService } from "./contracts";
+import { type BeatData, createBeatData } from "../domain";
 
 @injectable()
 export class SequenceStateService implements ISequenceStateService {

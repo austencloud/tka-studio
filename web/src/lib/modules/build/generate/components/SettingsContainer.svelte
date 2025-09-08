@@ -4,7 +4,7 @@ Handles the responsive layout and scrolling behavior
 All individual controls are evenly spaced throughout the container
 -->
 <script lang="ts">
-  import { DifficultyLevel, GenerationMode } from "$shared";
+  import { DifficultyLevel, GenerationMode } from "../domain";
   import type { GenerationConfig } from "../state/generate-config.svelte";
   import CAPTypeSelector from "./selectors/CAPTypeSelector.svelte";
   import GenerationModeToggle from "./selectors/GenerationModeToggle.svelte";

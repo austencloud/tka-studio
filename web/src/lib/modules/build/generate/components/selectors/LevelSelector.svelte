@@ -3,7 +3,8 @@ Level Selector - Svelte Version
 Simple 3-level difficulty selector with circular buttons.
 -->
 <script lang="ts">
-  import { DifficultyLevel } from '$shared';
+  import { DifficultyLevel } from "../../domain";
+
 
   interface Props {
     initialValue?: DifficultyLevel;
