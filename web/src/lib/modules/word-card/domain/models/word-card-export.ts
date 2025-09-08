@@ -9,14 +9,14 @@
 // IMAGE EXPORT CONFIGURATION
 // ============================================================================
 
-export interface ExportOptions {
+export interface WordCardExportOptions {
   format: "PNG" | "JPEG" | "WebP" | "PDF";
   quality: number; // 0-1 for JPEG/WebP
   width?: number;
   height?: number;
   scale: number; // Device pixel ratio multiplier
   backgroundColor?: string;
-  enableMetadata?: boolean;
+  includeMetadata?: boolean;
   filename?: string;
 }
 

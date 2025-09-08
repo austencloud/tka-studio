@@ -1,7 +1,8 @@
 <!-- SEO-Optimized SEQUENCE-CARD Page with Enhanced Meta Data -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { handleSEORedirect } from "$shared";
+  import type { ISeoService } from "$shared";
+  import { resolve, TYPES } from "$shared";
   import MainApplication from "../../lib/shared/application/components/MainApplication.svelte";
 
   import { onMount } from "svelte";
@@ -16,7 +17,8 @@
   // Enhanced SEO redirect with analytics potential
   onMount(() => {
     if (browser) {
-      handleSEORedirect("sequence_card");
+      const seoService = resolve<ISeoService>(TYPES.ISeoService);
+      seoService.handleSEORedirect("sequence_card");
     }
   });
 

@@ -14,14 +14,14 @@
  */
 
 
-import type { MotionData, PictographCoordinate, PictographData } from "$shared";
+import type { MotionData, PictographData } from "$shared";
 import { injectable } from "inversify";
 import { resolve, TYPES } from "../../../../inversify";
 import { GridMode } from "../../../grid";
-import type { IGridModeDeriver } from "../../../grid/services/contracts/positioning-interfaces";
-import type { ISpecialPlacementService } from "../contracts/positioning-interfaces";
+import type { IGridModeDeriver, ISpecialPlacementService } from "../../../grid/services/contracts/positioning-interfaces";
 import { jsonCache } from "./SimpleJsonCache";
 import { SpecialPlacementOriKeyGenerator } from "./SpecialPlacementOriKeyGenerator";
+import { Point } from "fabric";
 
 // Define Point interface locally since it might not be in domain
 
@@ -66,7 +66,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     motionData: MotionData,
     pictographData: PictographData,
     arrowColor?: string
-  ): Promise<PictographCoordinate | null> {
+  ): Promise<Point | null> {
     if (!motionData || !pictographData.letter) {
       return null;
     }
@@ -136,7 +136,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     if (colorKey in turnData) {
       const adjustmentValues = turnData[colorKey];
       if (Array.isArray(adjustmentValues) && adjustmentValues.length === 2) {
-        return { x: adjustmentValues[0], y: adjustmentValues[1] };
+        return new Point(adjustmentValues[0], adjustmentValues[1]);
       }
     }
 
@@ -146,7 +146,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     if (motionTypeKey in turnData) {
       const adjustmentValues = turnData[motionTypeKey];
       if (Array.isArray(adjustmentValues) && adjustmentValues.length === 2) {
-        return { x: adjustmentValues[0], y: adjustmentValues[1] };
+        return new Point(adjustmentValues[0], adjustmentValues[1]);
       }
     }
 

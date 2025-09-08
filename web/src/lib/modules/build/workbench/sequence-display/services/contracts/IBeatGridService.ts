@@ -9,8 +9,8 @@ import type {
   BeatGridConfig,
   ContainerDimensions,
   LayoutInfo,
-  PictographCoordinate
 } from "$shared";
+import type { ImageCanvasCoordinate } from "../../domain";
 
 export interface IBeatGridService {
   // Configuration methods
@@ -22,13 +22,13 @@ export interface IBeatGridService {
     index: number,
     beatCount?: number,
     config?: BeatGridConfig
-  ): PictographCoordinate;
+  ): ImageCanvasCoordinate;
 
   calculateStartPosition(
     beatCount: number,
     config?: BeatGridConfig,
     containerDimensions?: ContainerDimensions
-  ): PictographCoordinate;
+  ): ImageCanvasCoordinate;
 
   calculateFrameDimensions(
     beatCount: number,

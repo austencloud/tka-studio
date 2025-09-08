@@ -5,17 +5,20 @@
  * This replaces the PictographRenderingService with explicit composition.
  */
 
-import type { IArrowPositioningOrchestrator, IGridModeDeriver } from "$shared";
 import {
   GridMode,
   MotionColor,
   resolve,
   TYPES,
+  type IArrowPositioningOrchestrator,
+  type IGridModeDeriver,
   type MotionData,
   type PictographData,
 } from "$shared";
+import { Point } from "fabric";
 import type { IOverlayRenderer } from "../../../../modules/animator/services/implementations/OverlayRenderer";
 import type { ISvgUtilityService } from "../../../../modules/animator/services/implementations/SvgUtilityService";
+import type { ArrowPosition } from "../../arrow";
 import type { IArrowRenderer } from "../../arrow/services/implementations/rendering/ArrowRenderer";
 import type { IGridRenderingService } from "../../grid";
 
@@ -61,11 +64,13 @@ export async function renderPictograph(
       )) {
         const motion = motionData as MotionData;
         if (motion?.isVisible && motion.arrowPlacementData) {
-          const position = {
-            x: motion.arrowPlacementData.positionX,
-            y: motion.arrowPlacementData.positionY,
-            rotation: motion.arrowPlacementData.rotationAngle,
-          };
+          const position = Object.assign(
+            new Point(
+              motion.arrowPlacementData.positionX,
+              motion.arrowPlacementData.positionY
+            ),
+            { rotation: motion.arrowPlacementData.rotationAngle }
+          );
           await arrowRendering.renderArrowAtPosition(
             svg,
             color as MotionColor,
@@ -81,21 +86,21 @@ export async function renderPictograph(
     overlayRendering.renderIdLabel(svg, data);
 
     // Render debug info
-    const arrowPositions = new Map<
-      string,
-      { x: number; y: number; rotation: number }
-    >();
+    const arrowPositions = new Map<string, ArrowPosition>();
     if (updatedPictographData.motions) {
       for (const [color, motionData] of Object.entries(
         updatedPictographData.motions
       )) {
         const motion = motionData as MotionData;
         if (motion?.isVisible && motion.arrowPlacementData) {
-          arrowPositions.set(color, {
-            x: motion.arrowPlacementData.positionX,
-            y: motion.arrowPlacementData.positionY,
-            rotation: motion.arrowPlacementData.rotationAngle,
-          });
+          const arrowPosition = Object.assign(
+            new Point(
+              motion.arrowPlacementData.positionX,
+              motion.arrowPlacementData.positionY
+            ),
+            { rotation: motion.arrowPlacementData.rotationAngle }
+          );
+          arrowPositions.set(color, arrowPosition);
         }
       }
     }

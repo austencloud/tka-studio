@@ -17,10 +17,10 @@ import {
   Orientation,
   PropType,
   RotationDirection,
-  type BeatData,
   type MotionData,
 } from "$shared";
 import { injectable } from "inversify";
+import type { BeatData } from "../../../../../modules/build/workbench";
 
 export interface OrientationCalculationServiceInterface {
   calculateEndOrientation(motion: MotionData, color: MotionColor): Orientation;

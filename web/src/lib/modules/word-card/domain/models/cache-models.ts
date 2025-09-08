@@ -1,5 +1,5 @@
 import type { SequenceData } from "$shared";
-import type { ExportOptions } from "./word-card-export";
+import type { WordCardExportOptions } from "./word-card-export";
 
 export interface CacheEntry {
   data: Blob | SequenceData;
@@ -7,7 +7,7 @@ export interface CacheEntry {
   size: number;
   accessCount: number;
   lastAccessed: Date;
-  options?: ExportOptions;
+  options?: WordCardExportOptions;
 }
 
 export interface CacheStats {

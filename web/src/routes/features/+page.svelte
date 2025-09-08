@@ -1,14 +1,16 @@
 <!-- SEO-Optimized Features Page with User Redirect -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import { handleSEORedirect } from "$shared";
+  import type { ISeoService } from "$shared";
+  import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import AboutTab from "./../../lib/modules/about/components/AboutTab.svelte";
 
   // Redirect users to main app while preserving SEO benefits
   onMount(() => {
     if (browser) {
-      handleSEORedirect("about", "features");
+      const seoService = resolve<ISeoService>(TYPES.ISeoService);
+      seoService.handleSEORedirect("about", "features");
     }
   });
 </script>

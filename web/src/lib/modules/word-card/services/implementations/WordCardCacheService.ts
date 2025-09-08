@@ -5,7 +5,7 @@
  * Single responsibility: Cache storage and retrieval.
  */
 
-import type { ExportOptions, SequenceData } from "$shared";
+import type { SequenceData, WordCardExportOptions } from "$shared";
 import { injectable } from "inversify";
 import type { IWordCardCacheService } from "../contracts";
 
@@ -15,7 +15,7 @@ interface CacheEntry {
   size: number;
   accessCount: number;
   lastAccessed: Date;
-  options?: ExportOptions;
+  options?: WordCardExportOptions;
 }
 
 interface CacheStats {
@@ -44,7 +44,7 @@ export class WordCardCacheService implements IWordCardCacheService {
   async storeImage(
     sequenceId: string,
     imageBlob: Blob,
-    options?: ExportOptions
+    options?: WordCardExportOptions
   ): Promise<void> {
     try {
       const cacheKey = this.generateImageCacheKey(sequenceId, options);
@@ -75,7 +75,7 @@ export class WordCardCacheService implements IWordCardCacheService {
    */
   async retrieveImage(
     sequenceId: string,
-    options?: ExportOptions
+    options?: WordCardExportOptions
   ): Promise<Blob | null> {
     try {
       const cacheKey = this.generateImageCacheKey(sequenceId, options);
@@ -244,7 +244,7 @@ export class WordCardCacheService implements IWordCardCacheService {
 
   private generateImageCacheKey(
     sequenceId: string,
-    options?: ExportOptions
+    options?: WordCardExportOptions
   ): string {
     if (!options) {
       return sequenceId;

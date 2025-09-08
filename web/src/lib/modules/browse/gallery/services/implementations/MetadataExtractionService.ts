@@ -5,8 +5,7 @@
  * Provides a clean interface for metadata extraction operations.
  */
 
-import { PngMetadataExtractor } from "$shared";
-import type { SequenceMetadata } from "$shared";
+import { PngMetadataExtractor, type SequenceMetadata } from "$shared";
 import type {
   GalleryThumbnailFile,
   MetadataAnalysisResult,

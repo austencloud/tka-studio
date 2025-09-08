@@ -24,7 +24,6 @@ import type {
 } from "$shared";
 import {
   type MotionData,
-  type PictographCoordinate,
   type PictographData,
   GridLocation,
   GridMode,
@@ -33,6 +32,7 @@ import {
 } from "$shared";
 import { inject, injectable } from "inversify";
 import type { ArrowPlacementKeyService } from "../ArrowPlacementKeyService";
+import { Point } from "fabric";
 
 @injectable()
 export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
@@ -87,7 +87,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     letter: string,
     location: GridLocation,
     arrowColor?: string
-  ): Promise<PictographCoordinate> {
+  ): Promise<Point> {
     /**
      * Calculate arrow position adjustment - IDENTICAL logic to original.
      */
@@ -102,7 +102,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     } catch (error) {
       // Log error and return default for backward compatibility
       console.error(`Adjustment calculation failed: ${error}`);
-      return { x: 0, y: 0 };
+      return new Point(0, 0);
     }
   }
 
@@ -112,7 +112,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     letter: string,
     location: GridLocation,
     arrowColor?: string
-  ): Promise<PictographCoordinate> {
+  ): Promise<Point> {
     /**
      * Calculate arrow position adjustment with proper error handling.
      * IDENTICAL logic to original ArrowAdjustmentCalculator.
@@ -133,7 +133,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         location
       );
 
-      return finalAdjustment;
+      return new Point(finalAdjustment.x, finalAdjustment.y);
     } catch (error) {
       console.error(
         `Adjustment calculation failed for letter ${letter}: ${error}`
@@ -149,7 +149,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     motionData: MotionData,
     letter: string,
     arrowColor?: string
-  ): Promise<PictographCoordinate> {
+  ): Promise<Point> {
     /**
      * Get base adjustment using streamlined lookup logic.
      * IDENTICAL to ArrowAdjustmentLookup.getBaseAdjustment()
@@ -241,7 +241,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
     motionData: MotionData,
     pictographData: PictographData,
     arrowColor?: string
-  ): Promise<PictographCoordinate | null> {
+  ): Promise<Point | null> {
     /**
      * Look up special placement using exact legacy logic.
      * IDENTICAL to ArrowAdjustmentLookup.lookupSpecialPlacement()
@@ -255,7 +255,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         );
 
       if (adjustment) {
-        return adjustment;
+        return new Point(adjustment.x, adjustment.y);
       }
 
       // Return null instead of throwing when no special placement found
@@ -270,7 +270,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
   private async calculateDefaultAdjustment(
     motionData: MotionData,
     pictographData: PictographData
-  ): Promise<PictographCoordinate> {
+  ): Promise<Point> {
     /**
      * Calculate default adjustment - IDENTICAL to ArrowAdjustmentLookup.
      */
@@ -308,7 +308,7 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
           derivedGridMode as GridMode
         );
 
-      return adjustmentPoint;
+      return new Point(adjustmentPoint.x, adjustmentPoint.y);
     } catch (error) {
       console.error("Error calculating default adjustment:", error);
       throw new Error(`Default adjustment calculation failed: ${error}`);

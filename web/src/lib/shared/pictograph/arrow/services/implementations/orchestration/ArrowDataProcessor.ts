@@ -8,9 +8,9 @@
 import type {
   ArrowPlacementData,
   MotionData,
-  PictographCoordinate,
   PictographData,
 } from "$shared";
+import type { Point } from "fabric";
 import type { IArrowCoordinateSystemService } from "../coordinate_system/ArrowCoordinateSystemService";
 
 export class ArrowDataProcessor {
@@ -35,7 +35,7 @@ export class ArrowDataProcessor {
     ];
   }
 
-  ensureValidPosition(initialPosition: PictographCoordinate): PictographCoordinate {
+  ensureValidPosition(initialPosition: Point): Point {
     /**
      * Ensure position object has valid x and y attributes.
      */
@@ -51,7 +51,7 @@ export class ArrowDataProcessor {
     return this.coordinateSystem.getSceneCenter();
   }
 
-  extractAdjustmentValues(adjustment: PictographCoordinate | number): [number, number] {
+  extractAdjustmentValues(adjustment: Point | number): [number, number] {
     /**
      * Extract x and y values from adjustment object.
      */

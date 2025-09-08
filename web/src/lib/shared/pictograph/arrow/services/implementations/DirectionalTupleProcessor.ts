@@ -15,10 +15,10 @@ import {
   GridLocation,
   TYPES,
   type MotionData,
-  type PictographCoordinate,
 } from "$shared";
 import { inject, injectable } from "inversify";
 import { ArrowQuadrantCalculator } from "../..";
+import { Point } from "fabric";
 
 // GridPoint type definition
 
@@ -38,10 +38,10 @@ export interface IDirectionalTupleCalculator {
 
 export interface IDirectionalTupleProcessor {
   processDirectionalTuples(
-    baseAdjustment: PictographCoordinate,
+    baseAdjustment: Point,
     _motion: MotionData,
     location: GridLocation
-  ): PictographCoordinate;
+  ): Point;
 }
 
 @injectable()
@@ -365,10 +365,10 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
   ) {}
 
   processDirectionalTuples(
-    baseAdjustment: PictographCoordinate,
+    baseAdjustment: Point,
     _motion: MotionData,
     location: GridLocation
-  ): PictographCoordinate {
+  ): Point {
     /**
      * Process directional tuples to calculate final adjustment.
      *
@@ -399,7 +399,7 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
       const selectedTuple = directionalTuples[quadrantIndex] || [0, 0];
 
       // Final adjustment = selected tuple only (baseAdjustment already used to build tuples)
-      return { x: selectedTuple[0], y: selectedTuple[1] };
+      return new Point(selectedTuple[0], selectedTuple[1]);
     } catch (error) {
       console.warn(
         "Directional tuple processing failed, using base adjustment:",

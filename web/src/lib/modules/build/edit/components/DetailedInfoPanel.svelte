@@ -1,7 +1,6 @@
 <!-- DetailedInfoPanel.svelte - Detailed information about selected beat -->
 <script lang="ts">
-  import type { BeatData, IGridModeDeriver, SequenceData } from "$shared";
-  import { GridMode, MotionColor, resolve, TYPES } from "$shared";
+  import { GridMode, MotionColor, resolve, TYPES, type BeatData, type IGridModeDeriver, type SequenceData } from "$shared";
   import { onMount } from "svelte";
 
   // Props

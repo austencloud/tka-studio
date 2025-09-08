@@ -15,16 +15,16 @@ import type {
   ExportProgress,
   SequenceExportOptions,
 } from "../../../build/export/domain/models";
-import type { BatchExportResult, ExportOptions } from "../../domain/models/word-card-export";
+import type { Page } from "../../domain/models/PageLayout";
+import type { BatchExportResult, WordCardExportOptions } from "../../domain/models/word-card-export";
 import type { IPageImageExportService } from "../contracts";
-import type { Page } from "@sveltejs/kit";
 
 @injectable()
 export class PageImageExportService implements IPageImageExportService {
-  exportPage(_page: Page, _options: ExportOptions): Promise<Blob> {
+  exportPage(_page: Page, _options: WordCardExportOptions): Promise<Blob> {
     throw new Error("Method not implemented.");
   }
-  exportPages(_pages: Page[], _options: ExportOptions): Promise<Blob[]> {
+  exportPages(_pages: Page[], _options: WordCardExportOptions): Promise<Blob[]> {
     throw new Error("Method not implemented.");
   }
   private abortController: AbortController | null = null;

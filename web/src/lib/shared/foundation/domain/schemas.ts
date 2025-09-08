@@ -12,76 +12,16 @@
 
 import { z } from "zod";
 // Import enums directly from their sources to avoid circular dependencies
-import { GridLocation, GridMode, GridPosition, GridPositionGroup } from "../../pictograph/grid/domain/enums/grid-enums";
+import { GridMode, GridPositionGroup } from "../../pictograph/grid/domain/enums/grid-enums";
 import { PropType } from "../../pictograph/prop/domain/enums/prop-enums";
-import { MotionColor, MotionType, Orientation, RotationDirection } from "../../pictograph/shared/domain/enums/pictograph-enums";
-import { Letter } from "./models/Letter";
+import { MotionDataSchema, PictographDataSchema } from "../../pictograph/shared/domain/schemas";
 
 // ============================================================================
 // COORDINATE AND PLACEMENT SCHEMAS
 // ============================================================================
 
-const CoordinateSchema = z
-  .object({
-    x: z.number(),
-    y: z.number(),
-  })
-  .nullable();
 
-const ArrowPlacementDataSchema = z.object({
-  positionX: z.number().default(0.0),
-  positionY: z.number().default(0.0),
-  rotationAngle: z.number().default(0.0),
-  coordinates: CoordinateSchema.default(null),
-  svgCenter: CoordinateSchema.default(null),
-  svgMirrored: z.boolean().default(false),
-});
-
-const PropPlacementDataSchema = z.object({
-  positionX: z.number().default(0.0),
-  positionY: z.number().default(0.0),
-  rotationAngle: z.number().default(0.0),
-  coordinates: CoordinateSchema.default(null),
-  svgCenter: CoordinateSchema.default(null),
-});
-
-// ============================================================================
-// MOTION AND PICTOGRAPH SCHEMAS
-// ============================================================================
-
-const MotionDataSchema = z.object({
-  motionType: z.nativeEnum(MotionType).default(MotionType.STATIC),
-  rotationDirection: z
-    .nativeEnum(RotationDirection)
-    .default(RotationDirection.NO_ROTATION),
-  startLocation: z.nativeEnum(GridLocation).default(GridLocation.NORTH),
-  endLocation: z.nativeEnum(GridLocation).default(GridLocation.NORTH),
-  turns: z.union([z.number(), z.literal("fl")]).default(0.0),
-  startOrientation: z.nativeEnum(Orientation).default(Orientation.IN),
-  endOrientation: z.nativeEnum(Orientation).default(Orientation.IN),
-  isVisible: z.boolean().default(true),
-  propType: z.nativeEnum(PropType).default(PropType.STAFF),
-  arrowLocation: z.nativeEnum(GridLocation).default(GridLocation.NORTH),
-  color: z.nativeEnum(MotionColor).default(MotionColor.BLUE),
-  arrowPlacementData: ArrowPlacementDataSchema.default({}),
-  propPlacementData: PropPlacementDataSchema.default({}),
-  prefloatMotionType: z.nativeEnum(MotionType).nullable().default(null),
-  prefloatRotationDirection: z
-    .nativeEnum(RotationDirection)
-    .nullable()
-    .default(null),
-});
-
-const PictographDataSchema = z.object({
-  id: z
-    .string()
-    .min(1)
-    .default(() => crypto.randomUUID()),
-  letter: z.nativeEnum(Letter).nullable().default(null),
-  startPosition: z.nativeEnum(GridPosition).nullable().default(null),
-  endPosition: z.nativeEnum(GridPosition).nullable().default(null),
-  motions: z.record(z.nativeEnum(MotionColor), MotionDataSchema).default({}),
-});
+// Pictograph-specific schemas moved to pictograph/shared/domain/schemas/
 
 // ============================================================================
 // BEAT AND SEQUENCE SCHEMAS - The Main Targets

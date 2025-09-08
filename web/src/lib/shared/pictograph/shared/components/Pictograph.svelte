@@ -1,24 +1,19 @@
 <!--
 Pictograph.svelte - Modern Rune-Based Pictograph Component (Refactored)
 
-This is the refactored version of the Pictograph component, broken down into logical,
-easy-to-understand parts using focused hooks and components for different concerns.
+This is the refactored version of the Pictograph component using the new pictograph-state.svelte.ts
+for proper Svelte 5 runes state management without warnings.
 
 ARCHITECTURE:
-- usePictographData: Handles data transformation and derivation
-- useComponentLoading: Manages component loading state coordination
-- useArrowPositioning: Coordinates arrow positioning
+- createPictographState: Handles all pictograph state management with Svelte 5 runes
 - PictographSvg: Handles SVG rendering
-- Main component: Focuses on state management and layout
+- Main component: Focuses on state coordination and layout
 -->
 <script lang="ts">
   import type { PictographData } from "$shared";
-  import type { IComponentManagementService, IDataTransformationService } from "$shared/application/services/contracts";
-  import { resolve, TYPES } from "$shared/inversify";
   import { onMount } from "svelte";
+  import { createPictographState } from "../state/pictograph-state.svelte";
   import PictographSvg from "./PictographSvg.svelte";
-// Import our focused hooks
-  import { useArrowPositioning } from "../../arrow";
 
   // Simplified Props interface - removed beat-specific properties
   interface Props {
@@ -28,93 +23,52 @@ ARCHITECTURE:
   let { pictographData = null }: Props = $props();
 
   // =============================================================================
-  // HOOK-BASED STATE MANAGEMENT
+  // STATE MANAGEMENT (using pictograph-state.svelte.ts)
   // =============================================================================
 
-  // Resolve services from DI container
-  const dataTransformationService = resolve(TYPES.IDataTransformationService) as IDataTransformationService;
-  const componentManagementService = resolve(TYPES.IComponentManagementService) as IComponentManagementService;
+  // Create pictograph state with reactive data management
+  const pictographState = createPictographState(pictographData);
 
-  // Data transformation and derivation
-  const dataState = $derived(() => dataTransformationService.transformPictographData(pictographData));
-
-  // Component loading management
-  const requiredComponents = $derived(() => componentManagementService.getRequiredComponents(pictographData));
-
-  // Arrow positioning factory
-  const arrowFactory = useArrowPositioning({
-    pictographData: dataState().effectivePictographData,
+  // Update state when props change
+  $effect(() => {
+    pictographState.updatePictographData(pictographData);
   });
 
   // =============================================================================
-  // REACTIVE STATE (using Svelte runes)
+  // DERIVED STATE (from pictograph state)
   // =============================================================================
 
-  // Component loading state
-  let errorMessage = $state<string | null>(null);
-  let loadedComponents = $state(new Set<string>());
+  // All state is now managed by pictographState - no local state needed
 
-  // Arrow positioning state
-  let arrowPositions = $state<
-    Record<string, { x: number; y: number; rotation: number }>
-  >({});
-  let arrowMirroring = $state<Record<string, boolean>>({});
-  let showArrows = $state(false);
-
-  // Derived states - remove duplicate, use the one defined above
-
-  const allComponentsLoaded = $derived(() => {
-    return requiredComponents().every((component: string) =>
-      loadedComponents.has(component)
-    );
-  });
-
-  const isLoading = $derived(() => !allComponentsLoaded());
-  const isLoaded = $derived(() => allComponentsLoaded());
+  // Standard pictograph viewBox
+  const viewBox = "0 0 950 950";
 
   // =============================================================================
-  // EVENT HANDLERS
+  // EVENT HANDLERS (delegated to pictograph state)
   // =============================================================================
 
   function handleComponentLoaded(componentName: string) {
-    loadedComponents.add(componentName);
+    pictographState.handleComponentLoaded(componentName);
   }
 
   function handleComponentError(componentName: string, error: string) {
-    errorMessage = `${componentName}: ${error}`;
-    // Still mark as loaded to prevent blocking
-    handleComponentLoaded(componentName);
+    pictographState.handleComponentError(componentName, error);
   }
 
   // =============================================================================
   // LIFECYCLE & EFFECTS
   // =============================================================================
 
-  // Clear loading state when data changes (but preserve arrow visibility)
-  $effect(() => {
-    if (dataState().effectivePictographData) {
-      errorMessage = null;
-      loadedComponents.clear();
-      // Don't reset showArrows here - let onMount handle arrow positioning
-    }
-  });
-
   // Calculate arrow positions when component mounts
   onMount(async () => {
-    const result = await arrowFactory.calculateArrowPositions(
-      dataState().effectivePictographData
-    );
-    arrowPositions = result.positions;
-    arrowMirroring = result.mirroring;
-    showArrows = result.showArrows;
+    await pictographState.calculateArrowPositions();
   });
 
   // =============================================================================
   // UI STATE
   // =============================================================================
 
-  // SVG viewBox calculation
-  const viewBox = $derived(`0 0 950 950`);
+  // SVG viewBox is already defined above
 </script>
 
 <!-- =============================================================================
@@ -122,24 +76,24 @@ ARCHITECTURE:
      ============================================================================= -->
 <div
   class="pictograph"
-  class:loading={isLoading}
-  class:loaded={isLoaded}
-  class:has-error={errorMessage}
+  class:loading={pictographState.isLoading}
+  class:loaded={pictographState.isLoaded}
+  class:has-error={pictographState.errorMessage}
 >
   <PictographSvg
-    pictographData={dataState().effectivePictographData}
-    hasValidData={dataState().hasValidData}
-    displayLetter={dataState().displayLetter}
-    motionsToRender={dataState().motionsToRender}
+    pictographData={pictographState.effectivePictographData}
+    hasValidData={pictographState.hasValidData}
+    displayLetter={pictographState.displayLetter}
+    motionsToRender={pictographState.motionsToRender}
     width="100%"
     height="100%"
     {viewBox}
-    {arrowPositions}
-    {arrowMirroring}
-    {showArrows}
+    arrowPositions={pictographState.arrowPositions}
+    arrowMirroring={pictographState.arrowMirroring}
+    showArrows={pictographState.showArrows}
     onComponentLoaded={handleComponentLoaded}
     onComponentError={handleComponentError}
-    ariaLabel={dataState().hasValidData ? "Pictograph" : "Empty Pictograph"}
+    ariaLabel={pictographState.hasValidData ? "Pictograph" : "Empty Pictograph"}
   />
 </div>
 

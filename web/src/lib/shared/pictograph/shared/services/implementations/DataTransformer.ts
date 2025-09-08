@@ -15,11 +15,9 @@ import {
   type GridPointData as RawGridData,
 } from "$shared";
 import { injectable } from "inversify";
+import type { IDataTransformer } from "../contracts/IDataTransformer";
 
-export interface IDataTransformer {
-  beatToPictographData(beat: BeatData): PictographData;
-  adaptGridData(rawGridData: RawGridData, mode: GridMode): GridData;
-}
+// Interface moved to contracts/IDataTransformer.ts
 
 @injectable()
 export class DataTransformer implements IDataTransformer {

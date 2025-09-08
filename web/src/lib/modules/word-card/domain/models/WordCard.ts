@@ -8,7 +8,7 @@
 import type { SequenceData } from "$shared";
 import type { ExportResult } from "../../../../shared/foundation/ui/UITypes";
 import type { CacheEntry } from "./cache-models";
-import type { ExportOptions } from "./word-card-export";
+import type { WordCardExportOptions } from "./word-card-export";
 
 // ============================================================================
 // LAYOUT CONFIGURATION TYPES
@@ -189,7 +189,7 @@ export interface WordCardEvents {
   multipleSelected: { sequenceIds: string[] };
 
   // Export events
-  exportStarted: { sequences: SequenceData[]; options: ExportOptions };
+  exportStarted: { sequences: SequenceData[]; options: WordCardExportOptions };
   exportProgress: { progress: ProgressInfo };
   exportCompleted: { results: ExportResult[] };
   exportCancelled: { reason: string };

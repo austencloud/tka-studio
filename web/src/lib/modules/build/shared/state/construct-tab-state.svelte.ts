@@ -10,7 +10,9 @@
  * ✅ Component-scoped state (not global singleton)
  */
 
-import { GridMode, type BeatData, type PictographData } from "$shared";
+import type { PictographData } from "../../../../shared";
+import { GridMode } from "../../../../shared";
+import type { BeatData } from "../../workbench";
 import type { IBuildTabService } from "../services/contracts";
 
 /**

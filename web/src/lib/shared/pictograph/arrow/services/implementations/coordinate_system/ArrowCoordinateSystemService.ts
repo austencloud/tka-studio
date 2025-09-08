@@ -12,17 +12,18 @@
  * No UI dependencies, completely testable in isolation.
  */
 
-import { GridLocation, type MotionData, type PictographCoordinate } from "$shared";
+import { GridLocation, type MotionData } from "$shared";
+import { Point } from "fabric";
 import { injectable } from "inversify";
 
 export interface IArrowCoordinateSystemService {
-  getInitialPosition(motion: MotionData, location: GridLocation): PictographCoordinate;
-  getSceneCenter(): PictographCoordinate;
+  getInitialPosition(motion: MotionData, location: GridLocation): Point;
+  getSceneCenter(): Point;
   getSceneDimensions(): [number, number];
   getCoordinateInfo(location: GridLocation): Record<string, unknown>;
-  validateCoordinates(point: PictographCoordinate): boolean;
-  getAllHandPoints(): Record<GridLocation, PictographCoordinate>;
-  getAllLayer2Points(): Record<GridLocation, PictographCoordinate>;
+  validateCoordinates(point: Point): boolean;
+  getAllHandPoints(): Record<GridLocation, Point>;
+  getAllLayer2Points(): Record<GridLocation, Point>;
   getSupportedLocations(): GridLocation[];
 }
 
@@ -44,34 +45,34 @@ export class ArrowCoordinateSystemService
 
   // Hand point coordinates (for STATIC/DASH arrows)
   // These are the inner grid positions where props are placed
-  private readonly HAND_POINTS: Record<GridLocation, PictographCoordinate> = {
-    [GridLocation.NORTH]: { x: 475.0, y: 331.9 },
-    [GridLocation.EAST]: { x: 618.1, y: 475.0 },
-    [GridLocation.SOUTH]: { x: 475.0, y: 618.1 },
-    [GridLocation.WEST]: { x: 331.9, y: 475.0 },
+  private readonly HAND_POINTS: Record<GridLocation, Point> = {
+    [GridLocation.NORTH]: new Point(475.0, 331.9),
+    [GridLocation.EAST]: new Point(618.1, 475.0),
+    [GridLocation.SOUTH]: new Point(475.0, 618.1),
+    [GridLocation.WEST]: new Point(331.9, 475.0),
     // Diagonal hand points (calculated from radius)
-    [GridLocation.NORTHEAST]: { x: 618.1, y: 331.9 },
-    [GridLocation.SOUTHEAST]: { x: 618.1, y: 618.1 },
-    [GridLocation.SOUTHWEST]: { x: 331.9, y: 618.1 },
-    [GridLocation.NORTHWEST]: { x: 331.9, y: 331.9 },
+    [GridLocation.NORTHEAST]: new Point(618.1, 331.9),
+    [GridLocation.SOUTHEAST]: new Point(618.1, 618.1),
+    [GridLocation.SOUTHWEST]: new Point(331.9, 618.1),
+    [GridLocation.NORTHWEST]: new Point(331.9, 331.9),
   };
 
   // Layer2 point coordinates (for PRO/ANTI/FLOAT arrows)
   // Using DIAMOND layer2 points from circle_coords.json
-  private readonly LAYER2_POINTS: Record<GridLocation, PictographCoordinate> = {
+  private readonly LAYER2_POINTS: Record<GridLocation, Point> = {
     // Diamond layer2 points are diagonal positions
-    [GridLocation.NORTHEAST]: { x: 618.1, y: 331.9 },
-    [GridLocation.SOUTHEAST]: { x: 618.1, y: 618.1 },
-    [GridLocation.SOUTHWEST]: { x: 331.9, y: 618.1 },
-    [GridLocation.NORTHWEST]: { x: 331.9, y: 331.9 },
+    [GridLocation.NORTHEAST]: new Point(618.1, 331.9),
+    [GridLocation.SOUTHEAST]: new Point(618.1, 618.1),
+    [GridLocation.SOUTHWEST]: new Point(331.9, 618.1),
+    [GridLocation.NORTHWEST]: new Point(331.9, 331.9),
     // For cardinal directions, map to nearest diagonal
-    [GridLocation.NORTH]: { x: 618.1, y: 331.9 }, // Maps to NE
-    [GridLocation.EAST]: { x: 618.1, y: 618.1 }, // Maps to SE
-    [GridLocation.SOUTH]: { x: 331.9, y: 618.1 }, // Maps to SW
-    [GridLocation.WEST]: { x: 331.9, y: 331.9 }, // Maps to NW
+    [GridLocation.NORTH]: new Point(618.1, 331.9), // Maps to NE
+    [GridLocation.EAST]: new Point(618.1, 618.1), // Maps to SE
+    [GridLocation.SOUTH]: new Point(331.9, 618.1), // Maps to SW
+    [GridLocation.WEST]: new Point(331.9, 331.9), // Maps to NW
   };
 
-  getInitialPosition(motion: MotionData, location: GridLocation): PictographCoordinate {
+  getInitialPosition(motion: MotionData, location: GridLocation): Point {
     /**
      * Get initial position coordinates based on motion type and location.
      *
@@ -97,12 +98,12 @@ export class ArrowCoordinateSystemService
     }
   }
 
-  getSceneCenter(): PictographCoordinate {
+  getSceneCenter(): Point {
     /**Get the center point of the scene coordinate system.*/
-    return { x: this.CENTER_X, y: this.CENTER_Y };
+    return new Point(this.CENTER_X, this.CENTER_Y);
   }
 
-  private getLayer2Coords(location: GridLocation): PictographCoordinate {
+  private getLayer2Coords(location: GridLocation): Point {
     /**Get layer2 point coordinates for shift arrows.*/
     const coords = this.LAYER2_POINTS[location];
     if (!coords) {
@@ -114,7 +115,7 @@ export class ArrowCoordinateSystemService
     return coords;
   }
 
-  private getHandPointCoords(location: GridLocation): PictographCoordinate {
+  private getHandPointCoords(location: GridLocation): Point {
     /**Get hand point coordinates for static/dash arrows.*/
     const coords = this.HAND_POINTS[location];
     if (!coords) {
@@ -164,7 +165,7 @@ export class ArrowCoordinateSystemService
     };
   }
 
-  validateCoordinates(point: PictographCoordinate): boolean {
+  validateCoordinates(point: Point): boolean {
     /**
      * Validate that coordinates are within scene bounds.
      *
@@ -185,12 +186,12 @@ export class ArrowCoordinateSystemService
     );
   }
 
-  getAllHandPoints(): Record<GridLocation, PictographCoordinate> {
+  getAllHandPoints(): Record<GridLocation, Point> {
     /**Get all hand point coordinates.*/
     return { ...this.HAND_POINTS };
   }
 
-  getAllLayer2Points(): Record<GridLocation, PictographCoordinate> {
+  getAllLayer2Points(): Record<GridLocation, Point> {
     /**Get all layer2 point coordinates.*/
     return { ...this.LAYER2_POINTS };
   }

@@ -10,8 +10,8 @@ import {
   MotionType,
   type GridLocation,
   type MotionData,
-  type PictographCoordinate,
 } from "$shared";
+import { Point } from "fabric";
 import { ArrowQuadrantCalculator } from "./ArrowQuadrantCalculator";
 
 export class ArrowAdjustmentProcessor {
@@ -24,7 +24,7 @@ export class ArrowAdjustmentProcessor {
   getBasicAdjustment(
     motion: MotionData,
     locationCalculator: IArrowLocationCalculator
-  ): PictographCoordinate {
+  ): Point {
     /**
      * Get basic adjustment for synchronous operations with directional tuple processing.
      */
@@ -45,11 +45,11 @@ export class ArrowAdjustmentProcessor {
       return processedAdjustment;
     } catch (error) {
       console.warn("Basic adjustment calculation failed:", error);
-      return { x: 0, y: 0 };
+      return new Point(0, 0);
     }
   }
 
-  getBaseAdjustmentValues(motion: MotionData): PictographCoordinate {
+  getBaseAdjustmentValues(motion: MotionData): Point {
     /**
      * Get base adjustment values before directional processing.
      */
@@ -59,32 +59,32 @@ export class ArrowAdjustmentProcessor {
       turns === Math.floor(turns) ? turns.toString() : turns.toString();
 
     // Base adjustment mappings for different motion types
-    const adjustmentMappings: Record<string, Record<string, PictographCoordinate>> = {
+    const adjustmentMappings: Record<string, Record<string, Point>> = {
       [MotionType.PRO]: {
-        "0": { x: 40, y: 25 },
-        "0.5": { x: 35, y: 20 },
-        "1": { x: 30, y: 15 },
-        "1.5": { x: 25, y: 10 },
-        "2": { x: 20, y: 5 },
+        "0": new Point(40, 25),
+        "0.5": new Point(35, 20),
+        "1": new Point(30, 15),
+        "1.5": new Point(25, 10),
+        "2": new Point(20, 5),
       },
       [MotionType.ANTI]: {
-        "0": { x: 40, y: 25 },
-        "0.5": { x: 35, y: 20 },
-        "1": { x: 30, y: 15 },
-        "1.5": { x: 25, y: 10 },
-        "2": { x: 20, y: 5 },
+        "0": new Point(40, 25),
+        "0.5": new Point(35, 20),
+        "1": new Point(30, 15),
+        "1.5": new Point(25, 10),
+        "2": new Point(20, 5),
       },
       [MotionType.FLOAT]: {
-        "0": { x: 30, y: 20 },
-        "0.5": { x: 25, y: 15 },
-        "1": { x: 20, y: 10 },
+        "0": new Point(30, 20),
+        "0.5": new Point(25, 15),
+        "1": new Point(20, 10),
       },
       [MotionType.DASH]: {
-        "0": { x: 50, y: 30 },
-        "1": { x: 45, y: 25 },
+        "0": new Point(50, 30),
+        "1": new Point(45, 25),
       },
       [MotionType.STATIC]: {
-        "0": { x: 0, y: 0 },
+        "0": new Point(0, 0),
       },
     };
 
@@ -93,14 +93,14 @@ export class ArrowAdjustmentProcessor {
       return typeAdjustments[turnsStr];
     }
 
-    return { x: 0, y: 0 };
+    return new Point(0, 0);
   }
 
   processDirectionalTuples(
-    baseAdjustment: PictographCoordinate,
+    baseAdjustment: Point,
     motion: MotionData,
     location: GridLocation
-  ): PictographCoordinate {
+  ): Point {
     /**
      * Process directional tuples to get location-specific adjustments.
      */
@@ -121,7 +121,7 @@ export class ArrowAdjustmentProcessor {
       // Apply the appropriate directional tuple
       if (quadrantIndex >= 0 && quadrantIndex < directionalTuples.length) {
         const [adjustedX, adjustedY] = directionalTuples[quadrantIndex];
-        return { x: adjustedX, y: adjustedY };
+        return new Point(adjustedX, adjustedY);
       }
 
       console.warn(

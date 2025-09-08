@@ -3,7 +3,8 @@
   import { browser } from "$app/environment";
   import MainApplication from "../../lib/shared/application/components/MainApplication.svelte";
 
-  import { handleSEORedirect } from "$shared";
+  import type { ISeoService } from "$shared";
+  import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import type { PageData } from "./$types";
 
@@ -16,7 +17,8 @@
   // Enhanced SEO redirect with analytics potential
   onMount(() => {
     if (browser) {
-      handleSEORedirect("write");
+      const seoService = resolve<ISeoService>(TYPES.ISeoService);
+      seoService.handleSEORedirect("write");
     }
   });
 

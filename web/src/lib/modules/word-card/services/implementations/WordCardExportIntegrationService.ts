@@ -5,27 +5,17 @@
  * Handles DOM element selection, export orchestration, and file downloads.
  */
 
-import type { ExportResult, SequenceData } from "$shared";
-import { injectable } from "inversify";
+import type { DownloadResult, ExportResult, IFileDownloadService, SequenceData } from "$shared";
+import { inject, injectable, TYPES } from "$shared";
 import type {
-    BatchExportResult,
-    ExportOptions,
+  BatchExportResult,
+  WordCardExportOptions,
 } from "../../domain/models/word-card-export";
 
 // Local type definitions
-interface DownloadResult {
-  success: boolean;
-  filename: string;
-  error?: Error;
-}
 
-// Temporary interface definition
-interface SequenceExportOptions {
-  format: string;
-  quality: number;
-  includeMetadata: boolean;
-  scale?: number;
-}
+
+
 
 // File download functionality provided by FileDownloadService
 
@@ -57,7 +47,7 @@ function supportsFileDownload(): boolean {
 interface IPageImageExportService {
   exportPagesAsImages?(
     pageElements: HTMLElement[],
-    options: SequenceExportOptions
+    options: WordCardExportOptions
   ): Promise<BatchExportResult>;
   cancelExport?(): Promise<void>;
 }
@@ -65,7 +55,7 @@ interface IPageImageExportService {
 interface IWordCardExportIntegrationService {
   exportWordCards(
     sequences: SequenceData[],
-    options: ExportOptions
+    options: WordCardExportOptions
   ): Promise<ExportResult[]>;
   cancelExport(): Promise<void>;
 }
@@ -84,7 +74,7 @@ export class WordCardExportIntegrationService
 
   async exportWordCards(
     _sequences: SequenceData[],
-    options: ExportOptions
+    options: WordCardExportOptions
   ): Promise<ExportResult[]> {
     // Filter options to only include supported formats
     const filteredOptions = {
@@ -419,7 +409,7 @@ export class WordCardExportIntegrationService
     quality?: number;
     scale?: number;
     filenamePrefix?: string;
-  }): SequenceExportOptions {
+  }): WordCardExportOptions {
     const defaults = this.getDefaultExportOptions();
 
     return {

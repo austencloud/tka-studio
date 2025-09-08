@@ -8,9 +8,9 @@
 import type {
   BatchExportProgress,
   BatchOperationConfig,
-  ExportOptions,
   Page,
   SequenceData,
+  WordCardExportOptions,
   WordCardExportResult,
 } from "$shared";
 import type {
@@ -151,7 +151,7 @@ export interface IWordCardCacheService {
   storeImage(
     sequenceId: string,
     imageBlob: Blob,
-    options?: ExportOptions
+    options?: WordCardExportOptions
   ): Promise<void>;
 
   /**
@@ -159,7 +159,7 @@ export interface IWordCardCacheService {
    */
   retrieveImage(
     sequenceId: string,
-    options?: ExportOptions
+    options?: WordCardExportOptions
   ): Promise<Blob | null>;
 
   /**
@@ -225,8 +225,8 @@ export interface IGalleryService {
  * Handles image export functionality
  */
 export interface IPageImageExportService {
-  exportPage(page: Page, options: ExportOptions): Promise<Blob>;
-  exportPages(pages: Page[], options: ExportOptions): Promise<Blob[]>;
+  exportPage(page: Page, options: WordCardExportOptions): Promise<Blob>;
+  exportPages(pages: Page[], options: WordCardExportOptions): Promise<Blob[]>;
 }
 
 /**
@@ -236,7 +236,7 @@ export interface IPageImageExportService {
 export interface IWordCardExportOrchestrator {
   exportWordCards(
     sequences: SequenceData[],
-    options: ExportOptions
+    options: WordCardExportOptions
   ): Promise<WordCardExportResult[]>;
   getExportProgress(operationId: string): BatchExportProgress;
 }

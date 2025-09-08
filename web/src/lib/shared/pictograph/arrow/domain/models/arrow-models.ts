@@ -1,5 +1,5 @@
-import type { PictographCoordinate } from "$shared";
+import type { Point } from "fabric";
 
-export interface ArrowPosition extends PictographCoordinate {
+export interface ArrowPosition extends Point {
   rotation: number;
 }

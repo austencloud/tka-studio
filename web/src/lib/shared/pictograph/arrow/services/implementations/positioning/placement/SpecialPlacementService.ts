@@ -21,15 +21,10 @@ import {
   resolve,
   TYPES,
 } from "$shared";
+import { Point } from "fabric";
 import { injectable } from "inversify";
 import { jsonCache } from "../../SimpleJsonCache";
 import { SpecialPlacementOriKeyGenerator } from "../../SpecialPlacementOriKeyGenerator";
-
-// Define Point interface locally since it might not be in domain
-interface Point {
-  x: number;
-  y: number;
-}
 
 @injectable()
 export class SpecialPlacementService implements ISpecialPlacementService {
@@ -142,7 +137,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     if (colorKey in turnData) {
       const adjustmentValues = turnData[colorKey];
       if (Array.isArray(adjustmentValues) && adjustmentValues.length === 2) {
-        return { x: adjustmentValues[0], y: adjustmentValues[1] };
+        return new Point(adjustmentValues[0], adjustmentValues[1]);
       }
     }
 
@@ -152,7 +147,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     if (motionTypeKey in turnData) {
       const adjustmentValues = turnData[motionTypeKey];
       if (Array.isArray(adjustmentValues) && adjustmentValues.length === 2) {
-        return { x: adjustmentValues[0], y: adjustmentValues[1] };
+        return new Point(adjustmentValues[0], adjustmentValues[1]);
       }
     }
 

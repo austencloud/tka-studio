@@ -19,35 +19,16 @@ import type {
   MotionColor,
   MotionData,
   MotionType,
-  PictographCoordinate,
   PictographData,
   PropPlacementData,
 } from "$shared";
+import { Point } from "fabric";
 import type { ArrowPlacementData } from "../../../arrow";
-import type { VectorDirection } from "../../../prop";
 
 // ============================================================================
 // SERVICE CONTRACTS (Behavioral Interfaces)
 // ============================================================================
 
-export interface IBetaOffsetCalculator {
-  /**
-   * Calculate new position with offset based on direction
-   */
-  calculateNewPointWithOffset(
-    currentPoint: PictographCoordinate,
-    direction: VectorDirection
-  ): PictographCoordinate;
-
-  /**
-   * Calculate beta separation offsets for both props
-   * Returns offsets for blue and red props based on their calculated directions
-   */
-  calculateBetaSeparationOffsets(
-    blueDirection: VectorDirection | null,
-    redDirection: VectorDirection | null
-  ): { blue: PictographCoordinate; red: PictographCoordinate };
-}
 
 export interface IGridPositionDeriver {
   /**
@@ -194,20 +175,20 @@ export interface IArrowAdjustmentCalculator {
     motionData: MotionData,
     location: GridLocation,
     arrowColor?: string
-  ): Promise<PictographCoordinate>;
+  ): Promise<Point>;
 }
 
 export interface IArrowCoordinateSystemService {
   /**
    * Get initial position coordinates based on motion type and location.
    */
-  getInitialPoint(motion: MotionData, location: GridLocation): PictographCoordinate;
-  getSceneCenter(): PictographCoordinate;
+  getInitialPoint(motion: MotionData, location: GridLocation): Point;
+  getSceneCenter(): Point;
   getSceneDimensions(): [number, number];
   getCoordinateInfo(location: GridLocation): Record<string, unknown>;
-  validateCoordinates(point: PictographCoordinate): boolean;
-  getAllHandPoints(): Record<GridLocation, PictographCoordinate>;
-  getAllLayer2Points(): Record<GridLocation, PictographCoordinate>;
+  validateCoordinates(point: Point): boolean;
+  getAllHandPoints(): Record<GridLocation, Point>;
+  getAllLayer2Points(): Record<GridLocation, Point>;
   getSupportedLocations(): GridLocation[];
 }
 
@@ -282,10 +263,10 @@ export interface IQuadrantIndexCalculator {
 
 export interface IDirectionalTupleProcessor {
   processDirectionalTuples(
-    baseAdjustment: PictographCoordinate,
+    baseAdjustment: Point,
     motion: MotionData,
     location: GridLocation
-  ): PictographCoordinate;
+  ): Point;
 }
 
 export interface IPlacementKeyGenerator {
@@ -325,7 +306,7 @@ export interface ISpecialPlacementService {
     motionData: MotionData,
     pictographData: PictographData,
     arrowColor?: string
-  ): Promise<PictographCoordinate | null>;
+  ): Promise<Point | null>;
 }
 
 export interface IDefaultPlacementService {
@@ -374,7 +355,7 @@ export interface IArrowAdjustmentLookup {
     motionData: MotionData,
     letter: string,
     arrowColor?: string
-  ): Promise<PictographCoordinate>;
+  ): Promise<Point>;
 }
 
 export interface IGridModeDeriver {
