@@ -3,7 +3,7 @@
  */
 
 import { resolve, TYPES } from "$shared";
-import { renderPictograph } from "$shared";
+import { renderPictograph } from "../../../../../../shared/pictograph/shared/utils/pictograph-rendering-utils";
 import type { IStartPositionService } from "../contracts";
 
 /**

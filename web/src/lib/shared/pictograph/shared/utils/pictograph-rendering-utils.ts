@@ -14,14 +14,12 @@ import {
   type MotionData,
   type PictographData,
 } from "$shared";
-import type { IArrowRenderer } from "../../../arrow/services/implementations/rendering/ArrowRenderer";
-import type { IGridRenderingService } from "../../../grid";
-import type { IOverlayRenderer } from "./OverlayRenderer";
-import type { ISvgUtilityService } from "./SvgUtilityService";
+import type { IOverlayRenderer } from "../../../../modules/animator/services/implementations/OverlayRenderer";
+import type { ISvgUtilityService } from "../../../../modules/animator/services/implementations/SvgUtilityService";
+import type { IArrowRenderer } from "../../arrow/services/implementations/rendering/ArrowRenderer";
+import type { IGridRenderingService } from "../../grid";
 
-/**
- * Render a pictograph using direct composition of microservices
- */
+
 export async function renderPictograph(
   data: PictographData
 ): Promise<SVGElement> {

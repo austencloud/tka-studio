@@ -105,10 +105,16 @@ export function createOptionPickerState(config: OptionPickerStateConfig) {
   // ============================================================================
 
   function validateAndSetContainerDimensions(width: number, height: number): boolean {
+    // Skip validation if dimensions are not yet properly initialized
+    if (width <= 0 || height <= 0) {
+      console.log("🔍 OptionPickerState: Skipping validation for uninitialized dimensions:", { width, height });
+      return false;
+    }
+
     const validation = validator.validateContainerDimensions(width, height);
     if (!validation.isValid) {
       const validationError = errorHandler.handleError(
-        new Error(validation.error), 
+        new Error(validation.error),
         { width, height }
       );
       setError(validationError);

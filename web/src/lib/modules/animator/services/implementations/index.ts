@@ -16,10 +16,13 @@ export * from "./EndpointCalculationService"; // Utility functions
 export * from "./MotionCalculationService"; // Utility functions
 export { MotionLetterIdentificationService } from "./MotionLetterIdentificationService";
 export { MotionParameterService } from "./MotionParameterService";
+export { OverlayRenderer } from "./OverlayRenderer";
 export { PropInterpolationService } from "./PropInterpolationService";
 export { SequenceAnimationEngine } from "./sequence-animation-engine";
 export { SequenceAnimationOrchestrator } from "./SequenceAnimationOrchestrator";
+export { SvgConfig } from "./SvgConfig";
 export { SVGGenerator } from "./SVGGenerator";
+export { SvgUtilityService } from "./SvgUtilityService";
 
 // Math constants and utilities
 export * from "./MathConstants";

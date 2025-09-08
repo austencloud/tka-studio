@@ -6,7 +6,6 @@
 -->
 <script lang="ts">
 	import type { PictographData } from "$shared";
-
 // Import fade transition for smooth switching
   import { getSettings } from "$shared";
   import { fade } from "svelte/transition";
@@ -56,7 +55,7 @@
     out:contentOut
   >
     <div class="panel-content transparent-scroll">
-      <OptionPickerContainer {onOptionSelected} />
+      <OptionPickerContainer {onOptionSelected} {currentSequence} />
     </div>
   </div>
 </div>

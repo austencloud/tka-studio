@@ -6,9 +6,12 @@ import {
   BeatCalculationService,
   MotionLetterIdentificationService,
   MotionParameterService,
+  OverlayRenderer,
   PropInterpolationService,
   SequenceAnimationEngine,
   SequenceAnimationOrchestrator,
+  SvgConfig,
+  SvgUtilityService,
 } from "../../modules/animator/services";
 import { BrowseStatePersister } from "../../modules/browse/gallery/services/implementations/BrowseStatePersister";
 import { FavoritesService } from "../../modules/browse/gallery/services/implementations/FavoritesService";
@@ -107,7 +110,6 @@ import {
 } from "../foundation";
 import { MotionQueryHandler } from "../pictograph/arrow/services/implementations/MotionQueryHandler";
 import { PictographValidatorService } from "../pictograph/services";
-import { OverlayRenderer, SvgConfig, SvgUtilityService } from "../pictograph/services/implementations/rendering";
 import { LetterQueryHandler } from "../pictograph/tka-glyph/services/implementations/LetterQueryHandler";
 // Grid services moved to grid module
 import { GridModeDeriver, GridPositionDeriver, GridRenderingService } from "../pictograph/grid";

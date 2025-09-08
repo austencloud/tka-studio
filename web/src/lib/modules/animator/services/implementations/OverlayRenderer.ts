@@ -11,9 +11,8 @@ import type {
   Letter,
   PictographData,
 } from "$shared";
-import { TYPES } from "$shared";
+import { getLetterImagePath, TYPES } from "$shared";
 import { inject, injectable } from "inversify";
-import { getLetterImagePath } from "../../../tka-glyph";
 
 export interface IOverlayRenderer {
   renderOverlays(svg: SVGElement, data: PictographData): Promise<void>;

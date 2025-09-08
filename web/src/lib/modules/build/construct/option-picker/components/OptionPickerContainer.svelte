@@ -23,9 +23,10 @@ Clean, minimal component that focuses only on UI concerns:
   // Props
   interface Props {
     onOptionSelected: (option: PictographData) => void;
+    currentSequence?: PictographData[];
   }
 
-  let { onOptionSelected }: Props = $props();
+  let { onOptionSelected, currentSequence = [] }: Props = $props();
 
   // Services
   const optionPickerService = resolve(
@@ -44,23 +45,49 @@ Clean, minimal component that focuses only on UI concerns:
   let containerElement: HTMLElement;
   let containerWidth = $state(800);
   let containerHeight = $state(600);
+  let isContainerReady = $state(false);
 
   // Initialize component and load options
   onMount(() => {
-  // Set up resize observer for responsive behavior
-  if (containerElement) {
-    const resizeObserver = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      containerWidth = entry.contentRect.width;
-      containerHeight = entry.contentRect.height;
-      // Recalculate layout when container size changes
-      optionPickerState.recalculateLayout(containerWidth, containerHeight);
-    }
-    });
-    resizeObserver.observe(containerElement);
+    // Set up resize observer for responsive behavior
+    if (containerElement) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          containerWidth = entry.contentRect.width;
+          containerHeight = entry.contentRect.height;
 
-    return () => resizeObserver.disconnect();
-  }
+          // Mark container as ready after first measurement
+          if (!isContainerReady && containerWidth > 0 && containerHeight > 0) {
+            isContainerReady = true;
+          }
+
+          // Only recalculate layout if container is ready
+          if (isContainerReady) {
+            optionPickerState.recalculateLayout(containerWidth, containerHeight);
+          }
+        }
+      });
+      resizeObserver.observe(containerElement);
+
+      // Force initial measurement
+      const rect = containerElement.getBoundingClientRect();
+      if (rect.width > 0 && rect.height > 0) {
+        containerWidth = rect.width;
+        containerHeight = rect.height;
+        isContainerReady = true;
+        optionPickerState.recalculateLayout(containerWidth, containerHeight);
+      }
+
+      return () => resizeObserver.disconnect();
+    }
+  });
+
+  // Load options when sequence changes
+  $effect(() => {
+    if (isContainerReady && currentSequence && containerWidth > 0 && containerHeight > 0) {
+      console.log("🔍 OptionPickerContainer: Loading options for sequence:", currentSequence.length);
+      optionPickerState.loadOptionsForSequence(currentSequence, containerWidth, containerHeight);
+    }
   });
 
   // Handle option selection
@@ -94,7 +121,9 @@ Clean, minimal component that focuses only on UI concerns:
 
   <!-- Main content -->
   <div class="option-picker-content">
-  {#if optionPickerState.isLoading}
+  {#if !isContainerReady}
+    <LoadingOverlay message="Initializing container..." />
+  {:else if optionPickerState.isLoading}
     <LoadingOverlay message="Loading options..." />
   {:else if optionPickerState.error}
     <div class="error-state">
