@@ -60,14 +60,6 @@ export interface ResponsiveSettings {
   touchSupported: boolean;
   orientation: "portrait" | "landscape";
 }
-// --- Interfaces ---
-export interface FoldableDetectionResult {
-  isFoldable: boolean;
-  isUnfolded: boolean;
-  foldableType: "zfold" | "other" | "unknown";
-  confidence: number; // Confidence score (0 to 1)
-  detectionMethod?: string; // How the detection was made
-}
 // ============================================================================
 // BREAKPOINT CONFIGURATION
 // ============================================================================

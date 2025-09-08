@@ -3,3 +3,5 @@
  */
 
 export { LetterDeriver } from './LetterDeriver';
+export { LetterQueryHandler } from './LetterQueryHandler';
+

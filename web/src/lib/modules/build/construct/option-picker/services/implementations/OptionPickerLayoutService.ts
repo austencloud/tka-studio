@@ -5,12 +5,11 @@
  * and device-specific optimizations for the option picker component.
  */
 import type {
-  DeviceType, OptionPickerLayoutCalculationParams,
-  OptionPickerLayoutCalculationResult
+  DeviceType,
 } from "$shared";
-import { LayoutCategory } from "$shared";
 import { injectable } from "inversify";
 import { getContainerAspect, getDeviceConfig, getDeviceType } from "../../../../../../shared/device/utils/device-utils";
+import { type OptionPickerLayoutCalculationParams, type OptionPickerLayoutCalculationResult, LayoutCategory } from "../../domain";
 import type { IOptionPickerLayoutService } from "../contracts";
 
 @injectable()

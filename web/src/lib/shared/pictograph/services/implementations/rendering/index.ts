@@ -4,8 +4,6 @@
  * ONLY implementation classes - NO interfaces re-exported here.
  */
 
-// Core rendering services
-export { BeatFallbackRenderer } from "./BeatFallbackRenderer";
 // PictographGridService moved to grid module
 // GridRenderingService moved to grid module
 export { OverlayRenderer } from "./OverlayRenderer";

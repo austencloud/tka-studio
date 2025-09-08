@@ -5,10 +5,10 @@
  * Follows TKA architecture: services handle logic, runes handle reactivity.
  */
 
-import { ResizeDirection } from "$shared";
-import type {
-  GalleryPanelState,
-  GalleryPanelResizeOperation as ResizeOperation,
+import {
+  ResizeDirection,
+  type GalleryPanelState,
+  type GalleryPanelResizeOperation as ResizeOperation,
 } from "../domain/models/gallery-panel-models";
 import type { IGalleryPanelManager } from "../services/contracts";
 

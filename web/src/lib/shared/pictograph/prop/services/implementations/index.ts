@@ -10,3 +10,5 @@ export { PropCoordinator } from './PropCoordinator';
 export { PropPlacementService } from './PropPlacementService';
 export { PropRotAngleManager } from './PropRotAngleManager';
 
+//  orientation calculation service
+export { OrientationCalculationService } from './OrientationCalculationService';

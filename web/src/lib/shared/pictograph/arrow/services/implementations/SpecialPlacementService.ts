@@ -14,18 +14,15 @@
  */
 
 
+import type { MotionData, PictographCoordinate, PictographData } from "$shared";
 import { injectable } from "inversify";
 import { resolve, TYPES } from "../../../../inversify";
-import { type MotionData, type PictographData, GridMode } from "../../../domain";
+import { GridMode } from "../../../grid";
 import type { IGridModeDeriver, ISpecialPlacementService } from "../../../services";
 import { jsonCache } from "./SimpleJsonCache";
 import { SpecialPlacementOriKeyGenerator } from "./SpecialPlacementOriKeyGenerator";
 
 // Define Point interface locally since it might not be in domain
-interface Point {
-  x: number;
-  y: number;
-}
 
 @injectable()
 export class SpecialPlacementService implements ISpecialPlacementService {
@@ -68,7 +65,7 @@ export class SpecialPlacementService implements ISpecialPlacementService {
     motionData: MotionData,
     pictographData: PictographData,
     arrowColor?: string
-  ): Promise<Point | null> {
+  ): Promise<PictographCoordinate | null> {
     if (!motionData || !pictographData.letter) {
       return null;
     }

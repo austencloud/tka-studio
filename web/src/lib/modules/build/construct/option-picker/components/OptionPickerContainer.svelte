@@ -16,38 +16,29 @@ Clean, minimal component that focuses only on UI concerns:
   import { createOptionPickerState } from "../state/option-picker-state.svelte";
   import OptionPickerHeader from "./OptionPickerHeader.svelte";
   import OptionPickerScroll from "./OptionPickerScroll.svelte";
+// Create services directly since they're not in DI container yet
+  import { OptionPickerErrorHandler } from "../services/implementations/OptionPickerErrorHandler";
+  import { OptionPickerStateValidator } from "../services/implementations/OptionPickerStateValidator";
 
-  // Props - simplified with proper DI architecture
-  const {
-  onOptionSelected = () => {},
-  initialSequence = [],
-  } = $props<{
-  onOptionSelected?: (option: PictographData) => void;
-  initialSequence?: PictographData[];
-  }>();
-
-  // Track sequence ID to prevent unnecessary reloads
-  let lastSequenceId = $state<string | null>(null);
-
-  // React to changes in initialSequence and reload options
-  $effect(() => {
-  const currentSequenceId = initialSequence[0]?.id || null;
-
-  if (initialSequence.length > 0 && containerWidth > 0 && containerHeight > 0 && currentSequenceId !== lastSequenceId) {
-    lastSequenceId = currentSequenceId;
-    optionPickerState.loadOptionsForSequence(
-    initialSequence,
-    containerWidth,
-    containerHeight
-    );
+  // Props
+  interface Props {
+    onOptionSelected: (option: PictographData) => void;
   }
-  });
 
-  // Proper TKA architecture: Service → State → Component
+  let { onOptionSelected }: Props = $props();
+
+  // Services
   const optionPickerService = resolve(
-  TYPES.IOptionPickerServiceAdapter
+    TYPES.IOptionPickerServiceAdapter
   ) as IOptionPickerServiceAdapter;
-  const optionPickerState = createOptionPickerState(optionPickerService);
+  const errorHandler = new OptionPickerErrorHandler();
+  const validator = new OptionPickerStateValidator();
+
+  const optionPickerState = createOptionPickerState({
+    optionPickerService,
+    errorHandler,
+    validator
+  });
 
   // Component state (UI concerns only)
   let containerElement: HTMLElement;
@@ -98,7 +89,7 @@ Clean, minimal component that focuses only on UI concerns:
 
   <!-- Error banner -->
   {#if optionPickerState.error}
-  <ErrorBanner message={optionPickerState.error} onDismiss={optionPickerState.clearError} />
+  <ErrorBanner message={optionPickerState.error?.userMessage || "An error occurred"} onDismiss={optionPickerState.clearError} />
   {/if}
 
   <!-- Main content -->
@@ -108,7 +99,7 @@ Clean, minimal component that focuses only on UI concerns:
   {:else if optionPickerState.error}
     <div class="error-state">
     <p>Error loading options: {optionPickerState.error}</p>
-    <button onclick={() => optionPickerState.retryLoading(containerWidth, containerHeight)}> Retry </button>
+    <button onclick={() => optionPickerState.retryLastOperation()}> Retry </button>
     </div>
   {:else if optionPickerState.filteredOptions.length === 0}
     <div class="empty-state">

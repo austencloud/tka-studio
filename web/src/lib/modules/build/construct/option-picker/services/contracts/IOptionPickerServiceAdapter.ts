@@ -17,6 +17,25 @@ export interface OptionPickerServices {
 
 export interface IOptionPickerServiceAdapter {
   // ============================================================================
+  // ERROR HANDLING
+  // ============================================================================
+
+  /**
+   * Get the last error that occurred
+   */
+  getLastError(): string | null;
+
+  /**
+   * Clear any stored errors
+   */
+  clearErrors(): void;
+
+  /**
+   * Retry the last failed operation
+   */
+  retryLastOperation(): Promise<void>;
+
+  // ============================================================================
   // LAYOUT OPERATIONS
   // ============================================================================
 

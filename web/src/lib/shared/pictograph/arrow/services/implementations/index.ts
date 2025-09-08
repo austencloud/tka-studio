@@ -12,6 +12,7 @@ export { ArrowLocationService } from './ArrowLocationService';
 export { ArrowPlacementKeyService } from './ArrowPlacementKeyService';
 export { ArrowPlacementService } from './ArrowPlacementService';
 export { ArrowPositioningService } from './ArrowPositioningService';
+export * from './positioning';
 
 // Calculation services
 export * from './calculation';
@@ -21,3 +22,6 @@ export * from './coordinate_system';
 
 // Orchestration services
 export * from './orchestration';
+
+// Query services
+export { MotionQueryHandler } from './MotionQueryHandler';

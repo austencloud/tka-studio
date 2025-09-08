@@ -1,4 +1,4 @@
-import type { PictographCoordinate } from "../../../domain";
+import type { PictographCoordinate } from "$shared";
 
 export interface ArrowPosition extends PictographCoordinate {
   rotation: number;

@@ -56,7 +56,7 @@
     out:contentOut
   >
     <div class="panel-content transparent-scroll">
-      <OptionPickerContainer {onOptionSelected} initialSequence={currentSequence} />
+      <OptionPickerContainer {onOptionSelected} />
     </div>
   </div>
 </div>

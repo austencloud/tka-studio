@@ -4,6 +4,10 @@
     getActiveTab,
     getSettings,
     getShowSettings,
+    getShowSpotlight,
+    getSpotlightSequence,
+    getSpotlightThumbnailService,
+    hideSpotlight,
     isTabActive,
     switchTab,
   } from "./application/state/app-state.svelte";
@@ -14,11 +18,12 @@
   import AboutTab from "../modules/about/components/AboutTab.svelte";
   import AnimatorTab from "../modules/animator/components/AnimatorTab.svelte";
   import BrowseTab from "../modules/browse/gallery/components/GalleryTab.svelte";
+  import SpotlightViewer from "../modules/browse/spotlight/components/SpotlightViewer.svelte";
   import BuildTab from "../modules/build/shared/components/BuildTab.svelte";
   import LearnTab from "../modules/learn/LearnTab.svelte";
   import WordCardTab from "../modules/word-card/components/WordCardTab.svelte";
   import WriteTab from "../modules/write/components/WriteTab.svelte";
-  // Shared components: Direct relative paths (bulletproof standard)
+// Shared components: Direct relative paths (bulletproof standard)
   import BackgroundCanvas from "./background/components/BackgroundCanvas.svelte";
   import NavigationBar from "./navigation/components/NavigationBar.svelte";
   import SettingsDialog from "./settings/components/SettingsDialog.svelte";
@@ -28,6 +33,9 @@
   let activeTab = $derived(getActiveTab());
   let showSettings = $derived(getShowSettings());
   let settings = $derived(getSettings());
+  let showSpotlight = $derived(getShowSpotlight());
+  let spotlightSequence = $derived(getSpotlightSequence());
+  let spotlightThumbnailService = $derived(getSpotlightThumbnailService());
 
   // Debug the active tab
   $effect(() => {
@@ -165,6 +173,16 @@
   <!-- Settings Dialog - moved inside BackgroundProvider -->
   {#if showSettings && settings}
     <SettingsDialog />
+  {/if}
+
+  <!-- Spotlight Viewer - rendered at root level for proper z-index -->
+  {#if showSpotlight && spotlightSequence && spotlightThumbnailService}
+    <SpotlightViewer
+      show={showSpotlight}
+      sequence={spotlightSequence}
+      thumbnailService={spotlightThumbnailService}
+      onClose={hideSpotlight}
+    />
   {/if}
 </div>
 

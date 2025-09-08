@@ -5,7 +5,7 @@
  * Uses the correct position mapping based on hand location combinations.
  */
 
-import type { CSVRow, ICSVPictographParserService, IEnumMapper } from "$shared";
+import type { CSVRow, ICSVPictographParser, IEnumMapper } from "$shared";
 import {
   GridPosition,
   Letter,
@@ -18,7 +18,7 @@ import {
 import { inject, injectable } from "inversify";
 
 @injectable()
-export class CSVPictographParserService implements ICSVPictographParserService {
+export class CSVPictographParser implements ICSVPictographParser {
   constructor(
     @inject(TYPES.IGridPositionDeriver)
     private readonly positionMapper: any,

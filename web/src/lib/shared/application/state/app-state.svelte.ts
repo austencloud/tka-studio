@@ -8,11 +8,11 @@
  */
 
 import type {
-  AppSettings,
-  ISettingsService,
-  PerformanceSnapshot,
-  TabId,
-  Theme,
+    AppSettings,
+    ISettingsService,
+    PerformanceSnapshot,
+    TabId,
+    Theme,
 } from "$shared";
 import { resolve } from "../../inversify";
 import { TYPES } from "../../inversify/types";
@@ -133,6 +133,10 @@ const uiState = $state({
   theme: "dark" as Theme,
   isFullScreen: false,
   isTransitioning: false,
+  // Spotlight state
+  showSpotlight: false,
+  spotlightSequence: null as any,
+  spotlightThumbnailService: null as any,
 });
 
 export function getActiveTab() {
@@ -153,6 +157,18 @@ export function getIsFullScreen() {
 
 export function getIsTransitioning() {
   return uiState.isTransitioning;
+}
+
+export function getShowSpotlight() {
+  return uiState.showSpotlight;
+}
+
+export function getSpotlightSequence() {
+  return uiState.spotlightSequence;
+}
+
+export function getSpotlightThumbnailService() {
+  return uiState.spotlightThumbnailService;
 }
 
 // ============================================================================
@@ -245,6 +261,19 @@ export function hideSettingsDialog(): void {
 
 export function toggleSettingsDialog(): void {
   uiState.showSettings = !uiState.showSettings;
+}
+
+// Spotlight management
+export function showSpotlight(sequence: any, thumbnailService: any): void {
+  uiState.spotlightSequence = sequence;
+  uiState.spotlightThumbnailService = thumbnailService;
+  uiState.showSpotlight = true;
+}
+
+export function hideSpotlight(): void {
+  uiState.showSpotlight = false;
+  uiState.spotlightSequence = null;
+  uiState.spotlightThumbnailService = null;
 }
 
 export async function updateSettings(

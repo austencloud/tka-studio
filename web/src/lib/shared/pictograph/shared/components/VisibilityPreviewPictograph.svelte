@@ -6,17 +6,9 @@ with real-time opacity changes based on visibility settings.
 -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { PictographData } from "../../domain";
-  import {
-    createMotionData,
-    createPictographData,
-    GridLocation,
-    MotionColor,
-    MotionType,
-    Orientation,
-    RotationDirection,
-  } from "../../domain";
-  import { getVisibilityStateManager } from "../../state/visibility-state.svelte";
+
+  import { type PictographData, createMotionData, createPictographData, getVisibilityStateManager, MotionColor, MotionType, Orientation, RotationDirection } from "$shared";
+  import { GridLocation } from "../../grid";
   import PictographWithVisibility from "./PictographWithVisibility.svelte";
 
   interface Props {

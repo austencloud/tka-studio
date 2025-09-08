@@ -1,4 +1,4 @@
-import type { GridMode } from "../../../domain";
+import type { GridMode } from "$shared";
 
 export interface GridCoordinateData {
   hand_points: {

@@ -5,10 +5,9 @@ Extends the basic Pictograph component with sophisticated visibility controls
 matching the legacy desktop app's behavior.
 -->
 <script lang="ts">
-  import type { BeatData } from "$shared";
+  import type { BeatData, PictographData } from "$shared";
   import { onMount } from "svelte";
-  import type { PictographData } from "../../domain/models";
-  import { getVisibilityStateManager } from "../../state";
+  import { getVisibilityStateManager } from "../state/visibility-state.svelte";
   import Pictograph from "./Pictograph.svelte";
 
   interface Props {

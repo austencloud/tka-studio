@@ -1,5 +1,6 @@
 // Pictograph Service Contracts
-export * from "./ICsvPictographParserService";
-export * from "./pictograph-interfaces";
-export * from "./positioning-interfaces";
-export * from "./IBetaDetectionService";
+export * from "../../grid/services/contracts/positioning-interfaces";
+export * from "../../prop/services/contracts/IBetaDetectionService";
+export * from "../../../../modules/build/generate/services/contracts/ICsvPictographParserService";
+export * from "./IPictographRenderingService";
+

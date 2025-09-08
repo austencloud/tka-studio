@@ -1,5 +1,5 @@
 import { resolve, TYPES } from "$shared";
-import { OrientationCalculationService } from "$shared";
+import { OrientationCalculationService } from "$shared/pictograph/prop/services/implementations/OrientationCalculationService";
 import type {
   AnimatedMotionParams,
   AnimationState,
@@ -7,7 +7,6 @@ import type {
   PropStates,
   PropVisibility,
 } from "../domain";
-import type { ISequenceAnimationEngine } from "../services/contracts";
 import {
   AnimationControlService,
   MotionLetterIdentificationService,
@@ -58,9 +57,6 @@ export function createAnimatorState(): AnimatorState {
   const motionService = resolve(
     TYPES.IMotionParameterService
   ) as MotionParameterService;
-  const animationEngine = resolve(
-    TYPES.ISequenceAnimationEngine
-  ) as ISequenceAnimationEngine;
   const animationService = resolve(
     TYPES.IAnimationControlService
   ) as AnimationControlService;

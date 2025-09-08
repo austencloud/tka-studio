@@ -15,8 +15,8 @@ import {
 } from "$shared";
 import type { ArrowPlacementData } from "../../../arrow/domain/models/ArrowPlacementData";
 import { createArrowPlacementData } from "../../../arrow/domain/models/ArrowPlacementData";
+import { createPropPlacementData } from "../../../prop/domain/factories/createPropPlacementData";
 import type { PropPlacementData } from "../../../prop/domain/models/PropPlacementData";
-import { createPropPlacementData } from "../../../prop/domain/models/PropPlacementData";
 
 export interface MotionData {
   readonly motionType: MotionType;

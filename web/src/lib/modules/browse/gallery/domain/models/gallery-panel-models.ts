@@ -45,7 +45,6 @@ export interface GalleryPanelResizeOperation {
   startSize: { width: number; height: number };
 }
 
-import { ResizeDirection } from "$shared";
 
 export interface GalleryPanelSplitterConfig {
   orientation: "horizontal" | "vertical";
@@ -53,3 +52,12 @@ export interface GalleryPanelSplitterConfig {
   minPosition: number;
   maxPosition: number;
 }
+
+
+export enum ResizeDirection {
+  HORIZONTAL = "horizontal",
+  VERTICAL = "vertical",
+  BOTH = "both",
+  RIGHT = "right",
+}
+

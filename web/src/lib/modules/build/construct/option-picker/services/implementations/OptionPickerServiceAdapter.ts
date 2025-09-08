@@ -14,12 +14,39 @@ import type { IOptionPickerDataService, IOptionPickerLayoutService, IOptionPicke
 
 @injectable()
 export class OptionPickerServiceAdapter implements IOptionPickerServiceAdapter {
+  private lastError: string | null = null;
+  private lastOperation: { type: string; params: unknown } | null = null;
+
   constructor(
     @inject(TYPES.IOptionPickerLayoutService)
     private layoutService: IOptionPickerLayoutService,
     @inject(TYPES.IOptionPickerDataService)
     private dataService: IOptionPickerDataService
   ) {}
+
+  // ============================================================================
+  // ERROR HANDLING METHODS
+  // ============================================================================
+
+  getLastError(): string | null {
+    return this.lastError;
+  }
+
+  clearErrors(): void {
+    this.lastError = null;
+    this.lastOperation = null;
+  }
+
+  async retryLastOperation(): Promise<void> {
+    if (!this.lastOperation) {
+      throw new Error("No operation to retry");
+    }
+
+    // Retry logic would depend on the operation type
+    console.log("Retrying operation:", this.lastOperation.type);
+    // Implementation would call the appropriate method based on lastOperation.type
+  }
+
   getCurrentOptions(): PictographData[] {
     // These methods are state-related and should be handled by the state layer
     // The adapter focuses on coordinating services, not managing state

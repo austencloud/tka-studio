@@ -7,7 +7,7 @@ import {
   DEBUG_MODE,
   FOLDABLE_DEVICE_SPECS,
 } from "../domain/constants/device-constants";
-import type { FoldableDetectionResult } from "../domain/models/device-models";
+import type { FoldableDetectionResult } from "../domain/models/foldable-models";
 
 // --- Main Detection Function ---
 /**
@@ -29,8 +29,10 @@ export function detectFoldableDevice(): FoldableDetectionResult {
   const finalResult: FoldableDetectionResult = {
     isFoldable: false,
     isUnfolded: false,
-    foldableType: "unknown",
+    detectedDevice: null,
     confidence: 0,
+    aspectRatio: window.innerWidth / window.innerHeight,
+    foldableType: "unknown",
     detectionMethod: "none",
   };
 
@@ -198,9 +200,11 @@ function checkManualOverride(): FoldableDetectionResult | null {
       ) {
         return {
           isFoldable: settings.isFoldable,
-          foldableType: settings.foldableType || "unknown",
           isUnfolded: settings.isUnfolded,
+          detectedDevice: settings.detectedDevice || null,
           confidence: 1.0, // Max confidence for manual override
+          aspectRatio: window.innerWidth / window.innerHeight,
+          foldableType: settings.foldableType || "unknown",
           detectionMethod: "ManualOverride",
         };
       }

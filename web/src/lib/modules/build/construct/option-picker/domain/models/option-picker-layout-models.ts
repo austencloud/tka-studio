@@ -10,9 +10,8 @@
 
 import type {
   ContainerAspect,
-  DeviceType,
-  LayoutCategory,
 } from "$shared";
+import type { DeviceType } from "../../../../../../shared/device/domain/enums/device-enums";
 
 // ============================================================================
 // CONFIGURATION TYPES
@@ -141,4 +140,19 @@ export interface OptionPickerLayoutResult {
   isTablet: boolean;
   isPortrait: boolean;
   layoutConfig: ResponsiveLayoutConfig;
+}
+
+export enum ReversalFilter {
+  ALL = "all",
+  CONTINUOUS = "continuous",
+  ONE_REVERSAL = "oneReversal",
+  TWO_REVERSALS = "twoReversals",
+}
+
+export enum LayoutCategory {
+  SINGLE_ITEM = "singleItem",
+  TWO_ITEMS = "twoItems",
+  FEW_ITEMS = "fewItems",
+  MEDIUM_ITEMS = "mediumItems",
+  MANY_ITEMS = "manyItems",
 }

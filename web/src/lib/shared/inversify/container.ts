@@ -47,7 +47,7 @@ import { TextRenderingUtils } from "../../modules/build/export/services/implemen
 import { UserInfoRenderer } from "../../modules/build/export/services/implementations/UserInfoRenderer";
 import { WordTextRenderer } from "../../modules/build/export/services/implementations/WordTextRenderer";
 import { CSVPictographLoaderService } from "../../modules/build/generate/services/implementations/CSVPictographLoader";
-import { CSVPictographParserService } from "../../modules/build/generate/services/implementations/CSVPictographParser";
+import { CSVPictographParser } from "../../modules/build/generate/services/implementations/CSVPictographParser";
 import { PictographGenerator } from "../../modules/build/generate/services/implementations/PictographGenerator";
 import { PositionPatternService } from "../../modules/build/generate/services/implementations/PositionPatternService";
 import { SequenceDomainService } from "../../modules/build/generate/services/implementations/SequenceDomainService";
@@ -56,6 +56,7 @@ import { BuildTabService } from "../../modules/build/shared/services/implementat
 import { ConstructCoordinator } from "../../modules/build/shared/services/implementations/ConstructCoordinator";
 import { BeatGridService } from "../../modules/build/workbench/sequence-display/services/implementations/BeatGridService";
 import {
+  BeatFallbackRenderer,
   SequenceImportService,
   SequenceIndexService,
   SequenceService,
@@ -104,30 +105,16 @@ import {
   // MotionQueryHandler, // Service doesn't exist
   OptionFilterer,
 } from "../foundation";
-import {
-  // Arrow services moved to arrow module
-  AttributeKeyGenerator,
-  BeatFallbackRenderer,
-  // DashLocationCalculator moved to arrow module
-  DefaultPlacementService,
-  DirectionalTupleProcessor,
-  // GridRenderingService moved to grid module
-  OrientationCalculationService,
-  OverlayRenderer,
-  PictographValidatorService,
-  SpecialPlacementOriKeyGenerator,
-  SpecialPlacementService,
-  SvgConfig,
-  SvgUtilityService,
-  TurnsTupleKeyGenerator
-} from "../pictograph/services";
-import { LetterQueryHandler } from "../pictograph/services/implementations/LetterQueryHandler";
-import { MotionQueryHandler } from "../pictograph/services/implementations/MotionQueryHandler";
+import { MotionQueryHandler } from "../pictograph/arrow/services/implementations/MotionQueryHandler";
+import { PictographValidatorService } from "../pictograph/services";
+import { OverlayRenderer, SvgConfig, SvgUtilityService } from "../pictograph/services/implementations/rendering";
+import { LetterQueryHandler } from "../pictograph/tka-glyph/services/implementations/LetterQueryHandler";
 // Grid services moved to grid module
 import { GridModeDeriver, GridPositionDeriver, GridRenderingService } from "../pictograph/grid";
 // Prop services moved to prop module
 import {
   DirectionalTupleCalculator,
+  DirectionalTupleProcessor,
   QuadrantIndexCalculator,
 } from "../pictograph/arrow/services/implementations/DirectionalTupleProcessor";
 import { SettingsService } from "../settings/services/implementations/SettingsService";
@@ -147,8 +134,14 @@ import {
   ArrowPositioningService,
   ArrowRenderer,
   ArrowRotationCalculator,
-  DashLocationCalculator
+  DashLocationCalculator,
+  DefaultPlacementService,
+  SpecialPlacementService,
+  TurnsTupleKeyGenerator
 } from "../pictograph/arrow";
+import { AttributeKeyGenerator } from "../pictograph/arrow/services/implementations/AttributeKeyGenerator";
+import { SpecialPlacementOriKeyGenerator } from "../pictograph/arrow/services/implementations/SpecialPlacementOriKeyGenerator";
+import { OrientationCalculationService } from "../pictograph/prop/services/implementations/OrientationCalculationService";
 
 // Create container
 const container = new Container();
@@ -391,7 +384,7 @@ try {
   container.bind(TYPES.IGridPositionDeriver).to(GridPositionDeriver);
   container
     .bind(TYPES.ICSVPictographParserService)
-    .to(CSVPictographParserService);
+    .to(CSVPictographParser);
   container.bind(TYPES.ISequenceAnimationEngine).to(SequenceAnimationEngine);
   container
     .bind(TYPES.ISequenceAnimationOrchestrator)

@@ -9,10 +9,10 @@ Integrates panel management service with runes for:
 -->
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import SpotlightViewer from "../../spotlight/components/SpotlightViewer.svelte";
-// Import layout and UI components
+  // Import layout and UI components
   import type { SequenceData } from "$shared";
   import { resolve, TYPES } from "$shared";
+  import { showSpotlight } from "../../../../shared/application/state/app-state.svelte";
   import ErrorBanner from "../../../build/shared/components/ErrorBanner.svelte";
   import type { SequenceDeleteConfirmationData } from "../domain";
   import type {
@@ -25,6 +25,7 @@ Integrates panel management service with runes for:
     ISectionService,
     ISequenceIndexService,
   } from "../services/contracts";
+  import type { ISequenceDeleteService } from "../services/contracts/ISequenceDeleteService";
   import { createPanelState } from "../state/gallery-panel-state.svelte";
   import { createBrowseState } from "../state/gallery-state-factory.svelte";
   import DeleteConfirmationDialog from "./GalleryDeleteConfirmationDialog.svelte";
@@ -32,7 +33,6 @@ Integrates panel management service with runes for:
   import BrowseLoadingOverlay from "./GalleryLoadingOverlay.svelte";
   import GalleryPanel from "./GalleryPanel.svelte";
   import NavigationSidebar from "./NavigationSidebar.svelte";
-    import type { ISequenceDeleteService } from "../services/contracts/ISequenceDeleteService";
 
   // ============================================================================
   // SERVICE RESOLUTION
@@ -86,7 +86,6 @@ Integrates panel management service with runes for:
   let isLoading = $state(false);
   let error = $state<string | null>(null);
   let showDeleteDialog = $state(false);
-  let showSpotlightViewer = $state(false);
   let selectedSequence = $state<SequenceData | null>(null);
   let deleteConfirmationData = $state<SequenceDeleteConfirmationData | null>(
     null
@@ -180,13 +179,7 @@ Integrates panel management service with runes for:
   }
 
   function handleSpotlightView(sequence: SequenceData) {
-    selectedSequence = sequence;
-    showSpotlightViewer = true;
-  }
-
-  function handleSpotlightClose() {
-    showSpotlightViewer = false;
-    selectedSequence = null;
+    showSpotlight(sequence, thumbnailService);
   }
 
   function handleNavigationResize(width: number) {
@@ -269,15 +262,6 @@ Integrates panel management service with runes for:
     />
   {/if}
 
-  <!-- Fullscreen viewer -->
-  {#if showSpotlightViewer && selectedSequence}
-    <SpotlightViewer
-      show={showSpotlightViewer}
-      sequence={selectedSequence}
-      {thumbnailService}
-      onClose={handleSpotlightClose}
-    />
-  {/if}
 </div>
 
 <!-- ============================================================================ -->

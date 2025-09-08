@@ -6,7 +6,12 @@
  */
 
 // Components
-export { default as PropSvg } from './components/PropSvg.svelte';
+export * from "./components";
 
 // Services
-export * from './services/implementations';
+export * from "./services";
+
+// Domain
+export * from "./domain";
+
+ 

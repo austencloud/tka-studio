@@ -11,18 +11,11 @@
  */
 
 import { z } from "zod";
-import {
-  GridLocation,
-  GridMode,
-  GridPosition,
-  GridPositionGroup,
-  MotionColor,
-  MotionType,
-  Orientation,
-  PropType,
-  RotationDirection,
-} from "../../pictograph/domain/enums/enums";
-import { Letter } from "../../pictograph/domain/enums/Letter";
+// Import enums directly from their sources to avoid circular dependencies
+import { GridLocation, GridMode, GridPosition, GridPositionGroup } from "../../pictograph/grid/domain/enums/grid-enums";
+import { PropType } from "../../pictograph/prop/domain/enums/prop-enums";
+import { MotionColor, MotionType, Orientation, RotationDirection } from "../../pictograph/shared/domain/enums/pictograph-enums";
+import { Letter } from "./models/Letter";
 
 // ============================================================================
 // COORDINATE AND PLACEMENT SCHEMAS

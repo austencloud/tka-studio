@@ -20,6 +20,8 @@ export interface FoldableDetectionResult {
   detectedDevice: string | null;
   confidence: number;
   aspectRatio: number;
+  foldableType?: "zfold" | "other" | "unknown";
+  detectionMethod?: string;
   debugInfo?: {
     userAgent: string;
     dimensions: { width: number; height: number };

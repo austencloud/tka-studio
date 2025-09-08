@@ -1,10 +1,10 @@
-import { DeviceType } from "$shared";
 import { injectable } from "inversify";
 import type {
   DeviceCapabilities,
   ResponsiveSettings,
 } from "../../domain/models/device-models";
 import type { IDeviceDetector } from "../contracts/IDeviceDetector";
+import { DeviceType } from "../../domain";
 
 /**
  * Device Detector Implementation

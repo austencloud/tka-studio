@@ -160,7 +160,7 @@
     bottom: 0;
     background: rgba(0, 0, 0, 0.95);
     backdrop-filter: blur(10px);
-    z-index: 1000;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -207,6 +207,7 @@
     color: white;
     backdrop-filter: blur(4px);
     flex-shrink: 0;
+    z-index: 10001;
   }
 
   .close-button:hover {
@@ -325,7 +326,7 @@
       width: 2.5rem;
       height: 2.5rem;
       right: 0.75rem;
-      z-index: 10000;
+      z-index: 10001;
     }
 
     .close-icon {
