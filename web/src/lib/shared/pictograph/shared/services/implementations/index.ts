@@ -3,3 +3,7 @@
  */
 
 export * from "./DataTransformer";
+export { MotionQueryHandler } from './MotionQueryHandler';
+export { PictographCoordinator } from './PictographCoordinator';
+export { jsonCache } from './SimpleJsonCache';
+

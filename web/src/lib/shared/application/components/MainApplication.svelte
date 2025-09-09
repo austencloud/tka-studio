@@ -5,11 +5,12 @@
 
   import type { Container } from "inversify";
   import { getContext, onMount } from "svelte";
-  // Import app state management - BULLETPROOF RELATIVE IMPORTS
+// Import app state management - BULLETPROOF RELATIVE IMPORTS
   import {
     getInitializationError,
     getInitializationProgress,
     getIsInitialized,
+    getSettings,
     getShowSettings,
     hideSettingsDialog,
     restoreApplicationState,
@@ -22,6 +23,7 @@
   } from "../state/app-state.svelte";
   // Import components - BULLETPROOF RELATIVE IMPORTS
   import { BackgroundType } from "$shared";
+  import type { ISequenceService } from "../../../modules/build/workbench/shared/services/contracts/sequence-contracts";
   import BackgroundCanvas from "../../background/components/BackgroundCanvas.svelte";
   import type { IDeviceDetector } from "../../device/services/contracts/IDeviceDetector";
   import ErrorScreen from "../../foundation/ui/ErrorScreen.svelte";
@@ -30,7 +32,6 @@
   import SettingsDialog from "../../settings/components/SettingsDialog.svelte";
   import type { ISettingsService } from "../../settings/services/contracts/ISettingsService";
   import type { IApplicationInitializer } from "../services/contracts/IApplicationInitializer";
-  import type { ISequenceService } from "../../../modules/build/workbench/shared/services/contracts/sequence-contracts";
 
   // Get DI container from context
   const getContainer = getContext<() => Container | null>("di-container");
@@ -46,6 +47,7 @@
   let isInitialized = $derived(getIsInitialized());
   let initializationError = $derived(getInitializationError());
   let initializationProgress = $derived(getInitializationProgress());
+  let settings = $derived(getSettings());
 
   // Resolve services when container is available
   $effect(() => {
@@ -184,12 +186,14 @@
 
 <!-- Application Container -->
 <div class="tka-app" data-testid="tka-application">
-  <!-- Background Canvas - Sophisticated night sky with nebula, constellations, moon, spaceship, comets -->
-  <BackgroundCanvas
-    backgroundType={BackgroundType.NIGHT_SKY}
-    quality="medium"
-    onReady={() => console.log("🌌 Sophisticated night sky background ready!")}
-  />
+  <!-- Background Canvas - Uses reactive settings -->
+  {#if settings.backgroundEnabled}
+    <BackgroundCanvas
+      backgroundType={settings.backgroundType || BackgroundType.NIGHT_SKY}
+      quality={settings.backgroundQuality || "medium"}
+      onReady={() => console.log("🌌 Sophisticated night sky background ready!")}
+    />
+  {/if}
 
   {#if initializationError}
     <ErrorScreen

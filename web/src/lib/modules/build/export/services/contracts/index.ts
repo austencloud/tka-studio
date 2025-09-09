@@ -32,8 +32,8 @@ export type { IImageFormatConverterService } from './image-format-interfaces';
 export type { ISVGToCanvasConverterService, RenderQualitySettings, SVGConversionOptions } from './svg-conversion-interfaces';
 
 // Grid overlay
+export type { IGridService as IBeatGridService } from '../../../../../shared/pictograph/grid/services/contracts/IGridService';
 export type { IBeatGridDrawingService } from './beat-grid-draw-contracts';
-export type { IBeatGridService } from './beat-grid-interfaces';
 
 // Fallback rendering
 export type { EmptyBeatOptions, ErrorBeatOptions, FallbackRenderOptions, FallbackRenderResult, IBeatFallbackRenderer } from './beat-fallback-interfaces';

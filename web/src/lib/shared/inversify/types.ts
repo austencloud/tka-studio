@@ -30,6 +30,7 @@ export const TYPES = {
   // === APPLICATION SERVICES ===
   IComponentManagementService: Symbol.for("IComponentManagementService"),
   IDataTransformationService: Symbol.for("IDataTransformationService"),
+  IPictographCoordinator: Symbol.for("IPictographCoordinator"),
   IAnimationService: Symbol.for("IAnimationService"),
 
   // === BUILD TAB SERVICES ===
@@ -48,7 +49,9 @@ export const TYPES = {
   ISvgConfig: Symbol.for("ISvgConfig"),
   IDataTransformer: Symbol.for("IDataTransformer"),
   IGridRenderingService: Symbol.for("IGridRenderingService"),
+  IGridService: Symbol.for("IGridService"),
   IArrowRenderer: Symbol.for("IArrowRenderer"),
+  IArrowLifecycleManager: Symbol.for("IArrowLifecycleManager"),
   IOverlayRenderer: Symbol.for("IOverlayRenderer"),
   IPropCoordinator: Symbol.for("IPropCoordinator"),
 
@@ -199,7 +202,7 @@ export const TYPES = {
   IArrowLocationCalculator: Symbol.for("IArrowLocationCalculator"),
   IArrowRotationCalculator: Symbol.for("IArrowRotationCalculator"),
   IDashLocationCalculator: Symbol.for("IDashLocationCalculator"),
-  IArrowCoordinateSystemService: Symbol.for("IArrowCoordinateSystemService"),
+  IArrowGridCoordinateService: Symbol.for("IArrowGridCoordinateService"),
   ISpecialPlacementService: Symbol.for("ISpecialPlacementService"),
   IDefaultPlacementService: Symbol.for("IDefaultPlacementService"),
   ISpecialPlacementOriKeyGenerator: Symbol.for(
@@ -245,6 +248,7 @@ export const CoreTypes = {
 export const RenderingTypes = {
   ISvgUtilityService: TYPES.ISvgUtilityService,
   IGridRenderingService: TYPES.IGridRenderingService,
+  IGridService: TYPES.IGridService,
   IArrowRenderer: TYPES.IArrowRenderer,
 } as const;
 

@@ -13,7 +13,7 @@ and leaves state management to the parent component.
     type PictographData,
   } from "$shared";
   import { resolve, TYPES } from "../../../inversify";
-  import ArrowSvg from "../../arrow/components/ArrowSvg.svelte";
+  import ArrowSvg from "../../arrow/rendering/components/ArrowSvg.svelte";
   import GridSvg from "../../grid/components/GridSvg.svelte";
   import type { IGridModeDeriver } from "../../grid/services/contracts";
   import PropSvg from "../../prop/components/PropSvg.svelte";
@@ -117,14 +117,17 @@ and leaves state management to the parent component.
 
     <!-- Arrows (rendered after props) -->
     {#each motionsToRender as { color, motionData } (color)}
-      <ArrowSvg
-        {motionData}
-        preCalculatedPosition={arrowPositions[color]}
-        preCalculatedMirroring={arrowMirroring[color]}
-        showArrow={showArrows}
-        onLoaded={() => onComponentLoaded(`${color}-arrow`)}
-        onError={(error) => onComponentError(`${color}-arrow`, error)}
-      />
+      {#if pictographData}
+        <ArrowSvg
+          {motionData}
+          {pictographData}
+          arrowPosition={arrowPositions[color] || null}
+          shouldMirror={arrowMirroring[color] || false}
+          showArrow={showArrows}
+          onLoaded={() => onComponentLoaded(`${color}-arrow`)}
+          onError={(error) => onComponentError(`${color}-arrow`, error)}
+        />
+      {/if}
     {/each}
 
     <!-- Letter/Glyph overlay -->

@@ -7,9 +7,12 @@ import {
   type BackgroundSystem,
   type QualityLevel,
 } from "$shared";
-// import { SnowfallBackgroundSystem, NightSkyBackgroundSystem, BubblesBackgroundSystem, DeepOceanBackgroundSystem } from ".";
 
 import { AuroraBackgroundSystem } from "./systems/AuroraBackgroundSystem";
+import { BubblesBackgroundSystem } from "./systems/BubblesBackgroundSystem";
+import { DeepOceanBackgroundSystem } from "./systems/DeepOceanBackgroundSystem";
+import { NightSkyBackgroundSystem } from "./systems/NightSkyBackgroundSystem";
+import { SnowfallBackgroundSystem } from "./systems/SnowfallBackgroundSystem";
 
 // BackgroundFactoryParams doesn't exist in domain - define locally
 interface BackgroundFactoryParams {
@@ -68,12 +71,20 @@ export class BackgroundFactory {
         backgroundSystem = new AuroraBackgroundSystem();
         break;
       case BackgroundType.SNOWFALL:
+        backgroundSystem = new SnowfallBackgroundSystem();
+        break;
       case BackgroundType.NIGHT_SKY:
+        backgroundSystem = new NightSkyBackgroundSystem();
+        break;
       case BackgroundType.BUBBLES:
+        backgroundSystem = new BubblesBackgroundSystem();
+        break;
       case BackgroundType.DEEP_OCEAN:
+        backgroundSystem = new DeepOceanBackgroundSystem();
+        break;
       default:
         console.warn(
-          `Background type "${options.type}" not yet implemented. Defaulting to Aurora.`
+          `Background type "${options.type}" not implemented. Defaulting to Aurora.`
         );
         backgroundSystem = new AuroraBackgroundSystem();
     }

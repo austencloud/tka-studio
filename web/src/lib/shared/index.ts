@@ -9,6 +9,12 @@ export * from "./pictograph";
 export * from "./settings";
 export * from "./validation";
 
+// Export pictograph domain models and enums that are needed across modules
+export { ElementalType, GlyphType, HandMotionType, HandPath, MotionColor, MotionType, Orientation, RotationDirection, VTGDirection, VTGMode, VTGTiming } from "./pictograph/shared/domain/enums";
+export { createPictographData } from "./pictograph/shared/domain/factories";
+export type { ArrowSvgData, CSVRow, ISvgConfig, MotionData, PictographData, SVGDimensions } from "./pictograph/shared/domain/models";
+export { createMotionData } from "./pictograph/shared/domain/models/MotionData";
+
 // Export pictograph service contracts that are needed across modules
 
 // Grid interfaces
@@ -17,42 +23,24 @@ export type {
   IGridPositionDeriver
 } from "./pictograph/grid/services/contracts";
 
-// Arrow interfaces
+// Export arrow types and services from the new module structure
 export type {
-  IArrowAdjustmentCalculator,
-  IArrowLocationCalculator,
-  IArrowPositioningOrchestrator
-} from "./pictograph/arrow/services/contracts";
-
-export type {
-  IArrowPathResolutionService,
-  IDirectionalTupleProcessor
-} from "./pictograph/arrow/services/contracts/arrow-calculation-contracts";
-
-export type {
-  IDefaultPlacementService,
-  ISpecialPlacementService
-} from "./pictograph/arrow/services/contracts/arrow-placement-contracts";
-
-export type {
-  IAttributeKeyGenerator,
-  ISpecialPlacementOriKeyGenerator,
-  ITurnsTupleKeyGenerator
-} from "./pictograph/arrow/services/contracts/arrow-key-generation-contracts";
+  // Data types
+  AllPlacementData,
+  // Domain types
+  ArrowPlacementData, ArrowPosition, GridPlacementData,
+  // Orchestration contracts
+  IArrowLifecycleManager,
+  // Rendering contracts
+  IArrowPathResolutionService, IArrowPlacementService,
+  // Positioning contracts
+  IArrowPositioningOrchestrator, IArrowPositioningService, IDirectionalTupleProcessor, ISvgColorTransformer, ISvgLoader, ISvgParser, JsonPlacementData
+} from "./pictograph/arrow";
 
 // Prop interfaces
 export type {
   IPropPlacementService
 } from "./pictograph/prop/services/contracts";
-
-// Export new arrow service contracts
-export type {
-  AllPlacementData, ArrowLocationInput, ArrowPositioningInput, ArrowPositionResult, GridPlacementData, IArrowLocationService,
-  IArrowPlacementKeyService,
-  IArrowPlacementService,
-  IArrowPositioningService,
-  IDirectionalTupleCalculator, JsonPlacementData
-} from "./pictograph/arrow/services/contracts";
 
 // Export prop service contracts
 export type {
@@ -60,13 +48,6 @@ export type {
   IBetaOffsetCalculator
 } from "./pictograph/prop/services/contracts";
 
-// Export pictograph rendering service contracts
-export type {
-  IFallbackArrowService, IPictographRenderingService,
-  ISvgColorTransformer,
-  ISvgLoader,
-  ISvgParser
-} from "./pictograph/services/contracts";
 
 // Export storage service interface and utility functions
 export type { IStorageService } from "./foundation/services/contracts/IStorageService";
@@ -112,8 +93,9 @@ export type {
 } from "../modules/build/workbench/sequence-display/domain/models/beat-grid-models";
 export * from "../modules/build/workbench/shared/domain/models";
 
-// Build generate domain exports  
+// Build generate domain exports
 export * from "../modules/build/generate/domain";
+export type { CSVParseResult, ParsedCsvRow } from "../modules/build/generate/domain";
 
 // Browse gallery domain exports
 export * from "../modules/browse/gallery/domain";

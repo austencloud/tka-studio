@@ -3,8 +3,6 @@
  */
 
 export * from "./IDataTransformer";
+export * from "./IPictographCoordinator";
 export * from "./IPictographRenderingService";
-export * from "./ISvgColorTransformer";
-export * from "./ISvgLoader";
-export * from "./ISvgParser";
 

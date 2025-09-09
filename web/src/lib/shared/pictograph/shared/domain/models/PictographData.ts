@@ -4,7 +4,8 @@
  * Immutable data for a complete pictograph.
  * Based on modern desktop app's pictographData.py
  */
-import { GridPosition, Letter, MotionColor } from "$shared";
+import { GridPosition, Letter } from "$shared";
+import { MotionColor } from "../enums/pictograph-enums";
 import type { MotionData } from "./MotionData";
 
 export interface PictographData {

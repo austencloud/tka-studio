@@ -1,6 +1,10 @@
 
-export * from './domain';
-export * from './services';
-export * from './components';
-export * from './state';
+/**
+ * Arrow Module - Complete Arrow System
+ */
+
+// Export all arrow modules
+export * from './orchestration';
+export * from './positioning';
+export * from './rendering';
 

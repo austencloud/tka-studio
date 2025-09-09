@@ -67,7 +67,6 @@ export function createImageExportState(
 
   // Initialize with provided options
   if (initialOptions) {
-    exportOptions = { ...exportOptions, ...initialOptions };
   }
 
   // Derived state - validation
@@ -93,7 +92,8 @@ export function createImageExportState(
 
   // Auto-regenerate preview when options change
   $effect(() => {
-    // Track exportOptions to ensure reactivity
+    // Track exportOptions to ensure reactivity - access it to establish dependency
+    exportOptions;
 
     if (currentSequence && previewImageUrl) {
       // Debounce preview generation to avoid excessive updates
@@ -144,11 +144,10 @@ export function createImageExportState(
     previewError = null;
 
     try {
-      // Capture current options to avoid reactivity warning
-      const currentOptions = exportOptions;
+      // Use exportOptions directly within the async function to maintain reactivity
       const dataUrl = await exportService.generatePreview(
         sequence,
-        currentOptions
+        exportOptions
       );
       previewImageUrl = dataUrl;
     } catch (error) {
@@ -181,16 +180,13 @@ export function createImageExportState(
       // Update current sequence
       currentSequence = sequence;
 
-      // Capture current options to avoid reactivity warning
-      const currentOptions = exportOptions;
-
-      // Perform export and download
-      await exportService.exportAndDownload(sequence, filename, currentOptions);
+      // Perform export and download using exportOptions directly
+      await exportService.exportAndDownload(sequence, filename, exportOptions);
 
       // Generate filename for display (if not provided)
       const displayFilename =
         filename ||
-        `${sequence.word || "sequence"}.${currentOptions.format.toLowerCase()}`;
+        `${sequence.word || "sequence"}.${exportOptions.format.toLowerCase()}`;
       lastExportedFile = displayFilename;
     } catch (error) {
       const errorMessage =
@@ -225,7 +221,6 @@ export function createImageExportState(
   function resetToDefaults(): void {
     clearErrors();
     clearPreview();
-    exportOptions = exportService.getDefaultOptions();
     lastExportedFile = null;
   }
 
@@ -390,11 +385,10 @@ export function createBatchExportState(
     batchProgress = { current: 0, total: sequences.length };
 
     try {
-      // Capture current options to avoid reactivity warning
-      const currentOptions = baseState.exportOptions;
+      // Use exportOptions directly from baseState to maintain reactivity
       await exportService.batchExport?.(
         sequences,
-        currentOptions
+        baseState.exportOptions
       );
     } finally {
       batchProgress = { current: 0, total: 0 };

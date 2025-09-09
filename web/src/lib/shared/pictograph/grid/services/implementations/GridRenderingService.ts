@@ -5,13 +5,10 @@
  * Extracted from PictographRenderingService.
  */
 
-import type { ISvgConfig } from "$shared";
+import type { IGridRenderingService, ISvgConfig } from "$shared";
 import { GridMode, TYPES } from "$shared";
 import { inject, injectable } from "inversify";
 
-export interface IGridRenderingService {
-  renderGrid(svg: SVGElement, gridMode?: GridMode): Promise<void>;
-}
 
 @injectable()
 export class GridRenderingService implements IGridRenderingService {

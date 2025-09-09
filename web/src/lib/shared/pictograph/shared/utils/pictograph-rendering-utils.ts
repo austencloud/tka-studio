@@ -6,20 +6,20 @@
  */
 
 import {
-  GridMode,
-  MotionColor,
-  resolve,
-  TYPES,
-  type IArrowPositioningOrchestrator,
-  type IGridModeDeriver,
-  type MotionData,
-  type PictographData,
+    GridMode,
+    MotionColor,
+    resolve,
+    TYPES,
+    type IArrowPositioningOrchestrator,
+    type IGridModeDeriver,
+    type MotionData,
+    type PictographData,
 } from "$shared";
 import { Point } from "fabric";
 import type { IOverlayRenderer } from "../../../../modules/animator/services/implementations/OverlayRenderer";
 import type { ISvgUtilityService } from "../../../../modules/animator/services/implementations/SvgUtilityService";
 import type { ArrowPosition } from "../../arrow";
-import type { IArrowRenderer } from "../../arrow/services/implementations/rendering/ArrowRenderer";
+import type { IArrowRenderer } from "../../arrow/rendering/services/contracts";
 import type { IGridRenderingService } from "../../grid";
 
 

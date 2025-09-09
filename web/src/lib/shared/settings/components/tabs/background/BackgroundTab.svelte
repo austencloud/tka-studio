@@ -4,6 +4,7 @@
   import { BackgroundType } from "$shared";
   import SettingCard from "../../SettingCard.svelte";
   import ToggleSetting from "../../ToggleSetting.svelte";
+  import BackgroundSelector from "./BackgroundSelector.svelte";
   import { backgroundsConfig } from "./background-config";
 
   interface Props {
@@ -28,9 +29,8 @@
     onUpdate?.({ key, value });
   }
 
-  function handleBackgroundTypeChange(event: Event) {
-    const target = event.target as HTMLSelectElement;
-    updateBackgroundSetting("backgroundType", target.value as BackgroundType);
+  function handleBackgroundSelect(selectedType: BackgroundType) {
+    updateBackgroundSetting("backgroundType", selectedType);
   }
 
   function handleQualityChange(event: Event) {
@@ -66,38 +66,13 @@
   {#if backgroundSettings.backgroundEnabled}
     <SettingCard
       title="Background Type"
-      description="Choose the visual style for the background"
+      description="Choose your preferred animated background style"
     >
-      <div class="setting-row">
-        <label for="background-select" class="setting-label"
-          >Background Style</label
-        >
-        <select
-          id="background-select"
-          class="setting-select"
-          value={backgroundSettings.backgroundType}
-          onchange={handleBackgroundTypeChange}
-        >
-          {#each backgroundsConfig as background}
-            <option value={background.type}>{background.name}</option>
-          {/each}
-        </select>
-      </div>
+      <BackgroundSelector
+        selectedBackground={backgroundSettings.backgroundType}
+        onBackgroundSelect={handleBackgroundSelect}
+      />
 
-      {#if currentBackgroundInfo()}
-        {@const bgInfo = currentBackgroundInfo()!}
-        <div class="background-info">
-          <div class="background-preview">
-            <span class="background-icon">{bgInfo.icon}</span>
-            <div class="background-details">
-              <h4 class="background-name">{bgInfo.name}</h4>
-              <p class="background-description">
-                {bgInfo.description}
-              </p>
-            </div>
-          </div>
-        </div>
-      {/if}
     </SettingCard>
 
     <SettingCard
@@ -184,50 +159,6 @@
     outline: none;
     border-color: #6366f1;
     box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
-  }
-
-  .background-info {
-    margin-top: clamp(12px, 1.5vw, 20px);
-    padding: clamp(12px, 1.5vw, 20px);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-  }
-
-  .background-preview {
-    display: flex;
-    align-items: center;
-    gap: clamp(12px, 1.5vw, 16px);
-  }
-
-  .background-icon {
-    font-size: clamp(20px, 2.5vw, 32px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: clamp(40px, 5vw, 60px);
-    height: clamp(40px, 5vw, 60px);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .background-details {
-    flex: 1;
-  }
-
-  .background-name {
-    font-size: clamp(14px, 1.4vw, 18px);
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    margin: 0 0 clamp(4px, 0.5vw, 8px) 0;
-  }
-
-  .background-description {
-    font-size: clamp(11px, 1.1vw, 14px);
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0;
-    line-height: 1.4;
   }
 
   .quality-info {

@@ -5,18 +5,11 @@
  * Represents complete motion information including positioning and rendering data.
  */
 
-import {
-  GridLocation,
-  MotionColor,
-  MotionType,
-  Orientation,
-  PropType,
-  RotationDirection,
-} from "$shared";
-import type { ArrowPlacementData } from "../../../arrow/domain/models/ArrowPlacementData";
-import { createArrowPlacementData } from "../../../arrow/domain/models/ArrowPlacementData";
-import { createPropPlacementData } from "../../../prop/domain/factories/createPropPlacementData";
-import type { PropPlacementData } from "../../../prop/domain/models/PropPlacementData";
+import { type ArrowPlacementData, createArrowPlacementData } from "../../../arrow";
+import { GridLocation } from "../../../grid";
+import { PropType, type PropPlacementData, createPropPlacementData } from "../../../prop";
+import { MotionColor, MotionType, RotationDirection, Orientation } from "../enums";
+
 
 export interface MotionData {
   readonly motionType: MotionType;
