@@ -4,7 +4,6 @@
  * Tests the new simplified beta positioning architecture
  */
 
-import { PropPlacementService } from "$lib/shared/pictograph/prop";
 import {
   GridLocation,
   GridPosition,
@@ -58,7 +57,9 @@ async function testBetaPositioning() {
     letter: Letter.PSI_DASH,
   });
 
-  const propPlacementService = new PropPlacementService();
+  // Use container to resolve service with proper dependencies
+  const { resolve, TYPES } = await import("../../../src/lib/shared/inversify/container");
+  const propPlacementService = resolve(TYPES.IPropPlacementService) as import("../../../src/lib/shared/pictograph/prop/services/contracts/IPropPlacementService").IPropPlacementService;
 
   try {
     console.log("🔍 Testing blue prop placement...");

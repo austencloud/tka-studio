@@ -28,7 +28,8 @@ import {
   MotionQueryHandler,
   OrientationCalculationService,
   PictographCoordinator,
-  PropCoordinator, PropPlacementService,
+  PropCoordinator, PropLifecycleManager,
+  PropPlacementService, PropSvgLoader,
   QuadrantIndexCalculator,
   SpecialPlacementOriKeyGenerator,
   SpecialPlacementService,
@@ -81,7 +82,9 @@ export const pictographModule = new ContainerModule(
     options.bind(TYPES.IBetaDetectionService).to(BetaDetectionService);
     options.bind(TYPES.IBetaOffsetCalculator).to(BetaOffsetCalculator);
     options.bind(TYPES.IPropCoordinator).to(PropCoordinator);
+    options.bind(TYPES.IPropLifecycleManager).to(PropLifecycleManager);
     options.bind(TYPES.IPropPlacementService).to(PropPlacementService);
+    options.bind(TYPES.IPropSvgLoader).to(PropSvgLoader);
     options.bind(TYPES.IOrientationCalculationService).to(OrientationCalculationService);
 
     // === COORDINATION SERVICES ===

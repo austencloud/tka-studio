@@ -38,6 +38,10 @@ and leaves state management to the parent component.
     arrowMirroring: Record<string, boolean>;
     arrowAssets: Record<string, import("../../arrow/orchestration/domain/arrow-models").ArrowAssets>;
     showArrows: boolean;
+    /** Prop positioning state */
+    propPositions: Record<string, import("../../prop/domain/models").PropPosition>;
+    propAssets: Record<string, import("../../prop/domain/models").PropAssets>;
+    showProps: boolean;
     /** Event handlers */
     onComponentLoaded: (componentName: string) => void;
     onComponentError: (componentName: string, error: string) => void;
@@ -57,6 +61,9 @@ and leaves state management to the parent component.
     arrowMirroring,
     arrowAssets,
     showArrows,
+    propPositions,
+    propAssets,
+    showProps,
     onComponentLoaded,
     onComponentError,
     ariaLabel,
@@ -69,11 +76,8 @@ and leaves state management to the parent component.
   const allComponentsLoaded = $derived(() => {
     if (!hasValidData) return false;
 
-    // Required components: grid + props for each motion
+    // Required components: grid only (props and arrows are pre-loaded by parent)
     const requiredComponents = ['grid'];
-    motionsToRender.forEach(({ color }) => {
-      requiredComponents.push(`prop-${color}`);
-    });
 
     return requiredComponents.every(component => loadedComponents.has(component));
   });
@@ -146,12 +150,12 @@ and leaves state management to the parent component.
 
     <!-- Props (rendered first so arrows appear on top) -->
     {#each motionsToRender as { color, motionData } (color)}
-      {#if pictographData}
+      {#if pictographData && propAssets[color] && propPositions[color]}
         <PropSvg
           {motionData}
-          {pictographData}
-          onLoaded={() => handleComponentLoaded(`prop-${color}`)}
-          onError={(error) => onComponentError(`prop-${color}`, error)}
+          propAssets={propAssets[color]}
+          propPosition={propPositions[color]}
+          showProp={showProps}
         />
       {/if}
     {/each}

@@ -56,6 +56,8 @@ export const TYPES = {
   IArrowLifecycleManager: Symbol.for("IArrowLifecycleManager"),
   IOverlayRenderer: Symbol.for("IOverlayRenderer"),
   IPropCoordinator: Symbol.for("IPropCoordinator"),
+  IPropLifecycleManager: Symbol.for("IPropLifecycleManager"),
+  IPropSvgLoader: Symbol.for("IPropSvgLoader"),
 
   // === POSITIONING SERVICES ===
   IArrowPositioningOrchestrator: Symbol.for("IArrowPositioningOrchestrator"),

@@ -8,55 +8,25 @@
 
 import type { IPropPlacementService } from "$shared";
 import {
-  MotionColor,
   type MotionData,
   type PictographData,
   type PropPlacementData,
-  resolve,
   TYPES,
 } from "$shared";
-import { injectable } from "inversify";
-import type { ISvgPreloadService } from "../../../shared/services/contracts/ISvgPreloadService";
-import { PropPlacementService } from "./PropPlacementService";
-
-export interface PropRenderData {
-  position: { x: number; y: number };
-  rotation: number;
-  svgData: {
-    svgContent: string;
-    viewBox: { width: number; height: number };
-    center: { x: number; y: number };
-  } | null;
-  loaded: boolean;
-  error: string | null;
-}
-
-export interface IPropCoordinator {
-  calculatePropRenderData(
-    PropPlacementData: PropPlacementData,
-    motionData?: MotionData,
-    pictographData?: PictographData // ✅ SIMPLIFIED: Complete pictograph data contains gridMode
-  ): Promise<PropRenderData>;
-}
+import { inject, injectable } from "inversify";
+import type { PropRenderData } from "../../domain/models/PropRenderData";
+import type { IPropCoordinator } from "../contracts/IPropCoordinator";
+import type { IPropSvgLoader } from "../contracts/IPropSvgLoader";
 
 @injectable()
 export class PropCoordinator implements IPropCoordinator {
-  private svgCache = new Map<
-    string,
-    {
-      svgContent: string;
-      viewBox: { width: number; height: number };
-      center: { x: number; y: number };
-    }
-  >();
-  private placementService: IPropPlacementService;
-
-  constructor() {
-    this.placementService = new PropPlacementService();
-  }
+  constructor(
+    @inject(TYPES.IPropPlacementService) private placementService: IPropPlacementService,
+    @inject(TYPES.IPropSvgLoader) private svgLoader: IPropSvgLoader
+  ) {}
 
   async calculatePropRenderData(
-    PropPlacementData: PropPlacementData,
+    propPlacementData: PropPlacementData,
     motionData?: MotionData,
     pictographData?: PictographData
   ): Promise<PropRenderData> {
@@ -79,18 +49,8 @@ export class PropCoordinator implements IPropCoordinator {
         motionData
       );
 
-      // Load SVG data using motion data for color (single source of truth)
-      const svgData = await this.loadSvgData(PropPlacementData, motionData);
-
-      const result = {
-        position: { x: placementData.positionX, y: placementData.positionY },
-        rotation: placementData.rotationAngle,
-        svgData,
-        loaded: true,
-        error: null,
-      };
-
-      return result;
+      // Use fast SVG loader - direct approach like arrows
+      return await this.svgLoader.loadPropSvg(placementData, motionData);
     } catch (error) {
       console.error("❌ PropCoordinator.calculatePropRenderData error:", error);
       return {
@@ -101,145 +61,5 @@ export class PropCoordinator implements IPropCoordinator {
         error: error instanceof Error ? error.message : "Unknown error",
       };
     }
-  }
-
-  private async loadSvgData(
-    _propData: PropPlacementData,
-    motionData?: MotionData
-  ): Promise<{
-    svgContent: string;
-    viewBox: { width: number; height: number };
-    center: { x: number; y: number };
-  }> {
-    // Use motionData.color as source of truth, fallback to blue
-    const color = motionData?.color || MotionColor.BLUE;
-    const cacheKey = `${motionData?.propType || "staff"}_${color}`;
-
-    if (this.svgCache.has(cacheKey)) {
-      const cachedData = this.svgCache.get(cacheKey);
-      if (cachedData) {
-        return cachedData;
-      }
-    }
-
-    // Try to use preload service if available, fallback to fetch
-    let originalSvgText: string;
-    const propType = motionData?.propType || "staff";
-
-    try {
-      const svgPreloadService = resolve(TYPES.ISvgPreloadService) as ISvgPreloadService;
-
-      // Check if already cached for instant return
-      if (svgPreloadService.isCached('prop', propType)) {
-        originalSvgText = await svgPreloadService.getSvgContent('prop', propType);
-      } else {
-        // Load on-demand if not cached
-        originalSvgText = await svgPreloadService.getSvgContent('prop', propType);
-      }
-    } catch (error) {
-      // Fallback to direct fetch if preload service fails
-      console.log(`⚠️ PropCoordinator: Preload service failed for ${propType}, using fetch fallback:`, error);
-      const response = await fetch(`/images/props/${propType}.svg`);
-      if (!response.ok) throw new Error(`Failed to fetch SVG: ${propType} (${response.status})`);
-      originalSvgText = await response.text();
-    }
-    const { viewBox, center } = this.parsePropSvg(originalSvgText);
-    const coloredSvgText = this.applyColorToSvg(originalSvgText, color);
-
-    // Extract just the inner SVG content (no scaling needed - props are already correctly sized)
-    const svgContent = this.extractSvgContent(coloredSvgText);
-
-    const svgData = {
-      svgContent,
-      viewBox,
-      center,
-    };
-
-    this.svgCache.set(cacheKey, svgData);
-    return svgData;
-  }
-
-  private parsePropSvg(svgText: string): {
-    viewBox: { width: number; height: number };
-    center: { x: number; y: number };
-  } {
-    const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
-    const svg = doc.documentElement;
-
-    const viewBoxValues = svg.getAttribute("viewBox")?.split(/\s+/) || [
-      "0",
-      "0",
-      "252.8",
-      "77.8",
-    ];
-    const viewBox = {
-      width: parseFloat(viewBoxValues[2] || "252.8") || 252.8,
-      height: parseFloat(viewBoxValues[3] || "77.8") || 77.8,
-    };
-
-    let center = { x: viewBox.width / 2, y: viewBox.height / 2 };
-
-    try {
-      const centerElement = doc.getElementById("centerPoint");
-      if (centerElement) {
-        center = {
-          x: parseFloat(centerElement.getAttribute("cx") || "0") || center.x,
-          y: parseFloat(centerElement.getAttribute("cy") || "0") || center.y,
-        };
-      }
-    } catch {
-      // Use default center
-    }
-
-    return { viewBox, center };
-  }
-
-  private applyColorToSvg(svgText: string, color: MotionColor): string {
-    const colorMap = new Map([
-      [MotionColor.BLUE, "#2E3192"],
-      [MotionColor.RED, "#ED1C24"],
-    ]);
-
-    const targetColor = colorMap.get(color) || "#2E3192";
-
-    let coloredSvg = svgText.replace(
-      /fill="#[0-9A-Fa-f]{6}"/g,
-      `fill="${targetColor}"`
-    );
-    coloredSvg = coloredSvg.replace(
-      /fill:\s*#[0-9A-Fa-f]{6}/g,
-      `fill:${targetColor}`
-    );
-
-    // Make CSS class names unique for each color to prevent conflicts
-    // Replace .st0, .st1, etc. with .st0-blue, .st1-blue, etc.
-    const colorSuffix = color.toLowerCase();
-    coloredSvg = coloredSvg.replace(/\.st(\d+)/g, `.st$1-${colorSuffix}`);
-
-    // Also update class references in elements
-    coloredSvg = coloredSvg.replace(
-      /class="st(\d+)"/g,
-      `class="st$1-${colorSuffix}"`
-    );
-
-    // Remove centerPoint circle to prevent detection issues
-    coloredSvg = coloredSvg.replace(
-      /<circle[^>]*id="centerPoint"[^>]*\/?>/g,
-      ""
-    );
-
-    return coloredSvg;
-  }
-
-  private extractSvgContent(svgText: string): string {
-    // Extract SVG content (everything inside the <svg> tags)
-    // Props are already correctly sized for 950x950 coordinate system
-    const svgContentMatch = svgText.match(/<svg[^>]*>(.*)<\/svg>/s);
-    if (!svgContentMatch) {
-      console.warn("Could not extract SVG content");
-      return svgText;
-    }
-
-    return svgContentMatch[1];
   }
 }

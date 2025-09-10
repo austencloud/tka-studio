@@ -6,58 +6,39 @@
  * Returns PropPlacementData that can be attached to PropPlacementData.
  */
 
-import type { IGridModeDeriver, IPropPlacementService } from "$shared";
+import type { IBetaDetectionService, IGridModeDeriver, IPropPlacementService } from "$shared";
 import {
   type MotionData,
   type PictographData,
   type PropPlacementData,
+  createPropPlacementFromPosition,
   GridMode,
   PropRotAngleManager,
-  createPropPlacementFromPosition,
+  TYPES,
 } from "$shared";
-import type { IBetaDetectionService } from "$shared";
 import { Point } from "fabric";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { BetaOffsetCalculator } from "./BetaOffsetCalculator";
 import { BetaPropDirectionCalculator } from "./BetaPropDirectionCalculator";
 import DefaultPropPositioner from "./DefaultPropPositioner";
 
 @injectable()
 export class PropPlacementService implements IPropPlacementService {
-  private gridModeService: IGridModeDeriver | null = null;
-  private betaDetectionService: IBetaDetectionService | null = null;
+  constructor(
+    @inject(TYPES.IGridModeDeriver) private gridModeService: IGridModeDeriver,
+    @inject(TYPES.IBetaDetectionService) private betaDetectionService: IBetaDetectionService
+  ) {}
 
-  private async getGridModeService(): Promise<IGridModeDeriver> {
-    if (!this.gridModeService) {
-      const { resolve, TYPES } = await import(
-        "$lib/shared/inversify/container"
-      );
-      this.gridModeService = resolve<IGridModeDeriver>(TYPES.IGridModeDeriver);
-    }
-    return this.gridModeService;
-  }
 
-  private async getBetaDetectionService(): Promise<IBetaDetectionService> {
-    if (!this.betaDetectionService) {
-      const { resolve, TYPES } = await import(
-        "$lib/shared/inversify/container"
-      );
-      this.betaDetectionService = resolve<IBetaDetectionService>(
-        TYPES.IBetaDetectionService
-      );
-    }
-    return this.betaDetectionService;
-  }
 
   async calculatePlacement(
     pictographData: PictographData,
     motionData: MotionData
   ): Promise<PropPlacementData> {
-    // Compute gridMode from motion data
-    const gridModeService = await this.getGridModeService();
+    // Compute gridMode from motion data - now synchronous!
     const gridMode =
       pictographData.motions?.blue && pictographData.motions?.red
-        ? gridModeService.deriveGridMode(
+        ? this.gridModeService.deriveGridMode(
             pictographData.motions.blue,
             pictographData.motions.red
           )
@@ -104,9 +85,8 @@ export class PropPlacementService implements IPropPlacementService {
     pictographData: PictographData,
     motionData: MotionData
   ): Promise<{ x: number; y: number }> {
-    // Check if this pictograph ends with beta position
-    const betaDetectionService = await this.getBetaDetectionService();
-    const needsBetaOffset = betaDetectionService.endsWithBeta(pictographData);
+    // Check if this pictograph ends with beta position - now synchronous!
+    const needsBetaOffset = this.betaDetectionService.endsWithBeta(pictographData);
 
     if (!needsBetaOffset) {
       return { x: 0, y: 0 };

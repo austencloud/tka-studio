@@ -8,10 +8,10 @@
 // Components
 export * from "./components";
 
-// Services
-export * from "./services";
-
 // Domain
 export * from "./domain";
+
+// Services
+export * from "./services";
 
  

@@ -15,6 +15,7 @@ import type {
 } from "$shared";
 import { resolve, TYPES } from "$shared";
 import type { ArrowAssets } from "../../arrow/orchestration/domain/arrow-models";
+import type { PropAssets, PropPosition } from "../../prop/domain/models";
 
 export interface PictographState {
   // Data state
@@ -30,6 +31,11 @@ export interface PictographState {
   readonly arrowAssets: Record<string, ArrowAssets>;
   readonly showArrows: boolean;
 
+  // Prop positioning state
+  readonly propPositions: Record<string, PropPosition>;
+  readonly propAssets: Record<string, PropAssets>;
+  readonly showProps: boolean;
+
   // Loading state
   readonly isLoading: boolean;
   readonly isLoaded: boolean;
@@ -39,6 +45,7 @@ export interface PictographState {
 
   // Actions
   calculateArrowPositions(): Promise<void>;
+  calculatePropPositions(): Promise<void>;
   handleComponentLoaded(componentName: string): void;
   handleComponentError(componentName: string, error: string): void;
   clearLoadingState(): void;
@@ -55,6 +62,7 @@ export function createPictographState(
   const dataTransformationService = resolve(TYPES.IDataTransformationService) as IDataTransformationService;
   const componentManagementService = resolve(TYPES.IComponentManagementService) as IComponentManagementService;
   const arrowLifecycleManager = resolve(TYPES.IArrowLifecycleManager) as import("../../arrow/orchestration/services/contracts/IArrowLifecycleManager").IArrowLifecycleManager;
+  const propLifecycleManager = resolve(TYPES.IPropLifecycleManager) as import("../../prop/services/contracts/IPropLifecycleManager").IPropLifecycleManager;
 
   // Input data state
   let pictographData = $state<PictographData | null>(initialPictographData);
@@ -68,6 +76,11 @@ export function createPictographState(
   let arrowMirroring = $state<Record<string, boolean>>({});
   let arrowAssets = $state<Record<string, ArrowAssets>>({});
   let showArrows = $state(false);
+
+  // Prop positioning state
+  let propPositions = $state<Record<string, PropPosition>>({});
+  let propAssets = $state<Record<string, PropAssets>>({});
+  let showProps = $state(false);
 
   // Derived data transformation state
   const dataState = $derived(() => dataTransformationService.transformPictographData(pictographData));
@@ -95,8 +108,9 @@ export function createPictographState(
     if (dataState().effectivePictographData) {
       errorMessage = null;
       loadedComponents.clear();
-      // Recalculate arrow positions when data changes
+      // Recalculate arrow and prop positions when data changes
       calculateArrowPositions();
+      calculatePropPositions();
     }
   });
 
@@ -135,6 +149,59 @@ export function createPictographState(
     }
   }
 
+  async function calculatePropPositions(): Promise<void> {
+    const currentData = dataState().effectivePictographData;
+
+    if (!currentData?.motions) {
+      propPositions = {};
+      propAssets = {};
+      showProps = true;
+      return;
+    }
+
+    try {
+      const positions: Record<string, PropPosition> = {};
+      const assets: Record<string, PropAssets> = {};
+      const errors: Record<string, string> = {};
+
+      // Process all motions in parallel for better performance
+      const motionPromises = Object.entries(currentData.motions).map(
+        async ([color, motionData]) => {
+          try {
+            const propState = await propLifecycleManager.coordinatePropState(motionData, currentData);
+
+            if (propState.error) {
+              errors[color] = propState.error;
+            } else if (propState.assets && propState.position) {
+              positions[color] = propState.position;
+              assets[color] = propState.assets;
+            }
+          } catch (error) {
+            const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+            errors[color] = errorMessage;
+          }
+        }
+      );
+
+      await Promise.all(motionPromises);
+
+      // Update state
+      propPositions = positions;
+      propAssets = assets;
+      showProps = Object.keys(errors).length === 0 && Object.keys(positions).length > 0;
+
+      // Log any errors
+      if (Object.keys(errors).length > 0) {
+        console.warn("⚠️ Prop lifecycle had errors:", errors);
+      }
+    } catch (error) {
+      console.error("❌ Prop lifecycle coordination failed:", error);
+      propPositions = {};
+      propAssets = {};
+      showProps = false;
+    }
+  }
+
   function handleComponentLoaded(componentName: string): void {
     loadedComponents.add(componentName);
     loadedComponents = new Set(loadedComponents); // Trigger reactivity
@@ -170,6 +237,11 @@ export function createPictographState(
     get arrowAssets() { return arrowAssets; },
     get showArrows() { return showArrows; },
 
+    // Prop positioning state
+    get propPositions() { return propPositions; },
+    get propAssets() { return propAssets; },
+    get showProps() { return showProps; },
+
     // Loading state
     get isLoading() { return isLoading(); },
     get isLoaded() { return isLoaded(); },
@@ -179,6 +251,7 @@ export function createPictographState(
 
     // Actions
     calculateArrowPositions,
+    calculatePropPositions,
     handleComponentLoaded,
     handleComponentError,
     clearLoadingState,

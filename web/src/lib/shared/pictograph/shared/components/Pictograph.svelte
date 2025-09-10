@@ -59,9 +59,10 @@ ARCHITECTURE:
   // LIFECYCLE & EFFECTS
   // =============================================================================
 
-  // Calculate arrow positions when component mounts
+  // Calculate arrow and prop positions when component mounts
   onMount(async () => {
     await pictographState.calculateArrowPositions();
+    await pictographState.calculatePropPositions();
   });
 
   // =============================================================================
@@ -92,6 +93,9 @@ ARCHITECTURE:
     arrowMirroring={pictographState.arrowMirroring}
     arrowAssets={pictographState.arrowAssets}
     showArrows={pictographState.showArrows}
+    propPositions={pictographState.propPositions}
+    propAssets={pictographState.propAssets}
+    showProps={pictographState.showProps}
     onComponentLoaded={handleComponentLoaded}
     onComponentError={handleComponentError}
     ariaLabel={pictographState.hasValidData ? "Pictograph" : "Empty Pictograph"}

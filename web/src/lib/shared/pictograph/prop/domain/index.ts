@@ -1,4 +1,13 @@
+/**
+ * Prop Domain
+ */
+
+// Enums
 export * from "./enums/PropType";
+
+// Factories
 export * from "./factories/createPropPlacementData";
-export * from "./models/PropPlacementData";
+
+// Models
+export * from "./models";
 
