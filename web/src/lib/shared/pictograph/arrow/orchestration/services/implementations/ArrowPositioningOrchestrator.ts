@@ -6,12 +6,12 @@
  */
 
 import type {
-  ArrowPlacementData,
-  IArrowAdjustmentCalculator,
-  IArrowLocationCalculator,
-  IArrowPositioningOrchestrator,
-  MotionData,
-  PictographData,
+    ArrowPlacementData,
+    IArrowAdjustmentCalculator,
+    IArrowLocationCalculator,
+    IArrowPositioningOrchestrator,
+    MotionData,
+    PictographData,
 } from "$shared";
 import { TYPES } from "$shared";
 import { inject, injectable } from "inversify";

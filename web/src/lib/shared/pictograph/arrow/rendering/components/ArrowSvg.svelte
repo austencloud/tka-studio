@@ -25,8 +25,8 @@ Simple Arrow Component - Just renders an arrow with provided data
     transform="
       translate({arrowPosition.x}, {arrowPosition.y})
       rotate({arrowPosition.rotation})
-      scale({shouldMirror ? -1 : 1}, 1)
       translate({-arrowAssets.center.x}, {-arrowAssets.center.y})
+      {shouldMirror ? 'scale(-1, 1)' : ''}
     "
     class="arrow-svg {motionData.color}-arrow-svg"
     class:mirrored={shouldMirror}
