@@ -1,30 +1,39 @@
 /**
- * Reimport type { AppSettings, PerformanceSnapshot } from "../domain/models/application";actored Application State - Clean Architecture
+ * Refactored Application State - Clean Architecture
  *
- * Orchestrates focused state services following Single Responsibility Principle  // Update active tab immediately for all tabs
-  // The browse tab will handle its own loading state reactively
-  uiState.activeTab = tab;vice handles one specific concern, making the code maintainable and testable.
+ * Orchestrates focused state services following Single Responsibility Principle.
+ * Each service handles one specific concern, making the code maintainable and testable.
  *
  * This replaces the 460-line monolith with a clean, focused architecture.
  */
 
+import { browser } from "$app/environment";
 import type {
   AppSettings,
+  IPersistenceService,
   ISettingsService,
   PerformanceSnapshot,
   TabId,
-  Theme,
+  Theme
 } from "$shared";
 import { resolve } from "../../inversify";
 import { TYPES } from "../../inversify/types";
 
-// Lazy settings service resolution - only resolve when needed
+// Lazy service resolution - only resolve when needed
 let settingsService: ISettingsService | null = null;
 function getSettingsService(): ISettingsService {
   if (!settingsService) {
     settingsService = resolve(TYPES.ISettingsService) as ISettingsService;
   }
   return settingsService;
+}
+
+let persistenceService: IPersistenceService | null = null;
+function getPersistenceService(): IPersistenceService {
+  if (!persistenceService) {
+    persistenceService = resolve(TYPES.IPersistenceService) as IPersistenceService;
+  }
+  return persistenceService;
 }
 
 // Simple reactive store pattern for .svelte.ts files
@@ -125,9 +134,36 @@ export function getInitializationComplete() {
 // UI STATE
 // ============================================================================
 
+// Function to get initial tab from localStorage cache (synchronous)
+function getInitialTabFromCache(): TabId {
+  // Check if we're in a browser environment where localStorage is available
+  if (!browser) {
+    console.log("ℹ️ No localStorage available (SSR), using default: construct");
+    return "construct";
+  }
+
+  try {
+    // Try to get saved tab from localStorage cache (synchronous)
+    const savedTabData = localStorage.getItem('tka-active-tab-cache');
+    if (savedTabData) {
+      const parsed = JSON.parse(savedTabData);
+      if (parsed && typeof parsed.tabId === 'string') {
+        console.log("🔄 Pre-loaded saved tab from cache:", parsed.tabId);
+        return parsed.tabId as TabId;
+      }
+    }
+  } catch (error) {
+    console.warn("⚠️ Failed to pre-load saved tab from cache:", error);
+  }
+
+  console.log("ℹ️ No cached tab found, using default: construct");
+  return "construct";
+}
+
 // UI state - using Svelte 5 runes for proper reactivity
+// Initialize with null to prevent visual jumps during restoration
 const uiState = $state({
-  activeTab: "construct" as TabId,
+  activeTab: null as TabId | null, // Start with null, will be set after restoration
   showSettings: false,
   theme: "dark" as Theme,
   isFullScreen: false,
@@ -139,8 +175,12 @@ const uiState = $state({
   spotlightThumbnailService: null as any,
 });
 
-export function getActiveTab() {
+export function getActiveTab(): TabId | null {
   return uiState.activeTab;
+}
+
+export function getActiveTabOrDefault(): TabId {
+  return uiState.activeTab || "construct";
 }
 
 export function getShowSettings() {
@@ -214,7 +254,7 @@ export function getCanUseApp() {
 // ACTIONS
 // ============================================================================
 
-// Tab management
+// Tab management with persistence
 export async function switchTab(tab: TabId): Promise<void> {
   console.log("🔄 switchTab called with:", tab, "current:", uiState.activeTab);
   if (uiState.activeTab === tab) {
@@ -236,6 +276,22 @@ export async function switchTab(tab: TabId): Promise<void> {
     uiState.activeTab
   );
 
+  // Save tab to persistence (async, don't block UI)
+  try {
+    const persistence = getPersistenceService();
+    await persistence.saveActiveTab(tab);
+    console.log("💾 switchTab: Saved tab to persistence:", tab);
+
+    // Also save to localStorage cache for immediate access on next load
+    if (browser) {
+      localStorage.setItem('tka-active-tab-cache', JSON.stringify({ tabId: tab }));
+      console.log("💾 switchTab: Saved tab to cache:", tab);
+    }
+  } catch (error) {
+    console.warn("⚠️ switchTab: Failed to save tab to persistence:", error);
+    // Don't throw - tab switching should work even if persistence fails
+  }
+
   // Brief delay to allow transition to complete
   setTimeout(() => {
     uiState.isTransitioning = false;
@@ -245,6 +301,46 @@ export async function switchTab(tab: TabId): Promise<void> {
 
 export function isTabActive(tab: string): boolean {
   return uiState.activeTab === tab;
+}
+
+// Initialize persistence and restore saved tab
+export async function initializeTabPersistence(): Promise<void> {
+  try {
+    console.log("🔄 Initializing tab persistence...");
+    const persistence = getPersistenceService();
+
+    // Initialize the persistence service
+    await persistence.initialize();
+    console.log("✅ Persistence service initialized");
+
+    // Restore from database (no cache complexity)
+    const savedTab = await persistence.getActiveTab();
+    if (savedTab) {
+      console.log("🔄 Restoring saved tab from database:", savedTab);
+      uiState.activeTab = savedTab;
+
+      // Update localStorage cache to match database
+      if (browser) {
+        localStorage.setItem('tka-active-tab-cache', JSON.stringify({ tabId: savedTab }));
+      }
+      console.log("✅ Tab restored and cache updated:", savedTab);
+    } else {
+      console.log("ℹ️ No saved tab found in database, using default: construct");
+
+      // Set default tab and save it
+      const defaultTab: TabId = "construct";
+      uiState.activeTab = defaultTab;
+      await persistence.saveActiveTab(defaultTab);
+      if (browser) {
+        localStorage.setItem('tka-active-tab-cache', JSON.stringify({ tabId: defaultTab }));
+      }
+      console.log("✅ Default tab set and saved:", defaultTab);
+      console.log("✅ Initialized tab persistence with current tab:", uiState.activeTab);
+    }
+  } catch (error) {
+    console.warn("⚠️ Failed to initialize tab persistence:", error);
+    // Don't throw - app should work even if persistence fails
+  }
 }
 
 export function setFullScreen(fullScreen: boolean): void {
@@ -325,9 +421,16 @@ export function updateMemoryUsage(): void {
 // ============================================================================
 
 export async function restoreApplicationState(): Promise<void> {
-  // Restore application state from localStorage or other persistence
-  // For now, this is a no-op since we're using local state
-  console.log("Restoring application state...");
+  console.log("🔄 Restoring application state...");
+
+  try {
+    // Initialize tab persistence and restore saved tab
+    await initializeTabPersistence();
+    console.log("✅ Application state restored successfully");
+  } catch (error) {
+    console.warn("⚠️ Failed to restore application state:", error);
+    // Don't throw - app should work even if persistence fails
+  }
 }
 
 // ============================================================================

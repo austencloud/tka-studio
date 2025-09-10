@@ -79,25 +79,25 @@
     try {
       setInitializationState(false, true, null, 0);
 
-      // Step 1: Initialize application services
-      setInitializationProgress(20);
+      // Step 1: Restore tab state FIRST (before UI renders)
+      setInitializationProgress(10);
+      await restoreApplicationState();
+
+      // Step 2: Initialize application services
+      setInitializationProgress(30);
       await initService.initialize();
 
-      // Step 2: Load settings
-      setInitializationProgress(40);
+      // Step 3: Load settings
+      setInitializationProgress(50);
       await settingsService.loadSettings();
       updateSettings(settingsService.currentSettings);
 
-      // Step 3: Initialize device detection
-      setInitializationProgress(50);
-
-      // Step 4: Load initial data
+      // Step 4: Initialize device detection
       setInitializationProgress(70);
-      // TODO: Individual components should load their own data as needed
 
-      // Step 5: Restore application state (tab memory)
+      // Step 5: Load initial data
       setInitializationProgress(85);
-      await restoreApplicationState();
+      // TODO: Individual components should load their own data as needed
 
       // Step 6: Complete initialization
       setInitializationProgress(100);

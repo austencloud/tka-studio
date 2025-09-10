@@ -13,7 +13,7 @@ import type {
   SequenceData,
   TabId
 } from '$shared';
-import type { UserWorkData, UserProject } from '../../database/TKADatabase';
+import type { UserProject, UserWorkData } from '../../domain/models';
 
 // ============================================================================
 // MAIN PERSISTENCE SERVICE

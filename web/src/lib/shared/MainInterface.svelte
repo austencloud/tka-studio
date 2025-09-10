@@ -32,6 +32,7 @@
 
   // Reactive state for template using proper derived
   let activeTab = $derived(getActiveTab());
+  let isTabLoading = $derived(activeTab === null);
   let showSettings = $derived(getShowSettings());
   let settings = $derived(getSettings());
   let showSpotlight = $derived(getShowSpotlight());
@@ -147,31 +148,39 @@
 
   <!-- Main Content Area -->
   <main class="content-area" class:about-active={isTabActive("about")}>
-    <!-- App Content with reliable transitions -->
-    {#key activeTab}
-      <div
-        class="tab-content"
-        class:about-tab={isTabActive("about")}
-        in:tabIn
-        out:tabOut
-      >
-        {#if isTabActive("construct")}
-          <BuildTab />
-        {:else if isTabActive("browse")}
-          <BrowseTab />
-        {:else if isTabActive("sequence_card")}
-          <WordCardTab />
-        {:else if isTabActive("write")}
-          <WriteTab />
-        {:else if isTabActive("learn")}
-          <LearnTab />
-        {:else if isTabActive("animator")}
-          <AnimatorTab />
-        {:else if isTabActive("about")}
-          <AboutTab />
-        {/if}
+    {#if isTabLoading}
+      <!-- Loading state while tab is being restored -->
+      <div class="tab-loading">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
       </div>
-    {/key}
+    {:else}
+      <!-- App Content with reliable transitions -->
+      {#key activeTab}
+        <div
+          class="tab-content"
+          class:about-tab={isTabActive("about")}
+          in:tabIn
+          out:tabOut
+        >
+          {#if isTabActive("construct")}
+            <BuildTab />
+          {:else if isTabActive("browse")}
+            <BrowseTab />
+          {:else if isTabActive("sequence_card")}
+            <WordCardTab />
+          {:else if isTabActive("write")}
+            <WriteTab />
+          {:else if isTabActive("learn")}
+            <LearnTab />
+          {:else if isTabActive("animator")}
+            <AnimatorTab />
+          {:else if isTabActive("about")}
+            <AboutTab />
+          {/if}
+        </div>
+      {/key}
+    {/if}
   </main>
 
   <!-- Settings Dialog - moved inside BackgroundProvider -->
@@ -288,5 +297,37 @@
       overflow: visible;
       height: auto;
     }
+  }
+
+  /* Loading state styles */
+  .tab-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 200px;
+    color: var(--text-color, #333);
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color, #e0e0e0);
+    border-top: 3px solid var(--primary-color, #007bff);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .tab-loading p {
+    margin: 0;
+    font-size: 14px;
+    opacity: 0.7;
   }
 </style>

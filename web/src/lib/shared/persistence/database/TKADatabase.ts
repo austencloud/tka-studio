@@ -1,6 +1,6 @@
 /**
  * TKA Database - Dexie Configuration
- * 
+ *
  * This is your main database configuration using Dexie.js
  * Think of this as your "database schema" - it defines what tables you have
  * and how they're indexed for fast queries.
@@ -12,39 +12,13 @@ import type {
   SequenceData
 } from '$shared';
 import Dexie, { type EntityTable } from 'dexie';
-
-// ============================================================================
-// USER DATA INTERFACES
-// ============================================================================
-
-/**
- * User's work-in-progress data
- * This stores things like partially built sequences, tab states, etc.
- */
-export interface UserWorkData {
-  id?: number; // Auto-increment primary key
-  type: 'sequence-draft' | 'tab-state' | 'user-preferences' | 'gallery-state';
-  tabId?: string; // Which tab this belongs to (build, browse, etc.)
-  userId?: string; // For future multi-user support
-  data: unknown; // The actual state data (flexible)
-  lastModified: Date;
-  version: number; // For handling data migrations
-}
-
-/**
- * User projects - collections of sequences
- */
-export interface UserProject {
-  id?: number;
-  name: string;
-  description?: string;
-  sequenceIds: string[]; // References to sequences in this project
-  userId?: string;
-  createdAt: Date;
-  lastModified: Date;
-  isPublic: boolean;
-  tags: string[];
-}
+import {
+  DATABASE_NAME,
+  DATABASE_VERSION,
+  DEFAULT_USER_WORK_VERSION,
+  TABLE_INDEXES
+} from '../domain/constants';
+import type { UserProject, UserWorkData } from '../domain/models';
 
 // ============================================================================
 // DATABASE CLASS
@@ -65,34 +39,19 @@ export class TKADatabase extends Dexie {
   settings!: EntityTable<AppSettings & { id: string }, 'id'>;
 
   constructor() {
-    super('TKADatabase'); // Database name in browser
-    
+    super(DATABASE_NAME);
+
     // Version 1 schema - this is like a database migration
-    this.version(1).stores({
-      // Sequences table with indexes for fast searching
-      sequences: '++id, name, word, author, dateAdded, level, isFavorite, difficultyLevel, *tags',
-      
-      // Pictographs table with position-based indexes
-      pictographs: '++id, letter, startPosition, endPosition',
-      
-      // User work data with type-based indexing
-      userWork: '++id, type, tabId, userId, lastModified',
-      
-      // User projects
-      userProjects: '++id, name, userId, createdAt, lastModified, isPublic, *tags',
-      
-      // Settings (usually just one record per user)
-      settings: '++id, userId'
-    });
+    this.version(DATABASE_VERSION).stores(TABLE_INDEXES);
 
     // Optional: Add hooks for automatic timestamps
-    this.userWork.hook('creating', function (primKey, obj, trans) {
+    this.userWork.hook('creating', function (_primKey, obj, _trans) {
       obj.lastModified = new Date();
-      obj.version = obj.version || 1;
+      obj.version = obj.version || DEFAULT_USER_WORK_VERSION;
     });
 
-    this.userWork.hook('updating', function (modifications, primKey, obj, trans) {
-      (modifications as any).lastModified = new Date();
+    this.userWork.hook('updating', function (modifications, _primKey, _obj, _trans) {
+      (modifications as Partial<UserWorkData>).lastModified = new Date();
     });
   }
 }

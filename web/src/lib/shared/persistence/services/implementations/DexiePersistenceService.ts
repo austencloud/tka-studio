@@ -14,7 +14,8 @@ import type {
   TabId
 } from '$shared';
 import { injectable } from 'inversify';
-import { db, type UserProject, type UserWorkData } from '../../database/TKADatabase';
+import { db } from '../../database/TKADatabase';
+import type { UserProject, UserWorkData } from '../../domain/models';
 import type { IPersistenceService } from '../contracts/IPersistenceService';
 
 @injectable()

@@ -13,14 +13,14 @@
   }
   interface Props {
     tabs?: readonly TabDef[];
-    activeTab?: TabID;
+    activeTab?: TabID | null;
     onTabSelect?: (tabId: TabID) => void;
     onBackgroundChange?: (background: string) => void;
   }
 
   let {
     tabs = [],
-    activeTab = "",
+    activeTab = null,
     onTabSelect,
     onBackgroundChange,
   }: Props = $props();
