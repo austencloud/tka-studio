@@ -10,6 +10,7 @@ export { ConstructCoordinator } from "./ConstructCoordinator";
 export { PictographDataDebugger } from "./PictographDataDebugger";
 
 // Sequence management implementations
+export { ReversalDetectionService } from "./ReversalDetectionService";
 export { SequenceImportService } from "./SequenceImportService";
 export { SequenceIndexService } from "./SequenceIndexService";
 export { SequencePersistenceService } from "./SequencePersistenceService";

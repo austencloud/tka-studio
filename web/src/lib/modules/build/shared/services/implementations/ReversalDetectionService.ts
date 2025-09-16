@@ -6,23 +6,23 @@
  */
 
 import type { BeatData, SequenceData } from "$shared";
-import { MotionColor, RotationDirection } from "$shared";
+import { MotionColor } from "$shared";
 import { injectable } from "inversify";
-import { createBeatData } from "../../../shared/domain/factories/createBeatData";
-import type { IReversalDetectionService } from "../contracts/image-export-rendering-interfaces";
+import { createBeatData } from "../../domain/factories/createBeatData";
+import type { IReversalDetectionService } from "../contracts/IReversalDetectionService";
 
 @injectable()
 export class ReversalDetectionService implements IReversalDetectionService {
   /**
    * Process reversals for an entire sequence
    */
-  processReversals(sequence: SequenceData, beats: BeatData[]): BeatData[] {
-    console.log("🔄 ReversalDetectionService: Processing reversals for sequence", sequence.name, "with", beats.length, "beats");
+  processReversals(sequence: SequenceData): SequenceData {
+    console.log("🔄 ReversalDetectionService: Processing reversals for sequence", sequence.name, "with", sequence.beats.length, "beats");
     const processedBeats: BeatData[] = [];
 
-    for (let i = 0; i < beats.length; i++) {
-      const currentBeat = beats[i];
-      const previousBeats = beats.slice(0, i);
+    for (let i = 0; i < sequence.beats.length; i++) {
+      const currentBeat = sequence.beats[i];
+      const previousBeats = sequence.beats.slice(0, i);
 
       console.log(`🔍 ReversalDetectionService: Processing beat ${i + 1}:`, {
         letter: currentBeat.pictographData?.letter,
@@ -49,7 +49,11 @@ export class ReversalDetectionService implements IReversalDetectionService {
     }
 
     console.log("✅ ReversalDetectionService: Completed processing", processedBeats.length, "beats");
-    return processedBeats;
+    
+    return {
+      ...sequence,
+      beats: processedBeats
+    };
   }
 
   /**

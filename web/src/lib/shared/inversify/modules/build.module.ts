@@ -11,18 +11,19 @@ import { PositionPatternService } from "../../../modules/build/generate/services
 import { SequenceDomainService } from "../../../modules/build/generate/services/implementations/SequenceDomainService";
 import { SequenceGenerationService } from "../../../modules/build/generate/services/implementations/SequenceGenerationService";
 import {
-  SequenceImportService,
-  SequenceIndexService,
-  SequencePersistenceService,
-  SequenceService,
-  SequenceStateService
+    ReversalDetectionService,
+    SequenceImportService,
+    SequenceIndexService,
+    SequencePersistenceService,
+    SequenceService,
+    SequenceStateService
 } from "../../../modules/build/shared/services/implementations";
 import { BuildTabService } from "../../../modules/build/shared/services/implementations/BuildTabService";
 import { ConstructCoordinator } from "../../../modules/build/shared/services/implementations/ConstructCoordinator";
 
 import {
-  SequenceDeletionService,
-  SequenceTransformService,
+    SequenceDeletionService,
+    SequenceTransformService,
 } from "../../../modules/build/workbench/sequence-toolkit/services/implementations";
 import { BeatFallbackRenderer } from "../../../modules/build/workbench/shared/services";
 import { WorkbenchService } from "../../../modules/build/workbench/shared/services/implementations/WorkbenchService";
@@ -67,6 +68,7 @@ export const buildModule = new ContainerModule(
     options.bind(TYPES.IWorkbenchService).to(WorkbenchService);
 
     // === SEQUENCE SERVICES ===
+    options.bind(TYPES.IReversalDetectionService).to(ReversalDetectionService);
     options.bind(TYPES.ISequenceImportService).to(SequenceImportService);
     options.bind(TYPES.ISequenceService).to(SequenceService);
     options.bind(TYPES.ISequenceStateService).to(SequenceStateService);

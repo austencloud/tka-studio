@@ -22,7 +22,6 @@ import {
   ArrowSvgParser,
   AttributeKeyGenerator,
   BetaDetectionService,
-  BetaOffsetCalculator,
   DashLocationCalculator,
   DefaultPlacementService,
   DirectionalTupleCalculator,
@@ -107,7 +106,6 @@ export const pictographModule = new ContainerModule(
 
     // === PROP SERVICES ===
     options.bind(TYPES.IBetaDetectionService).to(BetaDetectionService);
-    options.bind(TYPES.IBetaOffsetCalculator).to(BetaOffsetCalculator);
     options.bind(TYPES.IPropPlacementService).to(PropPlacementService);
     options.bind(TYPES.IPropSvgLoader).to(PropSvgLoader);
     options

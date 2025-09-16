@@ -3,7 +3,6 @@
  */
 
 export { BetaDetectionService } from "./BetaDetectionService";
-export { BetaOffsetCalculator } from "./BetaOffsetCalculator";
 export { BetaPropDirectionCalculator } from "./BetaPropDirectionCalculator";
 export { DefaultPropPositioner } from "./DefaultPropPositioner";
 export { OrientationCalculationService } from "./OrientationCalculationService";

@@ -11,6 +11,7 @@ export * from "./IBuildTabTransitionService";
 export * from "./IConstructCoordinator";
 
 // Sequence management contracts
+export * from "./IReversalDetectionService";
 export * from "./ISequencePersistenceService";
 export * from "./ISequenceStateService";
 export * from "./sequence-contracts";

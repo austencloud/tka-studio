@@ -74,7 +74,6 @@ export const TYPES = {
   IArrowAdjustmentCalculator: Symbol.for("IArrowAdjustmentCalculator"),
   IGridPositionDeriver: Symbol.for("IGridPositionDeriver"),
   IPositionCalculatorService: Symbol.for("IPositionCalculatorService"),
-  IBetaOffsetCalculator: Symbol.for("IBetaOffsetCalculator"),
   IOrientationCalculationService: Symbol.for("IOrientationCalculationService"),
 
   // === MOVEMENT SERVICES ===
@@ -280,7 +279,6 @@ export const PositioningTypes = {
   IArrowPositioningOrchestrator: TYPES.IArrowPositioningOrchestrator,
   IGridPositionDeriver: TYPES.IGridPositionDeriver,
   IPositionCalculatorService: TYPES.IPositionCalculatorService,
-  IBetaOffsetCalculator: TYPES.IBetaOffsetCalculator,
 } as const;
 
 export const BackgroundTypes = {

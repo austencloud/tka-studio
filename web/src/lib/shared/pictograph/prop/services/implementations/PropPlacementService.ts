@@ -19,10 +19,10 @@ import {
   GridMode,
   PropRotAngleManager,
   TYPES,
+  VectorDirection,
 } from "$shared";
 import { Point } from "fabric";
 import { inject, injectable } from "inversify";
-import { BetaOffsetCalculator } from "./BetaOffsetCalculator";
 import { BetaPropDirectionCalculator } from "./BetaPropDirectionCalculator";
 import DefaultPropPositioner from "./DefaultPropPositioner";
 
@@ -127,13 +127,37 @@ export class PropPlacementService implements IPropPlacementService {
     }
 
     // Calculate the offset based on the direction
-    const offsetCalculator = new BetaOffsetCalculator();
-    const basePosition = new Point(0, 0);
-    const newPosition = offsetCalculator.calculateNewPointWithOffset(
-      basePosition,
-      direction
-    );
+    const offset = this.getOffsetForDirection(direction);
+    return { x: offset.x, y: offset.y };
+  }
 
-    return { x: newPosition.x, y: newPosition.y };
+  /**
+   * Get pixel offset for a given direction (moved from BetaOffsetCalculator)
+   * Standard offset distance matches legacy 25 pixel separation
+   */
+  private getOffsetForDirection(direction: VectorDirection): { x: number; y: number } {
+    const distance = 25;
+
+    switch (direction) {
+      case VectorDirection.UP:
+        return { x: 0, y: -distance };
+      case VectorDirection.DOWN:
+        return { x: 0, y: distance };
+      case VectorDirection.LEFT:
+        return { x: -distance, y: 0 };
+      case VectorDirection.RIGHT:
+        return { x: distance, y: 0 };
+      case VectorDirection.UPRIGHT:
+        return { x: distance, y: -distance };
+      case VectorDirection.DOWNRIGHT:
+        return { x: distance, y: distance };
+      case VectorDirection.UPLEFT:
+        return { x: -distance, y: -distance };
+      case VectorDirection.DOWNLEFT:
+        return { x: -distance, y: distance };
+      default:
+        console.warn(`Unknown direction: ${direction}`);
+        return { x: 0, y: 0 };
+    }
   }
 }
