@@ -15,14 +15,21 @@ import {
     addBeatToSequence,
     createSequenceData,
     removeBeatFromSequence,
+    TYPES,
     updateSequenceData,
 } from "$shared";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { createBeatData } from "../../domain/factories/createBeatData";
+import type { IReversalDetectionService } from "../../export/services/contracts/image-export-rendering-interfaces";
 import type { ISequenceStateService } from "../contracts";
 
 @injectable()
 export class SequenceStateService implements ISequenceStateService {
+  constructor(
+    @inject(TYPES.IReversalDetectionService)
+    private reversalDetectionService: IReversalDetectionService
+  ) {}
+
   // ============================================================================
   // SEQUENCE MANAGEMENT
   // ============================================================================
@@ -114,7 +121,17 @@ export class SequenceStateService implements ISequenceStateService {
       ...beatData,
     };
 
-    return addBeatToSequence(sequence, newBeat);
+    const updatedSequence = addBeatToSequence(sequence, newBeat);
+
+    // Apply reversal detection to the entire sequence
+    const beatsWithReversals = this.reversalDetectionService.processReversals(
+      updatedSequence,
+      updatedSequence.beats
+    );
+
+    return updateSequenceData(updatedSequence, {
+      beats: beatsWithReversals,
+    });
   }
 
   removeBeat(sequence: SequenceData, beatIndex: number): SequenceData {
@@ -132,8 +149,14 @@ export class SequenceStateService implements ISequenceStateService {
       })
     );
 
+    // Apply reversal detection to the entire sequence
+    const beatsWithReversals = this.reversalDetectionService.processReversals(
+      updatedSequence,
+      renumberedBeats
+    );
+
     return updateSequenceData(updatedSequence, {
-      beats: renumberedBeats,
+      beats: beatsWithReversals,
     });
   }
 
@@ -146,12 +169,19 @@ export class SequenceStateService implements ISequenceStateService {
       return sequence;
     }
 
+    // First, update the beat with the provided data
     const updatedBeats = sequence.beats.map((beat, index) =>
       index === beatIndex ? { ...beat, ...beatData } : beat
     );
 
+    // Apply reversal detection to the entire sequence
+    const beatsWithReversals = this.reversalDetectionService.processReversals(
+      sequence,
+      updatedBeats
+    );
+
     return updateSequenceData(sequence, {
-      beats: updatedBeats,
+      beats: beatsWithReversals,
     });
   }
 
@@ -187,8 +217,14 @@ export class SequenceStateService implements ISequenceStateService {
       beatNumber: index + 1,
     }));
 
+    // Apply reversal detection to the entire sequence
+    const beatsWithReversals = this.reversalDetectionService.processReversals(
+      sequence,
+      renumberedBeats
+    );
+
     return updateSequenceData(sequence, {
-      beats: renumberedBeats,
+      beats: beatsWithReversals,
     });
   }
 
@@ -319,6 +355,21 @@ export class SequenceStateService implements ISequenceStateService {
       .join("");
 
     return letters || sequence.name;
+  }
+
+  /**
+   * Apply reversal detection to an existing sequence
+   * Useful for sequences loaded from storage that may not have reversal data
+   */
+  applyReversalDetection(sequence: SequenceData): SequenceData {
+    const beatsWithReversals = this.reversalDetectionService.processReversals(
+      sequence,
+      sequence.beats
+    );
+
+    return updateSequenceData(sequence, {
+      beats: beatsWithReversals,
+    });
   }
 
   calculateSequenceDuration(sequence: SequenceData): number {

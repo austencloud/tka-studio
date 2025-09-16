@@ -67,8 +67,6 @@ export const TYPES = {
   IArrowSvgColorTransformer: Symbol.for("IArrowSvgColorTransformer"),
 
   IOverlayRenderer: Symbol.for("IOverlayRenderer"),
-  IPropCoordinator: Symbol.for("IPropCoordinator"),
-  IPropLifecycleManager: Symbol.for("IPropLifecycleManager"),
   IPropSvgLoader: Symbol.for("IPropSvgLoader"),
 
   // === POSITIONING SERVICES ===
@@ -143,6 +141,7 @@ export const TYPES = {
   IExportMemoryCalculator: Symbol.for("IExportMemoryCalculator"),
   IImagePreviewGenerator: Symbol.for("IImagePreviewGenerator"),
   IBeatRenderingService: Symbol.for("IBeatRenderingService"),
+  IReversalDetectionService: Symbol.for("IReversalDetectionService"),
 
   // === GENERATION SERVICES ===
   ISequenceGenerationService: Symbol.for("ISequenceGenerationService"),

@@ -65,7 +65,7 @@
     { id: "construct", label: "Build", icon: "🔧", isMain: true },
     { id: "gallery", label: "Gallery", icon: "🔍", isMain: true },
     { id: "learn", label: "Learn", icon: "🧠", isMain: true },
-    { id: "about", label: "About", icon: "ℹ️", isMain: true },
+    // { id: "about", label: "About", icon: "ℹ️", isMain: true },
     { id: "sequence_card", label: "Word Card", icon: "🎴", isMain: false },
     { id: "write", label: "Write", icon: "✍️", isMain: false },
     { id: "animator", label: "Animator", icon: "🎯", isMain: false },

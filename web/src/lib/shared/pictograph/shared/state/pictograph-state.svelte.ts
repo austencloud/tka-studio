@@ -67,8 +67,9 @@ export function createPictographState(
   // Services will be resolved asynchronously to avoid container initialization errors
   let dataTransformationService: IDataTransformationService | null = null;
   let componentManagementService: IComponentManagementService | null = null;
-  let arrowLifecycleManager: any = null;
-  let propLifecycleManager: any = null;
+  let arrowLifecycleManager: import("../../arrow/orchestration/services/contracts/IArrowLifecycleManager").IArrowLifecycleManager | null = null;
+  let propSvgLoader: import("../../prop/services/contracts/IPropSvgLoader").IPropSvgLoader | null = null;
+  let propPlacementService: import("../../prop/services/contracts/IPropPlacementService").IPropPlacementService | null = null;
   let servicesInitialized = $state(false);
 
   // Initialize services asynchronously
@@ -83,9 +84,12 @@ export function createPictographState(
       arrowLifecycleManager = await resolveAsync<
         import("../../arrow/orchestration/services/contracts/IArrowLifecycleManager").IArrowLifecycleManager
       >(TYPES.IArrowLifecycleManager);
-      propLifecycleManager = await resolveAsync<
-        import("../../prop/services/contracts/IPropLifecycleManager").IPropLifecycleManager
-      >(TYPES.IPropLifecycleManager);
+      propSvgLoader = await resolveAsync<
+        import("../../prop/services/contracts/IPropSvgLoader").IPropSvgLoader
+      >(TYPES.IPropSvgLoader);
+      propPlacementService = await resolveAsync<
+        import("../../prop/services/contracts/IPropPlacementService").IPropPlacementService
+      >(TYPES.IPropPlacementService);
       servicesInitialized = true;
     } catch (error) {
       console.error("Failed to initialize pictograph services:", error);
@@ -206,7 +210,7 @@ export function createPictographState(
   async function calculatePropPositions(): Promise<void> {
     const currentData = dataState().effectivePictographData;
 
-    if (!currentData?.motions || !servicesInitialized || !propLifecycleManager) {
+    if (!currentData?.motions || !servicesInitialized || !propSvgLoader || !propPlacementService) {
       propPositions = {};
       propAssets = {};
       showProps = true;
@@ -222,17 +226,35 @@ export function createPictographState(
       const motionPromises = Object.entries(currentData.motions).map(
         async ([color, motionData]) => {
           try {
-            const propState = await propLifecycleManager.coordinatePropState(
-              motionData,
-              currentData
-            );
-
-            if (propState.error) {
-              errors[color] = propState.error;
-            } else if (propState.assets && propState.position) {
-              positions[color] = propState.position;
-              assets[color] = propState.assets;
+            if (!motionData.propPlacementData) {
+              throw new Error("No prop placement data available");
             }
+
+            // Load assets and calculate position in parallel
+            const [renderData, placementData] = await Promise.all([
+              propSvgLoader!.loadPropSvg(motionData.propPlacementData, motionData),
+              propPlacementService!.calculatePlacement(currentData, motionData),
+            ]);
+
+            if (!renderData.svgData) {
+              throw new Error("Failed to load prop SVG data");
+            }
+
+            // Transform to expected format
+            const propAssets = {
+              imageSrc: renderData.svgData.svgContent,
+              viewBox: `${renderData.svgData.viewBox.width} ${renderData.svgData.viewBox.height}`,
+              center: renderData.svgData.center,
+            };
+
+            const position = {
+              x: placementData.positionX,
+              y: placementData.positionY,
+              rotation: placementData.rotationAngle,
+            };
+
+            positions[color] = position;
+            assets[color] = propAssets;
           } catch (error) {
             const errorMessage =
               error instanceof Error ? error.message : "Unknown error";

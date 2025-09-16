@@ -73,12 +73,12 @@ export class WordCardMetadataOverlayService {
         const beatCount = sequence.beats?.length || 0;
         if (beatCount > 0) {
           const layout = this.extractLayoutFromSVG(modifiedSVG, beatCount);
-          const beatNumberOverlays = this.generateBeatNumberOverlays(
+          const BeatNumbers = this.generateBeatNumbers(
             beatCount,
             layout
           );
 
-          for (const overlay of beatNumberOverlays) {
+          for (const overlay of BeatNumbers) {
             modifiedSVG = this.insertBeforeClosingTag(
               modifiedSVG,
               overlay,
@@ -160,7 +160,7 @@ export class WordCardMetadataOverlayService {
   /**
    * Generate beat number overlays
    */
-  generateBeatNumberOverlays(
+  generateBeatNumbers(
     beatCount: number,
     layout: {
       rows: number;

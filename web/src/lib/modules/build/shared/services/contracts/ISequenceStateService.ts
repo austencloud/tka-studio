@@ -133,6 +133,13 @@ export interface ISequenceStateService {
     duration: number;
   };
 
+  /**
+   * Apply reversal detection to an existing sequence
+   * @param sequence - Target sequence
+   * @returns Sequence with reversal data applied
+   */
+  applyReversalDetection(sequence: SequenceData): SequenceData;
+
   // ============================================================================
   // BEAT MANIPULATION
   // ============================================================================

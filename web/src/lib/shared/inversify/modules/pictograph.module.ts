@@ -9,8 +9,8 @@ import {
   ArrowLifecycleManager,
   ArrowLocationCalculator,
   ArrowLocationService,
-  ArrowPathResolver,
   ArrowPathResolutionService,
+  ArrowPathResolver,
   ArrowPlacementKeyService,
   ArrowPlacementService,
   ArrowPositioningOrchestrator,
@@ -34,8 +34,6 @@ import {
   MotionQueryHandler,
   OrientationCalculationService,
   PictographCoordinator,
-  PropCoordinator,
-  PropLifecycleManager,
   PropPlacementService,
   PropSvgLoader,
   QuadrantIndexCalculator,
@@ -110,8 +108,6 @@ export const pictographModule = new ContainerModule(
     // === PROP SERVICES ===
     options.bind(TYPES.IBetaDetectionService).to(BetaDetectionService);
     options.bind(TYPES.IBetaOffsetCalculator).to(BetaOffsetCalculator);
-    options.bind(TYPES.IPropCoordinator).to(PropCoordinator);
-    options.bind(TYPES.IPropLifecycleManager).to(PropLifecycleManager);
     options.bind(TYPES.IPropPlacementService).to(PropPlacementService);
     options.bind(TYPES.IPropSvgLoader).to(PropSvgLoader);
     options

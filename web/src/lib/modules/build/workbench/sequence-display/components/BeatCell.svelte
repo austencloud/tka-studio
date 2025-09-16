@@ -29,6 +29,17 @@
     return `Beat ${displayBeatNumber()} ${beat.pictographData ? "Pictograph" : "Empty"}`;
   });
 
+  // Debug logging for reversal data
+  $effect(() => {
+    if (beat.blueReversal || beat.redReversal) {
+      console.log(`🎯 BeatCell: Beat ${displayBeatNumber()} has reversals:`, {
+        blueReversal: beat.blueReversal,
+        redReversal: beat.redReversal,
+        letter: beat.pictographData?.letter
+      });
+    }
+  });
+
   let hasAnimated = $state(false);
   let isVisible = $state(true);
 

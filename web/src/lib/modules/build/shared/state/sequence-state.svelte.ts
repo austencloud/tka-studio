@@ -2,17 +2,17 @@
 // See that file history for rationale.
 
 import type {
-  ActiveBuildTab,
-  ArrowPosition,
-  BeatData,
-  PictographData,
-  SequenceData,
-  ValidationResult
+    ActiveBuildTab,
+    ArrowPosition,
+    BeatData,
+    PictographData,
+    SequenceData,
+    ValidationResult
 } from "$shared";
 import { GridMode } from "$shared";
 import type { ISequencePersistenceService, ISequenceStateService } from "../services/contracts";
 import type {
-  ISequenceService,
+    ISequenceService,
 } from "../services/contracts/sequence-contracts";
 
 export function createSequenceState(
@@ -117,13 +117,19 @@ export function createSequenceState(
       const savedState = await sequencePersistenceService.loadCurrentState();
 
       if (savedState) {
+        // Apply reversal detection to loaded sequence if it exists
+        let currentSequence = savedState.currentSequence;
+        if (currentSequence && sequenceStateService) {
+          console.log("🔄 SequenceState: Applying reversal detection to loaded sequence");
+          currentSequence = sequenceStateService.applyReversalDetection(currentSequence);
+        }
 
-        state.currentSequence = savedState.currentSequence;
+        state.currentSequence = currentSequence;
         state.selectedStartPosition = savedState.selectedStartPosition;
         state.hasStartPosition = savedState.hasStartPosition;
 
-        if (savedState.currentSequence) {
-          state.selectedSequenceId = savedState.currentSequence.id;
+        if (currentSequence) {
+          state.selectedSequenceId = currentSequence.id;
         }
       }
 

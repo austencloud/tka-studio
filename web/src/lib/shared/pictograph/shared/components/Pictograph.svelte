@@ -1,19 +1,30 @@
 <!--
-Pictograph.svelte - Modern Rune-Based Pictograph Component (Refactored)
+Pictograph.svelte - Unified Pictograph Component with Svelte 5 Snippets
 
-This is the refactored version of the Pictograph component using the new pictograph-state.svelte.ts
-for proper Svelte 5 runes state management without warnings.
+Modern unified component that consolidates state management and SVG rendering.
+Uses Svelte 5 snippets for better organization and eliminates prop drilling.
 
 ARCHITECTURE:
 - createPictographState: Handles all pictograph state management with Svelte 5 runes
-- PictographSvg: Handles SVG rendering
-- Main component: Focuses on state coordination and layout
+- Snippets: Organize SVG rendering logic (empty state, loading, overlays)
+- Direct component integration: No artificial separation between state and rendering
 -->
 <script lang="ts">
-  import type { PictographData } from "$shared";
+  import {
+    BeatNumber,
+    EmptyStateIndicator,
+    GridMode,
+    ReversalIndicators,
+    type PictographData,
+  } from "$shared";
   import { onMount } from "svelte";
+  import { resolve, TYPES } from "../../../inversify";
+  import ArrowSvg from "../../arrow/rendering/components/ArrowSvg.svelte";
+  import GridSvg from "../../grid/components/GridSvg.svelte";
+  import type { IGridModeDeriver } from "../../grid/services/contracts";
+  import PropSvg from "../../prop/components/PropSvg.svelte";
+  import { TKAGlyph } from "../../tka-glyph";
   import { createPictographState } from "../state/pictograph-state.svelte";
-  import PictographSvg from "./PictographSvg.svelte";
 
   // Enhanced Props interface - includes beat-specific properties for rendering
   let {
@@ -47,19 +58,61 @@ ARCHITECTURE:
   });
 
   // =============================================================================
-  // DERIVED STATE (from pictograph state)
+  // SVG RENDERING STATE (previously in PictographSvg)
   // =============================================================================
 
-  // All state is now managed by pictographState - no local state needed
+  // Loading coordination state
+  let loadedComponents = $state(new Set<string>());
+
+  // Track if all components are loaded for coordinated display
+  const allComponentsLoaded = $derived(() => {
+    if (!pictographState.hasValidData) return false;
+
+    // Required components: grid only (props and arrows are pre-loaded by parent)
+    const requiredComponents = ["grid"];
+
+    return requiredComponents.every((component) =>
+      loadedComponents.has(component)
+    );
+  });
+
+  // Derive grid mode from pictograph data using Svelte 5 runes
+  const gridMode = $derived(
+    (() => {
+      if (
+        !pictographState.effectivePictographData ||
+        !pictographState.effectivePictographData.motions?.blue ||
+        !pictographState.effectivePictographData.motions?.red
+      ) {
+        return GridMode.DIAMOND; // Default fallback
+      }
+
+      try {
+        const gridModeService = resolve<IGridModeDeriver>(
+          TYPES.IGridModeDeriver
+        );
+        return gridModeService.deriveGridMode(
+          pictographState.effectivePictographData.motions.blue,
+          pictographState.effectivePictographData.motions.red
+        );
+      } catch (error) {
+        console.warn("Failed to derive grid mode, using default:", error);
+        return GridMode.DIAMOND; // Fallback to default on error
+      }
+    })()
+  );
 
   // Standard pictograph viewBox
   const viewBox = "0 0 950 950";
 
   // =============================================================================
-  // EVENT HANDLERS (delegated to pictograph state)
+  // EVENT HANDLERS
   // =============================================================================
 
+  // Enhanced component loading handler
   function handleComponentLoaded(componentName: string) {
+    loadedComponents.add(componentName);
+    loadedComponents = new Set(loadedComponents); // Trigger reactivity
     pictographState.handleComponentLoaded(componentName);
   }
 
@@ -76,13 +129,30 @@ ARCHITECTURE:
     await pictographState.calculateArrowPositions();
     await pictographState.calculatePropPositions();
   });
-
-  // =============================================================================
-  // UI STATE
-  // =============================================================================
-
-  // SVG viewBox is already defined above
 </script>
+
+{#snippet loadingPlaceholder()}
+  <g class="loading-placeholder" opacity="0.3">
+    <rect width="950" height="950" fill="#f3f4f6" />
+    <text
+      x="475"
+      y="475"
+      text-anchor="middle"
+      dominant-baseline="middle"
+      font-family="Arial, sans-serif"
+      font-size="24"
+      fill="#6b7280"
+    >
+      Loading...
+    </text>
+  </g>
+{/snippet}
+
+
+
+
+
+
 
 <!-- =============================================================================
      MAIN CONTAINER
@@ -93,35 +163,86 @@ ARCHITECTURE:
   class:loaded={pictographState.isLoaded}
   class:has-error={pictographState.errorMessage}
 >
-  <PictographSvg
-    pictographData={pictographState.effectivePictographData}
-    hasValidData={pictographState.hasValidData}
-    displayLetter={pictographState.displayLetter}
-    motionsToRender={pictographState.motionsToRender}
+  <svg
     width="100%"
     height="100%"
     {viewBox}
-    arrowPositions={pictographState.arrowPositions}
-    arrowMirroring={pictographState.arrowMirroring}
-    arrowAssets={pictographState.arrowAssets}
-    showArrows={pictographState.showArrows}
-    propPositions={pictographState.propPositions}
-    propAssets={pictographState.propAssets}
-    showProps={pictographState.showProps}
-    onComponentLoaded={handleComponentLoaded}
-    onComponentError={handleComponentError}
-    ariaLabel={pictographState.hasValidData ? "Pictograph" : "Empty Pictograph"}
-    {beatNumber}
-    {isStartPosition}
-    {isSelected}
-    {blueReversal}
-    {redReversal}
-    {showBeatNumber}
-  />
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label={pictographState.hasValidData ? "Pictograph" : "Empty Pictograph"}
+  >
+    <!-- Background -->
+    <rect width="950" height="950" fill="white" />
+
+    {#if pictographState.hasValidData}
+      <!-- Show loading placeholder until all components are loaded -->
+      {#if !allComponentsLoaded}
+        {@render loadingPlaceholder()}
+      {/if}
+
+      <!-- Grid (always rendered first) -->
+      <GridSvg
+        {gridMode}
+        onLoaded={() => handleComponentLoaded("grid")}
+        onError={(error) => handleComponentError("grid", error)}
+      />
+
+      <!-- Props (rendered first so arrows appear on top) -->
+      {#each pictographState.motionsToRender as { color, motionData } (color)}
+        {#if pictographState.effectivePictographData && pictographState.propAssets[color] && pictographState.propPositions[color]}
+          <PropSvg
+            {motionData}
+            propAssets={pictographState.propAssets[color]}
+            propPosition={pictographState.propPositions[color]}
+            showProp={pictographState.showProps}
+          />
+        {/if}
+      {/each}
+
+      <!-- Arrows (rendered after props) -->
+      {#each pictographState.motionsToRender as { color, motionData } (color)}
+        {#if pictographState.effectivePictographData && pictographState.arrowAssets[color] && pictographState.arrowPositions[color]}
+          <ArrowSvg
+            {motionData}
+            arrowAssets={pictographState.arrowAssets[color]}
+            arrowPosition={pictographState.arrowPositions[color]}
+            shouldMirror={pictographState.arrowMirroring[color] || false}
+            showArrow={pictographState.showArrows}
+          />
+        {/if}
+      {/each}
+
+      <!-- Letter/Glyph overlay -->
+      {#if pictographState.displayLetter}
+        <TKAGlyph letter={pictographState.displayLetter} turnsTuple="(s, 0, 0)" />
+      {/if}
+
+      <!-- Beat number overlay -->
+      <BeatNumber
+        {beatNumber}
+        {showBeatNumber}
+        {isStartPosition}
+        hasValidData={pictographState.hasValidData}
+      />
+
+      <!-- Reversal indicators -->
+      <ReversalIndicators
+        {blueReversal}
+        {redReversal}
+        hasValidData={pictographState.hasValidData}
+      />
+    {:else}
+      <!-- Empty state -->
+      <EmptyStateIndicator
+        {beatNumber}
+        hasValidData={pictographState.hasValidData}
+      />
+    {/if}
+  </svg>
 </div>
 
 <!-- =============================================================================
-     STYLES (updated for container-only styles)
+     STYLES (unified container and SVG styles)
      ============================================================================= -->
 <style>
   .pictograph {
@@ -143,6 +264,12 @@ ARCHITECTURE:
 
   .pictograph.has-error {
     border-color: #ef4444;
+  }
+
+  /* SVG styles (from PictographSvg) */
+  svg {
+    display: block;
+    box-sizing: border-box;
   }
 
   :global(.component-loading) {

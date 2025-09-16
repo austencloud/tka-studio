@@ -270,15 +270,6 @@ export class GalleryService implements IGalleryService {
 
       const sequenceData = metadata.sequence;
 
-      console.log(`🔍 DEBUG ${sequenceName}:`, {
-        totalMetadataEntries: sequenceData.length,
-        firstEntry: sequenceData[0],
-        allEntries: sequenceData.slice(0, 3), // Show first 3 entries for debugging
-        topLevelFields: {
-          date_added: metadata.date_added,
-          is_favorite: metadata.is_favorite
-        }
-      });
 
       // Extract basic information from first entry (like desktop implementation)
       const firstEntry = sequenceData[0] as Record<string, unknown>;
@@ -318,12 +309,6 @@ export class GalleryService implements IGalleryService {
       // We add 2 to realBeats.length since we filtered out metadata entries
       const sequenceLength = realBeats.length + 2;
 
-      console.log(`🔍 DEBUG ${sequenceName} beats:`, {
-        realBeatsCount: realBeats.length,
-        calculatedLength: sequenceLength,
-        metadataLengthMinus2: sequenceData.length - 2
-      });
-
       // Use the actual beat count (realBeats.length) not the calculated length
       const actualBeatCount = realBeats.length;
 
@@ -346,14 +331,7 @@ export class GalleryService implements IGalleryService {
       // Extract date information - check both top-level and first entry
       let dateAdded: Date | string = new Date(); // Default fallback
 
-      console.log(`🔍 DEBUG ${sequenceName} date fields:`, {
-        topLevel_date_added: metadata.date_added,
-        firstEntry_date_added: firstEntry.date_added,
-        firstEntry_dateAdded: firstEntry.dateAdded,
-        firstEntry_created_date: firstEntry.created_date,
-        firstEntry_timestamp: firstEntry.timestamp,
-        firstEntry_date: firstEntry.date,
-      });
+
 
       // Try top-level first, then first entry fields
       if (metadata.date_added) {

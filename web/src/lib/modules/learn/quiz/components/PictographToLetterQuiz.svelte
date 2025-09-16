@@ -8,7 +8,7 @@
 <script lang="ts">
   import { resolve } from "$lib/shared/inversify";
   import { TYPES } from "$lib/shared/inversify/types";
-  import { PictographSvg } from "$lib/shared/pictograph/shared/components";
+  import { Pictograph } from "$lib/shared/pictograph/shared/components";
   import type { IPersistenceService, PictographData } from "$shared";
   import { Letter } from "$shared";
   import type { QuizAnswerOption, QuizQuestionData } from "../domain";
@@ -199,24 +199,8 @@
     <!-- Pictograph Display -->
     <div class="pictograph-display">
       <div class="pictograph-container">
-        <PictographSvg
+        <Pictograph
           pictographData={currentPictograph}
-          width={400}
-          height={400}
-          hasValidData={!!currentPictograph}
-          displayLetter={null}
-          motionsToRender={[]}
-          viewBox="0 0 400 400"
-          arrowPositions={{}}
-          arrowMirroring={{}}
-          arrowAssets={{}}
-          showArrows={true}
-          propPositions={{}}
-          propAssets={{}}
-          showProps={true}
-          onComponentLoaded={() => {}}
-          onComponentError={() => {}}
-          ariaLabel="Quiz pictograph"
         />
       </div>
     </div>

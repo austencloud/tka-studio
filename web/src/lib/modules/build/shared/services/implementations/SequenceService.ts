@@ -17,6 +17,7 @@ import type {
     ISequenceDomainService,
     ISequenceImportService,
     ISequenceService,
+    ISequenceStateService,
 } from "../contracts";
 
 @injectable()
@@ -26,6 +27,8 @@ export class SequenceService implements ISequenceService {
     private sequenceDomainService: ISequenceDomainService,
     @inject(TYPES.IPersistenceService)
     private persistenceService: IPersistenceService,
+    @inject(TYPES.ISequenceStateService)
+    private sequenceStateService: ISequenceStateService,
     @inject(TYPES.ISequenceImportService)
     private sequenceImportService?: ISequenceImportService
   ) {}
@@ -104,6 +107,11 @@ export class SequenceService implements ISequenceService {
         }
       }
 
+      // Apply reversal detection to ensure sequence has up-to-date reversal data
+      if (sequence) {
+        sequence = this.sequenceStateService.applyReversalDetection(sequence);
+      }
+
       return sequence;
     } catch (error) {
       console.error(`Failed to get sequence ${id}:`, error);
@@ -116,7 +124,12 @@ export class SequenceService implements ISequenceService {
    */
   async getAllSequences(): Promise<SequenceData[]> {
     try {
-      return await this.persistenceService.loadAllSequences();
+      const sequences = await this.persistenceService.loadAllSequences();
+
+      // Apply reversal detection to all sequences
+      return sequences.map(sequence =>
+        this.sequenceStateService.applyReversalDetection(sequence)
+      );
     } catch (error) {
       console.error("Failed to get all sequences:", error);
       return [];

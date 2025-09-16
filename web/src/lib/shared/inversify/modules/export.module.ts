@@ -2,12 +2,12 @@ import type { ContainerModuleLoadOptions } from "inversify";
 import { ContainerModule } from "inversify";
 import { PageFactoryService, PageImageExportService } from "../../../modules";
 import {
-  ExportMemoryCalculator,
-  ExportOptionsValidator,
-  FilenameGeneratorService,
-  ImagePreviewGenerator,
-  TextRenderingService,
-  TKAImageExportService,
+    ExportMemoryCalculator,
+    ExportOptionsValidator,
+    FilenameGeneratorService,
+    ImagePreviewGenerator,
+    TextRenderingService,
+    TKAImageExportService,
 } from "../../../modules/build/export/services/implementations";
 import { BeatRenderingService } from "../../../modules/build/export/services/implementations/BeatRenderingService";
 import { CanvasManagementService } from "../../../modules/build/export/services/implementations/CanvasManagementService";
@@ -18,6 +18,7 @@ import { FileExportService } from "../../../modules/build/export/services/implem
 import { ImageCompositionService } from "../../../modules/build/export/services/implementations/ImageCompositionService";
 import { ImageFormatConverterService } from "../../../modules/build/export/services/implementations/ImageFormatConverterService";
 import { LayoutCalculationService } from "../../../modules/build/export/services/implementations/LayoutCalculationService";
+import { ReversalDetectionService } from "../../../modules/build/export/services/implementations/ReversalDetectionService";
 import { SequenceExportService } from "../../../modules/build/export/services/implementations/SequenceExportService";
 import { SVGToCanvasConverterService } from "../../../modules/build/export/services/implementations/SVGToCanvasConverterService";
 import { TextRenderingUtils } from "../../../modules/build/export/services/implementations/TextRenderingUtils";
@@ -58,6 +59,7 @@ export const exportModule = new ContainerModule(
     options.bind(TYPES.IUserInfoRenderer).to(UserInfoRenderer);
     options.bind(TYPES.IDifficultyBadgeRenderer).to(DifficultyBadgeRenderer);
     options.bind(TYPES.ITextRenderingUtils).to(TextRenderingUtils);
+    options.bind(TYPES.IReversalDetectionService).to(ReversalDetectionService);
 
     // === PAGE SERVICES ===
     options.bind(TYPES.IPageFactoryService).to(PageFactoryService);
