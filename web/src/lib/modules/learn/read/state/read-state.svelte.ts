@@ -3,6 +3,7 @@
  *
  * Factory function for creating read module state with PDF and flipbook management.
  * Uses persistent PDF state to avoid reloading PDFs when navigating between tabs.
+ * Uses persistent PDF state to avoid reloading PDFs when navigating between tabs.
  */
 
 import type { FlipBookConfig } from "../domain";
@@ -89,10 +90,15 @@ export function createReadState(
     container: HTMLElement,
     config: Partial<FlipBookConfig> = {}
   ): Promise<void> {
+    if (isFlipBookInitialized) {
+      console.log("📚 ReadState: Flipbook already initialized");
+      return;
+    }
+
     try {
       console.log("📚 ReadState: Initializing flipbook");
 
-      // Use the provided config with defaults, let StPageFlip handle sizing
+      // Merge with default config
       const finalConfig = { ...defaultConfig, ...config };
 
       if (persistentPDFState.pages.length > 0) {
@@ -133,7 +139,7 @@ export function createReadState(
       console.log(`📚 ReadState: Flipbook initialized successfully`);
     } catch (error) {
       console.error("📚 ReadState: Error initializing flipbook", error);
-      throw error;
+      throw new Error(`Failed to initialize flipbook: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 

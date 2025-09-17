@@ -1,4 +1,5 @@
 <!-- Enhanced Navigation Bar with Dropdown Support -->
+<!-- Enhanced Navigation Bar with Dropdown Support -->
 <script lang="ts">
   import { onMount } from "svelte";
   import type { IAnimationService } from "../../application/services/contracts";

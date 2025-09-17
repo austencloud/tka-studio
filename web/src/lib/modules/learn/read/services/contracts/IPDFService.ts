@@ -41,6 +41,13 @@ export interface IPDFService {
   getDocumentInfo(): PDFDocumentInfo | null;
 
   /**
+   * Check if a PDF is fully cached in persistent storage
+   * @param url - URL to the PDF file
+   * @returns Promise resolving to true if fully cached
+   */
+  hasCachedPDF(url: string): Promise<boolean>;
+
+  /**
    * Clean up resources and unload the current PDF
    */
   cleanup(): void;

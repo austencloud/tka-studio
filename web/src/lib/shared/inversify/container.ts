@@ -14,6 +14,20 @@ export const inversifyContainer = container;
 let isInitialized = false;
 let initializationPromise: Promise<void> | null = null;
 
+// Handle HMR (Hot Module Replacement) - reset state if needed
+if (import.meta.hot) {
+  import.meta.hot.accept(() => {
+    console.log("🔄 HMR: Container module reloaded");
+  });
+
+  // Reset initialization state on HMR to allow re-initialization
+  import.meta.hot.dispose(() => {
+    console.log("🔄 HMR: Disposing container state");
+    isInitialized = false;
+    initializationPromise = null;
+  });
+}
+
 // Export resolve function
 export function resolve<T>(serviceType: symbol): T {
   if (!isInitialized) {
@@ -90,3 +104,4 @@ initializeContainer();
 
 // Export module initialization function for testing or manual control
 export { initializeContainer };
+
