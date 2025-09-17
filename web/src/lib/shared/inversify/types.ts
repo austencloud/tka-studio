@@ -134,7 +134,6 @@ export const TYPES = {
   ILayoutCalculationService: Symbol.for("ILayoutCalculationService"),
   IDimensionCalculationService: Symbol.for("IDimensionCalculationService"),
   IFilenameGeneratorService: Symbol.for("IFilenameGeneratorService"),
-  IFileExportService: Symbol.for("IFileExportService"),
   IExportConfigManager: Symbol.for("IExportConfigManager"),
   IExportOptionsValidator: Symbol.for("IExportOptionsValidator"),
   IExportMemoryCalculator: Symbol.for("IExportMemoryCalculator"),
@@ -243,7 +242,7 @@ export const TYPES = {
   IUserInfoRenderer: Symbol.for("IUserInfoRenderer"),
   IDifficultyBadgeRenderer: Symbol.for("IDifficultyBadgeRenderer"),
   ITextRenderingUtils: Symbol.for("ITextRenderingUtils"),
-  ITextRenderingService: Symbol.for("ITextRenderingService"),
+  IFileExportService: Symbol.for("IFileExportService"),
 
   // === UTILITY SERVICES ===
   IBetaDetectionService: Symbol.for("IBetaDetectionService"),

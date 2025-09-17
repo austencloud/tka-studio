@@ -145,14 +145,11 @@ export class SequenceStateService implements ISequenceStateService {
     );
 
     // Apply reversal detection to the entire sequence
-    const beatsWithReversals = this.reversalDetectionService.processReversals(
-      updatedSequence,
-      renumberedBeats
+    const sequenceWithReversals = this.reversalDetectionService.processReversals(
+      updateSequenceData(updatedSequence, { beats: renumberedBeats })
     );
 
-    return updateSequenceData(updatedSequence, {
-      beats: beatsWithReversals,
-    });
+    return sequenceWithReversals;
   }
 
   updateBeat(
@@ -170,14 +167,11 @@ export class SequenceStateService implements ISequenceStateService {
     );
 
     // Apply reversal detection to the entire sequence
-    const beatsWithReversals = this.reversalDetectionService.processReversals(
-      sequence,
-      updatedBeats
+    const sequenceWithReversals = this.reversalDetectionService.processReversals(
+      updateSequenceData(sequence, { beats: updatedBeats })
     );
 
-    return updateSequenceData(sequence, {
-      beats: beatsWithReversals,
-    });
+    return sequenceWithReversals;
   }
 
   insertBeat(
@@ -213,14 +207,11 @@ export class SequenceStateService implements ISequenceStateService {
     }));
 
     // Apply reversal detection to the entire sequence
-    const beatsWithReversals = this.reversalDetectionService.processReversals(
-      sequence,
-      renumberedBeats
+    const sequenceWithReversals = this.reversalDetectionService.processReversals(
+      updateSequenceData(sequence, { beats: renumberedBeats })
     );
 
-    return updateSequenceData(sequence, {
-      beats: beatsWithReversals,
-    });
+    return sequenceWithReversals;
   }
 
   // ============================================================================

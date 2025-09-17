@@ -1,14 +1,9 @@
 <script lang="ts">
-  import { getDeviceInfo } from "$shared/device";
+  import type { IDeviceDetector } from "$shared/device/services/contracts";
+  import { resolve, TYPES } from "$shared/inversify";
+  import type { ModeOption } from "../domain";
   import DesktopDropdown from "./DesktopDropdown.svelte";
   import MobileModal from "./MobileModal.svelte";
-  
-  export interface ModeOption {
-    id: string;
-    label: string;
-    icon: string;
-    description?: string;
-  }
   
   let {
     contextLabel = "Mode",
@@ -24,10 +19,15 @@
     showBreadcrumb?: boolean;
   }>();
   
-  const deviceInfo = getDeviceInfo();
+  const deviceDetector = resolve(TYPES.IDeviceDetector) as IDeviceDetector;
+  const deviceInfo = {
+    isMobile: deviceDetector.isMobile(),
+    isTablet: deviceDetector.isTablet(),
+    isDesktop: deviceDetector.isDesktop()
+  };
   
   const currentModeData = $derived(
-    modes.find(m => m.id === currentMode) || modes[0]
+    modes.find((m: ModeOption) => m.id === currentMode) || modes[0]
   );
 </script>
 

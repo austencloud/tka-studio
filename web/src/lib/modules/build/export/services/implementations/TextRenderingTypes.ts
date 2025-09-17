@@ -1,8 +1,10 @@
 /**
  * Text Rendering Types and Utilities
  *
- * Common text rendering utilities used across text rendering services.
- * Provides font creation, text measurement, and kerning functionality.
+ * Consolidated text rendering utilities used across text rendering services.
+ * Provides font creation, text measurement, kerning functionality, and canvas utilities.
+ *
+ * This file consolidates functionality from TextRenderingUtils to eliminate redundancy.
  */
 
 export interface FontConfig {
@@ -136,9 +138,39 @@ export function validateFont(fontFamily: string): boolean {
   // Test with a known fallback
   ctx.font = `16px ${fontFamily}, Arial`;
   const testWidth = ctx.measureText('Test').width;
-  
+
   ctx.font = '16px Arial';
   const fallbackWidth = ctx.measureText('Test').width;
-  
+
   return testWidth !== fallbackWidth;
+}
+
+/**
+ * Get canvas context with error handling
+ * Consolidated utility to avoid repetitive context retrieval code
+ */
+export function getCanvasContext(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    throw new Error('Canvas context not available');
+  }
+  return ctx;
+}
+
+/**
+ * Validate font loading and availability for multiple fonts
+ */
+export function validateFonts(requiredFonts: string[] = ['Georgia']): { available: boolean; missing: string[] } {
+  const missing: string[] = [];
+
+  for (const font of requiredFonts) {
+    if (!validateFont(font)) {
+      missing.push(font);
+    }
+  }
+
+  return {
+    available: missing.length === 0,
+    missing,
+  };
 }

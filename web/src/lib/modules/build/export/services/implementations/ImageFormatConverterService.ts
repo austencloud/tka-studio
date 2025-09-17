@@ -1,13 +1,17 @@
 /**
- * Image Format Converter Service - SIMPLIFIED
+ * Image Format Converter Service - CONSOLIDATED
  *
  * Uses native browser APIs + file-saver for clean, simple image conversion.
- * Replaces 400+ lines of over-engineered conversion logic with ~30 lines.
+ * Consolidates functionality from FileExportService to eliminate redundancy.
+ * Provides both format conversion and file download capabilities.
  */
 
+import type { IFileDownloadService } from "$shared/foundation/services/contracts";
+import { TYPES } from "$shared/inversify";
 import * as pkg from "file-saver";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import type { IImageFormatConverterService } from "../contracts";
+
 // Define missing types locally for now
 interface ImageFormatOptions {
   format: "png" | "jpeg" | "webp";
@@ -26,6 +30,9 @@ const { saveAs } = pkg;
 export class ImageFormatConverterService
   implements IImageFormatConverterService
 {
+  constructor(
+    @inject(TYPES.IFileDownloadService) private fileDownloadService: IFileDownloadService
+  ) {}
   /**
    * Convert Canvas to Blob using native browser API
    */
@@ -115,8 +122,73 @@ export class ImageFormatConverterService
     // No cleanup needed
   }
 
+  /**
+   * Download canvas as file (consolidated from FileExportService)
+   * Handles canvas-to-blob conversion and browser downloads
+   */
+  async downloadCanvas(
+    canvas: HTMLCanvasElement,
+    filename: string,
+    format: "PNG" | "JPEG" = "PNG",
+    quality: number = 1.0
+  ): Promise<void> {
+    try {
+      const blob = await this.canvasToBlob(canvas, {
+        format: format.toLowerCase() as "png" | "jpeg",
+        quality
+      });
+
+      await this.fileDownloadService.downloadBlob(blob, filename);
+    } catch (error) {
+      throw new Error(
+        `Download failed: ${error instanceof Error ? error.message : "Unknown error"}`
+      );
+    }
+  }
+
+  /**
+   * Generate versioned filename (consolidated from FileExportService)
+   * Matches desktop filename generation with versioning
+   */
+  generateVersionedFilename(
+    word: string,
+    format: string,
+    timestamp?: Date
+  ): string {
+    // Sanitize word for filename use
+    const sanitizedWord = this.sanitizeForFilename(word) || "sequence";
+
+    // Use provided timestamp or current time
+    const date = timestamp || new Date();
+    const dateString = date.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
+
+    // Generate version number (in real implementation, this would check for existing files)
+    const version = 1;
+
+    // Format extension
+    const extension = format.toLowerCase();
+
+    return `${sanitizedWord}_v${version}_${dateString}.${extension}`;
+  }
+
+  /**
+   * Sanitize string for filename use
+   */
+  private sanitizeForFilename(input: string): string {
+    if (!input) return "";
+
+    // Replace invalid filename characters with underscores
+    return input
+      .replace(/[<>:"/\\|?*]/g, "_")
+      .replace(/\s+/g, "_")
+      .substring(0, 100); // Reasonable length limit
+  }
+
   private getMimeType(format: string): string {
     const mimeTypes: Record<string, string> = {
+      png: "image/png",
+      jpeg: "image/jpeg",
+      webp: "image/webp",
       PNG: "image/png",
       JPEG: "image/jpeg",
       WEBP: "image/webp",

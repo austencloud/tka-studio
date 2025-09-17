@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ModeOption } from "./ModeSwitcher.svelte";
+  import type { ModeOption } from "../domain";
   
   let {
     contextLabel,

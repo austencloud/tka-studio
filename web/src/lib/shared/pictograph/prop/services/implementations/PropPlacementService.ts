@@ -7,21 +7,20 @@
  */
 
 import type {
-  IBetaDetectionService,
-  IGridModeDeriver,
-  IPropPlacementService,
+    IBetaDetectionService,
+    IGridModeDeriver,
+    IPropPlacementService,
 } from "$shared";
 import {
-  type MotionData,
-  type PictographData,
-  type PropPlacementData,
-  createPropPlacementFromPosition,
-  GridMode,
-  PropRotAngleManager,
-  TYPES,
-  VectorDirection,
+    type MotionData,
+    type PictographData,
+    type PropPlacementData,
+    createPropPlacementFromPosition,
+    GridMode,
+    PropRotAngleManager,
+    TYPES,
+    VectorDirection,
 } from "$shared";
-import { Point } from "fabric";
 import { inject, injectable } from "inversify";
 import { BetaPropDirectionCalculator } from "./BetaPropDirectionCalculator";
 import DefaultPropPositioner from "./DefaultPropPositioner";

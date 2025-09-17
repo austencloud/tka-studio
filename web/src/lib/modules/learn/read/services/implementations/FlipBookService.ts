@@ -5,7 +5,7 @@
  */
 
 import { injectable } from "inversify";
-import { PageFlip } from "page-flip";
+import { PageFlip, type FlipEvent } from "page-flip";
 import type { FlipBookConfig, PDFPageData } from "../../domain";
 import type { IFlipBookService } from "../contracts";
 
@@ -33,14 +33,10 @@ export class FlipBookService implements IFlipBookService {
         size: "stretch", // Use stretch to fit container properly
         autoSize: true, // Let the book control its own size
         usePortrait: false, // Use landscape mode to show both pages
-        minWidth: 400,
-        maxWidth: 1400,
-        minHeight: 300,
-        maxHeight: 1000,
       });
 
       // Set up event listeners
-      this.pageFlip.on("flip", (e: any) => {
+      this.pageFlip.on("flip", (e: FlipEvent) => {
         const currentPage = e.data + 1; // Convert from 0-based to 1-based
         console.log("📚 FlipBookService: Page changed to", currentPage);
         this.pageChangeCallback?.(currentPage);

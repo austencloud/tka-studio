@@ -12,6 +12,7 @@ export * from "./components";
 export * from "./device";
 export * from "./foundation";
 export * from "./inversify";
+export * from "./mode-switcher";
 export * from "./persistence";
 export * from "./pictograph";
 export * from "./settings";
@@ -58,8 +59,8 @@ export type { ICSVPictographParser } from "../modules/build/generate/services/co
 
 // Beat grid models (needed by workbench)
 export type {
-  BeatGridConfig,
-  ContainerDimensions,
-  LayoutInfo
+    BeatGridConfig,
+    ContainerDimensions,
+    LayoutInfo
 } from "../modules/build/workbench/sequence-display/domain/models/beat-grid-models";
 

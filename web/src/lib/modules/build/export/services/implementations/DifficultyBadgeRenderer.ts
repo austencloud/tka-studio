@@ -6,8 +6,8 @@
  */
 
 import { injectable } from "inversify";
-import { createFont } from "./TextRenderingTypes";
 import type { IDifficultyBadgeRenderer } from "../contracts";
+import { createFont, getCanvasContext } from "./TextRenderingTypes";
 
 @injectable()
 export class DifficultyBadgeRenderer implements IDifficultyBadgeRenderer {
@@ -24,10 +24,7 @@ export class DifficultyBadgeRenderer implements IDifficultyBadgeRenderer {
     position: [number, number],
     size: number
   ): void {
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      throw new Error("Canvas context not available");
-    }
+    const ctx = getCanvasContext(canvas);
 
     if (level < 1 || level > 5) {
       throw new Error(`Invalid difficulty level: ${level}`);

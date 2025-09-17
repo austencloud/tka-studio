@@ -9,7 +9,7 @@ import type { BeatData, GridMode, PictographData } from "$shared";
 export interface IStartPositionService {
   // Core functionality - load and select positions
   getStartPositions(gridMode: GridMode): Promise<PictographData[]>;
-  getDefaultStartPositions(gridMode: GridMode): Promise<BeatData[]>;
+  getDefaultStartPositions(gridMode: GridMode): Promise<PictographData[]>;
   selectStartPosition(position: PictographData): Promise<void>;
 
   // System method for setting start position in sequence

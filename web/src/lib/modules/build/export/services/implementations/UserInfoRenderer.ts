@@ -8,7 +8,7 @@
 import { injectable } from "inversify";
 import type { TextRenderOptions, UserInfo } from "../../domain/models";
 import type { IUserInfoRenderer } from "../contracts";
-import { createFont } from "./TextRenderingTypes";
+import { createFont, getCanvasContext } from "./TextRenderingTypes";
 
 @injectable()
 export class UserInfoRenderer implements IUserInfoRenderer {
@@ -25,10 +25,7 @@ export class UserInfoRenderer implements IUserInfoRenderer {
     userInfo: UserInfo,
     options: TextRenderOptions
   ): void {
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      throw new Error("Canvas context not available");
-    }
+    const ctx = getCanvasContext(canvas);
 
     const margin = options.margin;
     const bottomY = canvas.height - margin;

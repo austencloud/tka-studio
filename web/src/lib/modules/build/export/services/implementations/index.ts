@@ -19,15 +19,13 @@ export { SVGToCanvasConverterService } from './SVGToCanvasConverterService';
 export { DimensionCalculationService } from './DimensionCalculationService';
 export { LayoutCalculationService } from './LayoutCalculationService';
 
-// Text rendering (keeping the good existing ones)
+// Text rendering (consolidated utilities)
 export { DifficultyBadgeRenderer } from './DifficultyBadgeRenderer';
-export { TextRenderingUtils } from './TextRenderingUtils';
 export { UserInfoRenderer } from './UserInfoRenderer';
 export { WordTextRenderer } from './WordTextRenderer';
 
 
-// File operations
-export { FileExportService } from './FileExportService';
+// File operations (consolidated)
 export { ImageFormatConverterService } from './ImageFormatConverterService';
 
 // Configuration and validation
@@ -39,6 +37,5 @@ export { FilenameGeneratorService } from './FilenameGeneratorService';
 // Preview and additional services
 export { ImagePreviewGenerator } from './ImagePreviewGenerator';
 export { SequenceExportService } from './SequenceExportService';
-export { TextRenderingService } from './TextRenderingService';
 export { TKAImageExportService } from './TKAImageExportService';
 

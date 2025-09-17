@@ -8,7 +8,7 @@
 import { injectable } from "inversify";
 import type { TextRenderOptions } from "../../domain/models";
 import type { IWordTextRenderer } from "../contracts";
-import { createFont, measureTextWithKerning, renderTextWithKerning } from "./TextRenderingTypes";
+import { createFont, getCanvasContext, measureTextWithKerning, renderTextWithKerning } from "./TextRenderingTypes";
 
 
 @injectable()
@@ -32,10 +32,7 @@ export class WordTextRenderer implements IWordTextRenderer {
       return; // No word to render
     }
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      throw new Error("Canvas context not available");
-    }
+    const ctx = getCanvasContext(canvas);
 
     // Calculate initial font size and kerning with scaling
     let fontSize = Math.floor(
