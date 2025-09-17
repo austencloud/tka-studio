@@ -8,11 +8,10 @@
 // === SHARED INFRASTRUCTURE ===
 export * from "./application";
 export * from "./background";
-export * from "./components";
 export * from "./device";
 export * from "./foundation";
 export * from "./inversify";
-export * from "./mode-switcher";
+export * from "./navigation";
 export * from "./persistence";
 export * from "./pictograph";
 export * from "./settings";

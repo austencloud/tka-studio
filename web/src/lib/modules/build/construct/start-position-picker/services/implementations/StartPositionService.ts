@@ -1,6 +1,5 @@
 import type { BeatData, GridMode, PictographData } from "$shared";
 import {
-  createBeatData,
   createMotionData,
   createPictographData,
   GridLocation,
@@ -20,29 +19,24 @@ export class StartPositionService implements IStartPositionService {
   constructor() {}
 
   async getStartPositions(gridMode: GridMode): Promise<PictographData[]> {
-    const beatData = await this.getDefaultStartPositions(gridMode);
-    const positions = beatData
-      .map(beat => beat.pictographData)
-      .filter((p): p is PictographData => p !== null);
-
-    return positions;
+    return await this.getDefaultStartPositions(gridMode);
   }
 
-  async getDefaultStartPositions(gridMode: GridMode): Promise<BeatData[]> {
+  async getDefaultStartPositions(gridMode: GridMode): Promise<PictographData[]> {
     // Define start position locations based on grid mode (like legacy)
     const startPositionKeys = gridMode === 'diamond'
       ? [
-          { position: GridPosition.ALPHA1, letter: Letter.ALPHA, id: 'alpha1_alpha1' },
-          { position: GridPosition.BETA5, letter: Letter.BETA, id: 'beta5_beta5' },
-          { position: GridPosition.GAMMA11, letter: Letter.GAMMA, id: 'gamma11_gamma11' }
+          { position: GridPosition.ALPHA1, letter: Letter.ALPHA },
+          { position: GridPosition.BETA5, letter: Letter.BETA },
+          { position: GridPosition.GAMMA11, letter: Letter.GAMMA }
         ]
       : [
-          { position: GridPosition.ALPHA2, letter: Letter.ALPHA, id: 'alpha2_alpha2' },
-          { position: GridPosition.BETA4, letter: Letter.BETA, id: 'beta4_beta4' },
-          { position: GridPosition.GAMMA12, letter: Letter.GAMMA, id: 'gamma12_gamma12' }
+          { position: GridPosition.ALPHA2, letter: Letter.ALPHA },
+          { position: GridPosition.BETA4, letter: Letter.BETA },
+          { position: GridPosition.GAMMA12, letter: Letter.GAMMA }
         ];
 
-    const beatData: BeatData[] = startPositionKeys.map((pos, index) => {
+    const pictographData: PictographData[] = startPositionKeys.map((pos) => {
       // Get the hand locations for this position (blue and red hand locations)
       const [blueLocation, redLocation] = this.getHandLocationsForPosition(pos.position);
 
@@ -76,8 +70,8 @@ export class StartPositionService implements IStartPositionService {
       });
 
       // Create proper pictograph data using factory function (like the original working implementation)
-      const pictographData = createPictographData({
-        id: pos.id,
+      return createPictographData({
+        id: `start-${pos.position}`, // Use the position enum as the unique identifier
         letter: pos.letter,
         startPosition: pos.position,
         endPosition: pos.position,
@@ -86,20 +80,9 @@ export class StartPositionService implements IStartPositionService {
           [MotionColor.RED]: redMotion
         }
       });
-
-      // Create proper beat data using factory function (like the original working implementation)
-      return createBeatData({
-        id: `start-beat-${index}`,
-        beatNumber: 0, // Start position is beat 0
-        duration: 1.0,
-        blueReversal: false,
-        redReversal: false,
-        isBlank: false,
-        pictographData
-      });
     });
 
-    return beatData;
+    return pictographData;
   }
 
   private getHandLocationsForPosition(position: GridPosition): [GridLocation, GridLocation] {

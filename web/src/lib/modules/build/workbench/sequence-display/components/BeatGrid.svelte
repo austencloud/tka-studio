@@ -37,7 +37,8 @@
     // Calculate responsive cell size
     let cellSize = 160; // Default
     if (containerWidth > 0 && containerHeight > 0) {
-      const maxCellWidth = containerWidth / totalColumns;
+      // Use 90% of container width to create breathing room on the sides
+      const maxCellWidth = (containerWidth * 0.9) / totalColumns;
       const maxCellHeight = containerHeight / rows;
       const maxCellSize = Math.min(maxCellWidth, maxCellHeight);
       cellSize = Math.max(50, Math.min(300, Math.floor(maxCellSize)));

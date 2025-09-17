@@ -9,7 +9,7 @@ The main adorable flipbook component that displays PDF pages with beautiful page
   import type { FlipBookConfig } from "../domain";
   import type { IFlipBookService, IPDFService } from "../services/contracts";
   import { createReadState } from "../state";
-  import PDFLoader from "./PDFLoader.svelte";
+  import { LoadingSpinner } from "$shared/foundation/ui";
 
   // Props
   const { 
@@ -69,6 +69,9 @@ The main adorable flipbook component that displays PDF pages with beautiful page
     readState.cleanup();
   });
 
+  // Monitor visibility and restore page when component becomes visible
+  let flipBookWrapper = $state<HTMLElement>();
+
   // Navigation functions
   function handlePreviousPage() {
     readState.previousPage();
@@ -83,66 +86,72 @@ The main adorable flipbook component that displays PDF pages with beautiful page
   }
 </script>
 
-<div class="flipbook-wrapper">
-  {#if readState.loadingState.isLoading || !readState.isReady()}
-    <PDFLoader loadingState={readState.loadingState} />
-  {:else}
-    <div class="flipbook-container">
-
-
-      <!-- Flipbook Display -->
-      <div class="flipbook-display">
+<div class="flipbook-wrapper" bind:this={flipBookWrapper}>
+  <div class="flipbook-container">
+    <!-- Flipbook Display -->
+    <div class="flipbook-display">
+      {#if readState.loadingState.isLoading || !readState.isReady()}
+        <!-- Loading state - show spinner inside the canvas area -->
+        <div class="loading-canvas">
+          <LoadingSpinner 
+            size="large" 
+            message={readState.loadingState.stage || "Loading PDF..."} 
+          />
+        </div>
+      {:else}
+        <!-- Ready state - show actual flipbook -->
         <div 
           bind:this={flipBookContainer}
           class="flipbook-element"
         ></div>
-      </div>
-
-      <!-- Navigation Controls -->
-      <div class="flipbook-controls">
-        <button 
-          class="nav-button prev-button"
-          onclick={handlePreviousPage}
-          disabled={readState.currentPage <= 1}
-        >
-          ← Previous
-        </button>
-
-        <div class="page-info">
-          <span class="current-page">{readState.currentPage}</span>
-          <span class="page-separator">of</span>
-          <span class="total-pages">{readState.totalPages()}</span>
-        </div>
-
-        <button
-          class="nav-button next-button"
-          onclick={handleNextPage}
-          disabled={readState.currentPage >= readState.totalPages()}
-        >
-          Next →
-        </button>
-      </div>
-
-      <!-- Page Jump Controls -->
-      <div class="page-jump">
-        <label for="page-input">Go to page:</label>
-        <input
-          id="page-input"
-          type="number"
-          min="1"
-          max={readState.totalPages()}
-          value={readState.currentPage}
-          onchange={(e) => {
-            const target = e.target as HTMLInputElement;
-            const pageNumber = parseInt(target.value);
-            if (pageNumber >= 1 && pageNumber <= readState.totalPages()) {
-              handleGoToPage(pageNumber);
-            }
-          }}
-        />
-      </div>
+      {/if}
     </div>
-  {/if}
+
+    <!-- Navigation Controls - always visible -->
+    <div class="flipbook-controls">
+      <button 
+        class="nav-button prev-button"
+        onclick={handlePreviousPage}
+        disabled={readState.currentPage <= 1 || readState.loadingState.isLoading}
+      >
+        ← Previous
+      </button>
+
+      <div class="page-info">
+        <span class="current-page">{readState.currentPage}</span>
+        <span class="page-separator">of</span>
+        <span class="total-pages">{readState.totalPages()}</span>
+      </div>
+
+      <button
+        class="nav-button next-button"
+        onclick={handleNextPage}
+        disabled={readState.currentPage >= readState.totalPages() || readState.loadingState.isLoading}
+      >
+        Next →
+      </button>
+    </div>
+
+    <!-- Page Jump Controls - always visible -->
+    <div class="page-jump">
+      <label for="page-input">Go to page:</label>
+      <input
+        id="page-input"
+        type="number"
+        min="1"
+        max={readState.totalPages()}
+        value={readState.currentPage}
+        disabled={readState.loadingState.isLoading}
+        onchange={(e) => {
+          const target = e.target as HTMLInputElement;
+          const pageNumber = parseInt(target.value);
+          if (pageNumber >= 1 && pageNumber <= readState.totalPages()) {
+            handleGoToPage(pageNumber);
+          }
+        }}
+      />
+    </div>
+  </div>
 </div>
 
 <style>
@@ -195,6 +204,17 @@ The main adorable flipbook component that displays PDF pages with beautiful page
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .loading-canvas {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
   }
 
   .flipbook-controls {
@@ -284,9 +304,7 @@ The main adorable flipbook component that displays PDF pages with beautiful page
       padding: 0.5rem;
     }
 
-    .book-title {
-      font-size: 1.5rem;
-    }
+
 
     .flipbook-controls {
       flex-direction: column;

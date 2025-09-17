@@ -13,32 +13,30 @@ import type { IStartPositionService } from "../services/contracts";
 export function createStartPositionPickerState(
   startPositionService: IStartPositionService
 ) {
-  // Create reactive state that syncs with service
-  let startPositionPictographs = $state(startPositionService.startPositions);
-  let selectedStartPos = $state(startPositionService.selectedPosition);
-  let isLoading = $state(startPositionService.isLoading);
-  let loadingError = $state(!!startPositionService.error);
+  // Create reactive state managed locally
+  let startPositionPictographs = $state<PictographData[]>([]);
+  let selectedStartPos = $state<PictographData | null>(null);
+  let isLoading = $state(false);
+  let loadingError = $state(false);
 
-  // Sync with service changes via events
-  if (typeof window !== "undefined") {
-    const handleServiceChange = () => {
-      startPositionPictographs = startPositionService.startPositions;
-      selectedStartPos = startPositionService.selectedPosition;
-      isLoading = startPositionService.isLoading;
-      loadingError = !!startPositionService.error;
-    };
-
-    window.addEventListener(
-      "startPositionServiceStateChange",
-      handleServiceChange
-    );
+  // Load start positions when grid mode changes
+  async function loadStartPositions(gridMode: GridMode) {
+    try {
+      isLoading = true;
+      loadingError = false;
+      startPositionPictographs = await startPositionService.getStartPositions(gridMode);
+    } catch (error) {
+      console.error("Error loading start positions:", error);
+      loadingError = true;
+      startPositionPictographs = [];
+    } finally {
+      isLoading = false;
+    }
   }
 
-  /**
-   * Load start positions - delegates to service
-   */
-  async function loadStartPositions(gridMode: GridMode = GridMode.DIAMOND) {
-    await startPositionService.getDefaultStartPositions(gridMode);
+  // Initialize with default grid mode
+  if (typeof window !== "undefined") {
+    loadStartPositions(GridMode.DIAMOND);
   }
 
   return {
@@ -60,6 +58,10 @@ export function createStartPositionPickerState(
     loadStartPositions,
     setSelectedStartPos: (pos: PictographData | null) => {
       selectedStartPos = pos;
+    },
+    selectStartPosition: async (position: PictographData) => {
+      await startPositionService.selectStartPosition(position);
+      selectedStartPos = position;
     },
   };
 }

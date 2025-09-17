@@ -1,8 +1,12 @@
-<!-- Unified Navigation Bar -->
+<!-- Enhanced Navigation Bar with Dropdown Support -->
 <script lang="ts">
+  import { onMount } from "svelte";
   import type { IAnimationService } from "../../application/services/contracts";
   import { showSettingsDialog } from "../../application/state/app-state.svelte";
-  import { resolve, TYPES } from "../../inversify";
+  import type { IDeviceDetector } from "../../device/services/contracts/IDeviceDetector";
+  import type { DropdownState, ModeOption } from "../domain/types";
+  import DesktopDropdown from "./DesktopDropdown.svelte";
+  import MobileModal from "./MobileModal.svelte";
 
   type TabID = string;
   interface TabDef {
@@ -11,30 +15,266 @@
     icon: string;
     isMain?: boolean;
   }
+
   let {
     tabs = [],
     activeTab = null,
     onTabSelect,
     onBackgroundChange,
+    // New props for dropdown functionality
+    buildModes = [],
+    currentBuildMode = "construct",
+    onBuildModeChange,
+    learnModes = [],
+    currentLearnMode = "codex",
+    onLearnModeChange,
   } = $props<{
     tabs?: readonly TabDef[];
     activeTab?: TabID | null;
     onTabSelect?: (tabId: TabID) => void;
     onBackgroundChange?: (background: string) => void;
+    // Dropdown props
+    buildModes?: ModeOption[];
+    currentBuildMode?: string;
+    onBuildModeChange?: (mode: string) => void;
+    learnModes?: ModeOption[];
+    currentLearnMode?: string;
+    onLearnModeChange?: (mode: string) => void;
   }>();
 
-  // Resolve animation service
-  const animationService = resolve(
-    TYPES.IAnimationService
-  ) as IAnimationService;
+  // Resolve services with HMR-safe initialization
+  let animationService: IAnimationService | null = $state(null);
+  let deviceDetector: IDeviceDetector | null = $state(null);
+  let servicesInitialized = $state(false);
 
-  // Create fold transition
-  const foldTransition = (node: Element, params: any) =>
-    animationService.createFoldTransition({
+  // Initialize services when container is ready - HMR safe
+  async function initializeServices() {
+    if (servicesInitialized) return;
+
+    try {
+      const { resolveAsync, TYPES, ensureContainerInitialized } = await import("../../inversify");
+
+      // Ensure container is fully initialized before resolving services
+      await ensureContainerInitialized();
+
+      animationService = await resolveAsync<IAnimationService>(TYPES.IAnimationService);
+      deviceDetector = await resolveAsync<IDeviceDetector>(TYPES.IDeviceDetector);
+      servicesInitialized = true;
+
+      console.log("✅ NavigationBar: Services initialized successfully");
+    } catch (error) {
+      console.error("❌ NavigationBar: Failed to resolve services:", error);
+      // Retry after a short delay in case of HMR timing issues
+      setTimeout(() => {
+        servicesInitialized = false;
+        initializeServices();
+      }, 100);
+    }
+  }
+
+  // Initialize on mount and handle HMR
+  onMount(() => {
+    initializeServices();
+  });
+
+  // Handle HMR (Hot Module Replacement) to prevent navigation bar disappearing
+  if (import.meta.hot) {
+    import.meta.hot.accept(() => {
+      console.log("🔄 HMR: NavigationBar module reloaded");
+      // Re-initialize services after HMR
+      servicesInitialized = false;
+      initializeServices();
+    });
+  }
+
+  // Dropdown state
+  let dropdownState = $state<DropdownState>({
+    isOpen: false,
+    tabId: null,
+    showDiscoveryHint: false
+  });
+
+  // Device detection - handle null service gracefully
+  const isMobile = $derived(() => deviceDetector?.isMobile() ?? false);
+
+  // Create fold transition - handle null service gracefully
+  const foldTransition = (node: Element, params: any) => {
+    if (!animationService) {
+      // Fallback transition if service not ready
+      return {
+        duration: 300,
+        css: (t: number) => `opacity: ${t}`,
+      };
+    }
+    return animationService.createFoldTransition({
       direction: "fold-in",
       duration: 300,
       ...params,
     });
+  };
+
+  // Dropdown functionality with hover delay
+  let openTimeout: ReturnType<typeof setTimeout> | null = null;
+  let closeTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  // Track timeout IDs to prevent race conditions
+  let currentOpenTimeoutId = 0;
+  let currentCloseTimeoutId = 0;
+
+  function toggleDropdown(tabId: string) {
+    if (dropdownState.isOpen && dropdownState.tabId === tabId) {
+      closeDropdown();
+    } else {
+      openDropdown(tabId);
+    }
+  }
+
+  function openDropdown(tabId: string) {
+    const timestamp = Date.now();
+    console.log(`🔓 [${timestamp}] NavigationBar: openDropdown(${tabId})`);
+
+    // Clear ALL pending timeouts to prevent race conditions
+    if (openTimeout) {
+      console.log(`🚫 [${timestamp}] NavigationBar: Clearing openTimeout in openDropdown`);
+      clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    if (closeTimeout) {
+      console.log(`🚫 [${timestamp}] NavigationBar: Clearing closeTimeout in openDropdown`);
+      clearTimeout(closeTimeout);
+      closeTimeout = null;
+    }
+
+    console.log(`📝 [${timestamp}] NavigationBar: Setting dropdown state - isOpen: true, tabId: ${tabId}`);
+    dropdownState.isOpen = true;
+    dropdownState.tabId = tabId;
+    console.log(`✅ [${timestamp}] NavigationBar: Dropdown opened for ${tabId}`);
+  }
+
+  function closeDropdown() {
+    const timestamp = Date.now();
+    console.log(`🔒 [${timestamp}] NavigationBar: closeDropdown()`);
+    console.log(`📝 [${timestamp}] NavigationBar: Setting dropdown state - isOpen: false, tabId: null`);
+    dropdownState.isOpen = false;
+    dropdownState.tabId = null;
+    console.log(`✅ [${timestamp}] NavigationBar: Dropdown closed`);
+  }
+
+  function handleMouseEnter(tabId: string) {
+    const timestamp = Date.now();
+    console.log(`🖱️ [${timestamp}] NavigationBar: handleMouseEnter(${tabId})`);
+
+    if (!hasDropdown(tabId)) {
+      console.log(`❌ [${timestamp}] NavigationBar: ${tabId} has no dropdown, ignoring`);
+      return;
+    }
+
+    console.log(`🔍 [${timestamp}] NavigationBar: Current dropdown state:`, {
+      isOpen: dropdownState.isOpen,
+      tabId: dropdownState.tabId,
+      openTimeout: openTimeout !== null,
+      closeTimeout: closeTimeout !== null
+    });
+
+    // Clear any existing timeouts
+    if (openTimeout) {
+      console.log(`🚫 [${timestamp}] NavigationBar: Clearing existing openTimeout`);
+      clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+    if (closeTimeout) {
+      console.log(`🚫 [${timestamp}] NavigationBar: Clearing existing closeTimeout`);
+      clearTimeout(closeTimeout);
+      closeTimeout = null;
+    }
+
+    // Increment timeout ID to invalidate any pending timeouts
+    currentCloseTimeoutId++;
+
+    // If dropdown is already open for a different tab, switch immediately
+    if (dropdownState.isOpen && dropdownState.tabId !== tabId) {
+      console.log(`🔄 [${timestamp}] NavigationBar: Switching dropdown from ${dropdownState.tabId} to ${tabId} immediately`);
+      openDropdown(tabId);
+      return;
+    }
+
+    // Set timeout to open dropdown with ID tracking (faster 150ms delay)
+    const timeoutId = ++currentOpenTimeoutId;
+    console.log(`⏰ [${timestamp}] NavigationBar: Setting openTimeout for ${tabId} (150ms delay) - ID: ${timeoutId}`);
+    openTimeout = setTimeout(() => {
+      // Check if this timeout is still valid
+      if (timeoutId === currentOpenTimeoutId) {
+        console.log(`✅ [${Date.now()}] NavigationBar: openTimeout executed for ${tabId} - ID: ${timeoutId}`);
+        openDropdown(tabId);
+      } else {
+        console.log(`🚫 [${Date.now()}] NavigationBar: openTimeout CANCELLED for ${tabId} - ID: ${timeoutId} (current: ${currentOpenTimeoutId})`);
+      }
+    }, 100);
+  }
+
+  function handleMouseLeave() {
+    const timestamp = Date.now();
+    console.log(`🖱️ [${timestamp}] NavigationBar: handleMouseLeave()`);
+
+    console.log(`🔍 [${timestamp}] NavigationBar: Current dropdown state:`, {
+      isOpen: dropdownState.isOpen,
+      tabId: dropdownState.tabId,
+      openTimeout: openTimeout !== null,
+      closeTimeout: closeTimeout !== null
+    });
+
+    // Clear any pending open timeout
+    if (openTimeout) {
+      console.log(`🚫 [${timestamp}] NavigationBar: Clearing pending openTimeout`);
+      clearTimeout(openTimeout);
+      openTimeout = null;
+    }
+
+    // Increment timeout ID to invalidate any pending open timeouts
+    currentOpenTimeoutId++;
+
+    // Set timeout to close dropdown with ID tracking
+    const timeoutId = ++currentCloseTimeoutId;
+    console.log(`⏰ [${timestamp}] NavigationBar: Setting closeTimeout (300ms delay) - ID: ${timeoutId}`);
+    closeTimeout = setTimeout(() => {
+      // Check if this timeout is still valid
+      if (timeoutId === currentCloseTimeoutId) {
+        console.log(`✅ [${Date.now()}] NavigationBar: closeTimeout executed - ID: ${timeoutId}`);
+        closeDropdown();
+      } else {
+        console.log(`🚫 [${Date.now()}] NavigationBar: closeTimeout CANCELLED - ID: ${timeoutId} (current: ${currentCloseTimeoutId})`);
+      }
+    }, 300);
+  }
+
+  // Handle mode changes
+  function handleBuildModeChange(mode: string) {
+    onBuildModeChange?.(mode);
+    closeDropdown();
+  }
+
+  function handleLearnModeChange(mode: string) {
+    onLearnModeChange?.(mode);
+    closeDropdown();
+  }
+
+  // Get current mode label for display
+  function getCurrentModeLabel(tabId: string): string {
+    if (tabId === "construct") {
+      const mode = buildModes.find((m: ModeOption) => m.id === currentBuildMode);
+      return mode ? mode.label : "Build";
+    } else if (tabId === "learn") {
+      const mode = learnModes.find((m: ModeOption) => m.id === currentLearnMode);
+      return mode ? mode.label : "Learn";
+    }
+    return "";
+  }
+
+  // Check if tab has dropdown
+  function hasDropdown(tabId: string): boolean {
+    return (tabId === "construct" && buildModes.length > 0) ||
+           (tabId === "learn" && learnModes.length > 0);
+  }
 
   // Separate main and developer tabs for display
   const mainTabs = $derived(() => tabs.filter((tab: { isMain: boolean; }) => tab.isMain !== false));
@@ -85,17 +325,64 @@
 
   <!-- App Tab Navigation -->
   <div class="nav-tabs">
-    <!-- Main tabs -->
+    <!-- Main tabs with dropdown support -->
     {#each mainTabs() as tab}
-      <button
-        class="nav-tab"
-        class:active={activeTab === tab.id}
-        onclick={() => handleTabClick(tab)}
-        aria-pressed={activeTab === tab.id}
-      >
-        <span class="tab-icon">{tab.icon}</span>
-        <span class="tab-label">{tab.label}</span>
-      </button>
+      <div class="nav-tab-container" class:has-dropdown={hasDropdown(tab.id)}>
+        <button
+          class="nav-tab"
+          class:active={activeTab === tab.id}
+          onclick={() => handleTabClick(tab)}
+          onmouseenter={() => handleMouseEnter(tab.id)}
+          onmouseleave={handleMouseLeave}
+          aria-pressed={activeTab === tab.id}
+        >
+          <span class="tab-icon">{tab.icon}</span>
+          <span class="tab-label">{tab.label}</span>
+
+          <!-- Dropdown chevron for tabs with modes -->
+          {#if hasDropdown(tab.id)}
+            <span
+              class="dropdown-chevron"
+              class:active={dropdownState.isOpen && dropdownState.tabId === tab.id}
+            >
+              ▼
+            </span>
+          {/if}
+        </button>
+
+        <!-- Desktop Dropdown -->
+        {#if hasDropdown(tab.id) && !isMobile() && dropdownState.isOpen && dropdownState.tabId === tab.id}
+          <div
+            role="region"
+            aria-label="Dropdown menu container"
+            onmouseenter={() => {
+              const timestamp = Date.now();
+              console.log(`🖱️ [${timestamp}] NavigationBar: Dropdown container mouseenter for ${tab.id}`);
+              // Clear any pending close timeout when hovering over dropdown
+              if (closeTimeout) {
+                console.log(`🚫 [${timestamp}] NavigationBar: Clearing closeTimeout on dropdown hover`);
+                clearTimeout(closeTimeout);
+                closeTimeout = null;
+              }
+              // Invalidate any pending close timeouts
+              currentCloseTimeoutId++;
+            }}
+            onmouseleave={() => {
+              const timestamp = Date.now();
+              console.log(`🖱️ [${timestamp}] NavigationBar: Dropdown container mouseleave for ${tab.id}`);
+              handleMouseLeave();
+            }}
+          >
+            <DesktopDropdown
+              modes={tab.id === "construct" ? buildModes : learnModes}
+              currentMode={tab.id === "construct" ? currentBuildMode : currentLearnMode}
+              onModeChange={tab.id === "construct" ? handleBuildModeChange : handleLearnModeChange}
+              onClose={closeDropdown}
+              isOpen={true}
+            />
+          </div>
+        {/if}
+      </div>
     {/each}
 
     <!-- Developer tabs separator and tabs -->
@@ -143,6 +430,18 @@
     </button>
   </div>
 </nav>
+
+<!-- Mobile Modal for Mode Selection -->
+{#if isMobile() && dropdownState.isOpen}
+  <MobileModal
+    modes={dropdownState.tabId === "construct" ? buildModes : learnModes}
+    currentMode={dropdownState.tabId === "construct" ? currentBuildMode : currentLearnMode}
+    onModeChange={dropdownState.tabId === "construct" ? handleBuildModeChange : handleLearnModeChange}
+    onClose={closeDropdown}
+    isOpen={true}
+    contextLabel={dropdownState.tabId === "construct" ? "Build" : "Learn"}
+  />
+{/if}
 
 <style>
   .app-navigation-bar {
@@ -260,6 +559,43 @@
 
   .tab-label {
     font-weight: 500;
+  }
+
+  /* Dropdown-specific styles */
+  .nav-tab-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-tab-container.has-dropdown .nav-tab {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    justify-content: space-between;
+  }
+
+  .dropdown-chevron {
+    font-size: 10px;
+    color: var(--muted-foreground);
+    transition: all var(--transition-fast);
+    opacity: 0.7;
+    margin-left: var(--spacing-xs);
+    flex-shrink: 0;
+  }
+
+  .nav-tab:hover .dropdown-chevron {
+    opacity: 1;
+    color: var(--foreground);
+  }
+
+  .nav-tab.active .dropdown-chevron {
+    opacity: 1;
+    color: var(--primary-light);
+  }
+
+  .dropdown-chevron.active {
+    transform: rotate(180deg);
   }
 
   .nav-actions {

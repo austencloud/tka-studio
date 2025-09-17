@@ -10,7 +10,6 @@
 
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
 // import { constructTabEventService } from "../../services/implementations"; // TODO: Implement service
-  import ConstructTabNavigation from "./BuildTabNavigation.svelte";
 // Import Svelte's built-in fade transition for consistency with main tabs
   import type {
     ActiveBuildTab,
@@ -160,12 +159,6 @@
       <p>Loading...</p>
     </div>
   {:else if activeRightPanel}
-    <!-- Tab Navigation -->
-    <ConstructTabNavigation
-      activeBuildSubTab={activeRightPanel}
-      setActiveBuildSubTab={buildTabState.setActiveRightPanel}
-    />
-
     <!-- Tab Content with Sequential Fade Transitions -->
     <div class="tab-content">
       {#key activeRightPanel}

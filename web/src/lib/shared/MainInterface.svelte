@@ -28,6 +28,7 @@
   import { GalleryTab } from "../modules";
   import BackgroundCanvas from "./background/shared/components/BackgroundCanvas.svelte";
   import NavigationBar from "./navigation/components/NavigationBar.svelte";
+  import { navigationState } from "./navigation/state/navigation-state.svelte";
   import SettingsDialog from "./settings/components/SettingsDialog.svelte";
 
   // Reactive state for template using proper derived
@@ -123,6 +124,23 @@
   function handleBackgroundChange(_background: string) {
     // Background change handled
   }
+
+  // Mode change handlers for dropdown navigation
+  function handleBuildModeChange(mode: string) {
+    navigationState.setBuildMode(mode);
+    // If we're not on the construct tab, switch to it
+    if (activeTab !== "construct") {
+      switchTab("construct");
+    }
+  }
+
+  function handleLearnModeChange(mode: string) {
+    navigationState.setLearnMode(mode);
+    // If we're not on the learn tab, switch to it
+    if (activeTab !== "learn") {
+      switchTab("learn");
+    }
+  }
 </script>
 
 <div class="main-interface">
@@ -140,6 +158,12 @@
     {activeTab}
     onTabSelect={handleTabSelect}
     onBackgroundChange={handleBackgroundChange}
+    buildModes={navigationState.buildModes}
+    currentBuildMode={navigationState.currentBuildMode}
+    onBuildModeChange={handleBuildModeChange}
+    learnModes={navigationState.learnModes}
+    currentLearnMode={navigationState.currentLearnMode}
+    onLearnModeChange={handleLearnModeChange}
   />
 
   <!-- Main Content Area -->

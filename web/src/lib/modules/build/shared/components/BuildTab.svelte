@@ -8,14 +8,13 @@ Provides two-panel layout matching desktop app:
 Testing HMR persistence functionality
 -->
 <script lang="ts">
-  import { GridMode, resolve, TYPES } from "$shared";
+  import { ErrorBanner, GridMode, navigationState, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
   import type { IBuildTabService, ISequencePersistenceService, ISequenceService, ISequenceStateService } from "../services/contracts";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
   import { createBuildTabState } from "../state/build-tab-state.svelte";
   import { createConstructTabState } from "../state/construct-tab-state.svelte";
-  import ErrorBanner from "./ErrorBanner.svelte";
   import LeftPanel from './LeftPanel.svelte';
   import LoadingOverlay from './LoadingOverlay.svelte';
   import RightPanel from './RightPanel.svelte';
@@ -38,6 +37,27 @@ Testing HMR persistence functionality
   let isLoading = $state(false);
   let error = $state<string | null>(null);
   let isTransitioning = $state(false);
+
+  // Sync navigation state with build tab state
+  $effect(() => {
+    const currentMode = navigationState.currentBuildMode;
+    const buildTabCurrentMode = buildTabState.activeSubTab;
+
+    // If navigation state differs from build tab state, update build tab
+    if (currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized) {
+      buildTabState.setActiveRightPanel(currentMode as any);
+    }
+  });
+
+  // Sync build tab state changes back to navigation state
+  $effect(() => {
+    const buildTabCurrentMode = buildTabState.activeSubTab;
+    if (buildTabCurrentMode && buildTabCurrentMode !== navigationState.currentBuildMode) {
+      navigationState.setBuildMode(buildTabCurrentMode);
+    }
+  });
+
+
 
   async function handleOptionSelected(option: any): Promise<void> {
     try {
@@ -101,6 +121,8 @@ Testing HMR persistence functionality
     onDismiss={clearError}
   />
   {/if}
+
+
 
   <div class="build-tab-layout">
   <!-- Left Panel: Workbench -->

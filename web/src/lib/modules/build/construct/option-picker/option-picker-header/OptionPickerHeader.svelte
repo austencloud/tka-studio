@@ -186,8 +186,6 @@ Provides:
   .filter-btn {
     /* Dynamic width based on available space */
     flex: 1;
-    min-width: 0; /* Allow shrinking */
-    max-width: 120px; /* Prevent too wide */
 
     /* Glass morphism styling to match TKA design system */
     padding: 8px 12px;
@@ -197,13 +195,10 @@ Provides:
     border-radius: 12px;
     box-shadow: var(--shadow-glass);
     color: var(--foreground);
-    font-size: 14px;
-    font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-normal);
 
     /* Layout */
-    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;

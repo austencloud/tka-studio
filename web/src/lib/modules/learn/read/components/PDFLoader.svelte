@@ -5,35 +5,51 @@ Displays loading progress and status for PDF processing.
 -->
 <script lang="ts">
   import type { PDFLoadingState } from "../domain";
+  import { LoadingSpinner } from "$shared/foundation/ui";
 
   const { loadingState } = $props<{
     loadingState: PDFLoadingState;
   }>();
+
+  // Check if this is a simple cache loading (no progress tracking needed)
+  const isCacheLoading = $derived(
+    loadingState.isLoading && 
+    loadingState.stage === "Loading from cache..." &&
+    loadingState.progress === 0
+  );
 </script>
 
 <div class="pdf-loader">
   {#if loadingState.isLoading}
-    <div class="loading-container">
-      <div class="loading-header">
-        <h3>📖 Loading Your Book...</h3>
-        <p class="loading-stage">{loadingState.stage}</p>
+    {#if isCacheLoading}
+      <!-- Simple spinner for cached content -->
+      <div class="cache-loading-container">
+        <LoadingSpinner size="medium" message="Loading from cache..." />
       </div>
-      
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div 
-            class="progress-fill" 
-            style="width: {loadingState.progress}%"
-          ></div>
+    {:else}
+      <!-- Full progress loading for new content -->
+      <div class="loading-container">
+        <div class="loading-header">
+          <h3>📖 Loading Your Book...</h3>
+          <p class="loading-stage">{loadingState.stage}</p>
         </div>
-        <span class="progress-text">{Math.round(loadingState.progress)}%</span>
+        
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              style="width: {loadingState.progress}%"
+            ></div>
+          </div>
+          <span class="progress-text">{Math.round(loadingState.progress)}%</span>
+        </div>
+        
+        <div class="loading-animation">
+          <div class="book-icon">📚</div>
+          <div class="sparkles">✨</div>
+        </div>
       </div>
-      
-      <div class="loading-animation">
-        <div class="book-icon">📚</div>
-        <div class="sparkles">✨</div>
-      </div>
-    </div>
+    {/if}
   {:else if loadingState.error}
     <div class="error-container">
       <div class="error-icon">😞</div>
@@ -65,10 +81,18 @@ Displays loading progress and status for PDF processing.
   }
 
   .loading-container,
+  .cache-loading-container,
   .error-container,
   .ready-container {
     text-align: center;
     max-width: 400px;
+  }
+
+  .cache-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
   .loading-header h3 {

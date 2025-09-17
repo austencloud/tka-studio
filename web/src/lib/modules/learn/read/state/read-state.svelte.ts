@@ -2,10 +2,12 @@
  * Read State Factory
  *
  * Factory function for creating read module state with PDF and flipbook management.
+ * Uses persistent PDF state to avoid reloading PDFs when navigating between tabs.
  */
 
-import type { FlipBookConfig, PDFDocumentInfo, PDFLoadingState, PDFPageData } from "../domain";
+import type { FlipBookConfig } from "../domain";
 import type { IFlipBookService, IPDFService } from "../services/contracts";
+import { persistentPDFState } from "./persistent-pdf-state.svelte";
 
 /**
  * Create read state for managing PDF loading and flipbook display
@@ -14,17 +16,10 @@ export function createReadState(
   pdfService: IPDFService,
   flipBookService: IFlipBookService
 ) {
-  // PDF state
-  let documentInfo = $state<PDFDocumentInfo | null>(null);
-  let pages = $state<PDFPageData[]>([]);
-  let loadingState = $state<PDFLoadingState>({
-    isLoading: false,
-    progress: 0,
-    stage: "Ready",
-    error: undefined,
-  });
-
-  // Flipbook state
+  // Track the current PDF URL for page persistence
+  let currentPDFUrl = $state<string>("");
+  
+  // Flipbook state (component-specific)
   let currentPage = $state<number>(1);
   let isFlipBookInitialized = $state<boolean>(false);
 
@@ -40,37 +35,33 @@ export function createReadState(
   };
 
   /**
-   * Load a PDF from the specified URL
+   * Load a PDF from the specified URL (uses persistent state)
    */
   async function loadPDF(url: string): Promise<void> {
-    try {
-      console.log("📖 ReadState: Loading PDF from", url);
-      
-      loadingState.isLoading = true;
-      loadingState.progress = 0;
-      loadingState.stage = "Loading PDF document...";
-      loadingState.error = undefined;
+    console.log(`📚 ReadState: Loading PDF from ${url}`);
+    currentPDFUrl = url;
+    
+    // Get the saved page BEFORE loading to avoid showing page 1 first
+    const savedPage = persistentPDFState.getCurrentPage(url);
+    currentPage = savedPage;
+    console.log(`📚 ReadState: Set current page to ${savedPage} before loading`);
+    
+    await persistentPDFState.ensurePDFLoaded(url);
+    
+    console.log(`📚 ReadState: PDF loaded, confirmed page ${currentPage} for ${url}`);
+  }
 
-      // Load the PDF document
-      documentInfo = await pdfService.loadPDF(url);
-      
-      loadingState.stage = "Converting pages to images...";
-      
-      // Convert all pages to images
-      pages = await pdfService.convertPagesToImages((progress, stage) => {
-        loadingState.progress = progress;
-        loadingState.stage = stage;
-      });
-
-      loadingState.isLoading = false;
-      loadingState.stage = "PDF loaded successfully";
-      
-      console.log("📖 ReadState: PDF loaded with", pages.length, "pages");
-    } catch (error) {
-      console.error("📖 ReadState: Error loading PDF", error);
-      loadingState.isLoading = false;
-      loadingState.error = error instanceof Error ? error.message : "Unknown error";
-      loadingState.stage = "Error loading PDF";
+  /**
+   * Restore the flipbook to the saved page position (if needed)
+   */
+  async function restoreToSavedPage(): Promise<void> {
+    if (!currentPDFUrl || !isFlipBookInitialized) return;
+    
+    // Only restore if we're not already on the correct page
+    const flipBookCurrentPage = flipBookService.getCurrentPage();
+    if (flipBookCurrentPage !== currentPage) {
+      console.log(`📚 ReadState: Syncing flipbook page from ${flipBookCurrentPage} to ${currentPage}`);
+      flipBookService.goToPage(currentPage);
     }
   }
 
@@ -81,43 +72,53 @@ export function createReadState(
     container: HTMLElement,
     config: Partial<FlipBookConfig> = {}
   ): Promise<void> {
+    if (isFlipBookInitialized) {
+      console.log("📚 ReadState: Flipbook already initialized");
+      return;
+    }
+
     try {
       console.log("📚 ReadState: Initializing flipbook");
 
-      // Use the provided config with defaults, let StPageFlip handle sizing
+      // Merge with default config
       const finalConfig = { ...defaultConfig, ...config };
-
-      if (pages.length > 0) {
-        const firstPage = pages[0];
-        console.log("📚 ReadState: PDF page dimensions", {
-          width: firstPage.width,
-          height: firstPage.height,
-          aspectRatio: firstPage.width / firstPage.height
-        });
-      }
-
       console.log("📚 ReadState: Using flipbook config", finalConfig);
 
       // Initialize the flipbook
       await flipBookService.initialize(container, finalConfig);
 
-      // Set up page change listener
+      // Set up page change listener to save current page
       flipBookService.onPageChange((pageNumber) => {
+        console.log(`📚 ReadState: Page changed to ${pageNumber}`);
         currentPage = pageNumber;
+        // Save the current page for this PDF URL
+        if (currentPDFUrl) {
+          persistentPDFState.setCurrentPage(currentPDFUrl, pageNumber);
+        }
       });
 
-      // Load pages if available
-      if (hasPages()) {
+      // Load the pages
+      const pages = persistentPDFState.pages;
+      if (pages.length > 0) {
+        console.log("📚 ReadState: Loading pages into flipbook");
         await flipBookService.loadPages(pages);
+        
+        // Add a small delay to allow flipbook to fully initialize
+        if (currentPage > 1) {
+          console.log(`📚 ReadState: Setting flipbook to page ${currentPage} after initialization`);
+          // Use setTimeout to ensure flipbook is fully ready
+          setTimeout(() => {
+            console.log(`📚 ReadState: Now navigating flipbook to page ${currentPage}`);
+            flipBookService.goToPage(currentPage);
+          }, 100);
+        }
       }
 
       isFlipBookInitialized = true;
-      currentPage = 1;
-
-      console.log("📚 ReadState: Flipbook initialized successfully");
+      console.log("📚 ReadState: Flipbook initialization complete");
     } catch (error) {
       console.error("📚 ReadState: Error initializing flipbook", error);
-      throw error;
+      throw new Error(`Failed to initialize flipbook: ${error instanceof Error ? error.message : "Unknown error"}`);
     }
   }
 
@@ -128,6 +129,7 @@ export function createReadState(
     if (!isFlipBookInitialized) return;
     
     flipBookService.goToPage(pageNumber);
+    // Page change listener will handle saving the page
   }
 
   /**
@@ -137,6 +139,7 @@ export function createReadState(
     if (!isFlipBookInitialized) return;
     
     flipBookService.nextPage();
+    // Page change listener will handle saving the page
   }
 
   /**
@@ -146,40 +149,32 @@ export function createReadState(
     if (!isFlipBookInitialized) return;
     
     flipBookService.previousPage();
+    // Page change listener will handle saving the page
   }
 
   /**
-   * Clean up resources
+   * Clean up resources (only flipbook, keep PDF in persistent state)
    */
   function cleanup(): void {
     console.log("📖 ReadState: Cleaning up resources");
     
     flipBookService.destroy();
-    pdfService.cleanup();
     
-    // Reset state
-    documentInfo = null;
-    pages = [];
-    loadingState = {
-      isLoading: false,
-      progress: 0,
-      stage: "Ready",
-      error: undefined,
-    };
+    // Reset only flipbook state, keep PDF data in persistent state
     currentPage = 1;
     isFlipBookInitialized = false;
   }
 
-  // Computed properties
-  const totalPages = $derived(() => pages.length);
-  const hasPages = $derived(() => pages.length > 0);
-  const isReady = $derived(() => hasPages() && !loadingState.isLoading);
+  // Computed properties (delegate to persistent state)
+  const totalPages = $derived(() => persistentPDFState.totalPages);
+  const hasPages = $derived(() => persistentPDFState.hasPages);
+  const isReady = $derived(() => persistentPDFState.isReady);
 
   return {
-    // State
-    get documentInfo() { return documentInfo; },
-    get pages() { return pages; },
-    get loadingState() { return loadingState; },
+    // State (delegate to persistent state)
+    get documentInfo() { return persistentPDFState.documentInfo; },
+    get pages() { return persistentPDFState.pages; },
+    get loadingState() { return persistentPDFState.loadingState; },
     get currentPage() { return currentPage; },
     get isFlipBookInitialized() { return isFlipBookInitialized; },
     
@@ -195,5 +190,6 @@ export function createReadState(
     nextPage,
     previousPage,
     cleanup,
+    restoreToSavedPage,
   };
 }
