@@ -9,19 +9,19 @@
 
 import { browser } from "$app/environment";
 import type {
-  AppSettings,
-  IPersistenceService,
-  ISettingsService,
-  PerformanceSnapshot,
-  SequenceData,
-  TabId,
+    AppSettings,
+    IPersistenceService,
+    ISettingsService,
+    PerformanceSnapshot,
+    SequenceData,
+    TabId,
 } from "$shared";
 import type { IGalleryThumbnailService } from "../../../modules/gallery/display";
 import { BackgroundType } from "../../background";
 import {
-  ensureContainerInitialized,
-  resolve,
-  resolveAsync,
+    ensureContainerInitialized,
+    resolve,
+    resolveAsync,
 } from "../../inversify";
 import { TYPES } from "../../inversify/types";
 import { GridMode } from "../../pictograph";
@@ -202,7 +202,6 @@ function getInitialTabFromCache(): TabId {
 const uiState = $state({
   activeTab: null as TabId | null, // Start with null, will be set after restoration
   showSettings: false,
-  theme: "dark" as AppTheme,
   isFullScreen: false,
   isTransitioning: false,
   isWaitingForTabLoad: false,
@@ -256,22 +255,10 @@ export function getSettings() {
   if (!isInitialized || !settingsService) {
     // Return default settings if not initialized
     return {
-      theme: "dark" as const,
       gridMode: GridMode.DIAMOND,
-      showBeatNumbers: true,
-      autoSave: true,
-      exportQuality: "high" as const,
-      workbenchColumns: 5,
-      developerMode: true,
-      animationsEnabled: true,
       backgroundType: BackgroundType.NIGHT_SKY,
       backgroundQuality: "medium" as const,
       backgroundEnabled: true,
-      visibility: {
-        TKA: true,
-        TKAINVERSE: true,
-        TKAOPPOSITE: true,
-      },
     };
   }
   return getSettingsServiceSync().settings;
@@ -432,20 +419,6 @@ export async function updateSettings(
 
   // Update each setting individually using the interface method
   getSettingsServiceSync().updateSettings(newSettings);
-
-  // Update theme in UI state if theme changed
-  if (newSettings.theme) {
-    uiState.theme = newSettings.theme === "light" ? AppTheme.LIGHT : AppTheme.DARK;
-  }
-}
-
-export async function setTheme(theme: AppTheme): Promise<void> {
-  uiState.theme = theme;
-  if (isInitialized && settingsService) {
-    // Convert AppTheme enum to string literal for settings
-    const themeString = theme === AppTheme.LIGHT ? "light" : "dark";
-    getSettingsServiceSync().updateSettings({ theme: themeString });
-  }
 }
 
 // Performance tracking

@@ -92,6 +92,28 @@ Features:
     });
   });
 
+  // Filter status text for bottom center display
+  function getFilterStatusText(): string {
+    if (!optionPickerState) return "";
+    
+    const currentSortMethod = optionPickerState.sortMethod;
+    const optionCount = optionPickerState.filteredOptions.length;
+    const activeFilters = activeFilterLabels();
+    const totalAvailableOptions = optionPickerState.allAvailableOptions?.length || 0;
+    
+    // Don't show status if all available options are being displayed
+    if (optionCount >= totalAvailableOptions || activeFilters.length === 0) {
+      return "";
+    }
+    
+    const filterText = activeFilters.join(", ");
+    return `${filterText} • ${optionCount} options`;
+  }
+
+  function capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
   // Layout configuration using maximized sizing service
   const layoutConfig = $derived(() => {
     // Return fallback if services not ready
@@ -265,6 +287,13 @@ Features:
       onOpenModal={openFilterModal}
     />
 
+    <!-- Filter Status - Bottom Center -->
+    {#if getFilterStatusText()}
+      <div class="filter-status">
+        <span class="status-text">{getFilterStatusText()}</span>
+      </div>
+    {/if}
+
     <!-- Filter Modal -->
     <FilterModal
       isOpen={isFilterModalOpen}
@@ -334,7 +363,7 @@ Features:
     0 8px 32px rgba(0, 0, 0, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
-  overflow: visible;
+  overflow: hidden; /* Changed from visible to hidden to enable proper scrolling */
   }
 
   .option-picker-content {
@@ -343,6 +372,39 @@ Features:
   overflow: hidden;
   background: rgba(255, 255, 255, 0.02);
   min-height: 0; /* Crucial for flex child to allow proper scrolling */
+  }
+
+  .filter-status {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    
+    background: var(--background-overlay, rgba(0, 0, 0, 0.6));
+    backdrop-filter: blur(var(--glass-blur-sm, 10px));
+    -webkit-backdrop-filter: blur(var(--glass-blur-sm, 10px));
+    border-radius: var(--radius-md, 12px);
+    padding: var(--spacing-1_5, 6px) var(--spacing-3, 12px);
+    
+    /* Typography */
+    font-size: var(--text-xs, 12px);
+    color: var(--text-secondary, rgba(255, 255, 255, 0.9));
+    font-weight: var(--font-weight-medium, 500);
+    white-space: nowrap;
+    
+    /* Animation */
+    transition: all 0.3s ease;
+    opacity: 0.8;
+  }
+
+  .filter-status:hover {
+    opacity: 1;
+    background: var(--background-overlay-hover, rgba(0, 0, 0, 0.8));
+  }
+
+  .status-text {
+    line-height: 1.2;
   }
 
   .loading-state,

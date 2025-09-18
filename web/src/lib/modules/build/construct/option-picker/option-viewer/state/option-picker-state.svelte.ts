@@ -61,11 +61,30 @@ export function createOptionPickerState(config: OptionPickerStateConfig) {
       return [];
     }
     
-    // For now, we'll only use typeFilter since the service expects it
-    // In the future, we can extend the service to handle different filter types
-    const activeTypeFilter = sortMethod === 'type' ? typeFilter : undefined;
+    // Prepare filters based on current sort method
+    let activeTypeFilter: TypeFilter | undefined;
+    let activeEndPositionFilter: typeof endPositionFilter | undefined;
+    let activeReversalFilter: typeof reversalFilter | undefined;
     
-    return optionPickerService.getFilteredOptions(options, sortMethod, activeTypeFilter);
+    switch (sortMethod) {
+      case 'type':
+        activeTypeFilter = typeFilter;
+        break;
+      case 'endPosition':
+        activeEndPositionFilter = endPositionFilter;
+        break;
+      case 'reversals':
+        activeReversalFilter = reversalFilter;
+        break;
+    }
+    
+    return optionPickerService.getFilteredOptions(
+      options, 
+      sortMethod, 
+      activeTypeFilter, 
+      activeEndPositionFilter, 
+      activeReversalFilter
+    );
   });
 
   // Actions

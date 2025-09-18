@@ -14,7 +14,6 @@ import type { DeviceCapabilities } from "$shared";
 const displayState = $state({
   selectedLength: 16,
   columnCount: 2,
-  showBeatNumbers: true,
   transparentBackground: true,
 });
 
@@ -83,7 +82,7 @@ function setColumnCount(count: number) {
 }
 
 function setShowBeatNumbers(show: boolean) {
-  displayState.showBeatNumbers = show;
+  // Beat numbers are always shown, this function is kept for compatibility
 }
 
 function setTransparentBackground(transparent: boolean) {
@@ -179,23 +178,24 @@ function resetExportSettings() {
 // ============================================================================
 
 export {
-  // State
-  displayState,
-  exportSettings,
-  finishExport,
-  finishRegeneration,
-  layoutState,
-  progressState,
-  resetExportSettings,
-  setColumnCount,
-  setDeviceCapabilities,
-  // Actions
-  setSelectedLength,
-  setShowBeatNumbers,
-  setTransparentBackground,
-  startExport,
-  startRegeneration,
-  updateContainerSize,
-  updateExportProgress,
-  updateExportSetting,
+    // State
+    displayState,
+    exportSettings,
+    finishExport,
+    finishRegeneration,
+    layoutState,
+    progressState,
+    resetExportSettings,
+    setColumnCount,
+    setDeviceCapabilities,
+    // Actions
+    setSelectedLength,
+    setShowBeatNumbers,
+    setTransparentBackground,
+    startExport,
+    startRegeneration,
+    updateContainerSize,
+    updateExportProgress,
+    updateExportSetting
 };
+

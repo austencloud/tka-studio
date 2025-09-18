@@ -7,7 +7,6 @@
 <script lang="ts">
 	import type { PictographData } from "$shared";
 // Import fade transition for smooth switching
-  import { getSettings } from "$shared";
   import { fade } from "svelte/transition";
   import { OptionGrid, StartPositionPicker } from "../../construct";
 
@@ -18,21 +17,19 @@
     currentSequence?: PictographData[];
   }>();
 
-  let settings = $derived(getSettings());
 
-  // Transition functions that respect animation settings - same as main interface
+
+  // Transition functions - animations are always enabled
   const contentOut = (node: Element) => {
-    const animationsEnabled = settings.animationsEnabled !== false;
     return fade(node, {
-      duration: animationsEnabled ? 250 : 0,
+      duration: 250,
     });
   };
 
   const contentIn = (node: Element) => {
-    const animationsEnabled = settings.animationsEnabled !== false;
     return fade(node, {
-      duration: animationsEnabled ? 300 : 0,
-      delay: animationsEnabled ? 250 : 0, // Wait for out transition
+      duration: 300,
+      delay: 250, // Wait for out transition
     });
   };
 </script>
@@ -89,7 +86,8 @@
 
   .panel-content {
     flex: 1;
-    overflow: visible;
+    overflow: hidden; /* Changed from visible to hidden to enable proper scrolling */
+    min-height: 0; /* Important for flex child to enable scrolling */
   }
 
   .panel-content.transparent-scroll {

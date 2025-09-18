@@ -35,10 +35,9 @@ Features:
 
   // Sort method options
   const sortMethods = [
-    { value: "all", label: "Show All", description: "Display all options without grouping" },
-    { value: "type", label: "Group by Type", description: "Group options by movement type (1-6)" },
-    { value: "endPosition", label: "Group by End Position", description: "Group by final position (Alpha, Beta, Gamma)" },
-    { value: "reversals", label: "Group by Reversals", description: "Group by reversal count (Continuous, 1, 2)" },
+    { value: "type", label: "Filter by Type", description: "Group options by movement type (1-6)" },
+    { value: "endPosition", label: "Filter by End Position", description: "Group by final position (Alpha, Beta, Gamma)" },
+    { value: "reversals", label: "Filter by Reversals", description: "Group by reversal count (Continuous, 1, 2)" },
   ];
 
   // Secondary filter options based on sort method
@@ -143,8 +142,8 @@ Features:
           </div>
         </div>
 
-        <!-- Secondary Filters (only show if not "all") -->
-        {#if currentSortMethod !== "all" && secondaryFilters().length > 0}
+        <!-- Secondary Filters -->
+        {#if secondaryFilters().length > 0}
           <div class="filter-section">
             <h3 class="section-title">
               {#if currentSortMethod === "type"}

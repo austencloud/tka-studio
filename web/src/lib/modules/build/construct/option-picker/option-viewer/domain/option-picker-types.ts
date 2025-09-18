@@ -4,7 +4,7 @@
 export type OptionPickerState = 'loading' | 'ready' | 'error';
 
 // ===== Sort and Filter Types =====
-export type SortMethod = 'type' | 'endPosition' | 'reversals' | 'all';
+export type SortMethod = 'type' | 'endPosition' | 'reversals';
 
 // ===== Type Filter Types =====
 export type TypeFilter = {

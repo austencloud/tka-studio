@@ -15,25 +15,10 @@ import type { AppSettings } from "../domain";
 const SETTINGS_STORAGE_KEY = "tka-modern-web-settings";
 
 const DEFAULT_SETTINGS: AppSettings = {
-  theme: "dark",
   gridMode: GridMode.DIAMOND,
-  showBeatNumbers: true,
-  autoSave: true,
-  exportQuality: "high",
-  workbenchColumns: 5,
-  developerMode: true,
-  animationsEnabled: true,
   backgroundType: BackgroundType.NIGHT_SKY,
   backgroundQuality: "medium",
   backgroundEnabled: true,
-  visibility: {
-    TKA: true,
-    Reversals: true,
-    Positions: true,
-    Elemental: true,
-    VTG: true,
-    nonRadialPoints: true,
-  },
 } as AppSettings;
 
 // Initialize with loaded settings immediately (non-reactive)

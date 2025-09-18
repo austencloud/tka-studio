@@ -256,7 +256,6 @@ export class MotionQueryHandler implements IMotionQueryHandler {
 
           transformedPictographs.push(transformedPictograph);
 
-          console.log(`✅ MotionQueryHandler: Transformed option ${pictograph.letter} to start from Blue: ${endBlueOrientation}, Red: ${endRedOrientation}`);
         }
       }
 

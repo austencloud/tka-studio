@@ -24,7 +24,7 @@ export interface FadeTransitionParams {
 }
 
 export interface AnimationSettings {
-  animationsEnabled?: boolean;
+  // Animations are always enabled, this interface kept for compatibility
 }
 
 export interface TransitionResult {

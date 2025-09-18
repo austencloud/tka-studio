@@ -1,7 +1,6 @@
 <!-- SettingsDialog.svelte - Simplified main settings dialog -->
 <script lang="ts">
-  import { BackgroundType } from "$shared";
-  import { elasticOut, quintOut } from "svelte/easing";
+  import { quintOut } from "svelte/easing";
   import { fade, scale } from "svelte/transition";
   import {
     getSettings,
@@ -10,14 +9,11 @@
   } from "../../application/state/app-state.svelte";
   import SettingsSidebar from "./SettingsSidebar.svelte";
   import BackgroundTab from "./tabs/background/BackgroundTab.svelte";
-  import CodexExporterTab from "./tabs/CodexExporterTab.svelte";
-  import GeneralTab from "./tabs/GeneralTab.svelte";
   import PropTypeTab from "./tabs/PropTypeTab.svelte";
-  import VisibilityTab from "./tabs/VisibilityTab.svelte";
 
   // Current settings state with null safety
   let settings = $state(getSettings());
-  let activeTab = $state("General");
+  let activeTab = $state("PropType");
 
   // Check if settings are loaded
   const isSettingsLoaded = $derived(
@@ -27,18 +23,12 @@
       Object.keys(settings).length > 0
   );
 
-  // Simplified background settings for new BackgroundTab
-  const backgroundSettings = $derived(() => ({
-    backgroundType: settings?.backgroundType || BackgroundType.NIGHT_SKY,
-  }));
+
 
   // Simplified tab configuration
   const tabs = [
-    { id: "General", label: "General", icon: "⚙️" },
     { id: "PropType", label: "Prop Type", icon: "🏷️" },
-    { id: "Visibility", label: "Visibility", icon: "👁️" },
     { id: "Background", label: "Background", icon: "🌌" },
-    { id: "CodexExporter", label: "Codex Exporter", icon: "📤" },
   ];
 
   // Handle tab switching
@@ -46,13 +36,7 @@
     activeTab = tabId;
   }
 
-  // Handle settings updates from tabs
-  function handleSettingsUpdate(event: CustomEvent) {
-    const { key, value } = event.detail;
-    const newSettings = { ...settings, [key]: value };
-    updateSettings(newSettings);
-    settings = newSettings;
-  }
+
 
   // Adapter for modern prop-based updates
   function handlePropUpdate(event: { key: string; value: unknown }) {
@@ -64,17 +48,7 @@
     console.log("🔧 Settings updated locally in dialog:", settings);
   }
 
-  // Adapter for export handler
-  function handlePropExport() {
-    handleCodexExport(new CustomEvent("export"));
-  }
 
-  // Handle codex export request
-  function handleCodexExport(event: CustomEvent) {
-    const config = event.detail;
-    console.log("🚀 Codex export requested with config:", config);
-    // TODO: Implement actual export service call
-  }
 
   // Handle apply/save
   function handleApply() {
@@ -111,20 +85,19 @@
   aria-modal="true"
   aria-labelledby="settings-title"
   tabindex="-1"
-  in:fade={{ duration: 400, easing: quintOut }}
-  out:fade={{ duration: 300, easing: quintOut }}
+  in:fade={{ duration: 200, easing: quintOut }}
+  out:fade={{ duration: 200, easing: quintOut }}
 >
   <div
     class="settings-dialog"
     in:scale={{
-      duration: 500,
-      delay: 150,
-      start: 0.85,
+      duration: 250,
+      start: 0.95,
       opacity: 0,
-      easing: elasticOut
+      easing: quintOut
     }}
     out:scale={{
-      duration: 250,
+      duration: 200,
       start: 0.95,
       opacity: 0,
       easing: quintOut
@@ -133,8 +106,8 @@
     <!-- Dialog Header -->
     <div
       class="dialog-header"
-      in:fade={{ duration: 400, delay: 400, easing: quintOut }}
-      out:fade={{ duration: 200, easing: quintOut }}
+      in:fade={{ duration: 200, delay: 100, easing: quintOut }}
+      out:fade={{ duration: 150, easing: quintOut }}
     >
       <h2 id="settings-title">Settings</h2>
       <button
@@ -156,13 +129,13 @@
     <!-- Dialog Content -->
     <div
       class="dialog-content"
-      in:fade={{ duration: 400, delay: 500, easing: quintOut }}
-      out:fade={{ duration: 200, easing: quintOut }}
+      in:fade={{ duration: 200, delay: 150, easing: quintOut }}
+      out:fade={{ duration: 150, easing: quintOut }}
     >
       <!-- Sidebar Navigation -->
       <div
-        in:fade={{ duration: 400, delay: 600, easing: quintOut }}
-        out:fade={{ duration: 200, easing: quintOut }}
+        in:fade={{ duration: 200, delay: 200, easing: quintOut }}
+        out:fade={{ duration: 150, easing: quintOut }}
       >
         <SettingsSidebar {tabs} {activeTab} onTabSelect={switchTab} />
       </div>
@@ -170,23 +143,17 @@
       <!-- Content Area -->
       <main
         class="settings-content"
-        in:fade={{ duration: 400, delay: 700, easing: quintOut }}
-        out:fade={{ duration: 200, easing: quintOut }}
+        in:fade={{ duration: 200, delay: 250, easing: quintOut }}
+        out:fade={{ duration: 150, easing: quintOut }}
       >
         {#if !isSettingsLoaded}
           <div class="loading-state">
             <p>Loading settings...</p>
           </div>
-        {:else if activeTab === "General"}
-          <GeneralTab {settings} onUpdate={handlePropUpdate} />
         {:else if activeTab === "PropType"}
           <PropTypeTab {settings} onUpdate={handlePropUpdate} />
-        {:else if activeTab === "Visibility"}
-          <VisibilityTab {settings} onUpdate={handlePropUpdate} />
         {:else if activeTab === "Background"}
           <BackgroundTab {settings} onUpdate={handlePropUpdate} />
-        {:else if activeTab === "CodexExporter"}
-          <CodexExporterTab {settings} onUpdate={handlePropUpdate} />
         {/if}
       </main>
     </div>
@@ -194,8 +161,8 @@
     <!-- Dialog Footer -->
     <div
       class="dialog-footer"
-      in:fade={{ duration: 400, delay: 800, easing: quintOut }}
-      out:fade={{ duration: 200, easing: quintOut }}
+      in:fade={{ duration: 200, delay: 300, easing: quintOut }}
+      out:fade={{ duration: 150, easing: quintOut }}
     >
       <button class="cancel-button" onclick={handleClose}>Cancel</button>
       <button class="apply-button" onclick={handleApply}>Apply Settings</button>

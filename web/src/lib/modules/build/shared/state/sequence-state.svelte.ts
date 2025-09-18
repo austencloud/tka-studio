@@ -53,7 +53,7 @@ export function createSequenceState(
     error: null as string | null,
     selectedBeatIndex: null as number | null,
     selectedSequenceId: null as string | null,
-    showBeatNumbers: true,
+
     gridMode: GridMode.DIAMOND as GridMode,
     arrowPositions: new Map<string, ArrowPosition>(),
     arrowPositioningInProgress: false,
@@ -80,7 +80,7 @@ export function createSequenceState(
     return state.selectedSequenceId;
   }
   function getShowBeatNumbers() {
-    return state.showBeatNumbers;
+    return true; // Always show beat numbers
   }
   function getGridMode() {
     return state.gridMode;
@@ -251,7 +251,7 @@ export function createSequenceState(
     state.gridMode = mode;
   }
   function setShowBeatNumbers(show: boolean): void {
-    state.showBeatNumbers = show;
+    // Beat numbers are always shown, this function is kept for compatibility
   }
   function setArrowPositions(positions: Map<string, ArrowPosition>): void {
     state.arrowPositions = positions;

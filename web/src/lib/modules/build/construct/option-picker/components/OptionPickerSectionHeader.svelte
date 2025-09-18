@@ -79,13 +79,13 @@ Matches the desktop version exactly:
 <style>
   .section-header {
     width: 100%;
-    margin-bottom: 8px;
   }
 
   .header-layout {
     display: flex;
     align-items: center;
     width: 100%;
+    padding-bottom: 16px;
   }
 
   .stretch {

@@ -30,7 +30,6 @@
     { id: "Chicken", label: "Chicken", image: "/images/props/chicken.png" },
     { id: "Hand", label: "Hand", image: "/images/props/hand.svg" },
     { id: "Guitar", label: "Guitar", image: "/images/props/guitar.svg" },
-    { id: "Ukulele", label: "Ukulele", image: "/images/props/ukulele.svg" },
   ];
 
   let selectedPropType = $state(settings.propType || "Staff");
@@ -52,6 +51,15 @@
           class="prop-button"
           class:selected={selectedPropType === prop.id}
           onclick={() => selectPropType(prop.id)}
+          onkeydown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectPropType(prop.id);
+            }
+          }}
+          aria-label={`Select ${prop.label} prop type`}
+          aria-pressed={selectedPropType === prop.id}
+          title={`${prop.label} - Click to select this prop type`}
         >
           <div class="prop-image-container">
             <img
@@ -78,33 +86,38 @@
 
   .prop-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: clamp(12px, 1.5vw, 24px);
-    margin-top: clamp(16px, 2vw, 32px);
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: clamp(16px, 2vw, 24px);
+    margin-top: clamp(20px, 2.5vw, 32px);
+    width: 100%;
   }
 
-  /* Container queries for prop grid */
-  @container (min-width: 300px) {
-    .prop-grid {
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    }
-  }
-
-  @container (min-width: 500px) {
+  /* Container queries for better space utilization */
+  @container (min-width: 400px) {
     .prop-grid {
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: clamp(18px, 2.2vw, 26px);
     }
   }
 
-  @container (min-width: 700px) {
+  @container (min-width: 600px) {
     .prop-grid {
       grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: clamp(20px, 2.5vw, 28px);
     }
   }
 
-  @container (min-width: 900px) {
+  @container (min-width: 800px) {
     .prop-grid {
       grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 24px;
+    }
+  }
+
+  @container (min-width: 1000px) {
+    .prop-grid {
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 28px;
     }
   }
 
@@ -112,35 +125,47 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(6px, 0.8vw, 12px);
-    padding: clamp(8px, 1vw, 16px);
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
+    justify-content: center;
+    gap: clamp(8px, 1vw, 14px);
+    padding: clamp(12px, 1.5vw, 20px);
+    background: rgba(255, 255, 255, 0.06);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
     cursor: pointer;
-    transition: all var(--transition-fast);
-    color: rgba(255, 255, 255, 0.8);
-    min-height: clamp(70px, 8vw, 100px);
+    transition: all 0.2s ease-out;
+    color: rgba(255, 255, 255, 0.85);
+    min-height: clamp(90px, 10vw, 120px);
     aspect-ratio: 1;
   }
 
   .prop-button:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.35);
     color: #ffffff;
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
   .prop-button.selected {
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(99, 102, 241, 0.25);
     border-color: #6366f1;
     color: #ffffff;
-    box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+  }
+
+  .prop-button:focus-visible {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+    border-color: rgba(99, 102, 241, 0.6);
+  }
+
+  .prop-button:active {
+    transform: scale(0.98);
   }
 
   .prop-image-container {
-    width: clamp(28px, 4vw, 48px);
-    height: clamp(28px, 4vw, 48px);
+    width: clamp(40px, 5vw, 60px);
+    height: clamp(40px, 5vw, 60px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -150,23 +175,23 @@
   .prop-image {
     max-width: 100%;
     max-height: 100%;
-    filter: invert(1) brightness(0.9);
-    transition: filter var(--transition-fast);
+    opacity: 0.85;
+    transition: opacity 0.2s ease;
   }
 
   .prop-button:hover .prop-image {
-    filter: invert(1) brightness(1);
+    opacity: 1;
   }
 
   .prop-button.selected .prop-image {
-    filter: invert(1) brightness(1);
+    opacity: 1;
   }
 
   .prop-label {
-    font-size: clamp(10px, 1.2vw, 14px);
+    font-size: clamp(11px, 1.3vw, 15px);
     font-weight: 500;
     text-align: center;
-    line-height: 1.2;
+    line-height: 1.3;
     word-break: break-word;
   }
 

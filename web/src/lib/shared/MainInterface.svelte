@@ -45,19 +45,17 @@
     TYPES.IAnimationService
   ) as IAnimationService;
 
-  // Simple transition functions that respect animation settings
+  // Simple transition functions - animations are always enabled
   const tabOut = (node: Element) => {
-    const animationsEnabled = settings.animationsEnabled !== false;
     return animationService.createFadeTransition({
-      duration: animationsEnabled ? 250 : 0,
+      duration: 250,
     });
   };
 
   const tabIn = (node: Element) => {
-    const animationsEnabled = settings.animationsEnabled !== false;
     return animationService.createFadeTransition({
-      duration: animationsEnabled ? 300 : 0,
-      delay: animationsEnabled ? 250 : 0, // Wait for out transition
+      duration: 300,
+      delay: 250, // Wait for out transition
     });
   };
 
@@ -72,41 +70,15 @@
     { id: "animator", label: "Animator", icon: "🎯", isMain: false },
   ] as const;
 
-  // Filter tabs based on developer mode
+  // Show all tabs (developer mode is always enabled)
   const appTabs = $derived(() => {
-    if (settings.developerMode) {
-      // In developer mode, show main tabs first, then developer tabs
-      const mainTabs = allTabs.filter((tab) => tab.isMain);
-      const devTabs = allTabs.filter((tab) => !tab.isMain);
-      return [...mainTabs, ...devTabs];
-    } else {
-      // In consumer mode, only show main tabs
-      return allTabs.filter((tab) => tab.isMain);
-    }
+    // Show main tabs first, then developer tabs
+    const mainTabs = allTabs.filter((tab) => tab.isMain);
+    const devTabs = allTabs.filter((tab) => !tab.isMain);
+    return [...mainTabs, ...devTabs];
   });
 
-  // Handle developer mode changes - if user is on a dev tab and switches to consumer mode,
-  // redirect them to a main tab (but not during initial app load/restoration)
-  let hasInitialRestoreCompleted = false;
-
-  $effect(() => {
-    // Skip the first run to allow tab restoration to complete
-    if (!hasInitialRestoreCompleted) {
-      hasInitialRestoreCompleted = true;
-      return;
-    }
-
-    if (!settings.developerMode) {
-      const currentTabIsMain = allTabs.find(
-        (tab) => tab.id === activeTab
-      )?.isMain;
-      if (currentTabIsMain === false) {
-        // User is on a developer tab but developer mode is disabled
-        // Switch to the default main tab (construct)
-        switchTab("construct");
-      }
-    }
-  });
+  // Developer mode is always enabled, no need for tab switching logic
 
   function handleTabSelect(tabId: string) {
     switchTab(

@@ -24,12 +24,7 @@ export class ReversalDetectionService implements IReversalDetectionService {
       const currentBeat = sequence.beats[i];
       const previousBeats = sequence.beats.slice(0, i);
 
-      console.log(`🔍 ReversalDetectionService: Processing beat ${i + 1}:`, {
-        letter: currentBeat.pictographData?.letter,
-        isBlank: currentBeat.isBlank,
-        hasPictographData: !!currentBeat.pictographData,
-        fullPictographData: currentBeat.pictographData
-      });
+
 
       // Detect reversals for this beat
       const reversalInfo = this.detectReversal(previousBeats, currentBeat);
@@ -189,7 +184,6 @@ export class ReversalDetectionService implements IReversalDetectionService {
     // Use rotationDirection property (current structure) instead of propRotDir (legacy)
     const rotationDirection = motionData.rotationDirection;
 
-    console.log(`🔍 ReversalDetectionService: ${color} motion rotation direction:`, rotationDirection);
 
     return rotationDirection || null;
   }

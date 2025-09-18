@@ -24,12 +24,8 @@ Features:
 
   // Computed status text
   function getStatusText(): string {
-    if (currentSortMethod === "all") {
-      return `Showing All • ${optionCount} options`;
-    }
-    
     if (activeFilters.length === 0) {
-      return `Group by ${capitalize(currentSortMethod)} • ${optionCount} options`;
+      return `Filter by ${capitalize(currentSortMethod)} • ${optionCount} options`;
     }
     
     const filterText = activeFilters.join(", ");
@@ -53,10 +49,6 @@ Features:
       <span class="button-text">Filter</span>
     </div>
   </button>
-  
-  <div class="filter-status">
-    <span class="status-text">{getStatusText()}</span>
-  </div>
 </div>
 
 <style>
@@ -136,32 +128,6 @@ Features:
   .floating-filter-button:active {
     transform: translateY(0);
     box-shadow: var(--shadow-glass-active, 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2));
-  }
-
-  .filter-status {
-    /* Restore pointer events for hover/interactions */
-    pointer-events: auto;
-    
-    background: var(--background-overlay, rgba(0, 0, 0, 0.6));
-    backdrop-filter: blur(var(--glass-blur-sm, 10px));
-    -webkit-backdrop-filter: blur(var(--glass-blur-sm, 10px));
-    border-radius: var(--radius-md, 12px);
-    padding: var(--spacing-1_5, 6px) var(--spacing-3, 12px);
-    
-    /* Typography */
-    font-size: var(--text-xs, 12px);
-    color: var(--text-secondary, rgba(255, 255, 255, 0.9));
-    font-weight: var(--font-weight-medium, 500);
-    white-space: nowrap;
-    
-    /* Animation */
-    transition: all 0.3s ease;
-    opacity: 0.8;
-  }
-
-  .filter-status:hover {
-    opacity: 1;
-    background: var(--background-overlay-hover, rgba(0, 0, 0, 0.8));
   }
 
   .status-text {

@@ -1,6 +1,20 @@
 import type { PictographData } from "../../../../../../../shared";
 import type { SortMethod, TypeFilter } from "../../domain";
 
+// Type for end position filter
+type EndPositionFilter = {
+  alpha: boolean;
+  beta: boolean;
+  gamma: boolean;
+};
+
+// Type for reversal filter
+type ReversalFilter = {
+  continuous: boolean;
+  '1-reversal': boolean;
+  '2-reversals': boolean;
+};
+
 // ===== Service Interface =====
 export interface IOptionPickerService {
   /**
@@ -14,7 +28,9 @@ export interface IOptionPickerService {
   getFilteredOptions(
     options: PictographData[],
     sortMethod: SortMethod,
-    typeFilter?: TypeFilter
+    typeFilter?: TypeFilter,
+    endPositionFilter?: EndPositionFilter,
+    reversalFilter?: ReversalFilter
   ): PictographData[];
 
 

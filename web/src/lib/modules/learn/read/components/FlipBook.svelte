@@ -9,6 +9,7 @@ The main adorable flipbook component that displays PDF pages with beautiful page
   import type { FlipBookConfig } from "../domain";
   import type { IFlipBookService, IPDFService } from "../services/contracts";
   import { createReadState } from "../state";
+  import PDFLoader from "./PDFLoader.svelte";
 
   // Props
   const { 
@@ -233,16 +234,7 @@ The main adorable flipbook component that displays PDF pages with beautiful page
     justify-content: center;
   }
 
-  .loading-canvas {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 8px;
-    border: 2px dashed #dee2e6;
-  }
+
 
   .flipbook-controls {
     display: flex;

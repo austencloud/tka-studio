@@ -8,12 +8,12 @@
 import { injectable } from "inversify";
 import { cubicOut } from "svelte/easing";
 import type {
-  IAnimationService,
-  FoldTransitionParams,
-  SlideTransitionParams,
-  FadeTransitionParams,
-  AnimationSettings,
-  TransitionResult,
+    AnimationSettings,
+    FadeTransitionParams,
+    FoldTransitionParams,
+    IAnimationService,
+    SlideTransitionParams,
+    TransitionResult,
 } from "../contracts/IAnimationService";
 
 @injectable()
@@ -169,7 +169,7 @@ export class AnimationService implements IAnimationService {
       if (prefersReducedMotion) return false;
     }
 
-    // Respect app settings
-    return settings?.animationsEnabled !== false;
+    // Animations are always enabled
+    return true;
   }
 }

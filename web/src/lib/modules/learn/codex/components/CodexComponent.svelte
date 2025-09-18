@@ -141,7 +141,6 @@
     background: var(--desktop-bg-secondary); /* Transparent background */
     border-radius: var(--desktop-border-radius);
     border: 1px solid var(--desktop-border-secondary);
-    backdrop-filter: blur(10px);
     transition: all var(--desktop-transition-slow);
   }
 
