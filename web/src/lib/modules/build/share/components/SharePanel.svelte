@@ -2,7 +2,7 @@
 <script lang="ts">
   import { browser } from "$app/environment";
   import type { SequenceData } from "$shared";
-  import { resolve, TYPES } from "$shared";
+  import { createServiceResolver, TYPES } from "$shared";
   import type { ShareOptions } from "../domain";
   import type { IShareService } from "../services/contracts";
   import { createShareState } from "../state";
@@ -31,15 +31,19 @@
     currentSequence?: SequenceData | null;
   } = $props();
 
-  // Get the share service
-  const shareService = browser
-    ? resolve<IShareService>(TYPES.IShareService)
-    : null;
+  // HMR-safe service resolution
+  const shareServiceResolver = createServiceResolver<IShareService>(TYPES.IShareService);
 
-  // Create share state
-  const shareState = browser && shareService
-    ? createShareState(shareService)
-    : null;
+  // Create share state reactively when service becomes available
+  let shareState = $state<ReturnType<typeof createShareState> | null>(null);
+
+  $effect(() => {
+    if (shareServiceResolver.value) {
+      shareState = createShareState(shareServiceResolver.value);
+    } else {
+      shareState = null;
+    }
+  });
 
   // Auto-generate preview when sequence or options change
   $effect(() => {
@@ -48,21 +52,7 @@
     }
   });
 
-  // Sequence info for display
-  let sequenceInfo = $derived(() => {
-    if (!currentSequence) {
-      return "No sequence selected";
-    }
-
-    const beatCount = currentSequence.beats?.length || 0;
-    const word = currentSequence.word || "Untitled";
-
-    if (beatCount === 0) {
-      return `Sequence "${word}" is empty`;
-    }
-
-    return `Sequence "${word}" (${beatCount} beats)`;
-  });
+  // Removed unused sequenceInfo - was not being used anywhere in the component
 
   // Handle download
   async function handleDownload() {
@@ -161,10 +151,10 @@
     </div>
   </div>
 
-  <!-- Options Modal (All Devices) -->
+  <!-- Panel Options Overlay -->
   {#if showOptionsModal}
     <div
-      class="modal-overlay"
+      class="panel-overlay"
       role="dialog"
       aria-modal="true"
       tabindex="-1"
@@ -172,7 +162,7 @@
       onkeydown={(e) => e.key === 'Escape' && (showOptionsModal = false)}
     >
       <div
-        class="modal-content"
+        class="panel-modal-content"
         role="document"
       >
         <div class="modal-header">
@@ -329,6 +319,7 @@
     flex-direction: column;
     height: 100%;
     padding: 1rem;
+    position: relative;
   }
 
   .share-header {
@@ -558,6 +549,22 @@
     padding: 1rem;
   }
 
+  /* Panel-specific overlay for options modal */
+  .panel-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 100;
+    padding: 1rem;
+    border-radius: inherit;
+  }
+
   .modal-content {
     background: var(--bg-primary);
     border-radius: 12px;
@@ -568,6 +575,19 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
+  }
+
+  .panel-modal-content {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    width: 100%;
+    max-width: 100%;
+    max-height: calc(100% - 2rem);
+    overflow: hidden;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
   }
 
   .modal-header {

@@ -101,60 +101,36 @@
   }
 
   function openDropdown(tabId: string) {
-    const timestamp = Date.now();
-    console.log(`🔓 [${timestamp}] NavigationBar: openDropdown(${tabId})`);
-
     // Clear ALL pending timeouts to prevent race conditions
     if (openTimeout) {
-      console.log(`🚫 [${timestamp}] NavigationBar: Clearing openTimeout in openDropdown`);
       clearTimeout(openTimeout);
       openTimeout = null;
     }
     if (closeTimeout) {
-      console.log(`🚫 [${timestamp}] NavigationBar: Clearing closeTimeout in openDropdown`);
       clearTimeout(closeTimeout);
       closeTimeout = null;
     }
 
-    console.log(`📝 [${timestamp}] NavigationBar: Setting dropdown state - isOpen: true, tabId: ${tabId}`);
     dropdownState.isOpen = true;
     dropdownState.tabId = tabId;
-    console.log(`✅ [${timestamp}] NavigationBar: Dropdown opened for ${tabId}`);
   }
 
   function closeDropdown() {
-    const timestamp = Date.now();
-    console.log(`🔒 [${timestamp}] NavigationBar: closeDropdown()`);
-    console.log(`📝 [${timestamp}] NavigationBar: Setting dropdown state - isOpen: false, tabId: null`);
     dropdownState.isOpen = false;
     dropdownState.tabId = null;
-    console.log(`✅ [${timestamp}] NavigationBar: Dropdown closed`);
   }
 
   function handleMouseEnter(tabId: string) {
-    const timestamp = Date.now();
-    console.log(`🖱️ [${timestamp}] NavigationBar: handleMouseEnter(${tabId})`);
-
     if (!hasDropdown(tabId)) {
-      console.log(`❌ [${timestamp}] NavigationBar: ${tabId} has no dropdown, ignoring`);
       return;
     }
 
-    console.log(`🔍 [${timestamp}] NavigationBar: Current dropdown state:`, {
-      isOpen: dropdownState.isOpen,
-      tabId: dropdownState.tabId,
-      openTimeout: openTimeout !== null,
-      closeTimeout: closeTimeout !== null
-    });
-
     // Clear any existing timeouts
     if (openTimeout) {
-      console.log(`🚫 [${timestamp}] NavigationBar: Clearing existing openTimeout`);
       clearTimeout(openTimeout);
       openTimeout = null;
     }
     if (closeTimeout) {
-      console.log(`🚫 [${timestamp}] NavigationBar: Clearing existing closeTimeout`);
       clearTimeout(closeTimeout);
       closeTimeout = null;
     }
@@ -164,39 +140,23 @@
 
     // If dropdown is already open for a different tab, switch immediately
     if (dropdownState.isOpen && dropdownState.tabId !== tabId) {
-      console.log(`🔄 [${timestamp}] NavigationBar: Switching dropdown from ${dropdownState.tabId} to ${tabId} immediately`);
       openDropdown(tabId);
       return;
     }
 
     // Set timeout to open dropdown with ID tracking
     const timeoutId = ++currentOpenTimeoutId;
-    console.log(`⏰ [${timestamp}] NavigationBar: Setting openTimeout for ${tabId} (200ms delay) - ID: ${timeoutId}`);
     openTimeout = setTimeout(() => {
       // Check if this timeout is still valid
       if (timeoutId === currentOpenTimeoutId) {
-        console.log(`✅ [${Date.now()}] NavigationBar: openTimeout executed for ${tabId} - ID: ${timeoutId}`);
         openDropdown(tabId);
-      } else {
-        console.log(`🚫 [${Date.now()}] NavigationBar: openTimeout CANCELLED for ${tabId} - ID: ${timeoutId} (current: ${currentOpenTimeoutId})`);
       }
     }, 100);
   }
 
   function handleMouseLeave() {
-    const timestamp = Date.now();
-    console.log(`🖱️ [${timestamp}] NavigationBar: handleMouseLeave()`);
-
-    console.log(`🔍 [${timestamp}] NavigationBar: Current dropdown state:`, {
-      isOpen: dropdownState.isOpen,
-      tabId: dropdownState.tabId,
-      openTimeout: openTimeout !== null,
-      closeTimeout: closeTimeout !== null
-    });
-
     // Clear any pending open timeout
     if (openTimeout) {
-      console.log(`🚫 [${timestamp}] NavigationBar: Clearing pending openTimeout`);
       clearTimeout(openTimeout);
       openTimeout = null;
     }
@@ -206,14 +166,10 @@
 
     // Set timeout to close dropdown with ID tracking
     const timeoutId = ++currentCloseTimeoutId;
-    console.log(`⏰ [${timestamp}] NavigationBar: Setting closeTimeout (300ms delay) - ID: ${timeoutId}`);
     closeTimeout = setTimeout(() => {
       // Check if this timeout is still valid
       if (timeoutId === currentCloseTimeoutId) {
-        console.log(`✅ [${Date.now()}] NavigationBar: closeTimeout executed - ID: ${timeoutId}`);
         closeDropdown();
-      } else {
-        console.log(`🚫 [${Date.now()}] NavigationBar: closeTimeout CANCELLED - ID: ${timeoutId} (current: ${currentCloseTimeoutId})`);
       }
     }, 300);
   }
@@ -327,11 +283,8 @@
             role="region"
             aria-label="Dropdown menu container"
             onmouseenter={() => {
-              const timestamp = Date.now();
-              console.log(`🖱️ [${timestamp}] NavigationBar: Dropdown container mouseenter for ${tab.id}`);
               // Clear any pending close timeout when hovering over dropdown
               if (closeTimeout) {
-                console.log(`🚫 [${timestamp}] NavigationBar: Clearing closeTimeout on dropdown hover`);
                 clearTimeout(closeTimeout);
                 closeTimeout = null;
               }
@@ -339,8 +292,6 @@
               currentCloseTimeoutId++;
             }}
             onmouseleave={() => {
-              const timestamp = Date.now();
-              console.log(`🖱️ [${timestamp}] NavigationBar: Dropdown container mouseleave for ${tab.id}`);
               handleMouseLeave();
             }}
           >

@@ -22,14 +22,6 @@ colored according to the motion that is reversing between pictographs.
   // Only render if we have valid data and at least one reversal
   const shouldRender = $derived(() => {
     const render = hasValidData && (blueReversal || redReversal);
-    if (blueReversal || redReversal) {
-      console.log(`🎨 ReversalIndicators: Rendering decision:`, {
-        blueReversal,
-        redReversal,
-        hasValidData,
-        shouldRender: render
-      });
-    }
     return render;
   });
 

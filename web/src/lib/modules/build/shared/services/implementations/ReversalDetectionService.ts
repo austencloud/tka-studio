@@ -17,33 +17,20 @@ export class ReversalDetectionService implements IReversalDetectionService {
    * Process reversals for an entire sequence
    */
   processReversals(sequence: SequenceData): SequenceData {
-    console.log("🔄 ReversalDetectionService: Processing reversals for sequence", sequence.name, "with", sequence.beats.length, "beats");
     const processedBeats: BeatData[] = [];
 
     for (let i = 0; i < sequence.beats.length; i++) {
       const currentBeat = sequence.beats[i];
       const previousBeats = sequence.beats.slice(0, i);
 
-
-
       // Detect reversals for this beat
       const reversalInfo = this.detectReversal(previousBeats, currentBeat);
-
-      console.log(`🎯 ReversalDetectionService: Beat ${i + 1} reversal info:`, reversalInfo);
 
       // Apply reversal symbols to the beat
       const processedBeat = this.applyReversalSymbols(currentBeat, reversalInfo);
 
-      console.log(`📊 ReversalDetectionService: Final beat ${i + 1} data:`, {
-        blueReversal: processedBeat.blueReversal,
-        redReversal: processedBeat.redReversal,
-        letter: processedBeat.pictographData?.letter
-      });
-
       processedBeats.push(processedBeat);
     }
-
-    console.log("✅ ReversalDetectionService: Completed processing", processedBeats.length, "beats");
     
     return {
       ...sequence,
@@ -61,19 +48,12 @@ export class ReversalDetectionService implements IReversalDetectionService {
     const reversalInfo = { blueReversal: false, redReversal: false };
 
     if (!currentBeat.pictographData || currentBeat.isBlank) {
-      console.log("⚠️ ReversalDetectionService: Skipping beat - no pictograph data or is blank");
       return reversalInfo;
     }
 
     // Check blue motion reversal
     const lastBluePropRotDir = this._getLastValidPropRotDir(previousBeats, "blue");
     const currentBluePropRotDir = this._getPropRotDir(currentBeat, "blue");
-
-    console.log("🔵 Blue prop rotation:", {
-      last: lastBluePropRotDir,
-      current: currentBluePropRotDir,
-      isReversal: this._isReversal(lastBluePropRotDir, currentBluePropRotDir)
-    });
 
     if (this._isReversal(lastBluePropRotDir, currentBluePropRotDir)) {
       reversalInfo.blueReversal = true;
@@ -82,12 +62,6 @@ export class ReversalDetectionService implements IReversalDetectionService {
     // Check red motion reversal
     const lastRedPropRotDir = this._getLastValidPropRotDir(previousBeats, "red");
     const currentRedPropRotDir = this._getPropRotDir(currentBeat, "red");
-
-    console.log("🔴 Red prop rotation:", {
-      last: lastRedPropRotDir,
-      current: currentRedPropRotDir,
-      isReversal: this._isReversal(lastRedPropRotDir, currentRedPropRotDir)
-    });
 
     if (this._isReversal(lastRedPropRotDir, currentRedPropRotDir)) {
       reversalInfo.redReversal = true;
@@ -183,7 +157,6 @@ export class ReversalDetectionService implements IReversalDetectionService {
 
     // Use rotationDirection property (current structure) instead of propRotDir (legacy)
     const rotationDirection = motionData.rotationDirection;
-
 
     return rotationDirection || null;
   }

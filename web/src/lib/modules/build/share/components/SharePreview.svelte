@@ -79,28 +79,6 @@
 
 
 
-  .preview-status {
-    font-size: 0.8rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-weight: 500;
-  }
-
-  .preview-status.generating {
-    background: var(--warning-bg);
-    color: var(--warning-text);
-  }
-
-  .preview-status.error {
-    background: var(--error-bg);
-    color: var(--error-text);
-  }
-
-  .preview-status.ready {
-    background: var(--success-bg);
-    color: var(--success-text);
-  }
-
   .preview-content {
     flex: 1;
     display: flex;

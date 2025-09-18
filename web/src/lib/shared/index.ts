@@ -16,6 +16,7 @@ export * from "./persistence";
 export * from "./pictograph";
 export * from "./settings";
 export * from "./theme";
+export * from "./utils";
 export * from "./validation";
 
 // === MODULE EXPORTS ===
