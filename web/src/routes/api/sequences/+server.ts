@@ -42,7 +42,11 @@ export async function GET() {
 
         try {
           const files = await readdir(sequenceDir);
-          const pngFile = files.find((file) => file.endsWith("_ver1.png"));
+          // Try version 1 first, then version 2
+          let pngFile = files.find((file) => file.endsWith("_ver1.png"));
+          if (!pngFile) {
+            pngFile = files.find((file) => file.endsWith("_ver2.png"));
+          }
 
           if (pngFile) {
             sequences.push({

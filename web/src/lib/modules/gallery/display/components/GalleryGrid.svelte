@@ -108,16 +108,25 @@
   }
 
   /* Container queries for responsive columns based on available width */
-  @container (max-width: 399px) {
+  @container (max-width: 480px) {
     .sequences-grid.grid-view {
-      grid-template-columns: repeat(1, 1fr); /* 1 column for very narrow containers */
+      grid-template-columns: repeat(1, 1fr); /* 1 column for mobile phones */
+      gap: var(--spacing-sm);
+    }
+  }
+
+  /* Tablet breakpoint */
+  @container (min-width: 481px) and (max-width: 768px) {
+    .sequences-grid.grid-view {
+      grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
       gap: var(--spacing-md);
     }
   }
 
-  @container (min-width: 1000px) {
+  /* Desktop breakpoints */
+  @container (min-width: 769px) and (max-width: 1199px) {
     .sequences-grid.grid-view {
-      grid-template-columns: repeat(3, 1fr); /* 3 columns for medium width */
+      grid-template-columns: repeat(3, 1fr); /* 3 columns for medium desktop */
     }
   }
 

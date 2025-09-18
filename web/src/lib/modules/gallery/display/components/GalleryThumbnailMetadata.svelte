@@ -191,27 +191,58 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
     border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
-  /* Responsive design */
-  @media (max-width: 768px) {
+  /* Mobile-first responsive design with readable font sizes */
+  @media (max-width: 480px) {
     .metadata-section {
-      padding: 8px;
+      padding: 12px;
     }
 
     .sequence-title {
-      font-size: 0.875rem;
+      font-size: 1rem;
+      line-height: 1.3;
     }
 
     .difficulty-badge {
-      font-size: 0.5rem;
-      padding: 1px 4px;
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 6px;
     }
 
     .length-info {
-      font-size: 0.625rem;
+      font-size: 0.875rem;
     }
 
     .extended-info {
-      font-size: 0.625rem;
+      font-size: 0.75rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      padding: 4px 8px;
+    }
+  }
+
+  /* Tablet responsive design */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .metadata-section {
+      padding: 10px;
+    }
+
+    .sequence-title {
+      font-size: 0.9375rem;
+    }
+
+    .difficulty-badge {
+      font-size: 0.6875rem;
+      padding: 3px 6px;
+    }
+
+    .length-info {
+      font-size: 0.75rem;
+    }
+
+    .extended-info {
+      font-size: 0.6875rem;
     }
   }
 </style>

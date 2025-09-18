@@ -78,10 +78,36 @@ Provides layout matching legacy desktop app:
     background: rgba(255, 255, 255, 0.01);
   }
 
-  /* Responsive design */
-  @media (max-width: 768px) {
+  /* Mobile-first responsive design */
+  @media (max-width: 480px) {
+    .gallery-layout {
+      height: 100vh;
+      height: 100dvh; /* Dynamic viewport height for mobile */
+    }
+
+    .top-section {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
     .main-content {
-      flex-direction: column;
+      flex-direction: row; /* Keep sidebar on mobile for navigation */
+      overflow: hidden;
+    }
+
+    .center-panel {
+      padding: 0;
+    }
+  }
+
+  /* Tablet responsive design */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .top-section {
+      padding: 14px;
+    }
+
+    .main-content {
+      flex-direction: row;
     }
   }
 </style>

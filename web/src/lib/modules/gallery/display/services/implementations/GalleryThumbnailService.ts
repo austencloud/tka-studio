@@ -17,24 +17,38 @@ export class GalleryThumbnailService implements IGalleryThumbnailService {
   getThumbnailUrl(_sequenceId: string, thumbnailPath: string): string {
     // Handle different thumbnail path formats
 
-    // If path starts with /gallery/, it's already a complete path - return as-is
+    // If path starts with /gallery/, it's already a complete path - return optimized version
     if (thumbnailPath.startsWith("/gallery/")) {
-      return thumbnailPath;
+      return this.getOptimizedUrl(thumbnailPath);
     }
 
-    // If path starts with /, it's already absolute - return as-is
+    // If path starts with /, it's already absolute - return optimized version
     if (thumbnailPath.startsWith("/")) {
-      return thumbnailPath;
+      return this.getOptimizedUrl(thumbnailPath);
     }
 
-    // If thumbnailPath is just a filename, construct the full URL using legacy browse_thumbnails
+    // If thumbnailPath is just a filename, construct the full URL and optimize
     if (!thumbnailPath.includes("/")) {
-      return `${this.baseUrl}/${thumbnailPath}`;
+      const fullUrl = `${this.baseUrl}/${thumbnailPath}`;
+      return this.getOptimizedUrl(fullUrl);
     }
 
-    // If thumbnailPath is relative, prepend base URL (legacy support)
-    return `${this.baseUrl}/${thumbnailPath}`;
+    // If thumbnailPath is relative, prepend base URL and optimize
+    const fullUrl = `${this.baseUrl}/${thumbnailPath}`;
+    return this.getOptimizedUrl(fullUrl);
   }
+
+  /**
+   * Get optimized image URL - WebP-first approach (clean, no redundancy)
+   */
+  private getOptimizedUrl(originalUrl: string): string {
+    // Always serve WebP first (97% browser support)
+    // Component handles PNG fallback if WebP fails to load
+    const webpUrl = originalUrl.replace(/\.png$/i, '.webp');
+    return webpUrl;
+  }
+
+
 
   async preloadThumbnail(
     sequenceId: string,
@@ -109,11 +123,14 @@ export class GalleryThumbnailService implements IGalleryThumbnailService {
 
   async getThumbnailsForSequence(sequenceId: string): Promise<string[]> {
     // This would ideally scan the thumbnail directory for files matching the sequence
-    // For now, return common thumbnail patterns
+    // For now, return common thumbnail patterns, trying both ver1 and ver2
     const commonPatterns = [
       `${sequenceId}_ver1.png`,
       `${sequenceId.toUpperCase()}_ver1.png`,
       `${sequenceId.toLowerCase()}_ver1.png`,
+      `${sequenceId}_ver2.png`,
+      `${sequenceId.toUpperCase()}_ver2.png`,
+      `${sequenceId.toLowerCase()}_ver2.png`,
     ];
 
     const validThumbnails: string[] = [];
@@ -132,16 +149,15 @@ export class GalleryThumbnailService implements IGalleryThumbnailService {
     thumbnailPath: string,
     targetWidth?: number
   ): string {
-    // For now, return the original URL
-    // In the future, could implement server-side resizing or WebP conversion
-    const baseUrl = this.getThumbnailUrl(sequenceId, thumbnailPath);
+    // Get the optimized URL with WebP support
+    const optimizedUrl = this.getThumbnailUrl(sequenceId, thumbnailPath);
 
     if (targetWidth) {
-      // Could append query parameters for resizing if server supports it
-      // return `${baseUrl}?w=${targetWidth}`;
+      // Future enhancement: Could append query parameters for resizing if server supports it
+      // return `${optimizedUrl}?w=${targetWidth}`;
     }
 
-    return baseUrl;
+    return optimizedUrl;
   }
 
   // Private helper methods
@@ -194,11 +210,14 @@ export class GalleryThumbnailService implements IGalleryThumbnailService {
   private async getThumbnailPathForSequence(
     sequenceId: string
   ): Promise<string | null> {
-    // Try common thumbnail naming patterns
+    // Try common thumbnail naming patterns, trying both ver1 and ver2
     const patterns = [
       `${sequenceId}_ver1.png`,
       `${sequenceId.toUpperCase()}_ver1.png`,
       `${sequenceId.toLowerCase()}_ver1.png`,
+      `${sequenceId}_ver2.png`,
+      `${sequenceId.toUpperCase()}_ver2.png`,
+      `${sequenceId.toLowerCase()}_ver2.png`,
     ];
 
     for (const pattern of patterns) {

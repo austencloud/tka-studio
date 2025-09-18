@@ -189,21 +189,41 @@ Matches the desktop Python app navigation pattern exactly.
     background: rgba(255, 255, 255, 0.3);
   }
 
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
+  /* Mobile-first responsive adjustments */
+  @media (max-width: 480px) {
     .simple-navigation-sidebar {
-      width: clamp(70px, 15vw, 120px);
-      padding: clamp(0.5rem, 2vw, 1rem);
+      width: clamp(80px, 20vw, 140px);
+      padding: 1rem 0.75rem;
     }
 
     .header-text {
-      font-size: clamp(0.8rem, 3vw, 1rem);
+      font-size: 1rem;
+      padding: 0.5rem;
     }
 
     .nav-button {
-      padding: clamp(0.6rem, 2vw, 0.8rem) clamp(0.4rem, 1.5vw, 0.6rem);
-      font-size: clamp(1rem, 3.5vw, 1.2rem);
-      min-height: clamp(44px, 10vw, 52px);
+      padding: 0.75rem 0.5rem;
+      font-size: 1rem;
+      min-height: 44px;
+      border-radius: 8px;
+    }
+  }
+
+  /* Tablet responsive adjustments */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .simple-navigation-sidebar {
+      width: clamp(75px, 18vw, 130px);
+      padding: 0.875rem 0.625rem;
+    }
+
+    .header-text {
+      font-size: 0.9375rem;
+    }
+
+    .nav-button {
+      padding: 0.6875rem 0.5rem;
+      font-size: 1.0625rem;
+      min-height: 40px;
     }
   }
 </style>

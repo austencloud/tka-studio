@@ -33,13 +33,17 @@ Replaces GalleryThumbnailImage.svelte with:
   let imageError = $state(false);
   let shouldLoad = $state(priority); // Load immediately if priority
 
-  // ✅ DERIVED RUNES: Computed thumbnail URL
+  // ✅ DERIVED RUNES: Computed thumbnail URL with fallback
   let thumbnailUrl = $derived.by(() => {
     const firstThumbnail = thumbnails[0];
     return firstThumbnail
       ? thumbnailService.getThumbnailUrl(sequenceId, firstThumbnail)
       : null;
   });
+
+  // Fallback: For the rare case where WebP fails, we'll show a placeholder
+  // Since we removed PNG files for clean codebase, 97% get WebP, 3% get graceful degradation
+  let showPlaceholder = $state(false);
 
   // ✅ EFFECT: Set up intersection observer for lazy loading
   $effect(() => {
@@ -73,7 +77,19 @@ Replaces GalleryThumbnailImage.svelte with:
     imageError = false;
   }
 
-  function handleImageError() {
+  function handleImageError(event: Event) {
+    const img = event.target as HTMLImageElement;
+
+    // WebP failed - show graceful placeholder for the 3% of users with unsupported browsers
+    if (img.src.endsWith('.webp')) {
+      console.log(`WebP not supported for ${sequenceWord}, showing placeholder`);
+      showPlaceholder = true;
+      imageError = true;
+      imageLoaded = false;
+      return;
+    }
+
+    // Other error - show error state
     imageError = true;
     imageLoaded = false;
   }
@@ -117,8 +133,14 @@ Replaces GalleryThumbnailImage.svelte with:
   <!-- Error state or no thumbnail -->
   {#if imageError || !thumbnailUrl}
     <div class="error-placeholder">
-      <div class="placeholder-icon">📄</div>
-      <div class="placeholder-text">{sequenceWord}</div>
+      {#if showPlaceholder}
+        <div class="webp-unsupported-icon">🖼️</div>
+        <div class="webp-unsupported-text">{sequenceWord}</div>
+        <div class="webp-unsupported-subtitle">WebP not supported</div>
+      {:else}
+        <div class="placeholder-icon">📄</div>
+        <div class="placeholder-text">{sequenceWord}</div>
+      {/if}
     </div>
   {/if}
 </div>
@@ -238,6 +260,28 @@ Replaces GalleryThumbnailImage.svelte with:
     text-align: center;
     max-width: 80%;
     word-break: break-word;
+  }
+
+  .webp-unsupported-icon {
+    font-size: 2rem;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+
+  .webp-unsupported-text {
+    font-size: 0.875rem;
+    color: #475569;
+    font-weight: 600;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  .webp-unsupported-subtitle {
+    font-size: 0.625rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+    font-style: italic;
+    text-align: center;
   }
 
   /* Responsive design */

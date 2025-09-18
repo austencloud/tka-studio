@@ -1,7 +1,7 @@
 /**
  * Unified PNG Metadata Extractor for TKA Sequences
  *
- * This class extracts ALL sequence metadata from a single JSON structure
+ * This class extracts ALL sequence metadata from the unified JSON structure
  * stored in the "metadata" tEXt chunk of PNG files. This includes:
  * - Sequence information (author, level, start position, etc.)
  * - Beat data (letters, motion types, attributes)
@@ -113,8 +113,15 @@ export class PngMetadataExtractor {
   static async extractSequenceMetadata(
     sequenceName: string
   ): Promise<Record<string, unknown>[]> {
-    const filePath = `/gallery/${sequenceName}/${sequenceName}_ver1.png`;
-    return this.extractMetadata(filePath);
+    // Try version 1 first, then version 2 if that fails
+    let filePath = `/gallery/${sequenceName}/${sequenceName}_ver1.png`;
+    try {
+      return await this.extractMetadata(filePath);
+    } catch (error) {
+      // Try version 2 if version 1 doesn't exist
+      filePath = `/gallery/${sequenceName}/${sequenceName}_ver2.png`;
+      return this.extractMetadata(filePath);
+    }
   }
 
   /**
@@ -126,14 +133,20 @@ export class PngMetadataExtractor {
     sequenceName: string
   ): Promise<{sequence: Record<string, unknown>[], date_added?: string, is_favorite?: boolean}> {
     try {
-      const filePath = `/gallery/${sequenceName}/${sequenceName}_ver1.png`;
+      // Try version 1 first, then version 2 if that fails
+      let filePath = `/gallery/${sequenceName}/${sequenceName}_ver1.png`;
+      let response = await fetch(filePath);
       
-      // Fetch the PNG file
-      const response = await fetch(filePath);
       if (!response.ok) {
-        throw new Error(
-          `Failed to fetch PNG file: ${response.status} ${response.statusText}`
-        );
+        // Try version 2 if version 1 doesn't exist
+        filePath = `/gallery/${sequenceName}/${sequenceName}_ver2.png`;
+        response = await fetch(filePath);
+        
+        if (!response.ok) {
+          throw new Error(
+            `Failed to fetch PNG file: ${response.status} ${response.statusText}`
+          );
+        }
       }
 
       const arrayBuffer = await response.arrayBuffer();

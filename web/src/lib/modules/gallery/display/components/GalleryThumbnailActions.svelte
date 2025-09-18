@@ -140,18 +140,43 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
     border-color: rgba(59, 130, 246, 0.3);
   }
 
-  /* Responsive design */
-  @media (max-width: 768px) {
+  /* Mobile-first responsive design with proper touch targets */
+  @media (max-width: 480px) {
     .favorite-button {
-      width: 28px;
-      height: 28px;
-      font-size: 0.875rem;
+      width: 44px;
+      height: 44px;
+      font-size: 1.125rem;
+      top: 4px;
+      right: 4px;
     }
 
     .action-button {
-      width: 24px;
-      height: 24px;
-      font-size: 0.625rem;
+      width: 44px;
+      height: 44px;
+      font-size: 0.875rem;
+    }
+
+    .action-buttons {
+      opacity: 1;
+      transform: translateY(0);
+      bottom: 4px;
+      right: 4px;
+      gap: 8px;
+    }
+  }
+
+  /* Tablet responsive design */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .favorite-button {
+      width: 36px;
+      height: 36px;
+      font-size: 1rem;
+    }
+
+    .action-button {
+      width: 36px;
+      height: 36px;
+      font-size: 0.75rem;
     }
 
     .action-buttons {

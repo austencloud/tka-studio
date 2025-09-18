@@ -134,18 +134,35 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
     flex-shrink: 0;
   }
 
-  /* Responsive design */
-  @media (max-width: 768px) {
+  /* Mobile-first responsive design */
+  @media (max-width: 480px) {
     .grid-view {
-      min-height: 180px;
+      min-height: 200px;
+      border-radius: 12px;
     }
 
     .list-view {
-      height: 100px;
+      height: 120px;
+      border-radius: 8px;
     }
 
     .list-view :global(.image-container) {
-      width: 100px;
+      width: 120px;
+    }
+  }
+
+  /* Tablet responsive design */
+  @media (min-width: 481px) and (max-width: 768px) {
+    .grid-view {
+      min-height: 190px;
+    }
+
+    .list-view {
+      height: 110px;
+    }
+
+    .list-view :global(.image-container) {
+      width: 110px;
     }
   }
 </style>
