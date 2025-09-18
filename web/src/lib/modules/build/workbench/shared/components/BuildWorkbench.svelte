@@ -48,7 +48,7 @@
 
   // Advanced button actions (to be wired to services later)
   function handleAddToDictionary() {
-    console.log("Add to Dictionary - to be implemented");
+    console.log("Add to Gallery - to be implemented");
   }
 
   function handleSpotlight() {

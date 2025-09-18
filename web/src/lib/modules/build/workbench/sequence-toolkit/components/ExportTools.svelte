@@ -1,7 +1,7 @@
 <!--
 ExportTools.svelte - Sequence Export Tools
 
-Handles sequence export operations like copy JSON and add to dictionary.
+Handles sequence export operations like copy JSON and add to gallery.
 Pure presentation component that delegates to sequence export services.
 -->
 <script lang="ts">
@@ -48,7 +48,7 @@ Pure presentation component that delegates to sequence export services.
   <button
     type="button"
     class="tool-btn"
-    title="Add to Dictionary"
+    title="Add to Gallery"
     disabled={!hasSequence || disabled}
     onclick={() => handleWithSequence(onAddToDictionary)}
   >

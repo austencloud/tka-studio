@@ -12,13 +12,13 @@ import type { IGalleryThumbnailService } from "../contracts";
 export class GalleryThumbnailService implements IGalleryThumbnailService {
   private thumbnailCache = new Map<string, Promise<void>>();
   private metadataCache = new Map<string, { width: number; height: number }>();
-  private baseUrl = "/dictionary";
+  private baseUrl = "/gallery";
 
   getThumbnailUrl(_sequenceId: string, thumbnailPath: string): string {
     // Handle different thumbnail path formats
 
-    // If path starts with /dictionary/, it's already a complete path - return as-is
-    if (thumbnailPath.startsWith("/dictionary/")) {
+    // If path starts with /gallery/, it's already a complete path - return as-is
+    if (thumbnailPath.startsWith("/gallery/")) {
       return thumbnailPath;
     }
 

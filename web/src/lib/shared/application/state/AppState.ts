@@ -5,7 +5,6 @@
  * Clean and focused on UI state only.
  */
 
-import { AppTheme } from "./app-state-enums";
 import type { IAppState } from "./IAppState";
 
 // import type {
@@ -18,7 +17,6 @@ export class AppState implements IAppState {
   #isFullScreen = $state<boolean>(false);
   #isTransitioning = $state<boolean>(false);
   #showSettings = $state<boolean>(false);
-  #theme = $state<AppTheme>(AppTheme.DARK);
 
   // ============================================================================
   // GETTERS (Reactive)
@@ -36,9 +34,6 @@ export class AppState implements IAppState {
     return this.#showSettings;
   }
 
-  get theme() {
-    return this.#theme;
-  }
 
   // Derived state
   get isReady() {
@@ -74,9 +69,7 @@ export class AppState implements IAppState {
     this.#showSettings = false;
   }
 
-  setTheme(theme: AppTheme): void {
-    this.#theme = theme;
-  }
+
 
   toggleSettingsDialog(): void {
     this.#showSettings = !this.#showSettings;
@@ -91,7 +84,6 @@ export class AppState implements IAppState {
       isFullScreen: this.#isFullScreen,
       isTransitioning: this.#isTransitioning,
       showSettings: this.#showSettings,
-      theme: this.#theme,
     };
   }
 
@@ -99,7 +91,6 @@ export class AppState implements IAppState {
     this.#isFullScreen = false;
     this.#isTransitioning = false;
     this.#showSettings = false;
-    this.#theme = AppTheme.DARK;
   }
 }
 

@@ -25,7 +25,6 @@ import {
 } from "../../inversify";
 import { TYPES } from "../../inversify/types";
 import { GridMode } from "../../pictograph";
-import { AppTheme } from "./app-state-enums";
 
 // Lazy service resolution - only resolve when needed
 let settingsService: ISettingsService | null = null;
@@ -223,9 +222,6 @@ export function getShowSettings() {
   return uiState.showSettings;
 }
 
-export function getTheme() {
-  return AppTheme.DARK; // Always use dark theme
-}
 
 export function getIsFullScreen() {
   return uiState.isFullScreen;
@@ -474,7 +470,6 @@ export function createPerformanceSnapshot(): PerformanceSnapshot {
       isFullScreen: uiState.isFullScreen,
       isTransitioning: uiState.isTransitioning,
       showSettings: uiState.showSettings,
-      theme: AppTheme.DARK,
     },
     memoryUsage: performanceMetrics.value.memoryUsage,
   };

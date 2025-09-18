@@ -11,9 +11,9 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export async function GET() {
   try {
     const staticDir = join(__dirname, "../../../../static");
-    const dictionaryDir = join(staticDir, "dictionary");
+    const dictionaryDir = join(staticDir, "gallery");
 
-    // Read all directories in the dictionary
+    // Read all directories in the gallery
     const sequenceDirectories = await readdir(dictionaryDir, {
       withFileTypes: true,
     });
@@ -47,7 +47,7 @@ export async function GET() {
           if (pngFile) {
             sequences.push({
               name: pngFile,
-              path: `/dictionary/${sequenceName}/${pngFile}`,
+              path: `/gallery/${sequenceName}/${pngFile}`,
               word: sequenceName,
             });
           }
@@ -59,7 +59,7 @@ export async function GET() {
     }
 
     // Note: Removed thumbnails directory scanning as it was including fake/test sequences
-    // Only use real sequences from dictionary directories
+    // Only use real sequences from gallery directories
 
     // Sort by word name
     sequences.sort((a, b) => a.word.localeCompare(b.word));

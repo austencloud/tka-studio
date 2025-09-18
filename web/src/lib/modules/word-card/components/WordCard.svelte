@@ -7,11 +7,11 @@
     sequence: SequenceData;
   }>();
 
-  // Generate sequence image path - load from dictionary
+  // Generate sequence image path - load from gallery
   let imagePath = $derived(() => {
-    // Use the actual dictionary path structure: /dictionary/{word}/{word}_ver1.png
+    // Use the actual gallery path structure: /gallery/{word}/{word}_ver1.png
     const word = sequence.name;
-    return `/dictionary/${word}/${word}_ver1.png`;
+    return `/gallery/${word}/${word}_ver1.png`;
   });
 
   function handleCardClick() {

@@ -113,7 +113,7 @@ export class PngMetadataExtractor {
   static async extractSequenceMetadata(
     sequenceName: string
   ): Promise<Record<string, unknown>[]> {
-    const filePath = `/dictionary/${sequenceName}/${sequenceName}_ver1.png`;
+    const filePath = `/gallery/${sequenceName}/${sequenceName}_ver1.png`;
     return this.extractMetadata(filePath);
   }
 
@@ -126,7 +126,7 @@ export class PngMetadataExtractor {
     sequenceName: string
   ): Promise<{sequence: Record<string, unknown>[], date_added?: string, is_favorite?: boolean}> {
     try {
-      const filePath = `/dictionary/${sequenceName}/${sequenceName}_ver1.png`;
+      const filePath = `/gallery/${sequenceName}/${sequenceName}_ver1.png`;
       
       // Fetch the PNG file
       const response = await fetch(filePath);

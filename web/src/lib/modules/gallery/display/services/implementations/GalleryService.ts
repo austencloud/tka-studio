@@ -22,7 +22,7 @@ export class GalleryService implements IGalleryService {
   private isValidSequenceMetadata(sequence: SequenceData): boolean {
     const word = sequence.word || sequence.name || sequence.id || "";
 
-    // Basic validation for real dictionary sequences
+    // Basic validation for real gallery sequences
     return (
       word.length > 0 &&
       word.length <= 200 && // Increased limit for complex sequences
@@ -80,10 +80,10 @@ export class GalleryService implements IGalleryService {
       return validSequences;
     } catch (error) {
       console.warn(
-        "❌ Failed to load sequence index, generating from dictionary:",
+        "❌ Failed to load sequence index, generating from gallery:",
         error
       );
-      // Fallback to scanning dictionary folders
+      // Fallback to scanning gallery folders
       const sequences = await this.generateSequenceIndex();
       console.log(
         "🔧 Generated sequences as fallback:",
@@ -547,7 +547,7 @@ export class GalleryService implements IGalleryService {
     }
 
     console.log(
-      `📦 Processed ${sequences.length} real sequences from dictionary`
+      `📦 Processed ${sequences.length} real sequences from gallery`
     );
     console.log(
       "📋 Sample sequence words:",
@@ -558,20 +558,20 @@ export class GalleryService implements IGalleryService {
   }
 
   private async generateSequenceIndex(): Promise<SequenceData[]> {
-    console.log("🔧 Scanning dictionary folder to generate sequence index...");
+    console.log("🔧 Scanning gallery folder to generate sequence index...");
 
     try {
-      // Scan the dictionary folder for real sequences
+      // Scan the gallery folder for real sequences
       const sequences: SequenceData[] = [];
 
       // This is a fallback method - in production, you should regenerate the sequence-index.json
       // For now, return empty array to force using the real sequence-index.json
       console.warn(
-        "⚠️ Dictionary scanning not implemented - please ensure sequence-index.json is up to date"
+        "⚠️ Gallery scanning not implemented - please ensure sequence-index.json is up to date"
       );
       return sequences;
     } catch (error) {
-      console.error("❌ Failed to scan dictionary folder:", error);
+      console.error("❌ Failed to scan gallery folder:", error);
       return [];
     }
   }

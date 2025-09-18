@@ -130,8 +130,8 @@ export const TOOL_OPERATIONS: Record<ToolOperationType, ToolOperationMetadata> =
   },
   [ToolOperationType.ADD_TO_DICTIONARY]: {
     type: ToolOperationType.ADD_TO_DICTIONARY,
-    name: "Add to Dictionary",
-    description: "Add sequence to dictionary",
+    name: "Add to Gallery",
+    description: "Add sequence to gallery",
     icon: "📚",
     isDestructive: false,
     requiresConfirmation: false,

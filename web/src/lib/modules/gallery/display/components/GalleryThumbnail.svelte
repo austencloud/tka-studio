@@ -19,6 +19,7 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
     thumbnailService,
     viewMode = "grid",
     isFavorite = false,
+    priority = false, // For above-the-fold images
     onFavoriteToggle = () => {},
     onAction = () => {},
   } = $props<{
@@ -26,6 +27,7 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
     thumbnailService: IGalleryThumbnailService;
     viewMode?: "grid" | "list";
     isFavorite?: boolean;
+    priority?: boolean; // Load immediately if true
     onFavoriteToggle?: (sequenceId: string) => void;
     onAction?: (action: string, sequence: SequenceData) => void;
   }>();
@@ -61,6 +63,7 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
     sequenceWord={sequence.word}
     thumbnails={sequence.thumbnails}
     {thumbnailService}
+    {priority}
   />
 
   <!-- Action buttons component -->

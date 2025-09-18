@@ -46,11 +46,12 @@
             class:list-view={viewMode === "list"}
             class:grid-view={viewMode === "grid"}
           >
-            {#each section.sequences as sequence}
+            {#each section.sequences as sequence, index}
               <SequenceThumbnail
                 {sequence}
                 {thumbnailService}
                 {viewMode}
+                priority={index < 8}
                 onAction={handleSequenceAction}
               />
             {/each}
@@ -67,11 +68,12 @@
     class:grid-view={viewMode === "grid"}
     transition:slide={{ duration: 300 }}
   >
-    {#each sequences as sequence}
+    {#each sequences as sequence, index}
       <SequenceThumbnail
         {sequence}
         {thumbnailService}
         {viewMode}
+        priority={index < 8}
         onAction={handleSequenceAction}
       />
     {/each}

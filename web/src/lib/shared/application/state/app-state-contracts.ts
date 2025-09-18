@@ -5,7 +5,7 @@
  * Consolidated into a single file for simplicity since they're small.
  */
 
-import type { AppTheme, TabId } from "$shared";
+import type { TabId } from "$shared";
 
 // TODO: Import IBrowseStatePersister when it's properly exported
 // import type { IBrowseStatePersister } from "../../../../modules/browse/gallery/services/contracts";
@@ -22,7 +22,6 @@ export interface IApplicationStateService {
   readonly isFullScreen: boolean;
   readonly isTransitioning: boolean;
   readonly showSettings: boolean;
-  readonly theme: AppTheme;
 
   // Derived state
   readonly isReady: boolean;
@@ -34,7 +33,6 @@ export interface IApplicationStateService {
   showSettingsDialog(): void;
   hideSettingsDialog(): void;
   toggleSettingsDialog(): void;
-  setTheme(theme: AppTheme): void;
 
   // State management
   getStateSnapshot(): object;

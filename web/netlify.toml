@@ -38,9 +38,9 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache dictionary images for 1 year
+# Cache gallery images for 1 year
 [[headers]]
-  for = "/dictionary/*"
+  for = "/gallery/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 

@@ -2,7 +2,7 @@
 <script lang="ts">
   import type { SequenceData } from "$shared";
   import { onMount } from "svelte";
-// Note: Loading directly from dictionary API
+// Note: Loading directly from gallery API
   import WordCardNavigation from "./Navigation.svelte";
   import PageDisplay from "./PageDisplay.svelte";
 
@@ -13,7 +13,7 @@
   let columnCount = $state(3); // Default like desktop
   let error = $state<string | null>(null);
 
-  // Note: We load directly from dictionary API instead of using sequence service
+  // Note: We load directly from gallery API instead of using sequence service
 
   // Filtered sequences based on selected length
   let filteredSequences = $derived(() => {
@@ -38,7 +38,7 @@
       isLoading = true;
       error = null;
 
-      // Load sequences directly from dictionary API instead of local storage
+      // Load sequences directly from gallery API instead of local storage
       const response = await fetch("/api/sequences");
       const data = await response.json();
 

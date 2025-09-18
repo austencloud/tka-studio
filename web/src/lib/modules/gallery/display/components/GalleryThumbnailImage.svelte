@@ -1,8 +1,11 @@
 <!--
-ThumbnailImage Component - Image Loading and Display
+LazyGalleryThumbnailImage - Optimized lazy-loading thumbnail component
 
-Handles image loading, error states, and placeholders for sequence thumbnails.
-Extracted from SequenceThumbnail.svelte for better separation of concerns.
+Replaces GalleryThumbnailImage.svelte with:
+- Intersection Observer for lazy loading
+- Preload links for visible images
+- WebP fallback support
+- Progressive loading states
 -->
 <script lang="ts">
   import type { IGalleryThumbnailService } from "../services/contracts/IGalleryThumbnailService";
@@ -14,17 +17,21 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
     thumbnails = [],
     thumbnailService,
     alt = "",
+    priority = false, // For above-the-fold images
   } = $props<{
     sequenceId: string;
     sequenceWord: string;
     thumbnails: string[];
     thumbnailService: IGalleryThumbnailService;
     alt?: string;
+    priority?: boolean; // Load immediately if true
   }>();
 
   // ✅ PURE RUNES: State for image loading
+  let imageContainer: HTMLElement;
   let imageLoaded = $state(false);
   let imageError = $state(false);
+  let shouldLoad = $state(priority); // Load immediately if priority
 
   // ✅ DERIVED RUNES: Computed thumbnail URL
   let thumbnailUrl = $derived.by(() => {
@@ -32,6 +39,32 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
     return firstThumbnail
       ? thumbnailService.getThumbnailUrl(sequenceId, firstThumbnail)
       : null;
+  });
+
+  // ✅ EFFECT: Set up intersection observer for lazy loading
+  $effect(() => {
+    if (!imageContainer || priority || shouldLoad) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            shouldLoad = true;
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        rootMargin: "50px", // Start loading 50px before visible
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(imageContainer);
+
+    return () => {
+      observer.disconnect();
+    };
   });
 
   // Event handlers
@@ -46,24 +79,38 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
   }
 </script>
 
-<div class="image-container">
-  <!-- Actual image -->
-  {#if thumbnailUrl && !imageError}
+<div class="image-container" bind:this={imageContainer}>
+  <!-- Preload critical images -->
+  {#if priority && thumbnailUrl}
+    <link rel="preload" as="image" href={thumbnailUrl} />
+  {/if}
+
+  <!-- Actual image (only load when should load) -->
+  {#if thumbnailUrl && !imageError && shouldLoad}
     <img
       src={thumbnailUrl}
       alt={alt || `${sequenceWord} sequence thumbnail`}
       class="thumbnail-image"
       class:loaded={imageLoaded}
       class:error={imageError}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
       onload={handleImageLoad}
       onerror={handleImageError}
     />
   {/if}
 
   <!-- Loading state -->
-  {#if !imageLoaded && !imageError && thumbnailUrl}
+  {#if shouldLoad && !imageLoaded && !imageError && thumbnailUrl}
     <div class="loading-placeholder">
       <div class="loading-spinner"></div>
+    </div>
+  {/if}
+
+  <!-- Skeleton placeholder (before intersection) -->
+  {#if !shouldLoad && !priority}
+    <div class="skeleton-placeholder">
+      <div class="skeleton-content"></div>
     </div>
   {/if}
 
@@ -80,14 +127,12 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
   .image-container {
     position: relative;
     width: 100%;
-    height: 100%;
-    /* Remove background to make it transparent */
-    background: transparent;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    /* Minimum height to ensure placeholders have reasonable size */
     min-height: 120px;
+    container-type: inline-size;
   }
 
   .thumbnail-image {
@@ -135,6 +180,39 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
     }
   }
 
+  /* Skeleton loading animation */
+  .skeleton-placeholder {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .skeleton-content {
+    width: 80%;
+    height: 60%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
   .error-placeholder {
     position: absolute;
     inset: 0;
@@ -163,9 +241,8 @@ Extracted from SequenceThumbnail.svelte for better separation of concerns.
   }
 
   /* Responsive design */
-  @media (max-width: 768px) {
+  @container (max-width: 300px) {
     .image-container {
-      /* Remove fixed height for mobile as well */
       min-height: 100px;
     }
 
