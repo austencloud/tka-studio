@@ -1,5 +1,10 @@
 <script lang="ts">
-  let { isOpen, currentBackground, onClose, onBackgroundChange } = $props<{
+  let {
+    isOpen,
+    currentBackground,
+    onClose,
+    onBackgroundChange,
+  } = $props<{
     isOpen: boolean;
     currentBackground: "deepOcean" | "snowfall" | "nightSky";
     onClose: () => void;
