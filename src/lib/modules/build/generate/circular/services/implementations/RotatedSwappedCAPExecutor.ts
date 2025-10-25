@@ -19,17 +19,16 @@
 import type { BeatData } from "$build/workbench";
 import { MotionColor, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
-import type { GridPosition, GridLocation } from "$shared/pictograph/grid/domain/enums/grid-enums";
+import type { GridLocation, GridPosition } from "$shared/pictograph/grid/domain/enums/grid-enums";
 import { inject, injectable } from "inversify";
 import type { IOrientationCalculationService } from "../../../shared/services/contracts";
 import {
-	getHandRotationDirection,
-	getLocationMapForHandRotation,
-	HALVED_CAPS,
-	QUARTERED_CAPS,
+    getHandRotationDirection,
+    getLocationMapForHandRotation,
+    HALVED_CAPS,
+    QUARTERED_CAPS,
 } from "../../domain/constants/circular-position-maps";
 import type { SliceSize } from "../../domain/models/circular-models";
-import { RotationDirection } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 
 @injectable()
 export class RotatedSwappedCAPExecutor {
@@ -261,12 +260,12 @@ export class RotatedSwappedCAPExecutor {
 		// Blue will use Red's handpath (due to swap)
 		// Red will use Blue's handpath (due to swap)
 		const blueHandRotDir = getHandRotationDirection(
-			previousMatchingBeat.motions[MotionColor.RED].startLocation as GridLocation,
-			previousMatchingBeat.motions[MotionColor.RED].endLocation as GridLocation
+			previousMatchingBeat.motions[MotionColor.RED]!.startLocation as GridLocation,
+			previousMatchingBeat.motions[MotionColor.RED]!.endLocation as GridLocation
 		);
 		const redHandRotDir = getHandRotationDirection(
-			previousMatchingBeat.motions[MotionColor.BLUE].startLocation as GridLocation,
-			previousMatchingBeat.motions[MotionColor.BLUE].endLocation as GridLocation
+			previousMatchingBeat.motions[MotionColor.BLUE]!.startLocation as GridLocation,
+			previousMatchingBeat.motions[MotionColor.BLUE]!.endLocation as GridLocation
 		);
 
 		// Get the location maps for rotation
@@ -274,16 +273,16 @@ export class RotatedSwappedCAPExecutor {
 		const redLocationMap = getLocationMapForHandRotation(redHandRotDir);
 
 		// Rotate the locations from the previous beat
-		const newBlueEndLoc = blueLocationMap[previousBeat.motions[MotionColor.BLUE].endLocation as GridLocation];
-		const newRedEndLoc = redLocationMap[previousBeat.motions[MotionColor.RED].endLocation as GridLocation];
+		const newBlueEndLoc = blueLocationMap[previousBeat.motions[MotionColor.BLUE]!.endLocation as GridLocation];
+		const newRedEndLoc = redLocationMap[previousBeat.motions[MotionColor.RED]!.endLocation as GridLocation];
 
 		console.log(
-			`📍 Rotating locations: Blue ${previousBeat.motions[MotionColor.BLUE].endLocation} → ${newBlueEndLoc}, ` +
-			`Red ${previousBeat.motions[MotionColor.RED].endLocation} → ${newRedEndLoc}`
+			`📍 Rotating locations: Blue ${previousBeat.motions[MotionColor.BLUE]!.endLocation} → ${newBlueEndLoc}, ` +
+			`Red ${previousBeat.motions[MotionColor.RED]!.endLocation} → ${newRedEndLoc}`
 		);
 
 		// Derive position from both locations
-		const newEndPosition = this.gridPositionDeriver.getGridPosition(newBlueEndLoc, newRedEndLoc);
+		const newEndPosition = this.gridPositionDeriver.getGridPositionFromLocations(newBlueEndLoc, newRedEndLoc);
 
 		if (!newEndPosition) {
 			throw new Error(

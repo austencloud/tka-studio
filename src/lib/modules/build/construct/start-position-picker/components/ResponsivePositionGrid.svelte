@@ -6,10 +6,12 @@
     isTransitioning = false,
     hasOverflow = false,
     isSideBySideLayout = () => false,
+    children,
   }: {
     isTransitioning?: boolean;
     hasOverflow?: boolean;
     isSideBySideLayout?: () => boolean;
+    children?: import('svelte').Snippet;
   } = $props();
 
   let gridWrapperElement: HTMLDivElement | null = null;
@@ -101,7 +103,7 @@
     style:--grid-columns={gridLayout().gridColumns}
     style:--max-pictograph-size={maxPictographSize()}
   >
-    <slot />
+    {@render children?.()}
   </div>
 </div>
 

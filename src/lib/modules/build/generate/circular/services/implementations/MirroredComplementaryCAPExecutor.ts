@@ -16,16 +16,16 @@
  */
 
 import type { BeatData } from "$build/workbench";
-import { MotionColor, MotionType, RotationDirection, type IGridPositionDeriver } from "$shared";
+import { MotionColor, MotionType, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
-import type { GridPosition, GridLocation } from "$shared/pictograph/grid/domain/enums/grid-enums";
+import type { GridLocation, GridPosition } from "$shared/pictograph/grid/domain/enums/grid-enums";
 import { inject, injectable } from "inversify";
 import type { IOrientationCalculationService } from "../../../shared/services/contracts";
 import { type IComplementaryLetterService } from "../../../shared/services/contracts";
 import {
-	VERTICAL_MIRROR_POSITION_MAP,
-	VERTICAL_MIRROR_LOCATION_MAP,
-	MIRRORED_COMPLEMENTARY_VALIDATION_SET,
+    MIRRORED_COMPLEMENTARY_VALIDATION_SET,
+    VERTICAL_MIRROR_LOCATION_MAP,
+    VERTICAL_MIRROR_POSITION_MAP,
 } from "../../domain/constants/strict-cap-position-maps";
 import type { SliceSize } from "../../domain/models/circular-models";
 
@@ -144,6 +144,9 @@ export class MirroredComplementaryCAPExecutor {
 		);
 
 		// Get the complementary letter (COMPLEMENTARY effect)
+		if (!previousMatchingBeat.letter) {
+			throw new Error("Previous matching beat must have a letter");
+		}
 		const complementaryLetter = this.complementaryLetterService.getComplementaryLetter(
 			previousMatchingBeat.letter
 		);
@@ -159,7 +162,7 @@ export class MirroredComplementaryCAPExecutor {
 			...previousMatchingBeat,
 			id: `beat-${beatNumber}`,
 			beatNumber,
-			letter: complementaryLetter, // COMPLEMENTARY: Flip letter
+			letter: complementaryLetter as any, // COMPLEMENTARY: Flip letter
 			startPosition: previousBeat.endPosition ?? null,
 			endPosition: mirroredEndPosition, // MIRRORED: Flip position
 			motions: {

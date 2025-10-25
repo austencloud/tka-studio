@@ -199,6 +199,7 @@ Refactored into smaller section components for better maintainability:
     display: flex;
     flex-direction: column;
     height: 100%;
+    padding: var(--element-spacing);
     border-radius: 8px;
     font-family: "Segoe UI", sans-serif;
     overflow: hidden;

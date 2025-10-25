@@ -9,8 +9,8 @@
  * final beat selection wasn't applying continuity filters.
  */
 
-import { describe, it, expect } from "vitest";
 import type { BeatData } from "$build/workbench";
+import { describe, expect, it } from "vitest";
 
 describe("StrictMirroredCAPExecutor - Continuity Regression Test", () => {
   /**
@@ -26,8 +26,8 @@ describe("StrictMirroredCAPExecutor - Continuity Regression Test", () => {
       const blueMotion = beat.motions?.blue;
       const redMotion = beat.motions?.red;
 
-      const blueIsReversed = blueMotion?.isReversed === true;
-      const redIsReversed = redMotion?.isReversed === true;
+      const blueIsReversed = beat.blueReversal === true;
+      const redIsReversed = beat.redReversal === true;
 
       if (blueIsReversed || redIsReversed) {
         const details = [];

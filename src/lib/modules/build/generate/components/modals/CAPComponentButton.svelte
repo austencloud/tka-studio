@@ -5,7 +5,7 @@ Container-aware and aspect-ratio responsive
 -->
 <script lang="ts">
   import { FontAwesomeIcon } from "$shared";
-  import type { CAPComponentInfo } from "./cap-components";
+  import type { CAPComponentInfo } from "$build/generate/shared/domain/constants/cap-components";
 
   let {
     componentInfo,

@@ -19,12 +19,11 @@
 import type { BeatData } from "$build/workbench";
 import { MotionColor, MotionType, RotationDirection, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
-import type { GridPosition } from "$shared/pictograph/grid/domain/enums/grid-enums";
 import { inject, injectable } from "inversify";
 import type { IOrientationCalculationService } from "../../../shared/services/contracts";
 import {
-	getComplementaryLetter,
-	COMPLEMENTARY_CAP_VALIDATION_SET,
+    COMPLEMENTARY_CAP_VALIDATION_SET,
+    getComplementaryLetter,
 } from "../../domain/constants/strict-cap-position-maps";
 import type { SliceSize } from "../../domain/models/circular-models";
 
@@ -151,7 +150,7 @@ export class SwappedComplementaryCAPExecutor {
 			...previousMatchingBeat,
 			id: `beat-${beatNumber}`,
 			beatNumber,
-			letter: complementaryLetter, // COMPLEMENTARY
+			letter: complementaryLetter as any, // COMPLEMENTARY
 			startPosition: previousBeat.endPosition ?? null,
 			endPosition: previousMatchingBeat.endPosition, // Same as matching beat (returns to start)
 			motions: {

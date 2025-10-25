@@ -19,18 +19,18 @@
 import type { BeatData } from "$build/workbench";
 import { MotionColor, MotionType, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
-import type { GridPosition, GridLocation } from "$shared/pictograph/grid/domain/enums/grid-enums";
+import type { GridLocation, GridPosition } from "$shared/pictograph/grid/domain/enums/grid-enums";
+import { RotationDirection } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 import { inject, injectable } from "inversify";
 import type { IOrientationCalculationService } from "../../../shared/services/contracts";
 import { type IComplementaryLetterService } from "../../../shared/services/contracts";
 import {
-	getHandRotationDirection,
-	getLocationMapForHandRotation,
-	HALVED_CAPS,
-	QUARTERED_CAPS,
+    getHandRotationDirection,
+    getLocationMapForHandRotation,
+    HALVED_CAPS,
+    QUARTERED_CAPS,
 } from "../../domain/constants/circular-position-maps";
 import type { SliceSize } from "../../domain/models/circular-models";
-import { RotationDirection } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 
 @injectable()
 export class RotatedComplementaryCAPExecutor {
@@ -160,6 +160,9 @@ export class RotatedComplementaryCAPExecutor {
 		);
 
 		// Get the complementary letter (COMPLEMENTARY effect)
+		if (!previousMatchingBeat.letter) {
+			throw new Error("Previous matching beat must have a letter");
+		}
 		const complementaryLetter = this.complementaryLetterService.getComplementaryLetter(
 			previousMatchingBeat.letter
 		);
@@ -176,7 +179,7 @@ export class RotatedComplementaryCAPExecutor {
 			...previousMatchingBeat,
 			id: `beat-${beatNumber}`,
 			beatNumber,
-			letter: complementaryLetter, // COMPLEMENTARY: Flip letter
+			letter: complementaryLetter as any, // COMPLEMENTARY: Flip letter
 			startPosition: previousBeat.endPosition ?? null,
 			endPosition: rotatedEndPosition,
 			motions: {
@@ -279,12 +282,12 @@ export class RotatedComplementaryCAPExecutor {
 	): GridPosition | null {
 		// Get hand rotation directions from the matching beat (same color)
 		const blueHandRotDir = getHandRotationDirection(
-			previousMatchingBeat.motions[MotionColor.BLUE].startLocation as GridLocation,
-			previousMatchingBeat.motions[MotionColor.BLUE].endLocation as GridLocation
+			previousMatchingBeat.motions[MotionColor.BLUE]!.startLocation as GridLocation,
+			previousMatchingBeat.motions[MotionColor.BLUE]!.endLocation as GridLocation
 		);
 		const redHandRotDir = getHandRotationDirection(
-			previousMatchingBeat.motions[MotionColor.RED].startLocation as GridLocation,
-			previousMatchingBeat.motions[MotionColor.RED].endLocation as GridLocation
+			previousMatchingBeat.motions[MotionColor.RED]!.startLocation as GridLocation,
+			previousMatchingBeat.motions[MotionColor.RED]!.endLocation as GridLocation
 		);
 
 		// Get the location maps for rotation
@@ -292,16 +295,16 @@ export class RotatedComplementaryCAPExecutor {
 		const redLocationMap = getLocationMapForHandRotation(redHandRotDir);
 
 		// Rotate the locations from the previous beat
-		const newBlueEndLoc = blueLocationMap[previousBeat.motions[MotionColor.BLUE].endLocation as GridLocation];
-		const newRedEndLoc = redLocationMap[previousBeat.motions[MotionColor.RED].endLocation as GridLocation];
+		const newBlueEndLoc = blueLocationMap[previousBeat.motions[MotionColor.BLUE]!.endLocation as GridLocation];
+		const newRedEndLoc = redLocationMap[previousBeat.motions[MotionColor.RED]!.endLocation as GridLocation];
 
 		console.log(
-			`📍 Rotating locations: Blue ${previousBeat.motions[MotionColor.BLUE].endLocation} → ${newBlueEndLoc}, ` +
-			`Red ${previousBeat.motions[MotionColor.RED].endLocation} → ${newRedEndLoc}`
+			`📍 Rotating locations: Blue ${previousBeat.motions[MotionColor.BLUE]!.endLocation} → ${newBlueEndLoc}, ` +
+			`Red ${previousBeat.motions[MotionColor.RED]!.endLocation} → ${newRedEndLoc}`
 		);
 
 		// Derive position from both locations
-		const newEndPosition = this.gridPositionDeriver.getGridPosition(newBlueEndLoc, newRedEndLoc);
+		const newEndPosition = this.gridPositionDeriver.getGridPositionFromLocations(newBlueEndLoc, newRedEndLoc);
 
 		if (!newEndPosition) {
 			throw new Error(

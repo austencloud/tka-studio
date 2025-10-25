@@ -8,6 +8,7 @@ export { BeatConverterService } from "./BeatConverterService";
 export { BeatGenerationOrchestrator } from "./BeatGenerationOrchestrator";
 export { ComplementaryLetterService } from "./ComplementaryLetterService";
 export { PictographFilterService } from "./PictographFilterService";
+export { PictographGenerator } from "./PictographGenerator";
 export { SequenceMetadataService } from "./SequenceMetadataService";
 export { StartPositionSelector } from "./StartPositionSelector";
 export { TurnAllocator as TurnAllocationCalculator } from "./TurnAllocator";

@@ -15,7 +15,7 @@ Displays modal title and close button
 </script>
 
 <div class="modal-header">
-  <h2 id="modal-title">{icon}{#if icon} {/if}{title}</h2>
+  <h2 id="modal-title">{icon}{#if icon}&nbsp;{/if}{title}</h2>
   <button
     class="close-button"
     onclick={onClose}

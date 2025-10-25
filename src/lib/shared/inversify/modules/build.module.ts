@@ -40,6 +40,7 @@ import {
     ComplementaryLetterService,
     GenerationOrchestrationService,
     PictographFilterService,
+    PictographGenerator,
     SequenceMetadataService,
     StartPositionSelector,
     TurnAllocationCalculator,
@@ -103,6 +104,7 @@ export const buildModule = new ContainerModule(
     // === GENERATION SERVICES === (restored active services 2025-10-25)
     options.bind(TYPES.IBeatConverterService).to(BeatConverterService);
     options.bind(TYPES.IPictographFilterService).to(PictographFilterService);
+    options.bind(TYPES.IPictographGenerator).to(PictographGenerator);
     options.bind(TYPES.ITurnManagementService).to(TurnManagementService);
     // TurnIntensityLevelService provides UI-level turn intensity values
     // TurnIntensityManagerService is instantiated directly with constructor params for sequence generation

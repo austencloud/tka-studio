@@ -12,16 +12,17 @@
  * 8. Index mapping - correctly maps second half to first half
  */
 
-import { describe, expect, it, beforeEach, vi } from "vitest";
-import { StrictMirroredCAPExecutor } from "../../../../src/lib/modules/build/generate/circular/services/implementations/StrictMirroredCAPExecutor";
 import type { BeatData } from "$build/workbench";
 import {
-	GridPosition,
-	GridLocation,
-	MotionType,
-	MotionColor,
-	RotationDirection,
+    GridLocation,
+    GridPosition,
+    MotionColor,
+    MotionType,
+    RotationDirection
 } from "$shared";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { SliceSize } from "../../../../src/lib/modules/build/generate/circular/domain/models/circular-models";
+import { StrictMirroredCAPExecutor } from "../../../../src/lib/modules/build/generate/circular/services/implementations/StrictMirroredCAPExecutor";
 
 // Mock dependencies
 const mockOrientationService = {
@@ -55,7 +56,7 @@ describe("StrictMirroredCAPExecutor", () => {
 	): BeatData => ({
 		id: `beat-${beatNumber}`,
 		beatNumber,
-		letter,
+		letter: letter as any,
 		// For beat 0 (start position), both startPosition and endPosition should be the same
 		startPosition: beatNumber === 0 ? endPos : startPos,
 		endPosition: endPos,
@@ -93,7 +94,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA2, GridPosition.ALPHA8, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).not.toThrow();
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).not.toThrow();
 		});
 
 		it("should accept valid mirrored position pairs - ALPHA3↔ALPHA7", () => {
@@ -101,7 +102,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA3, GridPosition.ALPHA7, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).not.toThrow();
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).not.toThrow();
 		});
 
 		it("should accept valid mirrored position pairs - GAMMA1↔GAMMA9", () => {
@@ -109,7 +110,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.GAMMA1, GridPosition.GAMMA9, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).not.toThrow();
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).not.toThrow();
 		});
 
 		it("should reject invalid mirrored position pairs - ALPHA1→ALPHA2", () => {
@@ -117,7 +118,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA2, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).toThrow(/Invalid position pair for mirrored CAP/);
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).toThrow(/Invalid position pair for mirrored CAP/);
 		});
 
 		it("should reject when end position doesn't match mirror of start", () => {
@@ -125,14 +126,14 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA2, GridPosition.ALPHA3, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).toThrow(/must end at alpha8/i);
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).toThrow(/must end at alpha8/i);
 		});
 
 		it("should require at least 2 beats", () => {
 			const startPos = createBeat(0, "START", null, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos];
 
-			expect(() => executor.executeCAP(sequence)).toThrow(/at least 2 beats/);
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).toThrow(/at least 2 beats/);
 		});
 	});
 
@@ -142,7 +143,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA2, GridPosition.ALPHA8, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			// Result should have 3 beats: startPos + beat1 + mirrored beat2
 			expect(result).toHaveLength(3);
@@ -154,7 +155,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].endPosition).toBe(GridPosition.ALPHA1); // Stays on axis
 		});
@@ -164,7 +165,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.GAMMA1, GridPosition.GAMMA9, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].endPosition).toBe(GridPosition.GAMMA1); // Mirrored GAMMA9 → GAMMA1
 		});
@@ -190,11 +191,11 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
 			// EAST should mirror to WEST
-			expect(mirroredBeat.motions[MotionColor.BLUE].endLocation).toBe(GridLocation.WEST);
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.endLocation).toBe(GridLocation.WEST);
 		});
 
 		it("should mirror NORTHEAST to NORTHWEST", () => {
@@ -216,11 +217,11 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
 			// NORTHEAST should mirror to NORTHWEST
-			expect(mirroredBeat.motions[MotionColor.BLUE].endLocation).toBe(GridLocation.NORTHWEST);
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.endLocation).toBe(GridLocation.NORTHWEST);
 		});
 
 		it("should keep NORTH and SOUTH on vertical axis", () => {
@@ -242,11 +243,11 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
 			// NORTH stays NORTH (on axis)
-			expect(mirroredBeat.motions[MotionColor.BLUE].endLocation).toBe(GridLocation.NORTH);
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.endLocation).toBe(GridLocation.NORTH);
 		});
 	});
 
@@ -278,13 +279,13 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
-			expect(mirroredBeat.motions[MotionColor.BLUE].propRotationDirection).toBe(
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.rotationDirection).toBe(
 				RotationDirection.COUNTER_CLOCKWISE
 			);
-			expect(mirroredBeat.motions[MotionColor.RED].propRotationDirection).toBe(
+			expect(mirroredBeat.motions[MotionColor.RED]!.rotationDirection).toBe(
 				RotationDirection.COUNTER_CLOCKWISE
 			);
 		});
@@ -316,10 +317,10 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
-			expect(mirroredBeat.motions[MotionColor.BLUE].propRotationDirection).toBe(
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.rotationDirection).toBe(
 				RotationDirection.CLOCKWISE
 			);
 		});
@@ -351,10 +352,10 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
-			expect(mirroredBeat.motions[MotionColor.BLUE].propRotationDirection).toBe(
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.rotationDirection).toBe(
 				RotationDirection.NO_ROTATION
 			);
 		});
@@ -388,11 +389,11 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
-			expect(mirroredBeat.motions[MotionColor.BLUE].motionType).toBe(MotionType.PRO);
-			expect(mirroredBeat.motions[MotionColor.RED].motionType).toBe(MotionType.PRO);
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.motionType).toBe(MotionType.PRO);
+			expect(mirroredBeat.motions[MotionColor.RED]!.motionType).toBe(MotionType.PRO);
 		});
 
 		it("should keep ANTI as ANTI", () => {
@@ -422,10 +423,10 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const mirroredBeat = result[2];
-			expect(mirroredBeat.motions[MotionColor.BLUE].motionType).toBe(MotionType.ANTI);
+			expect(mirroredBeat.motions[MotionColor.BLUE]!.motionType).toBe(MotionType.ANTI);
 		});
 	});
 
@@ -435,7 +436,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA2, GridPosition.ALPHA8, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("A"); // Same letter
 		});
@@ -447,7 +448,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA2, GridPosition.ALPHA8, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result).toHaveLength(3); // startPos + beat1 + mirrored beat2
 			expect(result[0].beatNumber).toBe(0);
@@ -461,7 +462,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat2 = createBeat(2, "B", GridPosition.ALPHA4, GridPosition.ALPHA8, {}, {});
 			const sequence = [startPos, beat1, beat2];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result).toHaveLength(5); // startPos + 2 original + 2 mirrored
 		});
@@ -485,7 +486,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			// Beat 2 should start where beat 1 ended
 			expect(result[2].startPosition).toBe(GridPosition.ALPHA8);
@@ -498,7 +499,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA2, GridPosition.ALPHA8, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			// Beat 2 should be mirrored from beat 1
 			expect(result[2].letter).toBe(result[1].letter);
@@ -510,7 +511,7 @@ describe("StrictMirroredCAPExecutor", () => {
 			const beat2 = createBeat(2, "B", GridPosition.ALPHA4, GridPosition.ALPHA8, {}, {});
 			const sequence = [startPos, beat1, beat2];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			// Beat 3 should mirror beat 1
 			expect(result[3].letter).toBe("A");

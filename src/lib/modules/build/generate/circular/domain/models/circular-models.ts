@@ -37,6 +37,12 @@ export enum CAPType {
 
   /** Rotated swapped - combines rotation with color swapping */
   ROTATED_SWAPPED = "rotated_swapped",
+
+  /** Mirrored rotated - combines mirroring with rotation */
+  MIRRORED_ROTATED = "mirrored_rotated",
+
+  /** Mirrored complementary rotated - combines all three transformations */
+  MIRRORED_COMPLEMENTARY_ROTATED = "mirrored_complementary_rotated",
 }
 
 /**

@@ -247,8 +247,19 @@ li
         />
       {:else if currentView === "results"}
         <QuizResultsView
-          {score}
-          {totalQuestions}
+          results={{
+            sessionId: selectedQuizId || "",
+            lessonType: QuizType.PICTOGRAPH_TO_LETTER,
+            quizMode: QuizMode.FIXED_QUESTION,
+            totalQuestions,
+            correctAnswers: score,
+            incorrectGuesses: totalQuestions - score,
+            questionsAnswered: totalQuestions,
+            accuracyPercentage:
+              totalQuestions > 0 ? (score / totalQuestions) * 100 : 0,
+            completionTimeSeconds: 0,
+            completedAt: new Date(),
+          }}
           onReturnToSelector={handleReturnToSelector}
           onRestartQuiz={handleRestartQuiz}
         />

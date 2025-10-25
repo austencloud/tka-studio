@@ -6,13 +6,13 @@
  */
 
 import type {
-  IPersistenceService,
-  SequenceData,
-  PictographData,
-  TabId,
-  AppSettings,
-  UserProject,
-  CompleteGalleryState,
+    AppSettings,
+    CompleteGalleryState,
+    IPersistenceService,
+    PictographData,
+    SequenceData,
+    TabId,
+    UserProject,
 } from "$shared";
 import { injectable } from "inversify";
 
@@ -234,12 +234,27 @@ export class MockPersistenceService implements IPersistenceService {
   // SEQUENCE STATE PERSISTENCE
   // ============================================================================
 
-  async saveCurrentSequenceState(state: unknown): Promise<void> {
+  async saveCurrentSequenceState(state: {
+    currentSequence: SequenceData | null;
+    selectedStartPosition: PictographData | null;
+    hasStartPosition: boolean;
+    activeBuildSubTab?: string;
+  }): Promise<void> {
     this.currentSequenceState = state;
   }
 
-  async loadCurrentSequenceState(): Promise<unknown | null> {
-    return this.currentSequenceState;
+  async loadCurrentSequenceState(): Promise<{
+    currentSequence: SequenceData | null;
+    selectedStartPosition: PictographData | null;
+    hasStartPosition: boolean;
+    activeBuildSubTab?: string;
+  } | null> {
+    return this.currentSequenceState as {
+      currentSequence: SequenceData | null;
+      selectedStartPosition: PictographData | null;
+      hasStartPosition: boolean;
+      activeBuildSubTab?: string;
+    } | null;
   }
 
   async clearCurrentSequenceState(): Promise<void> {

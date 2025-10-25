@@ -5,7 +5,7 @@
  * in the browser console, bypassing the UI.
  */
 
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test.describe('Direct Background Change Test', () => {
   test('should change background when directly calling updateBodyBackground', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('Direct Background Change Test', () => {
     const result = await page.evaluate(async () => {
       try {
         // Import the module
-        const { updateBodyBackground, BackgroundType } = await import('/src/lib/shared/background/index.ts');
+        const { updateBodyBackground, BackgroundType } = await import('$lib/shared/background');
 
         console.log('🧪 TEST: Successfully imported background module');
         console.log('🧪 TEST: Available BackgroundType values:', Object.keys(BackgroundType));

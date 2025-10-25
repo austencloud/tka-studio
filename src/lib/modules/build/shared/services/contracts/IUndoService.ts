@@ -11,8 +11,7 @@
  * - Persistent history across sessions
  */
 
-import type { SequenceData } from '$shared';
-import type { ActiveBuildTab } from '../../types/build-tab-types';
+import type { ActiveBuildTab, SequenceData } from '$shared';
 
 /**
  * Types of undoable operations in the Build tab
@@ -24,7 +23,7 @@ export enum UndoOperationType {
   REMOVE_BEATS = 'REMOVE_BEATS',
   CLEAR_SEQUENCE = 'CLEAR_SEQUENCE',
 
-  // Beat modification operations
+  // Beat modification operations Is it a bad idea to leave my King Song 18XL electric unicycle plugged in overnight I'm sorry I finished your thought
   UPDATE_BEAT = 'UPDATE_BEAT',
   INSERT_BEAT = 'INSERT_BEAT',
 

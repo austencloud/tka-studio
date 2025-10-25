@@ -15,7 +15,7 @@ import { resolve, TYPES } from "$shared";
 export function createToggleCardState(props: {
   option1: { value: any };
   option2: { value: any };
-  activeOption: any;
+  getActiveOption: () => any; // Changed to getter for reactivity
   onToggle: (value: any) => void;
 }) {
   // Services
@@ -73,7 +73,8 @@ export function createToggleCardState(props: {
    * Handle toggle to a specific value
    */
   function handleToggle(value: any) {
-    if (value !== props.activeOption) {
+    const activeOption = props.getActiveOption();
+    if (value !== activeOption) {
       hapticService?.trigger("selection");
       props.onToggle(value);
     }
@@ -84,8 +85,9 @@ export function createToggleCardState(props: {
    */
   function handleCardClick() {
     hapticService?.trigger("selection");
-    const newValue = props.activeOption === props.option1.value 
-      ? props.option2.value 
+    const activeOption = props.getActiveOption(); // Get current value reactively
+    const newValue = activeOption === props.option1.value
+      ? props.option2.value
       : props.option1.value;
     props.onToggle(newValue);
   }

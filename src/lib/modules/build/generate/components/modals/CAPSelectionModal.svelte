@@ -5,9 +5,9 @@ Uses portal to render at document.body level for proper z-index stacking
 -->
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
-  import { CAPComponent, resolve, TYPES } from "$shared";
+  import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import { generateExplanationText } from "./cap-components";
+  import { CAPComponent, generateExplanationText } from "$build/generate/shared/domain/constants/cap-components";
   import CAPComponentGrid from "./CAPComponentGrid.svelte";
   import CAPExplanationPanel from "./CAPExplanationPanel.svelte";
   import CAPModalHeader from "./CAPModalHeader.svelte";

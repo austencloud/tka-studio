@@ -62,7 +62,7 @@ export const safeSessionStorageRemove = (key: string): void => {
 export { PngMetadataExtractor } from "./pictograph/shared/utils/png-metadata-extractor";
 
 // CSV parser interface (needed by modules)
-export type { ICSVPictographParser } from "../modules/build/generate/shared/services/contracts/ICsvPictographParserService";
+export type { ICSVPictographParserService as ICSVPictographParser } from "./foundation/services/contracts/data/ICSVPictographParserService";
 
 // CAP Type service (needed by CAPCard component)
 export type { ICAPTypeService } from "../modules/build/generate/shared/services/contracts/ICAPTypeService";

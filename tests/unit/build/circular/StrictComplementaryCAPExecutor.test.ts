@@ -12,16 +12,17 @@
  * 8. Index mapping - correctly maps second half to first half
  */
 
-import { describe, expect, it, beforeEach, vi } from "vitest";
-import { StrictComplementaryCAPExecutor } from "../../../../src/lib/modules/build/generate/circular/services/implementations/StrictComplementaryCAPExecutor";
 import type { BeatData } from "$build/workbench";
 import {
-	GridPosition,
-	GridLocation,
-	MotionType,
-	MotionColor,
-	RotationDirection,
+    GridLocation,
+    GridPosition,
+    MotionColor,
+    MotionType,
+    RotationDirection
 } from "$shared";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { SliceSize } from "../../../../src/lib/modules/build/generate/circular/domain/models/circular-models";
+import { StrictComplementaryCAPExecutor } from "../../../../src/lib/modules/build/generate/circular/services/implementations/StrictComplementaryCAPExecutor";
 
 // Mock dependencies
 const mockOrientationService = {
@@ -55,7 +56,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 	): BeatData => ({
 		id: `beat-${beatNumber}`,
 		beatNumber,
-		letter,
+		letter: letter as any,
 		// For beat 0 (start position), both startPosition and endPosition should be the same
 		startPosition: beatNumber === 0 ? endPos : startPos,
 		endPosition: endPos,
@@ -68,7 +69,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 				motionType: MotionType.PRO,
 				startLocation: GridLocation.SOUTH,
 				endLocation: GridLocation.WEST,
-				propRotationDirection: RotationDirection.CLOCKWISE,
+				rotationDirection: RotationDirection.CLOCKWISE,
 				startOrientation: null,
 				endOrientation: null,
 				turns: 1,
@@ -78,7 +79,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 				motionType: MotionType.ANTI,
 				startLocation: GridLocation.NORTH,
 				endLocation: GridLocation.EAST,
-				propRotationDirection: RotationDirection.COUNTER_CLOCKWISE,
+				rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
 				startOrientation: null,
 				endOrientation: null,
 				turns: 1,
@@ -93,7 +94,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).not.toThrow();
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).not.toThrow();
 		});
 
 		it("should accept when end position equals start position - BETA5", () => {
@@ -101,7 +102,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "D", GridPosition.BETA5, GridPosition.BETA5, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).not.toThrow();
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).not.toThrow();
 		});
 
 		it("should accept when end position equals start position - GAMMA9", () => {
@@ -109,7 +110,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "J", GridPosition.GAMMA9, GridPosition.GAMMA9, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).not.toThrow();
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).not.toThrow();
 		});
 
 		it("should reject when end position doesn't equal start position", () => {
@@ -117,14 +118,14 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA2, {}, {});
 			const sequence = [startPos, beat1];
 
-			expect(() => executor.executeCAP(sequence)).toThrow(/must end at the same position it started/);
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).toThrow(/must end at the same position it started/);
 		});
 
 		it("should require at least 2 beats", () => {
 			const startPos = createBeat(0, "START", null, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos];
 
-			expect(() => executor.executeCAP(sequence)).toThrow(/at least 2 beats/);
+			expect(() => executor.executeCAP(sequence, SliceSize.HALVED)).toThrow(/at least 2 beats/);
 		});
 	});
 
@@ -134,7 +135,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("B");
 		});
@@ -144,7 +145,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "B", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("A");
 		});
@@ -154,7 +155,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "D", GridPosition.BETA1, GridPosition.BETA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("E");
 		});
@@ -164,7 +165,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "E", GridPosition.BETA1, GridPosition.BETA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("D");
 		});
@@ -174,7 +175,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "C", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("C"); // C → C
 		});
@@ -184,7 +185,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "F", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("F"); // F → F
 		});
@@ -194,7 +195,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "Σ", GridPosition.GAMMA1, GridPosition.GAMMA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].letter).toBe("Δ");
 		});
@@ -228,11 +229,11 @@ describe("StrictComplementaryCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].motionType).toBe(MotionType.ANTI);
-			expect(complementaryBeat.motions[MotionColor.RED].motionType).toBe(MotionType.ANTI);
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.motionType).toBe(MotionType.ANTI);
+			expect(complementaryBeat.motions[MotionColor.RED]!.motionType).toBe(MotionType.ANTI);
 		});
 
 		it("should flip ANTI to PRO", () => {
@@ -262,11 +263,11 @@ describe("StrictComplementaryCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].motionType).toBe(MotionType.PRO);
-			expect(complementaryBeat.motions[MotionColor.RED].motionType).toBe(MotionType.PRO);
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.motionType).toBe(MotionType.PRO);
+			expect(complementaryBeat.motions[MotionColor.RED]!.motionType).toBe(MotionType.PRO);
 		});
 
 		it("should keep FLOAT unchanged", () => {
@@ -296,10 +297,10 @@ describe("StrictComplementaryCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].motionType).toBe(MotionType.FLOAT);
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.motionType).toBe(MotionType.FLOAT);
 		});
 
 		it("should keep DASH unchanged", () => {
@@ -329,10 +330,10 @@ describe("StrictComplementaryCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].motionType).toBe(MotionType.DASH);
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.motionType).toBe(MotionType.DASH);
 		});
 
 		it("should keep STATIC unchanged", () => {
@@ -362,10 +363,10 @@ describe("StrictComplementaryCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].motionType).toBe(MotionType.STATIC);
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.motionType).toBe(MotionType.STATIC);
 		});
 	});
 
@@ -376,8 +377,8 @@ describe("StrictComplementaryCAPExecutor", () => {
 				"START",
 				null,
 				GridPosition.ALPHA1,
-				{ endLocation: GridLocation.SOUTH, propRotationDirection: RotationDirection.CLOCKWISE },
-				{ endLocation: GridLocation.NORTH, propRotationDirection: RotationDirection.CLOCKWISE }
+				{ endLocation: GridLocation.SOUTH, rotationDirection: RotationDirection.CLOCKWISE },
+				{ endLocation: GridLocation.NORTH, rotationDirection: RotationDirection.CLOCKWISE }
 			);
 			const beat1 = createBeat(
 				1,
@@ -387,23 +388,23 @@ describe("StrictComplementaryCAPExecutor", () => {
 				{
 					startLocation: GridLocation.SOUTH,
 					endLocation: GridLocation.NORTH,
-					propRotationDirection: RotationDirection.CLOCKWISE,
+					rotationDirection: RotationDirection.CLOCKWISE,
 				},
 				{
 					startLocation: GridLocation.NORTH,
 					endLocation: GridLocation.SOUTH,
-					propRotationDirection: RotationDirection.CLOCKWISE,
+					rotationDirection: RotationDirection.CLOCKWISE,
 				}
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].propRotationDirection).toBe(
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.rotationDirection).toBe(
 				RotationDirection.COUNTER_CLOCKWISE
 			);
-			expect(complementaryBeat.motions[MotionColor.RED].propRotationDirection).toBe(
+			expect(complementaryBeat.motions[MotionColor.RED]!.rotationDirection).toBe(
 				RotationDirection.COUNTER_CLOCKWISE
 			);
 		});
@@ -414,8 +415,8 @@ describe("StrictComplementaryCAPExecutor", () => {
 				"START",
 				null,
 				GridPosition.ALPHA1,
-				{ endLocation: GridLocation.SOUTH, propRotationDirection: RotationDirection.COUNTER_CLOCKWISE },
-				{ endLocation: GridLocation.NORTH, propRotationDirection: RotationDirection.COUNTER_CLOCKWISE }
+				{ endLocation: GridLocation.SOUTH, rotationDirection: RotationDirection.COUNTER_CLOCKWISE },
+				{ endLocation: GridLocation.NORTH, rotationDirection: RotationDirection.COUNTER_CLOCKWISE }
 			);
 			const beat1 = createBeat(
 				1,
@@ -425,20 +426,20 @@ describe("StrictComplementaryCAPExecutor", () => {
 				{
 					startLocation: GridLocation.SOUTH,
 					endLocation: GridLocation.NORTH,
-					propRotationDirection: RotationDirection.COUNTER_CLOCKWISE,
+					rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
 				},
 				{
 					startLocation: GridLocation.NORTH,
 					endLocation: GridLocation.SOUTH,
-					propRotationDirection: RotationDirection.COUNTER_CLOCKWISE,
+					rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
 				}
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].propRotationDirection).toBe(
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.rotationDirection).toBe(
 				RotationDirection.CLOCKWISE
 			);
 		});
@@ -449,8 +450,8 @@ describe("StrictComplementaryCAPExecutor", () => {
 				"START",
 				null,
 				GridPosition.ALPHA1,
-				{ endLocation: GridLocation.SOUTH, propRotationDirection: RotationDirection.NO_ROTATION },
-				{ endLocation: GridLocation.NORTH, propRotationDirection: RotationDirection.NO_ROTATION }
+				{ endLocation: GridLocation.SOUTH, rotationDirection: RotationDirection.NO_ROTATION },
+				{ endLocation: GridLocation.NORTH, rotationDirection: RotationDirection.NO_ROTATION }
 			);
 			const beat1 = createBeat(
 				1,
@@ -460,20 +461,20 @@ describe("StrictComplementaryCAPExecutor", () => {
 				{
 					startLocation: GridLocation.SOUTH,
 					endLocation: GridLocation.NORTH,
-					propRotationDirection: RotationDirection.NO_ROTATION,
+					rotationDirection: RotationDirection.NO_ROTATION,
 				},
 				{
 					startLocation: GridLocation.NORTH,
 					endLocation: GridLocation.SOUTH,
-					propRotationDirection: RotationDirection.NO_ROTATION,
+					rotationDirection: RotationDirection.NO_ROTATION,
 				}
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].propRotationDirection).toBe(
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.rotationDirection).toBe(
 				RotationDirection.NO_ROTATION
 			);
 		});
@@ -485,7 +486,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result[2].endPosition).toBe(GridPosition.ALPHA1); // Same as beat 1
 		});
@@ -509,11 +510,11 @@ describe("StrictComplementaryCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			const complementaryBeat = result[2];
-			expect(complementaryBeat.motions[MotionColor.BLUE].endLocation).toBe(GridLocation.NORTH);
-			expect(complementaryBeat.motions[MotionColor.RED].endLocation).toBe(GridLocation.SOUTH);
+			expect(complementaryBeat.motions[MotionColor.BLUE]!.endLocation).toBe(GridLocation.NORTH);
+			expect(complementaryBeat.motions[MotionColor.RED]!.endLocation).toBe(GridLocation.SOUTH);
 		});
 	});
 
@@ -523,7 +524,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result).toHaveLength(3); // startPos + beat1 + complementary beat2
 			expect(result[0].beatNumber).toBe(0);
@@ -537,7 +538,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat2 = createBeat(2, "D", GridPosition.ALPHA3, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1, beat2];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			expect(result).toHaveLength(5); // startPos + 2 original + 2 complementary
 		});
@@ -561,7 +562,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			);
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			// Beat 2 should start where beat 1 ended
 			expect(result[2].startPosition).toBe(GridPosition.ALPHA1);
@@ -574,7 +575,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat1 = createBeat(1, "A", GridPosition.ALPHA1, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			// Beat 2 should be complementary of beat 1
 			expect(result[2].letter).toBe("B"); // A → B
@@ -586,7 +587,7 @@ describe("StrictComplementaryCAPExecutor", () => {
 			const beat2 = createBeat(2, "D", GridPosition.ALPHA3, GridPosition.ALPHA1, {}, {});
 			const sequence = [startPos, beat1, beat2];
 
-			const result = executor.executeCAP(sequence);
+			const result = executor.executeCAP(sequence, SliceSize.HALVED);
 
 			// Beat 3 should complement beat 1 (A → B)
 			expect(result[3].letter).toBe("B");

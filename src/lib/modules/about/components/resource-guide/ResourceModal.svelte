@@ -1,15 +1,15 @@
 <script lang="ts">
+  import { createFocusTrap } from "$lib/shared/settings/utils/focus-trap.svelte";
+  import { useScrollLock } from "$lib/shared/ui/utils/scroll-lock.svelte";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import type { ResourceModalData } from "./types";
-  import { createFocusTrap } from "$lib/shared/settings/utils/focus-trap.svelte";
-  import { useScrollLock } from "$lib/shared/ui/utils/scroll-lock.svelte";
+  import RelatedResourcesPanel from "./RelatedResourcesPanel.svelte";
   import ResourceModalCloseButton from "./ResourceModalCloseButton.svelte";
+  import ResourceModalFooter from "./ResourceModalFooter.svelte";
   import ResourceModalHeader from "./ResourceModalHeader.svelte";
   import ResourceModalNavigation from "./ResourceModalNavigation.svelte";
-  import RelatedResourcesPanel from "./RelatedResourcesPanel.svelte";
-  import ResourceModalFooter from "./ResourceModalFooter.svelte";
+  import type { ResourceModalData } from "./types";
 
   let {
     isOpen = false,
@@ -35,7 +35,7 @@
   // DOM element references
   let modalContainer: HTMLElement | undefined = $state();
   let modalContent: HTMLElement | undefined = $state();
-  let closeButton: HTMLElement | undefined = $state();
+  let closeButton: HTMLButtonElement | undefined = $state();
 
   // State
   let previouslyFocusedElement: HTMLElement | null = null;
@@ -109,6 +109,8 @@
     class="modal-overlay"
     bind:this={modalContainer}
     onclick={handleBackdropClick}
+    onkeydown={(e) =>
+      e.key === "Enter" && handleBackdropClick(e as unknown as MouseEvent)}
     role="dialog"
     aria-modal="true"
     aria-labelledby="modal-title"
@@ -117,7 +119,10 @@
   >
     <!-- Modal Container -->
     <div class="modal-container" bind:this={modalContent}>
-      <ResourceModalCloseButton onClose={handleClose} bind:buttonRef={closeButton} />
+      <ResourceModalCloseButton
+        onClose={handleClose}
+        bind:buttonRef={closeButton}
+      />
 
       {#if loading}
         <!-- Loading State -->

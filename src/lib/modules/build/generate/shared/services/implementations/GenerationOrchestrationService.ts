@@ -3,6 +3,8 @@ import type { BeatData, SequenceData } from "$shared";
 import { inject, injectable } from "inversify";
 // Import TYPES directly from inversify/types to avoid HMR issues with re-exports
 import { TYPES } from "../../../../../../shared/inversify/types";
+import type { ICAPEndPositionSelector } from "../../../circular/services/contracts/ICAPEndPositionSelector";
+import type { ICAPExecutorSelector } from "../../../circular/services/contracts/ICAPExecutorSelector";
 import type { IPartialSequenceGenerator } from "../../../circular/services/contracts/IPartialSequenceGenerator";
 import type { IRotationDirectionService } from "../../../circular/services/contracts/IRotationDirectionService";
 import { GenerationMode, PropContinuity, type GenerationOptions } from "../../domain";
@@ -47,10 +49,10 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 		private readonly partialSequenceGenerator: IPartialSequenceGenerator,
 
 		@inject(TYPES.ICAPEndPositionSelector)
-		private readonly capEndPositionSelector: any,
+		private readonly capEndPositionSelector: ICAPEndPositionSelector,
 
 		@inject(TYPES.ICAPExecutorSelector)
-		private readonly capExecutorSelector: any
+		private readonly capExecutorSelector: ICAPExecutorSelector
 	) {}
 
 	/**
@@ -135,7 +137,7 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 			startingPositionBeat: startPosition,
 			startPosition,
 			gridMode: options.gridMode,
-			propType: options.propType || PropType.STAFF,
+			propType: options.propType as any,
 			difficultyLevel: options.difficulty,
 			isFavorite: false,
 			isCircular: false,
@@ -220,7 +222,7 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 			startingPositionBeat: circularBeats[0],
 			startPosition: circularBeats[0],
 			gridMode: options.gridMode,
-			propType: options.propType || PropType.STAFF,
+			propType: options.propType as any,
 			difficultyLevel: options.difficulty,
 			isFavorite: false,
 			isCircular: true,

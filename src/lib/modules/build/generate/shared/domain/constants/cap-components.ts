@@ -1,15 +1,17 @@
 /**
  * CAP Component definitions and metadata
- * Re-exports from domain layer for UI convenience
+ * Unified export point for all CAP component-related data
  */
 
-// Re-export domain models and constants
-export type { CAPComponentInfo } from "../../shared/domain";
-export { CAP_COMPONENTS } from "../../shared/domain";
+// Re-export domain models
+export { CAPComponent, type CAPComponentInfo } from "../models";
+
+// Re-export constants
+export { CAP_COMPONENTS } from "./cap-constants";
 
 // Re-export service functionality
-import { CAPExplanationTextGenerator } from "../../shared/services/implementations";
-import type { CAPComponent } from "$shared";
+import { CAPExplanationTextGenerator } from "../../services";
+import type { CAPComponent } from "../models";
 
 // Create a singleton instance for convenience
 const explanationGenerator = new CAPExplanationTextGenerator();

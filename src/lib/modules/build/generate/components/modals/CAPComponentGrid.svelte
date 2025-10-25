@@ -3,8 +3,7 @@ CAPComponentGrid.svelte - Grid layout for CAP component selection buttons
 Displays all available CAP transformations in a responsive 2x2 grid
 -->
 <script lang="ts">
-  import { CAPComponent } from "$shared";
-  import { CAP_COMPONENTS } from "./cap-components";
+  import { CAP_COMPONENTS, CAPComponent } from "$build/generate/shared/domain/constants/cap-components";
   import CAPComponentButton from "./CAPComponentButton.svelte";
 
   let {

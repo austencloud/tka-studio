@@ -5,9 +5,8 @@
  * Based on the modern desktop app's SequenceData but adapted for TypeScript.
  */
 
-import type { BeatData } from "../../../modules/build/shared/domain/models/BeatData";
-import type { GridMode, GridPositionGroup } from "../../pictograph/grid/domain/enums/grid-enums";
-import type { PropType } from "../../pictograph/prop/domain/enums/prop-enums";
+import type { BeatData } from "$build/workbench";
+import type { GridMode, GridPositionGroup, PropType } from "$shared";
 
 export interface SequenceData {
   readonly id: string;

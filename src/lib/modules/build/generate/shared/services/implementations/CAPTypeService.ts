@@ -63,23 +63,17 @@ export class CAPTypeService implements ICAPTypeService {
 				return CAPType.ROTATED_COMPLEMENTARY;
 			if (first === CAPComponent.COMPLEMENTARY && second === CAPComponent.SWAPPED)
 				return CAPType.SWAPPED_COMPLEMENTARY;
-			if (first === CAPComponent.MIRRORED && second === CAPComponent.ROTATED)
-				return CAPType.MIRRORED_ROTATED;
 			if (first === CAPComponent.MIRRORED && second === CAPComponent.SWAPPED)
 				return CAPType.MIRRORED_SWAPPED;
 			if (first === CAPComponent.ROTATED && second === CAPComponent.SWAPPED)
 				return CAPType.ROTATED_SWAPPED;
+			// Note: MIRRORED + ROTATED combination not currently supported
+			// Falls through to default
 		}
 
 		// Three components
-		if (
-			sorted.length === 3 &&
-			sorted.includes(CAPComponent.MIRRORED) &&
-			sorted.includes(CAPComponent.COMPLEMENTARY) &&
-			sorted.includes(CAPComponent.ROTATED)
-		) {
-			return CAPType.MIRRORED_COMPLEMENTARY_ROTATED;
-		}
+		// Note: Three-component combinations not currently supported
+		// Falls through to default
 
 		return CAPType.STRICT_ROTATED;
 	}

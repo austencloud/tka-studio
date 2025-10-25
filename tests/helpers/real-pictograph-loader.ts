@@ -8,12 +8,11 @@
  * Always use this loader to get real, validated data.
  */
 
-import { GridMode, Letter } from "$shared";
 import type { ILetterQueryHandler, PictographData } from "$shared";
-import { TYPES } from "$shared/inversify/types";
+import { GridMode, Letter } from "$shared";
 import { CsvLoader } from "$shared/foundation/services/implementations/data/CsvLoader";
 import { container, initializeContainer } from "$shared/inversify/container";
-import { CSVPictographParser } from "$build/generate/shared/services/implementations/CSVPictographParser";
+import { TYPES } from "$shared/inversify/types";
 
 /**
  * Test helper class for loading real pictographs

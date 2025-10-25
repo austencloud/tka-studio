@@ -9,13 +9,13 @@ Features:
 - 🎯 Context-aware editing without leaving the flow
 -->
 <script lang="ts">
-  import { fly, fade } from 'svelte/transition';
-  import { quintOut, backOut } from 'svelte/easing';
-  import { onMount, onDestroy } from 'svelte';
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
-  import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
+  import { onDestroy, onMount } from 'svelte';
+  import { backOut, quintOut } from 'svelte/easing';
+  import { fade, fly } from 'svelte/transition';
   import type { BeatData } from "../../workbench";
+  import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
 
   // Props
   const {
@@ -60,7 +60,7 @@ Features:
 
   // Close handler with haptic feedback
   function handleClose() {
-    hapticService?.trigger('light');
+    hapticService?.trigger('selection');
     onClose();
   }
 
@@ -101,7 +101,7 @@ Features:
     if (panelElement) {
       if (deltaX > threshold) {
         // Swipe far enough - close the panel
-        hapticService?.trigger('medium');
+        hapticService?.trigger('warning');
         onClose();
       } else {
         // Snap back
@@ -147,7 +147,7 @@ Features:
   // Reactive: Trigger haptic when panel opens
   $effect(() => {
     if (isOpen) {
-      hapticService?.trigger('light');
+      hapticService?.trigger('selection');
     }
   });
 </script>
@@ -158,6 +158,7 @@ Features:
     class="edit-panel-backdrop"
     transition:fade={{ duration: 250, easing: quintOut }}
     onclick={handleBackdropClick}
+    onkeydown={(e) => e.key === 'Enter' && handleBackdropClick(e as unknown as MouseEvent)}
     role="button"
     tabindex="-1"
     aria-label="Close edit panel"
@@ -171,10 +172,12 @@ Features:
       role="dialog"
       aria-modal="true"
       aria-labelledby="edit-panel-title"
+      tabindex="0"
       ontouchstart={handleTouchStart}
       ontouchmove={handleTouchMove}
       ontouchend={handleTouchEnd}
       onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.key === 'Enter' && e.stopPropagation()}
     >
       <!-- Header with close button -->
       <div class="edit-panel-header">

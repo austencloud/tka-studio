@@ -13,18 +13,18 @@ interface LetterDerivationResult {
   confidence: "exact" | "partial" | "none";
   matchedParameters: string[];
 }
-import type { ILetterDeriver } from "$lib/modules/build/generate/shared/services/contracts";
+
 import {
-  GridMode,
-  Letter,
-  MotionType,
-  type MotionData,
-  type PictographData,
+    GridMode,
+    Letter,
+    MotionType,
+    type MotionData,
+    type PictographData,
 } from "$shared";
 import { injectable } from "inversify";
 
 @injectable()
-export class LetterDeriver implements ILetterDeriver {
+export class LetterDeriver {
   private readonly letterPatterns: Map<string, Letter> = new Map();
 
   constructor() {

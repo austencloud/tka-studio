@@ -3,7 +3,7 @@
  *
  * Provides turn intensity values for UI display based on difficulty level.
  * This is a stateless service that can be resolved from the DI container.
- * 
+ *
  * Separated from TurnIntensityManagerService which requires constructor parameters.
  */
 
@@ -34,11 +34,10 @@ export class TurnIntensityLevelService implements ITurnIntensityManagerService {
    * Not used by UI - only needed for sequence generation
    * Throws error if called
    */
-  allocateTurnsForBlueAndRed() {
+  allocateTurnsForBlueAndRed(): { blue: (number | "fl")[]; red: (number | "fl")[] } {
     throw new Error(
       "TurnIntensityLevelService does not support allocateTurnsForBlueAndRed. " +
       "Use TurnIntensityManagerService directly for turn allocation."
     );
   }
 }
-

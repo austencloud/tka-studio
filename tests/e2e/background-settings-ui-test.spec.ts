@@ -4,7 +4,7 @@
  * Simulates the exact user flow through the Settings UI
  */
 
-import { test, expect } from '@playwright/test';
+import { test } from '@playwright/test';
 
 test.describe('Settings UI Background Change', () => {
   test('should change background through Settings UI exactly as user does', async ({ page }) => {
@@ -92,8 +92,8 @@ test.describe('Settings UI Background Change', () => {
     const changeResult = await page.evaluate(async () => {
       try {
         // Import the necessary functions
-        const { updateSettings } = await import('/src/lib/shared/application/state/app-state.svelte.ts');
-        const { BackgroundType } = await import('/src/lib/shared/background/index.ts');
+        const { updateSettings } = await import('$lib/shared/application/state/app-state.svelte');
+        const { BackgroundType } = await import('$lib/shared/background');
 
         console.log('🧪 TEST: Imported modules successfully');
         console.log('🧪 TEST: Calling updateSettings with aurora...');

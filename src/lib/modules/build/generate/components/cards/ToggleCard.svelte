@@ -35,7 +35,13 @@ Perfect for narrow screens and provides immediate visual affordance
   }>();
 
   // Create state using factory function
-  const state = createToggleCardState({ option1, option2, activeOption, onToggle });
+  // Use getter for activeOption to ensure reactivity
+  const state = createToggleCardState({
+    option1,
+    option2,
+    getActiveOption: () => activeOption,
+    onToggle
+  });
 
   // Simple derived state stays in component
   const isOption1Active = $derived(activeOption === option1.value);

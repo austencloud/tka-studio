@@ -66,6 +66,7 @@ Uses consistent spacing via --element-spacing CSS variable from parent
     display: flex;
     gap: var(--element-spacing);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: var(--element-spacing);
     flex-direction: row;
   }
 

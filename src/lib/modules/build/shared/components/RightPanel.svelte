@@ -23,7 +23,6 @@
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import AnimationPanel from "../../animate/components/AnimationPanel.svelte";
-  import GraphEditor from "../../edit/components/GraphEditor.svelte";
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
   import { RecordPanel } from "../../record/components";
   import { SharePanel } from "../../share/components";
@@ -346,14 +345,6 @@
     flex: 1;
     overflow: auto;
     padding: var(--spacing-lg);
-  }
-
-  .graph-editor-content {
-    padding: 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
   }
 
   .animation-content {
