@@ -28,8 +28,8 @@ Shows BOTH Freeform and Circular options vertically with clear active/inactive s
 
 <ToggleCard
   title="Gen Mode"
-  option1={{ value: GenerationMode.CIRCULAR, label: "Circular", icon: "🔄" }}
-  option2={{ value: GenerationMode.FREEFORM, label: "Freeform", icon: "🎯" }}
+  option1={{ value: GenerationMode.CIRCULAR, label: "Circular", icon: "arrows-rotate" }}
+  option2={{ value: GenerationMode.FREEFORM, label: "Freeform", icon: "bullseye" }}
   activeOption={currentMode}
   onToggle={onModeChange}
   {color}

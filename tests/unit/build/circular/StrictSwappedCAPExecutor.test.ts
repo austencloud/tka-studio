@@ -70,7 +70,7 @@ describe("StrictSwappedCAPExecutor", () => {
         motionType: MotionType.PRO,
         startLocation: GridLocation.SOUTH,
         endLocation: GridLocation.WEST,
-        propRotationDirection: RotationDirection.CLOCKWISE,
+        rotationDirection: RotationDirection.CLOCKWISE,
         startOrientation: null,
         endOrientation: null,
         turns: 1,
@@ -80,7 +80,7 @@ describe("StrictSwappedCAPExecutor", () => {
         motionType: MotionType.ANTI,
         startLocation: GridLocation.NORTH,
         endLocation: GridLocation.EAST,
-        propRotationDirection: RotationDirection.COUNTER_CLOCKWISE,
+        rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
         startOrientation: null,
         endOrientation: null,
         turns: 1,
@@ -222,8 +222,8 @@ describe("StrictSwappedCAPExecutor", () => {
         null,
         null,
         GridPosition.ALPHA1,
-        { endLocation: GridLocation.SOUTH, propRotationDirection: RotationDirection.CLOCKWISE },
-        { endLocation: GridLocation.NORTH, propRotationDirection: RotationDirection.COUNTER_CLOCKWISE }
+        { endLocation: GridLocation.SOUTH, rotationDirection: RotationDirection.CLOCKWISE },
+        { endLocation: GridLocation.NORTH, rotationDirection: RotationDirection.COUNTER_CLOCKWISE }
       );
       const beat1 = createBeat(
         1,
@@ -233,12 +233,12 @@ describe("StrictSwappedCAPExecutor", () => {
         {
           startLocation: GridLocation.SOUTH,
           endLocation: GridLocation.NORTH,
-          propRotationDirection: RotationDirection.CLOCKWISE,
+          rotationDirection: RotationDirection.CLOCKWISE,
         },
         {
           startLocation: GridLocation.NORTH,
           endLocation: GridLocation.SOUTH,
-          propRotationDirection: RotationDirection.COUNTER_CLOCKWISE,
+          rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
         }
       );
       const sequence = [startPos, beat1];

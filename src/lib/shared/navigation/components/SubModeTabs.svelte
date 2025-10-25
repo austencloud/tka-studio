@@ -7,9 +7,16 @@
 -->
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
-  import { resolve, TYPES } from "$shared";
+  import { FontAwesomeIcon, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import type { ModeOption } from "../domain/types";
+
+  // Helper function to extract Font Awesome icon name from HTML string
+  function extractIconName(htmlString: string): string | null {
+    // Match patterns like: <i class="fas fa-hammer"></i>
+    const match = htmlString.match(/fa-([a-z-]+)/);
+    return match ? match[1] : null;
+  }
 
   let {
     subModeTabs = [],
@@ -106,7 +113,13 @@
         subMode.color ||
         'var(--muted-foreground)'};"
     >
-      <span class="tab-icon">{@html subMode.icon}</span>
+      <span class="tab-icon">
+        {#if extractIconName(subMode.icon)}
+          <FontAwesomeIcon icon={extractIconName(subMode.icon)!} size="1em" />
+        {:else}
+          {@html subMode.icon}
+        {/if}
+      </span>
       {#if navigationLayout === "top"}
         <span class="tab-label">{subMode.label}</span>
       {/if}

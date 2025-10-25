@@ -109,14 +109,6 @@ DESKTOP: Shows inline component buttons for direct selection
   // Format CAP type display using user-friendly labels
   // Show pending CAP type on card if modal is open
   const capTypeDisplay = $derived(CAP_TYPE_LABELS[displayCAPType as CAPType] || displayCAPType);
-
-  // Component data for desktop inline display
-  const capComponents = [
-    { component: CAPComponent.ROTATED, label: "Rotated", icon: "🔄" },
-    { component: CAPComponent.MIRRORED, label: "Mirrored", icon: "🪞" },
-    { component: CAPComponent.SWAPPED, label: "Swapped", icon: "🔀" },
-    { component: CAPComponent.COMPLEMENTARY, label: "Complementary", icon: "🎨" }
-  ];
 </script>
 
 <!-- CAP card with animated gradient wrapper -->
@@ -126,14 +118,16 @@ DESKTOP: Shows inline component buttons for direct selection
     <div class="cap-card-desktop">
       <div class="cap-header" style="font-size: {headerFontSize};">CAP TYPE</div>
       <div class="cap-components-grid">
-        {#each capComponents as { component, label, icon }}
+        {#each CAP_COMPONENTS as { component, label, icon, color: iconColor }}
           <button
             class="cap-component-btn"
             class:active={selectedComponents.has(component)}
             onclick={() => toggleComponentDesktop(component)}
             aria-label="Toggle {label}"
           >
-            <span class="cap-icon">{icon}</span>
+            <span class="cap-icon">
+              <FontAwesomeIcon {icon} size="1.2em" color={iconColor} />
+            </span>
             <span class="cap-label">{label}</span>
           </button>
         {/each}

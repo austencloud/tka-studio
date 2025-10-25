@@ -3,6 +3,7 @@ CAPComponentButton.svelte - Individual CAP component selection button
 Displays a selectable button for a single CAP transformation type
 -->
 <script lang="ts">
+  import { FontAwesomeIcon } from "$shared";
   import type { CAPComponentInfo } from "./cap-components";
 
   let {
@@ -15,7 +16,7 @@ Displays a selectable button for a single CAP transformation type
     onClick: () => void;
   }>();
 
-  const { component, label, shortLabel, icon, color, description } = componentInfo;
+  const { component, label, shortLabel, icon, color } = componentInfo;
 </script>
 
 <button
@@ -24,9 +25,10 @@ Displays a selectable button for a single CAP transformation type
   onclick={onClick}
   style="--component-color: {color};"
   aria-label="{label} - {isSelected ? 'selected' : 'not selected'}"
-  title={description}
 >
-  <div class="component-icon">{icon}</div>
+  <div class="component-icon">
+    <FontAwesomeIcon {icon} size="min(8vmin, 32px)" {color} />
+  </div>
   <div class="component-label">
     <span class="label-full">{label}</span>
     <span class="label-short">{shortLabel}</span>
@@ -130,6 +132,32 @@ Displays a selectable button for a single CAP transformation type
   .selected-indicator svg {
     width: 14px;
     height: 14px;
+  }
+
+  /* 💻 DESKTOP & WIDE SCREENS: Cap sizes to prevent oversized content */
+  @media (min-width: 1025px) {
+    .component-button {
+      padding: 16px;
+      max-width: 200px;
+    }
+
+    .component-icon {
+      font-size: 28px;
+    }
+
+    .component-label {
+      font-size: 14px;
+    }
+
+    .selected-indicator {
+      width: 24px;
+      height: 24px;
+    }
+
+    .selected-indicator svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 
   /* 📱 TABLET & LARGE PHONES: Optimized for bigger screens */

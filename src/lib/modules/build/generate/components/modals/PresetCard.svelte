@@ -285,6 +285,7 @@ Displays a single preset with icon, name, summary, and action buttons
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     word-break: break-word;

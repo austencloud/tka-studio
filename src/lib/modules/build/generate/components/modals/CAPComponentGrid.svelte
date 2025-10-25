@@ -29,14 +29,23 @@ Displays all available CAP transformations in a responsive 2x2 grid
 <style>
   .component-grid {
     display: grid;
-    /* 🎯 Single row for wide viewports, 2x2 for narrow */
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    /* 🎯 2x2 grid by default */
+    grid-template-columns: repeat(2, 1fr);
     gap: clamp(12px, 2vmin, 20px);
     width: 100%;
     flex-shrink: 0;
   }
 
-  /* 📱 PORTRAIT MODE: 2x2 grid for narrow viewports */
+  /* 💻 DESKTOP & WIDE SCREENS: 4-column single row layout */
+  @media (min-width: 1025px) {
+    .component-grid {
+      grid-template-columns: repeat(4, minmax(120px, 180px));
+      justify-content: center;
+      gap: 16px;
+    }
+  }
+
+  /* 📱 PORTRAIT MODE: Ensure 2x2 grid */
   @media (orientation: portrait) {
     .component-grid {
       grid-template-columns: repeat(2, 1fr);

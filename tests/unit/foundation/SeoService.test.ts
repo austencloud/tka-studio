@@ -221,14 +221,11 @@ describe("SeoService", () => {
   // ============================================================================
 
   describe("handleSEORedirect", () => {
-    let originalLocation: Location;
-
     beforeEach(() => {
-      // Save original location
-      originalLocation = window.location;
-
       // Mock window.location with a writable href property
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       delete (window as any).location;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (window as any).location = {
         href: "",
       };
@@ -242,8 +239,12 @@ describe("SeoService", () => {
     });
 
     afterEach(() => {
-      // Restore original location
-      window.location = originalLocation;
+      // Clean up mocked location
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      delete (window as any).location;
+      // Restore to jsdom's default location
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window as any).location = new URL("http://localhost:3000");
     });
 
     it("should not redirect bots", () => {

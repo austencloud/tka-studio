@@ -85,19 +85,13 @@ Uses portal to render at document.body level for proper z-index stacking
     right: 0;
     bottom: 0;
     width: 100vw;
-    height: 100vh;
-    height: 100dvh;
-    height: var(--actual-vh, 100vh);
+    height: 100dvh; /* Use dynamic viewport height to account for browser UI */
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 999999;
-    padding: max(16px, env(safe-area-inset-top, 16px))
-      max(16px, env(safe-area-inset-right, 16px))
-      max(16px, env(safe-area-inset-bottom, 16px))
-      max(16px, env(safe-area-inset-left, 16px));
     animation: fadeIn 0.25s ease-out;
   }
 
@@ -126,8 +120,9 @@ Uses portal to render at document.body level for proper z-index stacking
     background-size: 300% 300%;
     animation: meshGradientFlow 15s ease infinite, modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     border-radius: 20px;
-    width: 80%;
-    height: 80vh;
+    width: 90dvw;
+    height: 90dvh; /* Use dynamic viewport height to account for browser UI */
+    max-height: 90%; /* Fallback for browsers that don't support dvh */
     display: flex;
     flex-direction: column;
     gap: clamp(16px, 3vh, 24px);
@@ -178,29 +173,5 @@ Uses portal to render at document.body level for proper z-index stacking
     }
   }
 
-  @media (min-width: 600px) and (max-width: 1024px) and (orientation: portrait) {
-    .cap-modal-content {
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-  }
-
-  @media (orientation: landscape) and (max-height: 600px) {
-    .cap-modal-content {
-      width: min(98vw, 900px);
-      max-height: 98vh;
-      padding: clamp(12px, 2vh, 16px) clamp(16px, 2vw, 24px);
-      gap: clamp(8px, 1.5vh, 12px);
-    }
-  }
-
-  @media (orientation: landscape) and (max-height: 400px) {
-    .cap-modal-content {
-      width: min(98vw, 900px);
-      max-height: 98vh;
-      padding: 8px 12px;
-      gap: 8px;
-    }
-  }
+  /* 🎯 No media query overrides - modal stays at 80% width and 80vh height */
 </style>

@@ -27,8 +27,8 @@ Shows BOTH grid mode options vertically with clear active/inactive states
 
 <ToggleCard
   title="Grid"
-  option1={{ value: GridMode.DIAMOND, label: "Diamond", icon: "◆" }}
-  option2={{ value: GridMode.BOX, label: "Box", icon: "⬜" }}
+  option1={{ value: GridMode.DIAMOND, label: "Diamond", icon: "gem" }}
+  option2={{ value: GridMode.BOX, label: "Box", icon: "square" }}
   activeOption={currentMode}
   onToggle={onModeChange}
   {color}

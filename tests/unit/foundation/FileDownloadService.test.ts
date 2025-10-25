@@ -6,14 +6,15 @@
  */
 
 import { FileDownloadService } from "$shared/foundation/services/implementations/FileDownloadService";
+import type { MockInstance } from "vitest";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("FileDownloadService", () => {
   let service: FileDownloadService;
   let mockAnchor: HTMLAnchorElement;
-  let createElementSpy: ReturnType<typeof vi.spyOn>;
-  let createObjectURLSpy: ReturnType<typeof vi.spyOn>;
-  let revokeObjectURLSpy: ReturnType<typeof vi.spyOn>;
+  let createElementSpy: MockInstance;
+  let createObjectURLSpy: MockInstance;
+  let revokeObjectURLSpy: MockInstance;
 
   beforeEach(() => {
     service = new FileDownloadService();

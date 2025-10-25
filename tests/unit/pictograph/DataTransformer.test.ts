@@ -48,7 +48,7 @@ describe("DataTransformer", () => {
             color: MotionColor.BLUE,
             propType: PropType.STAFF,
           }),
-          red: null,
+          red: undefined,
         },
         blueReversal: false,
         redReversal: false,
@@ -116,8 +116,8 @@ describe("DataTransformer", () => {
         duration: 1.0,
         letter: Letter.C,
         motions: {
-          blue: null,
-          red: null,
+          blue: undefined,
+          red: undefined,
         },
         blueReversal: false,
         redReversal: false,
@@ -151,7 +151,7 @@ describe("DataTransformer", () => {
             color: MotionColor.BLUE,
             propType: PropType.STAFF,
           }),
-          red: null,
+          red: undefined,
         },
         blueReversal: false,
         redReversal: false,
@@ -185,7 +185,7 @@ describe("DataTransformer", () => {
         letter: Letter.D,
         motions: {
           blue: blueMotion,
-          red: null,
+          red: undefined,
         },
         blueReversal: false,
         redReversal: false,
@@ -207,7 +207,7 @@ describe("DataTransformer", () => {
         beatNumber: 42,
         duration: 1.0,
         letter: Letter.E,
-        motions: { blue: null, red: null },
+        motions: { blue: undefined, red: undefined },
         blueReversal: false,
         redReversal: false,
         isBlank: false,
@@ -236,7 +236,8 @@ describe("DataTransformer", () => {
           NORTH: { coordinates: { x: 475, y: 200 } },
           SOUTH: { coordinates: { x: 475, y: 750 } },
         },
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       const result = service.adaptGridData(rawGridData, GridMode.DIAMOND);
 
@@ -254,7 +255,8 @@ describe("DataTransformer", () => {
           NORTH: { coordinates: { x: 475, y: 100 } },
         },
         allHandPointsNormal: {},
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       const result = service.adaptGridData(rawGridData, GridMode.BOX);
 
@@ -270,7 +272,8 @@ describe("DataTransformer", () => {
         allHandPointsNormal: {
           EAST: { coordinates: null },
         },
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       const result = service.adaptGridData(rawGridData, GridMode.DIAMOND);
 
@@ -283,7 +286,8 @@ describe("DataTransformer", () => {
       const rawGridData = {
         allLayer2PointsNormal: {},
         allHandPointsNormal: {},
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       const result = service.adaptGridData(rawGridData, GridMode.DIAMOND);
 
@@ -295,7 +299,8 @@ describe("DataTransformer", () => {
       const rawGridData = {
         allLayer2PointsNormal: {},
         allHandPointsNormal: {},
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       const result = service.adaptGridData(rawGridData, GridMode.DIAMOND);
 
@@ -306,7 +311,8 @@ describe("DataTransformer", () => {
       const rawGridData = {
         allLayer2PointsNormal: {},
         allHandPointsNormal: {},
-      };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any;
 
       const result = service.adaptGridData(rawGridData, GridMode.DIAMOND);
 

@@ -27,8 +27,8 @@ Shows BOTH continuity options vertically with clear active/inactive states
 
 <ToggleCard
   title="Continuity"
-  option1={{ value: PropContinuity.CONTINUOUS, label: "Continuous", icon: "🔗" }}
-  option2={{ value: PropContinuity.RANDOM, label: "Reversals", icon: "↔️" }}
+  option1={{ value: PropContinuity.CONTINUOUS, label: "Continuous", icon: "link" }}
+  option2={{ value: PropContinuity.RANDOM, label: "Reversals", icon: "left-right" }}
   activeOption={currentContinuity}
   onToggle={onContinuityChange}
   {color}

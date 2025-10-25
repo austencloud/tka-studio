@@ -96,7 +96,7 @@ describe("Inversify Container", () => {
       // Both services should be defined and have the same constructor
       expect(service1).toBeDefined();
       expect(service2).toBeDefined();
-      expect(service1.constructor.name).toBe(service2.constructor.name);
+      expect((service1 as object).constructor.name).toBe((service2 as object).constructor.name);
     });
   });
 
@@ -165,7 +165,7 @@ describe("Inversify Container", () => {
     it("should load core module services", async () => {
       await initializeContainer();
 
-      const service = await resolve(TYPES.IPersistenceService);
+      const service = await resolve(TYPES.IPersistenceService) as { initialize?: () => void };
       expect(service).toBeDefined();
       expect(typeof service.initialize).toBe("function");
     });
@@ -204,10 +204,11 @@ describe("Inversify Container", () => {
       try {
         await resolve(fakeType);
         expect.fail("Should have thrown an error");
-      } catch (error: any) {
+      } catch (error: unknown) {
         expect(error).toBeDefined();
         // Error should mention the service or container
-        expect(error.message || error.toString()).toBeTruthy();
+        const errorMessage = error instanceof Error ? error.message : String(error);
+        expect(errorMessage).toBeTruthy();
       }
     });
 

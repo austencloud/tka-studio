@@ -28,8 +28,8 @@ Shows BOTH slice size options vertically with clear active/inactive states
 
 <ToggleCard
   title="Slice"
-  option1={{ value: SliceSize.QUARTERED, label: "Quartered", icon: "¼" }}
-  option2={{ value: SliceSize.HALVED, label: "Halved", icon: "½" }}
+  option1={{ value: SliceSize.QUARTERED, label: "Quartered", icon: "chart-pie" }}
+  option2={{ value: SliceSize.HALVED, label: "Halved", icon: "circle-half-stroke" }}
   activeOption={currentSliceSize}
   onToggle={onSliceSizeChange}
   {color}

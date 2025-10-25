@@ -7,6 +7,7 @@ Perfect for narrow screens and provides immediate visual affordance
   import type { IDeviceDetector, IHapticFeedbackService, IRippleEffectService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
+  import ToggleOption from "./ToggleOption.svelte";
 
   let {
     title,
@@ -39,49 +40,33 @@ Perfect for narrow screens and provides immediate visual affordance
   let isLandscapeMobile = $state(false);
   let cardElement: HTMLButtonElement | null = $state(null);
 
-  onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
-    rippleService = resolve<IRippleEffectService>(TYPES.IRippleEffectService);
-    deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
+  onMount(async () => {
+    // Resolve services from DI container
+    hapticService = await resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    rippleService = await resolve<IRippleEffectService>(TYPES.IRippleEffectService);
+    deviceDetector = await resolve<IDeviceDetector>(TYPES.IDeviceDetector);
 
-    // 🌊 Attach ripple effect to card
-    if (cardElement) {
-      const cleanup = rippleService.attachRipple(cardElement, {
-        color: 'rgba(255, 255, 255, 0.4)',
-        duration: 600,
-        opacity: 0.5
-      });
-
-      return cleanup;
-    }
-  });
-
-  // Reactive effect to update layout state on resize/orientation change
-  $effect(() => {
-    if (!deviceDetector) return;
-
-    // Update initial state
+    // Set initial layout state
     isLandscapeMobile = deviceDetector.isLandscapeMobile();
 
-    // Listen for resize and orientation changes
-    const handleResize = () => {
+    // Subscribe to device capability changes (ViewportService handles resize/orientation internally)
+    const cleanupDeviceListener = deviceDetector.onCapabilitiesChanged(() => {
       isLandscapeMobile = deviceDetector.isLandscapeMobile();
-    };
+    });
 
-    const handleOrientationChange = () => {
-      // Small delay to ensure viewport dimensions are updated
-      setTimeout(() => {
-        isLandscapeMobile = deviceDetector.isLandscapeMobile();
-      }, 100);
-    };
+    // 🌊 Attach ripple effect to card
+    const cleanupRipple = cardElement
+      ? rippleService.attachRipple(cardElement, {
+          color: 'rgba(255, 255, 255, 0.4)',
+          duration: 600,
+          opacity: 0.5
+        })
+      : () => {};
 
-    window.addEventListener("resize", handleResize);
-    window.addEventListener("orientationchange", handleOrientationChange);
-
-    // Cleanup listeners
+    // Consolidated cleanup
     return () => {
-      window.removeEventListener("resize", handleResize);
-      window.removeEventListener("orientationchange", handleOrientationChange);
+      cleanupDeviceListener();
+      cleanupRipple();
     };
   });
 
@@ -132,35 +117,18 @@ Perfect for narrow screens and provides immediate visual affordance
 
   <!-- Toggle Options Container -->
   <div class="toggle-options">
-    <!-- Option 1 -->
-    <div
-      class="toggle-option"
-      class:active={isOption1Active}
-      class:inactive={!isOption1Active}
-      role="presentation"
-      title={option1.label}
-      aria-label={option1.label}
-    >
-      {#if option1.icon}
-        <span class="option-icon">{option1.icon}</span>
-      {/if}
-      <span class="option-label">{option1.label}</span>
-    </div>
-
-    <!-- Option 2 -->
-    <div
-      class="toggle-option"
-      class:active={isOption2Active}
-      class:inactive={!isOption2Active}
-      role="presentation"
-      title={option2.label}
-      aria-label={option2.label}
-    >
-      {#if option2.icon}
-        <span class="option-icon">{option2.icon}</span>
-      {/if}
-      <span class="option-label">{option2.label}</span>
-    </div>
+    <ToggleOption
+      label={option1.label}
+      icon={option1.icon}
+      isActive={isOption1Active}
+      {isLandscapeMobile}
+    />
+    <ToggleOption
+      label={option2.label}
+      icon={option2.icon}
+      isActive={isOption2Active}
+      {isLandscapeMobile}
+    />
   </div>
 </button>
 
