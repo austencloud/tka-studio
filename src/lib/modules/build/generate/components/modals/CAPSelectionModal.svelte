@@ -105,6 +105,10 @@ Uses portal to render at document.body level for proper z-index stacking
   }
 
   .cap-modal-content {
+    /* 🎯 Container query context for intelligent layout switching */
+    container-type: size;
+    container-name: cap-modal;
+
     position: relative;
     background: linear-gradient(135deg,
       #4338ca 0%,
@@ -120,19 +124,26 @@ Uses portal to render at document.body level for proper z-index stacking
     background-size: 300% 300%;
     animation: meshGradientFlow 15s ease infinite, modalSlideIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     border-radius: 20px;
-    width: 90dvw;
-    height: 90dvh; /* Use dynamic viewport height to account for browser UI */
-    max-height: 90%; /* Fallback for browsers that don't support dvh */
+
+    /* Adaptive sizing - fills available space */
+    width: min(80vw, 80dvw);
+    height: min(80vh, 80dvh);
+    max-width: 1200px;
+    max-height: 900px;
+
     display: flex;
     flex-direction: column;
-    gap: clamp(16px, 3vh, 24px);
-    padding: clamp(20px, 4vh, 32px) clamp(16px, 3vw, 24px);
+    gap: clamp(12px, 2cqh, 20px);
+    padding: clamp(10px, 1.5cqw, 16px);
+
     box-shadow:
       0 0 20px rgba(139, 92, 246, 0.6),
       0 0 40px rgba(139, 92, 246, 0.4),
       0 8px 32px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    overflow-y: auto;
+
+    /* No overflow - everything must fit */
+    overflow: hidden;
   }
 
   .cap-modal-content::before {

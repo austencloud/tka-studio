@@ -12,11 +12,11 @@ Uses grid layout for perfect centering
   }>();
 </script>
 
-<div class="modal-header">
+<div class="cap-modal-header">
   <div class="header-spacer"></div>
   <h2 id="cap-title">{title}</h2>
   <button
-    class="close-button"
+    class="cap-modal-close-button"
     onclick={onClose}
     aria-label="Close CAP selection"
   >
@@ -28,135 +28,53 @@ Uses grid layout for perfect centering
 </div>
 
 <style>
-  .modal-header {
+  .cap-modal-header {
     display: grid;
-    grid-template-columns: 36px 1fr 36px;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    gap: clamp(12px, 2vw, 16px);
+    gap: clamp(8px, 2cqw, 14px);
     flex-shrink: 0;
+    min-height: 0;
   }
 
   .header-spacer {
-    width: 36px;
+    width: clamp(24px, 5cqw, 36px);
   }
 
-  .modal-header h2 {
+  .cap-modal-header h2 {
     color: white;
-    font-size: min(5vw, 24px);
+    font-size: clamp(14px, 3.5cqi, 22px);
     font-weight: 700;
     margin: 0;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     text-align: center;
+    white-space: nowrap;
   }
 
-  .close-button {
+  .cap-modal-close-button {
     background: rgba(0, 0, 0, 0.3);
     border: none;
-    border-radius: 8px;
+    border-radius: clamp(10px, 2.5cqi, 14px);
     color: white;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
-    padding: 8px;
-    width: 36px;
-    height: 36px;
+    padding: clamp(8px, 2cqi, 12px);
+    width: clamp(40px, 7cqw, 52px);
+    height: clamp(40px, 7cqw, 52px);
     flex-shrink: 0;
   }
 
-  .close-button:hover {
+
+  .cap-modal-close-button:hover {
     background: rgba(0, 0, 0, 0.5);
     transform: scale(1.05);
   }
 
-  .close-button svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  @media (max-height: 700px) and (orientation: portrait) {
-    .close-button {
-      width: 30px;
-      height: 30px;
-      padding: 6px;
-    }
-
-    .close-button svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .modal-header h2 {
-      font-size: 16px;
-    }
-  }
-
-  @media (max-width: 400px) and (min-width: 280px) {
-    .close-button {
-      width: 30px;
-      height: 30px;
-    }
-  }
-
-  @media (max-width: 279px) {
-    .close-button {
-      width: 28px;
-      height: 28px;
-      padding: 5px;
-    }
-
-    .close-button svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    .modal-header h2 {
-      font-size: 14px;
-    }
-  }
-
-  /* 🌅 LANDSCAPE MODE: Compact header for wide, short viewports */
-  @media (orientation: landscape) and (max-height: 600px) {
-    .modal-header {
-      gap: 8px;
-    }
-
-    .close-button {
-      width: 28px;
-      height: 28px;
-      padding: 5px;
-    }
-
-    .close-button svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .modal-header h2 {
-      font-size: 14px;
-    }
-  }
-
-  /* 📱 LANDSCAPE + VERY NARROW: Ultra-compact for 344px height */
-  @media (orientation: landscape) and (max-height: 400px) {
-    .modal-header {
-      gap: 6px;
-    }
-
-    .close-button {
-      width: 24px;
-      height: 24px;
-      padding: 4px;
-    }
-
-    .close-button svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    .modal-header h2 {
-      font-size: 12px;
-    }
+  .cap-modal-close-button svg {
+    width: 60%;
+    height: 60%;
   }
 </style>

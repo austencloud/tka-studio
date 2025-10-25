@@ -4,6 +4,8 @@ Left half decrements, right half increments (horizontal layout)
 Used when card aspect ratio is wide/landscape
 -->
 <script lang="ts">
+  import CardHeader from "./shared/CardHeader.svelte";
+
   let {
     title,
     displayValue,
@@ -13,7 +15,8 @@ Used when card aspect ratio is wide/landscape
     canDecrement,
     handleIncrement,
     handleDecrement,
-    handleKeydown
+    handleKeydown,
+    headerFontSize = "9px"
   } = $props<{
     title: string;
     displayValue: string;
@@ -24,6 +27,7 @@ Used when card aspect ratio is wide/landscape
     handleIncrement: () => void;
     handleDecrement: () => void;
     handleKeydown: (event: KeyboardEvent, action: 'increment' | 'decrement') => void;
+    headerFontSize?: string;
   }>();
 </script>
 
@@ -63,9 +67,7 @@ Used when card aspect ratio is wide/landscape
 
 <!-- Landscape Mode: Content Layer -->
 <div class="content-layer">
-  <div class="card-header">
-    <div class="card-title">{title}</div>
-  </div>
+  <CardHeader {title} {headerFontSize} />
 
   {#if subtitle}
     <div class="card-subtitle">{subtitle}</div>
@@ -89,34 +91,6 @@ Used when card aspect ratio is wide/landscape
     height: 100%;
     z-index: 2;
     pointer-events: none;
-  }
-
-  .card-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-    width: 100%;
-    flex-shrink: 0;
-    justify-content: center;
-    position: relative;
-    z-index: 3;
-    pointer-events: none;
-    padding: clamp(3px, 0.8cqh, 6px) clamp(6px, 1.5cqw, 10px);
-    min-height: auto;
-  }
-
-  .card-title {
-    font-size: var(--header-font-size, 9px);
-    font-weight: 600;
-    color: var(--text-color);
-    text-align: center;
-    letter-spacing: 0.2px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
   }
 
   /* Landscape mode: Touch zones for left/right buttons */

@@ -6,6 +6,7 @@ Provides consistent styling and interaction patterns for all generation setting 
   import type { IHapticFeedbackService, IRippleEffectService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
+  import CardHeader from "./shared/CardHeader.svelte";
 
   let {
     title,
@@ -80,10 +81,7 @@ Provides consistent styling and interaction patterns for all generation setting 
     aria-label={`${title}: ${currentValue}. Click to change.`}
     style="--card-color: {color}; --shadow-color: {shadowColor}; --card-index: {cardIndex}; --header-font-size: {headerFontSize}; grid-column: span {gridColumnSpan};"
   >
-    <!-- Card Header -->
-    <div class="card-header">
-      <div class="card-title">{title}</div>
-    </div>
+    <CardHeader {title} {headerFontSize} />
 
     <!-- Current Value Display -->
     <div class="card-value">
@@ -114,11 +112,7 @@ Provides consistent styling and interaction patterns for all generation setting 
     aria-label={`${title}: ${currentValue}`}
     style="--card-color: {color}; --shadow-color: {shadowColor}; --card-index: {cardIndex}; --header-font-size: {headerFontSize}; grid-column: span {gridColumnSpan};"
   >
-    <!-- Card Header -->
-    <div class="card-header">
-
-      <div class="card-title">{title}</div>
-    </div>
+    <CardHeader {title} {headerFontSize} />
 
     <!-- Current Value Display -->
     <div class="card-value">
@@ -138,6 +132,10 @@ Provides consistent styling and interaction patterns for all generation setting 
 
 <style>
   .base-card {
+    /* Enable container queries for intelligent responsive sizing */
+    container-type: size;
+    container-name: base-card;
+
     position: relative;
     display: flex;
     flex-direction: column;
@@ -150,8 +148,8 @@ Provides consistent styling and interaction patterns for all generation setting 
 
     min-width: 0; /* Allow grid to control width, prevent content expansion */
 
-    /* Responsive padding using clamp */
-    padding: clamp(6px, 1.5vw, 12px) clamp(4px, 1vw, 8px);
+    /* Container-aware padding - scales with card size */
+    padding: clamp(6px, 2cqh, 12px) clamp(4px, 1.5cqw, 8px);
 
     /* Modern 2025 border-radius (16px sweet spot) */
     border-radius: 16px;
@@ -281,36 +279,9 @@ Provides consistent styling and interaction patterns for all generation setting 
     outline-offset: 3px;
   }
 
-  .card-header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-    width: 100%;
-    flex-shrink: 0;
-    justify-content: center;
-  }
-
-
-
-
-  .card-title {
-    /* Use centralized font size from parent */
-    font-size: var(--header-font-size, 9px);
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    text-align: center;
-    letter-spacing: 0.2px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
-  }
-
   .card-value {
-    /* Flexible font size that scales with container */
-    font-size: clamp(13px, 2vw, 24px);
+    /* Container-aware font size - scales smoothly with card size */
+    font-size: clamp(12px, 5cqi, 24px);
     font-weight: 700;
     color: white;
     text-align: center;
@@ -323,7 +294,7 @@ Provides consistent styling and interaction patterns for all generation setting 
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
-    margin: clamp(2px, 0.5vw, 4px) 0;
+    margin: clamp(2px, 0.5cqh, 4px) 0;
   }
 
 
@@ -402,23 +373,7 @@ Provides consistent styling and interaction patterns for all generation setting 
       inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
   }
 
-  /* Desktop optimization: Better padding and text sizing */
-  @media (min-width: 1280px) {
-    .base-card {
-      /* Comfortable padding, let height be determined by content */
-      padding: 16px 12px;
-      /* NO min-height - let it size to content naturally */
-    }
-
-    /* Scale up text for better readability on desktop */
-    .base-card .card-title {
-      font-size: clamp(10px, 1.2vw, 13px);
-    }
-
-    .base-card .card-value {
-      font-size: clamp(16px, 2.5vw, 22px);
-    }
-  }
+  /* Desktop optimization removed - container query units handle smooth scaling automatically */
 
   /* Respect motion preferences - disable animations but keep glow */
   @media (prefers-reduced-motion: reduce) {
@@ -435,20 +390,16 @@ Provides consistent styling and interaction patterns for all generation setting 
       grid-row: span 1;
     }
 
-    .base-card.cap-card .card-title {
-      font-size: var(--header-font-size, 9px); /* Use centralized font size from parent */
-    }
-
     .base-card.cap-card .card-value {
-      font-size: clamp(10px, 1.5vw, 14px);
+      font-size: clamp(10px, 3.5cqi, 14px);
       margin: 0;
     }
 
     .base-card.cap-card .click-indicator {
-      width: 16px;
-      height: 16px;
-      top: 8px;
-      right: 8px;
+      width: clamp(14px, 3cqw, 18px);
+      height: clamp(14px, 3cqw, 18px);
+      top: clamp(6px, 1cqh, 10px);
+      right: clamp(6px, 1cqw, 10px);
     }
   }
 </style>

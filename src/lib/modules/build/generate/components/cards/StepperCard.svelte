@@ -8,8 +8,8 @@ Landscape: Left half decrements, right half increments (horizontal layout)
   import type { IHapticFeedbackService, IRippleEffectService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import StepperPortraitLayout from "./StepperPortraitLayout.svelte";
   import StepperLandscapeLayout from "./StepperLandscapeLayout.svelte";
+  import StepperPortraitLayout from "./StepperPortraitLayout.svelte";
 
   let {
     title,
@@ -130,6 +130,7 @@ Landscape: Left half decrements, right half increments (horizontal layout)
       {handleIncrement}
       {handleDecrement}
       {handleKeydown}
+      {headerFontSize}
     />
   </div>
 
@@ -145,6 +146,7 @@ Landscape: Left half decrements, right half increments (horizontal layout)
       {handleIncrement}
       {handleDecrement}
       {handleKeydown}
+      {headerFontSize}
     />
   </div>
 </div>
@@ -166,7 +168,7 @@ Landscape: Left half decrements, right half increments (horizontal layout)
     min-width: 0;
 
     /* Responsive padding */
-    padding: clamp(6px, .75vw, 12px) clamp(4px, 1vw, 8px);
+    padding: clamp(6px, 2cqh, 12px) clamp(4px, 1.5cqw, 8px);
 
     /* Modern border-radius matching BaseCard */
     border-radius: 16px;

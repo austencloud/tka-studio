@@ -5,8 +5,9 @@ DESKTOP: Shows inline component buttons for direct selection
 -->
 <script lang="ts">
   import { CAP_TYPE_LABELS } from "$build/generate/circular";
+  import { CAP_COMPONENTS } from "$build/generate/shared/domain/constants/cap-constants";
   import type { ICAPTypeService, IHapticFeedbackService } from "$shared";
-  import { CAPComponent, CAPType, resolve, TYPES } from "$shared";
+  import { CAPComponent, CAPType, FontAwesomeIcon, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import CAPSelectionModal from "../modals/CAPSelectionModal.svelte";
   import BaseCard from "./BaseCard.svelte";
@@ -163,8 +164,8 @@ DESKTOP: Shows inline component buttons for direct selection
 
   /* The wrapper has the animated gradient background */
   .cap-card-wrapper {
-    /* Enable container queries to detect card width */
-    container-type: inline-size;
+    /* Enable container queries to detect card width AND height */
+    container-type: size;
     container-name: cap-card;
 
     position: relative;
@@ -242,8 +243,8 @@ DESKTOP: Shows inline component buttons for direct selection
   .cap-card-desktop {
     display: flex;
     flex-direction: column;
-    gap: clamp(8px, 2vh, 12px);
-    padding: 12px 10px;
+    gap: clamp(8px, 2cqh, 12px);
+    padding: clamp(10px, 2cqh, 14px) clamp(8px, 1.5cqw, 12px);
     height: 100%;
   }
 
@@ -260,7 +261,7 @@ DESKTOP: Shows inline component buttons for direct selection
   .cap-components-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: clamp(6px, 1vw, 10px);
+    gap: clamp(6px, 1.5cqi, 10px);
     height: 100%;
   }
 
@@ -269,6 +270,8 @@ DESKTOP: Shows inline component buttons for direct selection
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: clamp(2px, 0.5cqi, 4px);
+    padding: clamp(8px, 2cqi, 14px);
     min-width: 0; /* Allow flex shrinking */
 
     /* Solid background for better readability - no glass morphism */
@@ -285,10 +288,8 @@ DESKTOP: Shows inline component buttons for direct selection
     .cap-components-grid {
       display: flex;
       flex-direction: row;
-      gap: clamp(8px, 1.5vw, 14px);
+      gap: clamp(8px, 2cqi, 14px);
     }
-
-
   }
 
   .cap-component-btn:hover {
@@ -305,16 +306,20 @@ DESKTOP: Shows inline component buttons for direct selection
   }
 
   .cap-icon {
-    font-size: clamp(32px, 5vh, 48px);
+    font-size: clamp(20px, 8cqi, 48px);
     line-height: 1;
   }
 
   .cap-label {
-    font-size: clamp(14px, 2.2vh, 20px);
+    font-size: clamp(10px, 4cqi, 18px);
     font-weight: 600;
     /* No text-transform - keep natural casing */
     letter-spacing: 0.3px;
     line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
   }
 
   /* Respect user motion preferences */

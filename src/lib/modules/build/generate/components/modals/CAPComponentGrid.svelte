@@ -16,7 +16,7 @@ Displays all available CAP transformations in a responsive 2x2 grid
   }>();
 </script>
 
-<div class="component-grid">
+<div class="cap-component-grid">
   {#each CAP_COMPONENTS as componentInfo}
     <CAPComponentButton
       {componentInfo}
@@ -27,49 +27,38 @@ Displays all available CAP transformations in a responsive 2x2 grid
 </div>
 
 <style>
-  .component-grid {
+  .cap-component-grid {
     display: grid;
-    /* 🎯 2x2 grid by default */
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(12px, 2vmin, 20px);
     width: 100%;
-    flex-shrink: 0;
+    flex: 1 1 auto; /* Allow shrinking and growing */
+    min-height: 0; /* Critical for flex children to shrink below content size */
+    overflow-y: auto; /* Allow scrolling if compressed too much */
+    overflow-x: hidden; /* Allow scrolling if compressed too much */
+    gap: clamp(8px, 1.5cqi, 16px);
+
+    /* 🎯 DEFAULT: 2x2 grid for square-ish containers */
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
   }
 
-  /* 💻 DESKTOP & WIDE SCREENS: 4-column single row layout */
-  @media (min-width: 1025px) {
-    .component-grid {
-      grid-template-columns: repeat(4, minmax(120px, 180px));
-      justify-content: center;
-      gap: 16px;
+  /* 🌅 WIDE CONTAINERS: Single row when aspect ratio > 1.5 (landscape) */
+  @container cap-modal (aspect-ratio > 1.5) {
+    .cap-component-grid {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: 1fr;
+      max-height: 50cqh; /* Cap height to leave room for header/explanation */
     }
   }
 
-  /* 📱 PORTRAIT MODE: Ensure 2x2 grid */
-  @media (orientation: portrait) {
-    .component-grid {
-      grid-template-columns: repeat(2, 1fr);
+  /* 📱 TALL CONTAINERS: Single column when aspect ratio < 0.7 (portrait) */
+  @container cap-modal (aspect-ratio < 0.7) {
+    .cap-component-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      margin: 0 auto;
     }
   }
 
-  /* 📱 SMALL SCREENS: Tighter spacing */
-  @media (max-width: 400px) {
-    .component-grid {
-      gap: clamp(8px, 2vw, 12px);
-    }
-  }
-
-  /* 🌅 LANDSCAPE MODE: Single row for wide viewports */
-  @media (orientation: landscape) and (max-height: 600px) {
-    .component-grid {
-      gap: clamp(12px, 2vw, 20px);
-    }
-  }
-
-  /* 📱 LANDSCAPE + VERY NARROW: Compact spacing */
-  @media (orientation: landscape) and (max-height: 400px) {
-    .component-grid {
-      gap: clamp(8px, 1.5vw, 12px);
-    }
-  }
+  /* 🎯 SQUARE-ISH CONTAINERS: 2x2 grid (0.7 ≤ aspect ratio ≤ 1.5) */
+  /* This is the default, no override needed */
 </style>

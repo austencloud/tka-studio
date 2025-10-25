@@ -4,6 +4,8 @@ Top half increments, bottom half decrements (vertical layout)
 Used when card aspect ratio is tall/portrait
 -->
 <script lang="ts">
+  import CardHeader from "./shared/CardHeader.svelte";
+
   let {
     title,
     displayValue,
@@ -13,7 +15,8 @@ Used when card aspect ratio is tall/portrait
     canDecrement,
     handleIncrement,
     handleDecrement,
-    handleKeydown
+    handleKeydown,
+    headerFontSize = "9px"
   } = $props<{
     title: string;
     displayValue: string;
@@ -24,6 +27,7 @@ Used when card aspect ratio is tall/portrait
     handleIncrement: () => void;
     handleDecrement: () => void;
     handleKeydown: (event: KeyboardEvent, action: 'increment' | 'decrement') => void;
+    headerFontSize?: string;
   }>();
 </script>
 
@@ -45,9 +49,7 @@ Used when card aspect ratio is tall/portrait
     aria-label="Decrease {title}"
   ></button>
 
-  <div class="card-header">
-    <div class="card-title">{title}</div>
-  </div>
+  <CardHeader {title} {headerFontSize} />
 
   <div class="stepper-controls">
     <div class="stepper-button-visual increment-visual">
@@ -88,34 +90,6 @@ Used when card aspect ratio is tall/portrait
     width: 100%;
     height: 100%;
     z-index: 2;
-  }
-
-  /* Portrait mode: Header - absolutely positioned at top */
-  .card-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-    justify-content: center;
-    z-index: 3;
-    pointer-events: none;
-  }
-
-  .card-title {
-    font-size: var(--header-font-size, 9px);
-    font-weight: 600;
-    color: var(--text-color);
-    text-align: center;
-    letter-spacing: 0.2px;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
   }
 
   /* Portrait mode: Stepper controls - absolutely centered */
