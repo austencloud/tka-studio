@@ -1,6 +1,18 @@
 // Resource Guide Types
 // Type definitions for resource modal functionality
 
+export interface TableOfContentsItem {
+  id: string;
+  label: string;
+}
+
+export interface RelatedResource {
+  name: string;
+  url: string;
+  description: string;
+  type: "internal" | "external";
+}
+
 export interface ResourceModalData {
   title: string;
   subtitle: string;
@@ -11,13 +23,8 @@ export interface ResourceModalData {
   keywords: string;
   url: string;
   resourceName: string;
-  tableOfContents: Array<{ id: string; label: string }>;
-  relatedResources: Array<{
-    name: string;
-    url: string;
-    description: string;
-    type: "internal" | "external";
-  }>;
+  tableOfContents: TableOfContentsItem[];
+  relatedResources: RelatedResource[];
   heroGradient: string;
   creatorColor: string;
 }

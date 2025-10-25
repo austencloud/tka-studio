@@ -4,7 +4,8 @@ node_modules/
 .pnpm-debug.log*
 
 # Build and deployment artifacts
-/build/                         # Ignore ONLY root-level build directory (SvelteKit output)
+/build                          # Ignore ONLY root-level build directory (SvelteKit output)
+/build/**
 .netlify/
 dist/
 .output/

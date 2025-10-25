@@ -9,7 +9,15 @@
       "Bash(timeout 5 echo:*)",
       "Bash(find:*)",
       "Bash(npm run check:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(git rm:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(cat:*)",
+      "Bash(sed:*)",
+      "Bash(git add:*)",
+      "Bash(git restore:*)",
+      "Bash(git check-attr:*)",
+      "Bash(git --version:*)"
     ],
     "deny": [],
     "ask": []

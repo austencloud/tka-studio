@@ -55,6 +55,10 @@ export const TYPES = {
   IBuildTabLayoutService: Symbol.for("IBuildTabLayoutService"),
   IUndoService: Symbol.for("IUndoService"),
   IQuizSessionService: Symbol.for("IQuizSessionService"),
+  IQuizGradingService: Symbol.for("IQuizGradingService"),
+  IQuizFeedbackService: Symbol.for("IQuizFeedbackService"),
+  IQuizAchievementService: Symbol.for("IQuizAchievementService"),
+  IQuizFormatterService: Symbol.for("IQuizFormatterService"),
   ITurnControlService: Symbol.for("ITurnControlService"),
   // === WRITE TAB SERVICES ===
   IActService: Symbol.for("IActService"),

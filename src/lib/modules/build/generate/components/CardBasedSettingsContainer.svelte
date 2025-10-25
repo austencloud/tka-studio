@@ -41,6 +41,8 @@ Delegates ALL logic to services (SRP compliant)
 
   // State
   let headerFontSize = $state("9px");
+  let containerElement = $state<HTMLDivElement | null>(null);
+  let toggleLayout = $state<"vertical" | "horizontal">("vertical");
 
   // Derived values - now safe because services are reactive $state
   let currentLevel = $derived(levelService?.numberToDifficulty(config.level) ?? null);
@@ -59,6 +61,26 @@ Delegates ALL logic to services (SRP compliant)
 
     updateFontSize();
     window.addEventListener("resize", updateFontSize);
+
+    // Set up ResizeObserver to detect container width changes
+    if (containerElement) {
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const containerWidth = entry.contentRect.width;
+          // Switch to horizontal layout when container is wide enough (600px+)
+          // This aligns with the 3-column desktop layout breakpoint
+          toggleLayout = containerWidth >= 600 ? "horizontal" : "vertical";
+        }
+      });
+
+      resizeObserver.observe(containerElement);
+
+      return () => {
+        resizeObserver.disconnect();
+        window.removeEventListener("resize", updateFontSize);
+      };
+    }
+
     return () => window.removeEventListener("resize", updateFontSize);
   });
 
@@ -130,7 +152,11 @@ Delegates ALL logic to services (SRP compliant)
   });
 </script>
 
-<div class="card-settings-container">
+<div
+  bind:this={containerElement}
+  class="card-settings-container"
+  data-toggle-layout={toggleLayout}
+>
   {#each cards as card (card.id)}
     <div
       class="card-wrapper"
