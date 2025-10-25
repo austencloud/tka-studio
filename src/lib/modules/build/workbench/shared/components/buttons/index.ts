@@ -3,6 +3,7 @@
 export { default as BackButton } from './BackButton.svelte';
 export { default as ClearSequencePanelButton } from './ClearSequenceButton.svelte';
 export { default as CopySequenceButton } from './CopySequenceButton.svelte';
+export { default as EditBeatButton } from './EditBeatButton.svelte';
 export { default as FullscreenButton } from './FullscreenButton.svelte';
 export { default as RemoveBeatButton } from './RemoveBeatButton.svelte';
 export { default as SaveSequencePanelButton } from './SaveSequenceButton.svelte';

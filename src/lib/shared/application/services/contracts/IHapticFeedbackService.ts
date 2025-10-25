@@ -23,7 +23,7 @@ export interface HapticFeedbackConfig {
 export interface IHapticFeedbackService {
   /**
    * Trigger haptic feedback with the specified pattern
-   * @param type The type of feedback to provide
+   * @param type The type of feedback to provide (default: "selection")
    * @returns Boolean indicating if feedback was triggered
    */
   trigger(type: HapticFeedbackType): boolean;

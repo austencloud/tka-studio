@@ -11,11 +11,13 @@
   - Just composition and prop passing
 -->
 <script lang="ts">
+  import type { IBuildTabState } from '$build/shared/types/build-tab-types';
   import { fade } from 'svelte/transition';
   import {
     BackButton,
     ClearSequencePanelButton,
     CopySequenceButton,
+    EditBeatButton,
     FullscreenButton,
     RemoveBeatButton,
     SaveSequencePanelButton,
@@ -36,6 +38,10 @@
     onRemoveBeat,
     selectedBeatIndex = null,
     selectedBeatData = null,
+
+    // Edit Beat button
+    canEditBeat = false,
+    onEditBeat,
 
     // Clear Sequence button
     canClearSequence = false,
@@ -59,25 +65,17 @@
     onBack?: () => void;
 
     // Build tab state for undo functionality
-    buildTabState?: {
-      readonly canUndo: boolean;
-      readonly undoHistory: Array<{
-        type: 'REMOVE_BEATS' | 'CLEAR_SEQUENCE' | 'ADD_BEAT';
-        timestamp: number;
-        metadata?: {
-          beatIndex?: number;
-          beatsRemoved?: number;
-          description?: string;
-        };
-      }>;
-      undo: () => boolean;
-    } | null;
+    buildTabState?: IBuildTabState | null;
 
     // Remove Beat button props
     canRemoveBeat?: boolean;
     onRemoveBeat?: (beatIndex: number) => void;
     selectedBeatIndex?: number | null;
     selectedBeatData?: any;
+
+    // Edit Beat button props
+    canEditBeat?: boolean;
+    onEditBeat?: () => void;
 
     // Clear Sequence button props
     canClearSequence?: boolean;
@@ -124,6 +122,11 @@
         beatNumber={selectedBeatData.beatNumber}
         onclick={() => onRemoveBeat?.(selectedBeatIndex!)}
       />
+    {/if}
+
+    <!-- Edit Beat Button -->
+    {#if canEditBeat}
+      <EditBeatButton onclick={onEditBeat} />
     {/if}
 
     <!-- Clear Sequence Button -->

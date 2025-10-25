@@ -17,7 +17,13 @@
       "Bash(git add:*)",
       "Bash(git restore:*)",
       "Bash(git check-attr:*)",
-      "Bash(git --version:*)"
+      "Bash(git --version:*)",
+      "Bash(dir:*)",
+      "Bash(powershell -Command \"Get-ChildItem -Path ''''src\\lib\\modules\\build\\generate'''' -Recurse -Directory | Select-Object FullName\")",
+      "Bash(powershell -Command \"Get-ChildItem -Path ''src\\lib\\modules\\build\\generate\\services'' | Select-Object Name, PSIsContainer\")",
+      "Bash(powershell -Command:*)",
+      "Bash(git mv:*)",
+      "Bash(rmdir:*)"
     ],
     "deny": [],
     "ask": []

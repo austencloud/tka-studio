@@ -22,6 +22,8 @@
     onRemoveBeat,
     selectedBeatIndex = null,
     selectedBeatData = null,
+    canEditBeat = false,
+    onEditBeat,
     canClearSequence = false,
     canSaveSequence = false,
     onSaveSequence,
@@ -45,6 +47,8 @@
     onRemoveBeat?: (beatIndex: number) => void;
     selectedBeatIndex?: number | null;
     selectedBeatData?: any;
+    canEditBeat?: boolean;
+    onEditBeat?: () => void;
     canClearSequence?: boolean;
     canSaveSequence?: boolean;
     onSaveSequence?: () => void;
@@ -69,13 +73,15 @@
   <!-- Button Panel at bottom (context-aware) -->
   <div class="button-panel-container">
     {#if isAnimateTab}
-      <!-- Animate tab: Show Undo, Remove Beat, Clear Sequence, and Fullscreen buttons -->
+      <!-- Animate tab: Show Undo, Remove Beat, Edit Beat, Clear Sequence, and Fullscreen buttons -->
       <ButtonPanel
         {buildTabState}
         {canRemoveBeat}
         {onRemoveBeat}
         {selectedBeatIndex}
         {selectedBeatData}
+        {canEditBeat}
+        {onEditBeat}
         canClearSequence={canClearSequence}
         onClearSequence={onClearSequence}
         sequenceData={sequenceState?.currentSequence}
@@ -91,6 +97,8 @@
         {onRemoveBeat}
         {selectedBeatIndex}
         {selectedBeatData}
+        {canEditBeat}
+        {onEditBeat}
         {canClearSequence}
         onClearSequence={onClearSequence}
         {canSaveSequence}

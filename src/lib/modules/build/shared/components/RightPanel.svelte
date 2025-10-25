@@ -264,13 +264,7 @@
             {/if}
           {:else if activeRightPanel === "generate"}
             <GeneratePanel sequenceState={buildTabState.sequenceState} />
-          {:else if activeRightPanel === "edit"}
-            <div class="panel-content graph-editor-content">
-              <GraphEditor
-                selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
-                selectedBeatData={buildTabState.sequenceState.selectedBeatData}
-              />
-            </div>
+          <!-- Edit tab removed - now using slide-out panel instead! -->
           {:else if activeRightPanel === "animate"}
             {#if animationPanelState}
               <div class="panel-content animation-content">

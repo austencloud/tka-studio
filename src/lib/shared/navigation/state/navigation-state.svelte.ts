@@ -8,6 +8,7 @@
 import type { ModeOption, ModuleDefinition, ModuleId } from "../domain/types";
 
 // Build modes configuration - mutable to allow dynamic tab accessibility updates
+// Note: Edit functionality is now handled via a slide-out panel, not a tab
 export const BUILD_MODES: ModeOption[] = [
   {
     id: "construct",
@@ -24,14 +25,6 @@ export const BUILD_MODES: ModeOption[] = [
     description: "Auto-create sequences",
     color: "#f59e0b",
     gradient: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #f97316 100%)",
-  },
-  {
-    id: "edit",
-    label: "Edit",
-    icon: '<i class="fas fa-edit"></i>',
-    description: "Modify existing sequences",
-    color: "#10b981",
-    gradient: "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
   },
   {
     id: "animate",

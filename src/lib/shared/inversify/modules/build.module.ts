@@ -2,11 +2,7 @@ import { ContainerModule, type ContainerModuleLoadOptions } from "inversify";
 import {
     BuildTabService,
     ConstructCoordinator,
-    CSVPictographParser,
     OptionSizer,
-    PictographGenerator,
-    PictographValidatorService,
-    PositionPatternService,
     ReversalDetectionService,
     SequenceDeletionService,
     SequenceDomainService,
@@ -37,12 +33,11 @@ import {
 import { FilterPersistenceService } from "../../../modules/build/construct/option-picker/services/FilterPersistenceService";
 import { LayoutDetectionService } from "../../../modules/build/construct/option-picker/services/implementations/LayoutDetectionService";
 import { TurnControlService } from "../../../modules/build/edit/services/TurnControlService";
-// Shared Generation Services
+// Shared Generation Services - ACTIVE ONLY (deprecated moved to _deprecated/)
 import {
     BeatConverterService,
     BeatGenerationOrchestrator,
     ComplementaryLetterService,
-    CSVPictographLoader,
     GenerationOrchestrationService,
     PictographFilterService,
     SequenceMetadataService,
@@ -68,12 +63,11 @@ import {
     StrictSwappedCAPExecutor,
     SwappedComplementaryCAPExecutor,
 } from "../../../modules/build/generate/circular/services/implementations";
-// Generation UI Services (SRP Refactoring - Dec 2024)
+// Generation UI Services (SRP Refactoring - Dec 2024) - ACTIVE ONLY
 import {
     CAPTypeService,
     CardConfigurationService,
     LevelConversionService,
-    PresetFormatterService,
     ResponsiveTypographyService,
 } from "../../../modules/build/generate/shared/services/implementations";
 import { TYPES } from "../types";
@@ -106,16 +100,9 @@ export const buildModule = new ContainerModule(
       .to(StartPositionService)
       .inSingletonScope();
 
-    // === GENERATION SERVICES ===
-    options.bind(TYPES.ICSVPictographLoader).to(CSVPictographLoader);
-    options.bind(TYPES.ICSVPictographParserService).to(CSVPictographParser);
-    options.bind(TYPES.IPictographGenerator).to(PictographGenerator);
-    options.bind(TYPES.IPositionPatternService).to(PositionPatternService);
-    options.bind(TYPES.ISequenceDomainService).to(SequenceDomainService);
-
-    // Clean orchestrator with focused services (refactored from 639-line monolith)
-    options.bind(TYPES.IPictographFilterService).to(PictographFilterService);
+    // === GENERATION SERVICES === (restored active services 2025-10-25)
     options.bind(TYPES.IBeatConverterService).to(BeatConverterService);
+    options.bind(TYPES.IPictographFilterService).to(PictographFilterService);
     options.bind(TYPES.ITurnManagementService).to(TurnManagementService);
     // TurnIntensityLevelService provides UI-level turn intensity values
     // TurnIntensityManagerService is instantiated directly with constructor params for sequence generation
@@ -153,14 +140,9 @@ export const buildModule = new ContainerModule(
     options.bind(TYPES.IResponsiveTypographyService).to(ResponsiveTypographyService);
     options.bind(TYPES.ICardConfigurationService).to(CardConfigurationService);
     options.bind(TYPES.ICAPTypeService).to(CAPTypeService);
-    options.bind(TYPES.IPresetFormatterService).to(PresetFormatterService);
 
     // Generation Orchestration Services (SRP Refactoring - Dec 2024)
     options.bind(TYPES.IGenerationOrchestrationService).to(GenerationOrchestrationService);
-
-    options
-      .bind(TYPES.IPictographValidatorService)
-      .to(PictographValidatorService);
 
     // === BEAT GRID SERVICES ===
     // Note: BeatFallbackRenderer moved to render module
@@ -170,6 +152,7 @@ export const buildModule = new ContainerModule(
 
     // === SEQUENCE SERVICES ===
     options.bind(TYPES.IReversalDetectionService).to(ReversalDetectionService);
+    options.bind(TYPES.ISequenceDomainService).to(SequenceDomainService);
 
     // Focused sequence services (refactored from monolithic SequenceStateService)
     options.bind(TYPES.IBeatNumberingService).to(BeatNumberingService);

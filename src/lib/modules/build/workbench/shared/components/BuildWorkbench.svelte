@@ -49,19 +49,12 @@
       selectedBeatIndex = index;
       sequenceState.selectBeat(index);
     } else {
-      // In other tabs: Switch to edit tab (existing behavior)
+      // In other tabs: Just select the beat - the edit panel will open automatically
       selectedBeatIndex = index;
       sequenceState.selectBeat(index);
 
-      // Automatically switch to edit tab when a beat is selected
-      if (buildTabState && buildTabState.setActiveRightPanel) {
-        buildTabState.setActiveRightPanel("edit");
-      }
-
-      // Also directly update navigation state to ensure visual tab switching
-      if (navigationState && navigationState.setCurrentSubMode) {
-        navigationState.setCurrentSubMode("edit");
-      }
+      // Note: We no longer switch to edit tab! The edit slide panel will open instead.
+      // This is handled by an effect in BuildTab.svelte that watches for beat selection.
     }
   }
 
@@ -77,15 +70,8 @@
     selectedBeatIndex = null;
     sequenceState.selectStartPositionForEditing();
 
-    // Automatically switch to edit tab when start position is selected
-    if (buildTabState && buildTabState.setActiveRightPanel) {
-      buildTabState.setActiveRightPanel("edit");
-    }
-
-    // Also directly update navigation state to ensure visual tab switching
-    if (navigationState && navigationState.setCurrentSubMode) {
-      navigationState.setCurrentSubMode("edit");
-    }
+    // Note: We no longer switch to edit tab! The edit slide panel will open instead.
+    // This is handled by an effect in BuildTab.svelte that watches for start position selection.
   }
 
   // Note: Save functionality moved to ButtonPanel component

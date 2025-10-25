@@ -45,9 +45,9 @@ import { PropPlacementService } from "../../pictograph/prop/services/implementat
 import { PropSvgLoader } from "../../pictograph/prop/services/implementations/PropSvgLoader";
 
 // Shared services
+import { CSVPictographParser } from "../../pictograph/shared/services/implementations/CSVPictographParser";
 import { MotionQueryHandler } from "../../pictograph/shared/services/implementations/MotionQueryHandler";
 import { PictographCoordinator } from "../../pictograph/shared/services/implementations/PictographCoordinator";
-
 import { SvgPreloadService } from "../../pictograph/shared/services/implementations/SvgPreloadService";
 import { LetterQueryHandler } from "../../pictograph/tka-glyph/services/implementations/LetterQueryHandler";
 import { TYPES } from "../types";
@@ -131,5 +131,8 @@ export const pictographModule = new ContainerModule(
     // === QUERY HANDLERS ===
     options.bind(TYPES.IMotionQueryHandler).to(MotionQueryHandler);
     options.bind(TYPES.ILetterQueryHandler).to(LetterQueryHandler);
+
+    // === DATA PARSERS ===
+    options.bind(TYPES.ICSVPictographParserService).to(CSVPictographParser);
   }
 );

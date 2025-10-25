@@ -63,14 +63,15 @@
   >
     ⚡ Generate
   </button>
+  <!-- Edit tab removed - now using slide-out panel instead! -->
   <button
     type="button"
     class="main-tab-btn"
-    class:active={activeBuildsubTab === "edit"}
-    onclick={() => handleTabClick("edit")}
-    onkeydown={(e) => handleKeyDown(e, "edit")}
+    class:active={activeBuildsubTab === "animate"}
+    onclick={() => handleTabClick("animate")}
+    onkeydown={(e) => handleKeyDown(e, "animate")}
   >
-    🔧 Edit
+    🎬 Animate
   </button>
   <button
     type="button"

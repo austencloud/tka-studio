@@ -20,11 +20,11 @@ export type TabId =
 
 /**
  * Available build tab sub-sections
+ * Note: Edit functionality is now handled via a slide-out panel, not a tab
  */
 export type ActiveBuildTab =
   | "construct"
   | "generate"
-  | "edit"
   | "animate"
   | "share"
   | "record";

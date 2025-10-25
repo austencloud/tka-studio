@@ -10,6 +10,7 @@ Testing HMR persistence functionality
 <script lang="ts">
   import { createComponentLogger, ensureContainerInitialized, ErrorBanner, GridMode, navigationState, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
+  import { EditSlidePanel } from "../../edit/components";
   import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
   import type { IBuildTabService, ISequencePersistenceService, ISequenceService } from "../services/contracts";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
@@ -55,6 +56,11 @@ Testing HMR persistence functionality
   // Reference to RightPanel for accessing canGoBack and handleBack
   let rightPanelRef: any = $state(null);
 
+  // Edit slide panel state
+  let isEditPanelOpen = $state(false);
+  let editPanelBeatIndex = $state<number | null>(null);
+  let editPanelBeatData = $state<any>(null);
+
   // Effect to notify parent of tab accessibility changes
   $effect(() => {
     // Guard: Don't run until buildTabState is initialized
@@ -95,8 +101,9 @@ Testing HMR persistence functionality
     // If navigation state differs from build tab state, update build tab
     // BUT skip if we're currently in a back navigation (to prevent loop)
     if (currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized && !buildTabState.isNavigatingBack) {
-      // GUARD: Prevent navigation to Edit, Animate, Share, or Record tabs without a valid sequence
-      if ((currentMode === "edit" || currentMode === "animate" || currentMode === "share" || currentMode === "record") && !buildTabState.canAccessEditTab) {
+      // GUARD: Prevent navigation to Animate, Share, or Record tabs without a valid sequence
+      // Note: Edit is no longer a tab - it's handled via slide-out panel
+      if ((currentMode === "animate" || currentMode === "share" || currentMode === "record") && !buildTabState.canAccessEditTab) {
         console.warn(`🚫 Cannot access ${currentMode} tab without a sequence. Redirecting to construct.`);
         navigationState.setCurrentSubMode("construct");
         return;
@@ -222,6 +229,29 @@ Testing HMR persistence functionality
     return () => {
       window.removeEventListener("start-position-selected", handleStartPositionSelected as unknown as EventListener);
     };
+  });
+
+  // Effect to open edit panel when a beat is selected
+  $effect(() => {
+    // Guard: Don't run until buildTabState is initialized
+    if (!buildTabState) return;
+
+    const selectedIndex = buildTabState.sequenceState.selectedBeatIndex;
+    const selectedData = buildTabState.sequenceState.selectedBeatData;
+
+    // If a beat is selected, open the edit panel
+    if (selectedIndex !== null && selectedData) {
+      editPanelBeatIndex = selectedIndex;
+      editPanelBeatData = selectedData;
+      isEditPanelOpen = true;
+      logger.log(`Opening edit panel for beat ${selectedIndex}`);
+    } else if (selectedData && selectedData.beatNumber === 0) {
+      // Start position is selected
+      editPanelBeatIndex = -1; // Special index for start position
+      editPanelBeatData = selectedData;
+      isEditPanelOpen = true;
+      logger.log("Opening edit panel for start position");
+    }
   });
 
 
@@ -391,6 +421,13 @@ Testing HMR persistence functionality
     isSideBySideLayout={shouldUseSideBySideLayout}
     selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
     selectedBeatData={buildTabState.sequenceState.selectedBeatData}
+    canEditBeat={buildTabState.sequenceState.selectedBeatData !== null}
+    onEditBeat={() => {
+      // Open the edit panel for the currently selected beat
+      if (buildTabState.sequenceState.selectedBeatData) {
+        isEditPanelOpen = true;
+      }
+    }}
     canClearSequence={buildTabState.sequenceState.hasStartPosition}
     canSaveSequence={buildTabState.sequenceState.hasStartPosition && buildTabState.sequenceState.beatCount() > 0}
     onSaveSequence={handleAddToDictionary}
@@ -419,6 +456,28 @@ Testing HMR persistence functionality
   <!-- Loading overlay -->
   {#if isTransitioning}
   <LoadingOverlay message="Processing..." />
+  {/if}
+
+  <!-- Edit Slide Panel - Modern slide-out for editing beats -->
+  {#if buildTabState}
+  <EditSlidePanel
+    isOpen={isEditPanelOpen}
+    onClose={() => {
+      isEditPanelOpen = false;
+    }}
+    selectedBeatIndex={editPanelBeatIndex}
+    selectedBeatData={editPanelBeatData}
+    onOrientationChanged={(color, orientation) => {
+      if (editPanelBeatData) {
+        buildTabState.sequenceState.updateBeatOrientation(color, orientation);
+      }
+    }}
+    onTurnAmountChanged={(color, turnAmount) => {
+      if (editPanelBeatData) {
+        buildTabState.sequenceState.updateBeatTurnAmount(color, turnAmount);
+      }
+    }}
+  />
   {/if}
 </div>
 
