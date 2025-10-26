@@ -164,7 +164,7 @@ Delegates ALL logic to services (SRP compliant)
 
 <style>
   .card-settings-container {
-    /* No position property - allows modals to escape and position relative to right-panel */
+    /* No position property - allows modals to escape and position relative to tool-panel */
     container-type: size; /* Enable both inline and block size container queries */
     container-name: settings-grid; /* Name the container for explicit targeting */
     flex: 1 1 auto; /* Grow to fill available space, allow shrink, auto basis */

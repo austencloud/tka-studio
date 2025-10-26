@@ -12,7 +12,7 @@
  * 8. Index mapping - correctly maps second half to first half
  */
 
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$shared";
 import {
     GridLocation,
     GridPosition,
@@ -21,8 +21,8 @@ import {
     RotationDirection
 } from "$shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { SliceSize } from "../../../../src/lib/modules/build/generate/circular/domain/models/circular-models";
-import { StrictComplementaryCAPExecutor } from "../../../../src/lib/modules/build/generate/circular/services/implementations/StrictComplementaryCAPExecutor";
+import { SliceSize } from "../../../../src/lib/modules/build/generate/circular/domain";
+import { StrictComplementaryCAPExecutor } from "../../../../src/lib/modules/build/generate/circular/services/implementations";
 
 // Mock dependencies
 const mockOrientationService = {

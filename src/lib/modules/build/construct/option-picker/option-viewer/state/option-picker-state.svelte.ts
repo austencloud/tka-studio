@@ -5,7 +5,7 @@
  * Follows the same pattern as the simplified start position picker.
  */
 
-import type { PictographData } from "../../../../../../shared";
+import type { PictographData } from "$shared";
 import type { OptionPickerState, SortMethod } from "../domain/option-picker-types";
 import type { OptionPickerLayout } from "../domain/option-viewer-models";
 import type { IOptionFilter, IOptionLoader, IOptionSorter } from "../services/contracts";

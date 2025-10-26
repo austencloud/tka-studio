@@ -1,9 +1,9 @@
 <!--
 Build Tab - Main construction interface
 
-Provides two-panel layout matching desktop app:
-- Left Panel: Workbench for sequence visualization
-- Right Panel: 4-tab interface (Construct, Edit, Generate, Export)
+Provides two-panel layout:
+- Workspace Panel: Sequence display and action buttons for viewing and interacting with the sequence
+- Tool Panel: Tabbed interface (Construct, Generate, Animate, Share, Record) for sequence construction and management
 
 Testing HMR persistence functionality
 -->
@@ -15,9 +15,9 @@ Testing HMR persistence functionality
   import type { IBuildTabService, ISequencePersistenceService, ISequenceService } from "../services/contracts";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
   import { createBuildTabState, createConstructTabState } from "../state";
-  import LeftPanel from './LeftPanel.svelte';
+  import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import LoadingOverlay from './LoadingOverlay.svelte';
-  import RightPanel from './RightPanel.svelte';
+  import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
 
   // Debug logger for this component
   const logger = createComponentLogger('BuildTab');
@@ -53,8 +53,8 @@ Testing HMR persistence functionality
   let isTransitioning = $state(false);
   let practiceBeatIndex = $state<number | null>(null);
 
-  // Reference to RightPanel for accessing canGoBack and handleBack
-  let rightPanelRef: any = $state(null);
+  // Reference to ToolPanel for accessing canGoBack and handleBack
+  let toolPanelRef: any = $state(null);
 
   // Edit slide panel state
   let isEditPanelOpen = $state(false);
@@ -408,14 +408,14 @@ Testing HMR persistence functionality
 
   {#if buildTabState && constructTabState}
   <div class="build-tab-layout" class:side-by-side={shouldUseSideBySideLayout} class:stacked={!shouldUseSideBySideLayout}>
-  <!-- Left Panel: Workbench with integrated vertical button panel -->
-  <LeftPanel
+  <!-- Workspace Panel: Sequence display with integrated action buttons -->
+  <WorkspacePanel
     sequenceState={buildTabState.sequenceState}
     onClearSequence={constructTabState.clearSequenceCompletely}
     {buildTabState}
     {practiceBeatIndex}
-    canGoBack={rightPanelRef?.getCanGoBack?.() ?? false}
-    onBack={() => rightPanelRef?.handleBack?.()}
+    canGoBack={toolPanelRef?.getCanGoBack?.() ?? false}
+    onBack={() => toolPanelRef?.handleBack?.()}
     canRemoveBeat={buildTabState.sequenceState.hasStartPosition}
     onRemoveBeat={handleRemoveBeat}
     isSideBySideLayout={shouldUseSideBySideLayout}
@@ -432,14 +432,14 @@ Testing HMR persistence functionality
     canSaveSequence={buildTabState.sequenceState.hasStartPosition && buildTabState.sequenceState.beatCount() > 0}
     onSaveSequence={handleAddToDictionary}
     showFullScreen={true}
-    animationStateRef={rightPanelRef?.getAnimationStateRef?.()}
+    animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
   />
 
 
 
-  <!-- Right Panel: 4-Tab interface matching desktop -->
-  <RightPanel
-    bind:this={rightPanelRef}
+  <!-- Tool Panel: Tabbed interface for sequence construction and management -->
+  <ToolPanel
+    bind:this={toolPanelRef}
     {buildTabState}
     {constructTabState}
     onOptionSelected={handleOptionSelected}
@@ -467,12 +467,12 @@ Testing HMR persistence functionality
     }}
     selectedBeatIndex={editPanelBeatIndex}
     selectedBeatData={editPanelBeatData}
-    onOrientationChanged={(color, orientation) => {
+    onOrientationChanged={(color: string, orientation: string) => {
       if (editPanelBeatData) {
         buildTabState.sequenceState.updateBeatOrientation(color, orientation);
       }
     }}
-    onTurnAmountChanged={(color, turnAmount) => {
+    onTurnAmountChanged={(color: string, turnAmount: number) => {
       if (editPanelBeatData) {
         buildTabState.sequenceState.updateBeatTurnAmount(color, turnAmount);
       }
@@ -509,13 +509,13 @@ Testing HMR persistence functionality
 
   /* Side-by-side layout (when navigation is on left - phone landscape) */
   .build-tab-layout.side-by-side {
-    grid-template-columns: 1fr 1fr; /* 50/50 split between left panel and right panel */
+    grid-template-columns: 1fr 1fr; /* 50/50 split between workspace and tool panels */
   }
 
   /* Stacked layout (when navigation is on top - tablets, desktop, portrait) */
   .build-tab-layout.stacked {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr; /* Top panel (left), bottom panel (right) */
+    grid-template-rows: 1fr 1fr; /* Top: workspace panel, Bottom: tool panel */
   }
 
 

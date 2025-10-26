@@ -15,6 +15,8 @@
  * - targetStaffAngle: Calculated from MotionData.endLocation + endOrientation + motionType + turns
  */
 
+import type { RotationDirection } from "$shared";
+
 export interface MotionEndpoints {
   /** Starting center path angle (radians) - calculated from startLocation */
   startCenterAngle: number;
@@ -27,4 +29,7 @@ export interface MotionEndpoints {
 
   /** Target staff rotation angle (radians) - calculated from endLocation + endOrientation + motionType + turns */
   targetStaffAngle: number;
+
+  /** Explicit rotation direction from sequence data - determines path direction */
+  rotationDirection: RotationDirection;
 }

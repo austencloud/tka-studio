@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import type { TableOfContentsItem } from "./types";
 
   interface Props {
@@ -14,8 +13,14 @@
   // Track current active section
   let currentSection = $state("");
 
-  // Set up IntersectionObserver to track visible sections
-  onMount(() => {
+  // Effect: Set up IntersectionObserver reactively
+  // This ensures the observer updates when sections prop changes
+  $effect(() => {
+    // Track section IDs to trigger effect when sections change
+    const sectionIds = sections.map((s) => s.id);
+
+    if (sectionIds.length === 0) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -28,8 +33,8 @@
     );
 
     // Observe all section elements
-    sections.forEach((section) => {
-      const element = document.getElementById(section.id);
+    sectionIds.forEach((id) => {
+      const element = document.getElementById(id);
       if (element) {
         observer.observe(element);
       }

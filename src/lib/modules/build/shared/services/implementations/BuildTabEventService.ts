@@ -6,8 +6,7 @@
  * that was previously scattered throughout the massive ConstructTab component.
  */
 
-import { createBeatData, type BeatData } from "$build/workbench";
-import { resolve, type IOrientationCalculationService, type PictographData, type SequenceData } from "$shared";
+import { createBeatData, resolve, type BeatData, type IOrientationCalculationService, type PictographData, type SequenceData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { injectable } from "inversify";
 import type { IBuildTabEventService, IConstructSubTabCoordinationService } from "../contracts";

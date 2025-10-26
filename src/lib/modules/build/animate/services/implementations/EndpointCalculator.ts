@@ -37,6 +37,8 @@ export class EndpointCalculator implements IEndpointCalculator {
     turns = 0,
   } = motionData;
 
+    // Logging removed - too noisy
+
     const startCenterAngle = this.angleCalculator.mapPositionToAngle(startLocation);
     const startStaffAngle = this.angleCalculator.mapOrientationToAngle(
       startOrientation || Orientation.IN,
@@ -50,20 +52,15 @@ export class EndpointCalculator implements IEndpointCalculator {
     switch (motionType) {
       case MotionType.PRO: {
         const numericTurns = typeof turns === "number" ? turns : 0;
-        if (numericTurns > 0) {
-          calculatedTargetStaffAngle = this.motionCalculator.calculateProTargetAngle(
-            startCenterAngle,
-            targetCenterAngle,
-            startStaffAngle,
-            numericTurns,
-            rotationDirection || RotationDirection.CLOCKWISE
-          );
-        } else {
-          calculatedTargetStaffAngle = this.motionCalculator.calculateProIsolationStaffAngle(
-            targetCenterAngle,
-            rotationDirection || RotationDirection.CLOCKWISE
-          );
-        }
+        // Always use calculateProTargetAngle, even for 0 turns
+        // This ensures proper rotation from start to end position
+        calculatedTargetStaffAngle = this.motionCalculator.calculateProTargetAngle(
+          startCenterAngle,
+          targetCenterAngle,
+          startStaffAngle,
+          numericTurns,
+          rotationDirection || RotationDirection.CLOCKWISE
+        );
         break;
       }
       case MotionType.ANTI: {
@@ -122,6 +119,7 @@ export class EndpointCalculator implements IEndpointCalculator {
       startStaffAngle,
       targetCenterAngle,
       targetStaffAngle: calculatedTargetStaffAngle,
+      rotationDirection: rotationDirection || RotationDirection.CLOCKWISE, // Pass through for interpolation
     };
   }
 

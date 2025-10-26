@@ -1,4 +1,4 @@
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$build/workspace-panel";
 import type { SliceSize } from "../../domain/models/circular-models";
 
 /**

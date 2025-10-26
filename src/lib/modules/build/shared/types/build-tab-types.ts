@@ -2,7 +2,7 @@
  * Build Tab Type Definitions
  *
  * Centralized type definitions for BuildTab components and state.
- * Extracted from inline types in RightPanel.svelte for better maintainability.
+ * Extracted from inline types in ToolPanel.svelte for better maintainability.
  */
 
 import type { ActiveBuildTab, BeatData, PictographData } from "$shared";
@@ -153,11 +153,11 @@ export interface IAnimationStateRef {
 }
 
 /**
- * Right Panel Props Interface
+ * Tool Panel Props Interface
  *
- * Props passed to RightPanel component from parent BuildTab.
+ * Props passed to ToolPanel component from parent BuildTab.
  */
-export interface IRightPanelProps {
+export interface IToolPanelProps {
   buildTabState: IBuildTabState;
   constructTabState: IConstructTabState;
   onOptionSelected: (option: PictographData) => Promise<void>;

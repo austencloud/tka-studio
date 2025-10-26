@@ -103,83 +103,99 @@ Renders a section with:
   let availableHeight = $state(0);
   let actualHeaderHeight = $state(0);
 
-  // Single effect to handle both contentAreaBounds and container measurement
+  // Effect 1: Width measurement from contentAreaBounds or container
   $effect(() => {
-    const updateAvailableDimensions = () => {
-      // Use contentAreaBounds if available (from HorizontalSwipeContainer)
-      if (contentAreaBounds && contentAreaBounds.width > 0) {
-        const newWidth = contentAreaBounds.width;
-        if (availableWidth !== newWidth) {
-          availableWidth = newWidth;
-        }
-      }
+    // Use contentAreaBounds if available (from HorizontalSwipeContainer)
+    if (contentAreaBounds && contentAreaBounds.width > 0) {
+      availableWidth = contentAreaBounds.width;
+      return;
+    }
 
-      // Measure container dimensions
-      if (!sectionContainer) return;
+    // Otherwise measure container width
+    if (!sectionContainer) return;
 
-      // Update width if not using contentAreaBounds
-      if (!contentAreaBounds || contentAreaBounds.width === 0) {
-        const rect = sectionContainer.getBoundingClientRect();
-        const newWidth = rect.width;
-        if (availableWidth !== newWidth) {
-          availableWidth = newWidth;
-        }
-      }
+    // Capture reference for closure (TypeScript flow analysis)
+    const container = sectionContainer;
 
-      // Measure height from VIEWPORT (not section container)
-      // The section container can overflow the viewport, so we need the viewport's actual height
-      const viewport = sectionContainer.closest('.embla__viewport') as HTMLElement;
-      if (viewport) {
-        const viewportRect = viewport.getBoundingClientRect();
-        const viewportStyles = window.getComputedStyle(viewport);
-        const paddingTop = parseFloat(viewportStyles.paddingTop) || 0;
-        const paddingBottom = parseFloat(viewportStyles.paddingBottom) || 0;
+    const resizeObserver = new ResizeObserver(() => {
+      const rect = container.getBoundingClientRect();
+      availableWidth = rect.width;
+    });
 
-        // Available height = viewport height minus padding
-        const newHeight = viewportRect.height - paddingTop - paddingBottom;
-        if (availableHeight !== newHeight) {
-          availableHeight = newHeight;
-        }
-      }
-
-      // Measure actual header height (or use 0 if hidden)
-      if (showHeader) {
-        const header = sectionContainer.querySelector('.section-header') as HTMLElement;
-        if (header) {
-          const headerRect = header.getBoundingClientRect();
-          const newHeaderHeight = headerRect.height;
-          if (actualHeaderHeight !== newHeaderHeight) {
-            actualHeaderHeight = newHeaderHeight;
-          }
-        }
-      } else {
-        // No header, so height is 0
-        if (actualHeaderHeight !== 0) {
-          actualHeaderHeight = 0;
-        }
-      }
-    };
+    resizeObserver.observe(container);
 
     // Initial measurement
-    updateAvailableDimensions();
+    const rect = container.getBoundingClientRect();
+    availableWidth = rect.width;
 
-    // Create ResizeObserver for reactive updates - immediate for snappy resize
-    if (sectionContainer) {
-      const resizeObserver = new ResizeObserver(() => {
-        updateAvailableDimensions();
-      });
-      resizeObserver.observe(sectionContainer);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  });
 
-      // Also observe viewport for padding changes
-      const viewport = sectionContainer.closest('.embla__viewport') as HTMLElement;
-      if (viewport) {
-        resizeObserver.observe(viewport);
-      }
+  // Effect 2: Height measurement from viewport
+  // The section container can overflow the viewport, so we need the viewport's actual height
+  $effect(() => {
+    if (!sectionContainer) return;
 
-      return () => {
-        resizeObserver.disconnect();
-      };
+    const viewport = sectionContainer.closest(".embla__viewport") as HTMLElement;
+    if (!viewport) return;
+
+    const measureViewportHeight = () => {
+      const viewportRect = viewport.getBoundingClientRect();
+      const viewportStyles = window.getComputedStyle(viewport);
+      const paddingTop = parseFloat(viewportStyles.paddingTop) || 0;
+      const paddingBottom = parseFloat(viewportStyles.paddingBottom) || 0;
+
+      // Available height = viewport height minus padding
+      availableHeight = viewportRect.height - paddingTop - paddingBottom;
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      measureViewportHeight();
+    });
+
+    resizeObserver.observe(viewport);
+
+    // Initial measurement
+    measureViewportHeight();
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  });
+
+  // Effect 3: Header height measurement
+  $effect(() => {
+    if (!showHeader) {
+      actualHeaderHeight = 0;
+      return;
     }
+
+    if (!sectionContainer) return;
+
+    const header = sectionContainer.querySelector(
+      ".section-header"
+    ) as HTMLElement;
+    if (!header) return;
+
+    const measureHeaderHeight = () => {
+      const headerRect = header.getBoundingClientRect();
+      actualHeaderHeight = headerRect.height;
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      measureHeaderHeight();
+    });
+
+    resizeObserver.observe(header);
+
+    // Initial measurement
+    measureHeaderHeight();
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   });
 
   // Calculate optimal pictograph size and grid columns based on available space

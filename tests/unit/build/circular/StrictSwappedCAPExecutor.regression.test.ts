@@ -13,7 +13,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$shared";
 
 describe("StrictSwappedCAPExecutor - Comprehensive Regression Test", () => {
 

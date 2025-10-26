@@ -3,7 +3,7 @@ import type {
   MotionType,
   Orientation,
   RotationDirection,
-} from "../../../../../shared";
+} from "$shared";
 
 // Note: InterpolationResult and BeatCalculationResult are defined in service contracts
 // (services/contracts/IAnimationStateManager.ts and services/contracts/IBeatCalculator.ts)

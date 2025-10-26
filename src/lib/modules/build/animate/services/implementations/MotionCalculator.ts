@@ -33,8 +33,8 @@ export function calculateProTargetAngle(
 ): number {
   const centerMovement = normalizeAngleSigned(targetCenterAngle - startCenterAngle);
   const dir = rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
-  const propRotation = dir * turns * TWO_PI;
-  const staffMovement = -centerMovement;
+  const propRotation = dir * turns * PI; // 1 turn = 180°, not 360°
+  const staffMovement = centerMovement; // PRO: same direction as grid movement
   const targetStaffAngle = startStaffAngle + staffMovement + propRotation;
   return normalizeAnglePositive(targetStaffAngle);
 }
@@ -48,8 +48,8 @@ export function calculateAntispinTargetAngle(
 ): number {
   const centerMovement = normalizeAngleSigned(targetCenterAngle - startCenterAngle);
   const dir = rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
-  const propRotation = dir * turns * TWO_PI;
-  const staffMovement = centerMovement;
+  const propRotation = dir * turns * PI; // 1 turn = 180°, not 360°
+  const staffMovement = -centerMovement; // ANTI: opposite direction to grid movement
   const targetStaffAngle = startStaffAngle + staffMovement + propRotation;
   return normalizeAnglePositive(targetStaffAngle);
 }

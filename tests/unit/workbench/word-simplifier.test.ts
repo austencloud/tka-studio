@@ -1,7 +1,7 @@
 import {
   simplifyAndTruncate,
   simplifyRepeatedWord,
-} from "$lib/modules/build/workbench/shared/utils/word-simplifier";
+} from "$lib/modules/build/workspace-panel/shared/utils/word-simplifier";
 import { describe, expect, it } from "vitest";
 
 describe("Word Simplifier", () => {

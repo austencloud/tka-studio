@@ -16,7 +16,7 @@
  * IMPORTANT: End position is calculated from rotated locations
  */
 
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$build/workspace-panel";
 import { MotionColor, MotionType, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import type { GridLocation, GridPosition } from "$shared/pictograph/grid/domain/enums/grid-enums";

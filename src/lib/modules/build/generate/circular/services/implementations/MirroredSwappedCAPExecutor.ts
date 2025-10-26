@@ -16,7 +16,7 @@
  * IMPORTANT: End position must be vertical mirror of start position
  */
 
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$build/workspace-panel";
 import { MotionColor, RotationDirection, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import type { GridPosition, GridLocation } from "$shared/pictograph/grid/domain/enums/grid-enums";

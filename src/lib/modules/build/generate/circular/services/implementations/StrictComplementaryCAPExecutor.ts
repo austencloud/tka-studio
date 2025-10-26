@@ -17,7 +17,7 @@
  * IMPORTANT: End position must equal start position for complementary CAPs
  */
 
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$build/workspace-panel";
 import { MotionColor, MotionType, RotationDirection, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";

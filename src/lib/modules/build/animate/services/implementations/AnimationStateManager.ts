@@ -79,17 +79,39 @@ export class AnimationStateManager implements IAnimationStateManager {
   /**
    * Update blue prop state
    * Dash motions provide their own x,y coordinates, other motions only provide angles
+   * CRITICAL: Must clear x,y when not provided to avoid stale DASH coordinates persisting
    */
   updateBluePropState(updates: Partial<PropState>): void {
-    this.bluePropState = { ...this.bluePropState, ...updates };
+    const newState: PropState = {
+      centerPathAngle: updates.centerPathAngle ?? this.bluePropState.centerPathAngle,
+      staffRotationAngle: updates.staffRotationAngle ?? this.bluePropState.staffRotationAngle,
+    };
+
+    // Only include x,y if explicitly provided in updates (DASH motions)
+    // This ensures stale x,y from previous DASH motion doesn't persist into non-DASH motions
+    if ('x' in updates && updates.x !== undefined) newState.x = updates.x;
+    if ('y' in updates && updates.y !== undefined) newState.y = updates.y;
+
+    this.bluePropState = newState;
   }
 
   /**
    * Update red prop state
    * Dash motions provide their own x,y coordinates, other motions only provide angles
+   * CRITICAL: Must clear x,y when not provided to avoid stale DASH coordinates persisting
    */
   updateRedPropState(updates: Partial<PropState>): void {
-    this.redPropState = { ...this.redPropState, ...updates };
+    const newState: PropState = {
+      centerPathAngle: updates.centerPathAngle ?? this.redPropState.centerPathAngle,
+      staffRotationAngle: updates.staffRotationAngle ?? this.redPropState.staffRotationAngle,
+    };
+
+    // Only include x,y if explicitly provided in updates (DASH motions)
+    // This ensures stale x,y from previous DASH motion doesn't persist into non-DASH motions
+    if ('x' in updates && updates.x !== undefined) newState.x = updates.x;
+    if ('y' in updates && updates.y !== undefined) newState.y = updates.y;
+
+    this.redPropState = newState;
   }
 
   /**

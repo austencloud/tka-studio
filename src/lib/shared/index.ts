@@ -81,4 +81,4 @@ export type {
     BeatGridConfig,
     ContainerDimensions,
     LayoutInfo
-} from "../modules/build/workbench/sequence-display/domain/models/beat-grid-models";
+} from "../modules/build/workspace-panel/sequence-display/domain/models/beat-grid-models";

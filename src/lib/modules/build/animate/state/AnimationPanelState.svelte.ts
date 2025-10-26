@@ -2,7 +2,7 @@
  * Animation Panel State
  *
  * Manages animation panel visibility and collapse state.
- * Extracted from RightPanel.svelte for better separation of concerns.
+ * Extracted from ToolPanel.svelte for better separation of concerns.
  *
  * ✅ Pure Svelte 5 state management
  * ✅ No business logic, just UI state

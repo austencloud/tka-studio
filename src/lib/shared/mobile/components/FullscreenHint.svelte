@@ -46,9 +46,6 @@ Features:
   const DISMISSAL_KEY = "tka-fullscreen-hint-dismissed";
   let hasBeenDismissed = $state(false);
 
-  // DOM mutation observer for reactive positioning
-  let mutationObserver: MutationObserver | null = null;
-
   function findFullscreenButton(): HTMLElement | null {
     // Look for fullscreen button in ButtonPanel
     const fullscreenButton = document.querySelector(".fullscreen-button");
@@ -97,105 +94,106 @@ Features:
     hasBeenDismissed = true;
   }
 
-  function setupMutationObserver() {
-    if (typeof window === "undefined") return;
+  // Initialize service on mount
+  onMount(() => {
+    try {
+      checkDismissalStatus();
+      fullscreenService = resolve(TYPES.IMobileFullscreenService);
+      if (!fullscreenService) return;
 
-    // Clean up existing observer
-    if (mutationObserver) {
-      mutationObserver.disconnect();
+      strategy = fullscreenService.getRecommendedStrategy();
+      isFullscreen = fullscreenService.isFullscreen();
+    } catch (error) {
+      console.error("Failed to initialize fullscreen hint:", error);
     }
+  });
 
-    // Create new observer to watch for DOM changes that might affect button position
-    mutationObserver = new MutationObserver(() => {
-      if (showHint) {
-        // Debounce position updates
-        setTimeout(updateButtonPosition, 100);
+  // Effect: Subscribe to fullscreen changes
+  $effect(() => {
+    if (!fullscreenService) return;
+
+    const unsubscribe = fullscreenService.onFullscreenChange((fs) => {
+      isFullscreen = fs;
+      if (fs) {
+        // Hide hint when user goes fullscreen
+        showHint = false;
+        hasShownHint = true;
+        saveDismissalStatus();
       }
     });
 
-    // Observe changes to the document body
+    return () => unsubscribe?.();
+  });
+
+  // Effect: Reactive button position tracking
+  // Consolidates MutationObserver, ResizeObserver, and resize events
+  $effect(() => {
+    if (!showHint) {
+      buttonPosition = null;
+      return;
+    }
+
+    // Update position immediately
+    updateButtonPosition();
+
+    // Track DOM mutations
+    const mutationObserver = new MutationObserver(() => {
+      requestAnimationFrame(updateButtonPosition);
+    });
+
     mutationObserver.observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ["class", "style"],
     });
-  }
 
-  onMount(() => {
-    try {
-      // Check if user has previously dismissed the hint
-      checkDismissalStatus();
+    // Track window resize
+    window.addEventListener("resize", updateButtonPosition);
 
-      fullscreenService = resolve(TYPES.IMobileFullscreenService);
-      if (!fullscreenService) return;
+    return () => {
+      mutationObserver.disconnect();
+      window.removeEventListener("resize", updateButtonPosition);
+    };
+  });
 
-      strategy = fullscreenService.getRecommendedStrategy();
-      isFullscreen = fullscreenService.isFullscreen();
+  // Effect: Auto-show hint with reactive timing
+  $effect(() => {
+    if (
+      !autoShow ||
+      strategy !== "fullscreen-api" ||
+      !fullscreenService ||
+      fullscreenService.isPWA() ||
+      isFullscreen ||
+      hasShownHint ||
+      hasBeenDismissed
+    ) {
+      return;
+    }
 
-      // Subscribe to fullscreen changes
-      const unsubscribe = fullscreenService.onFullscreenChange((fs) => {
-        isFullscreen = fs;
-        if (fs) {
-          // Hide hint when user goes fullscreen
+    // Wait for DOM to settle, then find button and show hint
+    const showTimer = setTimeout(() => {
+      updateButtonPosition();
+      if (buttonPosition) {
+        showHint = true;
+
+        // Auto-hide after duration
+        const hideTimer = setTimeout(() => {
           showHint = false;
           hasShownHint = true;
-          saveDismissalStatus(); // Remember that user has seen fullscreen
-        }
-      });
+        }, duration);
 
-      // Auto-show hint for mobile users if conditions are met
-      if (
-        autoShow &&
-        strategy === "fullscreen-api" &&
-        !fullscreenService.isPWA() &&
-        !isFullscreen &&
-        !hasShownHint &&
-        !hasBeenDismissed // Don't show if user previously dismissed
-      ) {
-        // Setup mutation observer for reactive positioning
-        setupMutationObserver();
-
-        // Delay to find button and show hint
-        setTimeout(() => {
-          updateButtonPosition();
-          if (buttonPosition) {
-            showHint = true;
-
-            // Auto-hide after duration
-            setTimeout(() => {
-              showHint = false;
-              hasShownHint = true;
-            }, duration);
-          }
-        }, 2000);
+        return () => clearTimeout(hideTimer);
       }
+    }, 2000);
 
-      // Update button position on resize
-      const handleResize = () => {
-        if (showHint) {
-          updateButtonPosition();
-        }
-      };
-
-      window.addEventListener("resize", handleResize);
-
-      return () => {
-        unsubscribe?.();
-        window.removeEventListener("resize", handleResize);
-        if (mutationObserver) {
-          mutationObserver.disconnect();
-        }
-      };
-    } catch (error) {
-      console.error("Failed to initialize fullscreen hint:", error);
-    }
+    return () => clearTimeout(showTimer);
   });
 
   function handleDismiss() {
     showHint = false;
     hasShownHint = true;
-    saveDismissalStatus(); // Remember user dismissal
+    saveDismissalStatus();
   }
 
   // Add a function to reset dismissal status (for debugging/settings)
@@ -208,23 +206,6 @@ Features:
 
   // Export reset function for potential use by parent components
   export { resetDismissalStatus };
-
-  // Reactive effect to update position when hint becomes visible
-  $effect(() => {
-    if (showHint) {
-      updateButtonPosition();
-      // Setup mutation observer when hint is shown
-      if (!mutationObserver) {
-        setupMutationObserver();
-      }
-    } else {
-      // Clean up mutation observer when hint is hidden
-      if (mutationObserver) {
-        mutationObserver.disconnect();
-        mutationObserver = null;
-      }
-    }
-  });
 </script>
 
 {#if showHint && strategy === "fullscreen-api" && buttonPosition}

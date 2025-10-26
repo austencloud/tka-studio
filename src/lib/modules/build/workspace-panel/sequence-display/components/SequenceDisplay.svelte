@@ -39,6 +39,9 @@
   $effect(() => {
     if (!beatGridWrapperRef) return;
 
+    // Capture reference for closure (TypeScript flow analysis)
+    const wrapper = beatGridWrapperRef;
+
     const handleBeatLetterAnimated = (event: Event) => {
       const customEvent = event as CustomEvent;
       const { letter } = customEvent.detail;
@@ -51,21 +54,21 @@
       progressiveWord = "";
     };
 
-    beatGridWrapperRef.addEventListener(
+    wrapper.addEventListener(
       "beat-letter-animated",
       handleBeatLetterAnimated
     );
-    beatGridWrapperRef.addEventListener(
+    wrapper.addEventListener(
       "sequential-animation-complete",
       handleSequentialAnimationComplete
     );
 
     return () => {
-      beatGridWrapperRef.removeEventListener(
+      wrapper.removeEventListener(
         "beat-letter-animated",
         handleBeatLetterAnimated
       );
-      beatGridWrapperRef.removeEventListener(
+      wrapper.removeEventListener(
         "sequential-animation-complete",
         handleSequentialAnimationComplete
       );

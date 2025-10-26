@@ -8,7 +8,7 @@
 // SHARED TYPES (imported from core-types to avoid duplication)
 // ============================================================================
 
-import type { PictographData } from "../../../../../shared";
+import type { PictographData } from "$shared";
 
 
 // ============================================================================

@@ -30,6 +30,10 @@ The main adorable flipbook component that displays PDF pages with beautiful page
 
   // Flipbook container reference
   let flipBookContainer = $state<HTMLElement>();
+  let flipBookWrapper = $state<HTMLElement>();
+
+  // Track visibility state
+  let isVisible = $state(false);
 
   // Initialize on mount
   onMount(async () => {
@@ -37,31 +41,9 @@ The main adorable flipbook component that displays PDF pages with beautiful page
       console.log("📚 FlipBook: Component mounted, loading PDF");
 
       // Start loading immediately
-      const loadPromise = readState.loadPDF(pdfUrl);
-
-      // Wait for both PDF loading and container to be ready
-      await loadPromise;
-
-      // Wait for container to be fully rendered and sized
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
-      // Ensure container has dimensions
-      if (flipBookContainer) {
-        const rect = flipBookContainer.getBoundingClientRect();
-        console.log("📚 FlipBook: Container dimensions", {
-          width: rect.width,
-          height: rect.height,
-          clientWidth: flipBookContainer.clientWidth,
-          clientHeight: flipBookContainer.clientHeight,
-        });
-      }
-
-      // Initialize the flipbook once PDF is loaded
-      if (readState.hasPages() && flipBookContainer) {
-        await readState.initializeFlipBook(flipBookContainer, config);
-      }
+      await readState.loadPDF(pdfUrl);
     } catch (error) {
-      console.error("📚 FlipBook: Error during initialization", error);
+      console.error("📚 FlipBook: Error during PDF loading", error);
     }
   });
 
@@ -70,36 +52,48 @@ The main adorable flipbook component that displays PDF pages with beautiful page
     readState.cleanup();
   });
 
-  // Monitor visibility and restore page when component becomes visible
-  let flipBookWrapper = $state<HTMLElement>();
-
-  // Also trigger restoration when flipbook is ready
+  // Effect: Initialize flipbook when container and PDF are ready
   $effect(() => {
-    if (readState.isFlipBookInitialized && readState.isReady()) {
-      console.log(
-        "📚 FlipBook: Flipbook is ready, attempting page restoration"
-      );
-      setTimeout(() => {
-        readState.restoreToSavedPage();
-      }, 300);
+    if (!readState.hasPages() || !flipBookContainer) {
+      return;
     }
+
+    // Capture reference for closure (TypeScript flow analysis)
+    const container = flipBookContainer;
+
+    // Wait for next frame to ensure layout is complete
+    const initFlipBook = async () => {
+      // Double requestAnimationFrame to ensure layout is stable
+      requestAnimationFrame(() => {
+        requestAnimationFrame(async () => {
+          const rect = container.getBoundingClientRect();
+          console.log("📚 FlipBook: Container dimensions", {
+            width: rect.width,
+            height: rect.height,
+            clientWidth: container.clientWidth,
+            clientHeight: container.clientHeight,
+          });
+
+          try {
+            await readState.initializeFlipBook(container, config);
+          } catch (error) {
+            console.error("📚 FlipBook: Error during initialization", error);
+          }
+        });
+      });
+    };
+
+    initFlipBook();
   });
 
+  // Effect: Track visibility with IntersectionObserver
   $effect(() => {
     if (!flipBookWrapper) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && readState.isFlipBookInitialized) {
-            console.log(
-              "📚 FlipBook: Component became visible, restoring page"
-            );
-            // Small delay to ensure everything is ready
-            setTimeout(() => {
-              readState.restoreToSavedPage();
-            }, 200);
-          }
+          isVisible = entry.isIntersecting;
         });
       },
       { threshold: 0.1 }
@@ -110,6 +104,21 @@ The main adorable flipbook component that displays PDF pages with beautiful page
     return () => {
       observer.disconnect();
     };
+  });
+
+  // Effect: Restore page when ready and visible
+  $effect(() => {
+    if (!readState.isFlipBookInitialized || !readState.isReady()) {
+      return;
+    }
+
+    if (isVisible) {
+      console.log("📚 FlipBook: Restoring to saved page");
+      // Use requestAnimationFrame for better timing than setTimeout
+      requestAnimationFrame(() => {
+        readState.restoreToSavedPage();
+      });
+    }
   });
 
   // Navigation functions

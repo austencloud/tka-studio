@@ -16,8 +16,8 @@ Refactored into smaller section components for better maintainability:
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 // Import section components
-  import type { IDeviceDetector } from "../../../../shared/device/services/contracts";
-  import type { SequenceState } from "../../shared/state";
+  import type { IDeviceDetector } from "$shared/device/services/contracts";
+  import type { SequenceState } from "$build/shared/state";
   import { createDeviceState, createGenerationActionsState, createGenerationConfigState, createPresetState } from "../state";
   import type { GenerationPreset } from "../state/preset.svelte";
   import ActionSection from "./ActionSection.svelte";
@@ -195,7 +195,7 @@ Refactored into smaller section components for better maintainability:
 <!-- Main panel styling only - child components handle their own styles -->
 <style>
   .generate-panel {
-    /* No position property - allows modals to position relative to right-panel ancestor */
+    /* No position property - allows modals to position relative to tool-panel ancestor */
     display: flex;
     flex-direction: column;
     height: 100%;

@@ -1,4 +1,4 @@
-import type { PictographData } from "../../../../../../shared";
+import type { PictographData } from "$shared";
 
 
 // ===== Basic State Types =====

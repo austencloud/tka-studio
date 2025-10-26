@@ -44,6 +44,13 @@
 
   // Overflow detection state
   let navBarElement: HTMLElement | null = $state(null);
+  let navCenterElement: HTMLElement | null = $state(null);
+
+  // Reactive measurements updated by ResizeObserver
+  let navScrollWidth = $state(0);
+  let navClientWidth = $state(0);
+
+  // Overflow state (updated by effect with hysteresis logic)
   let isNavOverflowing = $state(false);
 
   // Update landscape mobile state based on device detection
@@ -54,16 +61,16 @@
     isLandscapeMobile = deviceDetector.isLandscapeMobile();
   }
 
-  function checkNavOverflow() {
-    if (!navBarElement || navigationLayout !== "top") {
+  // Effect: Update overflow state with hysteresis when measurements change
+  // This prevents infinite toggle loops
+  $effect(() => {
+    if (!navCenterElement || navigationLayout !== "top") {
+      isNavOverflowing = false;
       return;
     }
 
-    // Check if the navigation bar's content exceeds its width
-    // This indicates that tabs or settings button are being pushed off-screen
-    const scrollWidth = navBarElement.scrollWidth;
-    const clientWidth = navBarElement.clientWidth;
-    const hasOverflow = scrollWidth > clientWidth;
+    // Current overflow state based on measurements
+    const hasOverflow = navScrollWidth > navClientWidth;
 
     // HYSTERESIS: To prevent infinite toggle loop, we need different thresholds
     // for turning icon-only mode ON vs OFF
@@ -72,8 +79,7 @@
     // which makes scrollWidth === clientWidth, which would immediately switch back to
     // full labels, causing an infinite loop.
     //
-    // Solution: When in icon-only mode, temporarily remove the class to measure if
-    // full labels would overflow. Only switch back to full labels if they fit.
+    // Solution: When in icon-only mode, measure with full labels to check if they fit
 
     let shouldBeIconOnly = isNavOverflowing; // Keep current state by default
 
@@ -83,13 +89,13 @@
     } else if (isNavOverflowing && !hasOverflow) {
       // Currently showing icons and no overflow detected
       // Temporarily remove icon-only class to measure if full labels would fit
-      const subModeTabs = navBarElement.querySelector(".sub-mode-tabs");
+      const subModeTabs = navCenterElement.querySelector(".sub-mode-tabs");
       if (subModeTabs) {
         subModeTabs.classList.remove("icon-only");
 
-        // Force layout recalculation
-        const fullLabelScrollWidth = navBarElement.scrollWidth;
-        const fullLabelClientWidth = navBarElement.clientWidth;
+        // Force layout recalculation and measure
+        const fullLabelScrollWidth = navCenterElement.scrollWidth;
+        const fullLabelClientWidth = navCenterElement.clientWidth;
         const wouldOverflowWithFullLabels =
           fullLabelScrollWidth > fullLabelClientWidth;
 
@@ -103,11 +109,39 @@
       }
     }
 
-    // Only update if state actually changed
+    // Update state if changed
     if (shouldBeIconOnly !== isNavOverflowing) {
       isNavOverflowing = shouldBeIconOnly;
     }
+  });
+
+  // Measure nav center dimensions (where tabs overflow) whenever they change
+  function updateNavMeasurements() {
+    if (!navCenterElement || navigationLayout !== "top") {
+      navScrollWidth = 0;
+      navClientWidth = 0;
+      return;
+    }
+
+    navScrollWidth = navCenterElement.scrollWidth;
+    navClientWidth = navCenterElement.clientWidth;
   }
+
+  // Reactive effect: Update measurements when subModeTabs array changes
+  // This ensures overflow detection reacts to dynamic tab additions/removals
+  $effect(() => {
+    // Track the subModeTabs array length to trigger on changes
+    const tabCount = subModeTabs.length;
+
+    // Schedule measurement update after DOM updates complete
+    // This allows the new tabs to render before we measure
+    if (tabCount > 0 && navCenterElement) {
+      // Use requestAnimationFrame to wait for layout
+      requestAnimationFrame(() => {
+        updateNavMeasurements();
+      });
+    }
+  });
 
   // Initialize services when container is ready
   onMount(() => {
@@ -121,7 +155,10 @@
     // Listen for resize and orientation changes
     const handleResize = () => {
       updateLandscapeMobileState();
-      checkNavOverflow();
+      // Use requestAnimationFrame to ensure layout has completed before measuring
+      requestAnimationFrame(() => {
+        updateNavMeasurements();
+      });
     };
 
     window.addEventListener("resize", handleResize);
@@ -129,17 +166,26 @@
 
     // Set up overflow detection for top layout only
     let resizeObserver: ResizeObserver | null = null;
-    if (navigationLayout === "top" && navBarElement) {
+    if (navigationLayout === "top" && navCenterElement) {
       resizeObserver = new ResizeObserver(() => {
-        checkNavOverflow();
+        // Use requestAnimationFrame to ensure layout has completed before measuring
+        requestAnimationFrame(() => {
+          updateNavMeasurements();
+        });
       });
 
-      resizeObserver.observe(navBarElement);
+      resizeObserver.observe(navCenterElement);
 
-      // Initial check with multiple attempts to ensure DOM is fully rendered
-      setTimeout(() => checkNavOverflow(), 0);
-      setTimeout(() => checkNavOverflow(), 100);
-      setTimeout(() => checkNavOverflow(), 500);
+      // Initial measurements with multiple attempts to ensure DOM is fully rendered
+      setTimeout(() => {
+        requestAnimationFrame(() => updateNavMeasurements());
+      }, 0);
+      setTimeout(() => {
+        requestAnimationFrame(() => updateNavMeasurements());
+      }, 100);
+      setTimeout(() => {
+        requestAnimationFrame(() => updateNavMeasurements());
+      }, 500);
     }
 
     // Cleanup listeners
@@ -190,7 +236,11 @@
   </div>
 
   <!-- Center: Sub-mode Tabs -->
-  <div class="nav-center" class:icon-only-mode={isNavOverflowing}>
+  <div
+    bind:this={navCenterElement}
+    class="nav-center"
+    class:icon-only-mode={isNavOverflowing}
+  >
     <SubModeTabs
       {subModeTabs}
       {currentSubMode}
@@ -255,6 +305,9 @@
     justify-self: stretch; /* Fill available space in center column */
     justify-content: center; /* Center content within the space */
     align-items: stretch; /* Changed from default to stretch */
+    /* CRITICAL FOR OVERFLOW DETECTION: Use auto to allow scrollWidth measurement */
+    overflow: auto;
+    min-width: 0; /* Allow flex item to shrink below content size */
   }
 
   .layout-top .nav-right {

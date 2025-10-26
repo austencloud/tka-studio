@@ -49,24 +49,19 @@ export class PropInterpolator implements IPropInterpolator {
     const blueDash = blueMotion.motionType === MotionType.DASH;
     const redDash = redMotion.motionType === MotionType.DASH;
 
-    // Debug logging for motion types - ONLY LOG ONCE at start
-    // NOW SHOWS DOMAIN CONCEPTS (GridLocation, Orientation) INSTEAD OF RAW ANGLES
-    if (currentBeatData.letter === "I" && beatProgress < 0.05) {
-      console.log(`🔍 Beat I Motion Data (DOMAIN CONCEPTS):`, {
-        blue: {
-          motionType: blueMotion.motionType,
-          path: `${blueMotion.startLocation.toUpperCase()} → ${blueMotion.endLocation.toUpperCase()}`,
-          orientation: `${blueMotion.startOrientation.toUpperCase()} → ${blueMotion.endOrientation.toUpperCase()}`,
-          turns: blueMotion.turns,
-          rotationDirection: blueMotion.rotationDirection
-        },
-        red: {
-          motionType: redMotion.motionType,
-          path: `${redMotion.startLocation.toUpperCase()} → ${redMotion.endLocation.toUpperCase()}`,
-          orientation: `${redMotion.startOrientation.toUpperCase()} → ${redMotion.endOrientation.toUpperCase()}`,
-          turns: redMotion.turns,
-          rotationDirection: redMotion.rotationDirection
-        }
+    // Log only at beat start to show motion plan
+    if (beatProgress < 0.05) {
+      console.log(`🎯 Beat ${currentBeatData.letter || '?'}:`, {
+        blue: `${blueMotion.motionType} ${blueMotion.startLocation}→${blueMotion.endLocation}`,
+        red: `${redMotion.motionType} ${redMotion.startLocation}→${redMotion.endLocation}`
+      });
+
+      // Show ACTUAL endpoint angles being calculated
+      console.log('  📐 RED ENDPOINTS:', {
+        startCenter: `${(redEndpoints.startCenterAngle * 180 / Math.PI).toFixed(0)}°`,
+        targetCenter: `${(redEndpoints.targetCenterAngle * 180 / Math.PI).toFixed(0)}°`,
+        startStaff: `${(redEndpoints.startStaffAngle * 180 / Math.PI).toFixed(0)}°`,
+        targetStaff: `${(redEndpoints.targetStaffAngle * 180 / Math.PI).toFixed(0)}°`
       });
     }
 
@@ -74,11 +69,13 @@ export class PropInterpolator implements IPropInterpolator {
     const blueAngles = blueDash
       ? this.interpolateDashMotion(blueEndpoints, beatProgress)
       : {
+          // Grid location: ALWAYS shortest path (W → N always goes W → NW → N)
           centerPathAngle: this.angleCalculator.lerpAngle(
             blueEndpoints.startCenterAngle,
             blueEndpoints.targetCenterAngle,
             beatProgress
           ),
+          // Staff rotation: Use shortest path - targetStaffAngle already has rotation direction baked in
           staffRotationAngle: this.angleCalculator.lerpAngle(
             blueEndpoints.startStaffAngle,
             blueEndpoints.targetStaffAngle,
@@ -91,11 +88,13 @@ export class PropInterpolator implements IPropInterpolator {
     const redAngles = redDash
       ? this.interpolateDashMotion(redEndpoints, beatProgress)
       : {
+          // Grid location: ALWAYS shortest path
           centerPathAngle: this.angleCalculator.lerpAngle(
             redEndpoints.startCenterAngle,
             redEndpoints.targetCenterAngle,
             beatProgress
           ),
+          // Staff rotation: Use shortest path - targetStaffAngle already has rotation direction baked in
           staffRotationAngle: this.angleCalculator.lerpAngle(
             redEndpoints.startStaffAngle,
             redEndpoints.targetStaffAngle,
@@ -104,39 +103,9 @@ export class PropInterpolator implements IPropInterpolator {
           // Don't set x,y for non-dash motions - let CanvasRenderer calculate from angle
         };
 
-    // Debug logging for Beat I - show interpolated results with GRID LOCATIONS
-    // Angles are hidden - only show approximate grid location for debugging
-    if (currentBeatData.letter === "I") {
-      // Helper function to convert angle to approximate grid location (for debugging only)
-      const angleToLocation = (angle: number): string => {
-        // Normalize angle to 0-2π range
-        const normalized = ((angle % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
-        const degrees = (normalized * 180) / Math.PI;
-
-        // Map to grid locations (0° = E, 90° = S, 180° = W, 270° = N)
-        if (degrees >= 337.5 || degrees < 22.5) return "E";
-        if (degrees >= 22.5 && degrees < 67.5) return "SE";
-        if (degrees >= 67.5 && degrees < 112.5) return "S";
-        if (degrees >= 112.5 && degrees < 157.5) return "SW";
-        if (degrees >= 157.5 && degrees < 202.5) return "W";
-        if (degrees >= 202.5 && degrees < 247.5) return "NW";
-        if (degrees >= 247.5 && degrees < 292.5) return "N";
-        if (degrees >= 292.5 && degrees < 337.5) return "NE";
-        return "?";
-      };
-
-      // Only log at specific progress points to avoid spam
-      // Show approximate location instead of raw angles
-      if (beatProgress < 0.05 || Math.abs(beatProgress - 0.5) < 0.05 || beatProgress > 0.95) {
-        console.log(`   ➡️ Interpolated (progress=${beatProgress.toFixed(3)}):`, {
-          blue: {
-            approximateLocation: angleToLocation(blueAngles.centerPathAngle),
-          },
-          red: {
-            approximateLocation: angleToLocation(redAngles.centerPathAngle),
-          }
-        });
-      }
+    // Log ACTUAL interpolated angle at beat midpoint to verify it's actually changing
+    if (Math.abs(beatProgress - 0.5) < 0.05) {
+      console.log(`  ➡️ At 50%: Red center angle = ${(redAngles.centerPathAngle * 180 / Math.PI).toFixed(0)}°`);
     }
 
     return {

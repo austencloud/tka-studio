@@ -5,7 +5,7 @@
  * position mapping, and orientation mapping.
  */
 
-import type { GridLocation, Orientation } from "$shared";
+import type { GridLocation, Orientation, RotationDirection } from "$shared";
 
 export interface IAngleCalculator {
   /**
@@ -34,8 +34,18 @@ export interface IAngleCalculator {
   lerp(a: number, b: number, t: number): number;
 
   /**
-   * Angular interpolation (handles wraparound)
+   * Angular interpolation (handles wraparound) - always takes shortest path
    */
   lerpAngle(a: number, b: number, t: number): number;
+
+  /**
+   * Directional angular interpolation - respects explicit rotation direction from sequence data
+   */
+  lerpAngleDirectional(
+    startAngle: number,
+    endAngle: number,
+    direction: RotationDirection,
+    progress: number
+  ): number;
 }
 

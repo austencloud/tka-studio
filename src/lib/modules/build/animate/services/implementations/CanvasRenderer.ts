@@ -3,7 +3,9 @@
  * Based on the exact implementation from standalone_animator.html
  */
 
+import { GridLocation } from "$shared";
 import { injectable } from "inversify";
+import { LOCATION_ANGLES, PI } from "../../domain/math-constants";
 import type { PropState } from "../../domain/types/PropState";
 import type { ICanvasRenderer } from "../contracts/ICanvasRenderer";
 
@@ -11,6 +13,32 @@ import type { ICanvasRenderer } from "../contracts/ICanvasRenderer";
 // Using "strict" hand point offset (actual hand position, further from center)
 // From gridCoordinates.ts: n_diamond_hand_point_strict at (475, 325.0) = 150px from center
 const GRID_HALFWAY_POINT_OFFSET = 150;
+
+/**
+ * Convert angle (radians) to nearest GridLocation for human-readable logging
+ */
+function angleToGridLocation(angle: number): string {
+  // Normalize angle to [0, 2π)
+  let normalized = angle % (2 * PI);
+  if (normalized < 0) normalized += 2 * PI;
+
+  // Find closest grid location
+  let closestLoc = GridLocation.EAST;
+  let minDiff = Infinity;
+
+  for (const [loc, locAngle] of Object.entries(LOCATION_ANGLES)) {
+    let diff = Math.abs(normalized - locAngle);
+    // Handle wrap-around (e.g., comparing 0° and 350°)
+    if (diff > PI) diff = 2 * PI - diff;
+
+    if (diff < minDiff) {
+      minDiff = diff;
+      closestLoc = loc as GridLocation;
+    }
+  }
+
+  return closestLoc.toUpperCase();
+}
 
 @injectable()
 export class CanvasRenderer implements ICanvasRenderer {
@@ -31,6 +59,8 @@ export class CanvasRenderer implements ICanvasRenderer {
     bluePropViewBoxDimensions: { width: number; height: number } = { width: 252.8, height: 77.8 },
     redPropViewBoxDimensions: { width: number; height: number } = { width: 252.8, height: 77.8 }
   ): void {
+    // Rendering logging removed - too noisy, use beat transition logging instead
+
     // Clear canvas exactly as in standalone
     ctx.clearRect(0, 0, canvasSize, canvasSize);
 
@@ -86,14 +116,18 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     // Use pre-calculated x,y if provided (dash motions), otherwise calculate from angle
     let x: number, y: number;
+    const staffAngle = (propState.staffRotationAngle * 180 / Math.PI).toFixed(0);
     if (propState.x !== undefined && propState.y !== undefined) {
       // Dash motion: use Cartesian coordinates directly (already in unit circle space)
       x = centerX + propState.x * scaledHalfwayRadius * inwardFactor;
       y = centerY + propState.y * scaledHalfwayRadius * inwardFactor;
+      console.log(`🎨 DASH - staff rotation: ${staffAngle}°`);
     } else {
       // Regular motion: calculate from angle using polar coordinates
       x = centerX + Math.cos(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
       y = centerY + Math.sin(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
+      const centerAngle = (propState.centerPathAngle * 180 / Math.PI).toFixed(0);
+      console.log(`🎨 center: ${centerAngle}°, staff rotation: ${staffAngle}°`);
     }
 
     // Scale the prop dimensions from viewBox coordinate space to canvas pixels

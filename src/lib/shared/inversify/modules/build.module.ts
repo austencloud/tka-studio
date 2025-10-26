@@ -2,7 +2,6 @@ import { ContainerModule, type ContainerModuleLoadOptions } from "inversify";
 import {
     BuildTabService,
     ConstructCoordinator,
-    OptionSizer,
     ReversalDetectionService,
     SequenceDeletionService,
     SequenceDomainService,
@@ -12,9 +11,10 @@ import {
     SequencePersistenceService,
     SequenceService,
     SequenceTransformService,
-    StartPositionService,
     WorkbenchService,
 } from "../../../modules";
+import { OptionSizer } from "../../../modules/build/construct/option-picker/option-viewer/services/implementations";
+import { StartPositionService } from "../../../modules/build/construct/start-position-picker/services/implementations";
 import { BuildTabLayoutService } from "../../../modules/build/shared/layout/services/BuildTabLayoutService";
 import { BeatNumberingService } from "../../../modules/build/shared/services/implementations/BeatNumberingService";
 import { SequenceStatisticsService } from "../../../modules/build/shared/services/implementations/SequenceStatisticsService";

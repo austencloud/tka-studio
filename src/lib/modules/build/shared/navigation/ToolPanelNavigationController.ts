@@ -1,8 +1,8 @@
 /**
- * Right Panel Navigation Controller
+ * Tool Panel Navigation Controller
  *
- * Handles complex back button logic for RightPanel navigation.
- * Extracted from RightPanel.svelte's massive handleBack function.
+ * Handles complex back button logic for ToolPanel navigation.
+ * Extracted from ToolPanel.svelte's massive handleBack function.
  *
  * ✅ Single responsibility: navigation logic
  * ✅ No UI concerns, pure business logic
@@ -14,7 +14,7 @@ import type { ActiveBuildTab } from "$shared";
 import type { IBuildTabState, IConstructTabState } from "../types/build-tab-types";
 
 /**
- * Navigation Controller for Right Panel back button
+ * Navigation Controller for Tool Panel back button
  *
  * Priority order for back navigation:
  * 1. Advanced start position picker navigation
@@ -23,7 +23,7 @@ import type { IBuildTabState, IConstructTabState } from "../types/build-tab-type
  * 4. Return to start position picker from option picker
  * 5. Normal tab navigation
  */
-export class RightPanelNavigationController {
+export class ToolPanelNavigationController {
   constructor(
     private buildTabState: IBuildTabState,
     private constructTabState: IConstructTabState
@@ -32,7 +32,7 @@ export class RightPanelNavigationController {
   /**
    * Handles back button press with priority hierarchy
    *
-   * @param activePanel - Currently active right panel
+   * @param activePanel - Currently active tool panel tab
    * @param shouldShowStartPositionPicker - Whether start position picker should be shown
    * @param hasMovedFromStartPositionPicker - Whether user has moved from start position picker to option picker
    * @param isInAdvancedStartPositionPicker - Whether user is in advanced start position picker

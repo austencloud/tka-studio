@@ -5,7 +5,7 @@
  * position mapping, and orientation mapping.
  */
 
-import { GridLocation, Orientation } from "$shared";
+import { GridLocation, Orientation, RotationDirection } from "$shared";
 import { injectable } from "inversify";
 import { HALF_PI, LOCATION_ANGLES, PI, TWO_PI } from "../../domain/math-constants.js";
 import type { IAngleCalculator } from "../contracts/IAngleCalculator";
@@ -92,10 +92,60 @@ export class AngleCalculator implements IAngleCalculator {
   }
 
   /**
-   * Angular interpolation (handles wraparound)
+   * Angular interpolation (handles wraparound) - ALWAYS TAKES SHORTEST PATH
+   * ⚠️ This ignores rotation direction! Use lerpAngleDirectional for explicit direction control.
    */
   lerpAngle(a: number, b: number, t: number): number {
     const d = this.normalizeAngleSigned(b - a);
     return this.normalizeAnglePositive(a + d * t);
+  }
+
+  /**
+   * Directional angular interpolation - respects explicit rotation direction from sequence data
+   * This is NOT over-engineered - it directly follows the sequence data instructions!
+   *
+   * @param startAngle - Starting angle in radians
+   * @param endAngle - Target angle in radians
+   * @param direction - Explicit rotation direction from sequence data (CW, CCW, or noRotation)
+   * @param progress - Interpolation progress (0 to 1)
+   * @returns Interpolated angle that follows the specified direction
+   */
+  lerpAngleDirectional(
+    startAngle: number,
+    endAngle: number,
+    direction: RotationDirection,
+    progress: number
+  ): number {
+    // For noRotation (STATIC/DASH), use shortest path
+    if (direction === RotationDirection.NO_ROTATION) {
+      return this.lerpAngle(startAngle, endAngle, progress);
+    }
+
+    // Normalize angles to [0, 2π) range
+    const start = this.normalizeAnglePositive(startAngle);
+    const end = this.normalizeAnglePositive(endAngle);
+
+    // Calculate the raw difference
+    let delta = end - start;
+
+    // Force the direction specified in the sequence data
+    if (direction === RotationDirection.CLOCKWISE) {
+      // Clockwise = negative rotation (in standard math coords)
+      // If delta is positive, we need to go the long way (subtract 2π)
+      if (delta > 0) {
+        delta -= TWO_PI;
+      }
+      // If delta is 0, we're at the same angle - no movement needed
+    } else if (direction === RotationDirection.COUNTER_CLOCKWISE) {
+      // Counter-clockwise = positive rotation
+      // If delta is negative, we need to go the long way (add 2π)
+      if (delta < 0) {
+        delta += TWO_PI;
+      }
+      // If delta is 0, we're at the same angle - no movement needed
+    }
+
+    // Apply the forced direction
+    return this.normalizeAnglePositive(start + delta * progress);
   }
 }

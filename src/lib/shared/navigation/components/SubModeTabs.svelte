@@ -37,10 +37,46 @@
 
   // Overflow detection state (local detection, can be overridden by forceIconOnly)
   let containerElement: HTMLDivElement | null = $state(null);
-  let isOverflowing = $state(false);
+
+  // Reactive measurements updated by ResizeObserver
+  let containerScrollWidth = $state(0);
+  let containerClientWidth = $state(0);
+
+  // Derived overflow detection: compares container scroll width against client width
+  const isOverflowing = $derived(
+    containerScrollWidth > containerClientWidth && navigationLayout === "top"
+  );
 
   // Combined overflow state: either forced from parent or detected locally
   const shouldShowIconOnly = $derived(forceIconOnly || isOverflowing);
+
+  // Measure container dimensions
+  function updateContainerMeasurements() {
+    if (!containerElement || navigationLayout !== "top") {
+      containerScrollWidth = 0;
+      containerClientWidth = 0;
+      return;
+    }
+
+    containerScrollWidth = containerElement.scrollWidth;
+    containerClientWidth = containerElement.clientWidth;
+  }
+
+  // Reactive effect: Update measurements when subModeTabs array changes
+  // This ensures overflow detection reacts to dynamic tab additions/removals
+  $effect(() => {
+    // Track the subModeTabs array length to trigger on changes
+    const tabCount = subModeTabs.length;
+
+    // Schedule measurement update after DOM updates complete
+    // This allows the new tabs to render before we measure
+    if (tabCount > 0 && containerElement) {
+      // Use requestAnimationFrame to wait for layout
+      requestAnimationFrame(() => {
+        updateContainerMeasurements();
+      });
+    }
+  });
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
@@ -50,37 +86,23 @@
     // Set up overflow detection for top layout only
     if (navigationLayout === "top" && containerElement) {
       const resizeObserver = new ResizeObserver(() => {
-        checkOverflow();
+        updateContainerMeasurements();
       });
 
       resizeObserver.observe(containerElement);
 
       // Also check on window resize
-      window.addEventListener("resize", checkOverflow);
+      window.addEventListener("resize", updateContainerMeasurements);
 
-      // Initial check
-      checkOverflow();
+      // Initial measurement
+      updateContainerMeasurements();
 
       return () => {
         resizeObserver.disconnect();
-        window.removeEventListener("resize", checkOverflow);
+        window.removeEventListener("resize", updateContainerMeasurements);
       };
     }
   });
-
-  function checkOverflow() {
-    if (!containerElement || navigationLayout !== "top") return;
-
-    // Check if the container's scroll width exceeds its client width
-    // This indicates that content is overflowing
-    const hasOverflow =
-      containerElement.scrollWidth > containerElement.clientWidth;
-
-    // Only update if state actually changed to avoid unnecessary re-renders
-    if (hasOverflow !== isOverflowing) {
-      isOverflowing = hasOverflow;
-    }
-  }
 
   // Handle sub-mode selection
   function handleSubModeSelect(subModeId: string) {
@@ -131,6 +153,10 @@
   .sub-mode-tabs {
     display: flex;
     height: 100%; /* Fill full navigation bar height */
+    /* Allow tabs to overflow for proper overflow detection */
+    overflow: visible;
+    flex-shrink: 0; /* Don't allow container to shrink */
+    min-width: max-content; /* Container must be at least as wide as its content */
   }
 
   .sub-mode-tabs.layout-left {
@@ -157,6 +183,9 @@
     transition: all var(--transition-fast);
     font-size: var(--font-size-sm);
     font-weight: 500;
+    /* CRITICAL FOR OVERFLOW DETECTION: Prevent tabs from shrinking */
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   /* Left layout tab adjustments - maximize touch targets */

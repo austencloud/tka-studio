@@ -10,7 +10,7 @@
 
 import type { BeatData, PictographData } from "$shared";
 import { injectable } from "inversify";
-// import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
+// import type { IStartPositionService } from "../../tool-panel/construct/start-position-picker/services/contracts";
 import type { IBuildTabService } from "../contracts";
 // IStartPositionSelectionService removed - using unified service
 import { constructTabEventService } from "./BuildTabEventService";

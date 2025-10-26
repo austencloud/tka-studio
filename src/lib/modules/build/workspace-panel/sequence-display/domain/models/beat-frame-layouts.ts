@@ -30,14 +30,14 @@ export const BEAT_FRAME_LAYOUTS: Record<number, BeatFrameLayout> = {
   2: { rows: 1, columns: 2 },      // Desktop: (2, 1) -> 1 row, 2 columns
   3: { rows: 1, columns: 3 },      // Desktop: (3, 1) -> 1 row, 3 columns
   4: { rows: 1, columns: 4 },      // Desktop: (4, 1) -> 1 row, 4 columns
-  5: { rows: 2, columns: 3 },      // Desktop: (3, 2) -> 2 rows, 3 columns
-  6: { rows: 2, columns: 3 },      // Desktop: (3, 2)
+  5: { rows: 2, columns: 4 },      // Desktop: (3, 2) -> 2 rows, 3 columns
+  6: { rows: 2, columns: 4 },      // Desktop: (3, 2)
   7: { rows: 2, columns: 4 },      // Desktop: (4, 2) -> 2 rows, 4 columns
   8: { rows: 2, columns: 4 },      // Desktop: (4, 2)
-  9: { rows: 3, columns: 3 },      // Desktop: (3, 3) -> 3 rows, 3 columns
-  10: { rows: 2, columns: 5 },     // Desktop: (5, 2) -> 2 rows, 5 columns
-  11: { rows: 4, columns: 3 },     // Desktop: (3, 4) -> 4 rows, 3 columns
-  12: { rows: 4, columns: 3 },     // Desktop: (3, 4) -> 4 rows, 3 columns - KEY: 12 beats = 3 cols!
+  9: { rows: 3, columns: 4 },      // Desktop: (3, 3) -> 3 rows, 3 columns
+  10: { rows: 2, columns: 4 },     // Desktop: (5, 2) -> 2 rows, 5 columns
+  11: { rows: 4, columns: 4 },     // Desktop: (3, 4) -> 4 rows, 3 columns
+  12: { rows: 4, columns: 4 },     // Desktop: (3, 4) -> 4 rows, 3 columns - KEY: 12 beats = 3 cols!
   13: { rows: 4, columns: 4 },     // Desktop: (4, 4) -> 4 rows, 4 columns
   14: { rows: 4, columns: 4 },     // Desktop: (4, 4)
   15: { rows: 4, columns: 4 },     // Desktop: (4, 4)

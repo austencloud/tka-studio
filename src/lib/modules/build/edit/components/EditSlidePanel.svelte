@@ -14,7 +14,7 @@ Features:
   import { onDestroy, onMount } from 'svelte';
   import { backOut, quintOut } from 'svelte/easing';
   import { fade, fly } from 'svelte/transition';
-  import type { BeatData } from "../../workbench";
+  import type { BeatData } from "$build/workspace-panel";
   import MainAdjustmentPanel from './MainAdjustmentPanel.svelte';
 
   // Props

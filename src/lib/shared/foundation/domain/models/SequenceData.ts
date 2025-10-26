@@ -5,7 +5,7 @@
  * Based on the modern desktop app's SequenceData but adapted for TypeScript.
  */
 
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$build/workspace-panel";
 import type { GridMode, GridPositionGroup, PropType } from "$shared";
 
 export interface SequenceData {

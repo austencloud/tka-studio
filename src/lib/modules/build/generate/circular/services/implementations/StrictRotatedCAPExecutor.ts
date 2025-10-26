@@ -13,7 +13,7 @@
  * - Creating new beats that fit the rotated positions
  */
 
-import type { BeatData } from "$build/workbench";
+import type { BeatData } from "$build/workspace-panel";
 import { GridLocation, MotionColor, type IGridPositionDeriver } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import type { GridPosition } from "$shared/pictograph/grid/domain/enums/grid-enums";

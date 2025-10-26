@@ -7,7 +7,7 @@
  * WARNING: Some type names (e.g., GridLayout) exist in multiple modules.
  * When using types from this barrel export, TypeScript may report ambiguity errors.
  * Solution: Import directly from the specific module you need:
- *   - import { GridLayout } from "$build/workbench/sequence-display/domain"
+ *   - import { GridLayout } from "$build/workspace-panel/sequence-display/domain"
  *   - import { GridLayout } from "$wordcard/domain/models/PageLayout"
  */
 
