@@ -10,7 +10,6 @@ import type {
 } from "../domain";
 import type {
     IAnimationControlService,
-    // IMotionLetterIdentificationService, // TODO: Restore from archive when needed
     IMotionParameterService,
 } from "../services/contracts";
 
@@ -64,10 +63,6 @@ export function createAnimatorState(): AnimatorState {
   const orientationService = resolve(
     TYPES.IOrientationCalculationService
   ) as OrientationCalculator;
-  // TODO: Restore letter identification service from archive when needed
-  // const letterIdentificationService = resolve(
-  //   TYPES.IMotionLetterIdentificationService
-  // ) as IMotionLetterIdentificationService;
 
   // Reactive state
   let blueMotionParams = $state<AnimatedMotionParams>(
@@ -97,14 +92,8 @@ export function createAnimatorState(): AnimatorState {
   let isEngineInitialized = $state(false);
   let gridMode = $state<GridMode>(GridMode.DIAMOND);
 
-  // Letter identification - reactive to motion parameter changes
-  // TODO: Restore letter identification when service is restored from archive
+  // Letter identification (archived - see archive/animator-unused-services/)
   const identifiedLetter = $derived(() => {
-    // return letterIdentificationService.identifyLetter(
-    //   blueMotionParams,
-    //   redMotionParams,
-    //   gridMode
-    // );
     return {
       letter: "",
       confidence: 0,

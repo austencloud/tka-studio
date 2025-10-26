@@ -1,3 +1,10 @@
+<!--
+AnimatorCanvas.svelte
+
+Canvas component for rendering animated prop positions.
+Handles prop visualization, SVG rendering, and canvas drawing
+for sequence animation playback.
+-->
 <script lang="ts">
   import {
     GridMode,
@@ -141,7 +148,6 @@
     const settings = settingsService.currentSettings;
     const newPropType = settings.propType || "staff";
     if (newPropType !== currentPropType) {
-      console.log("🎨 Prop type changed in animator, reloading images:", newPropType);
       currentPropType = newPropType;
       imagesLoaded = false;
       loadPropImages();

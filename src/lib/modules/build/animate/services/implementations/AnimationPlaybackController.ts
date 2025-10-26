@@ -155,10 +155,6 @@ export class AnimationPlaybackController implements IAnimationPlaybackController
     const beatDelta = (deltaTime / 1000) * beatsPerSecond;
     const newBeat = this.state.currentBeat + beatDelta;
 
-    // Debug logging to verify file is loaded
-    if (this.state.currentBeat >= 4 && this.state.currentBeat < 5) {
-      console.log(`🔧 FIXED VERSION: deltaTime=${deltaTime.toFixed(2)}ms, beatDelta=${beatDelta.toFixed(6)}, currentBeat=${this.state.currentBeat.toFixed(6)}`);
-    }
 
     // Check if we've reached the end (add 1 beat buffer after last beat)
     const animationEndBeat = this.state.totalBeats + 1;

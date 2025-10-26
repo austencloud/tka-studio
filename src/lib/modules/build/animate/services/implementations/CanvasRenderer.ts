@@ -121,13 +121,10 @@ export class CanvasRenderer implements ICanvasRenderer {
       // Dash motion: use Cartesian coordinates directly (already in unit circle space)
       x = centerX + propState.x * scaledHalfwayRadius * inwardFactor;
       y = centerY + propState.y * scaledHalfwayRadius * inwardFactor;
-      console.log(`🎨 DASH - staff rotation: ${staffAngle}°`);
     } else {
       // Regular motion: calculate from angle using polar coordinates
       x = centerX + Math.cos(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
       y = centerY + Math.sin(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
-      const centerAngle = (propState.centerPathAngle * 180 / Math.PI).toFixed(0);
-      console.log(`🎨 center: ${centerAngle}°, staff rotation: ${staffAngle}°`);
     }
 
     // Scale the prop dimensions from viewBox coordinate space to canvas pixels

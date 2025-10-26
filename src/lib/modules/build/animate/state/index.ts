@@ -2,4 +2,8 @@
  * Animator State Barrel Exports
  */
 
-export * from "./animator-state.svelte.js";
+// Main animator state for animation playback
+export * from "./animator-state.svelte";
+
+// Animation panel state for panel UI controls
+export * from "./animation-panel-state.svelte";

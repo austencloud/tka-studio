@@ -10,7 +10,7 @@
  * RESPONSIBILITY: Beat operations coordinator, orchestrates state + services
  */
 
-import type { BeatData } from "$shared";
+import type { BeatData, SequenceData } from "$shared";
 import type { SequenceAnimationState } from "../animation/SequenceAnimationState.svelte";
 import type { SequenceCoreState } from "../core/SequenceCoreState.svelte";
 import type { SequenceSelectionState } from "../selection/SequenceSelectionState.svelte";
@@ -19,13 +19,88 @@ export interface BeatOperationsConfig {
   coreState: SequenceCoreState;
   selectionState: SequenceSelectionState;
   animationState: SequenceAnimationState;
-  sequenceStateService: any | null; // TODO: Define proper interface for beat operations
   onError?: (error: string) => void;
   onSave?: () => Promise<void>;
 }
 
 export function createSequenceBeatOperations(config: BeatOperationsConfig) {
-  const { coreState, selectionState, animationState, sequenceStateService, onError, onSave } = config;
+  const { coreState, selectionState, animationState, onError, onSave } = config;
+
+  // Helper functions for in-memory sequence manipulation
+  function addBeatToSequence(sequence: SequenceData, beatData?: Partial<BeatData>): SequenceData {
+    const newBeat: BeatData = {
+      id: beatData?.id ?? crypto.randomUUID(),
+      beatNumber: sequence.beats.length + 1,
+      isBlank: beatData?.isBlank ?? true,
+      duration: beatData?.duration ?? 1,
+      blueReversal: beatData?.blueReversal ?? false,
+      redReversal: beatData?.redReversal ?? false,
+      letter: beatData?.letter ?? null,
+      startPosition: beatData?.startPosition ?? null,
+      endPosition: beatData?.endPosition ?? null,
+      motions: beatData?.motions ?? {},
+      ...beatData,
+    };
+    return { ...sequence, beats: [...sequence.beats, newBeat] };
+  }
+
+  function removeBeatFromSequence(sequence: SequenceData, beatIndex: number): SequenceData {
+    if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
+      return sequence;
+    }
+    const newBeats = sequence.beats.filter((_, index) => index !== beatIndex);
+    return { ...sequence, beats: newBeats };
+  }
+
+  function removeBeatAndSubsequentFromSequence(sequence: SequenceData, beatIndex: number): SequenceData {
+    if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
+      return sequence;
+    }
+    const newBeats = sequence.beats.slice(0, beatIndex);
+    return { ...sequence, beats: newBeats };
+  }
+
+  function updateBeatInSequence(sequence: SequenceData, beatIndex: number, beatData: Partial<BeatData>): SequenceData {
+    if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
+      return sequence;
+    }
+    const newBeats = [...sequence.beats];
+    newBeats[beatIndex] = { ...newBeats[beatIndex], ...beatData };
+    return { ...sequence, beats: newBeats };
+  }
+
+  function insertBeatInSequence(sequence: SequenceData, beatIndex: number, beatData: Partial<BeatData>): SequenceData {
+    const newBeat: BeatData = {
+      id: beatData?.id ?? crypto.randomUUID(),
+      beatNumber: beatIndex + 1,
+      isBlank: beatData?.isBlank ?? true,
+      duration: beatData?.duration ?? 1,
+      blueReversal: beatData?.blueReversal ?? false,
+      redReversal: beatData?.redReversal ?? false,
+      letter: beatData?.letter ?? null,
+      startPosition: beatData?.startPosition ?? null,
+      endPosition: beatData?.endPosition ?? null,
+      motions: beatData?.motions ?? {},
+      ...beatData,
+    };
+    const newBeats = [
+      ...sequence.beats.slice(0, beatIndex),
+      newBeat,
+      ...sequence.beats.slice(beatIndex),
+    ];
+    return { ...sequence, beats: newBeats };
+  }
+
+  function clearSequenceBeats(sequence: SequenceData): SequenceData {
+    return { ...sequence, beats: [] };
+  }
+
+  function getSelectedBeat(sequence: SequenceData, index: number): BeatData | null {
+    if (index < 0 || index >= sequence.beats.length) {
+      return null;
+    }
+    return sequence.beats[index] ?? null;
+  }
 
   function handleError(message: string, error?: unknown) {
     const errorMsg = error instanceof Error ? error.message : message;
@@ -36,10 +111,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
 
   return {
     addBeat(beatData?: Partial<BeatData>) {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       try {
-        const updatedSequence = sequenceStateService.addBeat(
+        const updatedSequence = addBeatToSequence(
           coreState.currentSequence,
           beatData
         );
@@ -51,10 +126,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     removeBeat(beatIndex: number) {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       try {
-        const updatedSequence = sequenceStateService.removeBeat(
+        const updatedSequence = removeBeatFromSequence(
           coreState.currentSequence,
           beatIndex
         );
@@ -68,14 +143,14 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     removeBeatWithAnimation(beatIndex: number, onComplete?: () => void) {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       animationState.startRemovingBeat(beatIndex);
 
       // Wait for fade animation (updated to match new faster animation: 250ms)
       setTimeout(() => {
         try {
-          const updatedSequence = sequenceStateService.removeBeat(
+          const updatedSequence = removeBeatFromSequence(
             coreState.currentSequence!,
             beatIndex
           );
@@ -97,10 +172,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     removeBeatAndSubsequent(beatIndex: number) {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       try {
-        const updatedSequence = sequenceStateService.removeBeatAndSubsequent(
+        const updatedSequence = removeBeatAndSubsequentFromSequence(
           coreState.currentSequence,
           beatIndex
         );
@@ -114,7 +189,7 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     removeBeatAndSubsequentWithAnimation(beatIndex: number, onComplete?: () => void) {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       const beatsToRemove = coreState.currentSequence.beats.length - beatIndex;
       const removingIndices: number[] = [];
@@ -145,7 +220,7 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
       const totalAnimationTime = (beatsToRemove - 1) * staggerDelay + fadeAnimationDuration;
       setTimeout(() => {
         try {
-          const updatedSequence = sequenceStateService.removeBeatAndSubsequent(
+          const updatedSequence = removeBeatAndSubsequentFromSequence(
             coreState.currentSequence!,
             beatIndex
           );
@@ -167,19 +242,13 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     updateBeat(beatIndex: number, beatData: Partial<BeatData>) {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       try {
-        const completeBeatData = beatData || {
-          id: "",
-          beatNumber: beatIndex + 1,
-          isBlank: true,
-          duration: 1,
-        };
-        const updatedSequence = sequenceStateService.updateBeat(
+        const updatedSequence = updateBeatInSequence(
           coreState.currentSequence,
           beatIndex,
-          completeBeatData as BeatData
+          beatData
         );
         coreState.setCurrentSequence(updatedSequence);
         coreState.clearError();
@@ -189,19 +258,13 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     insertBeat(beatIndex: number, beatData?: Partial<BeatData>) {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       try {
-        const completeBeatData = beatData || {
-          id: "",
-          beatNumber: beatIndex + 1,
-          isBlank: true,
-          duration: 1,
-        };
-        const updatedSequence = sequenceStateService.insertBeat(
+        const updatedSequence = insertBeatInSequence(
           coreState.currentSequence,
           beatIndex,
-          completeBeatData as BeatData
+          beatData ?? {}
         );
         coreState.setCurrentSequence(updatedSequence);
         selectionState.adjustSelectionForInsertedBeat(beatIndex);
@@ -212,10 +275,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     clearSequence() {
-      if (!coreState.currentSequence || !sequenceStateService) return;
+      if (!coreState.currentSequence) return;
 
       try {
-        const updatedSequence = sequenceStateService.clearSequence(coreState.currentSequence);
+        const updatedSequence = clearSequenceBeats(coreState.currentSequence);
         coreState.setCurrentSequence(updatedSequence);
         selectionState.clearSelection();
         coreState.clearError();
@@ -225,8 +288,8 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     },
 
     getBeat(index: number): BeatData | null {
-      if (!coreState.currentSequence || !sequenceStateService) return null;
-      return sequenceStateService.getSelectedBeat(coreState.currentSequence, index);
+      if (!coreState.currentSequence) return null;
+      return getSelectedBeat(coreState.currentSequence, index);
     },
 
     getBeatCount(): number {

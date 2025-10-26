@@ -6,6 +6,7 @@
  */
 
 import type { IDeviceDetector } from "$shared";
+import { getBeatFrameLayout } from "../domain/models/beat-frame-layouts";
 import type {
   GridLayout,
   GridSizingConstraints,
@@ -69,14 +70,20 @@ export function createGridLayoutState(
 
   /**
    * Calculate layout for specific beat count
+   * Uses beat frame layout configurations that adapt to screen width
    */
   function calculateLayoutForBeats(beatCount: number): GridLayout {
-    const maxColumns = gridLayout.maxColumns;
+    // Determine if we should use wide layout based on current container width and layout mode
+    const useWideLayout = !isSideBySideLayout() && containerWidth >= 650;
 
-    // Calculate actual columns based on beat count and max columns
-    const columns = beatCount <= maxColumns ? beatCount : maxColumns;
-    const rows = Math.ceil(beatCount / columns);
+    // Get the optimal layout from configuration
+    const optimalLayout = getBeatFrameLayout(beatCount, useWideLayout);
+
+    // Use the configured layout
+    const columns = optimalLayout.columns;
+    const rows = optimalLayout.rows;
     const totalColumns = columns + 1; // +1 for start position
+    const maxColumns = gridLayout.maxColumns;
 
     // Calculate responsive cell size considering both width and height
     let cellSize = 160; // Default

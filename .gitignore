@@ -39,6 +39,9 @@ coverage/
 # nyc test coverage
 .nyc_output
 
+# Test results
+test-results/
+
 # VSCode
 .vscode/
 .vscode/chrome-debug-fresh/

@@ -49,21 +49,6 @@ export class PropInterpolator implements IPropInterpolator {
     const blueDash = blueMotion.motionType === MotionType.DASH;
     const redDash = redMotion.motionType === MotionType.DASH;
 
-    // Log only at beat start to show motion plan
-    if (beatProgress < 0.05) {
-      console.log(`🎯 Beat ${currentBeatData.letter || '?'}:`, {
-        blue: `${blueMotion.motionType} ${blueMotion.startLocation}→${blueMotion.endLocation}`,
-        red: `${redMotion.motionType} ${redMotion.startLocation}→${redMotion.endLocation}`
-      });
-
-      // Show ACTUAL endpoint angles being calculated
-      console.log('  📐 RED ENDPOINTS:', {
-        startCenter: `${(redEndpoints.startCenterAngle * 180 / Math.PI).toFixed(0)}°`,
-        targetCenter: `${(redEndpoints.targetCenterAngle * 180 / Math.PI).toFixed(0)}°`,
-        startStaff: `${(redEndpoints.startStaffAngle * 180 / Math.PI).toFixed(0)}°`,
-        targetStaff: `${(redEndpoints.targetStaffAngle * 180 / Math.PI).toFixed(0)}°`
-      });
-    }
 
     // Interpolate blue prop
     const blueAngles = blueDash
@@ -102,11 +87,6 @@ export class PropInterpolator implements IPropInterpolator {
           ),
           // Don't set x,y for non-dash motions - let CanvasRenderer calculate from angle
         };
-
-    // Log ACTUAL interpolated angle at beat midpoint to verify it's actually changing
-    if (Math.abs(beatProgress - 0.5) < 0.05) {
-      console.log(`  ➡️ At 50%: Red center angle = ${(redAngles.centerPathAngle * 180 / Math.PI).toFixed(0)}°`);
-    }
 
     return {
       blueAngles,

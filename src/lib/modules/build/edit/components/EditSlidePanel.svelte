@@ -44,6 +44,8 @@ Features:
   // Touch gesture state
   let touchStartX = $state(0);
   let touchCurrentX = $state(0);
+  let touchStartY = $state(0);
+  let touchCurrentY = $state(0);
   let isDragging = $state(false);
 
   // Device detection for responsive behavior
@@ -72,46 +74,78 @@ Features:
     }
   }
 
-  // Touch gesture handlers for swipe-to-dismiss (mobile)
+  // Touch gesture handlers for swipe-to-dismiss
+  // Mobile: Vertical swipe (down to dismiss from bottom)
+  // Desktop: Horizontal swipe (right to dismiss from side)
   function handleTouchStart(event: TouchEvent) {
-    if (!isMobile) return;
     touchStartX = event.touches[0].clientX;
     touchCurrentX = touchStartX;
+    touchStartY = event.touches[0].clientY;
+    touchCurrentY = touchStartY;
     isDragging = true;
   }
 
   function handleTouchMove(event: TouchEvent) {
-    if (!isDragging || !isMobile) return;
+    if (!isDragging) return;
     touchCurrentX = event.touches[0].clientX;
+    touchCurrentY = event.touches[0].clientY;
 
-    // Only allow dragging to the right (to close)
-    const deltaX = touchCurrentX - touchStartX;
-    if (deltaX > 0 && panelElement) {
-      panelElement.style.transform = `translateX(${deltaX}px)`;
+    if (isMobile) {
+      // Mobile: Allow dragging downward (to close from bottom)
+      const deltaY = touchCurrentY - touchStartY;
+      if (deltaY > 0 && panelElement) {
+        panelElement.style.transform = `translateY(${deltaY}px)`;
+      }
+    } else {
+      // Desktop: Allow dragging to the right (to close from side)
+      const deltaX = touchCurrentX - touchStartX;
+      if (deltaX > 0 && panelElement) {
+        panelElement.style.transform = `translateX(${deltaX}px)`;
+      }
     }
   }
 
   function handleTouchEnd() {
-    if (!isDragging || !isMobile) return;
+    if (!isDragging) return;
     isDragging = false;
 
-    const deltaX = touchCurrentX - touchStartX;
     const threshold = 100; // Swipe threshold in pixels
 
     if (panelElement) {
-      if (deltaX > threshold) {
-        // Swipe far enough - close the panel
-        hapticService?.trigger('warning');
-        onClose();
+      if (isMobile) {
+        // Mobile: Check vertical swipe distance
+        const deltaY = touchCurrentY - touchStartY;
+        if (deltaY > threshold) {
+          // Swipe far enough - close the panel
+          hapticService?.trigger('warning');
+          onClose();
+        } else {
+          // Snap back
+          panelElement.style.transform = 'translateY(0)';
+          panelElement.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+          setTimeout(() => {
+            if (panelElement) {
+              panelElement.style.transition = '';
+            }
+          }, 300);
+        }
       } else {
-        // Snap back
-        panelElement.style.transform = 'translateX(0)';
-        panelElement.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
-        setTimeout(() => {
-          if (panelElement) {
-            panelElement.style.transition = '';
-          }
-        }, 300);
+        // Desktop: Check horizontal swipe distance
+        const deltaX = touchCurrentX - touchStartX;
+        if (deltaX > threshold) {
+          // Swipe far enough - close the panel
+          hapticService?.trigger('warning');
+          onClose();
+        } else {
+          // Snap back
+          panelElement.style.transform = 'translateX(0)';
+          panelElement.style.transition = 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+          setTimeout(() => {
+            if (panelElement) {
+              panelElement.style.transition = '';
+            }
+          }, 300);
+        }
       }
     }
   }
@@ -163,12 +197,14 @@ Features:
     tabindex="-1"
     aria-label="Close edit panel"
   >
-    <!-- Panel slides in from right with bouncy animation -->
+    <!-- Panel slides in - from bottom on mobile, from right on desktop -->
     <div
       bind:this={panelElement}
       class="edit-panel"
       class:mobile={isMobile}
-      transition:fly={{ x: 500, duration: 350, easing: backOut }}
+      transition:fly={isMobile
+        ? { y: 500, duration: 350, easing: backOut }
+        : { x: 500, duration: 350, easing: backOut }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="edit-panel-title"
@@ -249,6 +285,14 @@ Features:
     overflow: hidden;
   }
 
+  /* Mobile: Align panel to bottom instead of right */
+  @media (max-width: 768px) {
+    .edit-panel-backdrop {
+      align-items: flex-end;
+      justify-content: stretch;
+    }
+  }
+
   /* The slide-out panel itself */
   .edit-panel {
     position: relative;
@@ -278,10 +322,24 @@ Features:
     transform: translateZ(0);
   }
 
-  /* Mobile full-width */
+  /* Mobile: Full-width bottom panel with beautiful rounded top corners */
   .edit-panel.mobile {
     width: 100vw;
+    height: auto;
+    max-height: 75vh;
+
+    /* Remove side border, add top border */
     border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+    /* Gorgeous rounded top corners for bottom-slide aesthetic */
+    border-radius: 24px 24px 0 0;
+
+    /* Shadow goes UPWARD for bottom panel */
+    box-shadow:
+      0 -8px 32px rgba(0, 0, 0, 0.3),
+      0 -2px 8px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   /* Header */
@@ -438,6 +496,8 @@ Features:
   @media (max-width: 768px) {
     .edit-panel-header {
       padding: var(--spacing-md) var(--spacing-lg);
+      /* Rounded top corners to match panel */
+      border-radius: 24px 24px 0 0;
     }
 
     .edit-panel-title {

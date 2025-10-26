@@ -77,7 +77,6 @@ export function createSequenceState(services: SequenceStateServices) {
     coreState,
     selectionState,
     animationState,
-    sequenceStateService: sequenceService ?? null,
     onSave: saveSequenceDataOnly,
   });
 

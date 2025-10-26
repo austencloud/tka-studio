@@ -23,11 +23,7 @@ export * from "./IMotionCalculator";
 
 // Rendering Services
 export * from "./ICanvasRenderer";
-export * from "./IPictographRenderer";
 export * from "./ISVGGenerator";
-
-// Animator interfaces for state management
-export * from "./animator-interfaces";
 
 // ============================================================================
 // ARCHIVED CONTRACTS (moved to archive/animator-unused-services/)
@@ -35,3 +31,4 @@ export * from "./animator-interfaces";
 // export * from "./IAnimationController";
 // export * from "./IMotionParameterManager";
 // export * from "./IOverlayRenderer";
+// export * from "./IPictographRenderer"; // Unused - no implementation exists
