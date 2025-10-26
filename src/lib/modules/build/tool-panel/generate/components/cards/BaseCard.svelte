@@ -1,0 +1,405 @@
+<!--
+BaseCard.svelte - Base component for all setting cards
+Provides consistent styling and interaction patterns for all generation setting cards
+-->
+<script lang="ts">
+  import type { IHapticFeedbackService, IRippleEffectService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
+  import CardHeader from "./shared/CardHeader.svelte";
+
+  let {
+    title,
+    currentValue,
+    color = "#3b82f6",
+    shadowColor = "0deg 0% 0%", // HSL color for shadows (hue, saturation, lightness)
+    clickable = true,
+    gridColumnSpan = 2,
+    cardIndex = 0, // For stagger animations
+    headerFontSize = "9px",
+    onClick,
+    children
+  } = $props<{
+    title: string;
+    currentValue: string;
+    icon?: string;
+    description?: string;
+    color?: string;
+    shadowColor?: string; // HSL format: "220deg 60% 50%"
+    clickable?: boolean;
+    gridColumnSpan?: number;
+    cardIndex?: number; // Index for stagger animations
+    headerFontSize?: string;
+    onClick?: () => void;
+    children?: import("svelte").Snippet;
+  }>();
+
+  let hapticService: IHapticFeedbackService;
+  let rippleService: IRippleEffectService;
+  let cardElement: HTMLDivElement | null = $state(null);
+
+  onMount(() => {
+    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    rippleService = resolve<IRippleEffectService>(TYPES.IRippleEffectService);
+
+    // 🌊 Attach ripple effect to clickable cards
+    if (clickable && cardElement) {
+      const cleanup = rippleService.attachRipple(cardElement, {
+        color: 'rgba(255, 255, 255, 0.4)',
+        duration: 600,
+        opacity: 0.5
+      });
+
+      return cleanup;
+    }
+  });
+
+  function handleClick() {
+    if (clickable && onClick) {
+      hapticService?.trigger("selection");
+      onClick();
+    }
+  }
+
+  function handleKeydown(event: KeyboardEvent) {
+    if (clickable && onClick && (event.key === "Enter" || event.key === " ")) {
+      event.preventDefault();
+      handleClick();
+    }
+  }
+</script>
+
+{#if clickable}
+  <div
+    bind:this={cardElement}
+    class="base-card clickable"
+    class:cap-card={title === "CAP Type"}
+    role="button"
+    tabindex="0"
+    onclick={handleClick}
+    onkeydown={handleKeydown}
+    aria-label={`${title}: ${currentValue}. Click to change.`}
+    style="--card-color: {color}; --shadow-color: {shadowColor}; --card-index: {cardIndex}; --header-font-size: {headerFontSize}; grid-column: span {gridColumnSpan};"
+  >
+    <CardHeader {title} {headerFontSize} />
+
+    <!-- Current Value Display -->
+    <div class="card-value">
+      {currentValue}
+    </div>
+
+
+
+    <!-- Optional Custom Content -->
+    {#if children}
+      <div class="card-content">
+        {@render children()}
+      </div>
+    {/if}
+
+    <!-- Click Indicator -->
+    {#if clickable}
+      <div class="click-indicator" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 18l6-6-6-6"/>
+        </svg>
+      </div>
+    {/if}
+  </div>
+{:else}
+  <div
+    class="base-card"
+    aria-label={`${title}: ${currentValue}`}
+    style="--card-color: {color}; --shadow-color: {shadowColor}; --card-index: {cardIndex}; --header-font-size: {headerFontSize}; grid-column: span {gridColumnSpan};"
+  >
+    <CardHeader {title} {headerFontSize} />
+
+    <!-- Current Value Display -->
+    <div class="card-value">
+      {currentValue}
+    </div>
+
+
+
+    <!-- Optional Custom Content -->
+    {#if children}
+      <div class="card-content">
+        {@render children()}
+      </div>
+    {/if}
+  </div>
+{/if}
+
+<style>
+  .base-card {
+    /* Enable container queries for intelligent responsive sizing */
+    container-type: size;
+    container-name: base-card;
+
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    /* Flexible height - let grid control it */
+    min-height: 0;
+    height: 100%; /* Fill grid cell */
+
+    min-width: 0; /* Allow grid to control width, prevent content expansion */
+
+    /* Container-aware padding - scales with card size */
+    padding: clamp(6px, 2cqh, 12px) clamp(4px, 1.5cqw, 8px);
+
+    /* Modern 2025 border-radius (16px sweet spot) */
+    border-radius: 16px;
+    background: var(--card-color);
+    border: none;
+
+    /* Layered shadows with color-matching (Josh Comeau technique) */
+    /* Base elevation - subtle, realistic depth with color-matched shadows */
+    box-shadow:
+      0 1px 2px hsl(var(--shadow-color) / 0.15),
+      0 2px 4px hsl(var(--shadow-color) / 0.12),
+      0 4px 8px hsl(var(--shadow-color) / 0.10),
+      /* Inner highlight for 3D effect */
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    color: white;
+    text-align: center;
+
+    /* 🎬 ANIMATION - Clean fade in on load (400ms - 2025 standard) */
+    animation: cardEnter 0.4s ease-out;
+  }
+
+  /* 🌟 GLOSSY SHEEN OVERLAY - Creates 3D glass effect */
+  .base-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60%; /* Cover top 60% */
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 255, 255, 0.15) 40%,
+      rgba(255, 255, 255, 0.05) 70%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    border-radius: 16px 16px 0 0;
+    pointer-events: none;
+    z-index: 1; /* Above background, below content */
+  }
+
+  /* 🖱️ DESKTOP HOVER - Only on hover-capable devices (prevents mobile stuck hover) */
+  @media (hover: hover) {
+    .base-card.clickable:hover {
+      transform: scale(1.02);
+      filter: brightness(1.05);
+      box-shadow:
+        0 2px 4px hsl(var(--shadow-color) / 0.12),
+        0 4px 8px hsl(var(--shadow-color) / 0.10),
+        0 8px 16px hsl(var(--shadow-color) / 0.08),
+        0 16px 24px hsl(var(--shadow-color) / 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  /* 🎯 ELASTIC PRESS - Universal click/tap feedback for ALL devices */
+  .base-card.clickable:active {
+    transform: scale(0.97);
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* 🎬 Card entrance animation - clean fade in */
+  @keyframes cardEnter {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .base-card.clickable {
+    cursor: pointer;
+  }
+
+  .base-card.clickable:hover {
+    /* Lift effect - increase elevation */
+    transform: translateY(-2px);
+
+    /* 🌟 GLOW EFFECT - Color-matched glow on hover */
+    box-shadow:
+      0 2px 4px hsl(var(--shadow-color) / 0.12),
+      0 4px 8px hsl(var(--shadow-color) / 0.10),
+      0 8px 16px hsl(var(--shadow-color) / 0.08),
+      0 16px 24px hsl(var(--shadow-color) / 0.06),
+      0 0 40px hsl(var(--shadow-color) / 0.25); /* Soft glow */
+
+    /* Subtle brightness increase */
+    filter: brightness(1.08);
+  }
+
+  .base-card.clickable:active {
+    /* 🎯 SPRING PHYSICS - Press down with scale */
+    transform: translateY(0) scale(0.98);
+
+    /* Reduced shadow on press with color-matching */
+    box-shadow:
+      0 1px 2px hsl(var(--shadow-color) / 0.18),
+      0 2px 4px hsl(var(--shadow-color) / 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    /* Faster transition on press */
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* 🎯 SPRING BOUNCE - Trigger bounce animation on release */
+    animation: springBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* 🎯 Spring bounce animation - overshoot and settle */
+  @keyframes springBounce {
+    0% {
+      transform: scale(0.98);
+    }
+    50% {
+      transform: scale(1.02); /* Slight overshoot */
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .base-card:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 3px;
+  }
+
+  .card-value {
+    /* Container-aware font size - scales smoothly with card size */
+    font-size: clamp(12px, 5cqi, 24px);
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    line-height: 1.1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    margin: clamp(2px, 0.5cqh, 4px) 0;
+  }
+
+
+  .card-content {
+    margin-top: 12px;
+    width: 100%;
+  }
+
+  .click-indicator {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 20px;
+    height: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .base-card.clickable:hover .click-indicator {
+    opacity: 1;
+  }
+
+  .click-indicator svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ✨ MAGICAL CAP CARD - Animated Mesh Gradient + Consistent Glow */
+  .base-card.cap-card {
+    /* Use the gradient passed from CAPCard component */
+    background: var(--card-color) !important;
+    background-size: 300% 300% !important;
+
+    /* Apply mesh gradient flow animation and consistent glow */
+    animation:
+      cardEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards,
+      meshGradientFlow 15s ease infinite !important;
+    animation-delay:
+      calc(var(--card-index) * 50ms),
+      0s !important;
+
+    /* Consistent purple-violet glow that matches the gradient */
+    box-shadow:
+      0 0 25px rgba(139, 92, 246, 0.6),
+      0 0 50px rgba(139, 92, 246, 0.4),
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Mesh Gradient Flow Animation - Organic color movement */
+  @keyframes meshGradientFlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 50% 100%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75% {
+      background-position: 50% 0%;
+    }
+  }
+
+  /* Enhance glow on hover - brighter but same color */
+  .base-card.cap-card:hover {
+    animation:
+      meshGradientFlow 15s ease infinite !important;
+
+    box-shadow:
+      0 0 30px rgba(139, 92, 246, 0.7),
+      0 0 60px rgba(139, 92, 246, 0.5),
+      0 4px 16px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  }
+
+  /* Desktop optimization removed - container query units handle smooth scaling automatically */
+
+  /* Respect motion preferences - disable animations but keep glow */
+  @media (prefers-reduced-motion: reduce) {
+    .base-card.cap-card {
+      animation: cardEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards !important;
+      background-position: 0% 50% !important;
+    }
+  }
+
+  /* 📱 LANDSCAPE MOBILE: Adjust CAP card styling for compact mode */
+  @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
+    .base-card.cap-card {
+      /* Let grid control height - no forced constraints */
+      grid-row: span 1;
+    }
+
+    .base-card.cap-card .card-value {
+      font-size: clamp(10px, 3.5cqi, 14px);
+      margin: 0;
+    }
+
+    .base-card.cap-card .click-indicator {
+      width: clamp(14px, 3cqw, 18px);
+      height: clamp(14px, 3cqw, 18px);
+      top: clamp(6px, 1cqh, 10px);
+      right: clamp(6px, 1cqw, 10px);
+    }
+  }
+</style>
