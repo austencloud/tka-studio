@@ -57,15 +57,6 @@ export function createDeviceState() {
       deviceCapabilities = deviceService.getCapabilities();
       responsiveSettings = deviceService.getResponsiveSettings();
 
-      console.log(
-        "🔍 Device capabilities:",
-        $state.snapshot(deviceCapabilities)
-      );
-      console.log(
-        "📱 Responsive settings:",
-        $state.snapshot(responsiveSettings)
-      );
-
       // Listen for device changes
       const cleanup = deviceService.onCapabilitiesChanged(
         (caps: DeviceCapabilities) => {

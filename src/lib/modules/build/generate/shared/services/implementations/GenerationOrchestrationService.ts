@@ -58,15 +58,11 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 	 * Generate complete sequence - routes to appropriate mode
 	 */
 	async generateSequence(options: GenerationOptions): Promise<SequenceData> {
-		console.log("🎯 GenerationOrchestrationService: Starting generation", options);
-
 		// Route to appropriate generation mode
 		if (options.mode === GenerationMode.CIRCULAR) {
-			console.log("🔄 Routing to circular generation");
 			return this.generateCircularSequence(options);
 		}
 
-		console.log("🎯 Routing to freeform generation");
 		return this.generateFreeformSequence(options);
 	}
 
@@ -75,18 +71,14 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 	 * EXACT ORIGINAL LOGIC from SequenceGenerationService.generateSequence
 	 */
 	private async generateFreeformSequence(options: GenerationOptions): Promise<SequenceData> {
-		console.log("🎯 Starting freeform generation with options:", options);
-
 		// Step 1: Get random start position
 		const startPosition = await this.startPositionSelector.selectStartPosition(options.gridMode);
 		const sequence: BeatData[] = [startPosition];
-		console.log(`🎬 Added start position: ${startPosition.letter} at ${startPosition.startPosition}`);
 
 		// Step 2: Determine rotation directions
 		const rotationDirections = this.rotationDirectionService.determineRotationDirections(
 			options.propContinuity
 		);
-		console.log("🔄 Rotation directions:", rotationDirections);
 
 		// Step 3: Calculate turn allocation
 		const level = this.metadataService.mapDifficultyToLevel(options.difficulty);
@@ -96,7 +88,6 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 			level,
 			turnIntensity
 		);
-		console.log("🎲 Turn allocation:", turnAllocation);
 
 		// Step 4: Generate beats
 		const beatGenOptions: BeatGenerationOptions = {
@@ -147,12 +138,6 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 		// Step 6: Apply reversal detection
 		const finalSequence = this.reversalDetectionService.processReversals(sequenceData);
 
-		console.log("🎉 Freeform sequence complete:", {
-			id: finalSequence.id,
-			beats: finalSequence.beats.length,
-			word: finalSequence.word,
-		});
-
 		return finalSequence;
 	}
 
@@ -161,8 +146,6 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 	 * EXACT ORIGINAL LOGIC from SequenceGenerationService.generatePatternSequence
 	 */
 	private async generateCircularSequence(options: GenerationOptions): Promise<SequenceData> {
-		console.log("🔄 Starting circular generation with CAP executor");
-
 		// Import circular-specific models
 		const { CAPType, SliceSize } = await import("../../../circular/domain/models/circular-models");
 
@@ -170,7 +153,6 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 		// Determine which CAP executor to use based on capType option
 		const capType = (options.capType as any) || CAPType.STRICT_ROTATED;
 		const capExecutor = this.capExecutorSelector.getExecutor(capType);
-		console.log(`🎯 Using CAP executor: ${capType}`);
 
 		// Get slice size
 		const sliceSize = (options.sliceSize as any) || SliceSize.HALVED;
@@ -185,8 +167,6 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 		// Use CAP-specific end position selector (different end positions for rotated/mirrored/swapped/complementary)
 		const requiredEndPos = this.capEndPositionSelector.determineEndPosition(capType, startPos, sliceSize);
 
-		console.log(`📍 Start position: ${startPos}, Required end: ${requiredEndPos} (CAP type: ${capType})`);
-
 		// Generate partial sequence ending at required position
 		const partialSequence = await this.partialSequenceGenerator.generatePartialSequence(
 			startPos,
@@ -195,12 +175,8 @@ export class GenerationOrchestrationService implements IGenerationOrchestrationS
 			options
 		);
 
-		console.log(`✅ Generated partial sequence: ${partialSequence.length} beats`);
-
 		// Execute CAP to complete the circle
 		const circularBeats = capExecutor.executeCAP(partialSequence, sliceSize);
-
-		console.log(`🎉 Circular sequence complete: ${circularBeats.length} beats`);
 
 		// Build sequence data
 		const word = this.metadataService.calculateWordFromBeats(circularBeats.slice(1)); // Exclude start position

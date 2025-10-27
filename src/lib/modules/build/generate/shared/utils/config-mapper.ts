@@ -120,7 +120,7 @@ export function uiConfigToGenerationOptions(
   const sliceSize = requiresHalved ? "halved" : uiConfig.sliceSize;
 
   if (requiresHalved && uiConfig.sliceSize !== "halved") {
-    console.log(`🔄 Overriding slice size to "halved" for CAP type: ${uiConfig.capType}`);
+    // Override to halved for this CAP type
   }
 
   return {

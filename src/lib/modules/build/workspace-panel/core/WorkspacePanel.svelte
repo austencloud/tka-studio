@@ -64,38 +64,39 @@
   // Derived state for current tab
   const isAnimateTab = $derived(buildTabState?.activeSubTab === "animate");
 
-  // Local beat selection state
-  let localSelectedBeatIndex = $state<number | null>(null);
+  // Local beat selection state (beatNumber: 0=start, 1=first beat, etc.)
+  let localSelectedBeatNumber = $state<number | null>(null);
 
   // Get current word from sequence state
   const currentWord = $derived(() => {
     return sequenceState?.sequenceWord() ?? "";
   });
 
-  // Handle beat selection
-  function handleBeatSelected(index: number) {
+  // Handle beat selection (receives beatNumber: 1, 2, 3...)
+  function handleBeatSelected(beatNumber: number) {
     if (!sequenceState) return;
 
     // Check if we're in Animate tab
     const isAnimateTabActive = buildTabState?.activeSubTab === "animate";
 
     if (isAnimateTabActive && animationStateRef) {
-      // In Animate tab: Jump to this beat in the animation
-      animationStateRef.jumpToBeat(index);
-      // Still update local selection for visual feedback
-      localSelectedBeatIndex = index;
-      sequenceState.selectBeat(index);
+      // In Animate tab: Jump to this beat in the animation (needs array index)
+      const arrayIndex = beatNumber - 1;
+      animationStateRef.jumpToBeat(arrayIndex);
+      // Still update local selection for visual feedback (using beatNumber)
+      localSelectedBeatNumber = beatNumber;
+      sequenceState.selectBeat(beatNumber);
     } else {
       // In other tabs: Just select the beat - the edit panel will open automatically
-      localSelectedBeatIndex = index;
-      sequenceState.selectBeat(index);
+      localSelectedBeatNumber = beatNumber;
+      sequenceState.selectBeat(beatNumber);
 
       // Note: We no longer switch to edit tab! The edit slide panel will open instead.
       // This is handled by an effect in BuildTab.svelte that watches for beat selection.
     }
   }
 
-  // Handle start position selection
+  // Handle start position selection (beatNumber 0)
   function handleStartPositionSelected() {
     if (!sequenceState) return;
 
@@ -104,8 +105,8 @@
       return;
     }
 
-    // Select start position for editing (this will clear beat selection and set start position as selected)
-    localSelectedBeatIndex = null;
+    // Select start position for editing (beatNumber 0)
+    localSelectedBeatNumber = 0;
     sequenceState.selectStartPositionForEditing();
 
     // Note: We no longer switch to edit tab! The edit slide panel will open instead.
@@ -121,7 +122,7 @@
       currentWord={currentWord()}
       onBeatSelected={handleBeatSelected}
       onStartPositionSelected={handleStartPositionSelected}
-      selectedBeatIndex={localSelectedBeatIndex}
+      selectedBeatNumber={localSelectedBeatNumber}
       {practiceBeatIndex}
       {isSideBySideLayout}
     />

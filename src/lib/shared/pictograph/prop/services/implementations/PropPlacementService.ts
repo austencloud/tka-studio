@@ -136,9 +136,6 @@ export class PropPlacementService implements IPropPlacementService {
 
       // Skip beta offset ONLY when orientations are DIFFERENT within same category
       if (differentRadial || differentNonRadial) {
-        console.log(
-          `✅ Skipping beta offset for unilateral props: ${redPropType}/${bluePropType} with DIFFERENT orientations ${redEndOri}/${blueEndOri}`
-        );
         return { x: 0, y: 0 };
       }
     }
@@ -155,9 +152,6 @@ export class PropPlacementService implements IPropPlacementService {
     const direction = directionCalculator.getDirectionForMotionData(motionData);
 
     if (!direction) {
-      console.warn(
-        `⚠️ Could not calculate beta direction for ${motionData.color} prop, skipping beta offset`
-      );
       return { x: 0, y: 0 };
     }
 
@@ -203,7 +197,6 @@ export class PropPlacementService implements IPropPlacementService {
       case VectorDirection.DOWNLEFT:
         return { x: -distance, y: distance };
       default:
-        console.warn(`Unknown direction: ${direction}`);
         return { x: 0, y: 0 };
     }
   }

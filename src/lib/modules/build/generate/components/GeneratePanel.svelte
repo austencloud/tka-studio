@@ -108,7 +108,6 @@ Refactored into smaller section components for better maintainability:
       const deviceService = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
       return deviceState.initializeDevice(deviceService);
     } catch (error) {
-      console.log("GeneratePanel: Device service not ready yet:", error);
       // Fallback handled in deviceState
       return undefined;
     }

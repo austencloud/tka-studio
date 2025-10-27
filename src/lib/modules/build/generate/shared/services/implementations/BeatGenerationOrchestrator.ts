@@ -42,8 +42,6 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
     const generatedBeats: BeatData[] = [];
 
     for (let i = 0; i < count; i++) {
-      console.log(`⚡ Generating beat ${i + 1}/${count}`);
-
       const nextBeat = await this.generateNextBeat(
         sequence,
         options,
@@ -53,7 +51,6 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
 
       sequence.push(nextBeat);
       generatedBeats.push(nextBeat);
-      console.log(`✅ Generated beat ${i}: ${nextBeat.letter}`);
     }
 
     return generatedBeats;
@@ -70,7 +67,6 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
   ): Promise<BeatData> {
     // Get all options
     const allOptions = await this.letterQueryHandler.getAllPictographVariations(options.gridMode);
-    console.log(`📋 Loaded ${allOptions.length} option variations`);
 
     // Apply filters
     let filteredOptions = allOptions;
@@ -84,7 +80,6 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
         options.blueRotationDirection,
         options.redRotationDirection
       );
-      console.log(`🔄 Filtered for rotation: ${filteredOptions.length} options`);
     }
 
     filteredOptions = this.pictographFilterService.filterByLetterTypes(filteredOptions, options.letterTypes);
@@ -95,7 +90,6 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
 
     // Random selection
     const selectedOption = this.pictographFilterService.selectRandom(filteredOptions);
-    console.log(`🎯 Selected option: ${selectedOption.letter}`);
 
     // Convert to beat
     let nextBeat = this.beatConverterService.convertToBeat(selectedOption, sequence.length);
@@ -103,7 +97,6 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
     // Set turns if level 2 or 3
     if (options.level === 2 || options.level === 3) {
       this.turnManagementService.setTurns(nextBeat, turnBlue, turnRed);
-      console.log(`🎲 Set turns: blue=${turnBlue}, red=${turnRed}`);
     }
 
     // Update orientations

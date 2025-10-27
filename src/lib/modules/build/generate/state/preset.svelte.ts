@@ -149,7 +149,6 @@ export function createPresetState() {
     presets = [defaultPreset];
     savePresetsToStorage(untrack(() => presets));
     markAsInitialized();
-    console.log("✨ PresetState: Initialized with default Diamond 16 preset");
   }
 
   // Derived

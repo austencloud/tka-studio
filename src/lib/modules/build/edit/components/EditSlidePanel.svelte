@@ -9,27 +9,29 @@ Features:
 - 🎯 Context-aware editing without leaving the flow
 -->
 <script lang="ts">
+  import type { BeatData } from "$build/workspace-panel";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onDestroy, onMount } from 'svelte';
   import { backOut, quintOut } from 'svelte/easing';
   import { fade, fly } from 'svelte/transition';
-  import type { BeatData } from "$build/workspace-panel";
   import EditPanelLayout from './EditPanelLayout.svelte';
 
   // Props
   const {
     isOpen = false,
     onClose,
-    selectedBeatIndex,
+    selectedBeatNumber,
     selectedBeatData,
+    toolPanelHeight = 0,
     onOrientationChanged,
     onTurnAmountChanged,
   } = $props<{
     isOpen: boolean;
     onClose: () => void;
-    selectedBeatIndex: number | null;
+    selectedBeatNumber: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     selectedBeatData: BeatData | null;
+    toolPanelHeight?: number;
     onOrientationChanged: (color: string, orientation: string) => void;
     onTurnAmountChanged: (color: string, turnAmount: number) => void;
   }>();
@@ -51,6 +53,16 @@ Features:
   // Device detection for responsive behavior
   let isMobile = $state(false);
   let windowWidth = $state(0);
+
+  // Calculate panel height for mobile (use tool panel height when available)
+  const panelHeightStyle = $derived(() => {
+    if (!isMobile) return '';
+    // Use tool panel height if available, fallback to 75vh
+    if (toolPanelHeight > 0) {
+      return `height: ${toolPanelHeight}px;`;
+    }
+    return 'max-height: 75vh;';
+  });
 
   // Keyboard handler
   function handleKeydown(event: KeyboardEvent) {
@@ -192,6 +204,7 @@ Features:
       bind:this={panelElement}
       class="edit-panel"
       class:mobile={isMobile}
+      style={panelHeightStyle()}
       transition:fly={isMobile
         ? { y: 500, duration: 350, easing: backOut }
         : { x: 500, duration: 350, easing: backOut }}
@@ -209,9 +222,13 @@ Features:
       <div class="edit-panel-header">
         <h2 id="edit-panel-title" class="edit-panel-title">
           <span class="title-icon">✨</span>
-          Edit Beat
-          {#if selectedBeatIndex !== null}
-            <span class="beat-number">#{selectedBeatIndex}</span>
+          {#if selectedBeatNumber === 0}
+            Edit Start Position
+          {:else}
+            Edit Beat
+            {#if selectedBeatNumber !== null}
+              <span class="beat-number">#{selectedBeatNumber}</span>
+            {/if}
           {/if}
         </h2>
 
@@ -225,12 +242,6 @@ Features:
         </button>
       </div>
 
-      <!-- Drag handle for mobile (visual indicator) -->
-      {#if isMobile}
-        <div class="drag-handle-container">
-          <div class="drag-handle"></div>
-        </div>
-      {/if}
 
       <!-- Keyboard hint (desktop only) -->
       {#if !isMobile}
@@ -243,7 +254,7 @@ Features:
       <div class="edit-panel-content">
         <EditPanelLayout
           bind:this={editPanelLayoutRef}
-          {selectedBeatIndex}
+          {selectedBeatNumber}
           {selectedBeatData}
           {onOrientationChanged}
           {onTurnAmountChanged}
@@ -311,7 +322,8 @@ Features:
   /* Mobile: Full-width bottom panel with beautiful rounded top corners */
   .edit-panel.mobile {
     width: 100vw;
-    height: auto;
+    /* Height set dynamically via inline style to match tool panel height */
+    /* Fallback max-height if dynamic height not available */
     max-height: 75vh;
 
     /* Remove side border, add top border */
@@ -326,6 +338,28 @@ Features:
       0 -8px 32px rgba(0, 0, 0, 0.4),
       0 -4px 16px rgba(0, 0, 0, 0.3),
       0 -2px 8px rgba(0, 0, 0, 0.2);
+
+    /* Entire panel is draggable */
+    cursor: grab;
+  }
+
+  .edit-panel.mobile:active {
+    cursor: grabbing;
+  }
+
+  /* Subtle drag indicator at top - doesn't take layout space */
+  .edit-panel.mobile::before {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.3);
+    pointer-events: none;
+    z-index: 1;
   }
 
   /* Header */
@@ -404,25 +438,6 @@ Features:
     transform: scale(0.95) rotate(90deg);
   }
 
-  /* Drag handle for mobile */
-  .drag-handle-container {
-    padding: var(--spacing-sm) 0;
-    display: flex;
-    justify-content: center;
-    background: transparent;
-  }
-
-  .drag-handle {
-    width: 40px;
-    height: 4px;
-    border-radius: 2px;
-    background: hsl(var(--muted-foreground) / 0.5);
-    cursor: grab;
-  }
-
-  .drag-handle:active {
-    cursor: grabbing;
-  }
 
   /* Keyboard hint */
   .keyboard-hint {
@@ -491,9 +506,7 @@ Features:
       font-size: var(--font-size-lg);
     }
 
-    .edit-panel-content {
-      padding: var(--spacing-md);
-    }
+
   }
 
   /* Extra small screens (Z Fold folded) */

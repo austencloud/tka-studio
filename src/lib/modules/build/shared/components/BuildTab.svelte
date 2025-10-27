@@ -56,6 +56,10 @@ Testing HMR persistence functionality
   // Reference to ToolPanel for accessing canGoBack and handleBack
   let toolPanelRef: any = $state(null);
 
+  // Track ToolPanel container height reactively for edit panel sizing
+  let toolPanelElement: HTMLElement | null = $state(null);
+  let toolPanelHeight = $state(0);
+
   // Edit slide panel state
   let isEditPanelOpen = $state(false);
   let editPanelBeatIndex = $state<number | null>(null);
@@ -236,21 +240,15 @@ Testing HMR persistence functionality
     // Guard: Don't run until buildTabState is initialized
     if (!buildTabState) return;
 
-    const selectedIndex = buildTabState.sequenceState.selectedBeatIndex;
+    const selectedBeatNumber = buildTabState.sequenceState.selectedBeatNumber;
     const selectedData = buildTabState.sequenceState.selectedBeatData;
 
     // If a beat is selected, open the edit panel
-    if (selectedIndex !== null && selectedData) {
-      editPanelBeatIndex = selectedIndex;
+    if (selectedBeatNumber !== null && selectedData) {
+      editPanelBeatIndex = selectedBeatNumber; // beatNumber: 0=start, 1=first beat, etc.
       editPanelBeatData = selectedData;
       isEditPanelOpen = true;
-      logger.log(`Opening edit panel for beat ${selectedIndex}`);
-    } else if (selectedData && selectedData.beatNumber === 0) {
-      // Start position is selected
-      editPanelBeatIndex = -1; // Special index for start position
-      editPanelBeatData = selectedData;
-      isEditPanelOpen = true;
-      logger.log("Opening edit panel for start position");
+      logger.log(`Opening edit panel for beat ${selectedBeatNumber}`);
     }
   });
 
@@ -315,8 +313,8 @@ Testing HMR persistence functionality
     buildTabState.sequenceState.removeBeatAndSubsequentWithAnimation(beatIndex, () => {
       // After animation completes, select the previous beat
       if (beatIndex > 0) {
-        // Select the previous beat (beatIndex - 1)
-        buildTabState.sequenceState.selectBeat(beatIndex - 1);
+        // Select the previous beat: array index (beatIndex-1) has beatNumber beatIndex
+        buildTabState.sequenceState.selectBeat(beatIndex);
       } else {
         // If removing beat 0 (first beat), select start position
         buildTabState.sequenceState.selectStartPositionForEditing();
@@ -438,14 +436,16 @@ Testing HMR persistence functionality
 
 
   <!-- Tool Panel: Tabbed interface for sequence construction and management -->
-  <ToolPanel
-    bind:this={toolPanelRef}
-    {buildTabState}
-    {constructTabState}
-    onOptionSelected={handleOptionSelected}
-    onPracticeBeatIndexChange={(index) => { practiceBeatIndex = index; }}
-    isSideBySideLayout={() => shouldUseSideBySideLayout}
-  />
+  <div bind:this={toolPanelElement} bind:clientHeight={toolPanelHeight} class="tool-panel-wrapper">
+    <ToolPanel
+      bind:this={toolPanelRef}
+      {buildTabState}
+      {constructTabState}
+      onOptionSelected={handleOptionSelected}
+      onPracticeBeatIndexChange={(index) => { practiceBeatIndex = index; }}
+      isSideBySideLayout={() => shouldUseSideBySideLayout}
+    />
+  </div>
   </div>
   {:else}
   <div class="loading-container">
@@ -465,8 +465,9 @@ Testing HMR persistence functionality
     onClose={() => {
       isEditPanelOpen = false;
     }}
-    selectedBeatIndex={editPanelBeatIndex}
+    selectedBeatNumber={editPanelBeatIndex}
     selectedBeatData={editPanelBeatData}
+    {toolPanelHeight}
     onOrientationChanged={(color: string, orientation: string) => {
       if (editPanelBeatData) {
         buildTabState.sequenceState.updateBeatOrientation(color, orientation);
@@ -518,7 +519,19 @@ Testing HMR persistence functionality
     grid-template-rows: 1fr 1fr; /* Top: workspace panel, Bottom: tool panel */
   }
 
+  /* Tool panel wrapper - allows height measurement for edit panel */
+  .tool-panel-wrapper {
+    /* Fill the grid cell completely */
+    height: 100%;
+    width: 100%;
 
+    /* Allow child (ToolPanel) to fill */
+    display: flex;
+    flex-direction: column;
+
+    /* Ensure proper overflow behavior */
+    overflow: hidden;
+  }
 
 
 

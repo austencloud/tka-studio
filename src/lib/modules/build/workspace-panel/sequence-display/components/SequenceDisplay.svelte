@@ -6,13 +6,13 @@
   import BeatGrid from "./BeatGrid.svelte";
   import WordLabel from "./WordLabel.svelte";
 
-  let { sequenceState, currentWord = "", onBeatSelected, onStartPositionSelected, selectedBeatIndex = null, practiceBeatIndex = null, isSideBySideLayout = false } = $props<{
+  let { sequenceState, currentWord = "", onBeatSelected, onStartPositionSelected, selectedBeatNumber = null, practiceBeatNumber = null, isSideBySideLayout = false } = $props<{
     sequenceState: SequenceState;
     currentWord?: string;
-    onBeatSelected?: (index: number) => void;
+    onBeatSelected?: (beatNumber: number) => void;
     onStartPositionSelected?: () => void;
-    selectedBeatIndex?: number | null;
-    practiceBeatIndex?: number | null;
+    selectedBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
+    practiceBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     isSideBySideLayout?: boolean;
   }>();
 
@@ -99,9 +99,9 @@
 
 
 
-  function handleBeatClick(index: number) {
+  function handleBeatClick(beatNumber: number) {
     hapticService?.trigger("selection");
-    onBeatSelected?.(index);
+    onBeatSelected?.(beatNumber);
   }
 
   function handleStartPositionClick() {
@@ -125,11 +125,11 @@
           startPosition={startPositionBeat() ?? undefined}
           onBeatClick={handleBeatClick}
           onStartClick={handleStartPositionClick}
-          {selectedBeatIndex}
+          {selectedBeatNumber}
           {removingBeatIndex}
           {removingBeatIndices}
           {isClearing}
-          {practiceBeatIndex}
+          {practiceBeatNumber}
           {isSideBySideLayout}
         />
       </div>

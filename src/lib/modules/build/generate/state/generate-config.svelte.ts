@@ -165,7 +165,6 @@ export function createGenerationConfigState(
     // ensure turnIntensity is at least 1.0 (never 0)
     if (newLevel >= 2 && config.turnIntensity < 1.0) {
       updates.turnIntensity = 1.0;
-      console.log("🔄 Setting turn intensity to 1.0 (minimum for level 2+)");
     }
 
     updateConfig(updates);

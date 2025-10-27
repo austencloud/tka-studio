@@ -16,22 +16,22 @@
     startPosition = null,
     onBeatClick,
     onStartClick,
-    selectedBeatIndex = null,
+    selectedBeatNumber = null, // 0=start, 1=first beat, 2=second beat, etc.
     removingBeatIndex = null,
     removingBeatIndices = new Set<number>(),
     isClearing = false,
-    practiceBeatIndex = null,
+    practiceBeatNumber = null, // 0=start, 1=first beat, 2=second beat, etc.
     isSideBySideLayout = false,
   } = $props<{
     beats: ReadonlyArray<BeatData> | BeatData[];
     startPosition?: BeatData | null;
-    onBeatClick?: (index: number) => void;
+    onBeatClick?: (beatNumber: number) => void;
     onStartClick?: () => void;
-    selectedBeatIndex?: number | null;
+    selectedBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     removingBeatIndex?: number | null;
     removingBeatIndices?: Set<number>;
     isClearing?: boolean;
-    practiceBeatIndex?: number | null;
+    practiceBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     isSideBySideLayout?: boolean;
   }>();
 
@@ -220,9 +220,9 @@
     };
   });
 
-  function handleBeatClick(index: number) {
+  function handleBeatClick(beatNumber: number) {
     hapticService?.trigger("selection");
-    onBeatClick?.(index);
+    onBeatClick?.(beatNumber);
   }
 
   function handleStartClick() {
@@ -266,6 +266,7 @@
           beat={startPosition || placeholderBeat}
           index={-1}
           shouldAnimate={displayState.shouldAnimateStartPosition}
+          isSelected={selectedBeatNumber === 0}
         />
       </div>
 
@@ -293,10 +294,10 @@
           <BeatCell
             {beat}
             {index}
-            onClick={() => handleBeatClick(index)}
+            onClick={() => handleBeatClick(beat.beatNumber)}
             shouldAnimate={shouldAnimateBeat}
-            isSelected={selectedBeatIndex === index}
-            isPracticeBeat={practiceBeatIndex === index}
+            isSelected={selectedBeatNumber === beat.beatNumber}
+            isPracticeBeat={practiceBeatNumber === beat.beatNumber}
           />
         </div>
       {/each}

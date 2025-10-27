@@ -51,9 +51,6 @@ export class RotatedComplementaryCAPExecutor {
 	 * @returns The complete circular sequence with all beats
 	 */
 	executeCAP(sequence: BeatData[], sliceSize: SliceSize): BeatData[] {
-		console.log(`🔄🔄 Executing Rotated-Complementary CAP (${sliceSize})`);
-		console.log(`📊 Input sequence length: ${sequence.length} beats`);
-
 		// Validate the sequence
 		this._validateSequence(sequence, sliceSize);
 
@@ -75,8 +72,6 @@ export class RotatedComplementaryCAPExecutor {
 			entriesToAdd = sequenceLength;
 		}
 
-		console.log(`➕ Will generate ${entriesToAdd} additional beats (rotated-complementary ${sliceSize})`);
-
 		// Generate the new beats
 		const generatedBeats: BeatData[] = [];
 		let lastBeat = sequence[sequence.length - 1];
@@ -97,14 +92,11 @@ export class RotatedComplementaryCAPExecutor {
 			sequence.push(nextBeat);
 			lastBeat = nextBeat;
 			nextBeatNumber++;
-
-			console.log(`✅ Generated rotated-complementary beat ${nextBeat.beatNumber}: ${nextBeat.letter || "unknown"}`);
 		}
 
 		// Re-insert start position at the beginning
 		sequence.unshift(startPosition);
 
-		console.log(`🎉 Rotated-Complementary CAP complete! Final sequence length: ${sequence.length} beats`);
 		return sequence;
 	}
 
@@ -133,8 +125,6 @@ export class RotatedComplementaryCAPExecutor {
 					`The end position must match the ${sliceSize} rotation requirement.`
 			);
 		}
-
-		console.log(`✅ Validation passed: ${startPos} → ${endPos} is valid for rotated-complementary ${sliceSize} CAP`);
 	}
 
 	/**
@@ -153,10 +143,6 @@ export class RotatedComplementaryCAPExecutor {
 			beatNumber,
 			finalIntendedLength,
 			sliceSize
-		);
-
-		console.log(
-			`🔍 Creating rotated-complementary beat ${beatNumber} from beat ${previousMatchingBeat.beatNumber} (letter: ${previousMatchingBeat.letter})`
 		);
 
 		// Get the complementary letter (COMPLEMENTARY effect)
@@ -179,7 +165,7 @@ export class RotatedComplementaryCAPExecutor {
 			...previousMatchingBeat,
 			id: `beat-${beatNumber}`,
 			beatNumber,
-			letter: complementaryLetter as any, // COMPLEMENTARY: Flip letter
+			letter: complementaryLetter, // COMPLEMENTARY: Flip letter
 			startPosition: previousBeat.endPosition ?? null,
 			endPosition: rotatedEndPosition,
 			motions: {
@@ -298,11 +284,6 @@ export class RotatedComplementaryCAPExecutor {
 		const newBlueEndLoc = blueLocationMap[previousBeat.motions[MotionColor.BLUE]!.endLocation as GridLocation];
 		const newRedEndLoc = redLocationMap[previousBeat.motions[MotionColor.RED]!.endLocation as GridLocation];
 
-		console.log(
-			`📍 Rotating locations: Blue ${previousBeat.motions[MotionColor.BLUE]!.endLocation} → ${newBlueEndLoc}, ` +
-			`Red ${previousBeat.motions[MotionColor.RED]!.endLocation} → ${newRedEndLoc}`
-		);
-
 		// Derive position from both locations
 		const newEndPosition = this.gridPositionDeriver.getGridPositionFromLocations(newBlueEndLoc, newRedEndLoc);
 
@@ -348,16 +329,7 @@ export class RotatedComplementaryCAPExecutor {
 		const complementaryMotionType = this._getComplementaryMotionType(matchingMotion.motionType);
 
 		// Flip the prop rotation direction (COMPLEMENTARY effect)
-		const originalPropRotDir = matchingMotion.rotationDirection;
 		const complementaryPropRotDir = this._getComplementaryPropRotDir(matchingMotion.rotationDirection);
-
-		console.log(
-			`🔄🔄 [${color}] Rotated-Complementary: ` +
-			`motionType=${originalMotionType} → ${complementaryMotionType}, ` +
-			`rotation=${originalPropRotDir} → ${complementaryPropRotDir}, ` +
-			`handRotDir=${handRotDir}, ` +
-			`${previousMotion.endLocation} → ${rotatedEndLocation}`
-		);
 
 		// Create rotated-complementary motion
 		const rotatedComplementaryMotion = {

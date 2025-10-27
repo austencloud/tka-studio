@@ -65,8 +65,6 @@ export class PictographFilterService implements IPictographFilterService {
       return optionStartPosition === lastEndPosition;
     });
 
-    console.log(`🔗 Filtered for continuity: ${filtered.length} options match end position "${lastEndPosition}"`);
-
     // If filtering eliminates all options, return original options (legacy behavior)
     if (filtered.length === 0) {
       console.warn(`⚠️ No options match end position "${lastEndPosition}", using all options`);
@@ -112,7 +110,6 @@ export class PictographFilterService implements IPictographFilterService {
    */
   filterByLetterTypes(options: PictographData[], _letterTypes: string[]): PictographData[] {
     // TODO: Implement letter type filtering when logic is ready
-    console.log(`🔍 Letter type filtering not yet implemented`);
     return options;
   }
 
@@ -130,7 +127,6 @@ export class PictographFilterService implements IPictographFilterService {
       throw new Error("No valid start positions found in options");
     }
 
-    console.log(`📍 Found ${filtered.length} valid start positions`);
     return filtered;
   }
 

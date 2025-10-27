@@ -47,9 +47,6 @@ export class RotatedSwappedCAPExecutor {
 	 * @returns The complete circular sequence with all beats
 	 */
 	executeCAP(sequence: BeatData[], sliceSize: SliceSize): BeatData[] {
-		console.log(`🔄🔁 Executing Rotated-Swapped CAP (${sliceSize})`);
-		console.log(`📊 Input sequence length: ${sequence.length} beats`);
-
 		// Validate the sequence
 		this._validateSequence(sequence, sliceSize);
 
@@ -71,8 +68,6 @@ export class RotatedSwappedCAPExecutor {
 			entriesToAdd = sequenceLength;
 		}
 
-		console.log(`➕ Will generate ${entriesToAdd} additional beats (rotated-swapped ${sliceSize})`);
-
 		// Generate the new beats
 		const generatedBeats: BeatData[] = [];
 		let lastBeat = sequence[sequence.length - 1];
@@ -92,14 +87,11 @@ export class RotatedSwappedCAPExecutor {
 			sequence.push(nextBeat);
 			lastBeat = nextBeat;
 			nextBeatNumber++;
-
-			console.log(`✅ Generated rotated-swapped beat ${nextBeat.beatNumber}: ${nextBeat.letter || "unknown"}`);
 		}
 
 		// Re-insert start position at the beginning
 		sequence.unshift(startPosition);
 
-		console.log(`🎉 Rotated-Swapped CAP complete! Final sequence length: ${sequence.length} beats`);
 		return sequence;
 	}
 
@@ -128,8 +120,6 @@ export class RotatedSwappedCAPExecutor {
 					`The end position must match the ${sliceSize} rotation requirement.`
 			);
 		}
-
-		console.log(`✅ Validation passed: ${startPos} → ${endPos} is valid for rotated-swapped ${sliceSize} CAP`);
 	}
 
 	/**
@@ -146,10 +136,6 @@ export class RotatedSwappedCAPExecutor {
 			sequence,
 			beatNumber,
 			finalIntendedLength
-		);
-
-		console.log(
-			`🔍 Creating rotated-swapped beat ${beatNumber} from beat ${previousMatchingBeat.beatNumber} (letter: ${previousMatchingBeat.letter})`
 		);
 
 		// Calculate the rotated end position
@@ -276,11 +262,6 @@ export class RotatedSwappedCAPExecutor {
 		const newBlueEndLoc = blueLocationMap[previousBeat.motions[MotionColor.BLUE]!.endLocation as GridLocation];
 		const newRedEndLoc = redLocationMap[previousBeat.motions[MotionColor.RED]!.endLocation as GridLocation];
 
-		console.log(
-			`📍 Rotating locations: Blue ${previousBeat.motions[MotionColor.BLUE]!.endLocation} → ${newBlueEndLoc}, ` +
-			`Red ${previousBeat.motions[MotionColor.RED]!.endLocation} → ${newRedEndLoc}`
-		);
-
 		// Derive position from both locations
 		const newEndPosition = this.gridPositionDeriver.getGridPositionFromLocations(newBlueEndLoc, newRedEndLoc);
 
@@ -326,13 +307,6 @@ export class RotatedSwappedCAPExecutor {
 
 		// Rotate the end location
 		const rotatedEndLocation = locationMap[previousMotion.endLocation as GridLocation];
-
-		console.log(
-			`🔄🔁 [${color}] Rotated-Swapped: motionType=${matchingMotion.motionType}, ` +
-			`rotation=${matchingMotion.rotationDirection}, ` +
-			`handRotDir=${handRotDir}, ` +
-			`${previousMotion.endLocation} → ${rotatedEndLocation}`
-		);
 
 		// Create rotated-swapped motion
 		const rotatedSwappedMotion = {

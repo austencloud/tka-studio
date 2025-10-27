@@ -5,7 +5,11 @@
       "Bash(then echo \"$file\")",
       "Bash(git restore:*)",
       "Bash(for file in MirroredSwappedCAPExecutor.ts SwappedComplementaryCAPExecutor.ts RotatedSwappedCAPExecutor.ts RotatedComplementaryCAPExecutor.ts StrictComplementaryCAPExecutor.ts StrictRotatedCAPExecutor.ts StrictSwappedCAPExecutor.ts)",
-      "Bash(do grep -n \"console\\.log\" \"$file\")"
+      "Bash(do grep -n \"console\\.log\" \"$file\")",
+      "Bash(for file in \"f:\\_THE KINETIC ALPHABET\\_TKA APP\\src\\lib\\modules\\build\\generate\\circular\\services\\implementations\"/RotatedSwappedCAPExecutor.ts \"f:\\_THE KINETIC ALPHABET\\_TKA APP\\src\\lib\\modules\\build\\generate\\circular\\services\\implementations\"/RotatedComplementaryCAPExecutor.ts \"f:\\_THE KINETIC ALPHABET\\_TKA APP\\src\\lib\\modules\\build\\generate\\circular\\services\\implementations\"/StrictComplementaryCAPExecutor.ts \"f:\\_THE KINETIC ALPHABET\\_TKA APP\\src\\lib\\modules\\build\\generate\\circular\\services\\implementations\"/StrictRotatedCAPExecutor.ts \"f:\\_THE KINETIC ALPHABET\\_TKA APP\\src\\lib\\modules\\build\\generate\\circular\\services\\implementations\"/StrictSwappedCAPExecutor.ts)",
+      "Bash(done)",
+      "Bash(npx playwright test:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []

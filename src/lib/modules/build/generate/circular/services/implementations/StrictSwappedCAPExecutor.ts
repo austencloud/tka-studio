@@ -44,9 +44,6 @@ export class StrictSwappedCAPExecutor {
 	 * @returns The complete circular sequence with all beats
 	 */
 	executeCAP(sequence: BeatData[], sliceSize: SliceSize): BeatData[] {
-		console.log("🔀 Executing Strict Swapped CAP (always halved)");
-		console.log(`📊 Input sequence length: ${sequence.length} beats`);
-
 		// Validate the sequence
 		this._validateSequence(sequence);
 
@@ -59,7 +56,6 @@ export class StrictSwappedCAPExecutor {
 		// Calculate how many beats to generate (always doubles for swapped)
 		const sequenceLength = sequence.length;
 		const entriesToAdd = sequenceLength; // Always halved = doubles the sequence
-		console.log(`➕ Will generate ${entriesToAdd} additional beats (swapped)`);
 
 		// Generate the new beats
 		const generatedBeats: BeatData[] = [];
@@ -79,14 +75,11 @@ export class StrictSwappedCAPExecutor {
 			generatedBeats.push(nextBeat);
 			sequence.push(nextBeat);
 			lastBeat = nextBeat;
-
-			console.log(`✅ Generated swapped beat ${nextBeat.beatNumber}: ${nextBeat.letter || "unknown"}`);
 		}
 
 		// Re-insert start position at the beginning
 		sequence.unshift(startPosition);
 
-		console.log(`🎉 Swapped CAP complete! Final sequence length: ${sequence.length} beats`);
 		return sequence;
 	}
 
@@ -116,8 +109,6 @@ export class StrictSwappedCAPExecutor {
 					`For a swapped CAP from ${startPos}, the sequence must end at ${expectedEnd}.`
 			);
 		}
-
-		console.log(`✅ Validation passed: ${startPos} → ${endPos} is valid for swapped CAP`);
 	}
 
 	/**
@@ -134,30 +125,6 @@ export class StrictSwappedCAPExecutor {
 			sequence,
 			beatNumber,
 			finalIntendedLength
-		);
-
-		console.log(
-			`🔍 Swapping beat ${beatNumber} with beat ${previousMatchingBeat.beatNumber} (letter: ${previousMatchingBeat.letter})`
-		);
-
-		// Debug: Log the previous beat's end position (where we're starting from)
-		console.log(
-			`📍 Previous beat ${previousBeat.beatNumber}: endPosition=${previousBeat.endPosition}`,
-			{
-				blueEndLoc: previousBeat.motions[MotionColor.BLUE]?.endLocation,
-				redEndLoc: previousBeat.motions[MotionColor.RED]?.endLocation
-			}
-		);
-
-		// Debug: Log the matching beat's data (what we're swapping from)
-		console.log(
-			`📍 Matching beat ${previousMatchingBeat.beatNumber}: startPos=${previousMatchingBeat.startPosition}, endPos=${previousMatchingBeat.endPosition}`,
-			{
-				blueStartLoc: previousMatchingBeat.motions[MotionColor.BLUE]?.startLocation,
-				blueEndLoc: previousMatchingBeat.motions[MotionColor.BLUE]?.endLocation,
-				redStartLoc: previousMatchingBeat.motions[MotionColor.RED]?.startLocation,
-				redEndLoc: previousMatchingBeat.motions[MotionColor.RED]?.endLocation
-			}
 		);
 
 		// Create the swapped motions first
@@ -181,12 +148,6 @@ export class StrictSwappedCAPExecutor {
 		const actualEndPosition = this.gridPositionDeriver.getGridPositionFromLocations(
 			blueMotion.endLocation,
 			redMotion.endLocation
-		);
-
-		console.log(
-			`📍 New beat ${beatNumber}: ` +
-			`startPosition=${actualStartPosition} (from blue=${blueMotion.startLocation}, red=${redMotion.startLocation}), ` +
-			`endPosition=${actualEndPosition} (from blue=${blueMotion.endLocation}, red=${redMotion.endLocation})`
 		);
 
 		// Create the new beat with swapped attributes (BLUE ↔ RED)
@@ -272,8 +233,6 @@ export class StrictSwappedCAPExecutor {
 			throw new Error(`No swapped position found for ${endPos}`);
 		}
 
-		console.log(`📍 Swapped position: ${endPos} → ${swappedPosition}`);
-
 		return swappedPosition;
 	}
 
@@ -292,17 +251,6 @@ export class StrictSwappedCAPExecutor {
 			throw new Error(`Missing motion data for ${color}`);
 		}
 
-		console.log(
-			`🔀 [${color}] Creating swapped motion:`,
-			{
-				matchingMotionColor: matchingMotion.color,
-				previousMotionEndLoc: previousMotion.endLocation,
-				matchingMotionEndLoc: matchingMotion.endLocation,
-				matchingMotionType: matchingMotion.motionType,
-				matchingPropRotDir: matchingMotion.rotationDirection
-			}
-		);
-
 		// CRITICAL: We must explicitly set the color to match THIS motion,
 		// not copy it from the opposite color's matching motion!
 		// We want Blue to DO what Red did, but still BE Blue.
@@ -315,16 +263,6 @@ export class StrictSwappedCAPExecutor {
 			// Start orientation will be set by orientationCalculationService
 			// End orientation will be calculated by orientationCalculationService
 		};
-
-		console.log(
-			`✅ [${color}] Swapped motion result:`,
-			{
-				color: swappedMotion.color,
-				startLoc: swappedMotion.startLocation,
-				endLoc: swappedMotion.endLocation,
-				motionType: swappedMotion.motionType
-			}
-		);
 
 		return swappedMotion;
 	}

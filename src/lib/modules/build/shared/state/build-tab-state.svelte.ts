@@ -260,7 +260,7 @@ export function createBuildTabState(
     // Create state snapshot
     const beforeState = {
       sequence: sequenceCopy,
-      selectedBeatIndex: sequenceState.selectedBeatIndex,
+      selectedBeatNumber: sequenceState.selectedBeatNumber,
       activeSubTab: activeSubTab,
       shouldShowStartPositionPicker: type === 'SELECT_START_POSITION' ? true : undefined,
       timestamp: Date.now()
@@ -332,8 +332,8 @@ export function createBuildTabState(
           }
 
           // Restore the selection
-          if (lastEntry.beforeState.selectedBeatIndex !== null) {
-            sequenceState.selectBeat(lastEntry.beforeState.selectedBeatIndex);
+          if (lastEntry.beforeState.selectedBeatNumber !== null) {
+            sequenceState.selectBeat(lastEntry.beforeState.selectedBeatNumber);
           } else {
             sequenceState.clearSelection();
           }
@@ -352,8 +352,8 @@ export function createBuildTabState(
     sequenceState.setCurrentSequence(restoredSequence);
 
     // Restore the selection
-    if (lastEntry.beforeState.selectedBeatIndex !== null) {
-      sequenceState.selectBeat(lastEntry.beforeState.selectedBeatIndex);
+    if (lastEntry.beforeState.selectedBeatNumber !== null) {
+      sequenceState.selectBeat(lastEntry.beforeState.selectedBeatNumber);
     } else {
       sequenceState.clearSelection();
     }

@@ -46,9 +46,6 @@ export class MirroredSwappedCAPExecutor {
 	 * @returns The complete circular sequence with all beats
 	 */
 	executeCAP(sequence: BeatData[], sliceSize: SliceSize): BeatData[] {
-		console.log("🔄🪞 Executing Mirrored-Swapped CAP (always halved)");
-		console.log(`📊 Input sequence length: ${sequence.length} beats`);
-
 		// Validate the sequence
 		this._validateSequence(sequence);
 
@@ -61,7 +58,6 @@ export class MirroredSwappedCAPExecutor {
 		// Calculate how many beats to generate (always doubles for halved)
 		const sequenceLength = sequence.length;
 		const entriesToAdd = sequenceLength;
-		console.log(`➕ Will generate ${entriesToAdd} additional beats (mirrored-swapped)`);
 
 		// Generate the new beats
 		const generatedBeats: BeatData[] = [];
@@ -81,14 +77,11 @@ export class MirroredSwappedCAPExecutor {
 			generatedBeats.push(nextBeat);
 			sequence.push(nextBeat);
 			lastBeat = nextBeat;
-
-			console.log(`✅ Generated mirrored-swapped beat ${nextBeat.beatNumber}: ${nextBeat.letter || "unknown"}`);
 		}
 
 		// Re-insert start position at the beginning
 		sequence.unshift(startPosition);
 
-		console.log(`🎉 Mirrored-Swapped CAP complete! Final sequence length: ${sequence.length} beats`);
 		return sequence;
 	}
 
@@ -117,8 +110,6 @@ export class MirroredSwappedCAPExecutor {
 					`For a mirrored-swapped CAP, the end position must be the vertical mirror of start position.`
 			);
 		}
-
-		console.log(`✅ Validation passed: ${startPos} → ${endPos} is valid for mirrored-swapped CAP`);
 	}
 
 	/**
@@ -135,10 +126,6 @@ export class MirroredSwappedCAPExecutor {
 			sequence,
 			beatNumber,
 			finalIntendedLength
-		);
-
-		console.log(
-			`🔍 Creating mirrored-swapped beat ${beatNumber} from beat ${previousMatchingBeat.beatNumber} (letter: ${previousMatchingBeat.letter})`
 		);
 
 		// Get the mirrored end position
@@ -242,8 +229,6 @@ export class MirroredSwappedCAPExecutor {
 			throw new Error(`No mirrored position found for ${endPos}`);
 		}
 
-		console.log(`📍 Mirrored position: ${endPos} → ${mirroredPosition}`);
-
 		return mirroredPosition;
 	}
 
@@ -273,14 +258,7 @@ export class MirroredSwappedCAPExecutor {
 		const mirroredEndLocation = this._getMirroredLocation(matchingMotion.endLocation as GridLocation);
 
 		// Flip the prop rotation direction (mirroring effect)
-		const originalPropRotDir = matchingMotion.rotationDirection;
 		const mirroredPropRotDir = this._getMirroredPropRotDir(matchingMotion.rotationDirection);
-
-		console.log(
-			`🔄🪞 [${color}] Mirrored-Swapped: motionType=${matchingMotion.motionType}, ` +
-			`${originalPropRotDir} → ${mirroredPropRotDir}, ` +
-			`${matchingMotion.endLocation} → ${mirroredEndLocation}`
-		);
 
 		// Create mirrored-swapped motion
 		const mirroredSwappedMotion = {

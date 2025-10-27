@@ -295,16 +295,23 @@ export function createSequenceState(services: SequenceStateServices) {
     );
   }
 
-  function selectBeat(index: number | null): void {
-    if (index === null) {
+  function selectBeat(beatNumber: number | null): void {
+    if (beatNumber === null) {
       selectionState.clearSelection();
       return;
     }
 
-    // Simple inline validation: check if index is within bounds
+    // Validate beatNumber is within valid range
+    // beatNumber 0 = start position (always valid if we have a start position)
+    // beatNumber 1 to N = beats in the sequence
     const currentSequence = coreState.currentSequence;
-    if (currentSequence && index >= 0 && index < currentSequence.beats.length) {
-      selectionState.selectBeat(index);
+
+    if (beatNumber === 0) {
+      // Start position - always allow selection
+      selectionState.selectBeat(beatNumber);
+    } else if (currentSequence && beatNumber >= 1 && beatNumber <= currentSequence.beats.length) {
+      // Regular beat - validate it exists
+      selectionState.selectBeat(beatNumber);
     } else {
       selectionState.clearSelection();
     }
@@ -337,6 +344,9 @@ export function createSequenceState(services: SequenceStateServices) {
     },
     get selectedBeatIndex() {
       return selectionState.selectedBeatIndex;
+    },
+    get selectedBeatNumber() {
+      return selectionState.selectedBeatNumber;
     },
     get selectedSequenceId() {
       return coreState.selectedSequenceId;
@@ -376,6 +386,7 @@ export function createSequenceState(services: SequenceStateServices) {
     getIsLoading: () => coreState.isLoading,
     getError: () => coreState.error,
     getSelectedBeatIndex: () => selectionState.selectedBeatIndex,
+    getSelectedBeatNumber: () => selectionState.selectedBeatNumber,
     getSelectedSequenceId: () => coreState.selectedSequenceId,
     getRemovingBeatIndex: () => animationState.removingBeatIndex,
     getRemovingBeatIndices: () => animationState.removingBeatIndices,
@@ -423,7 +434,7 @@ export function createSequenceState(services: SequenceStateServices) {
     selectBeat,
     clearSelection: () => selectionState.clearSelection(),
     selectStartPositionForEditing: () => selectionState.selectStartPosition(),
-    isBeatSelected: (index: number) => selectionState.isBeatSelected(index),
+    isBeatSelected: (beatNumber: number) => selectionState.isBeatSelected(beatNumber),
     setSelectedStartPosition,
 
     // Grid mode

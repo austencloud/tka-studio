@@ -36,14 +36,6 @@ Uses consistent spacing via --element-spacing CSS variable from parent
     // Use mapper utility for clean, type-safe conversion
     const generationOptions = uiConfigToGenerationOptions(config, "fan");
 
-    console.log("🔄 Converting config for generation:", {
-      'UI config length': config.length,
-      'UI config level': config.level,
-      'UI config turnIntensity': config.turnIntensity,
-      'Converted options length': generationOptions.length,
-      'Full converted options': generationOptions,
-    });
-
     await onGenerateClicked(generationOptions);
   }
 

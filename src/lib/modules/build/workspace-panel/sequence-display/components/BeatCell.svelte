@@ -236,15 +236,20 @@
       0 8px 32px rgba(251, 191, 36, 0.3),
       0 0 0 1px rgba(251, 191, 36, 0.2);
 
-    /* Lift effect */
-    transform: scale(1.08) translateY(-2px);
+    /* Scale effect - expands equally on all sides */
+    transform: scale(1.08);
+
+    /* NO transparency - keep selected beat fully opaque */
+    opacity: 1;
 
     /* Smooth spring animation */
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
   .beat-cell.selected:hover {
-    transform: scale(1.12) translateY(-4px);
+    /* Keep fully opaque even on hover */
+    opacity: 1;
+    transform: scale(1.12);
     box-shadow:
       0 0 30px rgba(251, 191, 36, 0.7),
       0 12px 48px rgba(251, 191, 36, 0.4),

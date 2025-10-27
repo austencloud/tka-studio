@@ -2,35 +2,48 @@
  * Sequence Selection State
  *
  * Manages selection state for:
- * - Selected beat index in current sequence
+ * - Selected beat NUMBER (0 = start position, 1 = first beat, 2 = second beat, etc.)
  * - Selected start position
  * - Start position editing mode
  *
  * RESPONSIBILITY: Pure selection tracking, no business logic
+ *
+ * NOTE: Uses beatNumber instead of array index
+ * - beatNumber 0 = start position
+ * - beatNumber 1 = beats[0] (first beat in array)
+ * - beatNumber 2 = beats[1] (second beat in array)
  */
 
 import type { PictographData } from "$shared";
 
 export interface SequenceSelectionStateData {
-  selectedBeatIndex: number | null;
+  selectedBeatNumber: number | null; // 0 = start, 1 = first beat, 2 = second beat, etc.
   selectedStartPosition: PictographData | null;
   hasStartPosition: boolean;
-  isStartPositionSelected: boolean;
 }
 
 export function createSequenceSelectionState() {
   const state = $state<SequenceSelectionStateData>({
-    selectedBeatIndex: null,
+    selectedBeatNumber: null,
     selectedStartPosition: null,
     hasStartPosition: false,
-    isStartPositionSelected: false,
   });
 
   return {
     // Getters
-    get selectedBeatIndex() {
-      return state.selectedBeatIndex;
+    get selectedBeatNumber() {
+      return state.selectedBeatNumber;
     },
+
+    // Legacy getter for backwards compatibility (can be removed after full refactor)
+    get selectedBeatIndex() {
+      // Convert beatNumber to array index: beatNumber 1 -> index 0, beatNumber 2 -> index 1, etc.
+      if (state.selectedBeatNumber === null || state.selectedBeatNumber === 0) {
+        return null;
+      }
+      return state.selectedBeatNumber - 1;
+    },
+
     get selectedStartPosition() {
       return state.selectedStartPosition;
     },
@@ -38,32 +51,29 @@ export function createSequenceSelectionState() {
       return state.hasStartPosition;
     },
     get isStartPositionSelected() {
-      return state.isStartPositionSelected;
+      return state.selectedBeatNumber === 0;
     },
 
     // Computed
     get hasSelection() {
-      return state.selectedBeatIndex !== null || state.isStartPositionSelected;
+      return state.selectedBeatNumber !== null;
     },
 
     // Selection operations
-    selectBeat(index: number | null) {
-      state.selectedBeatIndex = index;
-      state.isStartPositionSelected = false;
+    selectBeat(beatNumber: number | null) {
+      state.selectedBeatNumber = beatNumber;
     },
 
     selectStartPosition() {
-      state.selectedBeatIndex = null;
-      state.isStartPositionSelected = true;
+      state.selectedBeatNumber = 0;
     },
 
     clearSelection() {
-      state.selectedBeatIndex = null;
-      state.isStartPositionSelected = false;
+      state.selectedBeatNumber = null;
     },
 
-    isBeatSelected(index: number): boolean {
-      return state.selectedBeatIndex === index;
+    isBeatSelected(beatNumber: number): boolean {
+      return state.selectedBeatNumber === beatNumber;
     },
 
     // Start position management
@@ -73,25 +83,24 @@ export function createSequenceSelectionState() {
     },
 
     // Helpers for beat removal adjustments
-    adjustSelectionForRemovedBeat(removedIndex: number) {
-      if (state.selectedBeatIndex === removedIndex) {
-        state.selectedBeatIndex = null;
-      } else if (state.selectedBeatIndex !== null && state.selectedBeatIndex > removedIndex) {
-        state.selectedBeatIndex = state.selectedBeatIndex - 1;
+    adjustSelectionForRemovedBeat(removedBeatNumber: number) {
+      if (state.selectedBeatNumber === removedBeatNumber) {
+        state.selectedBeatNumber = null;
+      } else if (state.selectedBeatNumber !== null && state.selectedBeatNumber > removedBeatNumber) {
+        state.selectedBeatNumber = state.selectedBeatNumber - 1;
       }
     },
 
-    adjustSelectionForInsertedBeat(insertedIndex: number) {
-      if (state.selectedBeatIndex !== null && state.selectedBeatIndex >= insertedIndex) {
-        state.selectedBeatIndex = state.selectedBeatIndex + 1;
+    adjustSelectionForInsertedBeat(insertedBeatNumber: number) {
+      if (state.selectedBeatNumber !== null && state.selectedBeatNumber >= insertedBeatNumber) {
+        state.selectedBeatNumber = state.selectedBeatNumber + 1;
       }
     },
 
     reset() {
-      state.selectedBeatIndex = null;
+      state.selectedBeatNumber = null;
       state.selectedStartPosition = null;
       state.hasStartPosition = false;
-      state.isStartPositionSelected = false;
     },
   };
 }

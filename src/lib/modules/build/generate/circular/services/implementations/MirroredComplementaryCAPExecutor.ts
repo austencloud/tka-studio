@@ -149,7 +149,7 @@ export class MirroredComplementaryCAPExecutor {
 			...previousMatchingBeat,
 			id: `beat-${beatNumber}`,
 			beatNumber,
-			letter: complementaryLetter as any, // COMPLEMENTARY: Flip letter
+			letter: complementaryLetter, // COMPLEMENTARY: Flip letter
 			startPosition: previousBeat.endPosition ?? null,
 			endPosition: mirroredEndPosition, // MIRRORED: Flip position
 			motions: {

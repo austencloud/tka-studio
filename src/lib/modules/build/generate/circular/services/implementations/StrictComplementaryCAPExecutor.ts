@@ -45,9 +45,6 @@ export class StrictComplementaryCAPExecutor {
 	 * @returns The complete circular sequence with all beats
 	 */
 	executeCAP(sequence: BeatData[], sliceSize: SliceSize): BeatData[] {
-		console.log("🎨 Executing Strict Complementary CAP (always halved)");
-		console.log(`📊 Input sequence length: ${sequence.length} beats`);
-
 		// Validate the sequence
 		this._validateSequence(sequence);
 
@@ -60,7 +57,6 @@ export class StrictComplementaryCAPExecutor {
 		// Calculate how many beats to generate (always doubles for complementary)
 		const sequenceLength = sequence.length;
 		const entriesToAdd = sequenceLength; // Always halved = doubles the sequence
-		console.log(`➕ Will generate ${entriesToAdd} additional beats (complementary)`);
 
 		// Generate the new beats
 		const generatedBeats: BeatData[] = [];
@@ -80,14 +76,11 @@ export class StrictComplementaryCAPExecutor {
 			generatedBeats.push(nextBeat);
 			sequence.push(nextBeat);
 			lastBeat = nextBeat;
-
-			console.log(`✅ Generated complementary beat ${nextBeat.beatNumber}: ${nextBeat.letter || "unknown"}`);
 		}
 
 		// Re-insert start position at the beginning
 		sequence.unshift(startPosition);
 
-		console.log(`🎉 Complementary CAP complete! Final sequence length: ${sequence.length} beats`);
 		return sequence;
 	}
 
@@ -116,8 +109,6 @@ export class StrictComplementaryCAPExecutor {
 					`For a complementary CAP, the sequence must end at the same position it started (${startPos}).`
 			);
 		}
-
-		console.log(`✅ Validation passed: ${startPos} → ${endPos} is valid for complementary CAP`);
 	}
 
 	/**
@@ -136,10 +127,6 @@ export class StrictComplementaryCAPExecutor {
 			finalIntendedLength
 		);
 
-		console.log(
-			`🔍 Creating complementary beat ${beatNumber} from beat ${previousMatchingBeat.beatNumber} (letter: ${previousMatchingBeat.letter})`
-		);
-
 		// Get complementary letter
 		const complementaryLetter = this._getComplementaryLetter(previousMatchingBeat);
 
@@ -148,7 +135,7 @@ export class StrictComplementaryCAPExecutor {
 			...previousMatchingBeat,
 			id: `beat-${beatNumber}`,
 			beatNumber,
-			letter: complementaryLetter as any,
+			letter: complementaryLetter,
 			startPosition: previousBeat.endPosition ?? null,
 			endPosition: previousMatchingBeat.endPosition, // Same as matching beat
 			motions: {
@@ -230,8 +217,6 @@ export class StrictComplementaryCAPExecutor {
 
 		const complementaryLetter = getComplementaryLetter(letter);
 
-		console.log(`🔤 Complementary letter: ${letter} → ${complementaryLetter}`);
-
 		return complementaryLetter;
 	}
 
@@ -255,12 +240,7 @@ export class StrictComplementaryCAPExecutor {
 		const complementaryMotionType = this._getComplementaryMotionType(matchingMotion.motionType);
 
 		// Flip the prop rotation direction (FIXED: use rotationDirection not propRotationDirection)
-		const originalPropRotDir = matchingMotion.rotationDirection;
 		const complementaryPropRotDir = this._getComplementaryPropRotDir(matchingMotion.rotationDirection);
-
-		console.log(
-			`🔄 [${color}] Prop rotation complementary: ${originalPropRotDir} → ${complementaryPropRotDir}`
-		);
 
 		// Create complementary motion
 		const complementaryMotion = {
@@ -272,16 +252,6 @@ export class StrictComplementaryCAPExecutor {
 			// Start orientation will be set by orientationCalculationService
 			// End orientation will be calculated by orientationCalculationService
 		};
-
-		console.log(
-			`📦 [${color}] Complementary motion created:`,
-			{
-				motionType: complementaryMotion.motionType,
-				startLoc: complementaryMotion.startLocation,
-				endLoc: complementaryMotion.endLocation,
-				rotationDir: complementaryMotion.rotationDirection,
-			}
-		);
 
 		return complementaryMotion;
 	}

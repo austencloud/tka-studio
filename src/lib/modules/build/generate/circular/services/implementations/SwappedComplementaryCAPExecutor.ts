@@ -44,9 +44,6 @@ export class SwappedComplementaryCAPExecutor {
 	 * @returns The complete circular sequence with all beats
 	 */
 	executeCAP(sequence: BeatData[], sliceSize: SliceSize): BeatData[] {
-		console.log("🔄🎨 Executing Swapped-Complementary CAP (always halved)");
-		console.log(`📊 Input sequence length: ${sequence.length} beats`);
-
 		// Validate the sequence
 		this._validateSequence(sequence);
 
@@ -59,7 +56,6 @@ export class SwappedComplementaryCAPExecutor {
 		// Calculate how many beats to generate (always doubles for halved)
 		const sequenceLength = sequence.length;
 		const entriesToAdd = sequenceLength;
-		console.log(`➕ Will generate ${entriesToAdd} additional beats (swapped-complementary)`);
 
 		// Generate the new beats
 		const generatedBeats: BeatData[] = [];
@@ -79,14 +75,11 @@ export class SwappedComplementaryCAPExecutor {
 			generatedBeats.push(nextBeat);
 			sequence.push(nextBeat);
 			lastBeat = nextBeat;
-
-			console.log(`✅ Generated swapped-complementary beat ${nextBeat.beatNumber}: ${nextBeat.letter || "unknown"}`);
 		}
 
 		// Re-insert start position at the beginning
 		sequence.unshift(startPosition);
 
-		console.log(`🎉 Swapped-Complementary CAP complete! Final sequence length: ${sequence.length} beats`);
 		return sequence;
 	}
 
@@ -115,8 +108,6 @@ export class SwappedComplementaryCAPExecutor {
 					`For a swapped-complementary CAP, the sequence must end at the same position it started (${startPos}).`
 			);
 		}
-
-		console.log(`✅ Validation passed: ${startPos} → ${endPos} is valid for swapped-complementary CAP`);
 	}
 
 	/**
@@ -135,10 +126,6 @@ export class SwappedComplementaryCAPExecutor {
 			finalIntendedLength
 		);
 
-		console.log(
-			`🔍 Creating swapped-complementary beat ${beatNumber} from beat ${previousMatchingBeat.beatNumber} (letter: ${previousMatchingBeat.letter})`
-		);
-
 		// Get complementary letter
 		const complementaryLetter = this._getComplementaryLetter(previousMatchingBeat);
 
@@ -150,7 +137,7 @@ export class SwappedComplementaryCAPExecutor {
 			...previousMatchingBeat,
 			id: `beat-${beatNumber}`,
 			beatNumber,
-			letter: complementaryLetter as any, // COMPLEMENTARY
+			letter: complementaryLetter, // COMPLEMENTARY
 			startPosition: previousBeat.endPosition ?? null,
 			endPosition: previousMatchingBeat.endPosition, // Same as matching beat (returns to start)
 			motions: {
@@ -236,8 +223,6 @@ export class SwappedComplementaryCAPExecutor {
 
 		const complementaryLetter = getComplementaryLetter(letter);
 
-		console.log(`🔤 Complementary letter: ${letter} → ${complementaryLetter}`);
-
 		return complementaryLetter;
 	}
 
@@ -267,15 +252,7 @@ export class SwappedComplementaryCAPExecutor {
 		const complementaryMotionType = this._getComplementaryMotionType(matchingMotion.motionType);
 
 		// COMPLEMENTARY: Flip the prop rotation direction
-		const originalPropRotDir = matchingMotion.rotationDirection;
 		const complementaryPropRotDir = this._getComplementaryPropRotDir(matchingMotion.rotationDirection);
-
-		console.log(
-			`🔄🎨 [${color}] Swapped-Complementary: ` +
-			`motionType=${matchingMotion.motionType}→${complementaryMotionType}, ` +
-			`${originalPropRotDir} → ${complementaryPropRotDir}, ` +
-			`loc=${matchingMotion.endLocation} (same)`
-		);
 
 		// Create swapped-complementary motion
 		const swappedComplementaryMotion = {

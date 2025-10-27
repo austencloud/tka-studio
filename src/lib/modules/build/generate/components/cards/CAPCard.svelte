@@ -43,7 +43,6 @@ DESKTOP: Shows inline component buttons for direct selection
     // Simple desktop detection based on viewport width
     const checkDesktop = () => {
       isDesktop = window.innerWidth >= 1280;
-      console.log("[CAPCard] isDesktop:", isDesktop, "viewport:", window.innerWidth);
     };
     checkDesktop();
     window.addEventListener('resize', checkDesktop);

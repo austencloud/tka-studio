@@ -264,8 +264,6 @@ export const QUARTERED_CAPS = new Set<string>([
 
 /**
  * Location Rotation Maps
- * TODO: These were in a separate file that was deleted during restructure
- * Need to restore proper implementation from git history
  */
 
 import { GridLocation } from "$shared/pictograph/grid/domain/enums/grid-enums";

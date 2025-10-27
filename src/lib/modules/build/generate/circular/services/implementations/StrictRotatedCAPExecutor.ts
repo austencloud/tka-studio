@@ -44,9 +44,6 @@ export class StrictRotatedCAPExecutor {
    * @returns The complete circular sequence with all beats
    */
   executeCAP(sequence: BeatData[], sliceSize: SliceSize): BeatData[] {
-    console.log(`🔄 Executing Strict Rotated CAP (${sliceSize})`);
-    console.log(`📊 Input sequence length: ${sequence.length} beats`);
-
     // Validate the sequence
     this._validateSequence(sequence, sliceSize);
 
@@ -59,7 +56,6 @@ export class StrictRotatedCAPExecutor {
     // Calculate how many beats to generate
     const sequenceLength = sequence.length;
     const entriesToAdd = this._calculateEntriesToAdd(sequenceLength, sliceSize);
-    console.log(`➕ Will generate ${entriesToAdd} additional beats`);
 
     // Generate the new beats
     const generatedBeats: BeatData[] = [];
@@ -80,14 +76,11 @@ export class StrictRotatedCAPExecutor {
       sequence.push(nextBeat);
       lastBeat = nextBeat;
       nextBeatNumber++;
-
-      console.log(`✅ Generated beat ${nextBeatNumber - 1}: ${nextBeat.letter || "unknown"}`);
     }
 
     // Re-insert start position at the beginning
     sequence.unshift(startPosition);
 
-    console.log(`🎉 CAP complete! Final sequence length: ${sequence.length - 1} beats`);
     return sequence;
   }
 
@@ -116,8 +109,6 @@ export class StrictRotatedCAPExecutor {
           `This pair cannot complete a ${sliceSize} rotation.`
       );
     }
-
-    console.log(`✅ Validation passed: ${startPos} → ${endPos} is valid for ${sliceSize} CAP`);
   }
 
   /**
@@ -149,10 +140,6 @@ export class StrictRotatedCAPExecutor {
       beatNumber,
       finalIntendedLength,
       sliceSize
-    );
-
-    console.log(
-      `🔍 Matching beat ${beatNumber} with beat ${previousMatchingBeat.beatNumber} (letter: ${previousMatchingBeat.letter})`
     );
 
     // Calculate new end position
@@ -299,10 +286,6 @@ export class StrictRotatedCAPExecutor {
     const newPosition = this.gridPositionDeriver.getGridPositionFromLocations(
       newBlueEndLoc,
       newRedEndLoc
-    );
-
-    console.log(
-      `📍 Calculated new position: (${newBlueEndLoc}, ${newRedEndLoc}) → ${newPosition}`
     );
 
     return newPosition;
