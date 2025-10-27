@@ -120,12 +120,10 @@ Combines video feed with playback controls for practicing sequences.
 
   // Lifecycle
   onMount(() => {
-    console.log("📹 RecordPanel mounted");
     metronome = new MetronomeService();
   });
 
   onDestroy(() => {
-    console.log("🗑️ RecordPanel destroying - cleaning up playback and metronome");
     stopPlayback();
     if (metronome) {
       metronome.dispose();
@@ -140,7 +138,7 @@ Combines video feed with playback controls for practicing sequences.
       <!-- Video feed -->
       <div class="video-section">
         <VideoFeedPanel
-          onCameraReady={() => console.log("Camera ready")}
+          onCameraReady={() => {}}
           onCameraError={(error) => console.error("Camera error:", error)}
         />
       </div>

@@ -58,10 +58,7 @@ export function createShareState(shareService: IShareService): ShareState {
 
     // Actions
     updateOptions: (newOptions: Partial<ShareOptions>) => {
-      console.log('🔧 ShareState: Before update - options:', options);
-      console.log('🔧 ShareState: Applying new options:', newOptions);
       options = { ...options, ...newOptions };
-      console.log('🔧 ShareState: After update - options:', options);
       selectedPreset = 'custom'; // Mark as custom when manually changed
       previewError = null; // Clear preview error when options change
     },

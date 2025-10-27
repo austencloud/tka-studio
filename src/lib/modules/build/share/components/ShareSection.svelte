@@ -38,7 +38,7 @@
     if (navigator.share && navigator.canShare) {
       try {
         // Get the actual image blob from the share service
-        const shareService = resolve(TYPES.IShareService) as any;
+        const shareService = resolve<any>(TYPES.IShareService);
         const blob = await shareService.getImageBlob(currentSequence, shareState.options);
 
         // Create a File object with optimal metadata for Android sharing
@@ -60,14 +60,6 @@
 
         await new Promise((resolve) => {
           img.onload = () => {
-            console.log('Sharing image:', {
-              filename,
-              type: mimeType,
-              size: blob.size,
-              sizeKB: Math.round(blob.size / 1024),
-              dimensions: `${img.width}x${img.height}`,
-              aspectRatio: (img.width / img.height).toFixed(2)
-            });
             URL.revokeObjectURL(imageUrl);
             resolve(null);
           };
@@ -96,7 +88,7 @@
           return;
         }
       } catch (error) {
-        console.log('Native sharing failed or was cancelled:', error);
+        // Native sharing failed or was cancelled (user closed share dialog)
         hapticService?.trigger("error");
         return;
       }

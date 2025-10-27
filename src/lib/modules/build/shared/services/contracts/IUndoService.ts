@@ -54,7 +54,7 @@ export interface UndoMetadata {
  */
 export interface BuildTabStateSnapshot {
   sequence: SequenceData | null;
-  selectedBeatIndex: number | null;
+  selectedBeatNumber: number | null;  // 0=start, 1=first beat, 2=second beat
   activeSubTab: ActiveBuildTab | null;
   shouldShowStartPositionPicker?: boolean;
   timestamp: number;

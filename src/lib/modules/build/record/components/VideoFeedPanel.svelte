@@ -79,34 +79,27 @@ Features square aspect ratio for consistent layout and settings dialog for camer
 
   async function startCamera(deviceId?: string) {
     try {
-      console.log("📹 Starting camera...", { deviceId });
       isLoading = true;
       error = null;
 
       // Stop existing stream if any
       if (stream) {
-        console.log("🛑 Stopping existing stream");
         stream.getTracks().forEach((track) => track.stop());
         stream = null;
       }
 
       // Request camera access
       const constraints = getCameraConstraints(deviceId);
-      console.log("📹 Requesting camera with constraints:", constraints);
       stream = await navigator.mediaDevices.getUserMedia(constraints);
-      console.log("✅ Got camera stream:", stream);
 
       // Attach stream to video element
       if (videoElement) {
-        console.log("📹 Attaching stream to video element");
         videoElement.srcObject = stream;
 
         // Wait for video to be ready
         videoElement.onloadedmetadata = () => {
-          console.log("✅ Video metadata loaded");
           videoElement?.play()
             .then(() => {
-              console.log("✅ Video playing");
               isCameraActive = true;
               isLoading = false;
               onCameraReady();
@@ -142,10 +135,8 @@ Features square aspect ratio for consistent layout and settings dialog for camer
   }
 
   function stopCamera() {
-    console.log("🛑 Stopping camera...");
     if (stream) {
       stream.getTracks().forEach((track) => {
-        console.log("🛑 Stopping track:", track.label);
         track.stop();
       });
       stream = null;
@@ -156,17 +147,14 @@ Features square aspect ratio for consistent layout and settings dialog for camer
     }
 
     isCameraActive = false;
-    console.log("✅ Camera stopped");
   }
 
   // Effect to attach stream when video element becomes available
   $effect(() => {
     if (videoElement && stream && !videoElement.srcObject) {
-      console.log("📹 Attaching stream to newly mounted video element");
       videoElement.srcObject = stream;
       videoElement.play()
         .then(() => {
-          console.log("✅ Video playing after effect attachment");
           isCameraActive = true;
         })
         .catch((err) => {
@@ -177,7 +165,6 @@ Features square aspect ratio for consistent layout and settings dialog for camer
 
   // Lifecycle
   onMount(async () => {
-    console.log("📹 VideoFeedPanel mounted");
     // Check for camera support
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       error = "Camera access is not supported in this browser.";
@@ -190,7 +177,6 @@ Features square aspect ratio for consistent layout and settings dialog for camer
   });
 
   onDestroy(() => {
-    console.log("🗑️ VideoFeedPanel destroying");
     stopCamera();
   });
 </script>

@@ -64,6 +64,7 @@ Testing HMR persistence functionality
   let isEditPanelOpen = $state(false);
   let editPanelBeatIndex = $state<number | null>(null);
   let editPanelBeatData = $state<any>(null);
+  let editPanelBeatsData = $state<any[]>([]);
 
   // Effect to notify parent of tab accessibility changes
   $effect(() => {
@@ -252,6 +253,35 @@ Testing HMR persistence functionality
     }
   });
 
+  // Effect to open batch edit panel when multiple beats are selected
+  $effect(() => {
+    // Guard: Don't run until buildTabState is initialized
+    if (!buildTabState) return;
+
+    const selectedBeatNumbers = buildTabState.sequenceState.selectedBeatNumbers;
+
+    // If multiple beats selected, open batch edit panel
+    if (selectedBeatNumbers && selectedBeatNumbers.size > 0) {
+      // @ts-ignore - Type inference issue with Set<number>
+      const beatNumbersArray = Array.from(selectedBeatNumbers).sort((a: number, b: number) => a - b);
+      // @ts-ignore - Type inference issue with Set elements
+      const beatsData = beatNumbersArray.map((beatNumber: number) => {
+        if (beatNumber === 0) {
+          // Start position
+          return buildTabState.sequenceState.selectedStartPosition;
+        } else {
+          // Regular beat (convert beatNumber to array index)
+          const beatIndex = beatNumber - 1;
+          return buildTabState.sequenceState.currentSequence?.beats[beatIndex];
+        }
+      }).filter(Boolean); // Remove any null values
+
+      editPanelBeatsData = beatsData;
+      isEditPanelOpen = true;
+      logger.log(`Opening batch edit panel for ${beatNumbersArray.length} beats`);
+    }
+  });
+
 
 
   async function handleOptionSelected(option: any): Promise<void> {
@@ -320,6 +350,57 @@ Testing HMR persistence functionality
         buildTabState.sequenceState.selectStartPositionForEditing();
       }
     });
+  }
+
+  // Batch Edit Handler
+  function handleBatchApply(changes: any) {
+    if (!buildTabState) {
+      console.warn("BuildTab: Cannot apply batch changes - build tab state not initialized");
+      return;
+    }
+
+    const selectedBeatNumbers = buildTabState.sequenceState.selectedBeatNumbers;
+    if (!selectedBeatNumbers || selectedBeatNumbers.size === 0) {
+      return;
+    }
+
+    // Push undo snapshot before batch edit
+    buildTabState.pushUndoSnapshot('BATCH_EDIT', {
+      beatNumbers: Array.from(selectedBeatNumbers),
+      changes,
+      description: `Batch edit ${selectedBeatNumbers.size} beats`
+    });
+
+    // Apply changes to all selected beats
+    selectedBeatNumbers.forEach((beatNumber: number) => {
+      if (beatNumber === 0) {
+        // Update start position
+        const currentStartPosition = buildTabState.sequenceState.selectedStartPosition;
+        if (currentStartPosition) {
+          const updatedData = {
+            ...currentStartPosition,
+            ...changes
+          };
+          buildTabState.sequenceState.setStartPosition(updatedData);
+        }
+      } else {
+        // Update regular beat (convert beatNumber to array index)
+        const beatIndex = beatNumber - 1;
+        const currentBeat = buildTabState.sequenceState.currentSequence?.beats[beatIndex];
+        if (currentBeat) {
+          const updatedBeat = {
+            ...currentBeat,
+            ...changes
+          };
+          buildTabState.sequenceState.updateBeat(beatIndex, updatedBeat);
+        }
+      }
+    });
+
+    // Exit multi-select mode and close edit panel
+    buildTabState.sequenceState.exitMultiSelectMode();
+    isEditPanelOpen = false;
+    logger.log(`Applied batch changes to ${selectedBeatNumbers.size} beats`);
   }
 
   // ============================================================================
@@ -464,20 +545,24 @@ Testing HMR persistence functionality
     isOpen={isEditPanelOpen}
     onClose={() => {
       isEditPanelOpen = false;
+      // Exit multi-select mode when closing panel
+      if (buildTabState.sequenceState.selectedBeatNumbers?.size > 0) {
+        buildTabState.sequenceState.exitMultiSelectMode();
+      }
     }}
     selectedBeatNumber={editPanelBeatIndex}
     selectedBeatData={editPanelBeatData}
+    selectedBeatsData={editPanelBeatsData.length > 0 ? editPanelBeatsData : null}
+    onBatchApply={handleBatchApply}
     {toolPanelHeight}
     onOrientationChanged={(color: string, orientation: string) => {
       if (editPanelBeatData && editPanelBeatIndex !== null) {
-        // Calculate beat index (beatNumber 0 = start position, 1+ = beats array)
-        const beatIndex = editPanelBeatIndex === 0 ? 0 : editPanelBeatIndex - 1;
-
         // Get current motion data for the color
         const currentMotion = editPanelBeatData.motions?.[color] || {};
 
-        // Update beat with new orientation
-        buildTabState.sequenceState.updateBeat(beatIndex, {
+        // Create updated beat data with new orientation
+        const updatedBeatData = {
+          ...editPanelBeatData,
           motions: {
             ...editPanelBeatData.motions,
             [color]: {
@@ -485,19 +570,26 @@ Testing HMR persistence functionality
               startOrientation: orientation,
             }
           }
-        });
+        };
+
+        // beatNumber 0 = start position, update separately
+        if (editPanelBeatIndex === 0) {
+          buildTabState.sequenceState.setStartPosition(updatedBeatData);
+        } else {
+          // beatNumber 1+ = beats array, use index = beatNumber - 1
+          const beatIndex = editPanelBeatIndex - 1;
+          buildTabState.sequenceState.updateBeat(beatIndex, updatedBeatData);
+        }
       }
     }}
     onTurnAmountChanged={(color: string, turnAmount: number) => {
       if (editPanelBeatData && editPanelBeatIndex !== null) {
-        // Calculate beat index (beatNumber 0 = start position, 1+ = beats array)
-        const beatIndex = editPanelBeatIndex === 0 ? 0 : editPanelBeatIndex - 1;
-
         // Get current motion data for the color
         const currentMotion = editPanelBeatData.motions?.[color] || {};
 
-        // Update beat with new turn amount
-        buildTabState.sequenceState.updateBeat(beatIndex, {
+        // Create updated beat data with new turn amount
+        const updatedBeatData = {
+          ...editPanelBeatData,
           motions: {
             ...editPanelBeatData.motions,
             [color]: {
@@ -505,7 +597,16 @@ Testing HMR persistence functionality
               turns: turnAmount,
             }
           }
-        });
+        };
+
+        // beatNumber 0 = start position, update separately
+        if (editPanelBeatIndex === 0) {
+          buildTabState.sequenceState.setStartPosition(updatedBeatData);
+        } else {
+          // beatNumber 1+ = beats array, use index = beatNumber - 1
+          const beatIndex = editPanelBeatIndex - 1;
+          buildTabState.sequenceState.updateBeat(beatIndex, updatedBeatData);
+        }
       }
     }}
   />

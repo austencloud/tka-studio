@@ -16,6 +16,7 @@ Features:
   import { backOut, quintOut } from 'svelte/easing';
   import { fade, fly } from 'svelte/transition';
   import EditPanelLayout from './EditPanelLayout.svelte';
+  import BatchEditLayout from './BatchEditLayout.svelte';
 
   // Props
   const {
@@ -23,18 +24,27 @@ Features:
     onClose,
     selectedBeatNumber,
     selectedBeatData,
+    selectedBeatsData = null, // NEW: For batch mode
     toolPanelHeight = 0,
     onOrientationChanged,
     onTurnAmountChanged,
+    onBatchApply, // NEW: Batch apply callback
   } = $props<{
     isOpen: boolean;
     onClose: () => void;
     selectedBeatNumber: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     selectedBeatData: BeatData | null;
+    selectedBeatsData?: BeatData[] | null; // NEW: Multiple beats for batch edit
     toolPanelHeight?: number;
     onOrientationChanged: (color: string, orientation: string) => void;
     onTurnAmountChanged: (color: string, turnAmount: number) => void;
+    onBatchApply?: (changes: Partial<BeatData>) => void; // NEW: Batch mode
   }>();
+
+  // Detect batch mode
+  const isBatchMode = $derived(
+    selectedBeatsData && selectedBeatsData.length > 1
+  );
 
   // Services
   let hapticService: IHapticFeedbackService | null = null;
@@ -222,7 +232,12 @@ Features:
       <div class="edit-panel-header">
         <h2 id="edit-panel-title" class="edit-panel-title">
           <span class="title-icon">✨</span>
-          {#if selectedBeatNumber === 0}
+          {#if isBatchMode}
+            Batch Edit
+            {#if selectedBeatsData}
+              <span class="beat-number">{selectedBeatsData.length} beats</span>
+            {/if}
+          {:else if selectedBeatNumber === 0}
             Edit Start Position
           {:else}
             Edit Beat
@@ -250,15 +265,23 @@ Features:
         </div>
       {/if}
 
-      <!-- Main content - Pictograph + Edit Controls with Responsive Layout -->
+      <!-- Main content - Conditional rendering based on mode -->
       <div class="edit-panel-content">
-        <EditPanelLayout
-          bind:this={editPanelLayoutRef}
-          {selectedBeatNumber}
-          {selectedBeatData}
-          {onOrientationChanged}
-          {onTurnAmountChanged}
-        />
+        {#if isBatchMode && selectedBeatsData}
+          <BatchEditLayout
+            selectedBeats={selectedBeatsData}
+            onApply={(changes) => onBatchApply?.(changes)}
+            onCancel={handleClose}
+          />
+        {:else}
+          <EditPanelLayout
+            bind:this={editPanelLayoutRef}
+            {selectedBeatNumber}
+            {selectedBeatData}
+            {onOrientationChanged}
+            {onTurnAmountChanged}
+          />
+        {/if}
       </div>
     </div>
   </div>

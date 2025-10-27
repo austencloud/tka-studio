@@ -6,7 +6,18 @@
   import BeatGrid from "./BeatGrid.svelte";
   import WordLabel from "./WordLabel.svelte";
 
-  let { sequenceState, currentWord = "", onBeatSelected, onStartPositionSelected, selectedBeatNumber = null, practiceBeatNumber = null, isSideBySideLayout = false } = $props<{
+  let {
+    sequenceState,
+    currentWord = "",
+    onBeatSelected,
+    onStartPositionSelected,
+    selectedBeatNumber = null,
+    practiceBeatNumber = null,
+    isSideBySideLayout = false,
+    isMultiSelectMode = false,
+    onBeatLongPress,
+    onStartLongPress
+  } = $props<{
     sequenceState: SequenceState;
     currentWord?: string;
     onBeatSelected?: (beatNumber: number) => void;
@@ -14,6 +25,9 @@
     selectedBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     practiceBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     isSideBySideLayout?: boolean;
+    isMultiSelectMode?: boolean;
+    onBeatLongPress?: (beatNumber: number) => void;
+    onStartLongPress?: () => void;
   }>();
 
   // Services
@@ -131,6 +145,9 @@
           {isClearing}
           {practiceBeatNumber}
           {isSideBySideLayout}
+          {isMultiSelectMode}
+          onBeatLongPress={onBeatLongPress}
+          onStartLongPress={onStartLongPress}
         />
       </div>
     </div>

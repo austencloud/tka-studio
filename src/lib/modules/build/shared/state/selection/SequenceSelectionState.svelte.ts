@@ -2,6 +2,8 @@
  * Sequence Selection State
  *
  * Manages selection state for:
+ * - Single-select mode: One beat at a time (default)
+ * - Multi-select mode: Multiple beats for batch editing
  * - Selected beat NUMBER (0 = start position, 1 = first beat, 2 = second beat, etc.)
  * - Selected start position
  * - Start position editing mode
@@ -16,15 +18,28 @@
 
 import type { PictographData } from "$shared";
 
+export type SelectionMode = 'single' | 'multi';
+
 export interface SequenceSelectionStateData {
+  // Mode
+  mode: SelectionMode; // 'single' (default) or 'multi' (batch editing)
+
+  // Single-select (backward compatible)
   selectedBeatNumber: number | null; // 0 = start, 1 = first beat, 2 = second beat, etc.
+
+  // Multi-select (batch editing)
+  selectedBeatNumbers: Set<number>; // Multiple beat numbers for batch operations
+
+  // Start position
   selectedStartPosition: PictographData | null;
   hasStartPosition: boolean;
 }
 
 export function createSequenceSelectionState() {
   const state = $state<SequenceSelectionStateData>({
+    mode: 'single',
     selectedBeatNumber: null,
+    selectedBeatNumbers: new Set<number>(),
     selectedStartPosition: null,
     hasStartPosition: false,
   });
@@ -54,9 +69,37 @@ export function createSequenceSelectionState() {
       return state.selectedBeatNumber === 0;
     },
 
+    // Mode getters
+    get mode() {
+      return state.mode;
+    },
+    get isMultiSelectMode() {
+      return state.mode === 'multi';
+    },
+    get isSingleSelectMode() {
+      return state.mode === 'single';
+    },
+
+    // Multi-select getters
+    get selectedBeatNumbers() {
+      return state.selectedBeatNumbers;
+    },
+    get selectionCount(): number {
+      if (state.mode === 'single') {
+        return state.selectedBeatNumber !== null ? 1 : 0;
+      }
+      return state.selectedBeatNumbers.size;
+    },
+    get hasMultipleSelection(): boolean {
+      return state.mode === 'multi' && state.selectedBeatNumbers.size > 1;
+    },
+
     // Computed
     get hasSelection() {
-      return state.selectedBeatNumber !== null;
+      if (state.mode === 'single') {
+        return state.selectedBeatNumber !== null;
+      }
+      return state.selectedBeatNumbers.size > 0;
     },
 
     // Selection operations
@@ -73,7 +116,83 @@ export function createSequenceSelectionState() {
     },
 
     isBeatSelected(beatNumber: number): boolean {
-      return state.selectedBeatNumber === beatNumber;
+      if (state.mode === 'single') {
+        return state.selectedBeatNumber === beatNumber;
+      }
+      return state.selectedBeatNumbers.has(beatNumber);
+    },
+
+    // Multi-select operations
+    enterMultiSelectMode(initialBeatNumber: number) {
+      state.mode = 'multi';
+      state.selectedBeatNumbers = new Set([initialBeatNumber]);
+      state.selectedBeatNumber = null; // Clear single-select
+    },
+
+    exitMultiSelectMode() {
+      state.mode = 'single';
+      state.selectedBeatNumbers.clear();
+      state.selectedBeatNumber = null;
+    },
+
+    toggleBeatInMultiSelect(beatNumber: number): { success: boolean; error?: string } {
+      if (state.mode !== 'multi') {
+        return { success: false, error: 'Not in multi-select mode' };
+      }
+
+      // Validate: Cannot mix start position (0) with regular beats (>0)
+      const hasStartPosition = state.selectedBeatNumbers.has(0);
+      const hasRegularBeats = Array.from(state.selectedBeatNumbers).some(n => n > 0);
+      const isStartPosition = beatNumber === 0;
+
+      if (isStartPosition && hasRegularBeats) {
+        return {
+          success: false,
+          error: 'Cannot select start position with beats. They have different properties.'
+        };
+      }
+
+      if (!isStartPosition && hasStartPosition) {
+        return {
+          success: false,
+          error: 'Cannot select beats with start position. They have different properties.'
+        };
+      }
+
+      // Toggle selection
+      if (state.selectedBeatNumbers.has(beatNumber)) {
+        state.selectedBeatNumbers.delete(beatNumber);
+
+        // Auto-exit if no items selected (optional behavior)
+        // if (state.selectedBeatNumbers.size === 0) {
+        //   this.exitMultiSelectMode();
+        // }
+      } else {
+        state.selectedBeatNumbers.add(beatNumber);
+      }
+
+      return { success: true };
+    },
+
+    selectAllBeats(beatNumbers: number[]) {
+      if (state.mode !== 'multi') {
+        state.mode = 'multi';
+      }
+
+      // Filter out start position if regular beats are included, and vice versa
+      const hasStartPosition = beatNumbers.includes(0);
+      const regularBeats = beatNumbers.filter(n => n > 0);
+
+      if (hasStartPosition && regularBeats.length > 0) {
+        // If both types, prefer regular beats (more common use case)
+        state.selectedBeatNumbers = new Set(regularBeats);
+      } else {
+        state.selectedBeatNumbers = new Set(beatNumbers);
+      }
+    },
+
+    clearMultiSelection() {
+      state.selectedBeatNumbers.clear();
     },
 
     // Start position management
@@ -98,7 +217,9 @@ export function createSequenceSelectionState() {
     },
 
     reset() {
+      state.mode = 'single';
       state.selectedBeatNumber = null;
+      state.selectedBeatNumbers.clear();
       state.selectedStartPosition = null;
       state.hasStartPosition = false;
     },

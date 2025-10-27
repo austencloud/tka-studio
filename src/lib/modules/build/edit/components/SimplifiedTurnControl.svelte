@@ -56,13 +56,13 @@ Research-backed design for 344px portrait (Z Fold):
 
   // Handlers
   function handleDecrement() {
-    hapticService?.trigger("light");
+    hapticService?.trigger("selection");
     const newValue = Math.max(0, currentTurn - 0.5);
     onTurnAmountChanged(color, newValue);
   }
 
   function handleIncrement() {
-    hapticService?.trigger("light");
+    hapticService?.trigger("selection");
     const newValue = currentTurn + 0.5;
     onTurnAmountChanged(color, newValue);
   }
@@ -78,49 +78,54 @@ Research-backed design for 344px portrait (Z Fold):
   class:red={color === "red"}
   data-testid={`simplified-turn-control-${color}`}
 >
-  <!-- Color label -->
+  <!-- Left column: Color label -->
   <div class="color-label">
     {displayLabel}
   </div>
 
-  <!-- Decrement button -->
-  <button
-    class="stepper-btn decrement"
-    onclick={handleDecrement}
-    aria-label={`Decrease ${displayLabel} turns`}
-    type="button"
-  >
-    <i class="fas fa-minus"></i>
-  </button>
+  <!-- Center column: Stepper controls (perfectly centered) -->
+  <div class="center-controls">
+    <!-- Decrement button -->
+    <button
+      class="stepper-btn decrement"
+      onclick={handleDecrement}
+      aria-label={`Decrease ${displayLabel} turns`}
+      type="button"
+    >
+      <i class="fas fa-minus"></i>
+    </button>
 
-  <!-- Value display -->
-  <div class="value-display">
-    {currentTurn.toFixed(1)}
+    <!-- Value display -->
+    <div class="value-display">
+      {currentTurn.toFixed(1)}
+    </div>
+
+    <!-- Increment button -->
+    <button
+      class="stepper-btn increment"
+      onclick={handleIncrement}
+      aria-label={`Increase ${displayLabel} turns`}
+      type="button"
+    >
+      <i class="fas fa-plus"></i>
+    </button>
   </div>
 
-  <!-- Increment button -->
-  <button
-    class="stepper-btn increment"
-    onclick={handleIncrement}
-    aria-label={`Increase ${displayLabel} turns`}
-    type="button"
-  >
-    <i class="fas fa-plus"></i>
-  </button>
-
-  <!-- Motion type badge (secondary info) -->
+  <!-- Right column: Motion type badge -->
   {#if motionType}
     <div class="motion-badge">
       {motionType}
     </div>
+  {:else}
+    <div></div>
   {/if}
 </div>
 
 <style>
   .simplified-turn-control {
-    display: flex;
+    display: grid;
+    grid-template-columns: minmax(50px, 1fr) auto minmax(50px, 1fr);
     align-items: center;
-    justify-content: space-between;
     gap: 12px;
     padding: 12px 16px;
     border-radius: 12px;
@@ -141,12 +146,12 @@ Research-backed design for 344px portrait (Z Fold):
     background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, white 100%);
   }
 
-  /* Color label */
+  /* Color label - left column */
   .color-label {
     font-weight: 700;
     font-size: 16px;
     letter-spacing: 0.5px;
-    min-width: 50px;
+    justify-self: start;
   }
 
   .simplified-turn-control.blue .color-label {
@@ -155,6 +160,14 @@ Research-backed design for 344px portrait (Z Fold):
 
   .simplified-turn-control.red .color-label {
     color: #ef4444;
+  }
+
+  /* Center controls container - perfectly centered */
+  .center-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: center;
   }
 
   /* Stepper buttons - 44x44px minimum touch target */
@@ -211,7 +224,7 @@ Research-backed design for 344px portrait (Z Fold):
     flex-shrink: 0;
   }
 
-  /* Motion type badge - secondary info */
+  /* Motion type badge - right column */
   .motion-badge {
     padding: 6px 12px;
     background: rgba(0, 0, 0, 0.08);
@@ -222,7 +235,9 @@ Research-backed design for 344px portrait (Z Fold):
     letter-spacing: 0.5px;
     color: #666;
     white-space: nowrap;
-    flex-shrink: 0;
+    min-width: 60px; /* Fixed width to prevent layout shifts when motion type changes */
+    text-align: center;
+    justify-self: end;
   }
 
   /* Responsive adjustments for very narrow containers */

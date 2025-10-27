@@ -296,11 +296,6 @@
           {/if}
         </div>
       {/key}
-
-      <!-- Debug sub-tab transition state -->
-      {#if isSubTabTransitionActive}
-        <div class="sub-tab-transition-debug">🎨 Sub-tab transitioning...</div>
-      {/if}
     </div>
   {:else}
     <!-- Fallback case: persistence is loaded but no active tab -->
@@ -360,21 +355,6 @@
     flex-direction: column;
     min-height: 0;
     overflow: hidden;
-  }
-
-  .sub-tab-transition-debug {
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background: rgba(138, 43, 226, 0.9);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: 600;
-    z-index: 999;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    pointer-events: none;
   }
 
   .persistence-loading,

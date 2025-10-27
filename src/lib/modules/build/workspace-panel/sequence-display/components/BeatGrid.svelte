@@ -22,6 +22,10 @@
     isClearing = false,
     practiceBeatNumber = null, // 0=start, 1=first beat, 2=second beat, etc.
     isSideBySideLayout = false,
+    // Multi-select props
+    isMultiSelectMode = false,
+    onBeatLongPress,
+    onStartLongPress,
   } = $props<{
     beats: ReadonlyArray<BeatData> | BeatData[];
     startPosition?: BeatData | null;
@@ -33,6 +37,10 @@
     isClearing?: boolean;
     practiceBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     isSideBySideLayout?: boolean;
+    // Multi-select
+    isMultiSelectMode?: boolean;
+    onBeatLongPress?: (beatNumber: number) => void;
+    onStartLongPress?: () => void;
   }>();
 
   const placeholderBeat = createBeatData({
@@ -267,6 +275,8 @@
           index={-1}
           shouldAnimate={displayState.shouldAnimateStartPosition}
           isSelected={selectedBeatNumber === 0}
+          {isMultiSelectMode}
+          onLongPress={onStartLongPress}
         />
       </div>
 
@@ -298,6 +308,8 @@
             shouldAnimate={shouldAnimateBeat}
             isSelected={selectedBeatNumber === beat.beatNumber}
             isPracticeBeat={practiceBeatNumber === beat.beatNumber}
+            {isMultiSelectMode}
+            onLongPress={() => onBeatLongPress?.(beat.beatNumber)}
           />
         </div>
       {/each}

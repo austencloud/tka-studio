@@ -7,6 +7,8 @@
 <script lang="ts">
   import SequenceDisplay from "../sequence-display/components/SequenceDisplay.svelte";
   import ButtonPanel from "../shared/components/ButtonPanel.svelte";
+  import SelectionToolbar from "../components/SelectionToolbar.svelte";
+  import Toast from "../components/Toast.svelte";
 
   // Props
   let {
@@ -67,6 +69,20 @@
   // Local beat selection state (beatNumber: 0=start, 1=first beat, etc.)
   let localSelectedBeatNumber = $state<number | null>(null);
 
+  // Multi-select state
+  const isMultiSelectMode = $derived(
+    sequenceState?.selectedBeatNumbers && sequenceState.selectedBeatNumbers.size > 0
+  );
+  const selectionCount = $derived(
+    sequenceState?.selectedBeatNumbers?.size ?? 0
+  );
+  const totalBeats = $derived(
+    sequenceState?.currentSequence?.beats?.length ?? 0
+  );
+
+  // Toast message for validation errors
+  let toastMessage = $state<string | null>(null);
+
   // Get current word from sequence state
   const currentWord = $derived(() => {
     return sequenceState?.sequenceWord() ?? "";
@@ -112,6 +128,33 @@
     // Note: We no longer switch to edit tab! The edit slide panel will open instead.
     // This is handled by an effect in BuildTab.svelte that watches for start position selection.
   }
+
+  // Multi-select handlers
+  function handleBeatLongPress(beatNumber: number) {
+    if (!sequenceState) return;
+    sequenceState.enterMultiSelectMode(beatNumber);
+  }
+
+  function handleExitMultiSelect() {
+    if (!sequenceState) return;
+    sequenceState.exitMultiSelectMode();
+    localSelectedBeatNumber = null;
+  }
+
+  function handleMultiSelectToggle(beatNumber: number) {
+    if (!sequenceState) return;
+    const result = sequenceState.toggleBeatInMultiSelect(beatNumber);
+    if (!result.success) {
+      // Show toast error
+      toastMessage = result.error ?? null;
+      setTimeout(() => toastMessage = null, 3000);
+    }
+  }
+
+  function handleBatchEdit() {
+    // Opening batch edit panel is handled by BuildTab watching selectedBeatNumbers
+    // This function is just for the toolbar button - no action needed here
+  }
 </script>
 
 {#if sequenceState}
@@ -120,52 +163,73 @@
     <SequenceDisplay
       {sequenceState}
       currentWord={currentWord()}
-      onBeatSelected={handleBeatSelected}
+      onBeatSelected={isMultiSelectMode ? handleMultiSelectToggle : handleBeatSelected}
       onStartPositionSelected={handleStartPositionSelected}
       selectedBeatNumber={localSelectedBeatNumber}
-      {practiceBeatIndex}
+      practiceBeatNumber={practiceBeatIndex}
       {isSideBySideLayout}
+      {isMultiSelectMode}
+      onBeatLongPress={handleBeatLongPress}
+      onStartLongPress={() => handleBeatLongPress(0)}
     />
   </div>
 
-  <!-- Button Panel at bottom (context-aware) -->
-  <div class="button-panel-container">
-    {#if isAnimateTab}
-      <!-- Animate tab: Show Undo, Remove Beat, Edit Beat, Clear Sequence, and Fullscreen buttons -->
-      <ButtonPanel
-        {buildTabState}
-        {canRemoveBeat}
-        {onRemoveBeat}
-        {selectedBeatIndex}
-        {selectedBeatData}
-        {canEditBeat}
-        {onEditBeat}
-        canClearSequence={canClearSequence}
-        onClearSequence={onClearSequence}
-        sequenceData={sequenceState?.currentSequence}
-        showFullScreen={showFullScreen}
+  <!-- Selection Toolbar (appears in multi-select mode) -->
+  {#if isMultiSelectMode}
+    <div class="selection-toolbar-container">
+      <SelectionToolbar
+        {selectionCount}
+        {totalBeats}
+        onEdit={handleBatchEdit}
+        onCancel={handleExitMultiSelect}
       />
-    {:else}
-      <!-- Default build controls -->
-      <ButtonPanel
-        {buildTabState}
-        {canGoBack}
-        {onBack}
-        {canRemoveBeat}
-        {onRemoveBeat}
-        {selectedBeatIndex}
-        {selectedBeatData}
-        {canEditBeat}
-        {onEditBeat}
-        {canClearSequence}
-        onClearSequence={onClearSequence}
-        {canSaveSequence}
-        {onSaveSequence}
-        sequenceData={sequenceState?.currentSequence}
-        {showFullScreen}
-      />
-    {/if}
-  </div>
+    </div>
+  {:else}
+    <!-- Button Panel at bottom (context-aware) -->
+    <div class="button-panel-container">
+      {#if isAnimateTab}
+        <!-- Animate tab: Show Undo, Remove Beat, Edit Beat, Clear Sequence, and Fullscreen buttons -->
+        <ButtonPanel
+          {buildTabState}
+          {canRemoveBeat}
+          {onRemoveBeat}
+          {selectedBeatIndex}
+          {selectedBeatData}
+          {canEditBeat}
+          {onEditBeat}
+          canClearSequence={canClearSequence}
+          onClearSequence={onClearSequence}
+          sequenceData={sequenceState?.currentSequence}
+          showFullScreen={showFullScreen}
+        />
+      {:else}
+        <!-- Default build controls -->
+        <ButtonPanel
+          {buildTabState}
+          {canGoBack}
+          {onBack}
+          {canRemoveBeat}
+          {onRemoveBeat}
+          {selectedBeatIndex}
+          {selectedBeatData}
+          {canEditBeat}
+          {onEditBeat}
+          {canClearSequence}
+          onClearSequence={onClearSequence}
+          {canSaveSequence}
+          {onSaveSequence}
+          sequenceData={sequenceState?.currentSequence}
+          {showFullScreen}
+        />
+      {/if}
+    </div>
+  {/if}
+
+  <!-- Toast for validation errors -->
+  <Toast
+    message={toastMessage ?? ""}
+    onDismiss={() => toastMessage = null}
+  />
 
 </div>
 {:else}
@@ -195,7 +259,8 @@
     overflow: hidden;
   }
 
-  .button-panel-container {
+  .button-panel-container,
+  .selection-toolbar-container {
     display: flex;
     align-items: center;
     justify-content: center;
