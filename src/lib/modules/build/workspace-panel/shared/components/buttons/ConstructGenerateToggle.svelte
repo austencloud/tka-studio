@@ -1,14 +1,14 @@
 <!--
 ConstructGenerateToggle.svelte
 
-Modern segmented control toggle based on Let's Build UI pattern.
-Uses radio buttons with smooth sliding background animation.
+Single-icon toggle button that switches between Construct and Generate modes.
+Shows the opposite mode's icon (the action you can take).
 
 Design Principles:
-- Semantic HTML: Uses radio buttons for proper form semantics
+- Action-oriented: Shows what you'll switch TO, not what you're ON
 - Accessible: Full keyboard navigation and screen reader support
-- Modern: Smooth CSS transitions with cubic-bezier easing (250ms)
-- Responsive: Calculates position dynamically based on active state
+- Adaptive: Shows text label when alone, icon-only when with other buttons
+- Consistent: Same size as other action buttons (48px circle)
 -->
 <script lang="ts">
   import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
@@ -19,221 +19,166 @@ Design Principles:
   const {
     activeTab = "construct",
     onTabChange,
+    showLabels = false,
   } = $props<{
     activeTab?: TabType;
     onTabChange?: (tab: TabType) => void;
+    showLabels?: boolean;
   }>();
 
   let hapticService: IHapticFeedbackService | null = $state(null);
-  let showTooltip = $state(false);
-  let tooltipTimeout: number | null = null;
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
   });
 
-  function handleRadioChange(newTab: TabType) {
+  function handleClick() {
     hapticService?.trigger("selection");
+    const newTab = activeTab === "construct" ? "generate" : "construct";
     onTabChange?.(newTab);
-
-    // Show tooltip on first interaction
-    if (!showTooltip) {
-      showTooltip = true;
-      if (tooltipTimeout) clearTimeout(tooltipTimeout);
-      tooltipTimeout = window.setTimeout(() => {
-        showTooltip = false;
-      }, 3000);
-    }
   }
 
   function handleKeyDown(event: KeyboardEvent) {
     if (event.key === " " || event.key === "Enter") {
       event.preventDefault();
-      handleRadioChange(activeTab === "construct" ? "generate" : "construct");
+      handleClick();
     }
   }
+
+  // Determine which icon and label to show (opposite of current mode)
+  const targetMode = $derived(activeTab === "construct" ? "generate" : "construct");
+  const targetIcon = $derived(targetMode === "generate" ? "⚡" : "🔨");
+  const targetLabel = $derived(targetMode === "generate" ? "Generate" : "Construct");
+  const ariaLabel = $derived(`Switch to ${targetLabel} mode`);
 </script>
 
-<div
-  class="segmented-control"
+<button
+  class="toggle-button"
+  class:with-label={showLabels}
   role="switch"
   aria-checked={activeTab === "generate"}
-  aria-label="Toggle between Construct and Generate modes"
-  onclick={() => handleRadioChange(activeTab === "construct" ? "generate" : "construct")}
+  aria-label={ariaLabel}
+  onclick={handleClick}
   onkeydown={handleKeyDown}
-  tabindex="0"
+  title={ariaLabel}
 >
-  <!-- Sliding background indicator -->
-  <div class="slider" class:generate={activeTab === "generate"}></div>
-
-  <!-- Construct segment -->
-  <div class="segment-button" class:active={activeTab === "construct"}>
-    <span class="emoji">🔨</span>
-  </div>
-
-  <!-- Generate segment -->
-  <div class="segment-button" class:active={activeTab === "generate"}>
-    <span class="emoji">⚡</span>
-  </div>
-
-  {#if showTooltip}
-    <div class="tooltip">
-      Click to switch between Construct and Generate
-    </div>
+  <span class="emoji">{targetIcon}</span>
+  {#if showLabels}
+    <span class="label">{targetLabel}</span>
   {/if}
-</div>
+</button>
 
 <style>
-  .segmented-control {
-    display: flex;
-    width: 100px;
-    height: 48px;
-    border-radius: 24px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    position: relative;
-    overflow: hidden;
-    padding: 2px;
-    gap: 0;
-    cursor: pointer;
-  }
-
-  .segmented-control:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.2);
-  }
-
-  /* Animated sliding background indicator */
-  .slider {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: calc(50% - 4px);
-    height: calc(100% - 4px);
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(139, 92, 246, 0.2));
-    border-radius: 20px;
-    transition: left 250ms cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-    border: 1px solid rgba(102, 126, 234, 0.3);
-    box-shadow: inset 0 0 12px rgba(102, 126, 234, 0.1);
-    z-index: 0;
-  }
-
-  .slider.generate {
-    left: calc(50% + 2px);
-  }
-
-  /* Individual segment button */
-  .segment-button {
+  .toggle-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex: 1;
-    height: 100%;
-    border-radius: 20px;
+    gap: 8px;
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(100, 116, 139, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    position: relative;
-    z-index: 1;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #ffffff;
   }
 
-  .segment-button:focus-within {
+  /* Wider when showing label */
+  .toggle-button.with-label {
+    width: auto;
+    padding: 0 16px;
+    border-radius: 24px;
+  }
+
+  .toggle-button:hover {
+    transform: scale(1.05);
+    background: rgba(100, 116, 139, 0.9);
+    border-color: rgba(148, 163, 184, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .toggle-button:active {
+    transform: scale(0.95);
+    transition: all 0.1s ease;
+  }
+
+  .toggle-button:focus-visible {
     outline: 2px solid #818cf8;
-    outline-offset: -2px;
+    outline-offset: 2px;
   }
 
   /* Emoji styling */
   .emoji {
     font-size: 20px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0.45;
-    transform: scale(0.9);
-    filter: grayscale(80%);
   }
 
-  /* Active state emoji styling */
-  .segment-button.active .emoji {
-    opacity: 1;
-    transform: scale(1.15);
-    filter: grayscale(0%) drop-shadow(0 0 6px rgba(102, 126, 234, 0.7));
-    animation: activeEmojiBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
-
-  @keyframes activeEmojiBounce {
-    0% {
-      transform: scale(0.85);
-      opacity: 0.6;
-    }
-    50% {
-      transform: scale(1.2);
-    }
-    100% {
-      transform: scale(1.15);
-      opacity: 1;
-    }
-  }
-
-  .tooltip {
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 12px;
+  /* Label text styling */
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
     white-space: nowrap;
-    pointer-events: none;
-    z-index: 1000;
-    animation: fadeIn 0.2s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translateX(-50%) translateY(-4px);
-    }
-    to {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
   }
 
   /* Mobile responsive adjustments */
   @media (max-width: 768px) {
-    .construct-generate-toggle {
-      width: 90px;
+    .toggle-button {
+      width: 44px;
       height: 44px;
     }
 
     .emoji {
       font-size: 18px;
     }
+
+    .label {
+      font-size: 13px;
+    }
   }
 
   @media (max-width: 480px) {
-    .construct-generate-toggle {
-      width: 80px;
+    .toggle-button {
+      width: 40px;
       height: 40px;
     }
 
     .emoji {
       font-size: 16px;
     }
+
+    .label {
+      font-size: 12px;
+    }
   }
 
   @media (max-width: 320px) {
-    .construct-generate-toggle {
-      width: 72px;
+    .toggle-button {
+      width: 36px;
       height: 36px;
     }
 
     .emoji {
       font-size: 14px;
+    }
+
+    .label {
+      font-size: 11px;
+    }
+  }
+
+  /* Landscape mobile: Ultra-compact */
+  @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
+    .toggle-button {
+      width: 36px;
+      height: 36px;
+    }
+
+    .emoji {
+      font-size: 16px;
     }
   }
 </style>

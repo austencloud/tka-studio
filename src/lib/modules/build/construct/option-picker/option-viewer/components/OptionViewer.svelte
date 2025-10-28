@@ -23,7 +23,7 @@ Business logic moved to state management and utility services.
   } from "../services/contracts";
   import { createContainerDimensionTracker, createOptionPickerState } from "../state";
   import { LetterTypeTextPainter } from "../utils/letter-type-text-painter";
-  import ContinuityToggle from "./ContinuityToggle.svelte";
+  import ConstructPickerHeader from "../../../shared/components/ConstructPickerHeader.svelte";
   import OptionViewerGridLayout from "./OptionViewerGridLayout.svelte";
   import OptionViewerSwipeLayout from "./OptionViewerSwipeLayout.svelte";
 
@@ -440,11 +440,13 @@ Business logic moved to state management and utility services.
       <p>Initializing option picker...</p>
     </div>
   {:else}
-    <!-- Continuity Toggle with Section Title -->
-    <ContinuityToggle
+    <!-- Shared header with Continuity toggle -->
+    <ConstructPickerHeader
+      variant="options"
+      title="Options"
+      titleHtml={formattedSectionTitle}
       isContinuousOnly={optionPickerState.isContinuousOnly}
-      sectionTitle={formattedSectionTitle}
-      onToggle={handleContinuityToggle}
+      onToggleContinuous={handleContinuityToggle}
     />
 
     <!-- Main content -->

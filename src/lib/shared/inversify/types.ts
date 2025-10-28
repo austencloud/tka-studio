@@ -52,7 +52,11 @@ export const TYPES = {
 
   // === BUILD TAB SERVICES ===
   IBuildTabService: Symbol.for("IBuildTabService"),
+  IBuildTabInitializationService: Symbol.for("IBuildTabInitializationService"),
   IBuildTabLayoutService: Symbol.for("IBuildTabLayoutService"),
+  IBuildTabResponsiveLayoutService: Symbol.for("IBuildTabResponsiveLayoutService"),
+  INavigationSyncService: Symbol.for("INavigationSyncService"),
+  IBeatOperationsService: Symbol.for("IBeatOperationsService"),
   IUndoService: Symbol.for("IUndoService"),
   IQuizSessionService: Symbol.for("IQuizSessionService"),
   IQuizGradingService: Symbol.for("IQuizGradingService"),

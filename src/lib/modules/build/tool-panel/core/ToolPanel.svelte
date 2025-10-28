@@ -51,9 +51,9 @@
   // Derived from props
   let activeToolPanel = $derived(buildTabState.activeSubTab);
 
-  // Derived: Determine if toggle should show in header (side-by-side layout with right navigation)
+  // Derived: Toggle never shows in ToolPanel header (always in ButtonPanel instead)
   let shouldShowToggleInHeader = $derived(() => {
-    return isSideBySideLayout?.() === true && navigationLayout === "right";
+    return false; // Toggle is always in ButtonPanel at right edge
   });
 
   // Component refs
@@ -300,6 +300,7 @@
               <ConstructTabContent
                 bind:this={constructTabContentRef}
                 shouldShowStartPositionPicker={shouldShowStartPositionPicker === true}
+                startPositionState={constructTabState.startPositionStateService}
                 currentSequence={currentSequenceData}
                 {onOptionSelected}
                 {isClearingSequence}

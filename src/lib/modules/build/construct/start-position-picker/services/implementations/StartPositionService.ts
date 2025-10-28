@@ -15,17 +15,17 @@ export class StartPositionService implements IStartPositionService {
   }
 
   async getDefaultStartPositions(gridMode: GridMode): Promise<PictographData[]> {
-    // Define start position locations based on grid mode (like legacy)
-    const startPositionKeys = gridMode === 'diamond'
+    // Define start position locations based on grid mode
+    const startPositionKeys = gridMode === "diamond"
       ? [
           { position: GridPosition.ALPHA1, letter: Letter.ALPHA },
+          { position: GridPosition.GAMMA11, letter: Letter.GAMMA },
           { position: GridPosition.BETA5, letter: Letter.BETA },
-          { position: GridPosition.GAMMA11, letter: Letter.GAMMA }
         ]
       : [
           { position: GridPosition.ALPHA2, letter: Letter.ALPHA },
-          { position: GridPosition.BETA4, letter: Letter.BETA },
-          { position: GridPosition.GAMMA12, letter: Letter.GAMMA }
+          { position: GridPosition.GAMMA12, letter: Letter.GAMMA },
+          { position: GridPosition.BETA6, letter: Letter.BETA },
         ];
 
     return this.createPictographsFromPositions(startPositionKeys);
@@ -132,19 +132,12 @@ export class StartPositionService implements IStartPositionService {
     return this.gridPositionDeriver.getGridLocationsFromPosition(position);
   }
 
-  async selectStartPosition(position: any): Promise<void> {
+  async selectStartPosition(position: PictographData): Promise<void> {
     try {
       const startPosCopy = { ...position, isStartPosition: true };
-      localStorage.setItem('startPosition', JSON.stringify(startPosCopy));
-
-      const customEvent = new CustomEvent('start-position-selected', {
-        detail: { startPosition: startPosCopy },
-        bubbles: true
-      });
-      document.dispatchEvent(customEvent);
+      localStorage.setItem("startPosition", JSON.stringify(startPosCopy));
     } catch (error) {
-      console.error("Error selecting start position:", error);
-      throw new Error(`Failed to select start position: ${error instanceof Error ? error.message : "Unknown error"}`);
+      console.warn("StartPositionService: unable to persist start position selection", error);
     }
   }
 
@@ -158,3 +151,4 @@ export class StartPositionService implements IStartPositionService {
     }
   }
 }
+

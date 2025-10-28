@@ -2,261 +2,236 @@
 Build Tab - Main construction interface
 
 Provides two-panel layout:
-- Workspace Panel: Sequence display and action buttons for viewing and interacting with the sequence
-- Tool Panel: Tabbed interface (Construct, Generate, Animate, Share, Record) for sequence construction and management
+- Workspace Panel: Sequence display and action buttons
+- Tool Panel: Tabbed interface (Construct, Generate, Animate, Share, Record)
 
-Testing HMR persistence functionality
+This component is a pure composition layer - all business logic delegated to services.
 -->
 <script lang="ts">
-  import { createComponentLogger, ensureContainerInitialized, ErrorBanner, GridMode, navigationState, resolve, TYPES } from "$shared";
+  import {
+    createComponentLogger,
+    ensureContainerInitialized,
+    ErrorBanner,
+    navigationState,
+    resolve,
+    TYPES,
+    type PictographData
+  } from "$shared";
   import { onMount } from "svelte";
-  import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
   import { EditSlidePanel } from "../../edit/components";
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
   import InlineAnimatorPanel from '../../workspace-panel/shared/components/InlineAnimatorPanel.svelte';
-  import type { IBuildTabService, ISequencePersistenceService, ISequenceService } from "../services/contracts";
-  import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
-  import { createBuildTabState, createConstructTabState } from "../state";
+  import type {
+    IBuildTabInitializationService
+  } from "../services/contracts";
+  import type { BuildTabInitializationResult } from "../services/contracts/IBuildTabInitializationService";
+  import type { createBuildTabState } from "../state/build-tab-state.svelte";
+  import type { createConstructTabState } from "../state/construct-tab-state.svelte";
+  import { createPanelCoordinationState } from "../state/panel-coordination-state.svelte";
+  import type { BatchEditChanges, IToolPanelMethods } from "../types/build-tab-types";
   import LoadingOverlay from './LoadingOverlay.svelte';
 
-  // Debug logger for this component
   const logger = createComponentLogger('BuildTab');
 
+  // Constants
+  const START_POSITION_BEAT_NUMBER = 0; // Beat 0 = start position, beats 1+ are in the sequence
+
+  // Type aliases for state objects
+  type BuildTabState = ReturnType<typeof createBuildTabState>;
+  type ConstructTabState = ReturnType<typeof createConstructTabState>;
+
   // Props
-  let { onTabAccessibilityChange }: { onTabAccessibilityChange?: (canAccessEditAndExport: boolean) => void } = $props();
+  let { onTabAccessibilityChange }: {
+    onTabAccessibilityChange?: (canAccessEditAndExport: boolean) => void
+  } = $props();
 
-  // Services - initialized after container is ready
-  let sequenceService: ISequenceService | null = null;
-  let sequencePersistenceService: ISequencePersistenceService | null = null;
-  let startPositionService: IStartPositionService | null = null;
-  let buildTabService: IBuildTabService | null = null;
+  // Services - all resolved via initialization service
+  let initializationService: IBuildTabInitializationService | null = $state(null);
+  let services: BuildTabInitializationResult | null = $state(null);
 
-  // Device detection services for responsive layout
-  let deviceDetector: any = null;
-  let viewportService: any = null;
+  // State
+  let buildTabState: BuildTabState | null = $state(null);
+  let constructTabState: ConstructTabState | null = $state(null);
 
-  // State - initialized after services are ready
-  let buildTabState: any = $state(null);
-  let constructTabState: any = $state(null);
+  // Panel coordination state - centralized management
+  let panelState = createPanelCoordinationState();
 
-  // Navigation layout state
-  let navigationLayout = $state<'top' | 'left'>('top');
+  // Layout state - managed by services
+  let shouldUseSideBySideLayout = $state<boolean>(false);
 
-  // Panel layout state - determines if panels should be side-by-side or stacked
-  let shouldUseSideBySideLayout = $state<boolean>(true);
-
-  // Trigger to force effect re-run when services are initialized
-  let servicesInitialized = $state<boolean>(false);
-
+  // UI state
   let isLoading = $state(false);
   let error = $state<string | null>(null);
-  let isTransitioning = $state(false);
-  let practiceBeatIndex = $state<number | null>(null);
+  let servicesInitialized = $state<boolean>(false);
 
-  // Reference to ToolPanel for accessing canGoBack and handleBack
-  let toolPanelRef: any = $state(null);
-
-  // Track ToolPanel container height reactively for edit panel sizing
+  // Panel refs
   let toolPanelElement: HTMLElement | null = $state(null);
-  let toolPanelHeight = $state(0);
+  let toolPanelRef: IToolPanelMethods | null = $state(null);
 
-  // Edit slide panel state
-  let isEditPanelOpen = $state(false);
-  let editPanelBeatIndex = $state<number | null>(null);
-  let editPanelBeatData = $state<any>(null);
-  let editPanelBeatsData = $state<any[]>([]);
-
-  // Animation panel state
-  let isAnimationPanelOpen = $state(false);
-  let isAnimating = $state(false);
-
-  // Determine if toggle should show in ButtonPanel (when NOT in ToolPanel header)
+  // Derived: Toggle always shows in ButtonPanel (at right edge)
   const shouldShowToggleInButtonPanel = $derived(() => {
-    // Show toggle in ButtonPanel when NOT showing in ToolPanel header
-    // ToolPanel shows toggle when: side-by-side layout AND left navigation (tool panel on right)
-    const showingInToolPanel = shouldUseSideBySideLayout && navigationLayout === "left";
-    return !showingInToolPanel;
+    // Always show toggle in ButtonPanel, regardless of layout
+    return true;
   });
 
-  // Effect to notify parent of tab accessibility changes
+  // Derived: Is mobile portrait mode (for floating button logic)
+  const isMobilePortrait = $derived(() => {
+    return !shouldUseSideBySideLayout;
+  });
+
+  // Derived: Allow clearing when a start position or beats exist
+  const canClearSequence = $derived(() => {
+    if (!buildTabState) return false;
+    const sequenceState = buildTabState.sequenceState;
+    if (!sequenceState) return false;
+    const hasStart = sequenceState.hasStartPosition;
+    const beatCount = sequenceState.currentSequence?.beats?.length ?? 0;
+    return hasStart || beatCount > 0;
+  });
+
+  // Effect: Notify parent of tab accessibility changes
   $effect(() => {
-    // Guard: Don't run until buildTabState is initialized
     if (!buildTabState) return;
 
     const canAccess = buildTabState.canAccessEditTab;
-    const hasStartPosition = buildTabState.sequenceState.hasStartPosition;
-    const beatCount = buildTabState.sequenceState.beatCount();
-
-    logger.log("Tab accessibility effect running:", {
-      canAccess,
-      hasStartPosition,
-      beatCount,
-      hasCallback: !!onTabAccessibilityChange
-    });
+    logger.log("Tab accessibility:", { canAccess });
 
     if (onTabAccessibilityChange) {
       onTabAccessibilityChange(canAccess);
     }
   });
 
-  // Sync navigation state with build tab state
+  // Effect: Sync navigation state TO build tab state
   $effect(() => {
-    // Guard: Don't run until buildTabState is initialized
-    if (!buildTabState) return;
+    if (!buildTabState || !services?.navigationSyncService) return;
 
-    const currentMode = navigationState.currentSubMode;
-    const buildTabCurrentMode = buildTabState.activeSubTab;
-
-    logger.log("Navigation → BuildTab sync effect:", {
-      currentMode,
-      buildTabCurrentMode,
-      isPersistenceInitialized: buildTabState.isPersistenceInitialized,
-      isNavigatingBack: buildTabState.isNavigatingBack,
-      isUpdatingFromToggle: buildTabState.isUpdatingFromToggle,
-      shouldUpdate: currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized && !buildTabState.isNavigatingBack && !buildTabState.isUpdatingFromToggle
-    });
-
-    // If navigation state differs from build tab state, update build tab
-    // BUT skip if we're currently in a back navigation or updating from toggle (to prevent loop)
-    if (currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized && !buildTabState.isNavigatingBack && !buildTabState.isUpdatingFromToggle) {
-      // GUARD: Prevent navigation to Animate, Share, or Record tabs without a valid sequence
-      // Note: Edit is no longer a tab - it's handled via slide-out panel
-      if ((currentMode === "animate" || currentMode === "share" || currentMode === "record") && !buildTabState.canAccessEditTab) {
-        console.warn(`🚫 Cannot access ${currentMode} tab without a sequence. Redirecting to construct.`);
-        navigationState.setCurrentSubMode("construct");
-        return;
-      }
-
-      logger.log("Updating buildTab state from navigation:", currentMode);
-      // Use regular setactiveToolPanelto ADD to history (user clicked a tab)
-      buildTabState.setactiveToolPanel(currentMode as any);
-      logger.success("BuildTab state updated to:", buildTabState.activeSubTab);
-    }
+    services.navigationSyncService.syncNavigationToBuildTab(
+      buildTabState,
+      navigationState
+    );
   });
 
-  // Sync build tab state changes back to navigation state
+  // Effect: Sync build tab state BACK to navigation state
   $effect(() => {
-    // Guard: Don't run until buildTabState is initialized
-    if (!buildTabState) return;
-
-    // Skip if we're currently updating from toggle (the toggle already syncs to navigation)
+    if (!buildTabState || !services?.navigationSyncService) return;
     if (buildTabState.isUpdatingFromToggle) return;
 
-    const buildTabCurrentMode = buildTabState.activeSubTab;
-    const navCurrentMode = navigationState.currentSubMode;
-
-    if (buildTabCurrentMode && buildTabCurrentMode !== navCurrentMode) {
-      navigationState.setCurrentSubMode(buildTabCurrentMode);
-    }
+    services.navigationSyncService.syncBuildTabToNavigation(
+      buildTabState,
+      navigationState
+    );
   });
 
-  // NOTE: Tab accessibility is now handled reactively in MainInterface.svelte
-  // by watching sequence state and creating new tab arrays with updated disabled properties.
-  // This avoids the infinite loop that occurred when mutating BUILD_MODES directly.
-
-  // Initialize device detection services
+  // Effect: Handle responsive layout changes
   $effect(() => {
-    if (!ensureContainerInitialized()) return;
+    if (!services?.layoutService || !servicesInitialized) return;
 
-    try {
-      deviceDetector = resolve(TYPES.IDeviceDetector);
-      viewportService = resolve(TYPES.IViewportService);
-      servicesInitialized = true;
-    } catch (error) {
-      console.error("❌ BuildTab: Failed to initialize device detection services:", error);
-    }
-  });
+    const layoutService = services.layoutService;
 
-  // Reactive viewport dimensions for the effect
-  let viewportWidth = $state(0);
-  let viewportHeight = $state(0);
+    // Initialize layout service
+    layoutService.initialize();
 
-  // Set up reactive viewport tracking
-  $effect(() => {
-    if (!viewportService || typeof window === 'undefined') return;
-
-    // Initialize with current values
-    viewportWidth = viewportService.width;
-    viewportHeight = viewportService.height;
-
-    // Subscribe to viewport changes
-    const unsubscribe = viewportService.onViewportChange(() => {
-      viewportWidth = viewportService!.width;
-      viewportHeight = viewportService!.height;
+    // Subscribe to layout changes
+    const unsubscribe = layoutService.onLayoutChange(() => {
+      shouldUseSideBySideLayout = layoutService.shouldUseSideBySideLayout();
     });
 
-    return unsubscribe;
+    // Initial layout calculation
+    shouldUseSideBySideLayout = layoutService.shouldUseSideBySideLayout();
+
+    // Cleanup
+    return () => {
+      unsubscribe();
+      layoutService.dispose();
+    };
   });
 
-  // Derived value for navigation layout - this will be reactive to device detector changes
-  const currentNavigationLayout = $derived(() => {
-    if (!deviceDetector) return 'top';
-    return deviceDetector.getNavigationLayoutImmediate();
-  });
-
-  // Effect to track navigation layout changes and update panel layout accordingly
+  // Effect: Auto-open edit panel when multiple beats selected
   $effect(() => {
-    // Access servicesInitialized to make this effect reactive to service initialization
-    const initialized = servicesInitialized;
+    if (!buildTabState) return;
 
-    if (!deviceDetector || !viewportService) {
+    const selectedBeatNumbers = buildTabState.sequenceState?.selectedBeatNumbers;
+    const selectedCount = selectedBeatNumbers?.size ?? 0;
+
+    if (selectedCount > 1 && !panelState.isEditPanelOpen) {
+      // Capture state reference for TypeScript null safety in closure
+      const state = buildTabState;
+
+      // Map beat numbers to beat data
+      const beatNumbersArray = Array.from(selectedBeatNumbers).sort((a, b) => a - b);
+      const beatsData = beatNumbersArray.map((beatNumber) => {
+        if (beatNumber === START_POSITION_BEAT_NUMBER) {
+          // Beat 0 is the start position
+          return state.sequenceState.selectedStartPosition;
+        } else {
+          // Beats are numbered 1, 2, 3... but stored in array at indices 0, 1, 2...
+          const beatIndex = beatNumber - 1;
+          return state.sequenceState.currentSequence?.beats[beatIndex];
+        }
+      }).filter(Boolean); // Remove any null values
+
+      logger.log(`Auto-opening batch edit panel: ${selectedCount} beats selected`);
+      panelState.openBatchEditPanel(beatsData);
+    }
+  });
+
+  // Effect: Track tool panel height for edit panel sizing
+  $effect(() => {
+    if (!toolPanelElement) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        panelState.setToolPanelHeight(entry.contentRect.height);
+      }
+    });
+
+    resizeObserver.observe(toolPanelElement);
+    return () => resizeObserver.disconnect();
+  });
+
+  // Component initialization
+  onMount(async () => {
+    if (!ensureContainerInitialized()) {
+      error = "Dependency injection container not initialized";
       return;
     }
 
-    // Explicitly access reactive viewport dimensions to make this effect reactive to viewport changes
-    const width = viewportWidth;
-    const height = viewportHeight;
+    isLoading = true;
 
-    // Update navigation layout when device detector changes
-    navigationLayout = currentNavigationLayout();
+    try {
+      // Use initialization service for all startup logic
+      if (!initializationService) {
+        initializationService = resolve<IBuildTabInitializationService>(
+          TYPES.IBuildTabInitializationService
+        );
+      }
 
-    // Determine panel layout based on device type, orientation, and viewport size
-    const isDesktop = deviceDetector.isDesktop();
-    const isLandscapeMobile = deviceDetector.isLandscapeMobile();
+      const initResult = await initializationService.initialize();
 
+      // Store all services and state from initialization
+      services = initResult;
+      buildTabState = initResult.buildTabState;
+      constructTabState = initResult.constructTabState;
 
-    // Use side-by-side layout when:
-    // 1. Desktop with sufficient width (responsive to window size)
-    // 2. Landscape mobile (phone held sideways, including Z Fold landscape)
-    // 3. Z Fold unfolded (detected as desktop but should always be side-by-side)
+      // Mark services as initialized
+      servicesInitialized = true;
 
-    // Check if viewport is wide enough for side-by-side layout
-    const hasWideViewport = width >= 1024; // Standard desktop breakpoint
+      // Configure event callbacks via initialization service
+      initializationService.configureEventCallbacks(buildTabState, panelState);
 
-    // Landscape detection: Use side-by-side for significantly landscape orientations
-    const aspectRatio = width / height;
-    const isSignificantlyLandscape = aspectRatio >= 1.15; // Landscape detection (includes Z Fold range)
-
-    // Z Fold specific: More flexible detection that accounts for browser UI
-    const isLikelyZFoldUnfolded =
-      width >= 700 && width <= 950 && // Wider range to account for browser UI
-      aspectRatio >= 1.1 && aspectRatio <= 1.4; // Broader aspect ratio range
-
-    const newSideBySideLayout = (isDesktop && hasWideViewport) || isLandscapeMobile || isLikelyZFoldUnfolded || isSignificantlyLandscape;
-    shouldUseSideBySideLayout = newSideBySideLayout;
+      logger.success("BuildTab initialized successfully");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to initialize BuildTab";
+      error = errorMessage;
+      console.error("❌ BuildTab: Initialization error:", err);
+    } finally {
+      isLoading = false;
+    }
   });
 
-  // Effect to handle start position selection events
-  $effect(() => {
-    // Guard: Don't run until constructTabState is initialized
-    if (!constructTabState || typeof window === "undefined") return;
-
-    const handleStartPositionSelected = async (event: CustomEvent) => {
-      const pictographData = event.detail.startPosition;
-      constructTabState.handleStartPositionSelected(pictographData);
-    };
-
-    window.addEventListener("start-position-selected", handleStartPositionSelected as unknown as EventListener);
-
-    // Cleanup function
-    return () => {
-      window.removeEventListener("start-position-selected", handleStartPositionSelected as unknown as EventListener);
-    };
-  });
-
-  // Effect to open edit panel when a beat is selected
+  // Effect: Open edit panel when a beat is selected
   $effect(() => {
     // Guard: Don't run until buildTabState is initialized
     if (!buildTabState) return;
@@ -266,570 +241,253 @@ Testing HMR persistence functionality
 
     // If a beat is selected, open the edit panel
     if (selectedBeatNumber !== null && selectedData) {
-      editPanelBeatIndex = selectedBeatNumber; // beatNumber: 0=start, 1=first beat, etc.
-      editPanelBeatData = selectedData;
-      isEditPanelOpen = true;
+      panelState.openEditPanel(selectedBeatNumber, selectedData);
       logger.log(`Opening edit panel for beat ${selectedBeatNumber}`);
     }
   });
 
-  // Effect to automatically open batch edit panel when beats are selected in multi-select mode
-  $effect(() => {
-    // Guard: Don't run until buildTabState is initialized
-    if (!buildTabState) return;
-
-    const selectedBeatNumbers = buildTabState.sequenceState.selectedBeatNumbers;
-
-    // If multiple beats selected, automatically open batch edit panel
-    if (selectedBeatNumbers && selectedBeatNumbers.size > 0) {
-      // @ts-ignore - Type inference issue with Set<number>
-      const beatNumbersArray = Array.from(selectedBeatNumbers).sort((a: number, b: number) => a - b);
-      // @ts-ignore - Type inference issue with Set elements
-      const beatsData = beatNumbersArray.map((beatNumber: number) => {
-        if (beatNumber === 0) {
-          // Start position
-          return buildTabState.sequenceState.selectedStartPosition;
-        } else {
-          // Regular beat (convert beatNumber to array index)
-          const beatIndex = beatNumber - 1;
-          return buildTabState.sequenceState.currentSequence?.beats[beatIndex];
-        }
-      }).filter(Boolean); // Remove any null values
-
-      editPanelBeatsData = beatsData;
-      isEditPanelOpen = true;
-      logger.log(`Auto-opening batch edit panel for ${beatNumbersArray.length} beats`);
-    } else {
-      // Close the panel if no beats selected
-      if (editPanelBeatsData.length > 0) {
-        editPanelBeatsData = [];
-        isEditPanelOpen = false;
-      }
-    }
-  });
-
-  // Function to manually open batch edit panel (also called from SelectionToolbar "Edit" button)
-  function handleOpenBatchEdit() {
-    // Panel opens automatically via $effect above, so this just ensures it stays open
-    logger.log('handleOpenBatchEdit called - panel should already be open via $effect');
-  }
-
-
-
-  async function handleOptionSelected(option: any): Promise<void> {
+  // Event handlers - delegate to services/state
+  async function handleOptionSelected(option: PictographData): Promise<void> {
     try {
-      if (!buildTabService) {
+      if (!services?.buildTabService) {
         throw new Error("Build tab service not initialized");
       }
-      performance.mark('build-tab-service-start');
-      // Delegate to Application Service - handles all business logic
-      await buildTabService.selectOption(option);
-      performance.mark('build-tab-service-complete');
+      await services.buildTabService.selectOption(option);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to select option";
       error = errorMessage;
-      console.error("❌ BuildTab: Error handling option selection:", err);
+      logger.error("Error handling option selection:", err);
     }
   }
 
   function clearError() {
-  error = null;
+    error = null;
   }
 
-  function handleAddToDictionary() {
-    // Save - to be implemented
-  }
-
-  // Animation panel handler
   function handlePlayAnimation() {
-    isAnimationPanelOpen = true;
+    panelState.openAnimationPanel();
+  }
+
+  async function handleClearSequence() {
+    if (!buildTabState) return;
+
+    try {
+      if (constructTabState?.clearSequenceCompletely) {
+        await constructTabState.clearSequenceCompletely();
+      } else if (buildTabState.sequenceState?.clearSequenceCompletely) {
+        await buildTabState.sequenceState.clearSequenceCompletely();
+      } else if (buildTabState.sequenceState?.clearSequence) {
+        buildTabState.sequenceState.clearSequence();
+      }
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to clear sequence";
+      error = errorMessage;
+      logger.error("Failed to clear sequence completely", err);
+    }
   }
 
   function handleCloseAnimationPanel() {
-    isAnimationPanelOpen = false;
+    panelState.closeAnimationPanel();
   }
 
-  // Button Panel Handlers
   function handleRemoveBeat(beatIndex: number) {
-    if (!buildTabState) {
-      console.warn("BuildTab: Cannot remove beat - build tab state not initialized");
+    if (!services?.beatOperationsService) {
+      logger.warn("Beat operations service not initialized");
       return;
     }
-
-    // Check if removing start position (beatNumber === 0)
-    const selectedBeat = buildTabState.sequenceState.selectedBeatData;
-    if (selectedBeat && selectedBeat.beatNumber === 0) {
-      // Push undo snapshot before clearing
-      buildTabState.pushUndoSnapshot('CLEAR_SEQUENCE', {
-        description: 'Clear sequence (removed start position)'
-      });
-
-      buildTabState.sequenceState.clearSequenceCompletely();
-      buildTabState.setactiveToolPanel("construct");
-      return;
+    
+    try {
+      services.beatOperationsService.removeBeat(beatIndex, buildTabState);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to remove beat";
+      error = errorMessage;
+      logger.error("Failed to remove beat", err);
     }
-
-    // Calculate how many beats will be removed
-    const currentSequence = buildTabState.sequenceState.currentSequence;
-    const beatsToRemove = currentSequence ? currentSequence.beats.length - beatIndex : 0;
-
-    // Push undo snapshot before removing beats
-    buildTabState.pushUndoSnapshot('REMOVE_BEATS', {
-      beatIndex,
-      beatsRemoved: beatsToRemove,
-      description: `Remove beat ${beatIndex} and ${beatsToRemove - 1} subsequent beats`
-    });
-
-    // Remove the beat and all subsequent beats with staggered animation
-    buildTabState.sequenceState.removeBeatAndSubsequentWithAnimation(beatIndex, () => {
-      // After animation completes, select the previous beat
-      if (beatIndex > 0) {
-        // Select the previous beat: array index (beatIndex-1) has beatNumber beatIndex
-        buildTabState.sequenceState.selectBeat(beatIndex);
-      } else {
-        // If removing beat 0 (first beat), select start position
-        buildTabState.sequenceState.selectStartPositionForEditing();
-      }
-    });
   }
 
-  // Batch Edit Handler
-  function handleBatchApply(changes: any) {
-    if (!buildTabState) {
-      console.warn("BuildTab: Cannot apply batch changes - build tab state not initialized");
+  function handleBatchApply(changes: BatchEditChanges) {
+    if (!services?.beatOperationsService) {
+      logger.warn("Beat operations service not initialized");
       return;
     }
-
-    const selectedBeatNumbers = buildTabState.sequenceState.selectedBeatNumbers;
-    if (!selectedBeatNumbers || selectedBeatNumbers.size === 0) {
-      return;
+    
+    try {
+      services.beatOperationsService.applyBatchChanges(changes, buildTabState);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to apply changes";
+      error = errorMessage;
+      logger.error("Failed to apply batch changes", err);
     }
-
-    // Push undo snapshot before batch edit
-    buildTabState.pushUndoSnapshot('BATCH_EDIT', {
-      beatNumbers: Array.from(selectedBeatNumbers),
-      changes,
-      description: `Batch edit ${selectedBeatNumbers.size} beats`
-    });
-
-    // Apply changes to all selected beats
-    selectedBeatNumbers.forEach((beatNumber: number) => {
-      if (beatNumber === 0) {
-        // Update start position
-        const currentStartPosition = buildTabState.sequenceState.selectedStartPosition;
-        if (currentStartPosition) {
-          const updatedData = {
-            ...currentStartPosition,
-            ...changes
-          };
-          buildTabState.sequenceState.setStartPosition(updatedData);
-        }
-      } else {
-        // Update regular beat (convert beatNumber to array index)
-        const beatIndex = beatNumber - 1;
-        const currentBeat = buildTabState.sequenceState.currentSequence?.beats[beatIndex];
-        if (currentBeat) {
-          const updatedBeat = {
-            ...currentBeat,
-            ...changes
-          };
-          buildTabState.sequenceState.updateBeat(beatIndex, updatedBeat);
-        }
-      }
-    });
-
-    // Exit multi-select mode and close edit panel
-    buildTabState.sequenceState.exitMultiSelectMode();
-    isEditPanelOpen = false;
-    logger.log(`Applied batch changes to ${selectedBeatNumbers.size} beats`);
   }
-
-  // ============================================================================
-  // LIFECYCLE - TEMPORARY DISABLED
-  // ============================================================================
-
-  onMount(async () => {
-  try {
-    isLoading = true;
-
-    // Ensure container is initialized first
-    await ensureContainerInitialized();
-
-    // Initialize services
-    sequenceService = resolve(TYPES.ISequenceService) as ISequenceService;
-    sequencePersistenceService = resolve(TYPES.ISequencePersistenceService) as ISequencePersistenceService;
-    startPositionService = resolve(TYPES.IStartPositionService) as IStartPositionService;
-    buildTabService = resolve(TYPES.IBuildTabService) as IBuildTabService;
-
-    // Wait a tick to ensure component context is fully established
-    await new Promise(resolve => setTimeout(resolve, 0));
-
-    // Initialize state objects
-    buildTabState = createBuildTabState(sequenceService, sequencePersistenceService);
-    constructTabState = createConstructTabState(
-      buildTabService,
-      buildTabState.sequenceState,
-      sequencePersistenceService,
-      buildTabState, // Pass buildTabState so construct tab can access lastContentTab
-      navigationState // Pass navigationState so construct tab can update navigation
-    );
-
-    // Initialize build tab service
-    await buildTabService.initialize();
-
-    // Initialize build tab state with persistence (includes sequence state)
-    await buildTabState.initializeWithPersistence();
-
-    // Initialize construct tab with persistence
-    await constructTabState.initializeConstructTab();
-
-    // Set up sequence state callbacks for BuildTabEventService
-    const buildTabEventService = getBuildTabEventService();
-    buildTabEventService.setSequenceStateCallbacks(
-      () => buildTabState.sequenceState.getCurrentSequence(),
-      (sequence) => buildTabState.sequenceState.setCurrentSequence(sequence)
-    );
-
-    // Set up option history callback
-    buildTabEventService.setAddOptionToHistoryCallback(
-      (beatIndex, beatData) => buildTabState.addOptionToHistory(beatIndex, beatData)
-    );
-
-    // Set up undo snapshot callback
-    buildTabEventService.setPushUndoSnapshotCallback(
-      (type, metadata) => buildTabState.pushUndoSnapshot(type, metadata)
-    );
-
-    // Load start positions using the service
-    await startPositionService.getDefaultStartPositions(GridMode.DIAMOND);
-  } catch (err) {
-    console.error("❌ BuildTab: Initialization failed:", err);
-    error = err instanceof Error ? err.message : "Failed to initialize build tab";
-  } finally {
-    isLoading = false;
-  }
-  });
 </script>
 
-<!-- ============================================================================ -->
-<!-- TEMPLATE -->
-<!-- ============================================================================ -->
-
-<div class="build-tab" data-testid="build-tab">
-  <!-- Error display -->
-  {#if error}
-  <ErrorBanner
-    message={error}
-    onDismiss={clearError}
-  />
-  {/if}
-
-
-
-  {#if buildTabState && constructTabState}
-  <div class="build-tab-layout" class:side-by-side={shouldUseSideBySideLayout} class:stacked={!shouldUseSideBySideLayout}>
-    {#if shouldUseSideBySideLayout}
-      <!-- Side-by-side layout: Left column with workspace + buttons, Right column with tool panel -->
-      <div class="left-column">
-        <!-- Workspace Panel: Sequence display -->
-        <WorkspacePanel
-          sequenceState={buildTabState.sequenceState}
-          {buildTabState}
-          {practiceBeatIndex}
-          isSideBySideLayout={shouldUseSideBySideLayout}
-          onBatchEdit={handleOpenBatchEdit}
-          animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
-          {toolPanelHeight}
-        />
-
-        <!-- Button Panel: Control center -->
-        <div class="button-panel-wrapper">
-          <ButtonPanel
-            {buildTabState}
-            canGoBack={toolPanelRef?.getCanGoBack?.() ?? false}
-            onBack={() => toolPanelRef?.handleBack?.()}
-            canRemoveBeat={buildTabState.sequenceState.hasStartPosition}
-            onRemoveBeat={handleRemoveBeat}
-            selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
-            selectedBeatData={buildTabState.sequenceState.selectedBeatData}
-            canClearSequence={buildTabState.sequenceState.hasStartPosition}
-            onClearSequence={constructTabState.clearSequenceCompletely}
-            showPlayButton={!!buildTabState.sequenceState.currentSequence}
-            onPlayAnimation={handlePlayAnimation}
-            {isAnimating}
-            showToggle={shouldShowToggleInButtonPanel()}
-            activeTab={buildTabState.activeSubTab}
-            onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
-            onOpenSequenceActions={() => {
-              // Sequence actions handler - can be expanded later
-              console.log("Sequence actions triggered");
-            }}
-            showFullScreen={true}
-          />
-        </div>
-      </div>
-
-      <!-- Tool Panel: Right column -->
-      <div bind:this={toolPanelElement} bind:clientHeight={toolPanelHeight} class="tool-panel-wrapper">
-        <ToolPanel
-          bind:this={toolPanelRef}
-          {buildTabState}
-          {constructTabState}
-          onOptionSelected={handleOptionSelected}
-          onPracticeBeatIndexChange={(index) => { practiceBeatIndex = index; }}
-          isSideBySideLayout={() => shouldUseSideBySideLayout}
-          activeTab={buildTabState.activeSubTab}
-          onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
-        />
-      </div>
-    {:else}
-      <!-- Stacked layout: Workspace, Buttons, Tool Panel vertically -->
-      <!-- Workspace Panel: Sequence display -->
+{#if isLoading}
+  <LoadingOverlay message="Initializing Build Tab..." />
+{:else if error}
+  <ErrorBanner message={error} onDismiss={clearError} />
+{:else if buildTabState && constructTabState && services}
+  <div class="build-tab" class:side-by-side={shouldUseSideBySideLayout}>
+    <!-- Workspace Panel -->
+    <div class="workspace-container">
       <WorkspacePanel
         sequenceState={buildTabState.sequenceState}
         {buildTabState}
-        {practiceBeatIndex}
-        isSideBySideLayout={shouldUseSideBySideLayout}
-        onBatchEdit={handleOpenBatchEdit}
+        practiceBeatIndex={panelState.practiceBeatIndex}
+        isMobilePortrait={isMobilePortrait()}
+        onPlayAnimation={handlePlayAnimation}
         animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
-        {toolPanelHeight}
       />
 
-      <!-- Button Panel: Control center -->
-      <div class="button-panel-wrapper">
-        <ButtonPanel
-          {buildTabState}
-          canGoBack={toolPanelRef?.getCanGoBack?.() ?? false}
-          onBack={() => toolPanelRef?.handleBack?.()}
-          canRemoveBeat={buildTabState.sequenceState.hasStartPosition}
-          onRemoveBeat={handleRemoveBeat}
-          selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
-          selectedBeatData={buildTabState.sequenceState.selectedBeatData}
-          canClearSequence={buildTabState.sequenceState.hasStartPosition}
-          onClearSequence={constructTabState.clearSequenceCompletely}
-          showPlayButton={!!buildTabState.sequenceState.currentSequence}
-          onPlayAnimation={handlePlayAnimation}
-          {isAnimating}
-          showToggle={shouldShowToggleInButtonPanel()}
-          activeTab={buildTabState.activeSubTab}
-          onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
-          onOpenSequenceActions={() => {
-            // Sequence actions handler - can be expanded later
-            console.log("Sequence actions triggered");
-          }}
-          showFullScreen={true}
-        />
-      </div>
+      <ButtonPanel
+        {buildTabState}
+        showToggle={shouldShowToggleInButtonPanel()}
+        activeTab={buildTabState.activeSubTab as 'construct' | 'generate'}
+        onTabChange={(tab) => buildTabState?.setactiveToolPanel(tab)}
+        showPlayButton={buildTabState.hasSequence}
+        onPlayAnimation={handlePlayAnimation}
+        isAnimating={panelState.isAnimationPanelOpen}
+        canClearSequence={canClearSequence()}
+        onClearSequence={handleClearSequence}
+        onRemoveBeat={handleRemoveBeat}
+      />
 
-      <!-- Tool Panel: Tabbed interface for sequence construction and management -->
-      <div bind:this={toolPanelElement} bind:clientHeight={toolPanelHeight} class="tool-panel-wrapper">
+      {#if panelState.isAnimationPanelOpen}
+        <InlineAnimatorPanel
+          sequence={buildTabState.sequenceState.currentSequence}
+          onClose={handleCloseAnimationPanel}
+        />
+      {/if}
+    </div>
+
+    <!-- Tool Panel -->
+    <div class="tool-panel-container" bind:this={toolPanelElement}>
+      {#if buildTabState && constructTabState}
         <ToolPanel
           bind:this={toolPanelRef}
-          {buildTabState}
-          {constructTabState}
+          buildTabState={buildTabState}
+          constructTabState={constructTabState}
           onOptionSelected={handleOptionSelected}
-          onPracticeBeatIndexChange={(index) => { practiceBeatIndex = index; }}
           isSideBySideLayout={() => shouldUseSideBySideLayout}
-          activeTab={buildTabState.activeSubTab}
-          onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
+          onPracticeBeatIndexChange={(index) => { panelState.setPracticeBeatIndex(index); }}
         />
-      </div>
-    {/if}
+      {/if}
+    </div>
   </div>
-  {:else}
-  <div class="loading-container">
-    <LoadingOverlay message="Initializing build interface..." />
-  </div>
-  {/if}
 
-  <!-- Loading overlay -->
-  {#if isTransitioning}
-  <LoadingOverlay message="Processing..." />
-  {/if}
-
-  <!-- Edit Slide Panel - Modern slide-out for editing beats -->
-  {#if buildTabState}
-  <EditSlidePanel
-    isOpen={isEditPanelOpen}
-    onClose={() => {
-      isEditPanelOpen = false;
-      // Exit multi-select mode when closing panel
-      if (buildTabState.sequenceState.selectedBeatNumbers?.size > 0) {
-        buildTabState.sequenceState.exitMultiSelectMode();
-      }
-    }}
-    selectedBeatNumber={editPanelBeatIndex}
-    selectedBeatData={editPanelBeatData}
-    selectedBeatsData={editPanelBeatsData.length > 0 ? editPanelBeatsData : null}
-    onBatchApply={handleBatchApply}
-    {toolPanelHeight}
-    onOrientationChanged={(color: string, orientation: string) => {
-      if (editPanelBeatData && editPanelBeatIndex !== null) {
-        // Get current motion data for the color
-        const currentMotion = editPanelBeatData.motions?.[color] || {};
-
-        // Create updated beat data with new orientation
-        const updatedBeatData = {
-          ...editPanelBeatData,
-          motions: {
-            ...editPanelBeatData.motions,
-            [color]: {
-              ...currentMotion,
-              startOrientation: orientation,
-            }
-          }
-        };
-
-        // beatNumber 0 = start position, update separately
-        if (editPanelBeatIndex === 0) {
-          buildTabState.sequenceState.setStartPosition(updatedBeatData);
-        } else {
-          // beatNumber 1+ = beats array, use index = beatNumber - 1
-          const beatIndex = editPanelBeatIndex - 1;
-          buildTabState.sequenceState.updateBeat(beatIndex, updatedBeatData);
+  <!-- Edit Slide Panel - Positioned outside grid layout to slide over content -->
+  {#if panelState.isEditPanelOpen && buildTabState}
+    <EditSlidePanel
+      isOpen={panelState.isEditPanelOpen}
+      selectedBeatNumber={panelState.editPanelBeatIndex}
+      selectedBeatData={panelState.editPanelBeatData}
+      selectedBeatsData={panelState.editPanelBeatsData}
+      toolPanelHeight={panelState.toolPanelHeight}
+      onClose={() => {
+        panelState.closeEditPanel();
+        // Exit multi-select mode when closing panel
+        const selectedCount = buildTabState?.sequenceState.selectedBeatNumbers?.size ?? 0;
+        if (selectedCount > 0) {
+          buildTabState?.sequenceState.exitMultiSelectMode();
         }
-      }
-    }}
-    onTurnAmountChanged={(color: string, turnAmount: number) => {
-      if (editPanelBeatData && editPanelBeatIndex !== null) {
-        // Get current motion data for the color
-        const currentMotion = editPanelBeatData.motions?.[color] || {};
+      }}
+      onOrientationChanged={(color, orientation) => {
+        const beatData = panelState.editPanelBeatData;
+        const beatIndex = panelState.editPanelBeatIndex;
 
-        // Create updated beat data with new turn amount
-        const updatedBeatData = {
-          ...editPanelBeatData,
-          motions: {
-            ...editPanelBeatData.motions,
-            [color]: {
-              ...currentMotion,
-              turns: turnAmount,
+        if (beatData && beatIndex !== null) {
+          // Get current motion data for the color
+          const currentMotion = beatData.motions?.[color] || {};
+
+          // Create updated beat data with new orientation
+          const updatedBeatData = {
+            ...beatData,
+            motions: {
+              ...beatData.motions,
+              [color]: {
+                ...currentMotion,
+                startOrientation: orientation,
+              }
             }
+          };
+
+          // Beat 0 = start position, beats 1+ are in array at indices 0, 1, 2...
+          if (beatIndex === START_POSITION_BEAT_NUMBER) {
+            buildTabState?.sequenceState.setStartPosition(updatedBeatData);
+          } else {
+            const arrayIndex = beatIndex - 1;
+            buildTabState?.sequenceState.updateBeat(arrayIndex, updatedBeatData);
           }
-        };
-
-        // beatNumber 0 = start position, update separately
-        if (editPanelBeatIndex === 0) {
-          buildTabState.sequenceState.setStartPosition(updatedBeatData);
-        } else {
-          // beatNumber 1+ = beats array, use index = beatNumber - 1
-          const beatIndex = editPanelBeatIndex - 1;
-          buildTabState.sequenceState.updateBeat(beatIndex, updatedBeatData);
         }
-      }
-    }}
-  />
-  {/if}
+      }}
+      onTurnAmountChanged={(color, turnAmount) => {
+        const beatData = panelState.editPanelBeatData;
+        const beatIndex = panelState.editPanelBeatIndex;
 
-  <!-- Inline Animator Panel - Slide-up animation viewer -->
-  {#if buildTabState}
-  <InlineAnimatorPanel
-    sequence={buildTabState.sequenceState.currentSequence}
-    show={isAnimationPanelOpen}
-    onClose={handleCloseAnimationPanel}
-    {toolPanelHeight}
-  />
-  {/if}
-</div>
+        if (beatData && beatIndex !== null) {
+          // Get current motion data for the color
+          const currentMotion = beatData.motions?.[color] || {};
 
-<!-- ============================================================================ -->
-<!-- STYLES -->
-<!-- ============================================================================ -->
+          // Create updated beat data with new turn amount
+          const updatedBeatData = {
+            ...beatData,
+            motions: {
+              ...beatData.motions,
+              [color]: {
+                ...currentMotion,
+                turns: turnAmount,
+              }
+            }
+          };
+
+          // Beat 0 = start position, beats 1+ are in array at indices 0, 1, 2...
+          if (beatIndex === START_POSITION_BEAT_NUMBER) {
+            buildTabState?.sequenceState.setStartPosition(updatedBeatData);
+          } else {
+            const arrayIndex = beatIndex - 1;
+            buildTabState?.sequenceState.updateBeat(arrayIndex, updatedBeatData);
+          }
+        }
+      }}
+      onBatchApply={handleBatchApply}
+    />
+  {/if}
+{/if}
 
 <style>
   .build-tab {
-  display: flex;
-  flex-direction: column;
-  /* Multi-layer fallback for reliable viewport height */
-  height: 100vh; /* Fallback 1: Static viewport height */
-  height: var(--viewport-height, 100vh); /* Fallback 2: JS-calculated height */
-  height: 100dvh; /* Preferred: Dynamic viewport height (when it works) */
-  width: 100%;
-  overflow: hidden;
-  position: relative;
-  }
-
-  .build-tab-layout {
-  flex: 1;
-  display: grid;
-  /* Grid layout will be set by CSS classes based on navigation layout */
-  overflow: hidden;
-  gap: var(--spacing-xs);
-  padding: 8px;
-  }
-
-  /* Side-by-side layout (when navigation is on left - phone landscape) */
-  .build-tab-layout.side-by-side {
-    grid-template-columns: 1fr 1fr; /* 50/50 split */
-    grid-template-rows: 1fr; /* Single row */
-  }
-
-  /* Stacked layout (when navigation is on top - tablets, desktop, portrait) */
-  .build-tab-layout.stacked {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto 1fr; /* Top: workspace panel, Middle: button panel, Bottom: tool panel */
-  }
-
-  /* Left column for side-by-side layout (workspace + buttons stacked) */
-  .left-column {
     display: flex;
     flex-direction: column;
     height: 100%;
     width: 100%;
     overflow: hidden;
-    gap: var(--spacing-xs);
   }
 
-  /* Button panel wrapper - control center between panels */
-  .button-panel-wrapper {
-    /* Auto height - only takes space it needs */
-    height: auto;
-    width: 100%;
-
-    /* Center content */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    /* Ensure proper overflow behavior */
-    overflow: visible;
+  .build-tab.side-by-side {
+    flex-direction: row;
   }
 
-  /* Tool panel wrapper - allows height measurement for edit panel */
-  .tool-panel-wrapper {
-    /* Fill the grid cell completely */
-    height: 100%;
-    width: 100%;
-
-    /* Allow child (ToolPanel) to fill */
+  .workspace-container,
+  .tool-panel-container {
     display: flex;
     flex-direction: column;
-
-    /* Ensure proper overflow behavior */
     overflow: hidden;
   }
 
-
-
-  /* Note: Layout is controlled by dynamic CSS classes based on:
-     - Desktop with wide viewport (>= 1024px)
-     - Landscape mobile (phones held sideways)
-     - Z Fold unfolded (flexible detection for browser UI variations)
-     - Significantly landscape orientation (aspect ratio > 1.3)
-     This ensures responsive behavior while preserving Z Fold functionality. */
-
-  /* Ultra-narrow mobile (Z Fold 6 folded, narrow phones) - fallback spacing */
-  @media (max-width: 480px) {
-    .build-tab-layout {
-      gap: var(--spacing-xs);
-      padding: 4px;
-    }
+  .workspace-container {
+    flex: 5;
+    min-height: 0;
   }
 
-  /* Z Fold 6 cover screen optimization - fallback spacing */
-  @media (max-width: 320px) {
-    .build-tab-layout {
-      gap: 2px;
-      padding: 2px;
-    }
+  .tool-panel-container {
+    flex: 4;
+    min-width: 0;
+  }
+
+  .build-tab.side-by-side .workspace-container {
+    flex: 1;
+  }
+
+  .build-tab.side-by-side .tool-panel-container {
+    flex: 1;
   }
 </style>

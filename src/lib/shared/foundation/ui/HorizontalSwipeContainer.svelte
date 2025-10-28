@@ -17,6 +17,8 @@
     freezeNavigation?: boolean; // Prevent navigation button recreation during transitions
     loop?: boolean; // Enable infinite scrolling - wraps from last to first and vice versa
     topPadding?: number; // Dynamic padding for content that extends above viewport (e.g., type labels)
+    preservePosition?: boolean; // Preserve scroll position across reInit (default: false)
+    storageKey?: string; // SessionStorage key for position persistence (required if preservePosition is true)
   }
 
   let {
@@ -33,6 +35,8 @@
     freezeNavigation = false,
     loop = false,
     topPadding = 0,
+    preservePosition = false,
+    storageKey = undefined,
   }: Props = $props();
 
   // Embla state
@@ -119,6 +123,29 @@
     if (!emblaApi) return;
     slides = emblaApi.slideNodes();
 
+    // Restore scroll position after reInit if preservePosition is enabled
+    if (preservePosition && storageKey && typeof window !== "undefined") {
+      try {
+        const stored = sessionStorage.getItem(storageKey);
+        if (stored) {
+          const savedIndex = parseInt(stored, 10);
+          if (
+            !isNaN(savedIndex) &&
+            savedIndex >= 0 &&
+            savedIndex < slides.length
+          ) {
+            // Use jump: true to instantly restore position without animation
+            emblaApi.scrollTo(savedIndex, true);
+          }
+        }
+      } catch (error) {
+        console.warn(
+          "Failed to restore scroll position from sessionStorage:",
+          error
+        );
+      }
+    }
+
     // Calculate initial content area bounds to ensure they're available early
     calculateContentAreaBounds();
   }
@@ -179,7 +206,10 @@
   <div
     class="embla__viewport"
     bind:this={emblaNode}
-    use:emblaCarouselSvelte={{ options: { loop }, plugins: [] }}
+    use:emblaCarouselSvelte={{
+      options: { loop, startIndex: initialPanelIndex },
+      plugins: [],
+    }}
     onemblaInit={onEmblaInit}
     style="--top-padding: {topPadding}px"
   >

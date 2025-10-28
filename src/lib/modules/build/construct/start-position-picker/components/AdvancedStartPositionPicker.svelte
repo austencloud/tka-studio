@@ -4,7 +4,6 @@
   import { SimpleGlassScroll } from "$shared";
   import { onMount } from "svelte";
   import { createAdvancedPickerState } from "../state/advanced-picker-state.svelte";
-  import AdvancedStartPositionPickerHeader from "./AdvancedStartPositionPickerHeader.svelte";
   import PositionGroupGrid from "./PositionGroupGrid.svelte";
   import ResponsivePositionGrid from "./ResponsivePositionGrid.svelte";
 
@@ -13,8 +12,6 @@
     selectedPictograph = null,
     currentGridMode,
     onPictographSelect,
-    onGridModeChange,
-    onBack,
     isSideBySideLayout = () => false,
     isAnimating = false,
   }: {
@@ -22,8 +19,6 @@
     selectedPictograph?: PictographData | null;
     currentGridMode: GridMode;
     onPictographSelect: (pictograph: PictographData) => void;
-    onGridModeChange: (gridMode: GridMode) => void;
-    onBack: () => void;
     isSideBySideLayout?: () => boolean;
     isAnimating?: boolean;
   } = $props();
@@ -79,9 +74,6 @@
 </script>
 
 <div class="advanced-picker-container">
-  <!-- Header with title and grid mode toggle -->
-  <AdvancedStartPositionPickerHeader {currentGridMode} {onGridModeChange} {onBack} />
-
   <!-- Responsive Grid of all 16 start positions -->
   <SimpleGlassScroll variant="primary" height="100%" width="100%">
     <ResponsivePositionGrid {isTransitioning} {hasOverflow} {isSideBySideLayout}>

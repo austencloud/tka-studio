@@ -117,9 +117,7 @@ export class CodexLetterMappingRepo implements ICodexLetterMappingRepo {
         categories: data.categories,
       };
 
-      console.log(
-        `✅ Loaded ${Object.keys(letters).length} letters from codex configuration`
-      );
+
     } catch (error) {
       console.error("Failed to load codex configuration:", error);
       throw error;

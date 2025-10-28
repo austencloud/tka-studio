@@ -1,14 +1,12 @@
 <!--
 GeneratePanel.svelte - Clean, focused generation panel component
 
-Refactored into smaller section components for better maintainability:
-- Header: GeneratePanelHeader.svelte
-- Settings: SettingsContainer.svelte (which includes individual sections)
-- Actions: ActionSection.svelte
-- Config state moved to generateConfigState.svelte.ts
-- Generation actions moved to generateActionsState.svelte.ts
-- Device state moved to generateDeviceState.svelte.ts
-- Maintains all original functionality with cleaner separation
+Card-based architecture with integrated Generate button:
+- Settings: CardBasedSettingsContainer.svelte (card grid with all controls)
+- Generate button: GenerateButtonCard.svelte (integrated into card grid)
+- Config state: generateConfigState.svelte.ts
+- Generation actions: generateActionsState.svelte.ts
+- Device state: generateDeviceState.svelte.ts
 -->
 <script lang="ts">
   import type { SequenceState } from "$build/shared/state";

@@ -72,52 +72,54 @@
 
   const environment = detectEnvironment();
 
-  const installGuidance = $derived<InstallGuidance | null>(() => {
-    if (isPWA) {
-      return null;
-    }
-
-    if (canInstallPWA) {
-      const manual = getManualGuidance(environment);
-      return {
-        support: "native",
-        heading: `Install with ${environment.browser}`,
-        steps: manual?.support === "manual" ? manual.steps : [],
-        note: manual?.support === "manual" ? manual.note : undefined,
-      } as InstallGuidance;
-    }
-
-    if (strategy === "pwa") {
-      const manual = getManualGuidance(environment);
-      if (manual && manual.support === "manual") {
-        return manual;
+  const installGuidance = $derived<InstallGuidance | null>(
+    (() => {
+      if (isPWA) {
+        return null;
       }
 
-      return {
-        support: "unsupported",
-        heading: manual?.heading ?? "Install not available",
-        message:
-          manual?.message ??
-          "This browser doesn't offer Add to Home Screen for Progressive Web Apps.",
-        recommendations:
-          manual?.recommendations ?? getDefaultRecommendations(environment),
-      };
-    }
+      if (canInstallPWA) {
+        const manual = getManualGuidance(environment);
+        return {
+          support: "native",
+          heading: `Install with ${environment.browser}`,
+          steps: manual?.support === "manual" ? manual.steps : [],
+          note: manual?.support === "manual" ? manual.note : undefined,
+        } as InstallGuidance;
+      }
 
-    if (strategy === "not-supported") {
-      return {
-        support: "unsupported",
-        heading: "Installation not supported in this browser",
-        message:
-          "Switch to a supported browser to install TKA as a fullscreen app.",
-        recommendations: getDefaultRecommendations(environment),
-      };
-    }
+      if (strategy === "pwa") {
+        const manual = getManualGuidance(environment);
+        if (manual && manual.support === "manual") {
+          return manual;
+        }
 
-    return null;
-  });
+        return {
+          support: "unsupported",
+          heading: manual?.heading ?? "Install not available",
+          message:
+            manual?.message ??
+            "This browser doesn't offer Add to Home Screen for Progressive Web Apps.",
+          recommendations:
+            manual?.recommendations ?? getDefaultRecommendations(environment),
+        };
+      }
 
-  const shouldPromptUser = $derived(() => installGuidance() !== null);
+      if (strategy === "not-supported") {
+        return {
+          support: "unsupported",
+          heading: "Installation not supported in this browser",
+          message:
+            "Switch to a supported browser to install TKA as a fullscreen app.",
+          recommendations: getDefaultRecommendations(environment),
+        };
+      }
+
+      return null;
+    })()
+  );
+
+  const shouldPromptUser = $derived(installGuidance !== null);
 
   function updateState() {
     if (!fullscreenService) return;
@@ -139,9 +141,9 @@
 
     updateState();
 
-    if (autoShow && shouldPromptUser()) {
+    if (autoShow && shouldPromptUser) {
       setTimeout(() => {
-        if (shouldPromptUser()) {
+        if (shouldPromptUser) {
           showPrompt = true;
         }
       }, 2500);
@@ -151,7 +153,7 @@
       (canInstall) => {
         canInstallPWA = canInstall;
         strategy = fullscreenService?.getRecommendedStrategy() ?? strategy;
-        if (canInstall && shouldPromptUser()) {
+        if (canInstall && shouldPromptUser) {
           showPrompt = true;
         }
       }
@@ -228,7 +230,9 @@
     const isFirefox = ua.includes("firefox") || ua.includes("fxios");
     const isOpera = ua.includes("opr/") || ua.includes("opera");
     const isChromeLike =
-      (ua.includes("chrome") || ua.includes("crios") || ua.includes("chromium")) &&
+      (ua.includes("chrome") ||
+        ua.includes("crios") ||
+        ua.includes("chromium")) &&
       !isEdge &&
       !isOpera &&
       !isSamsung;
@@ -238,24 +242,20 @@
     const browser = isSamsung
       ? "Samsung Internet"
       : isEdge
-      ? "Microsoft Edge"
-      : isFirefox
-      ? "Firefox"
-      : isChromeLike && isIOS
-      ? "Chrome on iOS"
-      : isChromeLike
-      ? "Google Chrome"
-      : isSafari && isIOS
-      ? "Safari on iOS"
-      : isSafari
-      ? "Safari"
-      : "your browser";
+        ? "Microsoft Edge"
+        : isFirefox
+          ? "Firefox"
+          : isChromeLike && isIOS
+            ? "Chrome on iOS"
+            : isChromeLike
+              ? "Google Chrome"
+              : isSafari && isIOS
+                ? "Safari on iOS"
+                : isSafari
+                  ? "Safari"
+                  : "your browser";
 
-    const platform = isAndroid
-      ? "android"
-      : isIOS
-      ? "ios"
-      : "desktop";
+    const platform = isAndroid ? "android" : isIOS ? "ios" : "desktop";
 
     return {
       platform,
@@ -269,9 +269,7 @@
     };
   }
 
-  function getManualGuidance(
-    env: BrowserEnvironment
-  ): ManualGuidance | null {
+  function getManualGuidance(env: BrowserEnvironment): ManualGuidance | null {
     if (env.platform === "android" && (env.isChromeLike || env.isEdge)) {
       return {
         support: "manual" as const,
@@ -354,8 +352,8 @@
   }
 </script>
 
-{#if showPrompt && shouldPromptUser()}
-  {@const guidance = installGuidance()}
+{#if showPrompt && shouldPromptUser}
+  {@const guidance = installGuidance}
   {#if guidance}
     <div
       class="fullscreen-prompt-overlay position-{position}"
@@ -368,7 +366,8 @@
 
           {#if guidance.support === "native"}
             <p>
-              Install TKA to launch it fullscreen and keep the builder only a tap away.
+              Install TKA to launch it fullscreen and keep the builder only a
+              tap away.
             </p>
             <div class="prompt-actions">
               <button
@@ -438,7 +437,8 @@
 
           {#if nagMode && guidance.support !== "unsupported"}
             <div class="nag-reminder">
-              We'll remind you again later so you can install when it's convenient.
+              We'll remind you again later so you can install when it's
+              convenient.
             </div>
           {/if}
         </div>
@@ -446,6 +446,7 @@
     </div>
   {/if}
 {/if}
+
 <style>
   .fullscreen-prompt-overlay {
     position: fixed;
@@ -657,4 +658,3 @@
     }
   }
 </style>
-

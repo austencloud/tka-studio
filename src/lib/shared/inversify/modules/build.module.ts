@@ -21,6 +21,11 @@ import { SequenceStatisticsService } from "../../../modules/build/shared/service
 import { SequenceTransformationService } from "../../../modules/build/shared/services/implementations/SequenceTransformationService";
 import { SequenceValidationService } from "../../../modules/build/shared/services/implementations/SequenceValidationService";
 import { UndoService } from "../../../modules/build/shared/services/implementations/UndoService";
+// NEW: BuildTab Refactoring Services (2025-10-28)
+import { BuildTabInitializationService } from "../../../modules/build/shared/services/implementations/BuildTabInitializationService";
+import { BuildTabResponsiveLayoutService } from "../../../modules/build/shared/services/implementations/BuildTabResponsiveLayoutService";
+import { NavigationSyncService } from "../../../modules/build/shared/services/implementations/NavigationSyncService";
+import { BeatOperationsService } from "../../../modules/build/shared/services/implementations/BeatOperationsService";
 // Refactored Generation Services
 import {
   OptionFilter,
@@ -77,6 +82,10 @@ export const buildModule = new ContainerModule(
     // === BUILD TAB SERVICES ===
     options.bind(TYPES.IBuildTabService).to(BuildTabService);
     options.bind(TYPES.IBuildTabLayoutService).to(BuildTabLayoutService);
+    options.bind(TYPES.IBuildTabInitializationService).to(BuildTabInitializationService);
+    options.bind(TYPES.IBuildTabResponsiveLayoutService).to(BuildTabResponsiveLayoutService);
+    options.bind(TYPES.INavigationSyncService).to(NavigationSyncService);
+    options.bind(TYPES.IBeatOperationsService).to(BeatOperationsService);
     options.bind(TYPES.IUndoService).to(UndoService);
     options.bind(TYPES.IConstructTabCoordinator).to(ConstructCoordinator);
     options.bind(TYPES.ITurnControlService).to(TurnControlService);

@@ -1,6 +1,6 @@
 import type { GridPosition } from "$shared";
-import { TYPES } from "$shared";
 import { inject, injectable } from "inversify";
+import { TYPES } from "$shared/inversify/types";
 import { CAPType, SliceSize } from "../../domain/models/circular-models";
 import type { ICAPEndPositionSelector } from "../contracts/ICAPEndPositionSelector";
 import type { IRotatedEndPositionSelector } from "../contracts/IRotatedEndPositionSelector";

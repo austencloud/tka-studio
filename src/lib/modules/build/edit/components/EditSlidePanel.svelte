@@ -13,8 +13,8 @@ Features:
   import type { IHapticFeedbackService } from "$shared";
   import { BottomSheet, resolve, TYPES } from "$shared";
   import { onDestroy, onMount } from 'svelte';
-  import EditPanelLayout from './EditPanelLayout.svelte';
   import BatchEditLayout from './BatchEditLayout.svelte';
+  import EditPanelLayout from './EditPanelLayout.svelte';
 
   // Props
   const {
@@ -236,7 +236,7 @@ Features:
   isOpen={isOpen}
   labelledBy="edit-panel-title"
   on:close={handleClose}
-  closeOnBackdrop={false}
+  closeOnBackdrop={true}
   focusTrap={false}
   lockScroll={false}
   showHandle={false}
@@ -305,9 +305,9 @@ Features:
 </BottomSheet>
 <style>
   :global(.edit-panel-backdrop) {
-    background: transparent;
-    backdrop-filter: none;
-    pointer-events: none;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(4px);
+    pointer-events: auto;
   }
 
   :global(.edit-panel-backdrop[data-placement="right"]) {
@@ -326,17 +326,18 @@ Features:
     box-shadow: none;
     width: min(600px, 90vw);
     max-height: none;
-    height: 100%;
     padding-bottom: 0;
     pointer-events: auto;
   }
 
   :global(.bottom-sheet.edit-panel-container[data-placement="bottom"]) {
     width: 100%;
+    height: 100%;
   }
 
   :global(.bottom-sheet.edit-panel-container[data-placement="right"]) {
-    height: 100vh;
+    height: auto;
+    max-height: 90vh;
   }
 
   /* The slide-out panel itself - OPAQUE, not glass */
@@ -356,10 +357,6 @@ Features:
 
     display: flex;
     flex-direction: column;
-
-    /* Smooth hardware-accelerated rendering */
-    will-change: transform;
-    transform: translateZ(0);
 
     /* Re-enable pointer events for the panel itself */
     pointer-events: auto;

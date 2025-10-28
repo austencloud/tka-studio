@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import type {
-  IRippleEffectService,
-  RippleOptions
+    IRippleEffectService,
+    RippleOptions
 } from "../contracts/IRippleEffectService";
 
 /**
@@ -109,8 +109,10 @@ export class RippleEffectService implements IRippleEffectService {
       this.createRipple(element, event, options);
     };
 
+    // Add event listeners with passive option for better scroll performance
+    // Passive listeners indicate we won't call preventDefault()
     element.addEventListener("mousedown", handleInteraction as EventListener);
-    element.addEventListener("touchstart", handleInteraction as EventListener);
+    element.addEventListener("touchstart", handleInteraction as EventListener, { passive: true });
 
     return () => {
       element.removeEventListener(

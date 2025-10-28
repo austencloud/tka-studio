@@ -6,6 +6,7 @@
  */
 
 import type { ActiveBuildTab, BeatData, PictographData } from "$shared";
+import type { SimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
 import type { UndoHistoryEntry, UndoMetadata } from "../services/contracts/IUndoService";
 import type { SequenceState } from "../state/SequenceStateOrchestrator.svelte";
 
@@ -96,11 +97,7 @@ export interface IConstructTabState {
   readonly selectedStartPosition: PictographData | null;
 
   // Services
-  readonly startPositionStateService: {
-    readonly startPositions: PictographData[];
-    readonly isLoading: boolean;
-    readonly error: string | null;
-  };
+  readonly startPositionStateService: SimplifiedStartPositionState;
 
   // State mutations
   setLoading: (loading: boolean) => void;
@@ -114,7 +111,7 @@ export interface IConstructTabState {
   syncPickerStateWithSequence: () => void;
 
   // Event handlers
-  handleStartPositionSelected: (pictographData: PictographData) => void;
+  handleStartPositionSelected: (pictographData: PictographData | null, source?: "user" | "sync") => void;
 
   // Initialization
   initializeConstructTab: () => Promise<void>;
@@ -161,8 +158,26 @@ export interface IToolPanelProps {
   buildTabState: IBuildTabState;
   constructTabState: IConstructTabState;
   onOptionSelected: (option: PictographData) => Promise<void>;
-  onPracticeBeatIndexChange?: (index: number) => void;
+  onPracticeBeatIndexChange?: (index: number | null) => void;
   isSideBySideLayout?: () => boolean;
   activeTab?: ActiveBuildTab | null;
   onTabChange?: (tab: ActiveBuildTab) => void;
 }
+
+/**
+ * Tool Panel Methods Interface
+ *
+ * Public methods exposed by ToolPanel component via ref binding.
+ */
+export interface IToolPanelMethods {
+  getCanGoBack: () => boolean;
+  getAnimationStateRef: () => IAnimationStateRef;
+  handleBack: () => void;
+}
+
+/**
+ * Batch Edit Changes Interface
+ *
+ * Partial beat data changes that can be applied to multiple beats at once.
+ */
+export type BatchEditChanges = Partial<BeatData>;

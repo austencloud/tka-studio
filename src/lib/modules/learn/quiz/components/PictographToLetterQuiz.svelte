@@ -92,9 +92,7 @@
         ),
       ].sort();
 
-      console.log(
-        `✅ Loaded ${pictographs.length} pictographs with ${availableLetters.length} unique letters`
-      );
+
     } catch (error) {
       console.error("❌ Failed to load pictograph data:", error);
     } finally {

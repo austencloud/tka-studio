@@ -20,7 +20,6 @@
     FullscreenButton,
     PlayButton,
     RemoveBeatButton,
-    SequenceActionsButton,
     UndoButton
   } from './buttons/index.js';
 
@@ -47,9 +46,6 @@
     showPlayButton = false,
     onPlayAnimation,
     isAnimating = false,
-
-    // Sequence Actions button
-    onOpenSequenceActions,
 
     // Full Screen button
     showFullScreen = true,
@@ -84,9 +80,6 @@
     onPlayAnimation?: () => void;
     isAnimating?: boolean;
 
-    // Sequence Actions button props
-    onOpenSequenceActions?: () => void;
-
     // Full Screen button props
     showFullScreen?: boolean;
 
@@ -106,53 +99,88 @@
            selectedBeatData.beatNumber >= 1 &&
            selectedBeatIndex !== null;
   });
+
+  // Count visible buttons to determine if toggle should show text labels
+  const visibleButtonCount = $derived(() => {
+    let count = 0;
+
+    // Count toggle
+    if (showToggle) count++;
+
+    // Count undo/back button
+    if (buildTabState || canGoBack) count++;
+
+    // Count remove beat button
+    if (shouldShowRemoveBeat()) count++;
+
+    // Count clear sequence button
+    if (canClearSequence) count++;
+
+    // Count play button
+    if (showPlayButton) count++;
+
+    // Count fullscreen button
+    if (showFullScreen) count++;
+
+    return count;
+  });
+
+  // Show text labels when toggle is the only button visible
+  const shouldShowToggleLabels = $derived(() => visibleButtonCount() === 1);
 </script>
 
 {#if visible}
   <div class="button-panel" transition:fade={{ duration: 200 }}>
-    <!-- Construct/Generate Toggle (when not shown in ToolPanel header) -->
-    {#if showToggle && activeTab && onTabChange}
-      <ConstructGenerateToggle
-        {activeTab}
-        onTabChange={onTabChange}
-      />
-    {/if}
+    <!-- LEFT ZONE: Undo/Back button (always left edge) -->
+    <div class="left-zone">
+      <!-- Undo Button (when buildTabState is available) or Back Button -->
+      {#if buildTabState}
+        <UndoButton
+          {buildTabState}
+          showHistoryDropdown={true}
+        />
+      {:else if canGoBack}
+        <BackButton onclick={onBack} />
+      {/if}
+    </div>
 
-    <!-- Undo Button (when buildTabState is available) or Back Button -->
-    {#if buildTabState}
-      <UndoButton
-        {buildTabState}
-        showHistoryDropdown={true}
-      />
-    {:else if canGoBack}
-      <BackButton onclick={onBack} />
-    {/if}
+    <!-- CENTER ZONE: Contextual action buttons (centered in available space) -->
+    <div class="center-zone">
+      <!-- Remove Beat Button -->
+      {#if shouldShowRemoveBeat()}
+        <RemoveBeatButton
+          beatNumber={selectedBeatData.beatNumber}
+          onclick={() => onRemoveBeat?.(selectedBeatIndex!)}
+        />
+      {/if}
 
-    <!-- Remove Beat Button -->
-    {#if shouldShowRemoveBeat()}
-      <RemoveBeatButton
-        beatNumber={selectedBeatData.beatNumber}
-        onclick={() => onRemoveBeat?.(selectedBeatIndex!)}
-      />
-    {/if}
+      <!-- Clear Sequence Button -->
+      {#if canClearSequence}
+        <ClearSequencePanelButton onclick={onClearSequence} />
+      {/if}
 
-    <!-- Clear Sequence Button -->
-    {#if canClearSequence}
-      <ClearSequencePanelButton onclick={onClearSequence} />
-    {/if}
+      <!-- Play Button -->
+      {#if showPlayButton}
+        <PlayButton onclick={onPlayAnimation} {isAnimating} />
+      {/if}
 
-    <!-- Play Button (central position - opens inline animator) -->
-    {#if showPlayButton}
-      <PlayButton onclick={onPlayAnimation} {isAnimating} />
-    {/if}
+      <!-- Full Screen Button -->
+      {#if showFullScreen}
+        <FullscreenButton />
+      {/if}
+    </div>
 
-    <!-- Sequence Actions Button (opens sheet with more actions) -->
-    <SequenceActionsButton onclick={onOpenSequenceActions} />
-
-    <!-- Full Screen Button (rightmost) -->
-    {#if showFullScreen}
-      <FullscreenButton />
-    {/if}
+    <!-- RIGHT ZONE: Toggle (always right edge) -->
+    <div class="right-zone">
+      <!-- Construct/Generate Toggle (always rightmost) -->
+      {#if showToggle && activeTab && onTabChange}
+        <ConstructGenerateToggle
+          {activeTab}
+          onTabChange={onTabChange}
+          showLabels={shouldShowToggleLabels()}
+        />
+      {/if}
+    </div>
   </div>
 {/if}
 
@@ -161,27 +189,73 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 16px;
+    justify-content: space-between; /* Space between left, center, right zones */
+    width: 100%;
     border-radius: 24px;
     z-index: 1;
+
+    /* Intelligent reactive padding to prevent overlap */
+    padding: clamp(8px, 1.5vh, 16px) clamp(12px, 2vw, 24px);
+  }
+
+  /* LEFT ZONE: Undo button always at left edge */
+  .left-zone {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0; /* Don't shrink */
+  }
+
+  /* CENTER ZONE: Contextual buttons centered in available space */
+  .center-zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-grow: 1; /* Take up available space */
+  }
+
+  /* RIGHT ZONE: Toggle always at right edge */
+  .right-zone {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0; /* Don't shrink */
   }
 
   /* Mobile responsive adjustments */
   @media (max-width: 768px) {
     .button-panel {
+      padding: clamp(6px, 1.2vh, 12px) clamp(10px, 1.8vw, 20px);
+    }
+
+    .left-zone,
+    .center-zone,
+    .right-zone {
       gap: 12px;
     }
   }
 
   @media (max-width: 480px) {
     .button-panel {
+      padding: clamp(4px, 1vh, 10px) clamp(8px, 1.5vw, 16px);
+    }
+
+    .left-zone,
+    .center-zone,
+    .right-zone {
       gap: 8px;
     }
   }
 
   @media (max-width: 320px) {
     .button-panel {
+      padding: 4px 8px;
+    }
+
+    .left-zone,
+    .center-zone,
+    .right-zone {
       gap: 6px;
     }
   }
@@ -191,10 +265,16 @@
   /* This preserves precious vertical space on wide but short screens */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .button-panel {
-      gap: 16px;
       border-radius: 16px;
-      /* Reduce vertical footprint */
+      /* Reduce vertical footprint - minimal padding */
       min-height: 0;
+      padding: 4px 12px;
+    }
+
+    .left-zone,
+    .center-zone,
+    .right-zone {
+      gap: 16px;
     }
   }
 
@@ -202,8 +282,14 @@
   /* For devices in horizontal orientation with extreme width constraints */
   @media (max-width: 500px) and (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .button-panel {
-      gap: 6px;
       border-radius: 12px;
+      padding: 3px 8px;
+    }
+
+    .left-zone,
+    .center-zone,
+    .right-zone {
+      gap: 6px;
     }
   }
 </style>

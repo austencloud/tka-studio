@@ -4,7 +4,7 @@
   import { onMount } from "svelte";
   import type { SequenceState } from "../../../shared/state";
   import BeatGrid from "./BeatGrid.svelte";
-  import WordLabel from "./WordLabel.svelte";
+  import WorkspaceHeader from "./WorkspaceHeader.svelte";
 
   let {
     sequenceState,
@@ -17,7 +17,8 @@
     isMultiSelectMode = false,
     selectedBeatNumbers = new Set<number>(),
     onBeatLongPress,
-    onStartLongPress
+    onStartLongPress,
+    onSequenceActionsClick
   } = $props<{
     sequenceState: SequenceState;
     currentWord?: string;
@@ -30,6 +31,7 @@
     selectedBeatNumbers?: Set<number>;
     onBeatLongPress?: (beatNumber: number) => void;
     onStartLongPress?: () => void;
+    onSequenceActionsClick?: () => void;
   }>();
 
   // Services
@@ -129,10 +131,12 @@
 <div class="sequence-container">
   <div class="content-wrapper">
     <div class="label-and-beatframe-unit">
-      <!-- Word label inside glassmorphism container - hidden in multi-select mode -->
-      {#if !isMultiSelectMode}
-        <WordLabel word={displayWord} />
-      {/if}
+      <!-- Workspace header with word label and sequence actions button -->
+      <WorkspaceHeader
+        word={displayWord}
+        {isMultiSelectMode}
+        onSequenceActionsClick={onSequenceActionsClick}
+      />
 
       <div
         bind:this={beatGridWrapperRef}

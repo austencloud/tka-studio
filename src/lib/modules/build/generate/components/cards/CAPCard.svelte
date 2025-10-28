@@ -15,16 +15,13 @@ DESKTOP: Shows inline component buttons for direct selection
   let {
     currentCAPType,
     onCAPTypeChange,
-    // 🎨 MAGICAL: Animated mesh gradient with vibrant colors (2025 design)
-    color = "linear-gradient(135deg, #4338ca 0%, #6b21a8 12.5%, #db2777 25%, #f97316 37.5%, #eab308 50%, #22c55e 62.5%, #0891b2 75%, #3b82f6 87.5%, #6366f1 100%)",
-    shadowColor = "270deg 70% 50%", // Purple shadow to match glow
+    shadowColor = "30deg 75% 55%", // Orange shadow
     gridColumnSpan = 2,
     cardIndex = 0,
     headerFontSize = "9px"
   } = $props<{
     currentCAPType: CAPType;
     onCAPTypeChange: (capType: CAPType) => void;
-    color?: string;
     shadowColor?: string;
     gridColumnSpan?: number;
     cardIndex?: number;
@@ -161,7 +158,7 @@ DESKTOP: Shows inline component buttons for direct selection
 <style>
   /* ✨ Animated CAP Card - Mesh Gradient Wrapper */
 
-  /* The wrapper has the animated gradient background */
+  /* The wrapper has a simple static gradient background */
   .cap-card-wrapper {
     /* Enable container queries to detect card width AND height */
     container-type: size;
@@ -171,29 +168,23 @@ DESKTOP: Shows inline component buttons for direct selection
     border-radius: 16px;
     overflow: hidden;
 
-    /* Animated mesh gradient background */
+    /* Warm orange gradient - represents transformation/variation, balances cool colors */
     background: linear-gradient(135deg,
-      #4338ca 0%,
-      #6b21a8 12.5%,
-      #db2777 25%,
-      #f97316 37.5%,
-      #eab308 50%,
-      #22c55e 62.5%,
-      #0891b2 75%,
-      #3b82f6 87.5%,
-      #6366f1 100%
+      #fed7aa 0%,    /* Orange 200 - Light peachy */
+      #fdba74 25%,   /* Orange 300 - Soft orange */
+      #fb923c 50%,   /* Orange 400 - Bright orange */
+      #f97316 75%,   /* Orange 500 - Vibrant orange */
+      #ea580c 100%   /* Orange 600 - Deep orange */
     );
-    background-size: 300% 300%;
 
-    /* Subtle shadow without glow (glow moved to Generate button) */
+    /* Subtle shadow - consistent with other cards */
     box-shadow:
       0 2px 4px rgba(0, 0, 0, 0.15),
       0 4px 8px rgba(0, 0, 0, 0.10),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
-    /* Apply ONLY gradient flow and entrance animations (no glow pulse) */
-    /* Glow is now on the Generate button instead */
-    animation: meshGradientFlow 15s ease infinite, cardEnter 0.4s ease-out;
+    /* Only entrance animation - no gradient flow */
+    animation: cardEnter 0.4s ease-out;
   }
 
   /* The BaseCard inside is transparent to show the wrapper's background */
@@ -219,22 +210,6 @@ DESKTOP: Shows inline component buttons for direct selection
     }
     to {
       opacity: 1;
-    }
-  }
-
-  /* Mesh Gradient Animation - Organic flowing colors */
-  @keyframes meshGradientFlow {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    25% {
-      background-position: 50% 100%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    75% {
-      background-position: 50% 0%;
     }
   }
 

@@ -128,6 +128,8 @@ Features:
     loop={true}
     height="100%"
     width="100%"
+    preservePosition={true}
+    storageKey={PANEL_STORAGE_KEY}
   >
     {#each frozenPictographs as section, index (section.title)}
       <div

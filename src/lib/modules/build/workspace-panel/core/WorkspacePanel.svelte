@@ -26,9 +26,13 @@
 
     // Layout mode
     isSideBySideLayout = false,
+    isMobilePortrait = false,
 
     // Tool panel height (for slide panels)
-    toolPanelHeight = 0
+    toolPanelHeight = 0,
+
+    // Play animation handler
+    onPlayAnimation
   }: {
     sequenceState?: any; // TODO: Type this properly
     buildTabState?: any; // TODO: Type this properly
@@ -42,9 +46,13 @@
 
     // Layout mode
     isSideBySideLayout?: boolean;
+    isMobilePortrait?: boolean;
 
     // Tool panel height
     toolPanelHeight?: number;
+
+    // Play animation handler
+    onPlayAnimation?: () => void;
   } = $props();
 
   // Local beat selection state (beatNumber: 0=start, 1=first beat, etc.)
@@ -226,6 +234,7 @@
       selectedBeatNumbers={sequenceState?.selectedBeatNumbers ?? new Set<number>()}
       onBeatLongPress={handleBeatLongPress}
       onStartLongPress={() => handleBeatLongPress(0)}
+      onSequenceActionsClick={handleOpenSequenceActions}
     />
   </div>
 

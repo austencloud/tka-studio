@@ -3,19 +3,18 @@
  * All reactive effects in one manageable place
  */
 
-import type { PictographData } from "$shared";
 import { navigationState } from "$shared";
 import type { LayoutConfiguration } from "../orchestration/types";
 
 export interface EffectConfig {
   buildTabState: any;
-  constructTabState: any;
+  constructTabState?: any;
   layoutService: any;
   onTabAccessibilityChange?: (canAccess: boolean) => void;
 }
 
 export function createBuildTabEffects(config: EffectConfig) {
-  const { buildTabState, constructTabState, layoutService, onTabAccessibilityChange } = config;
+  const { buildTabState, layoutService, onTabAccessibilityChange } = config;
 
   let layoutConfig = $state<LayoutConfiguration | null>(null);
 
@@ -81,26 +80,6 @@ export function createBuildTabEffects(config: EffectConfig) {
     });
 
     return unsubscribe;
-  });
-
-  // Effect 5: Start position event handling
-  $effect(() => {
-    if (!constructTabState || typeof window === "undefined") return;
-
-    const handleStartPositionSelected: EventListener = (event) => {
-      const customEvent = event as CustomEvent<{ startPosition?: PictographData }>;
-      const pictographData = customEvent.detail?.startPosition;
-
-      if (pictographData) {
-        constructTabState.handleStartPositionSelected(pictographData);
-      }
-    };
-
-    window.addEventListener("start-position-selected", handleStartPositionSelected);
-
-    return () => {
-      window.removeEventListener("start-position-selected", handleStartPositionSelected);
-    };
   });
 
   return {

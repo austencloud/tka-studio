@@ -60,65 +60,71 @@ export function createConstructTabState(
   // Sub-states (construct-specific)
   // Start position state service using proper simplified state
   const startPositionStateService = createSimplifiedStartPositionState();
+  let unsubscribeStartPositionListener: (() => void) | null = null;
 
-  // Event handler function for start position selection (to be called from component)
-  function handleStartPositionSelected(pictographData: PictographData) {
-    // Push undo snapshot BEFORE making changes (if buildTabState is available)
-    if (buildTabState && buildTabState.pushUndoSnapshot) {
+  // Event handler function for start position selection (reactive listener compatible)
+  function handleStartPositionSelected(
+    pictographData: PictographData | null,
+    source: "user" | "sync" = "user"
+  ) {
+    if (!pictographData) {
+      setSelectedStartPosition(null);
+      if (sequenceState) {
+        sequenceState.setSelectedStartPosition(null);
+      }
+      if (source === "user") {
+        setShowStartPositionPicker(true);
+      }
+      return;
+    }
+
+    if (source === "user" && buildTabState && buildTabState.pushUndoSnapshot) {
       buildTabState.pushUndoSnapshot('SELECT_START_POSITION', {
         description: 'Select start position'
       });
     }
 
     setShowStartPositionPicker(false);
-    setSelectedStartPosition(pictographData || null);
+    setSelectedStartPosition(pictographData);
 
-    // Also update the sequence state for persistence
     if (sequenceState) {
-      sequenceState.setSelectedStartPosition(pictographData || null);
+      sequenceState.setSelectedStartPosition(pictographData);
     }
 
-    // Update the workbench with the start position
-    if (pictographData && sequenceState) {
-      console.log("🔧 ConstructTabState: Creating new sequence with start position");
+    if (source !== "user" || !sequenceState) {
+      return;
+    }
 
-      // Convert PictographData to BeatData format - spread PictographData properties since BeatData extends PictographData
-      const beatData: BeatData = {
-        ...pictographData, // Spread all PictographData properties (id, motions, letter, startPosition, endPosition)
-        id: `beat-${Date.now()}`, // Override with beat-specific ID
-        beatNumber: 0,
-        duration: 1000,
-        blueReversal: false,
-        redReversal: false,
-        isBlank: false,
-      };
+    console.log("?? ConstructTabState: Creating new sequence with start position");
 
-      // Create a new sequence first (following ConstructCoordinator pattern)
-      sequenceState.createSequence({
-        name: `Sequence ${new Date().toLocaleTimeString()}`,
-        length: 0 // Start with 0 beats - beats will be added progressively
-      }).then((newSequence: any) => {
-        if (newSequence) {
-          // Set the current sequence
-          sequenceState.setCurrentSequence(newSequence);
+    const beatData: BeatData = {
+      ...pictographData,
+      id: `beat-${Date.now()}`,
+      beatNumber: 0,
+      duration: 1000,
+      blueReversal: false,
+      redReversal: false,
+      isBlank: false,
+    };
 
-          // Set the start position
-          try {
-            sequenceState.setStartPosition(beatData);
-          } catch (error) {
-            console.error("❌ ConstructTabState: Error setting start position:", error);
-          }
-        } else {
-          console.error("❌ ConstructTabState: Failed to create new sequence");
+    sequenceState.createSequence({
+      name: `Sequence ${new Date().toLocaleTimeString()}`,
+      length: 0
+    }).then((newSequence: any) => {
+      if (newSequence) {
+        sequenceState.setCurrentSequence(newSequence);
+        try {
+          sequenceState.setStartPosition(beatData);
+        } catch (error) {
+          console.error("? ConstructTabState: Error setting start position:", error);
         }
-      }).catch((error: any) => {
-        console.error("❌ ConstructTabState: Error creating sequence:", error);
-      });
-    } else {
-      console.error("❌ ConstructTabState: Cannot create sequence - missing pictographData or sequenceState");
-    }
+      } else {
+        console.error("? ConstructTabState: Failed to create new sequence");
+      }
+    }).catch((error: any) => {
+      console.error("? ConstructTabState: Error creating sequence:", error);
+    });
   }
-
   // ============================================================================
   // DERIVED STATE (Construct-specific derived state)
   // ============================================================================
@@ -156,6 +162,13 @@ export function createConstructTabState(
       coordinationSetup = true;
     }
 
+    if (!unsubscribeStartPositionListener && startPositionStateService.onSelectedPositionChange) {
+      unsubscribeStartPositionListener = startPositionStateService.onSelectedPositionChange((position, source) => {
+        handleStartPositionSelected(position, source);
+      });
+    }
+
+
     // Register callback with build tab state for undo functionality
     if (buildTabState && buildTabState.setShowStartPositionPickerCallback) {
       buildTabState.setShowStartPositionPickerCallback(() => {
@@ -173,18 +186,24 @@ export function createConstructTabState(
         if (savedState && savedState.hasStartPosition) {
           setShowStartPositionPicker(false);
           setSelectedStartPosition(savedState.selectedStartPosition);
+          if (savedState.selectedStartPosition) {
+            startPositionStateService.setSelectedPosition(savedState.selectedStartPosition);
+          }
         } else {
           // No saved state, set default to show start position picker
           setShowStartPositionPicker(true);
+          startPositionStateService.clearSelectedPosition();
         }
       } catch (error) {
         console.error("❌ ConstructTabState: Failed to restore persisted state:", error);
         // On error, default to showing start position picker
         setShowStartPositionPicker(true);
+        startPositionStateService.clearSelectedPosition();
       }
     } else {
       // No persistence service, default to showing start position picker
       setShowStartPositionPicker(true);
+      startPositionStateService.clearSelectedPosition();
     }
 
     // Sync picker state with sequence state's hasStartPosition (replaces $effect)
@@ -236,6 +255,7 @@ export function createConstructTabState(
       // Start UI transition and sequence clearing simultaneously for smooth UX
       setShowStartPositionPicker(true);
       setSelectedStartPosition(null);
+      startPositionStateService.clearSelectedPosition();
       clearError();
 
       // Capture the target tab before clearing
@@ -411,3 +431,11 @@ export function addHMRBackupEffect(constructTabState: ReturnType<typeof createCo
 }
 
 // Import required state factories
+
+
+
+
+
+
+
+

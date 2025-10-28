@@ -3,28 +3,30 @@ StartPositionPicker.svelte - Simplified version with advanced variations
 Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variations
 -->
 <script lang="ts">
-  import type { IHapticFeedbackService, PictographData } from "$shared";
+  import type { GridMode, IHapticFeedbackService, PictographData } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { createSimplifiedStartPositionState } from "../state/start-position-state.svelte";
+  import { createSimplifiedStartPositionState, type SimplifiedStartPositionState } from "../state/start-position-state.svelte";
   import AdvancedStartPositionPicker from "./AdvancedStartPositionPicker.svelte";
   import PictographGrid from "./PictographGrid.svelte";
-  import SimpleAdvancedToggle from "./SimpleAdvancedToggle.svelte";
+  import ConstructPickerHeader from "../../shared/components/ConstructPickerHeader.svelte";
 
   // Props - receive navigation callbacks and layout detection
   const {
+    startPositionState,
     onNavigateToAdvanced,
     onNavigateToDefault,
     isSideBySideLayout = () => false,
   } = $props<{
+    startPositionState?: SimplifiedStartPositionState | null;
     onNavigateToAdvanced?: () => void;
     onNavigateToDefault?: () => void;
     isSideBySideLayout?: () => boolean;
   }>();
 
   // Create simplified state
-  const pickerState = createSimplifiedStartPositionState();
+  const pickerState = startPositionState ?? createSimplifiedStartPositionState();
 
   // State for showing advanced picker
   let showAdvancedPicker = $state(false);
@@ -79,27 +81,29 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
     }, 600);
   }
 
-  // Handle back from advanced picker (for back button in advanced picker)
+  // Handle return to the default picker (exposed for external triggers)
   function handleBackToDefault() {
-    // Trigger navigation haptic feedback for back button
+    // Trigger navigation haptic feedback for returning to default
     hapticService?.trigger("navigation");
     handleToggleView(false);
   }
 
   // Handle grid mode change in advanced picker
-  function handleGridModeChange(gridMode: any) {
-    pickerState.loadAllVariations(gridMode);
+  async function handleGridModeChange(gridMode: GridMode) {
+    await pickerState.loadPositions(gridMode);
+    await pickerState.loadAllVariations(gridMode);
   }
 </script>
 
 <div class="start-pos-picker" data-testid="start-position-picker">
-  <!-- Toggle between simple and advanced views -->
-  <div class="toggle-container">
-    <SimpleAdvancedToggle
-      isAdvanced={showAdvancedPicker}
-      onToggle={handleToggleView}
-    />
-  </div>
+  <ConstructPickerHeader
+    variant="start"
+    title="Start Positions"
+    currentGridMode={pickerState.currentGridMode}
+    isAdvanced={showAdvancedPicker}
+    onToggleAdvanced={handleToggleView}
+    onGridModeChange={handleGridModeChange}
+  />
 
   <!-- Use {#key} to ensure only one view exists at a time during transitions -->
   {#key showAdvancedPicker}
@@ -111,8 +115,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
           selectedPictograph={pickerState.selectedPosition}
           currentGridMode={pickerState.currentGridMode}
           onPictographSelect={handlePositionSelect}
-          onGridModeChange={handleGridModeChange}
-          onBack={handleBackToDefault}
           {isSideBySideLayout}
           {isAnimating}
         />
@@ -144,7 +146,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
     height: 100%;
     width: 100%;
     min-height: 300px;
-    padding: 20px 0;
     position: relative;
     container-type: inline-size;
   }
@@ -152,13 +153,9 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
   .picker-view {
     display: flex;
     flex-direction: column;
-    height: 100%;
+    flex: 1;
     width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    position: relative;
   }
 
   .picker-header {
@@ -186,15 +183,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
     line-height: 1.1;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .toggle-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px 0;
-    width: 100%;
-    z-index: 20;
   }
 
   .grid-container {

@@ -142,10 +142,7 @@ export class CardConfigurationService implements ICardConfigurationService {
 				props: {
 					currentCAPType: config.capType,
 					onCAPTypeChange: handlers.handleCAPTypeChange,
-					// Animated mesh gradient (overridden by CAPCard wrapper styles)
-					color:
-						"linear-gradient(135deg, #4338ca 0%, #6b21a8 12.5%, #db2777 25%, #f97316 37.5%, #eab308 50%, #22c55e 62.5%, #0891b2 75%, #3b82f6 87.5%, #6366f1 100%)",
-					shadowColor: "270deg 70% 50%", // Purple shadow to match glow
+					shadowColor: "30deg 75% 55%", // Orange shadow
 					cardIndex: cardIndex++,
 					headerFontSize
 				},
