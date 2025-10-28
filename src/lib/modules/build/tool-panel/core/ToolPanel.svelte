@@ -42,7 +42,8 @@
     isSideBySideLayout = () => false,
     activeTab,
     onTabChange,
-  }: IToolPanelProps = $props();
+    onOpenFilters = () => {},
+  }: IToolPanelProps & { onOpenFilters?: () => void } = $props();
 
   // ============================================================================
   // REACTIVE STATE
@@ -308,6 +309,7 @@
                 onStartPositionNavigateToAdvanced={handleNavigateToAdvanced}
                 onStartPositionNavigateToDefault={handleNavigateToDefault}
                 {isSideBySideLayout}
+                {onOpenFilters}
               />
             {/if}
           {:else if activeToolPanel === "generate"}

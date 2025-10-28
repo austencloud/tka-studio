@@ -10,17 +10,12 @@
     type PictographData
   } from "$shared";
   import { onMount } from "svelte";
+  import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
   import { EditSlidePanel } from "../../edit/components";
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
   import InlineAnimatorPanel from '../../workspace-panel/shared/components/InlineAnimatorPanel.svelte';
-  import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
-  import { createBuildTabState, createConstructTabState } from "../state";
-  import type { createBuildTabState as BuildTabStateType } from "../state/build-tab-state.svelte";
-  import type { createConstructTabState as ConstructTabStateType } from "../state/construct-tab-state.svelte";
-  import { createPanelCoordinationState } from "../state/panel-coordination-state.svelte";
-  import type { BatchEditChanges, IToolPanelMethods } from "../types/build-tab-types";
   import type {
     IBeatOperationsService,
     IBuildTabResponsiveLayoutService,
@@ -30,6 +25,11 @@
     ISequenceService
   } from "../services/contracts";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
+  import { createBuildTabState, createConstructTabState } from "../state";
+  import type { createBuildTabState as BuildTabStateType } from "../state/build-tab-state.svelte";
+  import type { createConstructTabState as ConstructTabStateType } from "../state/construct-tab-state.svelte";
+  import { createPanelCoordinationState } from "../state/panel-coordination-state.svelte";
+  import type { BatchEditChanges, IToolPanelMethods } from "../types/build-tab-types";
   import LoadingOverlay from './LoadingOverlay.svelte';
 
   const logger = createComponentLogger('BuildTab');
