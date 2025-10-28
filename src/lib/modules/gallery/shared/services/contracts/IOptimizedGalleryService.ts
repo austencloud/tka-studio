@@ -5,13 +5,14 @@
  * to dramatically improve mobile gallery performance.
  */
 
-import type { SequenceData } from "$shared";
 
 export interface SequenceMetadata {
   id: string;
   word: string;
   thumbnailUrl: string;
   webpThumbnailUrl?: string;
+  width?: number; // Image width for layout stability
+  height?: number; // Image height for layout stability
   length: number;
   hasImage: boolean;
   priority: boolean; // Above-the-fold

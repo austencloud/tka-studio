@@ -5,48 +5,148 @@
   Handles cross-browser fullscreen API with proper state management.
 -->
 <script lang="ts">
-  import type { IHapticFeedbackService } from "$shared";
+  import type {
+    IHapticFeedbackService,
+    IMobileFullscreenService,
+  } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
   // Services
-  let hapticService: IHapticFeedbackService;
+  let hapticService: IHapticFeedbackService | null = null;
+  let fullscreenService: IMobileFullscreenService | null = null;
 
   // State
   let isFullscreen = $state(false);
   let isFullscreenSupported = $state(false);
+  let isPWA = $state(false);
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    const cleanupFns: Array<() => void> = [];
 
-    // Check fullscreen support
-    isFullscreenSupported = !!(
-      document.fullscreenEnabled ||
-      (document as any).webkitFullscreenEnabled ||
-      (document as any).mozFullScreenEnabled ||
-      (document as any).msFullscreenEnabled
-    );
+    try {
+      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    } catch (error) {
+      console.warn("Failed to resolve haptic feedback service:", error);
+    }
 
-    // Listen for fullscreen changes
-    const handleFullscreenChange = () => {
-      isFullscreen = !!(
-        document.fullscreenElement ||
-        (document as any).webkitFullscreenElement ||
-        (document as any).mozFullScreenElement ||
-        (document as any).msFullscreenElement
+    try {
+      fullscreenService = resolve<IMobileFullscreenService>(
+        TYPES.IMobileFullscreenService
       );
-    };
+    } catch (error) {
+      console.warn("Failed to resolve mobile fullscreen service:", error);
+      fullscreenService = null;
+    }
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
-    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
-    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+    if (fullscreenService) {
+      isFullscreenSupported = fullscreenService.isFullscreenSupported();
+      isFullscreen = fullscreenService.isFullscreen();
+      isPWA = fullscreenService.isPWA();
+
+      const unsubscribeFullscreen = fullscreenService.onFullscreenChange(
+        (fullscreen) => {
+          isFullscreen = fullscreen;
+        }
+      );
+      cleanupFns.push(() => unsubscribeFullscreen?.());
+
+      const updatePWAStatus = () => {
+        isPWA = fullscreenService?.isPWA() ?? false;
+      };
+
+      const unsubscribeInstall = fullscreenService.onInstallPromptAvailable(
+        () => updatePWAStatus()
+      );
+      cleanupFns.push(() => unsubscribeInstall?.());
+
+      if (typeof window !== "undefined" && "matchMedia" in window) {
+        const queries = [
+          "(display-mode: standalone)",
+          "(display-mode: fullscreen)",
+          "(display-mode: minimal-ui)",
+        ];
+
+        queries.forEach((query) => {
+          const mediaQuery = window.matchMedia(query);
+          const handler = () => updatePWAStatus();
+
+          if (mediaQuery.addEventListener) {
+            mediaQuery.addEventListener("change", handler);
+            cleanupFns.push(() =>
+              mediaQuery.removeEventListener("change", handler)
+            );
+          } else if (mediaQuery.addListener) {
+            mediaQuery.addListener(handler);
+            cleanupFns.push(() => mediaQuery.removeListener(handler));
+          }
+        });
+
+        const handleAppInstalled = () => updatePWAStatus();
+        window.addEventListener("appinstalled", handleAppInstalled);
+        cleanupFns.push(() =>
+          window.removeEventListener("appinstalled", handleAppInstalled)
+        );
+      }
+    } else {
+      // Fallback to direct DOM checks if service is unavailable
+      const supportsFullscreen = !!(
+        document.fullscreenEnabled ||
+        (document as any).webkitFullscreenEnabled ||
+        (document as any).mozFullScreenEnabled ||
+        (document as any).msFullscreenEnabled
+      );
+      isFullscreenSupported = supportsFullscreen;
+      isPWA = false;
+
+      const handleFullscreenChange = () => {
+        isFullscreen = !!(
+          document.fullscreenElement ||
+          (document as any).webkitFullscreenElement ||
+          (document as any).mozFullScreenElement ||
+          (document as any).msFullscreenElement
+        );
+      };
+
+      document.addEventListener("fullscreenchange", handleFullscreenChange);
+      document.addEventListener(
+        "webkitfullscreenchange",
+        handleFullscreenChange
+      );
+      document.addEventListener("mozfullscreenchange", handleFullscreenChange);
+      document.addEventListener("MSFullscreenChange", handleFullscreenChange);
+
+      cleanupFns.push(() =>
+        document.removeEventListener("fullscreenchange", handleFullscreenChange)
+      );
+      cleanupFns.push(() =>
+        document.removeEventListener(
+          "webkitfullscreenchange",
+          handleFullscreenChange
+        )
+      );
+      cleanupFns.push(() =>
+        document.removeEventListener(
+          "mozfullscreenchange",
+          handleFullscreenChange
+        )
+      );
+      cleanupFns.push(() =>
+        document.removeEventListener(
+          "MSFullscreenChange",
+          handleFullscreenChange
+        )
+      );
+    }
 
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
-      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+      cleanupFns.forEach((cleanup) => {
+        try {
+          cleanup();
+        } catch (error) {
+          console.warn("Failed to clean up fullscreen listeners:", error);
+        }
+      });
     };
   });
 
@@ -55,7 +155,9 @@
       if (isFullscreen) {
         hapticService?.trigger("navigation");
 
-        if (document.exitFullscreen) {
+        if (fullscreenService) {
+          await fullscreenService.exitFullscreen();
+        } else if (document.exitFullscreen) {
           await document.exitFullscreen();
         } else if ((document as any).webkitExitFullscreen) {
           await (document as any).webkitExitFullscreen();
@@ -67,15 +169,19 @@
       } else {
         hapticService?.trigger("selection");
 
-        const element = document.documentElement;
-        if (element.requestFullscreen) {
-          await element.requestFullscreen();
-        } else if ((element as any).webkitRequestFullscreen) {
-          await (element as any).webkitRequestFullscreen();
-        } else if ((element as any).mozRequestFullScreen) {
-          await (element as any).mozRequestFullScreen();
-        } else if ((element as any).msRequestFullscreen) {
-          await (element as any).msRequestFullscreen();
+        if (fullscreenService) {
+          await fullscreenService.requestFullscreen();
+        } else {
+          const element = document.documentElement;
+          if (element.requestFullscreen) {
+            await element.requestFullscreen();
+          } else if ((element as any).webkitRequestFullscreen) {
+            await (element as any).webkitRequestFullscreen();
+          } else if ((element as any).mozRequestFullScreen) {
+            await (element as any).mozRequestFullScreen();
+          } else if ((element as any).msRequestFullscreen) {
+            await (element as any).msRequestFullscreen();
+          }
         }
       }
     } catch (error) {
@@ -84,7 +190,7 @@
   }
 </script>
 
-{#if isFullscreenSupported}
+{#if isFullscreenSupported && !isPWA}
   <button
     class="panel-button fullscreen-button"
     onclick={handleClick}

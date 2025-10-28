@@ -8,10 +8,12 @@
     pictographDataSet,
     selectedPictograph = null,
     onPictographSelect,
+    isAnimating = false,
   }: {
     pictographDataSet: PictographData[];
     selectedPictograph?: PictographData | null;
     onPictographSelect: (pictograph: PictographData) => void;
+    isAnimating?: boolean;
   } = $props();
 
   // Animation state for entrance effect

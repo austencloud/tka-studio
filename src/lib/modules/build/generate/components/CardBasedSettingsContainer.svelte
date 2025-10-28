@@ -25,12 +25,15 @@ Delegates ALL logic to services (SRP compliant)
   import PropContinuityCard from "./cards/PropContinuityCard.svelte";
   import SliceSizeCard from "./cards/SliceSizeCard.svelte";
   import TurnIntensityCard from "./cards/TurnIntensityCard.svelte";
+  import GenerateButtonCard from "./cards/GenerateButtonCard.svelte";
 
   // Props
-  let { config, isFreeformMode, updateConfig } = $props<{
+  let { config, isFreeformMode, updateConfig, isGenerating, onGenerateClicked } = $props<{
     config: UIGenerationConfig;
     isFreeformMode: boolean;
     updateConfig: (updates: Partial<UIGenerationConfig>) => void;
+    isGenerating: boolean;
+    onGenerateClicked: (options: any) => Promise<void>;
   }>();
 
   // Services - use $state to make them reactive
@@ -123,10 +126,12 @@ Delegates ALL logic to services (SRP compliant)
         handleGridModeChange,
         handleGenerationModeChange,
         handleCAPTypeChange,
-        handleSliceSizeChange
+        handleSliceSizeChange,
+        handleGenerateClick: onGenerateClicked
       },
       headerFontSize,
-      allowedIntensityValues
+      allowedIntensityValues,
+      isGenerating
     );
   });
 </script>
@@ -157,6 +162,8 @@ Delegates ALL logic to services (SRP compliant)
         <TurnIntensityCard {...(card.props as any)} />
       {:else if card.id === 'cap-type'}
         <CAPCard {...(card.props as any)} />
+      {:else if card.id === 'generate-button'}
+        <GenerateButtonCard {...(card.props as any)} />
       {/if}
     </div>
   {/each}

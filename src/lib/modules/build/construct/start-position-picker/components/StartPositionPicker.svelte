@@ -1,6 +1,6 @@
 <!--
 StartPositionPicker.svelte - Simplified version with advanced variations
-Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variations
+Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variations
 -->
 <script lang="ts">
   import type { IHapticFeedbackService, PictographData } from "$shared";
@@ -10,6 +10,7 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
   import { createSimplifiedStartPositionState } from "../state/start-position-state.svelte";
   import AdvancedStartPositionPicker from "./AdvancedStartPositionPicker.svelte";
   import PictographGrid from "./PictographGrid.svelte";
+  import SimpleAdvancedToggle from "./SimpleAdvancedToggle.svelte";
 
   // Props - receive navigation callbacks and layout detection
   const {
@@ -27,6 +28,9 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
 
   // State for showing advanced picker
   let showAdvancedPicker = $state(false);
+
+  // Track if animation is in progress
+  let isAnimating = $state(false);
 
   // Services
   let hapticService: IHapticFeedbackService;
@@ -52,25 +56,34 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
     await pickerState.selectPosition(position);
   }
 
-  // Handle variations button click
-  function handleShowVariations() {
-    // Trigger navigation haptic feedback for variations button
-    hapticService?.trigger("navigation");
+  // Handle toggle between simple and advanced
+  function handleToggleView(isAdvanced: boolean) {
+    // Trigger haptic feedback
+    hapticService?.trigger("selection");
 
-    showAdvancedPicker = true;
-    pickerState.loadAllVariations(pickerState.currentGridMode);
-    // Notify parent of navigation
-    onNavigateToAdvanced?.();
+    // Start animation
+    isAnimating = true;
+
+    if (isAdvanced) {
+      showAdvancedPicker = true;
+      pickerState.loadAllVariations(pickerState.currentGridMode);
+      onNavigateToAdvanced?.();
+    } else {
+      showAdvancedPicker = false;
+      onNavigateToDefault?.();
+    }
+
+    // End animation after transition completes
+    setTimeout(() => {
+      isAnimating = false;
+    }, 600);
   }
 
-  // Handle back from advanced picker
+  // Handle back from advanced picker (for back button in advanced picker)
   function handleBackToDefault() {
     // Trigger navigation haptic feedback for back button
     hapticService?.trigger("navigation");
-
-    showAdvancedPicker = false;
-    // Notify parent of navigation
-    onNavigateToDefault?.();
+    handleToggleView(false);
   }
 
   // Handle grid mode change in advanced picker
@@ -80,6 +93,14 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
 </script>
 
 <div class="start-pos-picker" data-testid="start-position-picker">
+  <!-- Toggle between simple and advanced views -->
+  <div class="toggle-container">
+    <SimpleAdvancedToggle
+      isAdvanced={showAdvancedPicker}
+      onToggle={handleToggleView}
+    />
+  </div>
+
   <!-- Use {#key} to ensure only one view exists at a time during transitions -->
   {#key showAdvancedPicker}
     <div class="picker-view" in:fade={{ duration: 250, delay: 250 }} out:fade={{ duration: 250 }}>
@@ -93,6 +114,7 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
           onGridModeChange={handleGridModeChange}
           onBack={handleBackToDefault}
           {isSideBySideLayout}
+          {isAnimating}
         />
       {:else}
         <!-- Default picker with 3 positions -->
@@ -107,15 +129,8 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
             pictographDataSet={pickerState.positions}
             selectedPictograph={pickerState.selectedPosition}
             onPictographSelect={handlePositionSelect}
+            {isAnimating}
           />
-        </div>
-
-        <!-- Variations button -->
-        <div class="variations-button-container">
-          <button class="variations-button" onclick={handleShowVariations}>
-            <span class="variations-icon">⚡</span>
-            <span>Variations</span>
-          </button>
         </div>
       {/if}
     </div>
@@ -173,6 +188,15 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
     text-overflow: ellipsis;
   }
 
+  .toggle-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0;
+    width: 100%;
+    z-index: 20;
+  }
+
   .grid-container {
     width: 100%;
     height: 100%; /* Take full height */
@@ -180,43 +204,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with option to view all 16 variatio
     justify-content: center;
     align-items: center;
     /* Grid is now centered in the full available space */
-  }
-
-  .variations-button-container {
-    position: absolute;
-    bottom: 10%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-  }
-
-  .variations-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: var(--bg-secondary, #2a2a2a);
-    border: 1px solid var(--border-color, #444);
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    font-style: italic;
-    color: var(--text-primary, #ffffff);
-    transition: all 0.2s ease-in-out;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-
-  .variations-button:hover {
-    background: var(--accent-color, #4a90e2);
-    color: white;
-    border-color: var(--accent-color, #4a90e2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  .variations-icon {
-    font-size: 20px;
   }
 
   /* Container-based responsive adjustments */

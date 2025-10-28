@@ -64,9 +64,9 @@ Uses consistent spacing via --element-spacing CSS variable from parent
 
   .action-button {
     flex: 1;
-    min-height: var(--min-touch-target);
     padding: 12px 20px;
     border: none;
+    min-height: 44px;
 
     /* Modern 16px border-radius */
     border-radius: 16px;

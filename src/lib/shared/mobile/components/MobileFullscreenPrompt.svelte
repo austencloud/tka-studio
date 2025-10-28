@@ -1,92 +1,185 @@
 <!--
-Mobile Fullscreen Prompt Component
+  MobileFullscreenPrompt.svelte
 
-Shows intelligent prompts for mobile fullscreen based on device capabilities:
-1. PWA installation prompt (best experience)
-2. Fullscreen API button (requires user gesture)
-3. Manual fullscreen instructions (fallback)
+  Encourages users to install the Progressive Web App when the fullscreen
+  button would normally be shown (i.e. the app is not already installed).
+  Provides a direct install button when the browser exposes the native prompt,
+  and clear manual steps otherwise. Optionally supports a nag mode that will
+  gently remind the user again after dismissal.
 -->
 <script lang="ts">
   import { resolve, TYPES } from "$shared";
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   import type { IMobileFullscreenService } from "../services/contracts/IMobileFullscreenService";
 
-  // Props
   let {
     showPrompt = $bindable(false),
     autoShow = true,
     position = "bottom",
+    nagMode = false,
   }: {
     showPrompt?: boolean;
     autoShow?: boolean;
     position?: "top" | "bottom" | "center";
+    nagMode?: boolean;
   } = $props();
 
-  // Service
+  const dispatch = createEventDispatcher<{ dismiss: void }>();
+
   let fullscreenService: IMobileFullscreenService | null = null;
 
-  // State
   let strategy = $state<
     "pwa" | "fullscreen-api" | "viewport-only" | "not-supported"
   >("not-supported");
+  let isPWA = $state(false);
   let canInstallPWA = $state(false);
-  let isFullscreen = $state(false);
   let isInstalling = $state(false);
-  let isTogglingFullscreen = $state(false);
+
+  const dismissLabel = $derived(() =>
+    nagMode ? "Keep using browser for now" : "Maybe Later"
+  );
+
+  type BrowserEnvironment = {
+    platform: "android" | "ios" | "desktop" | "unknown";
+    browser: string;
+    isChromeLike: boolean;
+    isEdge: boolean;
+    isFirefox: boolean;
+    isSafari: boolean;
+    isSamsung: boolean;
+    isDesktop: boolean;
+  };
+
+  type InstallGuidance =
+    | {
+        support: "native";
+        heading: string;
+        steps: string[];
+        note?: string;
+      }
+    | {
+        support: "manual";
+        heading: string;
+        steps: string[];
+        note?: string;
+      }
+    | {
+        support: "unsupported";
+        heading: string;
+        message: string;
+        recommendations: string[];
+      };
+
+  const environment = detectEnvironment();
+
+  const installGuidance = $derived<InstallGuidance | null>(() => {
+    if (isPWA) {
+      return null;
+    }
+
+    if (canInstallPWA) {
+      const manual = getManualGuidance(environment);
+      return {
+        support: "native",
+        heading: `Install with ${environment.browser}`,
+        steps: manual?.support === "manual" ? manual.steps : [],
+        note: manual?.support === "manual" ? manual.note : undefined,
+      } as InstallGuidance;
+    }
+
+    if (strategy === "pwa") {
+      const manual = getManualGuidance(environment);
+      if (manual && manual.support === "manual") {
+        return manual;
+      }
+
+      return {
+        support: "unsupported",
+        heading: manual?.heading ?? "Install not available",
+        message:
+          manual?.message ??
+          "This browser doesn't offer Add to Home Screen for Progressive Web Apps.",
+        recommendations:
+          manual?.recommendations ?? getDefaultRecommendations(environment),
+      };
+    }
+
+    if (strategy === "not-supported") {
+      return {
+        support: "unsupported",
+        heading: "Installation not supported in this browser",
+        message:
+          "Switch to a supported browser to install TKA as a fullscreen app.",
+        recommendations: getDefaultRecommendations(environment),
+      };
+    }
+
+    return null;
+  });
+
+  const shouldPromptUser = $derived(() => installGuidance() !== null);
+
+  function updateState() {
+    if (!fullscreenService) return;
+    strategy = fullscreenService.getRecommendedStrategy();
+    isPWA = fullscreenService.isPWA();
+    canInstallPWA = fullscreenService.canInstallPWA();
+  }
 
   onMount(() => {
     try {
-      fullscreenService = resolve(TYPES.IMobileFullscreenService);
-      if (!fullscreenService) return;
-
-      strategy = fullscreenService.getRecommendedStrategy();
-      canInstallPWA = fullscreenService.canInstallPWA();
-      isFullscreen = fullscreenService.isFullscreen();
-
-      // Subscribe to changes
-      const unsubscribeFullscreen = fullscreenService.onFullscreenChange(
-        (fs) => {
-          isFullscreen = fs;
-        }
+      fullscreenService = resolve<IMobileFullscreenService>(
+        TYPES.IMobileFullscreenService
       );
-
-      const unsubscribeInstall = fullscreenService.onInstallPromptAvailable(
-        (canInstall) => {
-          canInstallPWA = canInstall;
-          if (canInstall && autoShow && !fullscreenService!.isPWA()) {
-            showPrompt = true;
-          }
-        }
-      );
-
-      // Auto-show prompt for mobile users if not PWA
-      if (
-        autoShow &&
-        strategy !== "not-supported" &&
-        !fullscreenService.isPWA()
-      ) {
-        // Delay to avoid interrupting initial page load
-        setTimeout(() => {
-          showPrompt = true;
-        }, 3000);
-      }
-
-      return () => {
-        unsubscribeFullscreen();
-        unsubscribeInstall();
-      };
     } catch (error) {
-      console.error("Failed to initialize mobile fullscreen service:", error);
+      console.warn("Failed to resolve mobile fullscreen service:", error);
+      fullscreenService = null;
+      return;
     }
+
+    updateState();
+
+    if (autoShow && shouldPromptUser()) {
+      setTimeout(() => {
+        if (shouldPromptUser()) {
+          showPrompt = true;
+        }
+      }, 2500);
+    }
+
+    const unsubscribeInstall = fullscreenService.onInstallPromptAvailable(
+      (canInstall) => {
+        canInstallPWA = canInstall;
+        strategy = fullscreenService?.getRecommendedStrategy() ?? strategy;
+        if (canInstall && shouldPromptUser()) {
+          showPrompt = true;
+        }
+      }
+    );
+
+    const handleAppInstalled = () => {
+      updateState();
+      showPrompt = false;
+    };
+
+    window.addEventListener("appinstalled", handleAppInstalled);
+
+    return () => {
+      unsubscribeInstall?.();
+      window.removeEventListener("appinstalled", handleAppInstalled);
+    };
   });
 
-  async function handleInstallPWA() {
-    if (!fullscreenService) return;
+  async function handleInstall() {
+    if (!fullscreenService || !canInstallPWA) {
+      return;
+    }
 
     isInstalling = true;
     try {
-      const success = await fullscreenService.promptInstallPWA();
-      if (success) {
+      const accepted = await fullscreenService.promptInstallPWA();
+      if (accepted) {
+        updateState();
         showPrompt = false;
       }
     } finally {
@@ -94,98 +187,265 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     }
   }
 
-  async function handleToggleFullscreen() {
-    if (!fullscreenService) return;
-
-    isTogglingFullscreen = true;
-    try {
-      await fullscreenService.toggleFullscreen();
-    } finally {
-      isTogglingFullscreen = false;
-    }
-  }
-
   function handleDismiss() {
     showPrompt = false;
+    dispatch("dismiss");
+  }
+
+  type ManualGuidance =
+    | {
+        support: "manual";
+        heading: string;
+        steps: string[];
+        note?: string;
+      }
+    | {
+        support: "unsupported";
+        heading: string;
+        message: string;
+        recommendations: string[];
+      };
+
+  function detectEnvironment(): BrowserEnvironment {
+    if (typeof navigator === "undefined") {
+      return {
+        platform: "unknown",
+        browser: "your browser",
+        isChromeLike: false,
+        isEdge: false,
+        isFirefox: false,
+        isSafari: false,
+        isSamsung: false,
+        isDesktop: true,
+      };
+    }
+
+    const ua = navigator.userAgent.toLowerCase();
+    const isAndroid = ua.includes("android");
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isSamsung = ua.includes("samsungbrowser");
+    const isEdge = ua.includes("edg/");
+    const isFirefox = ua.includes("firefox") || ua.includes("fxios");
+    const isOpera = ua.includes("opr/") || ua.includes("opera");
+    const isChromeLike =
+      (ua.includes("chrome") || ua.includes("crios") || ua.includes("chromium")) &&
+      !isEdge &&
+      !isOpera &&
+      !isSamsung;
+    const isSafari =
+      !isChromeLike && !isEdge && !isFirefox && ua.includes("safari");
+
+    const browser = isSamsung
+      ? "Samsung Internet"
+      : isEdge
+      ? "Microsoft Edge"
+      : isFirefox
+      ? "Firefox"
+      : isChromeLike && isIOS
+      ? "Chrome on iOS"
+      : isChromeLike
+      ? "Google Chrome"
+      : isSafari && isIOS
+      ? "Safari on iOS"
+      : isSafari
+      ? "Safari"
+      : "your browser";
+
+    const platform = isAndroid
+      ? "android"
+      : isIOS
+      ? "ios"
+      : "desktop";
+
+    return {
+      platform,
+      browser,
+      isChromeLike,
+      isEdge,
+      isFirefox,
+      isSafari,
+      isSamsung,
+      isDesktop: !isAndroid && !isIOS,
+    };
+  }
+
+  function getManualGuidance(
+    env: BrowserEnvironment
+  ): ManualGuidance | null {
+    if (env.platform === "android" && (env.isChromeLike || env.isEdge)) {
+      return {
+        support: "manual" as const,
+        heading: "Add TKA to your home screen",
+        steps: [
+          "Tap the menu button (three dots) in the top-right corner",
+          'Choose "Add to Home screen"',
+          "Confirm by tapping Add",
+        ],
+        note: "TKA will appear as an icon on your home screen for one-tap launches.",
+      };
+    }
+
+    if (env.platform === "android" && env.isSamsung) {
+      return {
+        support: "manual" as const,
+        heading: "Add TKA in Samsung Internet",
+        steps: [
+          "Tap the menu button (three horizontal lines) in the bottom bar",
+          'Choose "Add page to" then "Home screen"',
+          "Confirm the shortcut",
+        ],
+      };
+    }
+
+    if (env.platform === "ios") {
+      return {
+        support: "manual" as const,
+        heading: "Add TKA to your Home Screen",
+        steps: [
+          "Tap the share button (square with an up arrow)",
+          'Scroll and tap "Add to Home Screen"',
+          "Tap Add to confirm",
+        ],
+        note: "Safari creates an app-like icon that opens TKA fullscreen.",
+      };
+    }
+
+    if (env.isDesktop && (env.isChromeLike || env.isEdge)) {
+      return {
+        support: "manual" as const,
+        heading: "Install TKA on your computer",
+        steps: [
+          "Click the install icon in the address bar (monitor with a down arrow)",
+          'Select "Install" when prompted',
+          "Open TKA from your app list or desktop shortcut",
+        ],
+        note: "Installed apps run in their own window without browser chrome.",
+      };
+    }
+
+    return {
+      support: "unsupported" as const,
+      heading: `Install not available in ${env.browser}`,
+      message:
+        "This browser does not support adding Progressive Web Apps to the home screen.",
+      recommendations: getDefaultRecommendations(env),
+    };
+  }
+
+  function getDefaultRecommendations(env: BrowserEnvironment): string[] {
+    if (env.platform === "ios") {
+      return [
+        "Open this page in Safari on iOS 16 or later",
+        "Or install from Chrome/Edge on a desktop computer",
+      ];
+    }
+
+    if (env.platform === "android") {
+      return [
+        "Try Google Chrome on Android for one-tap install",
+        "Samsung Internet also supports Add to Home Screen",
+      ];
+    }
+
+    return [
+      "Use Google Chrome or Microsoft Edge on desktop",
+      "Install from Chrome on Android or Safari on iOS for mobile access",
+    ];
   }
 </script>
 
-{#if showPrompt && strategy !== "not-supported"}
-  <div class="fullscreen-prompt-overlay position-{position}">
-    <div class="fullscreen-prompt">
-      <!-- PWA Installation Prompt -->
-      {#if strategy === "pwa" && canInstallPWA}
-        <div class="prompt-content">
-          <div class="prompt-icon">📱</div>
-          <h3>Get the Best Experience</h3>
-          <p>
-            Install TKA as an app for fullscreen experience and offline access!
-          </p>
+{#if showPrompt && shouldPromptUser()}
+  {@const guidance = installGuidance()}
+  {#if guidance}
+    <div
+      class="fullscreen-prompt-overlay position-{position}"
+      class:nag-mode={nagMode}
+    >
+      <div class="fullscreen-prompt" class:nag-mode={nagMode}>
+        <div class="prompt-content" class:nag-content={nagMode}>
+          <div class="prompt-icon">??</div>
+          <h3>{guidance.heading}</h3>
 
-          <div class="prompt-actions">
-            <button
-              class="install-button"
-              onclick={handleInstallPWA}
-              disabled={isInstalling}
-            >
-              {isInstalling ? "Installing..." : "Install App"}
-            </button>
-            <button class="dismiss-button" onclick={handleDismiss}>
-              Maybe Later
-            </button>
-          </div>
+          {#if guidance.support === "native"}
+            <p>
+              Install TKA to launch it fullscreen and keep the builder only a tap away.
+            </p>
+            <div class="prompt-actions">
+              <button
+                class="install-button"
+                onclick={handleInstall}
+                disabled={isInstalling}
+              >
+                {isInstalling ? "Installing..." : "Install App"}
+              </button>
+              <button
+                class="dismiss-button"
+                class:nag-dismiss={nagMode}
+                onclick={handleDismiss}
+              >
+                {dismissLabel()}
+              </button>
+            </div>
+            {#if guidance.steps.length > 0}
+              <div class="manual-instructions">
+                <p class="manual-title">
+                  If the install button doesn't appear:
+                </p>
+                <ol>
+                  {#each guidance.steps as step}
+                    <li>{step}</li>
+                  {/each}
+                </ol>
+                {#if guidance.note}
+                  <p class="manual-note">{guidance.note}</p>
+                {/if}
+              </div>
+            {/if}
+          {:else if guidance.support === "manual"}
+            <p>Follow these quick steps to add TKA to your device:</p>
+            <div class="manual-instructions">
+              <ol>
+                {#each guidance.steps as step}
+                  <li>{step}</li>
+                {/each}
+              </ol>
+              {#if guidance.note}
+                <p class="manual-note">{guidance.note}</p>
+              {/if}
+            </div>
+            <div class="prompt-actions">
+              <button
+                class="dismiss-button"
+                class:nag-dismiss={nagMode}
+                onclick={handleDismiss}
+              >
+                {dismissLabel()}
+              </button>
+            </div>
+          {:else}
+            <p class="unsupported-message">{guidance.message}</p>
+            <ul class="recommendations">
+              {#each guidance.recommendations as recommendation}
+                <li>{recommendation}</li>
+              {/each}
+            </ul>
+            <div class="prompt-actions">
+              <button class="dismiss-button" onclick={handleDismiss}>
+                Got it
+              </button>
+            </div>
+          {/if}
+
+          {#if nagMode && guidance.support !== "unsupported"}
+            <div class="nag-reminder">
+              We'll remind you again later so you can install when it's convenient.
+            </div>
+          {/if}
         </div>
-
-        <!-- Fullscreen API Prompt -->
-      {:else if strategy === "fullscreen-api"}
-        <div class="prompt-content">
-          <div class="prompt-icon">🔲</div>
-          <h3>Go Fullscreen</h3>
-          <p>
-            Tap the button below to use TKA in fullscreen mode for the best
-            experience.
-          </p>
-
-          <div class="prompt-actions">
-            <button
-              class="fullscreen-button"
-              onclick={handleToggleFullscreen}
-              disabled={isTogglingFullscreen}
-            >
-              {isTogglingFullscreen
-                ? "Loading..."
-                : isFullscreen
-                  ? "Exit Fullscreen"
-                  : "Enter Fullscreen"}
-            </button>
-            <button class="dismiss-button" onclick={handleDismiss}>
-              Not Now
-            </button>
-          </div>
-        </div>
-
-        <!-- Viewport Optimization Prompt -->
-      {:else if strategy === "viewport-only"}
-        <div class="prompt-content">
-          <div class="prompt-icon">📐</div>
-          <h3>Fullscreen Tips</h3>
-          <p>For the best experience, use your browser's fullscreen option:</p>
-          <ul>
-            <li>Tap the menu (⋮) and select "Fullscreen"</li>
-            <li>Or rotate to landscape mode</li>
-          </ul>
-
-          <div class="prompt-actions">
-            <button class="dismiss-button" onclick={handleDismiss}>
-              Got It
-            </button>
-          </div>
-        </div>
-      {/if}
+      </div>
     </div>
-  </div>
+  {/if}
 {/if}
-
 <style>
   .fullscreen-prompt-overlay {
     position: fixed;
@@ -197,11 +457,21 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     padding: 16px;
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .fullscreen-prompt-overlay.nag-mode {
+    background: rgba(0, 0, 0, 0.9);
   }
 
   .fullscreen-prompt-overlay.position-top {
     top: 0;
     align-items: flex-start;
+  }
+
+  .fullscreen-prompt-overlay.position-bottom {
+    bottom: 0;
+    align-items: flex-end;
   }
 
   .fullscreen-prompt-overlay.position-center {
@@ -210,52 +480,39 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     align-items: center;
   }
 
-  .fullscreen-prompt-overlay.position-bottom {
-    bottom: 0;
-    align-items: flex-end;
-  }
-
   .fullscreen-prompt {
-    background: var(--color-surface);
+    background: var(--color-surface, rgba(15, 23, 42, 0.94));
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    max-width: 400px;
+    box-shadow: 0 12px 40px rgba(15, 23, 42, 0.5);
+    max-width: 420px;
     width: 100%;
     animation: slideIn 0.3s ease-out;
+  }
+
+  .fullscreen-prompt.nag-mode {
+    border: 2px solid rgba(129, 140, 248, 0.6);
   }
 
   .prompt-content {
     padding: 24px;
     text-align: center;
+    color: var(--color-text-primary, #e2e8f0);
   }
 
   .prompt-icon {
-    font-size: 48px;
+    font-size: 44px;
     margin-bottom: 16px;
   }
 
   .prompt-content h3 {
     margin: 0 0 12px 0;
-    color: var(--color-text-primary);
     font-size: 20px;
     font-weight: 600;
   }
 
   .prompt-content p {
     margin: 0 0 20px 0;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-
-  .prompt-content ul {
-    text-align: left;
-    margin: 0 0 20px 0;
-    padding-left: 20px;
-    color: var(--color-text-secondary);
-  }
-
-  .prompt-content li {
-    margin-bottom: 8px;
+    color: var(--color-text-secondary, #cbd5f5);
   }
 
   .prompt-actions {
@@ -264,9 +521,8 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     gap: 12px;
   }
 
-  .install-button,
-  .fullscreen-button {
-    background: var(--color-primary);
+  .install-button {
+    background: var(--color-primary, #6366f1);
     color: white;
     border: none;
     border-radius: 8px;
@@ -277,14 +533,12 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     transition: all 0.2s ease;
   }
 
-  .install-button:hover,
-  .fullscreen-button:hover {
-    background: var(--color-primary-hover);
+  .install-button:hover {
+    background: var(--color-primary-hover, #4f46e5);
     transform: translateY(-1px);
   }
 
-  .install-button:disabled,
-  .fullscreen-button:disabled {
+  .install-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
@@ -292,8 +546,8 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
 
   .dismiss-button {
     background: transparent;
-    color: var(--color-text-secondary);
-    border: 1px solid var(--color-border);
+    color: var(--color-text-secondary, #cbd5f5);
+    border: 1px solid rgba(148, 163, 184, 0.35);
     border-radius: 8px;
     padding: 12px 24px;
     font-size: 14px;
@@ -302,8 +556,67 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
   }
 
   .dismiss-button:hover {
-    background: var(--color-surface-hover);
-    color: var(--color-text-primary);
+    background: rgba(148, 163, 184, 0.12);
+    color: var(--color-text-primary, #e2e8f0);
+  }
+
+  .dismiss-button.nag-dismiss {
+    border-color: rgba(226, 232, 240, 0.4);
+    color: rgba(226, 232, 240, 0.92);
+  }
+
+  .manual-instructions {
+    background: rgba(99, 102, 241, 0.12);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+
+  .manual-title {
+    margin: 0 0 12px 0;
+    font-weight: 600;
+  }
+
+  .manual-instructions ol {
+    margin: 0 0 12px 0;
+    padding-left: 20px;
+    color: var(--color-text-secondary, #cbd5f5);
+  }
+
+  .manual-instructions ol li {
+    margin-bottom: 8px;
+  }
+
+  .manual-note {
+    margin: 0;
+    color: var(--color-text-secondary, #cbd5f5);
+    font-size: 14px;
+  }
+
+  .unsupported-message {
+    margin: 0 0 16px 0;
+    color: var(--color-text-secondary, #cbd5f5);
+  }
+
+  .recommendations {
+    text-align: left;
+    padding-left: 20px;
+    margin: 0 0 20px 0;
+    color: var(--color-text-secondary, #cbd5f5);
+  }
+
+  .recommendations li {
+    margin-bottom: 8px;
+  }
+
+  .nag-reminder {
+    margin-top: 18px;
+    padding: 12px;
+    background: rgba(99, 102, 241, 0.14);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--color-text-secondary, #cbd5f5);
   }
 
   @keyframes slideIn {
@@ -317,7 +630,15 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     }
   }
 
-  /* Mobile optimizations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
   @media (max-width: 480px) {
     .fullscreen-prompt-overlay {
       padding: 12px;
@@ -328,7 +649,7 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     }
 
     .prompt-icon {
-      font-size: 40px;
+      font-size: 38px;
     }
 
     .prompt-content h3 {
@@ -336,3 +657,4 @@ Shows intelligent prompts for mobile fullscreen based on device capabilities:
     }
   }
 </style>
+

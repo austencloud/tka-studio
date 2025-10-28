@@ -18,6 +18,8 @@ Replaces GalleryThumbnailImage.svelte with:
     thumbnailService,
     alt = "",
     priority = false, // For above-the-fold images
+    width = undefined, // Image width from manifest
+    height = undefined, // Image height from manifest
   } = $props<{
     sequenceId: string;
     sequenceWord: string;
@@ -25,6 +27,8 @@ Replaces GalleryThumbnailImage.svelte with:
     thumbnailService: IGalleryThumbnailService;
     alt?: string;
     priority?: boolean; // Load immediately if true
+    width?: number; // Prevents layout shift
+    height?: number; // Prevents layout shift
   }>();
 
   // ✅ PURE RUNES: State for image loading
@@ -108,11 +112,15 @@ Replaces GalleryThumbnailImage.svelte with:
     <img
       src={thumbnailUrl}
       alt={alt || `${sequenceWord} sequence thumbnail`}
+      {width}
+      {height}
       class="thumbnail-image"
       class:loaded={imageLoaded}
       class:error={imageError}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
+      fetchpriority={priority ? "high" : "auto"}
+      aria-label={alt || `${sequenceWord} sequence thumbnail`}
       onload={handleImageLoad}
       onerror={handleImageError}
     />
@@ -120,27 +128,28 @@ Replaces GalleryThumbnailImage.svelte with:
 
   <!-- Loading state -->
   {#if shouldLoad && !imageLoaded && !imageError && thumbnailUrl}
-    <div class="loading-placeholder">
-      <div class="loading-spinner"></div>
+    <div class="loading-placeholder" role="status" aria-live="polite">
+      <div class="loading-spinner" aria-label="Loading image"></div>
+      <span class="sr-only">Loading {sequenceWord} image...</span>
     </div>
   {/if}
 
   <!-- Skeleton placeholder (before intersection) -->
   {#if !shouldLoad && !priority}
-    <div class="skeleton-placeholder">
+    <div class="skeleton-placeholder" aria-hidden="true">
       <div class="skeleton-content"></div>
     </div>
   {/if}
 
   <!-- Error state or no thumbnail -->
   {#if imageError || !thumbnailUrl}
-    <div class="error-placeholder">
+    <div class="error-placeholder" role="status">
       {#if showPlaceholder}
-        <div class="webp-unsupported-icon">🖼️</div>
+        <div class="webp-unsupported-icon" aria-hidden="true">🖼️</div>
         <div class="webp-unsupported-text">{sequenceWord}</div>
         <div class="webp-unsupported-subtitle">WebP not supported</div>
       {:else}
-        <div class="placeholder-icon">📄</div>
+        <div class="placeholder-icon" aria-hidden="true">📄</div>
         <div class="placeholder-text">{sequenceWord}</div>
       {/if}
     </div>
@@ -299,5 +308,18 @@ Replaces GalleryThumbnailImage.svelte with:
     .placeholder-text {
       font-size: 0.625rem;
     }
+  }
+
+  /* Screen reader only class for accessibility */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
   }
 </style>

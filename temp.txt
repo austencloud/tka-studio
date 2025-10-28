@@ -81,25 +81,73 @@ the actual fullscreen state rather than inferring from viewport size.
       return;
     }
 
+    // 📱 Only show on mobile devices (not desktop)
+    const isMobile = deviceDetector.isMobile();
+
+    // 🔲 Check if fullscreen API is supported
     const fullscreenSupported = fullscreenService.isFullscreenSupported();
+
+    // ✅ Check if currently in fullscreen mode
     const isCurrentlyFullscreen = fullscreenService.isFullscreen();
+
+    // 📐 Skip if already installed as PWA (has native fullscreen)
+    const isPWA = fullscreenService.isPWA();
+
+    // 🔧 Skip in development mode (localhost) to avoid interrupting debugging
+    const isDevelopment =
+      typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        window.location.hostname.includes("192.168"));
+
+    // 📱 Check orientation
+    const isLandscape =
+      typeof window !== "undefined" && window.innerWidth > window.innerHeight;
+
+    // 🚨 EMERGENCY MODE: Extremely constrained vertical space
+    // When height is critically low, ALWAYS show (even in portrait, even in dev)
     const isExtremelyConstrained =
       typeof window !== "undefined" && window.innerHeight < 300;
 
+    // 🎯 SMART LOGIC: Show prompt in two scenarios:
+
+    // SCENARIO 1: Emergency mode (extremely constrained)
+    // - Always show when height < 300px (takes priority over all other checks)
+    // - Can't dismiss in emergency mode (need fullscreen to use app)
     const emergencyMode =
       fullscreenSupported && !isCurrentlyFullscreen && isExtremelyConstrained;
 
-    showPrompt = emergencyMode;
+    // SCENARIO 2: Normal landscape mode (smart detection)
+    // - On mobile device
+    // - Fullscreen is supported
+    // - NOT currently in fullscreen
+    // - NOT running as PWA
+    // - NOT in development mode (allow debugging)
+    // - In landscape mode (portrait works fine without fullscreen)
+    // - NOT been dismissed this session
+    const normalMode =
+      isMobile &&
+      fullscreenSupported &&
+      !isCurrentlyFullscreen &&
+      !isPWA &&
+      !isDevelopment &&
+      isLandscape &&
+      !hasBeenDismissed &&
+      !isExtremelyConstrained; // Don't use normal mode when in emergency
+
+    showPrompt = emergencyMode || normalMode;
     isEmergencyMode = emergencyMode;
 
     if (emergencyMode) {
       console.log(
-        "?? EMERGENCY: Showing fullscreen prompt (height < 300px - can't dismiss)"
+        "🚨 EMERGENCY: Showing fullscreen prompt (height < 300px - can't dismiss)"
       );
-    } else {
+    } else if (normalMode) {
       console.log(
-        "?? Fullscreen prompt suppressed (viewport meets minimum height)"
+        "🎯 Showing fullscreen prompt (landscape mobile, not in fullscreen)"
       );
+    } else if (isDevelopment && isMobile && !isExtremelyConstrained) {
+      console.log("🔧 Skipping fullscreen prompt (development mode)");
     }
   }
 

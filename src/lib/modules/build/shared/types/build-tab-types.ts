@@ -163,4 +163,6 @@ export interface IToolPanelProps {
   onOptionSelected: (option: PictographData) => Promise<void>;
   onPracticeBeatIndexChange?: (index: number) => void;
   isSideBySideLayout?: () => boolean;
+  activeTab?: ActiveBuildTab | null;
+  onTabChange?: (tab: ActiveBuildTab) => void;
 }

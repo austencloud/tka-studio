@@ -215,8 +215,9 @@
 </BottomSheet>
 
 <style>
-  :global(.actions-sheet-backdrop) {
+  :global(.bottom-sheet-backdrop.actions-sheet-backdrop) {
     background: transparent;
+    backdrop-filter: none !important;
     pointer-events: none;
   }
 

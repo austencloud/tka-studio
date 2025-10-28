@@ -15,20 +15,14 @@ Refactored into smaller section components for better maintainability:
   import { resolve, TYPES } from "$shared";
   import type { IDeviceDetector } from "$shared/device/services/contracts";
   import { onMount } from "svelte";
-  import BuildTabHeader from "../../shared/components/BuildTabHeader.svelte";
   import { createDeviceState, createGenerationActionsState, createGenerationConfigState } from "../state";
-  import ActionSection from "./ActionSection.svelte";
   import CardBasedSettingsContainer from "./CardBasedSettingsContainer.svelte";
 
   // Props
   let {
     sequenceState,
-    activeTab = "generate",
-    onTabChange,
   }: {
     sequenceState: SequenceState;
-    activeTab?: "construct" | "generate";
-    onTabChange?: (tab: "construct" | "generate") => void;
   } = $props();
 
   // Animation is always sequential with gentle bloom
@@ -42,11 +36,6 @@ Refactored into smaller section components for better maintainability:
   );
   const deviceState = createDeviceState();
 
-  // ===== Tab Handlers =====
-  function handleTabChange(tab: "construct" | "generate") {
-    console.log("í³¢ GeneratePanel.handleTabChange called with:", tab);
-    onTabChange?.(tab);
-  }
 
   // ===== Device Service Integration =====
   onMount(() => {
@@ -66,22 +55,12 @@ Refactored into smaller section components for better maintainability:
   data-allow-scroll={deviceState.shouldAllowScrolling}
   style="--min-touch-target: {deviceState.minTouchTarget}px; --element-spacing: {deviceState.elementSpacing}px;"
 >
-  <!-- Tab Header with Construct/Generate Toggle -->
-  <BuildTabHeader
-    {activeTab}
-    onTabChange={handleTabChange}
-  />
-
   <CardBasedSettingsContainer
     config={configState.config}
     isFreeformMode={configState.isFreeformMode}
     updateConfig={configState.updateConfig}
-  />
-
-  <ActionSection
-    onGenerateClicked={actionsState.onGenerateClicked}
-    config={configState.config}
     isGenerating={actionsState.isGenerating}
+    onGenerateClicked={actionsState.onGenerateClicked}
   />
 </div>
 
@@ -95,27 +74,19 @@ Refactored into smaller section components for better maintainability:
     gap: 0;
   }
 
-  .generate-panel > :global(*:not(:first-child)) {
+  /* Settings container takes up all available space */
+  .generate-panel > :global(div:nth-child(1)) {
     flex: 1;
-    overflow: auto;
-  }
-
-  .generate-panel > :global(div:nth-child(2)) {
     height: 100%;
     padding: var(--element-spacing);
     border-radius: 8px;
     font-family: "Segoe UI", sans-serif;
-    overflow: hidden;
+    overflow: auto;
     gap: calc(var(--element-spacing) );
   }
-
 
   /* Ensure no scrolling is forced when not appropriate */
   .generate-panel[data-allow-scroll="false"] {
     overflow: hidden;
   }
-
-
-
 </style>
-

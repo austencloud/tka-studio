@@ -5,34 +5,18 @@
 	Main area for viewing and interacting with the sequence.
 -->
 <script lang="ts">
-  import SequenceDisplay from "../sequence-display/components/SequenceDisplay.svelte";
-  import ButtonPanel from "../shared/components/ButtonPanel.svelte";
-  import SequenceActionsSheet from "../shared/components/SequenceActionsSheet.svelte";
-  import InlineAnimatorPanel from "../shared/components/InlineAnimatorPanel.svelte";
+  import MultiSelectOverlay from "../components/MultiSelectOverlay.svelte";
   import SelectionToolbar from "../components/SelectionToolbar.svelte";
   import Toast from "../components/Toast.svelte";
-  import MultiSelectOverlay from "../components/MultiSelectOverlay.svelte";
+  import SequenceDisplay from "../sequence-display/components/SequenceDisplay.svelte";
+  import InlineAnimatorPanel from "../shared/components/InlineAnimatorPanel.svelte";
+  import SequenceActionsSheet from "../shared/components/SequenceActionsSheet.svelte";
 
   // Props
   let {
     sequenceState,
-    onClearSequence,
     buildTabState,
     practiceBeatIndex = null,
-
-    // Button panel props
-    canGoBack = false,
-    onBack,
-    canRemoveBeat = false,
-    onRemoveBeat,
-    selectedBeatIndex = null,
-    selectedBeatData = null,
-    canEditBeat = false,
-    onEditBeat,
-    canClearSequence = false,
-    canSaveSequence = false,
-    onSaveSequence,
-    showFullScreen = true,
 
     // Multi-select props
     onBatchEdit,
@@ -47,23 +31,8 @@
     toolPanelHeight = 0
   }: {
     sequenceState?: any; // TODO: Type this properly
-    onClearSequence?: () => Promise<void>;
     buildTabState?: any; // TODO: Type this properly
     practiceBeatIndex?: number | null;
-
-    // Button panel props
-    canGoBack?: boolean;
-    onBack?: () => void;
-    canRemoveBeat?: boolean;
-    onRemoveBeat?: (beatIndex: number) => void;
-    selectedBeatIndex?: number | null;
-    selectedBeatData?: any;
-    canEditBeat?: boolean;
-    onEditBeat?: () => void;
-    canClearSequence?: boolean;
-    canSaveSequence?: boolean;
-    onSaveSequence?: () => void;
-    showFullScreen?: boolean;
 
     // Multi-select props
     onBatchEdit?: () => void;
@@ -77,9 +46,6 @@
     // Tool panel height
     toolPanelHeight?: number;
   } = $props();
-
-  // Derived state for current tab
-  const isAnimateTab = $derived(buildTabState?.activeSubTab === "animate");
 
   // Local beat selection state (beatNumber: 0=start, 1=first beat, etc.)
   let localSelectedBeatNumber = $state<number | null>(null);
@@ -211,13 +177,13 @@
   }
 
   function handleEdit() {
-    // Trigger edit for currently selected beat
-    onEditBeat?.();
+    // Edit is now handled by BuildTab
+    console.log("Edit action triggered");
   }
 
   function handleSave() {
-    // Trigger save sequence
-    onSaveSequence?.();
+    // Save is now handled by BuildTab
+    console.log("Save action triggered");
   }
 
   function handleCopyJSON() {
@@ -272,45 +238,6 @@
         onEdit={handleBatchEdit}
         onCancel={handleExitMultiSelect}
       />
-    </div>
-  {:else}
-    <!-- Button Panel at bottom (context-aware) -->
-    <div class="button-panel-container">
-      {#if isAnimateTab}
-        <!-- Animate tab: Show Undo, Remove Beat, Clear Sequence, Actions, and Fullscreen buttons -->
-        <ButtonPanel
-          {buildTabState}
-          {canRemoveBeat}
-          {onRemoveBeat}
-          {selectedBeatIndex}
-          {selectedBeatData}
-          canClearSequence={canClearSequence}
-          onClearSequence={onClearSequence}
-          showPlayButton={!!sequenceState?.currentSequence}
-          onPlayAnimation={handlePlayAnimation}
-          isAnimating={showInlineAnimator}
-          onOpenSequenceActions={handleOpenSequenceActions}
-          showFullScreen={showFullScreen}
-        />
-      {:else}
-        <!-- Default build controls -->
-        <ButtonPanel
-          {buildTabState}
-          {canGoBack}
-          {onBack}
-          {canRemoveBeat}
-          {onRemoveBeat}
-          {selectedBeatIndex}
-          {selectedBeatData}
-          {canClearSequence}
-          onClearSequence={onClearSequence}
-          showPlayButton={!!sequenceState?.currentSequence}
-          onPlayAnimation={handlePlayAnimation}
-          isAnimating={showInlineAnimator}
-          onOpenSequenceActions={handleOpenSequenceActions}
-          {showFullScreen}
-        />
-      {/if}
     </div>
   {/if}
 
@@ -378,14 +305,13 @@
     z-index: 10; /* Above multi-select overlay */
   }
 
-  .button-panel-container,
   .selection-toolbar-container {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 8px 0;
     width: 100%;
-    flex-shrink: 0; /* Prevent buttons from shrinking */
+    flex-shrink: 0; /* Prevent toolbar from shrinking */
   }
 
   .workspace-panel.loading {

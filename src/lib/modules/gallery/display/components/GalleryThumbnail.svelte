@@ -1,4 +1,43 @@
 <!--
+@component GalleryThumbnail
+
+Displays an individual sequence thumbnail with image, metadata, and action buttons.
+This component is the primary building block of the gallery display system.
+
+@prop {SequenceData} sequence - The sequence data to display
+@prop {IGalleryThumbnailService} thumbnailService - Service for generating thumbnail URLs
+@prop {"grid" | "list"} [viewMode="grid"] - Display mode (grid or list layout)
+@prop {boolean} [isFavorite=false] - Whether the sequence is marked as favorite
+@prop {boolean} [priority=false] - If true, loads image eagerly (for above-the-fold content)
+@prop {(sequenceId: string) => void} [onFavoriteToggle] - Callback when favorite is toggled
+@prop {(action: string, sequence: SequenceData) => void} [onAction] - Callback for user actions
+
+@fires action - Emitted when user performs an action (fullscreen, edit, delete, etc.)
+
+@example
+```svelte
+<GalleryThumbnail
+  sequence={mySequence}
+  thumbnailService={thumbnailService}
+  viewMode="grid"
+  priority={true}
+  onAction={(action, seq) => {
+    if (action === 'fullscreen') openFullscreen(seq);
+  }}
+/>
+```
+
+@accessibility
+- Full keyboard navigation support (Enter/Space to activate)
+- ARIA labels describe sequence and available actions
+- Focus indicators for keyboard users
+- Screen reader friendly
+
+@performance
+- Lazy loading for off-screen images
+- Priority loading for above-the-fold content
+- Skeleton loading states for perceived performance
+
 SequenceThumbnail Component - Refactored Implementation
 
 Displays individual sequence thumbnails using extracted components for better
@@ -38,6 +77,15 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
   // Services
   let hapticService: IHapticFeedbackService | null = $state(null);
 
+  // Extract dimensions from sequence metadata if available
+  const imageDimensions = $derived.by(() => {
+    const metadata = sequence.metadata as any;
+    return {
+      width: metadata?.width,
+      height: metadata?.height,
+    };
+  });
+
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
@@ -59,6 +107,11 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
       onAction("fullscreen", sequence);
     }
   }
+
+  // Generate accessible label for the thumbnail
+  const accessibleLabel = $derived(
+    `${sequence.word} sequence, ${sequence.sequenceLength} beats. Click to view fullscreen.`
+  );
 </script>
 
 <!-- Thumbnail container with responsive design -->
@@ -68,6 +121,8 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
   class:grid-view={viewMode === "grid"}
   role="button"
   tabindex="0"
+  aria-label={accessibleLabel}
+  title={accessibleLabel}
   onclick={handleClick}
   onkeydown={handleKeydown}
 >
@@ -78,6 +133,8 @@ Updated UX: Clicking thumbnail opens fullscreen view directly.
     thumbnails={sequence.thumbnails}
     {thumbnailService}
     {priority}
+    width={imageDimensions.width}
+    height={imageDimensions.height}
   />
 
   <!-- Action buttons component -->

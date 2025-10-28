@@ -1,11 +1,11 @@
 <!--
   BuildTabHeader.svelte
-  
+
   Header component for Build tab with segmented control for Construct/Generate toggle.
-  Similar to option picker header but with a toggle in the middle.
-  
+  Supports both horizontal (header) and vertical (sidebar) layouts.
+
   Responsibilities:
-  - Display header with centered segmented control
+  - Display toggle with centered segmented control (horizontal) or vertical sidebar
   - Handle tab switching between Construct and Generate
   - Provide visual feedback for active tab
 -->
@@ -17,9 +17,11 @@
   const {
     activeTab,
     onTabChange,
+    layout = "horizontal",
   } = $props<{
     activeTab: "construct" | "generate";
     onTabChange: (tab: "construct" | "generate") => void;
+    layout?: "horizontal" | "vertical";
   }>();
 
   // Services
@@ -31,9 +33,9 @@
 
   // Handle tab click
   function handleTabClick(tab: "construct" | "generate") {
-    console.log("í´„ BuildTabHeader.handleTabClick:", { tab, activeTab, onTabChange: typeof onTabChange });
+    console.log("ï¿½ï¿½ï¿½ BuildTabHeader.handleTabClick:", { tab, activeTab, onTabChange: typeof onTabChange });
     if (tab !== activeTab) {
-      console.log("í³¢ Tab changed, calling onTabChange");
+      console.log("ï¿½ï¿½ï¿½ Tab changed, calling onTabChange");
       hapticService?.trigger("navigation");
       onTabChange(tab);
     } else {
@@ -50,8 +52,8 @@
   }
 </script>
 
-<!-- Header with segmented control -->
-<div class="build-tab-header">
+<!-- Header with segmented control - supports horizontal and vertical layouts -->
+<div class="build-tab-header" class:vertical={layout === "vertical"}>
   <div class="header-content">
     <!-- Segmented Control -->
     <div class="segmented-control" role="tablist" aria-label="Build tab selection">
@@ -66,8 +68,13 @@
         aria-selected={activeTab === "construct"}
         aria-controls="construct-panel"
         id="tab-construct"
+        title="Construct mode"
       >
-        í´¨ Construct
+        {#if layout === "vertical"}
+          ðŸ”¨
+        {:else}
+          ðŸ”¨ Construct
+        {/if}
       </button>
 
       <!-- Generate Tab -->
@@ -81,18 +88,26 @@
         aria-selected={activeTab === "generate"}
         aria-controls="generate-panel"
         id="tab-generate"
+        title="Generate mode"
       >
-        âš¡ Generate
+        {#if layout === "vertical"}
+          âš¡
+        {:else}
+          âš¡ Generate
+        {/if}
       </button>
     </div>
   </div>
 </div>
 
 <style>
+  /* ============================================================================ */
+  /* HORIZONTAL LAYOUT (Default) */
+  /* ============================================================================ */
+
   .build-tab-header {
     width: 100%;
     position: relative;
-    padding: 12px 16px;
     min-height: auto;
     box-sizing: border-box;
     display: flex;
@@ -108,14 +123,35 @@
     width: 100%;
   }
 
+  /* ============================================================================ */
+  /* VERTICAL LAYOUT (Sidebar) */
+  /* ============================================================================ */
+
+  .build-tab-header.vertical {
+    width: auto;
+    height: 100%;
+    flex-direction: column;
+    border-bottom: none;
+    padding: 8px 0;
+  }
+
+  .build-tab-header.vertical .header-content {
+    flex-direction: column;
+    height: 100%;
+  }
+
   /* Segmented Control Styles */
   .segmented-control {
     display: inline-flex;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
-    padding: 4px;
     gap: 0;
+  }
+
+  .build-tab-header.vertical .segmented-control {
+    flex-direction: column;
+    border-radius: 8px;
   }
 
   .segment-button {
@@ -138,6 +174,14 @@
     gap: 4px;
   }
 
+  .build-tab-header.vertical .segment-button {
+    padding: 12px 8px;
+    min-height: 44px;
+    min-width: 44px;
+    font-size: 20px;
+    white-space: normal;
+  }
+
   .segment-button:hover:not(.active) {
     color: rgba(255, 255, 255, 0.8);
     background: rgba(255, 255, 255, 0.05);
@@ -149,21 +193,23 @@
     box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
   }
 
+  /* Remove focus outline to prevent visual distraction on mobile */
   .segment-button:focus-visible {
-    outline: 2px solid #667eea;
-    outline-offset: 2px;
+    outline: none;
   }
 
   /* Mobile responsive */
   @media (max-width: 768px) {
-    .build-tab-header {
-      padding: 10px 12px;
-    }
-
     .segment-button {
-      padding: 6px 12px;
       font-size: 12px;
       min-height: 28px;
+    }
+
+    .build-tab-header.vertical .segment-button {
+      padding: 10px 6px;
+      min-height: 40px;
+      min-width: 40px;
+      font-size: 18px;
     }
   }
 

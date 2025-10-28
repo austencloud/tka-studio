@@ -16,6 +16,7 @@
     onGridModeChange,
     onBack,
     isSideBySideLayout = () => false,
+    isAnimating = false,
   }: {
     pictographDataSet: PictographData[];
     selectedPictograph?: PictographData | null;
@@ -24,6 +25,7 @@
     onGridModeChange: (gridMode: GridMode) => void;
     onBack: () => void;
     isSideBySideLayout?: () => boolean;
+    isAnimating?: boolean;
   } = $props();
 
   // Create state for UI management

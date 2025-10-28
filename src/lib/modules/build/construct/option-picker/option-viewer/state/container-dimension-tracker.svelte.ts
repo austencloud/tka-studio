@@ -38,6 +38,9 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
     currentElement = element;
 
     // Create new observer with debouncing
+    let lastProcessedWidth = width;
+    let lastProcessedHeight = height;
+
     resizeObserver = new ResizeObserver((entries) => {
       // Clear any existing timeout
       if (resizeTimeout !== null) {
@@ -57,6 +60,8 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
           if (isValidDimension && !isDramaticChange) {
             width = newWidth;
             height = newHeight;
+            lastProcessedWidth = newWidth;
+            lastProcessedHeight = newHeight;
 
             // Mark as ready after first measurement
             if (!isReady && width > 0 && height > 0) {
@@ -69,6 +74,22 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
           }
         }
         resizeTimeout = null;
+
+        // After debounce settles, check if dimensions have stabilized
+        // This ensures reactive updates trigger even if no more resize events come in
+        setTimeout(() => {
+          if (currentElement) {
+            const rect = currentElement.getBoundingClientRect();
+            const finalWidth = rect.width;
+            const finalHeight = rect.height;
+
+            // If dimensions changed since last update, trigger one more update
+            if (Math.abs(finalWidth - lastProcessedWidth) > 1 || Math.abs(finalHeight - lastProcessedHeight) > 1) {
+              width = finalWidth;
+              height = finalHeight;
+            }
+          }
+        }, 50); // Check again after 50ms to catch final stabilization
       }, 16); // ~1 frame delay (60fps) for snappier resize while still preventing layout thrashing
     });
 

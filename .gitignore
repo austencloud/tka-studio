@@ -74,3 +74,6 @@ Thumbs.db
 
 # Generated thumbnail cache
 static/gallery_thumbnails/
+
+# Generated gallery manifest (auto-generated during build)
+static/gallery-manifest.json

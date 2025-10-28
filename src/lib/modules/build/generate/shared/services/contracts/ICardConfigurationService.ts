@@ -1,5 +1,5 @@
-import type { DifficultyLevel } from "../../domain/models";
 import type { UIGenerationConfig } from "../../../state/generate-config.svelte";
+import type { DifficultyLevel } from "../../domain/models";
 
 /**
  * Card descriptor for rendering in the UI
@@ -27,6 +27,7 @@ export interface CardHandlers {
 	handleGenerationModeChange: (mode: any) => void;
 	handleCAPTypeChange: (capType: any) => void;
 	handleSliceSizeChange: (sliceSize: any) => void;
+	handleGenerateClick?: () => Promise<void>;
 }
 
 /**
@@ -45,6 +46,7 @@ export interface ICardConfigurationService {
 	 * @param handlers - Event handlers for card interactions
 	 * @param headerFontSize - Calculated header font size to pass to cards
 	 * @param allowedIntensityValues - Allowed turn intensity values for current level
+	 * @param isGenerating - Whether generation is currently in progress
 	 * @returns Array of card descriptors ready for rendering
 	 */
 	buildCardDescriptors(
@@ -53,6 +55,7 @@ export interface ICardConfigurationService {
 		isFreeformMode: boolean,
 		handlers: CardHandlers,
 		headerFontSize: string,
-		allowedIntensityValues: number[]
+		allowedIntensityValues: number[],
+		isGenerating?: boolean
 	): CardDescriptor[];
 }

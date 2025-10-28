@@ -14,6 +14,8 @@ Testing HMR persistence functionality
   import { EditSlidePanel } from "../../edit/components";
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
+  import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
+  import InlineAnimatorPanel from '../../workspace-panel/shared/components/InlineAnimatorPanel.svelte';
   import type { IBuildTabService, ISequencePersistenceService, ISequenceService } from "../services/contracts";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
   import { createBuildTabState, createConstructTabState } from "../state";
@@ -66,6 +68,18 @@ Testing HMR persistence functionality
   let editPanelBeatData = $state<any>(null);
   let editPanelBeatsData = $state<any[]>([]);
 
+  // Animation panel state
+  let isAnimationPanelOpen = $state(false);
+  let isAnimating = $state(false);
+
+  // Determine if toggle should show in ButtonPanel (when NOT in ToolPanel header)
+  const shouldShowToggleInButtonPanel = $derived(() => {
+    // Show toggle in ButtonPanel when NOT showing in ToolPanel header
+    // ToolPanel shows toggle when: side-by-side layout AND left navigation (tool panel on right)
+    const showingInToolPanel = shouldUseSideBySideLayout && navigationLayout === "left";
+    return !showingInToolPanel;
+  });
+
   // Effect to notify parent of tab accessibility changes
   $effect(() => {
     // Guard: Don't run until buildTabState is initialized
@@ -100,12 +114,13 @@ Testing HMR persistence functionality
       buildTabCurrentMode,
       isPersistenceInitialized: buildTabState.isPersistenceInitialized,
       isNavigatingBack: buildTabState.isNavigatingBack,
-      shouldUpdate: currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized && !buildTabState.isNavigatingBack
+      isUpdatingFromToggle: buildTabState.isUpdatingFromToggle,
+      shouldUpdate: currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized && !buildTabState.isNavigatingBack && !buildTabState.isUpdatingFromToggle
     });
 
     // If navigation state differs from build tab state, update build tab
-    // BUT skip if we're currently in a back navigation (to prevent loop)
-    if (currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized && !buildTabState.isNavigatingBack) {
+    // BUT skip if we're currently in a back navigation or updating from toggle (to prevent loop)
+    if (currentMode !== buildTabCurrentMode && buildTabState.isPersistenceInitialized && !buildTabState.isNavigatingBack && !buildTabState.isUpdatingFromToggle) {
       // GUARD: Prevent navigation to Animate, Share, or Record tabs without a valid sequence
       // Note: Edit is no longer a tab - it's handled via slide-out panel
       if ((currentMode === "animate" || currentMode === "share" || currentMode === "record") && !buildTabState.canAccessEditTab) {
@@ -125,6 +140,9 @@ Testing HMR persistence functionality
   $effect(() => {
     // Guard: Don't run until buildTabState is initialized
     if (!buildTabState) return;
+
+    // Skip if we're currently updating from toggle (the toggle already syncs to navigation)
+    if (buildTabState.isUpdatingFromToggle) return;
 
     const buildTabCurrentMode = buildTabState.activeSubTab;
     const navCurrentMode = navigationState.currentSubMode;
@@ -187,7 +205,9 @@ Testing HMR persistence functionality
       return;
     }
 
-    // Access reactive viewport dimensions to make this effect reactive to viewport changes
+    // Explicitly access reactive viewport dimensions to make this effect reactive to viewport changes
+    const width = viewportWidth;
+    const height = viewportHeight;
 
     // Update navigation layout when device detector changes
     navigationLayout = currentNavigationLayout();
@@ -203,16 +223,16 @@ Testing HMR persistence functionality
     // 3. Z Fold unfolded (detected as desktop but should always be side-by-side)
 
     // Check if viewport is wide enough for side-by-side layout
-    const hasWideViewport = viewportWidth >= 1024; // Standard desktop breakpoint
+    const hasWideViewport = width >= 1024; // Standard desktop breakpoint
 
     // Landscape detection: Use side-by-side for significantly landscape orientations
-    const aspectRatio = viewportWidth / viewportHeight;
-    const isSignificantlyLandscape = aspectRatio > 1.2; // Broader landscape detection (includes Z Fold range)
+    const aspectRatio = width / height;
+    const isSignificantlyLandscape = aspectRatio >= 1.15; // Landscape detection (includes Z Fold range)
 
     // Z Fold specific: More flexible detection that accounts for browser UI
     const isLikelyZFoldUnfolded =
-      viewportWidth >= 750 && viewportWidth <= 950 && // Wider range to account for browser UI
-      aspectRatio > 1.1 && aspectRatio < 1.4; // Broader aspect ratio range
+      width >= 700 && width <= 950 && // Wider range to account for browser UI
+      aspectRatio >= 1.1 && aspectRatio <= 1.4; // Broader aspect ratio range
 
     const newSideBySideLayout = (isDesktop && hasWideViewport) || isLandscapeMobile || isLikelyZFoldUnfolded || isSignificantlyLandscape;
     shouldUseSideBySideLayout = newSideBySideLayout;
@@ -318,6 +338,15 @@ Testing HMR persistence functionality
 
   function handleAddToDictionary() {
     // Save - to be implemented
+  }
+
+  // Animation panel handler
+  function handlePlayAnimation() {
+    isAnimationPanelOpen = true;
+  }
+
+  function handleCloseAnimationPanel() {
+    isAnimationPanelOpen = false;
   }
 
   // Button Panel Handlers
@@ -499,48 +528,113 @@ Testing HMR persistence functionality
 
   {#if buildTabState && constructTabState}
   <div class="build-tab-layout" class:side-by-side={shouldUseSideBySideLayout} class:stacked={!shouldUseSideBySideLayout}>
-  <!-- Workspace Panel: Sequence display with integrated action buttons -->
-  <WorkspacePanel
-    sequenceState={buildTabState.sequenceState}
-    onClearSequence={constructTabState.clearSequenceCompletely}
-    {buildTabState}
-    {practiceBeatIndex}
-    canGoBack={toolPanelRef?.getCanGoBack?.() ?? false}
-    onBack={() => toolPanelRef?.handleBack?.()}
-    canRemoveBeat={buildTabState.sequenceState.hasStartPosition}
-    onRemoveBeat={handleRemoveBeat}
-    isSideBySideLayout={shouldUseSideBySideLayout}
-    selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
-    selectedBeatData={buildTabState.sequenceState.selectedBeatData}
-    canEditBeat={buildTabState.sequenceState.selectedBeatData !== null}
-    onEditBeat={() => {
-      // Open the edit panel for the currently selected beat
-      if (buildTabState.sequenceState.selectedBeatData) {
-        isEditPanelOpen = true;
-      }
-    }}
-    onBatchEdit={handleOpenBatchEdit}
-    canClearSequence={buildTabState.sequenceState.hasStartPosition}
-    canSaveSequence={buildTabState.sequenceState.hasStartPosition && buildTabState.sequenceState.beatCount() > 0}
-    onSaveSequence={handleAddToDictionary}
-    showFullScreen={true}
-    animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
-    {toolPanelHeight}
-  />
+    {#if shouldUseSideBySideLayout}
+      <!-- Side-by-side layout: Left column with workspace + buttons, Right column with tool panel -->
+      <div class="left-column">
+        <!-- Workspace Panel: Sequence display -->
+        <WorkspacePanel
+          sequenceState={buildTabState.sequenceState}
+          {buildTabState}
+          {practiceBeatIndex}
+          isSideBySideLayout={shouldUseSideBySideLayout}
+          onBatchEdit={handleOpenBatchEdit}
+          animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
+          {toolPanelHeight}
+        />
 
+        <!-- Button Panel: Control center -->
+        <div class="button-panel-wrapper">
+          <ButtonPanel
+            {buildTabState}
+            canGoBack={toolPanelRef?.getCanGoBack?.() ?? false}
+            onBack={() => toolPanelRef?.handleBack?.()}
+            canRemoveBeat={buildTabState.sequenceState.hasStartPosition}
+            onRemoveBeat={handleRemoveBeat}
+            selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
+            selectedBeatData={buildTabState.sequenceState.selectedBeatData}
+            canClearSequence={buildTabState.sequenceState.hasStartPosition}
+            onClearSequence={constructTabState.clearSequenceCompletely}
+            showPlayButton={!!buildTabState.sequenceState.currentSequence}
+            onPlayAnimation={handlePlayAnimation}
+            {isAnimating}
+            showToggle={shouldShowToggleInButtonPanel()}
+            activeTab={buildTabState.activeSubTab}
+            onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
+            onOpenSequenceActions={() => {
+              // Sequence actions handler - can be expanded later
+              console.log("Sequence actions triggered");
+            }}
+            showFullScreen={true}
+          />
+        </div>
+      </div>
 
+      <!-- Tool Panel: Right column -->
+      <div bind:this={toolPanelElement} bind:clientHeight={toolPanelHeight} class="tool-panel-wrapper">
+        <ToolPanel
+          bind:this={toolPanelRef}
+          {buildTabState}
+          {constructTabState}
+          onOptionSelected={handleOptionSelected}
+          onPracticeBeatIndexChange={(index) => { practiceBeatIndex = index; }}
+          isSideBySideLayout={() => shouldUseSideBySideLayout}
+          activeTab={buildTabState.activeSubTab}
+          onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
+        />
+      </div>
+    {:else}
+      <!-- Stacked layout: Workspace, Buttons, Tool Panel vertically -->
+      <!-- Workspace Panel: Sequence display -->
+      <WorkspacePanel
+        sequenceState={buildTabState.sequenceState}
+        {buildTabState}
+        {practiceBeatIndex}
+        isSideBySideLayout={shouldUseSideBySideLayout}
+        onBatchEdit={handleOpenBatchEdit}
+        animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
+        {toolPanelHeight}
+      />
 
-  <!-- Tool Panel: Tabbed interface for sequence construction and management -->
-  <div bind:this={toolPanelElement} bind:clientHeight={toolPanelHeight} class="tool-panel-wrapper">
-    <ToolPanel
-      bind:this={toolPanelRef}
-      {buildTabState}
-      {constructTabState}
-      onOptionSelected={handleOptionSelected}
-      onPracticeBeatIndexChange={(index) => { practiceBeatIndex = index; }}
-      isSideBySideLayout={() => shouldUseSideBySideLayout}
-    />
-  </div>
+      <!-- Button Panel: Control center -->
+      <div class="button-panel-wrapper">
+        <ButtonPanel
+          {buildTabState}
+          canGoBack={toolPanelRef?.getCanGoBack?.() ?? false}
+          onBack={() => toolPanelRef?.handleBack?.()}
+          canRemoveBeat={buildTabState.sequenceState.hasStartPosition}
+          onRemoveBeat={handleRemoveBeat}
+          selectedBeatIndex={buildTabState.sequenceState.selectedBeatIndex}
+          selectedBeatData={buildTabState.sequenceState.selectedBeatData}
+          canClearSequence={buildTabState.sequenceState.hasStartPosition}
+          onClearSequence={constructTabState.clearSequenceCompletely}
+          showPlayButton={!!buildTabState.sequenceState.currentSequence}
+          onPlayAnimation={handlePlayAnimation}
+          {isAnimating}
+          showToggle={shouldShowToggleInButtonPanel()}
+          activeTab={buildTabState.activeSubTab}
+          onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
+          onOpenSequenceActions={() => {
+            // Sequence actions handler - can be expanded later
+            console.log("Sequence actions triggered");
+          }}
+          showFullScreen={true}
+        />
+      </div>
+
+      <!-- Tool Panel: Tabbed interface for sequence construction and management -->
+      <div bind:this={toolPanelElement} bind:clientHeight={toolPanelHeight} class="tool-panel-wrapper">
+        <ToolPanel
+          bind:this={toolPanelRef}
+          {buildTabState}
+          {constructTabState}
+          onOptionSelected={handleOptionSelected}
+          onPracticeBeatIndexChange={(index) => { practiceBeatIndex = index; }}
+          isSideBySideLayout={() => shouldUseSideBySideLayout}
+          activeTab={buildTabState.activeSubTab}
+          onTabChange={(tab) => buildTabState.setactiveToolPanel(tab)}
+        />
+      </div>
+    {/if}
   </div>
   {:else}
   <div class="loading-container">
@@ -625,6 +719,16 @@ Testing HMR persistence functionality
     }}
   />
   {/if}
+
+  <!-- Inline Animator Panel - Slide-up animation viewer -->
+  {#if buildTabState}
+  <InlineAnimatorPanel
+    sequence={buildTabState.sequenceState.currentSequence}
+    show={isAnimationPanelOpen}
+    onClose={handleCloseAnimationPanel}
+    {toolPanelHeight}
+  />
+  {/if}
 </div>
 
 <!-- ============================================================================ -->
@@ -655,13 +759,39 @@ Testing HMR persistence functionality
 
   /* Side-by-side layout (when navigation is on left - phone landscape) */
   .build-tab-layout.side-by-side {
-    grid-template-columns: 1fr 1fr; /* 50/50 split between workspace and tool panels */
+    grid-template-columns: 1fr 1fr; /* 50/50 split */
+    grid-template-rows: 1fr; /* Single row */
   }
 
   /* Stacked layout (when navigation is on top - tablets, desktop, portrait) */
   .build-tab-layout.stacked {
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr; /* Top: workspace panel, Bottom: tool panel */
+    grid-template-rows: 1fr auto 1fr; /* Top: workspace panel, Middle: button panel, Bottom: tool panel */
+  }
+
+  /* Left column for side-by-side layout (workspace + buttons stacked) */
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    gap: var(--spacing-xs);
+  }
+
+  /* Button panel wrapper - control center between panels */
+  .button-panel-wrapper {
+    /* Auto height - only takes space it needs */
+    height: auto;
+    width: 100%;
+
+    /* Center content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Ensure proper overflow behavior */
+    overflow: visible;
   }
 
   /* Tool panel wrapper - allows height measurement for edit panel */

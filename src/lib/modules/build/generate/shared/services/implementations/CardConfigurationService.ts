@@ -1,10 +1,10 @@
+import type { UIGenerationConfig } from "../../../state/generate-config.svelte";
 import { DifficultyLevel } from "../../domain/models";
 import type {
-	CardDescriptor,
-	CardHandlers,
-	ICardConfigurationService
+    CardDescriptor,
+    CardHandlers,
+    ICardConfigurationService
 } from "../contracts/ICardConfigurationService";
-import type { UIGenerationConfig } from "../../../state/generate-config.svelte";
 
 /**
  * Implementation of ICardConfigurationService
@@ -21,7 +21,8 @@ export class CardConfigurationService implements ICardConfigurationService {
 		isFreeformMode: boolean,
 		handlers: CardHandlers,
 		headerFontSize: string,
-		allowedIntensityValues: number[]
+		allowedIntensityValues: number[],
+		isGenerating: boolean = false
 	): CardDescriptor[] {
 		const cardList: CardDescriptor[] = [];
 		let cardIndex = 0;
@@ -149,6 +150,19 @@ export class CardConfigurationService implements ICardConfigurationService {
 					headerFontSize
 				},
 				gridColumnSpan: capTypeAllowsSliceChoice ? 4 : 6 // Expands to full row when slice size hidden
+			});
+		}
+
+		// Generate Button Card - always at the end, spans full width
+		if (handlers.handleGenerateClick) {
+			cardList.push({
+				id: "generate-button",
+				props: {
+					isGenerating,
+					onGenerateClicked: handlers.handleGenerateClick,
+					config // Pass the config so the button can convert it to GenerationOptions
+				},
+				gridColumnSpan: 6 // Full width
 			});
 		}
 

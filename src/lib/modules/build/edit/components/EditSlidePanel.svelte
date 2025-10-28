@@ -306,6 +306,7 @@ Features:
 <style>
   :global(.edit-panel-backdrop) {
     background: transparent;
+    backdrop-filter: none;
     pointer-events: none;
   }
 

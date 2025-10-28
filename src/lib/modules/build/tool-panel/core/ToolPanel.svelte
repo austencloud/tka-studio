@@ -18,19 +18,17 @@
 -->
 <script lang="ts">
   import type {
+    IDeviceDetector,
     IHapticFeedbackService,
   } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import AnimationPanel from "../../animate/components/AnimationPanel.svelte";
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
-  import { RecordPanel } from "../../record/components";
-  import { SharePanel } from "../../share/components";
-  import BuildTabHeader from "../../shared/components/BuildTabHeader.svelte";
   import ConstructTabContent from "../../shared/components/ConstructTabContent.svelte";
   import { ToolPanelNavigationController } from "../../shared/navigation/ToolPanelNavigationController";
   import type { IAnimationStateRef, IToolPanelProps } from "../../shared/types/build-tab-types";
+  import ConstructGenerateToggle from "../../workspace-panel/shared/components/buttons/ConstructGenerateToggle.svelte";
 
   // ============================================================================
   // PROPS
@@ -42,6 +40,8 @@
     onOptionSelected,
     onPracticeBeatIndexChange,
     isSideBySideLayout = () => false,
+    activeTab,
+    onTabChange,
   }: IToolPanelProps = $props();
 
   // ============================================================================
@@ -50,7 +50,11 @@
 
   // Derived from props
   let activeToolPanel = $derived(buildTabState.activeSubTab);
-  let isSubTabTransitionActive = $derived(buildTabState.isTransitioning);
+
+  // Derived: Determine if toggle should show in header (side-by-side layout with right navigation)
+  let shouldShowToggleInHeader = $derived(() => {
+    return isSideBySideLayout?.() === true && navigationLayout === "right";
+  });
 
   // Component refs
   let constructTabContentRef: { handleStartPositionPickerBack: () => boolean } | null = $state(null);
@@ -58,6 +62,8 @@
   // Services
   let hapticService: IHapticFeedbackService;
   let navigationController: ToolPanelNavigationController | null = null;
+  let deviceDetector: IDeviceDetector | null = null;
+  let navigationLayout = $state<"top" | "bottom" | "right">("top");
 
   // Animation panel visibility state (for panel show/hide/collapse)
   let animationPanelVisibilityState = $state({
@@ -102,12 +108,35 @@
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
     navigationController = new ToolPanelNavigationController(buildTabState, constructTabState);
+    deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
+
+    // Initialize navigation layout
+    if (deviceDetector) {
+      updateNavigationLayout();
+
+      // Subscribe to device capability changes
+      const unsubscribe = deviceDetector.onCapabilitiesChanged(() => {
+        updateNavigationLayout();
+      });
+
+      return () => {
+        unsubscribe();
+      };
+    }
 
     // Set up callback for undo option animation
     buildTabState.setOnUndoingOptionCallback((isUndoing: boolean) => {
       isUndoingOption = isUndoing;
     });
   });
+
+  function updateNavigationLayout() {
+    if (!deviceDetector) return;
+
+    const deviceLayout = deviceDetector.getNavigationLayoutImmediate();
+    // Map device detector's "left" to our "right" for right-side navigation
+    navigationLayout = deviceLayout === "left" ? "right" : (deviceLayout as "top" | "bottom" | "right");
+  }
 
   // ============================================================================
   // DERIVED STATE
@@ -234,7 +263,17 @@
 <!-- TEMPLATE -->
 <!-- ============================================================================ -->
 
-<div class="tool-panel" data-testid="tool-panel">
+<div class="tool-panel" class:layout-right={navigationLayout === "right"} data-testid="tool-panel">
+  {#if shouldShowToggleInHeader() && activeTab && onTabChange && (activeTab === "construct" || activeTab === "generate")}
+    <!-- Toggle at top of tool panel in side-by-side layout (landscape mode) -->
+    <div class="tool-panel-header">
+      <ConstructGenerateToggle
+        activeTab={activeTab}
+        onTabChange={(tab) => onTabChange(tab)}
+      />
+    </div>
+  {/if}
+
   {#if !isPersistenceFullyInitialized}
     <!-- Loading state while persistence is being restored -->
     <div class="persistence-loading">
@@ -273,34 +312,6 @@
           {:else if activeToolPanel === "generate"}
             <GeneratePanel
               sequenceState={buildTabState.sequenceState}
-              activeTab={activeToolPanel === "generate" ? "generate" : "construct"}
-              onTabChange={(tab) => {
-                console.log("🔗 ToolPanel.onTabChange callback called with:", tab);
-                buildTabState.setactiveToolPanel(tab);
-                console.log("✅ ToolPanel: buildTabState.activeSubTab is now:", buildTabState.activeSubTab);
-              }}
-            />
-          <!-- Edit tab removed - now using slide-out panel instead! -->
-          {:else if activeToolPanel === "animate"}
-            <div class="panel-content animation-content">
-              <AnimationPanel
-                sequence={buildTabState.sequenceState.currentSequence}
-                panelState={animationPanelVisibilityState}
-                bind:animationStateRef
-                onClose={() => buildTabState.setactiveToolPanel("construct")}
-              />
-            </div>
-          {:else if activeToolPanel === "share"}
-            <SharePanel
-              currentSequence={buildTabState.sequenceState.currentSequence}
-            />
-          {:else if activeToolPanel === "record"}
-            <RecordPanel
-              sequence={buildTabState.sequenceState.currentSequence}
-              onBeatIndexChange={(beatIndex) => {
-                buildTabState.sequenceState.selectBeat(beatIndex);
-                onPracticeBeatIndexChange?.(beatIndex);
-              }}
             />
           {/if}
         </div>
@@ -327,6 +338,22 @@
     overflow: hidden;
   }
 
+  /* When navigation is on the right (landscape mobile), use row layout */
+  /* row puts navigation on the right and content on the left */
+  .tool-panel.layout-right {
+    flex-direction: column;
+  }
+
+  /* Header for toggle in side-by-side layout */
+  .tool-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    flex-shrink: 0;
+    order: 1;
+  }
+
   .tab-content {
     flex: 1;
     display: flex;
@@ -349,21 +376,6 @@
     height: 100%;
     will-change: opacity;
     backface-visibility: hidden;
-  }
-
-  .panel-content {
-    flex: 1;
-    overflow: auto;
-    padding: var(--spacing-lg);
-  }
-
-  .animation-content {
-    padding: 0;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
   }
 
   .persistence-loading,

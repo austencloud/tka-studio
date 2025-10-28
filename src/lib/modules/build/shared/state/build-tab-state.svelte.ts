@@ -72,6 +72,9 @@ export function createBuildTabState(
   let optionSelectionHistory = $state<OptionSelectionHistoryEntry[]>([]);
   const MAX_OPTION_HISTORY = 50; // Allow tracking up to 50 option selections
 
+  // Flag to prevent sync loop when updating from toggle
+  let isUpdatingFromToggle = $state(false);
+
   // Undo service - professional undo/redo management
   const undoService = resolve<IUndoService>(TYPES.IUndoService);
 
@@ -134,9 +137,15 @@ export function createBuildTabState(
   }
 
   function setactiveToolPanel(panel: ActiveBuildTab) {
+    // Set flag to prevent sync loop
+    isUpdatingFromToggle = true;
     setactiveToolPanelInternal(panel, true);
-    // Also sync to navigation state to prevent sync loop
+    // Also sync to navigation state directly
     navigationState.setCurrentSubMode(panel);
+    // Reset flag after a microtask to allow sync effects to see the updated state
+    setTimeout(() => {
+      isUpdatingFromToggle = false;
+    }, 0);
   }
 
   /**
@@ -479,6 +488,9 @@ export function createBuildTabState(
     },
     get isNavigatingBack() {
       return isNavigatingBack;
+    },
+    get isUpdatingFromToggle() {
+      return isUpdatingFromToggle;
     },
     get hasOptionHistory() {
       return hasOptionHistory;

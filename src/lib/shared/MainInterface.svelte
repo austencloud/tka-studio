@@ -12,7 +12,10 @@
     switchTab,
   } from "./application/state/app-state.svelte";
   // Import background types - BULLETPROOF RELATIVE IMPORTS
+  import { onMount } from "svelte";
   import type { IAnimationService } from "./application/services/contracts";
+  import type { IDeviceDetector } from "./device/services/contracts/IDeviceDetector";
+  import type { IMobileFullscreenService } from "./mobile/services/contracts/IMobileFullscreenService";
   import { isContainerReady, resolve, TYPES } from "./inversify";
   // Import transition utilities - BULLETPROOF RELATIVE IMPORTS
   // Cross-module imports: Direct component imports (bulletproof default imports)
@@ -25,6 +28,7 @@
   // Shared components: Direct relative paths (bulletproof standard)
   import { GalleryTab } from "../modules";
   import FullscreenHint from "./mobile/components/FullscreenHint.svelte";
+  import MobileFullscreenPrompt from "./mobile/components/MobileFullscreenPrompt.svelte";
   import UnifiedNavigationMenu from "./navigation/components/UnifiedNavigationMenu.svelte";
   import {
     MODULE_DEFINITIONS,
@@ -40,6 +44,181 @@
   let showSpotlight = $derived(getShowSpotlight());
   let spotlightSequence = $derived(getSpotlightSequence());
   let spotlightThumbnailService = $derived(getSpotlightThumbnailService());
+
+  // Mobile PWA install prompt state
+  let showMobileInstallPrompt = $state(false);
+
+  const INSTALL_REPROMPT_DELAY_MS = 45000;
+  let deviceDetector: IDeviceDetector | null = null;
+  let fullscreenService: IMobileFullscreenService | null = null;
+  let installRePromptTimer: ReturnType<typeof setTimeout> | null = null;
+
+  const isOnMobile = () =>
+    !!deviceDetector &&
+    (deviceDetector.isMobile() || deviceDetector.isLandscapeMobile());
+  const shouldShowInstallOverlay = () =>
+    !!fullscreenService && isOnMobile() && !fullscreenService.isPWA();
+
+  function clearInstallRePromptTimer() {
+    if (installRePromptTimer !== null) {
+      clearTimeout(installRePromptTimer);
+      installRePromptTimer = null;
+    }
+  }
+
+  function scheduleInstallRePrompt() {
+    clearInstallRePromptTimer();
+
+    if (typeof window === "undefined" || !shouldShowInstallOverlay()) {
+      return;
+    }
+
+    installRePromptTimer = setTimeout(() => {
+      if (shouldShowInstallOverlay()) {
+        showMobileInstallPrompt = true;
+      }
+    }, INSTALL_REPROMPT_DELAY_MS);
+  }
+
+  onMount(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const cleanupFns: Array<() => void> = [];
+
+    try {
+      deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
+    } catch (error) {
+      console.warn("Failed to resolve device detector:", error);
+      deviceDetector = null;
+    }
+
+    try {
+      fullscreenService = resolve<IMobileFullscreenService>(
+        TYPES.IMobileFullscreenService
+      );
+    } catch (error) {
+      console.warn("Failed to resolve mobile fullscreen service:", error);
+      fullscreenService = null;
+    }
+
+    if (shouldShowInstallOverlay()) {
+      showMobileInstallPrompt = true;
+    } else {
+      showMobileInstallPrompt = false;
+    }
+
+    if (deviceDetector) {
+      const unsubscribeCapabilities = deviceDetector.onCapabilitiesChanged(
+        () => {
+          if (shouldShowInstallOverlay()) {
+            showMobileInstallPrompt = true;
+          } else {
+            showMobileInstallPrompt = false;
+            clearInstallRePromptTimer();
+          }
+        }
+      );
+      cleanupFns.push(() => unsubscribeCapabilities?.());
+    }
+
+    if (fullscreenService) {
+      const unsubscribeInstall = fullscreenService.onInstallPromptAvailable(
+        () => {
+          if (shouldShowInstallOverlay()) {
+            showMobileInstallPrompt = true;
+          }
+        }
+      );
+      cleanupFns.push(() => unsubscribeInstall?.());
+    }
+
+    if (typeof window !== "undefined" && fullscreenService) {
+      const handleAppInstalled = () => {
+        showMobileInstallPrompt = false;
+        clearInstallRePromptTimer();
+      };
+      window.addEventListener("appinstalled", handleAppInstalled);
+      cleanupFns.push(() =>
+        window.removeEventListener("appinstalled", handleAppInstalled)
+      );
+
+      const updatePromptFromDisplayMode = () => {
+        if (shouldShowInstallOverlay()) {
+          showMobileInstallPrompt = true;
+        } else {
+          showMobileInstallPrompt = false;
+          clearInstallRePromptTimer();
+        }
+      };
+
+      const queries = [
+        "(display-mode: standalone)",
+        "(display-mode: fullscreen)",
+        "(display-mode: minimal-ui)",
+      ];
+
+      queries.forEach((query) => {
+        const mediaQuery = window.matchMedia(query);
+        const handler = () => updatePromptFromDisplayMode();
+
+        if (mediaQuery.addEventListener) {
+          mediaQuery.addEventListener("change", handler);
+          cleanupFns.push(() =>
+            mediaQuery.removeEventListener("change", handler)
+          );
+        } else if (mediaQuery.addListener) {
+          mediaQuery.addListener(handler);
+          cleanupFns.push(() => mediaQuery.removeListener(handler));
+        }
+      });
+    }
+
+    cleanupFns.push(() => clearInstallRePromptTimer());
+
+    return () => {
+      cleanupFns.forEach((cleanup) => {
+        try {
+          cleanup();
+        } catch (error) {
+          console.warn(
+            "Failed to clean up mobile PWA prompt listeners:",
+            error
+          );
+        }
+      });
+    };
+  });
+
+  $effect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!fullscreenService) {
+      return;
+    }
+
+    if (showMobileInstallPrompt) {
+      clearInstallRePromptTimer();
+      return;
+    }
+
+    if (shouldShowInstallOverlay()) {
+      scheduleInstallRePrompt();
+    } else {
+      clearInstallRePromptTimer();
+    }
+  });
+
+  function handleMobileInstallDismiss() {
+    if (fullscreenService?.getRecommendedStrategy() === "not-supported") {
+      clearInstallRePromptTimer();
+      return;
+    }
+    scheduleInstallRePrompt();
+  }
 
 
   // Tab accessibility state - updated by BuildTab via callback
@@ -246,8 +425,13 @@
 
   <!-- Settings Dialog - REMOVED - now rendered in MainApplication.svelte to avoid duplicates -->
 
-  <!-- Mobile Fullscreen Prompt - Disabled for better UX -->
-  <!-- <MobileFullscreenPrompt /> -->
+  <MobileFullscreenPrompt
+    bind:showPrompt={showMobileInstallPrompt}
+    autoShow={false}
+    position="center"
+    nagMode={true}
+    on:dismiss={handleMobileInstallDismiss}
+  />
 
   <!-- Subtle Fullscreen Hint -->
   <FullscreenHint />

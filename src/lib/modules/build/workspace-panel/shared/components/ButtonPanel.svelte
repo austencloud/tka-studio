@@ -16,6 +16,7 @@
   import {
     BackButton,
     ClearSequencePanelButton,
+    ConstructGenerateToggle,
     FullscreenButton,
     PlayButton,
     RemoveBeatButton,
@@ -53,6 +54,11 @@
     // Full Screen button
     showFullScreen = true,
 
+    // Construct/Generate toggle props
+    showToggle = false,
+    activeTab = 'construct',
+    onTabChange,
+
     // Panel visibility
     visible = true
   }: {
@@ -84,6 +90,11 @@
     // Full Screen button props
     showFullScreen?: boolean;
 
+    // Construct/Generate toggle props
+    showToggle?: boolean;
+    activeTab?: 'construct' | 'generate';
+    onTabChange?: (tab: 'construct' | 'generate') => void;
+
     // Panel visibility
     visible?: boolean;
   } = $props();
@@ -99,6 +110,14 @@
 
 {#if visible}
   <div class="button-panel" transition:fade={{ duration: 200 }}>
+    <!-- Construct/Generate Toggle (when not shown in ToolPanel header) -->
+    {#if showToggle && activeTab && onTabChange}
+      <ConstructGenerateToggle
+        {activeTab}
+        onTabChange={onTabChange}
+      />
+    {/if}
+
     <!-- Undo Button (when buildTabState is available) or Back Button -->
     {#if buildTabState}
       <UndoButton

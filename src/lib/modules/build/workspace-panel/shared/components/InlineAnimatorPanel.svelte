@@ -252,8 +252,9 @@
 </BottomSheet>
 
 <style>
-  :global(.inline-animator-backdrop) {
+  :global(.bottom-sheet-backdrop.inline-animator-backdrop) {
     background: transparent;
+    backdrop-filter: none !important;
     pointer-events: none;
   }
 
