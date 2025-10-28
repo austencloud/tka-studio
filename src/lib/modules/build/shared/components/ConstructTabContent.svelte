@@ -8,7 +8,7 @@
 	import type { PictographData } from "$shared";
 	import { fade } from "svelte/transition";
 	import { OptionViewer, StartPositionPicker } from "../../construct";
-  import type { SimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
+	import type { SimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
 
   // Props - simplified with unified service
   let {
@@ -21,6 +21,7 @@
     onStartPositionNavigateToAdvanced,
     onStartPositionNavigateToDefault,
     isSideBySideLayout = () => false,
+    onOpenFilters = () => {},
   } = $props<{
     shouldShowStartPositionPicker: boolean;
     startPositionState?: SimplifiedStartPositionState | null;
@@ -31,6 +32,7 @@
     onStartPositionNavigateToAdvanced?: () => void;
     onStartPositionNavigateToDefault?: () => void;
     isSideBySideLayout?: () => boolean;
+    onOpenFilters?: () => void;
   }>();
 
   // Reference to StartPositionPicker for external control
@@ -74,6 +76,7 @@
               {isClearingSequence}
               {isSideBySideLayout}
               {isUndoingOption}
+              {onOpenFilters}
             />
           {/if}
         </div>

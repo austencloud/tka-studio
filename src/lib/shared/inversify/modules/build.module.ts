@@ -22,10 +22,10 @@ import { SequenceTransformationService } from "../../../modules/build/shared/ser
 import { SequenceValidationService } from "../../../modules/build/shared/services/implementations/SequenceValidationService";
 import { UndoService } from "../../../modules/build/shared/services/implementations/UndoService";
 // NEW: BuildTab Refactoring Services (2025-10-28)
+import { BeatOperationsService } from "../../../modules/build/shared/services/implementations/BeatOperationsService";
 import { BuildTabInitializationService } from "../../../modules/build/shared/services/implementations/BuildTabInitializationService";
 import { BuildTabResponsiveLayoutService } from "../../../modules/build/shared/services/implementations/BuildTabResponsiveLayoutService";
 import { NavigationSyncService } from "../../../modules/build/shared/services/implementations/NavigationSyncService";
-import { BeatOperationsService } from "../../../modules/build/shared/services/implementations/BeatOperationsService";
 // Refactored Generation Services
 import {
   OptionFilter,

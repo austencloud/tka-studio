@@ -1,0 +1,310 @@
+<!--
+OptionFilterPanel.svelte - Filter options slide-up panel
+
+Provides a dedicated UI for filtering option viewer content:
+- All/Continuous toggle
+- Future filter options (grid mode, difficulty, etc.)
+- Slide-up interaction matching existing panels
+-->
+
+<script lang="ts">
+  import type { IHapticFeedbackService } from "$shared";
+  import { BottomSheet, resolve, TYPES } from "$shared";
+
+  // Props
+  const {
+    isOpen = false,
+    isContinuousOnly = false,
+    onClose = () => {},
+    onToggleContinuous = () => {},
+  } = $props<{
+    isOpen?: boolean;
+    isContinuousOnly?: boolean;
+    onClose?: () => void;
+    onToggleContinuous?: (isContinuousOnly: boolean) => void;
+  }>();
+
+  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+
+  function handleClose() {
+    onClose();
+  }
+
+  function handleContinuityToggle(value: boolean) {
+    hapticService?.trigger("selection");
+    onToggleContinuous(value);
+  }
+</script>
+
+<BottomSheet
+  {isOpen}
+  labelledBy="filter-panel-title"
+  on:close={handleClose}
+  closeOnBackdrop={true}
+  focusTrap={false}
+  lockScroll={false}
+  showHandle={true}
+  placement="bottom"
+  class="filter-panel-container"
+  backdropClass="filter-panel-backdrop"
+>
+  <div class="filter-panel">
+    <div class="filter-panel-header">
+      <h2 id="filter-panel-title" class="filter-panel-title">
+        <i class="fas fa-filter"></i>
+        Filter Options
+      </h2>
+      <button
+        class="close-button"
+        onclick={handleClose}
+        aria-label="Close filter panel"
+        type="button"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <div class="filter-panel-content">
+      <!-- Continuity Filter Section -->
+      <div class="filter-section">
+        <h3 class="section-title">Option Type</h3>
+        <div class="toggle-group">
+          <button
+            class="toggle-option"
+            class:active={!isContinuousOnly}
+            onclick={() => handleContinuityToggle(false)}
+            aria-pressed={!isContinuousOnly}
+          >
+            <div class="toggle-icon">
+              <i class="fas fa-th"></i>
+            </div>
+            <div class="toggle-label">
+              <div class="label-text">All Options</div>
+              <div class="label-description">Show all available options</div>
+            </div>
+          </button>
+
+          <button
+            class="toggle-option"
+            class:active={isContinuousOnly}
+            onclick={() => handleContinuityToggle(true)}
+            aria-pressed={isContinuousOnly}
+          >
+            <div class="toggle-icon">
+              <i class="fas fa-link"></i>
+            </div>
+            <div class="toggle-label">
+              <div class="label-text">Continuous Only</div>
+              <div class="label-description">Show only continuous options</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Future filter sections can be added here -->
+      <div class="filter-section future">
+        <p class="future-note">
+          <i class="fas fa-info-circle"></i>
+          More filter options coming soon!
+        </p>
+      </div>
+    </div>
+  </div>
+</BottomSheet>
+
+<style>
+  :global(.filter-panel-backdrop) {
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+  }
+
+  :global(.bottom-sheet.filter-panel-container) {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    width: 100%;
+    max-height: 60vh;
+    padding-bottom: 0;
+  }
+
+  .filter-panel {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 24px 24px 0 0;
+    box-shadow:
+      0 -8px 32px rgba(0, 0, 0, 0.4),
+      0 -4px 16px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .filter-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .filter-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+  }
+
+  .filter-panel-title i {
+    font-size: 1.1rem;
+    color: rgba(147, 197, 253, 0.9);
+  }
+
+  .close-button {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .close-button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.95);
+    transform: scale(1.05);
+  }
+
+  .close-button:active {
+    transform: scale(0.95);
+  }
+
+  .filter-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .section-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+  }
+
+  .toggle-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .toggle-option {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-align: left;
+  }
+
+  .toggle-option:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+
+  .toggle-option.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.5);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
+  }
+
+  .toggle-option.active:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.6);
+  }
+
+  .toggle-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.7);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .toggle-option.active .toggle-icon {
+    background: rgba(59, 130, 246, 0.25);
+    color: rgba(147, 197, 253, 1);
+  }
+
+  .toggle-label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .label-text {
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .label-description {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .filter-section.future {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+  }
+
+  .future-note {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+    font-style: italic;
+  }
+
+  .future-note i {
+    color: rgba(147, 197, 253, 0.6);
+  }
+</style>
+

@@ -15,8 +15,7 @@
     currentGridMode = GridModeEnum.BOX,
     onToggleAdvanced,
     onGridModeChange,
-    isContinuousOnly = false,
-    onToggleContinuous,
+    onOpenFilters,
   }: {
     variant?: HeaderVariant;
     title?: string;
@@ -25,8 +24,7 @@
     currentGridMode?: GridMode;
     onToggleAdvanced?: (isAdvanced: boolean) => void;
     onGridModeChange?: (gridMode: GridMode) => void;
-    isContinuousOnly?: boolean;
-    onToggleContinuous?: (isContinuousOnly: boolean) => void;
+    onOpenFilters?: () => void;
   } = $props();
 
   const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
@@ -35,9 +33,9 @@
     onToggleAdvanced?.(nextValue);
   }
 
-  function handleContinuityToggle() {
+  function handleFilterClick() {
     hapticService?.trigger("selection");
-    onToggleContinuous?.(!isContinuousOnly);
+    onOpenFilters?.();
   }
 </script>
 
@@ -61,13 +59,12 @@
       <GridModeToggle currentGridMode={currentGridMode} onGridModeChange={onGridModeChange} />
     {:else}
       <button
-        class="continuity-toggle"
-        class:continuous={isContinuousOnly}
-        onclick={handleContinuityToggle}
-        aria-label={isContinuousOnly ? "Showing continuous options only. Click to show all options." : "Showing all options. Click to show continuous only."}
-        title={isContinuousOnly ? "Continuous options" : "All options"}
+        class="filter-button"
+        onclick={handleFilterClick}
+        aria-label="Open filter options"
+        title="Filter options"
       >
-        {isContinuousOnly ? "Continuous" : "All"}
+        <i class="fas fa-filter"></i>
       </button>
     {/if}
   </div>
@@ -121,45 +118,34 @@
     white-space: nowrap;
   }
 
-  .continuity-toggle {
+  .filter-button {
     background: rgba(255, 255, 255, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.2);
     cursor: pointer;
-    padding: 6px 14px;
+    width: 40px;
+    height: 40px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: rgba(255, 255, 255, 0.85);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.3px;
+    border-radius: 50%;
+    font-size: 1rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     user-select: none;
     -webkit-tap-highlight-color: transparent;
   }
 
-  .continuity-toggle.continuous {
-    background: rgba(59, 130, 246, 0.25);
-    color: rgba(255, 255, 255, 0.95);
-    border-color: rgba(59, 130, 246, 0.45);
-    box-shadow: 0 2px 12px rgba(59, 130, 246, 0.25);
-  }
-
   @media (hover: hover) {
-    .continuity-toggle:hover {
+    .filter-button:hover {
       background: rgba(255, 255, 255, 0.15);
       transform: scale(1.05);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .continuity-toggle.continuous:hover {
-      background: rgba(59, 130, 246, 0.35);
+      color: rgba(147, 197, 253, 1);
     }
   }
 
-  .continuity-toggle:active {
+  .filter-button:active {
     transform: scale(0.95);
     transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -170,9 +156,10 @@
       gap: 10px;
     }
 
-    .continuity-toggle {
-      padding: 5px 12px;
-      font-size: 0.7rem;
+    .filter-button {
+      width: 36px;
+      height: 36px;
+      font-size: 0.9rem;
     }
 
     .header-left,

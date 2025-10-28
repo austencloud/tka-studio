@@ -1,17 +1,9 @@
-<!--
-Build Tab - Main construction interface
-
-Provides two-panel layout:
-- Workspace Panel: Sequence display and action buttons
-- Tool Panel: Tabbed interface (Construct, Generate, Animate, Share, Record)
-
-This component is a pure composition layer - all business logic delegated to services.
--->
 <script lang="ts">
   import {
     createComponentLogger,
     ensureContainerInitialized,
     ErrorBanner,
+    GridMode,
     navigationState,
     resolve,
     TYPES,
@@ -23,14 +15,21 @@ This component is a pure composition layer - all business logic delegated to ser
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
   import InlineAnimatorPanel from '../../workspace-panel/shared/components/InlineAnimatorPanel.svelte';
-  import type {
-    IBuildTabInitializationService
-  } from "../services/contracts";
-  import type { BuildTabInitializationResult } from "../services/contracts/IBuildTabInitializationService";
-  import type { createBuildTabState } from "../state/build-tab-state.svelte";
-  import type { createConstructTabState } from "../state/construct-tab-state.svelte";
+  import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
+  import { createBuildTabState, createConstructTabState } from "../state";
+  import type { createBuildTabState as BuildTabStateType } from "../state/build-tab-state.svelte";
+  import type { createConstructTabState as ConstructTabStateType } from "../state/construct-tab-state.svelte";
   import { createPanelCoordinationState } from "../state/panel-coordination-state.svelte";
   import type { BatchEditChanges, IToolPanelMethods } from "../types/build-tab-types";
+  import type {
+    IBeatOperationsService,
+    IBuildTabResponsiveLayoutService,
+    IBuildTabService,
+    INavigationSyncService,
+    ISequencePersistenceService,
+    ISequenceService
+  } from "../services/contracts";
+  import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
   import LoadingOverlay from './LoadingOverlay.svelte';
 
   const logger = createComponentLogger('BuildTab');
@@ -39,17 +38,22 @@ This component is a pure composition layer - all business logic delegated to ser
   const START_POSITION_BEAT_NUMBER = 0; // Beat 0 = start position, beats 1+ are in the sequence
 
   // Type aliases for state objects
-  type BuildTabState = ReturnType<typeof createBuildTabState>;
-  type ConstructTabState = ReturnType<typeof createConstructTabState>;
+  type BuildTabState = ReturnType<typeof BuildTabStateType>;
+  type ConstructTabState = ReturnType<typeof ConstructTabStateType>;
 
   // Props
   let { onTabAccessibilityChange }: {
     onTabAccessibilityChange?: (canAccessEditAndExport: boolean) => void
   } = $props();
 
-  // Services - all resolved via initialization service
-  let initializationService: IBuildTabInitializationService | null = $state(null);
-  let services: BuildTabInitializationResult | null = $state(null);
+  // Services - resolved directly from DI container
+  let sequenceService: ISequenceService | null = $state(null);
+  let sequencePersistenceService: ISequencePersistenceService | null = $state(null);
+  let startPositionService: IStartPositionService | null = $state(null);
+  let buildTabService: IBuildTabService | null = $state(null);
+  let layoutService: IBuildTabResponsiveLayoutService | null = $state(null);
+  let navigationSyncService: INavigationSyncService | null = $state(null);
+  let beatOperationsService: IBeatOperationsService | null = $state(null);
 
   // State
   let buildTabState: BuildTabState | null = $state(null);
@@ -105,9 +109,9 @@ This component is a pure composition layer - all business logic delegated to ser
 
   // Effect: Sync navigation state TO build tab state
   $effect(() => {
-    if (!buildTabState || !services?.navigationSyncService) return;
+    if (!buildTabState || !navigationSyncService) return;
 
-    services.navigationSyncService.syncNavigationToBuildTab(
+    navigationSyncService.syncNavigationToBuildTab(
       buildTabState,
       navigationState
     );
@@ -115,10 +119,10 @@ This component is a pure composition layer - all business logic delegated to ser
 
   // Effect: Sync build tab state BACK to navigation state
   $effect(() => {
-    if (!buildTabState || !services?.navigationSyncService) return;
+    if (!buildTabState || !navigationSyncService) return;
     if (buildTabState.isUpdatingFromToggle) return;
 
-    services.navigationSyncService.syncBuildTabToNavigation(
+    navigationSyncService.syncBuildTabToNavigation(
       buildTabState,
       navigationState
     );
@@ -126,16 +130,16 @@ This component is a pure composition layer - all business logic delegated to ser
 
   // Effect: Handle responsive layout changes
   $effect(() => {
-    if (!services?.layoutService || !servicesInitialized) return;
-
-    const layoutService = services.layoutService;
+    if (!layoutService || !servicesInitialized) return;
 
     // Initialize layout service
     layoutService.initialize();
 
     // Subscribe to layout changes
     const unsubscribe = layoutService.onLayoutChange(() => {
-      shouldUseSideBySideLayout = layoutService.shouldUseSideBySideLayout();
+      if (layoutService) {
+        shouldUseSideBySideLayout = layoutService.shouldUseSideBySideLayout();
+      }
     });
 
     // Initial layout calculation
@@ -144,7 +148,9 @@ This component is a pure composition layer - all business logic delegated to ser
     // Cleanup
     return () => {
       unsubscribe();
-      layoutService.dispose();
+      if (layoutService) {
+        layoutService.dispose();
+      }
     };
   });
 
@@ -191,7 +197,7 @@ This component is a pure composition layer - all business logic delegated to ser
     return () => resizeObserver.disconnect();
   });
 
-  // Component initialization
+  // Component initialization - DIRECT SERVICE RESOLUTION
   onMount(async () => {
     if (!ensureContainerInitialized()) {
       error = "Dependency injection container not initialized";
@@ -201,25 +207,63 @@ This component is a pure composition layer - all business logic delegated to ser
     isLoading = true;
 
     try {
-      // Use initialization service for all startup logic
-      if (!initializationService) {
-        initializationService = resolve<IBuildTabInitializationService>(
-          TYPES.IBuildTabInitializationService
-        );
-      }
+      // Resolve all services directly from DI container
+      sequenceService = resolve<ISequenceService>(TYPES.ISequenceService);
+      sequencePersistenceService = resolve<ISequencePersistenceService>(TYPES.ISequencePersistenceService);
+      startPositionService = resolve<IStartPositionService>(TYPES.IStartPositionService);
+      buildTabService = resolve<IBuildTabService>(TYPES.IBuildTabService);
+      layoutService = resolve<IBuildTabResponsiveLayoutService>(TYPES.IBuildTabResponsiveLayoutService);
+      navigationSyncService = resolve<INavigationSyncService>(TYPES.INavigationSyncService);
+      beatOperationsService = resolve<IBeatOperationsService>(TYPES.IBeatOperationsService);
 
-      const initResult = await initializationService.initialize();
+      // Wait a tick to ensure component context is fully established
+      await new Promise(resolve => setTimeout(resolve, 0));
 
-      // Store all services and state from initialization
-      services = initResult;
-      buildTabState = initResult.buildTabState;
-      constructTabState = initResult.constructTabState;
+      // Create state objects directly
+      buildTabState = createBuildTabState(
+        sequenceService,
+        sequencePersistenceService
+      );
+
+      constructTabState = createConstructTabState(
+        buildTabService,
+        buildTabState.sequenceState,
+        sequencePersistenceService,
+        buildTabState,
+        navigationState
+      );
+
+      // Initialize services
+      await buildTabService.initialize();
+
+      // Initialize state with persistence
+      await buildTabState.initializeWithPersistence();
+      await constructTabState.initializeConstructTab();
 
       // Mark services as initialized
       servicesInitialized = true;
 
-      // Configure event callbacks via initialization service
-      initializationService.configureEventCallbacks(buildTabState, panelState);
+      // Configure event callbacks
+      const buildTabEventService = getBuildTabEventService();
+
+      // Set up sequence state callbacks for BuildTabEventService
+      buildTabEventService.setSequenceStateCallbacks(
+        () => buildTabState!.sequenceState.getCurrentSequence(),
+        (sequence) => buildTabState!.sequenceState.setCurrentSequence(sequence)
+      );
+
+      // Set up option history callback
+      buildTabEventService.setAddOptionToHistoryCallback(
+        (beatIndex, beatData) => buildTabState!.addOptionToHistory(beatIndex, beatData)
+      );
+
+      // Set up undo snapshot callback
+      buildTabEventService.setPushUndoSnapshotCallback(
+        (type, metadata) => buildTabState!.pushUndoSnapshot(type, metadata)
+      );
+
+      // Load start positions
+      await startPositionService.getDefaultStartPositions(GridMode.DIAMOND);
 
       logger.success("BuildTab initialized successfully");
     } catch (err) {
@@ -249,10 +293,10 @@ This component is a pure composition layer - all business logic delegated to ser
   // Event handlers - delegate to services/state
   async function handleOptionSelected(option: PictographData): Promise<void> {
     try {
-      if (!services?.buildTabService) {
+      if (!buildTabService) {
         throw new Error("Build tab service not initialized");
       }
-      await services.buildTabService.selectOption(option);
+      await buildTabService.selectOption(option);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to select option";
       error = errorMessage;
@@ -291,13 +335,13 @@ This component is a pure composition layer - all business logic delegated to ser
   }
 
   function handleRemoveBeat(beatIndex: number) {
-    if (!services?.beatOperationsService) {
+    if (!beatOperationsService) {
       logger.warn("Beat operations service not initialized");
       return;
     }
-    
+
     try {
-      services.beatOperationsService.removeBeat(beatIndex, buildTabState);
+      beatOperationsService.removeBeat(beatIndex, buildTabState);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to remove beat";
       error = errorMessage;
@@ -306,17 +350,75 @@ This component is a pure composition layer - all business logic delegated to ser
   }
 
   function handleBatchApply(changes: BatchEditChanges) {
-    if (!services?.beatOperationsService) {
+    if (!beatOperationsService) {
       logger.warn("Beat operations service not initialized");
       return;
     }
-    
+
     try {
-      services.beatOperationsService.applyBatchChanges(changes, buildTabState);
+      beatOperationsService.applyBatchChanges(changes, buildTabState);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to apply changes";
       error = errorMessage;
       logger.error("Failed to apply batch changes", err);
+
+      // Error recovery: Clear selection and close panel to prevent stuck UI
+      buildTabState?.sequenceState.clearSelection();
+      panelState.closeEditPanel();
+    }
+  }
+
+  function handleOrientationChange(color: string, orientation: string) {
+    if (!beatOperationsService) {
+      logger.warn("Beat operations service not initialized");
+      return;
+    }
+
+    const beatIndex = panelState.editPanelBeatIndex;
+    if (beatIndex === null) {
+      logger.warn("Cannot change orientation: no beat selected");
+      return;
+    }
+
+    try {
+      beatOperationsService.updateBeatOrientation(
+        beatIndex,
+        color,
+        orientation,
+        buildTabState,
+        panelState
+      );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to update orientation";
+      error = errorMessage;
+      logger.error("Failed to update orientation", err);
+    }
+  }
+
+  function handleTurnAmountChange(color: string, turnAmount: number) {
+    if (!beatOperationsService) {
+      logger.warn("Beat operations service not initialized");
+      return;
+    }
+
+    const beatIndex = panelState.editPanelBeatIndex;
+    if (beatIndex === null) {
+      logger.warn("Cannot change turns: no beat selected");
+      return;
+    }
+
+    try {
+      beatOperationsService.updateBeatTurns(
+        beatIndex,
+        color,
+        turnAmount,
+        buildTabState,
+        panelState
+      );
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to update turns";
+      error = errorMessage;
+      logger.error("Failed to update turns", err);
     }
   }
 </script>
@@ -325,7 +427,7 @@ This component is a pure composition layer - all business logic delegated to ser
   <LoadingOverlay message="Initializing Build Tab..." />
 {:else if error}
   <ErrorBanner message={error} onDismiss={clearError} />
-{:else if buildTabState && constructTabState && services}
+{:else if buildTabState && constructTabState}
   <div class="build-tab" class:side-by-side={shouldUseSideBySideLayout}>
     <!-- Workspace Panel -->
     <div class="workspace-container">
@@ -390,64 +492,8 @@ This component is a pure composition layer - all business logic delegated to ser
           buildTabState?.sequenceState.exitMultiSelectMode();
         }
       }}
-      onOrientationChanged={(color, orientation) => {
-        const beatData = panelState.editPanelBeatData;
-        const beatIndex = panelState.editPanelBeatIndex;
-
-        if (beatData && beatIndex !== null) {
-          // Get current motion data for the color
-          const currentMotion = beatData.motions?.[color] || {};
-
-          // Create updated beat data with new orientation
-          const updatedBeatData = {
-            ...beatData,
-            motions: {
-              ...beatData.motions,
-              [color]: {
-                ...currentMotion,
-                startOrientation: orientation,
-              }
-            }
-          };
-
-          // Beat 0 = start position, beats 1+ are in array at indices 0, 1, 2...
-          if (beatIndex === START_POSITION_BEAT_NUMBER) {
-            buildTabState?.sequenceState.setStartPosition(updatedBeatData);
-          } else {
-            const arrayIndex = beatIndex - 1;
-            buildTabState?.sequenceState.updateBeat(arrayIndex, updatedBeatData);
-          }
-        }
-      }}
-      onTurnAmountChanged={(color, turnAmount) => {
-        const beatData = panelState.editPanelBeatData;
-        const beatIndex = panelState.editPanelBeatIndex;
-
-        if (beatData && beatIndex !== null) {
-          // Get current motion data for the color
-          const currentMotion = beatData.motions?.[color] || {};
-
-          // Create updated beat data with new turn amount
-          const updatedBeatData = {
-            ...beatData,
-            motions: {
-              ...beatData.motions,
-              [color]: {
-                ...currentMotion,
-                turns: turnAmount,
-              }
-            }
-          };
-
-          // Beat 0 = start position, beats 1+ are in array at indices 0, 1, 2...
-          if (beatIndex === START_POSITION_BEAT_NUMBER) {
-            buildTabState?.sequenceState.setStartPosition(updatedBeatData);
-          } else {
-            const arrayIndex = beatIndex - 1;
-            buildTabState?.sequenceState.updateBeat(arrayIndex, updatedBeatData);
-          }
-        }
-      }}
+      onOrientationChanged={handleOrientationChange}
+      onTurnAmountChanged={handleTurnAmountChange}
       onBatchApply={handleBatchApply}
     />
   {/if}

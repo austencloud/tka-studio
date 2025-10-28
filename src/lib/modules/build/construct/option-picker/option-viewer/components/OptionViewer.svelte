@@ -13,6 +13,7 @@ Business logic moved to state management and utility services.
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
+  import ConstructPickerHeader from "../../../shared/components/ConstructPickerHeader.svelte";
   import type { ILayoutDetectionService } from "../../services/contracts/ILayoutDetectionService";
   import type { IOptionSizer } from "../services";
   import type {
@@ -23,7 +24,6 @@ Business logic moved to state management and utility services.
   } from "../services/contracts";
   import { createContainerDimensionTracker, createOptionPickerState } from "../state";
   import { LetterTypeTextPainter } from "../utils/letter-type-text-painter";
-  import ConstructPickerHeader from "../../../shared/components/ConstructPickerHeader.svelte";
   import OptionViewerGridLayout from "./OptionViewerGridLayout.svelte";
   import OptionViewerSwipeLayout from "./OptionViewerSwipeLayout.svelte";
 
@@ -38,13 +38,27 @@ Business logic moved to state management and utility services.
     isClearingSequence = false,
     isUndoingOption = false,
     isSideBySideLayout = () => false,
+    onOpenFilters = () => {},
   }: {
     onOptionSelected: (option: PictographData) => void;
     currentSequence?: PictographData[];
     isClearingSequence?: boolean;
     isUndoingOption?: boolean;
     isSideBySideLayout?: () => boolean;
+    onOpenFilters?: () => void;
   } = $props();
+
+  // Export continuity toggle handler for use by parent (BuildTab)
+  export function handleContinuityToggle(isContinuousOnly: boolean) {
+    if (optionPickerState) {
+      optionPickerState.setContinuousOnly(isContinuousOnly);
+    }
+  }
+
+  // Export getter for continuity state
+  export function getContinuityState() {
+    return optionPickerState?.isContinuousOnly ?? false;
+  }
 
   // Services - initialized asynchronously
   let optionPickerSizingService: IOptionSizer | null = null;
@@ -102,13 +116,6 @@ Business logic moved to state management and utility services.
 
   // Derived formatted title for display
   const formattedSectionTitle = $derived(formatSectionTitle(currentSectionTitle));
-
-  // Continuity toggle handler
-  function handleContinuityToggle(isContinuousOnly: boolean) {
-    if (optionPickerState) {
-      optionPickerState.setContinuousOnly(isContinuousOnly);
-    }
-  }
 
   // Handle section change from swipe container
   function handleSectionChange(sectionIndex: number) {
@@ -440,13 +447,12 @@ Business logic moved to state management and utility services.
       <p>Initializing option picker...</p>
     </div>
   {:else}
-    <!-- Shared header with Continuity toggle -->
+    <!-- Shared header with Filter button -->
     <ConstructPickerHeader
       variant="options"
       title="Options"
       titleHtml={formattedSectionTitle}
-      isContinuousOnly={optionPickerState.isContinuousOnly}
-      onToggleContinuous={handleContinuityToggle}
+      onOpenFilters={onOpenFilters}
     />
 
     <!-- Main content -->

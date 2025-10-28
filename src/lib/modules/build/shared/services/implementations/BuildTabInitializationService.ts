@@ -13,13 +13,13 @@ import { injectable } from "inversify";
 import type { IStartPositionService } from "../../../construct/start-position-picker/services/contracts";
 import { createBuildTabState, createConstructTabState } from "../../state";
 import type { PanelCoordinationState } from "../../state/panel-coordination-state.svelte";
-import type { 
-  IBuildTabService, 
-  ISequencePersistenceService, 
-  ISequenceService,
+import type {
+  IBeatOperationsService,
   IBuildTabResponsiveLayoutService,
+  IBuildTabService,
   INavigationSyncService,
-  IBeatOperationsService
+  ISequencePersistenceService,
+  ISequenceService
 } from "../contracts";
 import type { BuildTabInitializationResult, IBuildTabInitializationService } from "../contracts/IBuildTabInitializationService";
 import { getBuildTabEventService } from "./BuildTabEventService";

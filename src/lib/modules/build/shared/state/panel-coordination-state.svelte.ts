@@ -28,6 +28,12 @@ export interface PanelCoordinationState {
   closeAnimationPanel(): void;
   setAnimating(animating: boolean): void;
 
+  // Filter Panel State
+  get isFilterPanelOpen(): boolean;
+
+  openFilterPanel(): void;
+  closeFilterPanel(): void;
+
   // Tool Panel Height (for sizing other panels)
   get toolPanelHeight(): number;
   setToolPanelHeight(height: number): void;
@@ -47,6 +53,9 @@ export function createPanelCoordinationState(): PanelCoordinationState {
   // Animation panel state
   let isAnimationPanelOpen = $state(false);
   let isAnimating = $state(false);
+
+  // Filter panel state
+  let isFilterPanelOpen = $state(false);
 
   // Tool panel height tracking
   let toolPanelHeight = $state(0);
@@ -96,6 +105,17 @@ export function createPanelCoordinationState(): PanelCoordinationState {
 
     setAnimating(animating: boolean) {
       isAnimating = animating;
+    },
+
+    // Filter Panel Getters
+    get isFilterPanelOpen() { return isFilterPanelOpen; },
+
+    openFilterPanel() {
+      isFilterPanelOpen = true;
+    },
+
+    closeFilterPanel() {
+      isFilterPanelOpen = false;
     },
 
     // Tool Panel Height
