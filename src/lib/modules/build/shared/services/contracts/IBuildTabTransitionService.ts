@@ -14,7 +14,7 @@ export interface IBuildTabTransitionService {
   handleMainTabTransition(
     targetTab: ActiveBuildTab,
     currentTab: ActiveBuildTab,
-    setActiveRightPanel: (tab: ActiveBuildTab) => void
+    setactiveToolPanel: (tab: ActiveBuildTab) => void
   ): Promise<void>;
 
   /**

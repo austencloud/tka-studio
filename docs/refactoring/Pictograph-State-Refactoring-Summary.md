@@ -314,7 +314,7 @@ describe("PictographState Integration", () => {
 
 - [BuildTab Refactoring Battle Plan](./BuildTab-Refactoring-Battle-Plan.md)
 - [BuildTab Architecture Visual](./BuildTab-Architecture-Visual.md)
-- [RightPanel Refactoring Summary](./RightPanel-Refactoring-Summary.md)
+- [ToolPanel Refactoring Summary](./ToolPanel-Refactoring-Summary.md)
 
 ## Next Steps (Optional Future Improvements)
 

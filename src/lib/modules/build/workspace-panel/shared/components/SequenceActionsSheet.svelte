@@ -1,8 +1,7 @@
 <!-- Slide-up Sheet for Sequence Actions -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { IAnimationService } from "$shared/application/services/contracts";
-  import { resolve, TYPES } from "$shared/inversify";
+  import { BottomSheet } from "$shared";
 
   let {
     show = false,
@@ -30,26 +29,16 @@
     onClose?: () => void;
   }>();
 
-  let animationService: IAnimationService | null = null;
-
   // Dynamically measured navigation bar height
   let bottomNavHeight = $state(0);
 
   // Measure navigation bar height proactively on mount, so it's ready when panel opens
   onMount(() => {
-    animationService = resolve<IAnimationService>(TYPES.IAnimationService);
-
     const measureNavHeight = () => {
       const bottomNav = document.querySelector('.bottom-navigation');
       if (bottomNav) {
         bottomNavHeight = bottomNav.clientHeight;
       }
-
-      console.log('SequenceActionsSheet measurements:', {
-        toolPanelHeight,
-        bottomNavHeight,
-        calculatedTotal: toolPanelHeight + bottomNavHeight
-      });
     };
 
     // Initial measure
@@ -74,11 +63,9 @@
     if (toolPanelHeight > 0 && bottomNavHeight > 0) {
       // Add 1px for border-top + 4px for grid gap between workspace and tool panel
       const totalHeight = toolPanelHeight + bottomNavHeight + 1 + 4;
-      console.log('SequenceActionsSheet using calculated height:', totalHeight);
       return `height: ${totalHeight}px;`;
     }
 
-    console.log('SequenceActionsSheet falling back to 45vh (toolPanelHeight:', toolPanelHeight, 'bottomNavHeight:', bottomNavHeight, ')');
     return 'height: 45vh;';
   });
 
@@ -136,12 +123,6 @@
   const availableActions = $derived(
     actions.filter((action) => !action.requiresSequence || hasSequence)
   );
-
-  // Handle backdrop click
-  function handleBackdropClick(): void {
-    onClose?.();
-  }
-
   // Action type definition
   type Action = {
     id: string;
@@ -167,53 +148,36 @@
   }
 
   // Slide transition
-  const slideTransition = (node: Element) => {
-    if (!animationService) {
-      return {
-        duration: 300,
-        css: (t: number) => `transform: translateY(${(1 - t) * 100}%)`,
-      };
-    }
-    return {
-      duration: 300,
-      css: (t: number) => {
-        const easeOut = 1 - Math.pow(1 - t, 3);
-        return `transform: translateY(${(1 - easeOut) * 100}%)`;
-      },
-    };
-  };
-
-  const fadeTransition = (node: Element) => {
-    if (!animationService) {
-      return {
-        duration: 200,
-        css: (t: number) => `opacity: ${t}`,
-      };
-    }
-    return animationService.createFadeTransition({ duration: 200 });
-  };
+  function handleSheetClose(): void {
+    handleClose();
+  }
 </script>
 
-{#if show}
-  <!-- Sheet (no backdrop - allows viewing sequence behind) -->
+<BottomSheet
+  isOpen={show}
+  on:close={handleSheetClose}
+  labelledBy="sequence-actions-title"
+  closeOnBackdrop={false}
+  focusTrap={false}
+  lockScroll={false}
+  showHandle={false}
+  class="actions-sheet-container glass-surface"
+  backdropClass="actions-sheet-backdrop"
+>
   <div
-    class="actions-sheet glass-surface"
-    style={panelHeightStyle()}
-    transition:slideTransition
+    class="actions-sheet"
     role="dialog"
     aria-label="Sequence actions"
+    style={panelHeightStyle()}
   >
-    <!-- Close button -->
     <button class="close-button" onclick={handleClose} aria-label="Close actions sheet">
       <i class="fas fa-times"></i>
     </button>
 
-    <!-- Header -->
     <div class="sheet-header">
-      <h2>Sequence Actions</h2>
+      <h2 id="sequence-actions-title">Sequence Actions</h2>
     </div>
 
-    <!-- Actions list -->
     <div class="actions-list">
       {#if availableActions.length === 0}
         <div class="empty-state">
@@ -234,39 +198,54 @@
               <span class="action-label">{action.label}</span>
               <span class="action-description">{action.description}</span>
             </div>
+            {#if action.disabled}
+              <span class="action-badge">Coming soon</span>
+            {/if}
           </button>
         {/each}
       {/if}
     </div>
+
+    <div class="sheet-footer">
+      <button class="done-button" onclick={handleClose} aria-label="Close actions sheet">
+        Done
+      </button>
+    </div>
   </div>
-{/if}
+</BottomSheet>
 
 <style>
-  .actions-sheet {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    /* Height set dynamically via style binding - calculates button panel + nav height */
-    min-height: 300px; /* Fallback minimum */
+  :global(.actions-sheet-backdrop) {
+    background: transparent;
+    pointer-events: none;
+  }
+
+  :global(.bottom-sheet.actions-sheet-container) {
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: var(--glass-backdrop-strong);
     border-top-left-radius: 24px;
     border-top-right-radius: 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
-    z-index: 150; /* Below edit panel (1000) but above regular content */
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    /* Account for iOS safe area */
+    min-height: 300px;
     padding-bottom: env(safe-area-inset-bottom);
+    pointer-events: auto;
   }
 
-  /* Remove hover effect from glass-surface - panel should not be interactive */
-  .actions-sheet:hover {
+  :global(.bottom-sheet.actions-sheet-container:hover) {
     background: rgba(255, 255, 255, 0.08);
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: none;
+  }
+
+  .actions-sheet {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
   }
 
   .close-button {
@@ -320,6 +299,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    flex: 1;
   }
 
   .empty-state {
@@ -403,6 +383,44 @@
   .action-description {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.6);
+  }
+
+  .action-badge {
+    margin-left: auto;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .sheet-footer {
+    padding: 12px 16px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+  }
+
+  .done-button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .done-button:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
+  .done-button:active {
+    transform: scale(0.98);
   }
 
   /* High contrast mode */

@@ -47,7 +47,7 @@ export interface IBuildTabState {
   setTransitioning: (transitioning: boolean) => void;
   setError: (errorMessage: string | null) => void;
   clearError: () => void;
-  setActiveRightPanel: (panel: ActiveBuildTab) => void;
+  setactiveToolPanel: (panel: ActiveBuildTab) => void;
   goBack: () => void;
 
   // Option history management

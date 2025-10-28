@@ -54,7 +54,7 @@ export function createBuildTabEffects(config: EffectConfig) {
         return;
       }
 
-      buildTabState.setActiveRightPanel(currentMode as any);
+      buildTabState.setactiveToolPanel(currentMode as any);
     }
   });
 

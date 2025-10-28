@@ -6,6 +6,7 @@ export { default as ErrorBanner } from "./ErrorBanner.svelte";
 export { default as ErrorScreen } from "./ErrorScreen.svelte";
 export { default as FontAwesomeIcon } from "./FontAwesomeIcon.svelte";
 export { default as HorizontalSwipeContainer } from "./HorizontalSwipeContainer.svelte";
+export { default as BottomSheet } from "./BottomSheet.svelte";
 export { default as IOSToggle } from "./IOSToggle.svelte";
 export { default as LoadingScreen } from "./LoadingScreen.svelte";
 export { default as LoadingSpinner } from "./LoadingSpinner.svelte";

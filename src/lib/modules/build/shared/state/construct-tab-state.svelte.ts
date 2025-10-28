@@ -253,7 +253,7 @@ export function createConstructTabState(
             // Navigate AFTER sequence is cleared to avoid state conflicts
             if (shouldNavigate && targetTab && buildTabState && navigationState) {
               console.log(`🎬 ConstructTabState: Navigating to ${targetTab} after clear`);
-              buildTabState.setActiveRightPanel(targetTab);
+              buildTabState.setactiveToolPanel(targetTab);
               // CRITICAL: Also update navigation state to prevent guard from triggering
               navigationState.setCurrentSubMode(targetTab);
             }

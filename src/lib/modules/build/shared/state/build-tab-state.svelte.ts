@@ -13,6 +13,7 @@
 // Import required state factories
 import type { ActiveBuildTab, BeatData, SequenceData } from "$shared";
 import { resolve, TYPES } from "$shared";
+import { navigationState } from "$shared/navigation/state/navigation-state.svelte";
 import type { ISequencePersistenceService, ISequenceService } from "../services/contracts";
 import type { ISequenceStatisticsService } from "../services/contracts/ISequenceStatisticsService";
 import type { ISequenceTransformationService } from "../services/contracts/ISequenceTransformationService";
@@ -86,7 +87,7 @@ export function createBuildTabState(
   // Callback for showing start position picker (set by construct tab state)
   let showStartPositionPickerCallback: (() => void) | null = null;
 
-  // Callback for triggering undo option animation (set by RightPanel)
+  // Callback for triggering undo option animation (set by ToolPanel)
   let onUndoingOptionCallback: ((isUndoing: boolean) => void) | null = null;
 
   // Shared sub-states
@@ -132,8 +133,10 @@ export function createBuildTabState(
     error = null;
   }
 
-  function setActiveRightPanel(panel: ActiveBuildTab) {
-    setActiveRightPanelInternal(panel, true);
+  function setactiveToolPanel(panel: ActiveBuildTab) {
+    setactiveToolPanelInternal(panel, true);
+    // Also sync to navigation state to prevent sync loop
+    navigationState.setCurrentSubMode(panel);
   }
 
   /**
@@ -141,7 +144,9 @@ export function createBuildTabState(
    * @param panel - The panel to activate
    * @param addToHistory - Whether to add this navigation to history
    */
-  function setActiveRightPanelInternal(panel: ActiveBuildTab, addToHistory: boolean = true) {
+  function setactiveToolPanelInternal(panel: ActiveBuildTab, addToHistory: boolean = true) {
+    console.log("🔄 buildTabState.setactiveToolPanelInternal called with:", { panel, currentActiveSubTab: activeSubTab });
+
     // Track the last content tab (generate or construct) BEFORE navigating away from it
     if ((activeSubTab === 'generate' || activeSubTab === 'construct') && activeSubTab !== panel) {
       lastContentTab = activeSubTab;
@@ -161,6 +166,7 @@ export function createBuildTabState(
     }
 
     activeSubTab = panel;
+    console.log("✅ buildTabState.activeSubTab updated to:", activeSubTab);
     // Save the active tab to persistence
     saveCurrentState();
   }
@@ -173,7 +179,7 @@ export function createBuildTabState(
         // Set flag to prevent sync loop
         isNavigatingBack = true;
         // Set without adding to history (using internal method)
-        setActiveRightPanelInternal(previous.panel, false);
+        setactiveToolPanelInternal(previous.panel, false);
         // Reset flag after state settles
         setTimeout(() => {
           isNavigatingBack = false;
@@ -340,7 +346,7 @@ export function createBuildTabState(
 
           // Restore the active tab
           if (lastEntry.beforeState.activeSubTab !== null) {
-            setActiveRightPanelInternal(lastEntry.beforeState.activeSubTab, false);
+            setactiveToolPanelInternal(lastEntry.beforeState.activeSubTab, false);
           }
         }, fadeAnimationDuration);
 
@@ -360,7 +366,7 @@ export function createBuildTabState(
 
     // Restore the active tab (important for clear sequence undo)
     if (lastEntry.beforeState.activeSubTab !== null) {
-      setActiveRightPanelInternal(lastEntry.beforeState.activeSubTab, false);  // Don't add to navigation history
+      setactiveToolPanelInternal(lastEntry.beforeState.activeSubTab, false);  // Don't add to navigation history
     }
 
     return true;
@@ -381,7 +387,7 @@ export function createBuildTabState(
   }
 
   /**
-   * Set callback for triggering undo option animation (called by RightPanel)
+   * Set callback for triggering undo option animation (called by ToolPanel)
    */
   function setOnUndoingOptionCallback(callback: (isUndoing: boolean) => void) {
     onUndoingOptionCallback = callback;
@@ -512,8 +518,8 @@ export function createBuildTabState(
     setTransitioning: setTransitioningSubTab,
     setError,
     clearError,
-    setActiveRightPanel,
-    setActiveRightPanelInternal, // Internal method for sync effects
+    setactiveToolPanel,
+    setactiveToolPanelInternal, // Internal method for sync effects
     goBack,
 
     // Option history management

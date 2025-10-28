@@ -13,7 +13,7 @@ export * from "./device/domain";
 export * from "./device/services";
 export * from "./foundation";
 // Modern Swipe Components (Embla-based)
-export { FontAwesomeIcon, HorizontalSwipeContainer } from "./foundation/ui";
+export { BottomSheet, FontAwesomeIcon, HorizontalSwipeContainer } from "./foundation/ui";
 export * from "./inversify";
 export * from "./navigation";
 export * from "./persistence";

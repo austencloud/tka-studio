@@ -19,19 +19,19 @@ export class BuildTabTransitionService implements IBuildTabTransitionService {
    * Handle main tab transitions with fade animations
    * @param targetTab - The tab to transition to
    * @param currentTab - The current active tab
-   * @param setActiveRightPanel - Function to update the active tab state
+   * @param setactiveToolPanel- Function to update the active tab state
    */
   async handleMainTabTransition(
     targetTab: ActiveBuildTab,
     currentTab: ActiveBuildTab,
-    setActiveRightPanel: (tab: ActiveBuildTab) => void
+    setactiveToolPanel: (tab: ActiveBuildTab) => void
   ): Promise<void> {
     if (currentTab === targetTab) {
       return; // Already on this tab
     }
 
     // Simple immediate transition without complex fade orchestrator
-    setActiveRightPanel(targetTab);
+    setactiveToolPanel(targetTab);
     console.log(`🎭 Sub-tab transition: ${currentTab} → ${targetTab}`);
   }
 

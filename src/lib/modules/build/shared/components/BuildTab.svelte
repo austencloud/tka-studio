@@ -10,14 +10,14 @@ Testing HMR persistence functionality
 <script lang="ts">
   import { createComponentLogger, ensureContainerInitialized, ErrorBanner, GridMode, navigationState, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import { EditSlidePanel } from "../../edit/components";
   import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
+  import { EditSlidePanel } from "../../edit/components";
+  import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
+  import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import type { IBuildTabService, ISequencePersistenceService, ISequenceService } from "../services/contracts";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
   import { createBuildTabState, createConstructTabState } from "../state";
-  import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import LoadingOverlay from './LoadingOverlay.svelte';
-  import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
 
   // Debug logger for this component
   const logger = createComponentLogger('BuildTab');
@@ -115,8 +115,8 @@ Testing HMR persistence functionality
       }
 
       logger.log("Updating buildTab state from navigation:", currentMode);
-      // Use regular setActiveRightPanel to ADD to history (user clicked a tab)
-      buildTabState.setActiveRightPanel(currentMode as any);
+      // Use regular setactiveToolPanelto ADD to history (user clicked a tab)
+      buildTabState.setactiveToolPanel(currentMode as any);
       logger.success("BuildTab state updated to:", buildTabState.activeSubTab);
     }
   });
@@ -336,7 +336,7 @@ Testing HMR persistence functionality
       });
 
       buildTabState.sequenceState.clearSequenceCompletely();
-      buildTabState.setActiveRightPanel("construct");
+      buildTabState.setactiveToolPanel("construct");
       return;
     }
 

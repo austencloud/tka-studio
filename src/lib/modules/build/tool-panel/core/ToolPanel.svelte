@@ -27,9 +27,10 @@
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
   import { RecordPanel } from "../../record/components";
   import { SharePanel } from "../../share/components";
+  import BuildTabHeader from "../../shared/components/BuildTabHeader.svelte";
   import ConstructTabContent from "../../shared/components/ConstructTabContent.svelte";
   import { ToolPanelNavigationController } from "../../shared/navigation/ToolPanelNavigationController";
-  import type { IToolPanelProps, IAnimationStateRef } from "../../shared/types/build-tab-types";
+  import type { IAnimationStateRef, IToolPanelProps } from "../../shared/types/build-tab-types";
 
   // ============================================================================
   // PROPS
@@ -48,7 +49,7 @@
   // ============================================================================
 
   // Derived from props
-  let activeRightPanel = $derived(buildTabState.activeSubTab);
+  let activeToolPanel = $derived(buildTabState.activeSubTab);
   let isSubTabTransitionActive = $derived(buildTabState.isTransitioning);
 
   // Component refs
@@ -144,7 +145,7 @@
   let canGoBack = $derived.by(() => {
     if (!navigationController) return false;
     return navigationController.canGoBack({
-      activePanel: activeRightPanel,
+      activePanel: activeToolPanel,
       shouldShowStartPositionPicker,
       hasMovedFromStartPositionPicker,
       isInAdvancedStartPositionPicker,
@@ -158,7 +159,7 @@
   // Track transition from start position picker to option picker
   $effect(() => {
     if (
-      activeRightPanel === "construct" &&
+      activeToolPanel === "construct" &&
       shouldShowStartPositionPicker === false &&
       !hasMovedFromStartPositionPicker
     ) {
@@ -186,7 +187,7 @@
     if (!navigationController) return;
 
     navigationController.handleBack({
-      activePanel: activeRightPanel,
+      activePanel: activeToolPanel,
       shouldShowStartPositionPicker,
       hasMovedFromStartPositionPicker,
       isInAdvancedStartPositionPicker,
@@ -240,16 +241,16 @@
       <div class="loading-spinner"></div>
       <p>Loading...</p>
     </div>
-  {:else if activeRightPanel}
+  {:else if activeToolPanel}
     <!-- Tab Content with Sequential Fade Transitions -->
     <div class="tab-content">
-      {#key activeRightPanel}
+      {#key activeToolPanel}
         <div
           class="sub-tab-content"
           in:fade={fadeInParams}
           out:fade={fadeOutParams}
         >
-          {#if activeRightPanel === "construct"}
+          {#if activeToolPanel === "construct"}
             {#if isPickerStateLoading}
               <!-- Loading state while determining which picker to show -->
               <div class="picker-loading">
@@ -269,23 +270,31 @@
                 {isSideBySideLayout}
               />
             {/if}
-          {:else if activeRightPanel === "generate"}
-            <GeneratePanel sequenceState={buildTabState.sequenceState} />
+          {:else if activeToolPanel === "generate"}
+            <GeneratePanel
+              sequenceState={buildTabState.sequenceState}
+              activeTab={activeToolPanel === "generate" ? "generate" : "construct"}
+              onTabChange={(tab) => {
+                console.log("🔗 ToolPanel.onTabChange callback called with:", tab);
+                buildTabState.setactiveToolPanel(tab);
+                console.log("✅ ToolPanel: buildTabState.activeSubTab is now:", buildTabState.activeSubTab);
+              }}
+            />
           <!-- Edit tab removed - now using slide-out panel instead! -->
-          {:else if activeRightPanel === "animate"}
+          {:else if activeToolPanel === "animate"}
             <div class="panel-content animation-content">
               <AnimationPanel
                 sequence={buildTabState.sequenceState.currentSequence}
                 panelState={animationPanelVisibilityState}
                 bind:animationStateRef
-                onClose={() => buildTabState.setActiveRightPanel("construct")}
+                onClose={() => buildTabState.setactiveToolPanel("construct")}
               />
             </div>
-          {:else if activeRightPanel === "share"}
+          {:else if activeToolPanel === "share"}
             <SharePanel
               currentSequence={buildTabState.sequenceState.currentSequence}
             />
-          {:else if activeRightPanel === "record"}
+          {:else if activeToolPanel === "record"}
             <RecordPanel
               sequence={buildTabState.sequenceState.currentSequence}
               onBeatIndexChange={(beatIndex) => {

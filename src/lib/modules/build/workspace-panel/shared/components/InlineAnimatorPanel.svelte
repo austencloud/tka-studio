@@ -9,9 +9,8 @@
 -->
 <script lang="ts">
   import type { ISequenceService } from "$build/shared";
-  import { resolve, TYPES, type SequenceData } from "$shared";
+  import { BottomSheet, resolve, TYPES, type SequenceData } from "$shared";
   import { onMount } from "svelte";
-  import { fade, slide } from "svelte/transition";
   import type { IAnimationPlaybackController } from "$build/animate/services/contracts";
   import { createAnimationPanelState } from "$build/animate/state/animation-panel-state.svelte";
   import { loadSequenceForAnimation } from "$build/animate/utils/sequence-loader";
@@ -49,12 +48,6 @@
       if (bottomNav) {
         bottomNavHeight = bottomNav.clientHeight;
       }
-
-      console.log('InlineAnimatorPanel measurements:', {
-        toolPanelHeight,
-        bottomNavHeight,
-        calculatedTotal: toolPanelHeight + bottomNavHeight
-      });
     };
 
     // Initial measure
@@ -76,14 +69,12 @@
   // Calculate panel height dynamically - same approach as EditSlidePanel
   const panelHeightStyle = $derived(() => {
     // Use tool panel height + navigation bar height + border + gap if available
-    if (toolPanelHeight > 0 && bottomNavHeight > 0) {
+    if (toolPanelHeight > 0) {
       // Add 1px for border-top + 4px for grid gap between workspace and tool panel
-      const totalHeight = toolPanelHeight + bottomNavHeight + 1 + 4;
-      console.log('Using calculated height:', totalHeight);
+      const totalHeight = toolPanelHeight + 1 + 4;
       return `height: ${totalHeight}px;`;
     }
 
-    console.log('Falling back to 70vh (toolPanelHeight:', toolPanelHeight, 'bottomNavHeight:', bottomNavHeight, ')');
     return 'height: 70vh;';
   });
 
@@ -159,7 +150,6 @@
         playbackController?.togglePlayback();
       }, 100);
 
-      console.log("✅ Inline animator ready - auto-starting playback");
     } catch (err) {
       console.error("❌ Failed to load sequence:", err);
       panelState.setError(
@@ -199,45 +189,39 @@
     };
   });
 
-  // Keyboard handler for ESC key
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
-      handleClose();
-    }
-  }
-
-  // Add keyboard listener when panel is open
-  $effect(() => {
-    if (show) {
-      window.addEventListener('keydown', handleKeydown);
-      return () => window.removeEventListener('keydown', handleKeydown);
-    }
-  });
-
-  // Backdrop click handler
-  function handleBackdropClick() {
+  function handleSheetClose() {
     handleClose();
   }
 </script>
 
-{#if show}
-  <!-- Inline animator panel - slides up from bottom -->
+<BottomSheet
+  isOpen={show}
+  on:close={handleSheetClose}
+  labelledBy="inline-animator-title"
+  closeOnBackdrop={false}
+  focusTrap={false}
+  lockScroll={false}
+  showHandle={false}
+  class="inline-animator-container glass-surface"
+  backdropClass="inline-animator-backdrop"
+>
   <div
-    class="inline-animator-panel glass-surface"
-    transition:slide={{ duration: 300 }}
+    class="inline-animator-panel"
     style={panelHeightStyle()}
+    role="dialog"
+    aria-labelledby="inline-animator-title"
   >
-    <!-- Close button -->
     <button class="close-button" onclick={handleClose} aria-label="Close animator">
       <i class="fas fa-times"></i>
     </button>
+
+    <h2 id="inline-animator-title" class="sr-only">Inline Animator</h2>
 
     {#if panelState.loading}
       <div class="loading-message">Loading animation...</div>
     {:else if panelState.error}
       <div class="error-message">{panelState.error}</div>
     {:else}
-      <!-- Animator Canvas (pictograph display) -->
       <div class="canvas-container">
         <AnimatorCanvas
           blueProp={panelState.bluePropState}
@@ -247,7 +231,6 @@
         />
       </div>
 
-      <!-- Minimalist Speed Control -->
       <div class="speed-control-container">
         <div class="speed-control">
           <label for="inline-speed-slider" class="speed-label">Speed</label>
@@ -266,24 +249,33 @@
       </div>
     {/if}
   </div>
-{/if}
+</BottomSheet>
 
 <style>
-  .inline-animator-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    /* Height set dynamically via style binding - calculates button panel + nav height */
-    min-height: 300px; /* Fallback minimum */
+  :global(.inline-animator-backdrop) {
+    background: transparent;
+    pointer-events: none;
+  }
 
-    /* Animated mesh gradient background - inspired by CAP card */
+  :global(.bottom-sheet.inline-animator-container) {
     background-size: 300% 300%;
     animation: meshGradientFlow 15s ease infinite;
-
     backdrop-filter: var(--glass-backdrop-strong);
     border-top: 1px solid rgba(255, 255, 255, 0.15);
-    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    pointer-events: auto;
+  }
+
+  :global(.bottom-sheet.inline-animator-container:hover) {
+    background-size: 300% 300%;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: none;
+  }
+
+  .inline-animator-panel {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -292,13 +284,8 @@
     padding: 24px;
     padding-top: 56px; /* Extra padding at top for close button */
     padding-bottom: calc(24px + env(safe-area-inset-bottom));
-  }
-
-  /* Remove hover effect from glass-surface - panel should not be interactive */
-  .inline-animator-panel:hover {
-    background-size: 300% 300%;
-    border-top: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: none;
+    height: 100%;
+    width: 100%;
   }
 
   /* Mesh Gradient Flow Animation - Subtle organic color movement */
@@ -336,6 +323,18 @@
     font-size: 20px; /* Larger icon */
     z-index: 1000; /* Much higher z-index to ensure it's always on top */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Shadow for visibility */
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .close-button:hover {
@@ -552,7 +551,7 @@
 
   /* High contrast mode */
   @media (prefers-contrast: high) {
-    .inline-animator-panel {
+    :global(.inline-animator-container) {
       background: rgba(0, 0, 0, 0.95);
       border-top: 2px solid white;
     }

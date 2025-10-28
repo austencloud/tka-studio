@@ -1,21 +1,20 @@
 <!--
-  Unified Navigation Menu - Single Menu Button Approach
+  Unified Navigation Menu - Slide-Up Panel Approach
 
-  Displays a single floating menu button that opens a modern modal
+  Displays a single floating menu button that opens a modern slide-up panel
   containing ALL navigation options:
   - Current module's tabs
   - All available modules
   - Settings
 
-  This replaces persistent navigation bars across all device types.
+  Uses 2025 UX trend: slide-up panel (bottom sheet) instead of center modal.
 -->
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { fly, fade } from "svelte/transition";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
   import { toggleSettingsDialog } from "../../application/state/app-state.svelte";
-  import type { ModuleDefinition, ModuleId, ModeOption } from "../domain/types";
+  import type { ModeOption, ModuleDefinition, ModuleId } from "../domain/types";
 
   let {
     // Current state
@@ -42,6 +41,8 @@
 
   let hapticService: IHapticFeedbackService;
   let showMenu = $state(false);
+  let panelElement: HTMLDivElement | undefined = $state(undefined);
+  let contentHeight = $state(0);
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
@@ -49,8 +50,90 @@
     );
   });
 
+  // Reactively measure content height when panel is shown
+  $effect(() => {
+    if (showMenu && panelElement) {
+      // Wait for next frame to ensure content is rendered
+      requestAnimationFrame(() => {
+        const panel = panelElement;
+        if (panel) {
+          const scrollHeight = panel.scrollHeight;
+          const viewportHeight = window.innerHeight;
+          const maxHeight = viewportHeight * 0.9; // 90% of viewport
+          const safeAreaBottom = parseInt(
+            getComputedStyle(document.documentElement).getPropertyValue(
+              "--safe-area-inset-bottom"
+            ) || "0"
+          );
+
+          // Use the smaller of content height or 90vh
+          contentHeight = Math.min(scrollHeight + safeAreaBottom, maxHeight);
+        }
+      });
+    }
+  });
+
   // Filter to main modules only
-  const mainModules = $derived(modules.filter((m) => m.isMain));
+  const mainModules = $derived(
+    modules.filter((m: ModuleDefinition) => m.isMain)
+  );
+
+  // Slide-up transition for the panel
+  function slideTransition(node: Element) {
+    return {
+      duration: 350,
+      css: (t: number) => {
+        // Cubic easing out: 1 - (1-t)^3
+        const easeOut = 1 - Math.pow(1 - t, 3);
+        return `transform: translateY(${(1 - easeOut) * 100}%)`;
+      },
+    };
+  }
+
+  // Fade transition for backdrop
+  function fadeTransition(node: Element) {
+    return {
+      duration: 250,
+      css: (t: number) => `opacity: ${t}`,
+    };
+  }
+
+  // Touch gesture handling for swipe-to-dismiss
+  let touchStartY = $state(0);
+  let touchCurrentY = $state(0);
+  let isDragging = $state(false);
+
+  function handleTouchStart(e: TouchEvent) {
+    touchStartY = e.touches[0].clientY;
+    touchCurrentY = touchStartY;
+    isDragging = true;
+  }
+
+  function handleTouchMove(e: TouchEvent) {
+    if (!isDragging) return;
+    touchCurrentY = e.touches[0].clientY;
+    const deltaY = touchCurrentY - touchStartY;
+
+    // Only allow downward swipes (positive deltaY)
+    if (deltaY > 0) {
+      e.preventDefault();
+    }
+  }
+
+  function handleTouchEnd() {
+    if (!isDragging) return;
+
+    const deltaY = touchCurrentY - touchStartY;
+    const threshold = 100; // Minimum swipe distance to close
+
+    if (deltaY > threshold) {
+      closeMenu();
+    }
+
+    isDragging = false;
+    touchStartY = 0;
+    touchCurrentY = 0;
+  }
 
   function toggleMenu() {
     hapticService?.trigger("navigation");
@@ -108,40 +191,52 @@
   <i class="fas fa-bars"></i>
 </button>
 
-<!-- Full-Screen Navigation Modal -->
+<!-- Slide-Up Navigation Panel -->
 {#if showMenu}
   <!-- Backdrop -->
   <div
-    class="menu-backdrop"
+    class="sheet-backdrop"
     onclick={handleBackdropClick}
-    transition:fade={{ duration: 200 }}
+    transition:fadeTransition
     role="presentation"
   ></div>
 
-  <!-- Menu Content -->
+  <!-- Menu Panel -->
   <div
-    class="menu-content glass-surface"
-    transition:fly={{ y: -20, duration: 300 }}
+    bind:this={panelElement}
+    class="menu-sheet glass-surface"
+    style:height={contentHeight > 0 ? `${contentHeight}px` : "auto"}
+    transition:slideTransition
     role="dialog"
     aria-label="Navigation menu"
+    tabindex="-1"
+    onclick={(e) => e.stopPropagation()}
+    onkeydown={(e) => e.stopPropagation()}
+    ontouchstart={handleTouchStart}
+    ontouchmove={handleTouchMove}
+    ontouchend={handleTouchEnd}
   >
-    <!-- Close button -->
-    <button class="close-button" onclick={closeMenu} aria-label="Close menu">
-      <i class="fas fa-times"></i>
-    </button>
+    <!-- Handle bar for swipe affordance -->
+    <div class="sheet-handle"></div>
 
     <!-- Header -->
-    <div class="menu-header">
-      <h2>Navigation</h2>
-      <div class="current-location">
-        <span class="module-name">{currentModuleName}</span>
-        {#if currentSubMode}
-          <span class="separator">›</span>
-          <span class="tab-name">
-            {subModeTabs.find((t) => t.id === currentSubMode)?.label || currentSubMode}
-          </span>
-        {/if}
+    <div class="sheet-header">
+      <div class="header-content">
+        <h2>Navigation</h2>
+        <div class="current-location">
+          <span class="module-name">{currentModuleName}</span>
+          {#if currentSubMode}
+            <span class="separator">›</span>
+            <span class="tab-name">
+              {subModeTabs.find((t: ModeOption) => t.id === currentSubMode)
+                ?.label || currentSubMode}
+            </span>
+          {/if}
+        </div>
       </div>
+      <button class="close-button" onclick={closeMenu} aria-label="Close menu">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
 
     <div class="menu-scroll">
@@ -166,7 +261,9 @@
                   {/if}
                 </div>
                 {#if currentSubMode === tab.id}
-                  <span class="active-indicator"><i class="fas fa-check"></i></span>
+                  <span class="active-indicator"
+                    ><i class="fas fa-check"></i></span
+                  >
                 {/if}
               </button>
             {/each}
@@ -192,7 +289,9 @@
                 {/if}
               </div>
               {#if currentModule === module.id}
-                <span class="active-indicator"><i class="fas fa-check"></i></span>
+                <span class="active-indicator"
+                  ><i class="fas fa-check"></i></span
+                >
               {/if}
             </button>
           {/each}
@@ -206,7 +305,9 @@
             <span class="item-icon"><i class="fas fa-cog"></i></span>
             <div class="item-info">
               <span class="item-label">Settings</span>
-              <span class="item-description">App preferences and configuration</span>
+              <span class="item-description"
+                >App preferences and configuration</span
+              >
             </div>
           </button>
         </div>
@@ -221,11 +322,11 @@
      ============================================================================ */
   .floating-menu-button {
     position: fixed;
-    top: 16px;
-    left: 16px;
     z-index: 200;
-    width: 48px;
-    height: 48px;
+    left: 6px;
+    top: 6px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: var(--glass-backdrop-strong);
@@ -250,81 +351,85 @@
     transform: scale(0.95);
   }
 
-  /* Account for safe areas on mobile */
-  @supports (top: env(safe-area-inset-top)) {
-    .floating-menu-button {
-      top: max(16px, env(safe-area-inset-top));
-      left: max(16px, env(safe-area-inset-left));
-    }
-  }
+
 
   /* ============================================================================
-     MENU MODAL
+     SLIDE-UP PANEL (BOTTOM SHEET)
      ============================================================================ */
-  .menu-backdrop {
+  .sheet-backdrop {
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.6);
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(8px);
     z-index: 250;
+    transform: translateZ(0);
   }
 
-  .menu-content {
+  .menu-sheet {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90%;
-    max-width: 480px;
-    max-height: 80vh;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: var(--glass-backdrop-strong);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 24px;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 90vh;
+    max-height: 90dvh;
+    background: rgba(26, 26, 46, 0.95);
+    backdrop-filter: var(--glass-backdrop-strong, blur(20px));
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
     z-index: 251;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    padding-bottom: env(safe-area-inset-bottom);
+    box-shadow:
+      0 -8px 32px rgba(0, 0, 0, 0.4),
+      0 -2px 8px rgba(0, 0, 0, 0.2);
+    transform: translateZ(0);
+    will-change: transform;
+    touch-action: pan-y;
   }
 
-  /* Close button */
-  .close-button {
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    border: none;
-    color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    transition: all 0.2s ease;
-    z-index: 1;
+  /* Handle bar */
+  .sheet-handle {
+    width: 48px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin: 12px auto 8px;
+    flex-shrink: 0;
+    cursor: grab;
+    transition: background 0.2s ease;
   }
 
-  .close-button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: rgba(255, 255, 255, 1);
+  .sheet-handle:hover {
+    background: rgba(255, 255, 255, 0.5);
   }
 
   /* Header */
-  .menu-header {
-    padding: 24px 24px 16px;
+  .sheet-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px 24px 12px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
+    gap: 16px;
   }
 
-  .menu-header h2 {
+  .header-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sheet-header h2 {
     margin: 0 0 8px 0;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 700;
     color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.02em;
   }
 
   .current-location {
@@ -333,6 +438,7 @@
     gap: 8px;
     font-size: 14px;
     color: rgba(255, 255, 255, 0.6);
+    flex-wrap: wrap;
   }
 
   .module-name {
@@ -346,6 +452,33 @@
 
   .tab-name {
     color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* Close button */
+  .close-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .close-button:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .close-button:active {
+    transform: scale(0.95);
   }
 
   /* Scrollable content */
@@ -456,18 +589,16 @@
      RESPONSIVE ADJUSTMENTS
      ============================================================================ */
   @media (max-width: 500px) {
-    .menu-content {
-      width: 95%;
-      max-height: 85vh;
-      border-radius: 20px;
+    .sheet-header {
+      padding: 12px 20px;
     }
 
-    .menu-header {
-      padding: 20px 20px 12px;
-    }
-
-    .menu-header h2 {
+    .sheet-header h2 {
       font-size: 20px;
+    }
+
+    .menu-scroll {
+      padding: 12px;
     }
   }
 
@@ -476,14 +607,17 @@
      ============================================================================ */
   @media (prefers-reduced-motion: reduce) {
     .floating-menu-button,
-    .menu-item {
+    .menu-item,
+    .close-button,
+    .sheet-handle {
       transition: none;
     }
 
     .floating-menu-button:hover,
     .floating-menu-button:active,
     .menu-item:hover,
-    .menu-item:active {
+    .menu-item:active,
+    .close-button:active {
       transform: none;
     }
   }
@@ -494,9 +628,9 @@
       border: 2px solid white;
     }
 
-    .menu-content {
-      background: rgba(0, 0, 0, 0.95);
-      border: 2px solid white;
+    .menu-sheet {
+      background: rgba(0, 0, 0, 0.98);
+      border-top: 2px solid white;
     }
 
     .menu-item {

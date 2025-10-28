@@ -11,10 +11,8 @@ Features:
 <script lang="ts">
   import type { BeatData } from "$build/workspace-panel";
   import type { IHapticFeedbackService } from "$shared";
-  import { resolve, TYPES } from "$shared";
+  import { BottomSheet, resolve, TYPES } from "$shared";
   import { onDestroy, onMount } from 'svelte';
-  import { backOut, quintOut } from 'svelte/easing';
-  import { fade, fly } from 'svelte/transition';
   import EditPanelLayout from './EditPanelLayout.svelte';
   import BatchEditLayout from './BatchEditLayout.svelte';
 
@@ -74,12 +72,6 @@ Features:
       if (bottomNav) {
         bottomNavHeight = bottomNav.clientHeight;
       }
-
-      console.log('EditSlidePanel measurements:', {
-        toolPanelHeight,
-        bottomNavHeight,
-        calculatedTotal: toolPanelHeight + bottomNavHeight
-      });
     };
 
     // Initial measure
@@ -102,14 +94,12 @@ Features:
   const panelHeightStyle = $derived(() => {
     if (!isMobile) return '';
     // Use tool panel height + navigation bar height + border + gap if available
-    if (toolPanelHeight > 0 && bottomNavHeight > 0) {
+    if (toolPanelHeight > 0) {
       // Add 1px for border-top + 4px for grid gap between workspace and tool panel
-      const totalHeight = toolPanelHeight + bottomNavHeight + 1 + 4;
-      console.log('EditSlidePanel using calculated height:', totalHeight);
+      const totalHeight = toolPanelHeight + 1 + 4;
       return `height: ${totalHeight}px;`;
     }
 
-    console.log('EditSlidePanel falling back to 75vh (toolPanelHeight:', toolPanelHeight, 'bottomNavHeight:', bottomNavHeight, ')');
     return 'max-height: 75vh;';
   });
 
@@ -242,112 +232,110 @@ Features:
   });
 </script>
 
-{#if isOpen}
-  <!-- Backdrop - transparent, allows clicking through to beats -->
+<BottomSheet
+  isOpen={isOpen}
+  labelledBy="edit-panel-title"
+  on:close={handleClose}
+  closeOnBackdrop={false}
+  focusTrap={false}
+  lockScroll={false}
+  showHandle={false}
+  placement={isMobile ? "bottom" : "right"}
+  class="edit-panel-container"
+  backdropClass="edit-panel-backdrop"
+>
   <div
-    class="edit-panel-backdrop"
-    transition:fade={{ duration: 250, easing: quintOut }}
+    bind:this={panelElement}
+    class="edit-panel"
+    class:mobile={isMobile}
+    style={panelHeightStyle()}
+    ontouchstart={handleTouchStart}
+    ontouchmove={handleTouchMove}
+    ontouchend={handleTouchEnd}
   >
-    <!-- Panel slides in - from bottom on mobile, from right on desktop -->
-    <div
-      bind:this={panelElement}
-      class="edit-panel"
-      class:mobile={isMobile}
-      style={panelHeightStyle()}
-      transition:fly={isMobile
-        ? { y: 500, duration: 350, easing: backOut }
-        : { x: 500, duration: 350, easing: backOut }}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="edit-panel-title"
-      tabindex="0"
-      ontouchstart={handleTouchStart}
-      ontouchmove={handleTouchMove}
-      ontouchend={handleTouchEnd}
-      onclick={(e) => e.stopPropagation()}
-      onkeydown={(e) => e.key === 'Enter' && e.stopPropagation()}
-    >
-      <!-- Header with close button -->
-      <div class="edit-panel-header">
-        <h2 id="edit-panel-title" class="edit-panel-title">
-          <span class="title-icon">✨</span>
-          {#if isBatchMode}
-            Batch Edit
-          {:else if selectedBeatNumber === 0}
-            Edit Start Position
-          {:else}
-            Edit
-
-          {/if}
-        </h2>
-
-        <button
-          class="close-button"
-          onclick={handleClose}
-          aria-label="Close edit panel"
-          type="button"
-        >
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-
-
-      <!-- Keyboard hint (desktop only) -->
-      {#if !isMobile}
-        <div class="keyboard-hint">
-          Press <kbd>Esc</kbd> to close
-        </div>
-      {/if}
-
-      <!-- Main content - Conditional rendering based on mode -->
-      <div class="edit-panel-content">
-        {#if isBatchMode && selectedBeatsData}
-          <BatchEditLayout
-            selectedBeats={selectedBeatsData}
-            onApply={(changes) => onBatchApply?.(changes)}
-            onCancel={handleClose}
-          />
+    <div class="edit-panel-header">
+      <h2 id="edit-panel-title" class="edit-panel-title">
+        <span class="title-icon">?</span>
+        {#if isBatchMode}
+          Batch Edit
+        {:else if selectedBeatNumber === 0}
+          Edit Start Position
         {:else}
-          <EditPanelLayout
-            bind:this={editPanelLayoutRef}
-            selectedBeatIndex={selectedBeatNumber}
-            {selectedBeatData}
-            {onOrientationChanged}
-            {onTurnAmountChanged}
-          />
+          Edit
+          {#if typeof selectedBeatNumber === 'number'}
+            Beat {selectedBeatNumber}
+          {/if}
         {/if}
+      </h2>
+
+      <button
+        class="close-button"
+        onclick={handleClose}
+        aria-label="Close edit panel"
+        type="button"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    {#if !isMobile}
+      <div class="keyboard-hint">
+        Press <kbd>Esc</kbd> to close
       </div>
+    {/if}
+
+    <div class="edit-panel-content">
+      {#if isBatchMode && selectedBeatsData}
+        <BatchEditLayout
+          selectedBeats={selectedBeatsData}
+          onApply={(changes) => onBatchApply?.(changes)}
+          onCancel={handleClose}
+        />
+      {:else}
+        <EditPanelLayout
+          bind:this={editPanelLayoutRef}
+          selectedBeatIndex={selectedBeatNumber}
+          {selectedBeatData}
+          {onOrientationChanged}
+          {onTurnAmountChanged}
+        />
+      {/if}
     </div>
   </div>
-{/if}
-
+</BottomSheet>
 <style>
-  /* Backdrop - transparent, allows sequence to remain visible AND clickable */
-  .edit-panel-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1000;
-
-    /* NO blur - keep sequence visible and clear */
+  :global(.edit-panel-backdrop) {
     background: transparent;
-
-    display: flex;
-    align-items: stretch;
-    justify-content: flex-end;
-
-    /* Allow clicks to pass through backdrop to beats behind */
     pointer-events: none;
   }
 
-  /* Mobile: Align panel to bottom instead of right */
-  @media (max-width: 768px) {
-    .edit-panel-backdrop {
-      align-items: flex-end;
-      justify-content: stretch;
-    }
+  :global(.edit-panel-backdrop[data-placement="right"]) {
+    justify-content: flex-end;
+    align-items: stretch;
+  }
+
+  :global(.edit-panel-backdrop[data-placement="bottom"]) {
+    justify-content: stretch;
+    align-items: flex-end;
+  }
+
+  :global(.bottom-sheet.edit-panel-container) {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    width: min(600px, 90vw);
+    max-height: none;
+    height: 100%;
+    padding-bottom: 0;
+    pointer-events: auto;
+  }
+
+  :global(.bottom-sheet.edit-panel-container[data-placement="bottom"]) {
+    width: 100%;
+  }
+
+  :global(.bottom-sheet.edit-panel-container[data-placement="right"]) {
+    height: 100vh;
   }
 
   /* The slide-out panel itself - OPAQUE, not glass */

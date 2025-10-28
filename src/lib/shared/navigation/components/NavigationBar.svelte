@@ -297,6 +297,8 @@
     display: flex;
     align-items: stretch; /* Changed from center to stretch */
     justify-self: start;
+    margin-left: calc(var(--spacing-xs) * -1); /* Push hamburger to corner */
+    padding-left: 0;
   }
 
   .layout-top .nav-center {
