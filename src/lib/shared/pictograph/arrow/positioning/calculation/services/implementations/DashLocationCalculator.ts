@@ -408,14 +408,25 @@ export class DashLocationCalculator implements IDashLocationCalculator {
   private dashLocationNonZeroTurns(motion: MotionData): GridLocation {
     /**Calculate dash location for non-zero turns.*/
     const rotationDirection = motion.rotationDirection?.toLowerCase();
-    if (rotationDirection === "noRotation" || rotationDirection === "none") {
+    if (rotationDirection === "norotation" || rotationDirection === "none" || rotationDirection === "no_rotation") {
       // Fallback for no rotation
       return motion.startLocation;
     }
 
-    const directionMap =
-      this.NON_ZERO_TURNS_DASH_LOCATION_MAP[rotationDirection] ||
-      this.NON_ZERO_TURNS_DASH_LOCATION_MAP["clockwise"];
+    // Normalize rotation direction to map keys
+    // RotationDirection enum uses "cw" and "ccw", but map uses full names
+    let normalizedDirection: string;
+    if (rotationDirection === "cw" || rotationDirection === "clockwise") {
+      normalizedDirection = "clockwise";
+    } else if (rotationDirection === "ccw" || rotationDirection === "counter_clockwise" || rotationDirection === "counterclockwise") {
+      normalizedDirection = "counter_clockwise";
+    } else {
+      // If we don't recognize it, default to clockwise
+      console.warn(`Unrecognized rotation direction: ${rotationDirection}, defaulting to clockwise`);
+      normalizedDirection = "clockwise";
+    }
+
+    const directionMap = this.NON_ZERO_TURNS_DASH_LOCATION_MAP[normalizedDirection];
     return directionMap?.[motion.startLocation] || motion.startLocation;
   }
 
@@ -494,14 +505,11 @@ export class DashLocationCalculator implements IDashLocationCalculator {
     gridMode: GridMode;
     shiftLocation?: GridLocation;
   } {
-    // Compute gridMode from motion data
+    // Use gridMode directly from motion data (now stored in each motion)
     const gridMode =
-      pictographData.motions?.blue && pictographData.motions?.red
-        ? this.getGridModeService().deriveGridMode(
-            pictographData.motions.blue,
-            pictographData.motions.red
-          )
-        : GridMode.DIAMOND;
+      pictographData.motions?.blue?.gridMode ||
+      pictographData.motions?.red?.gridMode ||
+      GridMode.DIAMOND;
 
     const result: { gridMode: GridMode; shiftLocation?: GridLocation } = {
       gridMode,

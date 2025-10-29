@@ -75,12 +75,13 @@
     align-items: center;
     gap: var(--spacing-sm);
     padding: 0 var(--spacing-md); /* Remove vertical padding for full-height touch target */
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(100, 116, 139, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
     border-radius: 8px;
-    color: var(--foreground);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
     font-size: var(--font-size-sm);
     font-weight: 500;
     height: 100%; /* Fill full navigation bar height */
@@ -88,9 +89,10 @@
   }
 
   .hamburger-menu-button:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-1px);
+    transform: scale(1.05);
+    background: rgba(100, 116, 139, 0.9);
+    border-color: rgba(148, 163, 184, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 
   .hamburger-menu-button:focus-visible {
@@ -140,13 +142,13 @@
 
   .module-name {
     font-weight: 500;
-    color: var(--muted-foreground);
+    color: rgba(255, 255, 255, 0.9);
     transition: color var(--transition-fast);
     white-space: nowrap;
   }
 
   .hamburger-menu-button:hover .module-name {
-    color: var(--foreground);
+    color: #ffffff;
   }
 
   .hamburger-menu-button.open .module-name {

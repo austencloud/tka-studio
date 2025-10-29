@@ -9,7 +9,7 @@
 // DO NOT import from barrel exports (../../../arrow, ../../../prop) as they import MotionData
 import { type ArrowPlacementData } from "../../../arrow/positioning/placement/domain/ArrowPlacementData";
 import { createArrowPlacementData } from "../../../arrow/positioning/placement/domain/createArrowPlacementData";
-import { GridLocation } from "../../../grid/domain/enums/grid-enums";
+import { GridLocation, GridMode } from "../../../grid/domain/enums/grid-enums";
 import { type PropPlacementData } from "../../../prop/domain/models/PropPlacementData";
 import { createPropPlacementData } from "../../../prop/domain/factories/createPropPlacementData";
 import { PropType } from "../../../prop/domain/enums/PropType";
@@ -32,6 +32,7 @@ export interface MotionData {
   readonly propType: PropType;
   readonly arrowLocation: GridLocation;
   readonly color: MotionColor;
+  readonly gridMode: GridMode; // CRITICAL: Grid mode for correct positioning
 
   // EMBEDDED PLACEMENT DATA: Everything accessible through motion data
   readonly arrowPlacementData: ArrowPlacementData;
@@ -60,6 +61,7 @@ export function createMotionData(data: Partial<MotionData> = {}): MotionData {
     propType: data.propType ?? PropType.STAFF, // Default prop type
     arrowLocation: data.arrowLocation ?? GridLocation.NORTH, // Must be calculated by ArrowLocationCalculator - NEVER default to startLocation!
     color: data.color ?? MotionColor.BLUE, // Single source of truth for color
+    gridMode: data.gridMode ?? GridMode.DIAMOND, // Default to diamond mode for backward compatibility
 
     arrowPlacementData: data.arrowPlacementData ?? createArrowPlacementData(),
     propPlacementData: data.propPlacementData ?? createPropPlacementData(),

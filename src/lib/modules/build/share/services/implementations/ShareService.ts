@@ -21,8 +21,9 @@ export class ShareService implements IShareService {
 
   async generatePreview(sequence: SequenceData, options: ShareOptions): Promise<string> {
     // Convert ShareOptions to SequenceExportOptions for render service
-    const renderOptions = this.convertToRenderOptions(options);
-    
+    // Use much smaller scale for thumbnail preview (faster loading)
+    const renderOptions = this.convertToPreviewOptions(options);
+
     // Use render service to generate preview
     return await this.renderService.generatePreview(sequence, renderOptions);
   }
@@ -122,6 +123,44 @@ export class ShareService implements IShareService {
       format: shareOptions.format,
       quality: shareOptions.quality,
       scale: 1.0,
+      backgroundColor: shareOptions.backgroundColor,
+    };
+  }
+
+  private convertToPreviewOptions(shareOptions: ShareOptions) {
+    // Convert ShareOptions for thumbnail preview (MAXIMUM SPEED)
+    return {
+      // Core export settings - same as full export
+      includeStartPosition: shareOptions.includeStartPosition,
+      addBeatNumbers: shareOptions.addBeatNumbers,
+      addReversalSymbols: true,
+      addUserInfo: shareOptions.addUserInfo,
+      addWord: shareOptions.addWord,
+      combinedGrids: false,
+      addDifficultyLevel: shareOptions.addDifficultyLevel,
+
+      // Scaling and sizing - MINIMAL SIZE for instant generation
+      beatScale: 0.15, // Tiny thumbnail (15% of full size) - lightning fast
+      beatSize: shareOptions.beatSize,
+      margin: shareOptions.margin,
+
+      // Visibility settings
+      redVisible: true,
+      blueVisible: true,
+
+      // User information
+      userName: shareOptions.userName || 'TKA User',
+      exportDate: new Date().toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'numeric',
+        day: 'numeric',
+      }).replace(/\//g, '-'),
+      notes: shareOptions.notes || 'Created with The Kinetic Alphabet',
+
+      // Output format - Maximum speed optimization
+      format: 'JPEG', // JPEG encodes much faster than PNG
+      quality: 0.4, // Minimum acceptable quality for instant speed
+      scale: 0.15, // Match beatScale for consistency
       backgroundColor: shareOptions.backgroundColor,
     };
   }

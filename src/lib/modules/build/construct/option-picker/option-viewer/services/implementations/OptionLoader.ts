@@ -5,7 +5,7 @@
  * Extracted from OptionPickerService for better separation of concerns.
  */
 
-import type { IMotionQueryHandler, PictographData } from "$shared";
+import type { GridMode, IMotionQueryHandler, PictographData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { IOptionLoader, IPositionAnalyzer } from "../contracts";
@@ -20,10 +20,10 @@ export class OptionLoader implements IOptionLoader {
   ) {}
 
   /**
-   * Load available options based on current sequence
+   * Load available options based on current sequence and grid mode
    * PRESERVED: Core working logic from OptionPickerDataService
    */
-  async loadOptions(sequence: PictographData[]): Promise<PictographData[]> {
+  async loadOptions(sequence: PictographData[], gridMode: GridMode): Promise<PictographData[]> {
     if (!sequence || sequence.length === 0) {
       return [];
     }
@@ -37,7 +37,7 @@ export class OptionLoader implements IOptionLoader {
 
     try {
       // Get all available options from motion query service
-      const allOptions = await this.motionQueryHandler.getNextOptionsForSequence(sequence);
+      const allOptions = await this.motionQueryHandler.getNextOptionsForSequence(sequence, gridMode);
 
       // Filter options based on sequence context
       // The next beat's start position should match the current beat's end position

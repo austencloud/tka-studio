@@ -72,7 +72,7 @@ export interface IMotionQueryHandler {
   /**
    * Get next options for sequence building
    */
-  getNextOptionsForSequence(sequence: unknown[]): Promise<PictographData[]>;
+  getNextOptionsForSequence(sequence: unknown[], gridMode: GridMode): Promise<PictographData[]>;
 }
 
 // ICSVPictographParserService moved to dedicated contract file

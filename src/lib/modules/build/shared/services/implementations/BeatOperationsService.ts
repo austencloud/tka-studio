@@ -8,9 +8,10 @@
  * Achieves Single Responsibility Principle by centralizing beat operation logic.
  */
 
-import { createComponentLogger } from "$shared";
+import { createComponentLogger, resolve, TYPES, createMotionData } from "$shared";
 import { injectable } from "inversify";
 import type { IBeatOperationsService } from "../contracts/IBeatOperationsService";
+import type { IOrientationCalculator } from "$shared/pictograph/prop/services/contracts/IOrientationCalculationService";
 
 const START_POSITION_BEAT_NUMBER = 0; // Beat 0 = start position, beats 1+ are in the sequence
 
@@ -159,7 +160,18 @@ export class BeatOperationsService implements IBeatOperationsService {
     // Get current motion data for the color
     const currentMotion = beatData.motions?.[color] || {};
 
-    // Create updated beat data with new turn amount
+    // Recalculate endOrientation based on new turn amount
+    const orientationCalculator = resolve<IOrientationCalculator>(TYPES.IOrientationCalculationService);
+    const tempMotionData = createMotionData({
+      ...currentMotion,
+      turns: turnAmount,  // Use new turn value for calculation
+    });
+    const newEndOrientation = orientationCalculator.calculateEndOrientation(
+      tempMotionData,
+      currentMotion.startOrientation
+    );
+
+    // Create updated beat data with new turn amount AND recalculated endOrientation
     const updatedBeatData = {
       ...beatData,
       motions: {
@@ -167,6 +179,7 @@ export class BeatOperationsService implements IBeatOperationsService {
         [color]: {
           ...currentMotion,
           turns: turnAmount,
+          endOrientation: newEndOrientation,  // Update endOrientation so prop rotates correctly
         }
       }
     };
@@ -174,11 +187,11 @@ export class BeatOperationsService implements IBeatOperationsService {
     // Apply update based on beat number
     if (beatNumber === START_POSITION_BEAT_NUMBER) {
       buildTabState.sequenceState.setStartPosition(updatedBeatData);
-      this.logger.log(`Updated start position ${color} turns to ${turnAmount}`);
+      this.logger.log(`Updated start position ${color} turns to ${turnAmount} (endOrientation: ${newEndOrientation})`);
     } else {
       const arrayIndex = beatNumber - 1; // Beat numbers 1, 2, 3... map to array indices 0, 1, 2...
       buildTabState.sequenceState.updateBeat(arrayIndex, updatedBeatData);
-      this.logger.log(`Updated beat ${beatNumber} ${color} turns to ${turnAmount}`);
+      this.logger.log(`Updated beat ${beatNumber} ${color} turns to ${turnAmount} (endOrientation: ${newEndOrientation})`);
     }
   }
 }

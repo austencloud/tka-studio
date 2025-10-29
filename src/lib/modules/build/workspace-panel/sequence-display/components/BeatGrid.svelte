@@ -16,6 +16,7 @@
     startPosition = null,
     onBeatClick,
     onStartClick,
+    onBeatDelete,
     selectedBeatNumber = null, // 0=start, 1=first beat, 2=second beat, etc.
     removingBeatIndex = null,
     removingBeatIndices = new Set<number>(),
@@ -32,6 +33,7 @@
     startPosition?: BeatData | null;
     onBeatClick?: (beatNumber: number) => void;
     onStartClick?: () => void;
+    onBeatDelete?: (beatNumber: number) => void;
     selectedBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     removingBeatIndex?: number | null;
     removingBeatIndices?: Set<number>;
@@ -309,6 +311,7 @@
             {beat}
             {index}
             onClick={() => handleBeatClick(beat.beatNumber)}
+            onDelete={() => onBeatDelete?.(beat.beatNumber)}
             shouldAnimate={shouldAnimateBeat}
             isSelected={isMultiSelectMode ? selectedBeatNumbers.has(beat.beatNumber) : selectedBeatNumber === beat.beatNumber}
             isPracticeBeat={practiceBeatNumber === beat.beatNumber}

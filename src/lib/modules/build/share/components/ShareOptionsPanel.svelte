@@ -1,7 +1,7 @@
 <!-- ShareOptionsPanel.svelte - Share options configuration -->
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
-  import { resolve, TYPES } from "$shared";
+  import { FontAwesomeIcon, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import type { ShareOptions } from "../domain";
 
@@ -20,42 +20,52 @@
     hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
   });
 
+  // Toggle options with Font Awesome icons and colors (matching your CAP card style)
+  const toggleOptions = [
+    {
+      key: 'addWord' as const,
+      icon: 'fa-solid fa-heading',
+      label: 'Word/Title',
+      color: '#3b82f6' // blue
+    },
+    {
+      key: 'addBeatNumbers' as const,
+      icon: 'fa-solid fa-list-ol',
+      label: 'Beat #s',
+      color: '#8b5cf6' // purple
+    },
+    {
+      key: 'addUserInfo' as const,
+      icon: 'fa-solid fa-user',
+      label: 'User Info',
+      color: '#ec4899' // pink
+    },
+    {
+      key: 'addDifficultyLevel' as const,
+      icon: 'fa-solid fa-star',
+      label: 'Difficulty',
+      color: '#f59e0b' // amber
+    },
+    {
+      key: 'includeStartPosition' as const,
+      icon: 'fa-solid fa-bullseye',
+      label: 'Start Pos',
+      color: '#10b981' // green
+    }
+  ];
 
-
-  // Handle individual option changes
-  function handleOptionChange(key: keyof ShareOptions, value: any) {
+  // Handle toggle with haptic feedback
+  function handleToggle(key: keyof ShareOptions) {
+    hapticService?.trigger("selection");
     if (!options) return;
-    onOptionsChange?.({ [key]: value });
+    onOptionsChange?.({ [key]: !options[key] });
   }
 
-  // Type-safe event handlers
-  function handleSelectChange(key: keyof ShareOptions, transform?: (value: string) => any) {
-    return (event: Event) => {
-      const target = event.target as HTMLSelectElement;
-      const value = transform ? transform(target.value) : target.value;
-
-      // Trigger selection haptic feedback for option changes
-      hapticService?.trigger("selection");
-
-      handleOptionChange(key, value);
-    };
-  }
-
+  // Handle text input
   function handleInputChange(key: keyof ShareOptions) {
     return (event: Event) => {
       const target = event.target as HTMLInputElement;
-      handleOptionChange(key, target.value);
-    };
-  }
-
-  function handleCheckboxChange(key: keyof ShareOptions) {
-    return (event: Event) => {
-      const target = event.target as HTMLInputElement;
-
-      // Trigger selection haptic feedback for checkbox toggles
-      hapticService?.trigger("selection");
-
-      handleOptionChange(key, target.checked);
+      onOptionsChange?.({ [key]: target.value });
     };
   }
 
@@ -68,157 +78,172 @@
       });
     }
   });
-
-
 </script>
 
 <div class="share-options">
   {#if options}
-
-
-
-    <!-- Content Options -->
-    <div class="option-group">
-      <h4 class="group-title">What to include in your image</h4>
-
-      <label class="option-checkbox">
-        <input
-          type="checkbox"
-          checked={options.addWord}
-          onchange={handleCheckboxChange('addWord')}
-        />
-        Include word/title
-      </label>
-
-      <label class="option-checkbox">
-        <input
-          type="checkbox"
-          checked={options.addBeatNumbers}
-          onchange={handleCheckboxChange('addBeatNumbers')}
-        />
-        Show beat numbers
-      </label>
-
-      <label class="option-checkbox">
-        <input
-          type="checkbox"
-          checked={options.addUserInfo}
-          onchange={handleCheckboxChange('addUserInfo')}
-        />
-        Include user info
-      </label>
-
-      <label class="option-checkbox">
-        <input
-          type="checkbox"
-          checked={options.addDifficultyLevel}
-          onchange={handleCheckboxChange('addDifficultyLevel')}
-        />
-        Show difficulty level
-      </label>
-
-      <label class="option-checkbox">
-        <input
-          type="checkbox"
-          checked={options.includeStartPosition}
-          onchange={handleCheckboxChange('includeStartPosition')}
-        />
-        Include start position
-      </label>
+    <!-- Toggle Buttons Grid (matching CAP card style) -->
+    <div class="toggles-grid">
+      {#each toggleOptions as option}
+        <button
+          type="button"
+          class="toggle-btn"
+          class:active={options[option.key]}
+          style:--toggle-color={option.color}
+          onclick={() => handleToggle(option.key)}
+          aria-label="Toggle {option.label}"
+        >
+          <span class="toggle-icon">
+            <FontAwesomeIcon icon={option.icon} size="1.4em" />
+          </span>
+          <span class="toggle-label">{option.label}</span>
+        </button>
+      {/each}
     </div>
 
-    <!-- User Info (if enabled) -->
+    <!-- User Info Inputs (if enabled) -->
     {#if options.addUserInfo}
-      <div class="option-group">
-        <h4 class="group-title">User Information</h4>
+      <div class="user-info-section">
+        <input
+          type="text"
+          class="info-input"
+          value={options.userName}
+          oninput={handleInputChange('userName')}
+          placeholder="Your name"
+        />
 
-        <label class="option-label">
-          Name
-          <input
-            type="text"
-            class="option-input"
-            value={options.userName}
-            oninput={handleInputChange('userName')}
-            placeholder="Your name"
-          />
-        </label>
-
-        <label class="option-label">
-          Notes
-          <input
-            type="text"
-            class="option-input"
-            value={options.notes}
-            oninput={handleInputChange('notes')}
-            placeholder="Optional notes"
-          />
-        </label>
+        <input
+          type="text"
+          class="info-input"
+          value={options.notes}
+          oninput={handleInputChange('notes')}
+          placeholder="Optional notes"
+        />
       </div>
     {/if}
   {/if}
 </div>
 
 <style>
+  /* Simple vertical stack - no grid needed */
   .share-options {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-primary);
-    max-height: 500px;
-    overflow-y: auto;
+    gap: 16px;
   }
 
-  .option-group {
+  /* Toggle Buttons Stack - clean vertical list */
+  .toggles-grid {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 10px;
   }
 
-  .group-title {
-    margin: 0 0 0.25rem 0;
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.25rem;
-  }
-
-  .option-label {
+  /* Toggle Button - horizontal list item style */
+  .toggle-btn {
     display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-primary);
+    flex-direction: row;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+
+    /* Solid background - no glassmorphism */
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
   }
 
-  .option-input {
-    padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
-    font-size: 0.9rem;
+  .toggle-btn:hover {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
   }
 
-  .option-input:focus {
-    outline: none;
-    border-color: var(--accent-color);
+  .toggle-btn:active {
+    transform: translateY(0);
   }
 
-  .option-checkbox {
+  /* Active state - colorful gradient with glow */
+  .toggle-btn.active {
+    background: linear-gradient(135deg, var(--toggle-color), color-mix(in srgb, var(--toggle-color) 80%, black));
+    border-color: white;
+    border-width: 3px;
+    box-shadow: 0 0 16px color-mix(in srgb, var(--toggle-color) 50%, transparent);
+  }
+
+  .toggle-btn:focus-visible {
+    outline: 3px solid rgba(59, 130, 246, 0.4);
+    outline-offset: 2px;
+  }
+
+  .toggle-icon {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
-    color: var(--text-primary);
-    cursor: pointer;
+    justify-content: center;
+    font-size: 20px;
+    line-height: 1;
+    color: white;
+    flex-shrink: 0;
   }
 
-  .option-checkbox input[type="checkbox"] {
-    margin: 0;
+  .toggle-label {
+    flex: 1;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
+    text-align: left;
+  }
+
+  /* User Info Section */
+  .user-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 4px;
+  }
+
+  .info-input {
+    padding: 12px 14px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .info-input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .info-input:hover {
+    background: rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .info-input:focus {
+    outline: none;
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(59, 130, 246, 0.7);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .toggle-btn,
+    .info-input {
+      transition: none;
+    }
+
+    .toggle-btn:hover,
+    .toggle-btn:active {
+      transform: none;
+    }
   }
 </style>

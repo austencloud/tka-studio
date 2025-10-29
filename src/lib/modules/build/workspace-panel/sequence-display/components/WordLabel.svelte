@@ -1,14 +1,23 @@
 <script lang="ts">
   import { simplifyAndTruncate } from "../../shared/utils/word-simplifier";
+  import type { SequenceData } from "$shared/foundation/domain/models/SequenceData";
+  import type { ISequenceAnalysisService } from "$build/shared/services/contracts";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
 
   // Props
   let {
     word = "",
-    scrollMode = false
+    scrollMode = false,
+    sequence = null
   } = $props<{
     word?: string;
     scrollMode?: boolean;
+    sequence?: SequenceData | null;
   }>();
+
+  // Services
+  let sequenceAnalysisService: ISequenceAnalysisService | null = $state(null);
 
   // State
   let showCopiedMessage = $state(false);
@@ -16,6 +25,17 @@
 
   // Derived simplified word
   const displayWord = $derived(simplifyAndTruncate(word, 8));
+
+  // Check if sequence is circular-capable
+  const isCircularCapable = $derived(() => {
+    if (!sequence || !sequenceAnalysisService) return false;
+    return sequenceAnalysisService.isCircularCapable(sequence);
+  });
+
+  // Initialize services
+  onMount(() => {
+    sequenceAnalysisService = resolve<ISequenceAnalysisService>(TYPES.ISequenceAnalysisService);
+  });
 
   // Only show word label if there's an actual word (not empty, not default sequence names)
   const shouldShowWordLabel = $derived(() => {
@@ -105,10 +125,13 @@
     transition: all 0.2s ease;
     border-radius: 8px;
     text-align: center;
-    letter-spacing: 0.5px;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
   }
 
   .word-label:hover {

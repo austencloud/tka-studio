@@ -5,7 +5,7 @@
  * Follows the same pattern as the simplified start position picker.
  */
 
-import type { PictographData } from "$shared";
+import type { GridMode, PictographData } from "$shared";
 import type { OptionPickerState, SortMethod } from "../domain/option-picker-types";
 import type { OptionPickerLayout } from "../domain/option-viewer-models";
 import type { IOptionFilter, IOptionLoader, IOptionSorter } from "../services/contracts";
@@ -69,15 +69,15 @@ export function createOptionPickerState(config: OptionPickerStateConfig) {
   });
 
   // Actions
-  async function loadOptions(sequence: PictographData[]) {
+  async function loadOptions(sequence: PictographData[], gridMode: GridMode) {
     if (state === 'loading') {
       return; // Prevent concurrent loads
     }
 
     // Create a simple sequence ID to prevent reloading the same sequence
     const sequenceId = sequence.length > 0 ?
-      `${sequence.length}-${sequence[sequence.length - 1]?.id || 'empty'}` :
-      'empty';
+      `${sequence.length}-${sequence[sequence.length - 1]?.id || 'empty'}-${gridMode}` :
+      `empty-${gridMode}`;
 
     if (lastSequenceId === sequenceId) {
       return; // Skip reload for same sequence
@@ -88,7 +88,7 @@ export function createOptionPickerState(config: OptionPickerStateConfig) {
     lastSequenceId = sequenceId;
 
     try {
-      const newOptions = await optionLoader.loadOptions(sequence);
+      const newOptions = await optionLoader.loadOptions(sequence, gridMode);
 
       options = newOptions;
       state = 'ready';

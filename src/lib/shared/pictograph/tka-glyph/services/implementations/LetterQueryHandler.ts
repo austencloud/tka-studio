@@ -179,7 +179,8 @@ export class LetterQueryHandler implements ILetterQueryHandler {
 
       // Transform CSV row to PictographData using existing service
       return this.csvPictographParser.parseCSVRowToPictograph(
-        csvRow as unknown as CSVRow
+        csvRow as unknown as CSVRow,
+        gridMode
       );
     } catch (error) {
       console.error(`❌ Error getting pictograph for letter ${letter}:`, error);
@@ -249,7 +250,8 @@ export class LetterQueryHandler implements ILetterQueryHandler {
         const row = csvRows[i];
         try {
           const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
-            row as unknown as CSVRow
+            row as unknown as CSVRow,
+            actualGridMode
           );
           if (pictograph) {
             pictographs.push(pictograph);

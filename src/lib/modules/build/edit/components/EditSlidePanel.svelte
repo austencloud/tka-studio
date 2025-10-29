@@ -13,6 +13,7 @@ Features:
   import type { IHapticFeedbackService } from "$shared";
   import { BottomSheet, resolve, TYPES } from "$shared";
   import { onDestroy, onMount } from 'svelte';
+  import RemoveBeatButton from '../../workspace-panel/shared/components/buttons/RemoveBeatButton.svelte';
   import BatchEditLayout from './BatchEditLayout.svelte';
   import EditPanelLayout from './EditPanelLayout.svelte';
 
@@ -23,22 +24,24 @@ Features:
     selectedBeatNumber,
     selectedBeatData,
     selectedBeatsData = null, // NEW: For batch mode
-    toolPanelHeight = 0,
+    combinedPanelHeight = 0,
     isSideBySideLayout = false,
     onOrientationChanged,
     onTurnAmountChanged,
     onBatchApply, // NEW: Batch apply callback
+    onRemoveBeat, // Remove beat callback
   } = $props<{
     isOpen: boolean;
     onClose: () => void;
     selectedBeatNumber: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     selectedBeatData: BeatData | null;
     selectedBeatsData?: BeatData[] | null; // NEW: Multiple beats for batch edit
-    toolPanelHeight?: number;
+    combinedPanelHeight?: number;
     isSideBySideLayout?: boolean;
     onOrientationChanged: (color: string, orientation: string) => void;
     onTurnAmountChanged: (color: string, turnAmount: number) => void;
     onBatchApply?: (changes: Partial<BeatData>) => void; // NEW: Batch mode
+    onRemoveBeat?: (beatNumber: number) => void; // Remove beat callback
   }>();
 
   // Detect batch mode
@@ -67,10 +70,10 @@ Features:
   let windowWidth = $state(0);
 
 
-  // Calculate panel height dynamically to match tool panel
+  // Calculate panel height dynamically to match tool panel + button panel
   const panelHeightStyle = $derived(() => {
-    if (toolPanelHeight > 0) {
-      return `height: ${toolPanelHeight}px;`;
+    if (combinedPanelHeight > 0) {
+      return `height: ${combinedPanelHeight}px;`;
     }
     return 'height: 70vh;';
   });
@@ -202,6 +205,20 @@ Features:
       hapticService?.trigger('selection');
     }
   });
+
+  // Handle remove beat click
+  function handleRemoveBeat() {
+    if (selectedBeatNumber !== null && selectedBeatNumber >= 1) {
+      onRemoveBeat?.(selectedBeatNumber);
+      // Close the panel after deletion
+      handleClose();
+    }
+  }
+
+  // Determine if we should show the remove beat button
+  const shouldShowRemoveButton = $derived(
+    !isBatchMode && selectedBeatNumber !== null && selectedBeatNumber >= 1
+  );
 </script>
 
 <BottomSheet
@@ -226,28 +243,38 @@ Features:
     ontouchend={handleTouchEnd}
   >
     <div class="edit-panel-header">
+      <!-- Left: Remove Beat Button -->
+      <div class="header-left">
+        {#if shouldShowRemoveButton}
+          <RemoveBeatButton
+            beatNumber={selectedBeatNumber}
+            onclick={handleRemoveBeat}
+          />
+        {/if}
+      </div>
+
+      <!-- Center: Title -->
       <h2 id="edit-panel-title" class="edit-panel-title">
-        <span class="title-icon">?</span>
         {#if isBatchMode}
           Batch Edit
         {:else if selectedBeatNumber === 0}
           Edit Start Position
         {:else}
-          Edit
-          {#if typeof selectedBeatNumber === 'number'}
-            Beat {selectedBeatNumber}
-          {/if}
+          Edit Beat {selectedBeatNumber}
         {/if}
       </h2>
 
-      <button
-        class="close-button"
-        onclick={handleClose}
-        aria-label="Close edit panel"
-        type="button"
-      >
-        <i class="fas fa-times"></i>
-      </button>
+      <!-- Right: Close Button -->
+      <div class="header-right">
+        <button
+          class="close-button"
+          onclick={handleClose}
+          aria-label="Close edit panel"
+          type="button"
+        >
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
     </div>
 
     {#if !isMobile}
@@ -276,18 +303,18 @@ Features:
   </div>
 </BottomSheet>
 <style>
-  :global(.edit-panel-backdrop) {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(4px);
+  :global(.bottom-sheet-backdrop.edit-panel-backdrop) {
+    background: transparent; /* Fully transparent - no dimming at all */
+    backdrop-filter: none !important; /* No blur - keep background fully visible */
     pointer-events: auto;
   }
 
-  :global(.edit-panel-backdrop[data-placement="right"]) {
+  :global(.bottom-sheet-backdrop.edit-panel-backdrop[data-placement="right"]) {
     justify-content: flex-end;
     align-items: stretch;
   }
 
-  :global(.edit-panel-backdrop[data-placement="bottom"]) {
+  :global(.bottom-sheet-backdrop.edit-panel-backdrop[data-placement="bottom"]) {
     justify-content: stretch;
     align-items: flex-end;
   }
@@ -377,12 +404,12 @@ Features:
     z-index: 1;
   }
 
-  /* Header */
+  /* Header - 3-column layout: left (remove button), center (title), right (close button) */
   .edit-panel-header {
     flex-shrink: 0;
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     padding: var(--spacing-lg) var(--spacing-xl);
 
     /* Solid opaque header - matches panel background */
@@ -390,27 +417,28 @@ Features:
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
 
+  .header-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
   .edit-panel-title {
     margin: 0;
     font-size: var(--font-size-xl);
     font-weight: 700;
     color: var(--foreground);
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-sm);
+    text-align: center;
+    justify-self: center; /* Center in grid column */
 
     /* Subtle text shadow for depth */
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
-  .title-icon {
-    font-size: var(--font-size-2xl);
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+  .header-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   /* Close button - modern and clean */
@@ -519,10 +547,6 @@ Features:
   @media (max-width: 320px) {
     .edit-panel-title {
       font-size: var(--font-size-md);
-    }
-
-    .title-icon {
-      font-size: var(--font-size-lg);
     }
 
     .close-button {

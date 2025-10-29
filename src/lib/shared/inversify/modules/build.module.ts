@@ -13,6 +13,7 @@ import {
     SequenceTransformService,
     WorkbenchService,
 } from "../../../modules";
+import { SequenceAnalysisService } from "../../../modules/build/shared/services/implementations/SequenceAnalysisService";
 import { OptionSizer } from "../../../modules/build/construct/option-picker/option-viewer/services/implementations";
 import { StartPositionService } from "../../../modules/build/construct/start-position-picker/services/implementations";
 import { BuildTabLayoutService } from "../../../modules/build/shared/layout/services/BuildTabLayoutService";
@@ -162,6 +163,7 @@ export const buildModule = new ContainerModule(
     // === SEQUENCE SERVICES ===
     options.bind(TYPES.IReversalDetectionService).to(ReversalDetectionService);
     options.bind(TYPES.ISequenceDomainService).to(SequenceDomainService);
+    options.bind(TYPES.ISequenceAnalysisService).to(SequenceAnalysisService);
 
     // Focused sequence services (refactored from monolithic SequenceStateService)
     options.bind(TYPES.IBeatNumberingService).to(BeatNumberingService);

@@ -22,12 +22,12 @@
     sequence = null,
     show = false,
     onClose = () => {},
-    toolPanelHeight = 0,
+    combinedPanelHeight = 0,
   }: {
     sequence?: SequenceData | null;
     show?: boolean;
     onClose?: () => void;
-    toolPanelHeight?: number;
+    combinedPanelHeight?: number;
   } = $props();
 
   // Services
@@ -38,10 +38,10 @@
   // Component state
   const panelState = createAnimationPanelState();
 
-  // Calculate panel height dynamically to match tool panel
+  // Calculate panel height dynamically to match tool panel + button panel
   const panelHeightStyle = $derived(() => {
-    if (toolPanelHeight > 0) {
-      return `height: ${toolPanelHeight}px;`;
+    if (combinedPanelHeight > 0) {
+      return `height: ${combinedPanelHeight}px;`;
     }
     return 'height: 70vh;';
   });

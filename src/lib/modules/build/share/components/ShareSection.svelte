@@ -131,58 +131,75 @@
 </button>
 
 <style>
+  /* Modern 2026 Share Button - Spring Animation & Blue Gradient */
   .share-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    padding: 0.875rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    gap: 10px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
     border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 500;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.98);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow:
+      0 4px 16px rgba(59, 130, 246, 0.3),
+      0 2px 4px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
   }
 
   .share-btn:hover:not(.disabled) {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transform: scale(1.04) translateY(-2px);
+    box-shadow:
+      0 0 24px rgba(59, 130, 246, 0.5),
+      0 8px 24px rgba(59, 130, 246, 0.25),
+      0 4px 8px rgba(0, 0, 0, 0.15);
   }
 
   .share-btn:active:not(.disabled) {
-    transform: translateY(0);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transform: scale(0.98);
+    transition: all 0.15s ease;
+    box-shadow:
+      0 2px 12px rgba(59, 130, 246, 0.3),
+      0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .share-btn:focus-visible {
+    outline: 3px solid rgba(59, 130, 246, 0.4);
+    outline-offset: 2px;
   }
 
   .share-btn.disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
-    box-shadow: none;
+    box-shadow:
+      0 2px 8px rgba(59, 130, 246, 0.15),
+      0 1px 2px rgba(0, 0, 0, 0.05);
   }
 
   .share-btn i {
-    font-size: 1.1rem;
+    font-size: 17px;
   }
 
   .btn-text {
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .loading-spinner {
     width: 16px;
     height: 16px;
-    border: 2px solid transparent;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-top: 2px solid currentColor;
     border-radius: 50%;
-    animation: spin 1s linear infinite;
+    animation: spin 0.8s linear infinite;
   }
 
   @keyframes spin {
@@ -190,5 +207,34 @@
     100% { transform: rotate(360deg); }
   }
 
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .share-btn {
+      transition: none;
+    }
 
+    .share-btn:hover:not(.disabled),
+    .share-btn:active:not(.disabled) {
+      transform: none;
+    }
+
+    .loading-spinner {
+      animation: none;
+      border-top-color: transparent;
+      opacity: 0.7;
+    }
+  }
+
+  /* Mobile responsive adjustments */
+  @media (max-width: 768px) {
+    .share-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 10px;
+    }
+
+    .share-btn i {
+      font-size: 16px;
+    }
+  }
 </style>

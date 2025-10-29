@@ -75,8 +75,13 @@ export interface ISequenceAnalysisService {
 	 * A sequence is circular-capable if:
 	 * 1. It has at least one beat with pictograph data
 	 * 2. Both start and end positions are defined
-	 * 3. Both start and end positions are beta positions
+	 * 3. Both positions are in the same position group (alpha→alpha, beta→beta, or gamma→gamma)
 	 * 4. End position relates to start position in a valid way (same/halved/quartered)
+	 *
+	 * Valid circular relationships:
+	 * - Alpha to Alpha (any variation, e.g., alpha1→alpha3)
+	 * - Beta to Beta (any variation, e.g., beta1→beta5)
+	 * - Gamma to Gamma (any variation, e.g., gamma1→gamma8)
 	 *
 	 * @param sequence - The sequence to analyze
 	 * @returns Complete circularity analysis
@@ -107,31 +112,39 @@ export interface ISequenceAnalysisService {
 	 * Get possible CAP types for a circular sequence
 	 *
 	 * Based on the circular type, returns which CAP patterns are possible:
-	 * - 'same': Only 'static' is possible
-	 * - 'halved': 'mirrored' is possible
-	 * - 'quartered': 'rotated' is possible
+	 * - 'same' (distance 0): Returns to exact same position → mirrored/swapped/complementary
+	 * - 'halved' (distance 4 or 8): Opposite position → halved rotated
+	 * - 'quartered' (distance 2 or 4): Quarter-turn position → quartered rotated
 	 *
 	 * @param sequence - The sequence to analyze
 	 * @returns Array of possible strict CAP types
 	 *
 	 * @example
 	 * const capTypes = service.getPossibleCapTypes(sequence);
-	 * // ['rotated'] for quartered sequences
-	 * // ['mirrored'] for halved sequences
-	 * // ['static'] for same-position sequences
+	 * // ['rotated'] for quartered sequences (e.g., alpha1→alpha3)
+	 * // ['mirrored'] for halved sequences (e.g., beta1→beta5)
+	 * // ['static'] for same-position sequences (e.g., gamma1→gamma1)
 	 */
 	getPossibleCapTypes(sequence: SequenceData): readonly StrictCapType[];
 
 	/**
-	 * Determine the circular relationship between two beta positions
+	 * Determine the circular relationship between two positions
 	 *
-	 * @param startPosition - Starting beta position
-	 * @param endPosition - Ending beta position
+	 * Works for positions within the same group (alpha→alpha, beta→beta, gamma→gamma).
+	 *
+	 * @param startPosition - Starting position (any group)
+	 * @param endPosition - Ending position (must be same group as start)
 	 * @returns The circular type or null if not circular
 	 *
 	 * @example
-	 * const type = service.getCircularType(GridPosition.BETA1, GridPosition.BETA3);
-	 * // Returns: 'quartered' (adjacent 90° position)
+	 * service.getCircularType(GridPosition.BETA1, GridPosition.BETA3);
+	 * // Returns: 'quartered' (90° turn)
+	 *
+	 * service.getCircularType(GridPosition.ALPHA1, GridPosition.ALPHA5);
+	 * // Returns: 'halved' (180° turn)
+	 *
+	 * service.getCircularType(GridPosition.GAMMA1, GridPosition.GAMMA1);
+	 * // Returns: 'same' (returns to same position)
 	 */
 	getCircularType(startPosition: GridPosition, endPosition: GridPosition): CircularType | null;
 
@@ -174,4 +187,30 @@ export interface ISequenceAnalysisService {
 	 * // "Quartered sequence: beta1 → beta3 (adjacent 90°)"
 	 */
 	getCircularDescription(analysis: CircularityAnalysis): string;
+
+	/**
+	 * Detect the actual CAP type of a COMPLETED sequence
+	 *
+	 * Analyzes all consecutive beat transformations to determine what type
+	 * of completed CAP pattern the sequence represents.
+	 *
+	 * Logic:
+	 * 1. Static CAP: All beats at the same position
+	 * 2. Rotated CAP: Each consecutive pair shows 90° rotation
+	 * 3. Mirrored CAP: Each consecutive pair shows mirroring relationship
+	 *
+	 * @param sequence - The completed sequence to analyze
+	 * @returns Array of CAP types this sequence represents (can be multiple)
+	 *
+	 * @example
+	 * // For a rotated sequence: alpha1 → alpha3 → alpha5 → alpha7 → alpha1
+	 * service.detectCompletedCapTypes(sequence); // ['rotated']
+	 *
+	 * // For a mirrored sequence: gamma1 → gamma9 → gamma1 → gamma9 → gamma1
+	 * service.detectCompletedCapTypes(sequence); // ['mirrored']
+	 *
+	 * // For a static sequence: beta1 → beta1 → beta1 → beta1
+	 * service.detectCompletedCapTypes(sequence); // ['static']
+	 */
+	detectCompletedCapTypes(sequence: SequenceData): readonly StrictCapType[];
 }

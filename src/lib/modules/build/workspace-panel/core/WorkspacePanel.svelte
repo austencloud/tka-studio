@@ -5,10 +5,16 @@
 	Main area for viewing and interacting with the sequence.
 -->
 <script lang="ts">
+  import type { IBeatOperationsService } from "$build/shared/services/contracts";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
   import MultiSelectOverlay from "../components/MultiSelectOverlay.svelte";
   import SelectionToolbar from "../components/SelectionToolbar.svelte";
   import Toast from "../components/Toast.svelte";
   import SequenceDisplay from "../sequence-display/components/SequenceDisplay.svelte";
+
+  // Services
+  let beatOperationsService: IBeatOperationsService | null = null;
 
   // Props
   let {
@@ -146,6 +152,30 @@
       onBatchEdit();
     }
   }
+
+  // Handle beat deletion via keyboard
+  function handleBeatDelete(beatNumber: number) {
+    if (!beatOperationsService || !buildTabState) {
+      console.warn("Cannot delete beat - services not initialized");
+      return;
+    }
+
+    // Convert beatNumber (1, 2, 3...) to beatIndex (0, 1, 2...)
+    const beatIndex = beatNumber - 1;
+
+    try {
+      beatOperationsService.removeBeat(beatIndex, buildTabState);
+    } catch (err) {
+      console.error("Failed to remove beat", err);
+      toastMessage = "Failed to remove beat";
+      setTimeout(() => toastMessage = null, 3000);
+    }
+  }
+
+  // Initialize services on mount
+  onMount(() => {
+    beatOperationsService = resolve<IBeatOperationsService>(TYPES.IBeatOperationsService);
+  });
 </script>
 
 {#if sequenceState}
@@ -156,6 +186,7 @@
       currentWord={currentWord()}
       onBeatSelected={isMultiSelectMode ? handleMultiSelectToggle : handleBeatSelected}
       onStartPositionSelected={handleStartPositionSelected}
+      onBeatDelete={handleBeatDelete}
       selectedBeatNumber={localSelectedBeatNumber}
       practiceBeatNumber={practiceBeatIndex}
       {isSideBySideLayout}

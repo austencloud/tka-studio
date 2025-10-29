@@ -120,7 +120,10 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         arrowColor
       );
 
-      // STEP 2: Process directional tuples - EXACTLY like legacy
+      // STEP 2: Process directional tuples for ALL motion types
+      // JSON values are reference adjustments for a specific location (e.g., North)
+      // They must be rotated via directional tuple matrices for each quadrant
+      // This applies to ALL arrow types: PRO/ANTI/FLOAT/STATIC/DASH
       const finalAdjustment = this.tupleProcessor.processDirectionalTuples(
         baseAdjustment,
         motionData,

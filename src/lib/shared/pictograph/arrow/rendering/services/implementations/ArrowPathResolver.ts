@@ -31,8 +31,8 @@ export class ArrowPathResolver implements IArrowPathResolver {
     const { motionType, turns } = motionData;
     const baseDir = `/images/arrows/${motionType}`;
 
-    // For motion types that have turn-based subdirectories (pro, anti, static)
-    if (["pro", "anti", "static"].includes(motionType)) {
+    // For motion types that have turn-based subdirectories (pro, anti, static, dash)
+    if (["pro", "anti", "static", "dash"].includes(motionType)) {
       // Determine if we should use radial vs non-radial arrows
       // Use non-radial only for clock/counter orientations, radial for everything else
       // ✅ FIXED: Orientation data comes from MotionData only
@@ -52,7 +52,7 @@ export class ArrowPathResolver implements IArrowPathResolver {
       return path;
     }
 
-    // For simple motion types (dash, float) - use base directory
+    // For float (truly turn-agnostic) - use base directory
     const path = `${baseDir}.svg`;
     return path;
   }

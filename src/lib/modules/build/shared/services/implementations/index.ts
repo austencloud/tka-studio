@@ -11,6 +11,7 @@ export { PictographDataDebugger } from "./PictographDataDebugger";
 
 // Sequence management implementations
 export { ReversalDetectionService } from "./ReversalDetectionService";
+export { SequenceAnalysisService } from "./SequenceAnalysisService";
 export { SequenceDomainService } from "./SequenceDomainService";
 export { SequenceExportService } from "./SequenceExportService";
 export { SequenceImportService } from "./SequenceImportService";

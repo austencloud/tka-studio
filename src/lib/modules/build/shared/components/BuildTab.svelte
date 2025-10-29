@@ -14,6 +14,7 @@
   import OptionFilterPanel from "../../construct/option-picker/option-viewer/components/OptionFilterPanel.svelte";
   import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
   import { EditSlidePanel } from "../../edit/components";
+  import SharePanelSheet from "../../share/components/SharePanelSheet.svelte";
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
@@ -75,6 +76,7 @@
   // Panel refs
   let toolPanelElement: HTMLElement | null = $state(null);
   let toolPanelRef: IToolPanelMethods | null = $state(null);
+  let buttonPanelElement: HTMLElement | null = $state(null);
 
   // Derived: Toggle always shows in ButtonPanel (at right edge)
   const shouldShowToggleInButtonPanel = $derived(() => {
@@ -197,6 +199,20 @@
     });
 
     resizeObserver.observe(toolPanelElement);
+    return () => resizeObserver.disconnect();
+  });
+
+  // Effect: Track button panel height for accurate slide panel positioning
+  $effect(() => {
+    if (!buttonPanelElement) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        panelState.setButtonPanelHeight(entry.contentRect.height);
+      }
+    });
+
+    resizeObserver.observe(buttonPanelElement);
     return () => resizeObserver.disconnect();
   });
 
@@ -490,29 +506,31 @@
         animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
       />
 
-      <ButtonPanel
-        {buildTabState}
-        showToggle={shouldShowToggleInButtonPanel()}
-        activeTab={buildTabState.activeSubTab as 'construct' | 'generate'}
-        onTabChange={(tab) => buildTabState?.setactiveToolPanel(tab)}
-        showPlayButton={buildTabState.hasSequence}
-        onPlayAnimation={handlePlayAnimation}
-        isAnimating={panelState.isAnimationPanelOpen}
-        canClearSequence={canClearSequence()}
-        onClearSequence={handleClearSequence}
-        onRemoveBeat={handleRemoveBeat}
-        showShareButton={canShareSequence()}
-        onShare={handleOpenSharePanel}
-        isShareOpen={panelState.isSharePanelOpen}
-        showSequenceActions={buildTabState.hasSequence}
-        onSequenceActionsClick={handleOpenSequenceActions}
-      />
+      <div bind:this={buttonPanelElement}>
+        <ButtonPanel
+          {buildTabState}
+          showToggle={shouldShowToggleInButtonPanel()}
+          activeTab={buildTabState.activeSubTab as 'construct' | 'generate'}
+          onTabChange={(tab) => buildTabState?.setactiveToolPanel(tab)}
+          showPlayButton={buildTabState.hasSequence}
+          onPlayAnimation={handlePlayAnimation}
+          isAnimating={panelState.isAnimationPanelOpen}
+          canClearSequence={canClearSequence()}
+          onClearSequence={handleClearSequence}
+          onRemoveBeat={handleRemoveBeat}
+          showShareButton={canShareSequence()}
+          onShare={handleOpenSharePanel}
+          isShareOpen={panelState.isSharePanelOpen}
+          showSequenceActions={buildTabState.hasSequence}
+          onSequenceActionsClick={handleOpenSequenceActions}
+        />
+      </div>
 
       <AnimationPanel
         sequence={buildTabState.sequenceState.currentSequence}
         show={panelState.isAnimationPanelOpen}
         onClose={handleCloseAnimationPanel}
-        toolPanelHeight={panelState.toolPanelHeight}
+        combinedPanelHeight={panelState.combinedPanelHeight}
       />
     </div>
 
@@ -539,7 +557,7 @@
       selectedBeatNumber={panelState.editPanelBeatIndex}
       selectedBeatData={panelState.editPanelBeatData}
       selectedBeatsData={panelState.editPanelBeatsData}
-      toolPanelHeight={panelState.toolPanelHeight}
+      combinedPanelHeight={panelState.combinedPanelHeight}
       isSideBySideLayout={shouldUseSideBySideLayout}
       onClose={() => {
         panelState.closeEditPanel();
@@ -552,6 +570,7 @@
       onOrientationChanged={handleOrientationChange}
       onTurnAmountChanged={handleTurnAmountChange}
       onBatchApply={handleBatchApply}
+      onRemoveBeat={(beatNumber) => handleRemoveBeat(beatNumber - 1)}
     />
   {/if}
 
@@ -571,19 +590,24 @@
     />
   {/if}
 
+  <!-- Share Panel Sheet - Full-screen positioned outside grid layout -->
+  {#if buildTabState}
+    <SharePanelSheet
+      show={panelState.isSharePanelOpen}
+      sequence={buildTabState.sequenceState.currentSequence}
+      onClose={handleCloseSharePanel}
+    />
+  {/if}
+
   <!-- Sequence Actions Sheet - Positioned outside grid layout to slide over content -->
   {#if buildTabState}
     <SequenceActionsSheet
       show={showSequenceActionsSheet}
       hasSequence={buildTabState.hasSequence}
-      toolPanelHeight={panelState.toolPanelHeight}
+      combinedPanelHeight={panelState.combinedPanelHeight}
       onMirror={handleMirror}
       onRotate={handleRotate}
       onColorSwap={handleColorSwap}
-      onSave={() => {
-        // TODO: Implement save
-        logger.log("Save action triggered");
-      }}
       onCopyJSON={handleCopyJSON}
       onClose={handleCloseSequenceActions}
     />

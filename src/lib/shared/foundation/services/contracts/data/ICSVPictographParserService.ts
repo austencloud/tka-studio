@@ -5,7 +5,7 @@
  * Handles row-level parsing of BoxPictographDataframe.csv data.
  */
 
-import type { PictographData } from "$shared";
+import type { GridMode, PictographData } from "$shared";
 
 export interface CSVRow {
   letter: string;
@@ -26,13 +26,17 @@ export interface CSVRow {
 export interface ICSVPictographParserService {
   /**
    * Convert a CSV row to PictographData object
+   * @param row - CSV row data
+   * @param gridMode - Grid mode (diamond/box) for correct positioning
    */
-  parseCSVRowToPictograph(row: CSVRow): PictographData;
+  parseCSVRowToPictograph(row: CSVRow, gridMode: GridMode): PictographData;
 
   /**
    * Parse multiple CSV rows for a letter
+   * @param letterRows - CSV rows to parse
+   * @param gridMode - Grid mode (diamond/box) for correct positioning
    */
-  parseLetterPictographs(letterRows: CSVRow[]): PictographData[];
+  parseLetterPictographs(letterRows: CSVRow[], gridMode: GridMode): PictographData[];
 
   /**
    * Validate that a CSV row has the expected structure

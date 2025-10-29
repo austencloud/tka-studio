@@ -9,6 +9,7 @@ export * from "./INavigationSyncService";
 export * from "./IPersistenceService";
 export * from "./IResponsiveLayoutService";
 export * from "./IReversalDetectionService";
+export * from "./ISequenceAnalysisService";
 export * from "./ISequenceDomainService";
 export * from "./ISequenceExportService";
 export * from "./ISequenceImportService";

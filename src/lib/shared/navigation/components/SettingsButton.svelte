@@ -62,12 +62,13 @@
     min-width: 48px; /* Minimum touch target width */
     height: 100%; /* Fill full navigation bar height */
     padding: 0 var(--spacing-sm); /* Add horizontal padding for larger touch target */
-    background: transparent;
-    border: none;
+    background: rgba(100, 116, 139, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.3);
     border-radius: 8px;
-    color: var(--muted-foreground);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: #ffffff;
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
   }
 
   .nav-action.layout-left {
@@ -78,8 +79,11 @@
   }
 
   .nav-action:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: var(--foreground);
+    transform: scale(1.05);
+    background: rgba(100, 116, 139, 0.9);
+    border-color: rgba(148, 163, 184, 0.4);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: #ffffff;
   }
 
   .nav-action:focus-visible {

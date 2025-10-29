@@ -6,7 +6,7 @@
  */
 
 import type { CSVRow, ICSVPictographParser, IEnumMapper, IOrientationCalculationService } from "$shared";
-import { GridPosition, Letter, MotionColor, createMotionData, createPictographData, type PictographData } from "$shared";
+import { GridMode, GridPosition, Letter, MotionColor, createMotionData, createPictographData, type PictographData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { Orientation } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 import { inject, injectable } from "inversify";
@@ -24,8 +24,10 @@ export class CSVPictographParser implements ICSVPictographParser {
 
   /**
    * Convert a CSV row to PictographData object
+   * @param row - CSV row data
+   * @param gridMode - Grid mode (diamond/box) for correct positioning
    */
-  parseCSVRowToPictograph(row: CSVRow): PictographData {
+  parseCSVRowToPictograph(row: CSVRow, gridMode: GridMode): PictographData {
     // Convert string letter to Letter enum (e.g., "A" -> Letter.A)
     const letter = row.letter as Letter;
 
@@ -40,6 +42,7 @@ export class CSVPictographParser implements ICSVPictographParser {
       startOrientation: Orientation.IN, // Default start orientation
       turns: 0, // Default turns for CSV data
       color: MotionColor.BLUE,
+      gridMode: gridMode, // Set grid mode for positioning
     });
 
     // Calculate blue end orientation dynamically
@@ -60,6 +63,7 @@ export class CSVPictographParser implements ICSVPictographParser {
       endOrientation: blueEndOrientation, // Include calculated orientation
       turns: 0,
       color: MotionColor.BLUE,
+      gridMode: gridMode, // Set grid mode for positioning
     });
 
     // Create temporary red motion for orientation calculation
@@ -73,6 +77,7 @@ export class CSVPictographParser implements ICSVPictographParser {
       startOrientation: Orientation.IN, // Default start orientation
       turns: 0, // Default turns for CSV data
       color: MotionColor.RED,
+      gridMode: gridMode, // Set grid mode for positioning
     });
 
     // Calculate red end orientation dynamically
@@ -93,6 +98,7 @@ export class CSVPictographParser implements ICSVPictographParser {
       endOrientation: redEndOrientation, // Include calculated orientation
       turns: 0,
       color: MotionColor.RED,
+      gridMode: gridMode, // Set grid mode for positioning
     });
 
     // CSV parsing completed successfully
@@ -130,9 +136,11 @@ export class CSVPictographParser implements ICSVPictographParser {
 
   /**
    * Parse multiple CSV rows for a letter
+   * @param letterRows - CSV rows to parse
+   * @param gridMode - Grid mode (diamond/box) for correct positioning
    */
-  parseLetterPictographs(letterRows: CSVRow[]): PictographData[] {
-    return letterRows.map((row) => this.parseCSVRowToPictograph(row));
+  parseLetterPictographs(letterRows: CSVRow[], gridMode: GridMode): PictographData[] {
+    return letterRows.map((row) => this.parseCSVRowToPictograph(row, gridMode));
   }
 
   /**

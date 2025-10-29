@@ -7,6 +7,7 @@
     beat,
     index = 0,
     onClick,
+    onDelete,
     shouldAnimate = false,
     isSelected = false,
     isPracticeBeat = false,
@@ -17,6 +18,7 @@
     beat: BeatData;
     index?: number;
     onClick?: () => void;
+    onDelete?: () => void;
     shouldAnimate?: boolean;
     isSelected?: boolean;
     isPracticeBeat?: boolean;
@@ -180,6 +182,14 @@
       // Trigger haptic feedback for keyboard interaction
       hapticService?.trigger("selection");
       onClick?.();
+    } else if (event.key === "Delete" || event.key === "Backspace") {
+      // Only allow deletion if beat is selected and not the start position
+      if (isSelected && beat.beatNumber >= 1) {
+        event.preventDefault();
+        // Trigger warning haptic feedback for deletion
+        hapticService?.trigger("warning");
+        onDelete?.();
+      }
     }
   }
 </script>

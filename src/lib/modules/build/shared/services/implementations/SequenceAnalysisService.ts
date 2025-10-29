@@ -10,19 +10,26 @@ import type {
 	CircularType,
 	StrictCapType,
 } from "../contracts/ISequenceAnalysisService";
+import {
+	QUARTERED_CAPS,
+	HALVED_CAPS,
+} from "$build/generate/circular/domain/constants/circular-position-maps";
+import {
+	VERTICAL_MIRROR_POSITION_MAP,
+	SWAPPED_POSITION_MAP,
+	COMPLEMENTARY_CAP_VALIDATION_SET,
+} from "$build/generate/circular/domain/constants/strict-cap-position-maps";
 
 /**
  * Sequence Analysis Service Implementation
  *
- * Analyzes sequences to detect circular patterns and CAP potential.
+ * Analyzes sequences to detect circular patterns and CAP (Continuous Assembly Pattern) potential.
  *
  * Key Concepts:
- * - Beta positions form an octagon with 8 positions (beta1-beta8)
- * - Circular sequences must start and end in beta positions
- * - Distance between positions determines the circular type:
- *   - Distance 0: Same position (static)
- *   - Distance 2 or 6: Adjacent 90° (quartered)
- *   - Distance 4: Opposite 180° (halved)
+ * - Circular sequences can be "autocompleted" by applying CAP transformations
+ * - The start→end position relationship determines which CAP types are possible
+ * - Uses predefined position maps (quartered, halved, mirrored, swapped, complementary)
+ * - Intermediate pictographs are irrelevant - only start/end positions matter
  */
 @injectable()
 export class SequenceAnalysisService implements ISequenceAnalysisService {
@@ -64,18 +71,19 @@ export class SequenceAnalysisService implements ISequenceAnalysisService {
 			return defaultResult;
 		}
 
-		// Check if both positions are beta positions
+		// Check if both positions are in the same position group
+		const sameGroup = this.areSamePositionGroup(startPosition, endPosition);
 		const startIsBeta = this.isBetaPosition(startPosition);
 		const endIsBeta = this.isBetaPosition(endPosition);
 
-		if (!startIsBeta || !endIsBeta) {
+		if (!sameGroup) {
 			return {
 				...defaultResult,
 				startPosition,
 				endPosition,
 				startIsBeta,
 				endIsBeta,
-				description: "Positions are not both beta positions",
+				description: "Positions are not in the same position group",
 			};
 		}
 
@@ -125,38 +133,43 @@ export class SequenceAnalysisService implements ISequenceAnalysisService {
 	}
 
 	/**
-	 * Determine the circular relationship between two beta positions
+	 * Determine the circular relationship between two positions
 	 *
-	 * Beta positions form an octagon with 8 positions (1-8).
-	 * We calculate the shortest distance around the octagon:
-	 * - Distance 0: Same position
-	 * - Distance 2 or 6: Adjacent 90° (quartered)
-	 * - Distance 4: Opposite 180° (halved)
+	 * Uses the predefined transformation maps to check if the start→end pair
+	 * exists in any of the CAP validation sets:
+	 * - Same position → 'same' (complementary, mirrored, swapped)
+	 * - Quartered map → 'quartered' (90° rotation)
+	 * - Halved map → 'halved' (180° rotation)
 	 */
 	getCircularType(startPosition: GridPosition, endPosition: GridPosition): CircularType | null {
-		// Extract beta numbers (e.g., "beta1" → 1)
-		const startNum = this.extractBetaNumber(startPosition);
-		const endNum = this.extractBetaNumber(endPosition);
+		const positionKey = `${startPosition},${endPosition}`;
 
-		if (startNum === null || endNum === null) {
-			return null;
+		// Check if same position (complementary CAP)
+		if (startPosition === endPosition) {
+			return 'same';
 		}
 
-		// Calculate distance around the octagon (shortest path)
-		const rawDistance = Math.abs(endNum - startNum);
-		const distance = Math.min(rawDistance, 8 - rawDistance);
-
-		// Determine circular type based on distance
-		switch (distance) {
-			case 0:
-				return 'same';
-			case 2:
-				return 'quartered';
-			case 4:
-				return 'halved';
-			default:
-				return null; // Invalid distance for circular patterns
+		// Check quartered CAPs (90° rotation)
+		if (QUARTERED_CAPS.has(positionKey)) {
+			return 'quartered';
 		}
+
+		// Check halved CAPs (180° rotation)
+		if (HALVED_CAPS.has(positionKey)) {
+			return 'halved';
+		}
+
+		// Check mirrored positions (also 'same' type)
+		if (VERTICAL_MIRROR_POSITION_MAP[startPosition] === endPosition) {
+			return 'same';
+		}
+
+		// Check swapped positions (also 'halved' type since alpha1→alpha5 is both)
+		if (SWAPPED_POSITION_MAP[startPosition] === endPosition) {
+			return 'halved';
+		}
+
+		return null;
 	}
 
 	/**
@@ -164,6 +177,18 @@ export class SequenceAnalysisService implements ISequenceAnalysisService {
 	 */
 	isBetaPosition(position: GridPosition): boolean {
 		return this.betaDetectionService.isBetaPosition(position);
+	}
+
+	/**
+	 * Check if both positions are in the same position group
+	 */
+	private areSamePositionGroup(pos1: GridPosition, pos2: GridPosition): boolean {
+		const info1 = this.extractPositionInfo(pos1);
+		const info2 = this.extractPositionInfo(pos2);
+
+		if (!info1 || !info2) return false;
+
+		return info1.group === info2.group;
 	}
 
 	/**
@@ -211,6 +236,98 @@ export class SequenceAnalysisService implements ISequenceAnalysisService {
 	}
 
 	/**
+	 * Detect the actual CAP type of a COMPLETED sequence
+	 *
+	 * Analyzes ALL consecutive beat transformations to determine what type
+	 * of completed CAP pattern the sequence represents.
+	 */
+	detectCompletedCapTypes(sequence: SequenceData): readonly StrictCapType[] {
+		if (!sequence.beats || sequence.beats.length === 0) {
+			return [];
+		}
+
+		// Filter out blank beats
+		const validBeats = sequence.beats.filter(beat => !beat.isBlank && beat.endPosition);
+
+		if (validBeats.length === 0) {
+			return [];
+		}
+
+		// Check 1: Static CAP - all beats at the same position
+		const allSamePosition = validBeats.every(beat =>
+			beat.startPosition === validBeats[0].startPosition &&
+			beat.endPosition === validBeats[0].endPosition
+		);
+
+		if (allSamePosition) {
+			return ['static'] as const;
+		}
+
+		// Build consecutive pairs: each beat's end → next beat's start
+		const consecutivePairs: Array<{ from: GridPosition; to: GridPosition }> = [];
+
+		for (let i = 0; i < validBeats.length; i++) {
+			const currentBeat = validBeats[i];
+			const nextBeat = validBeats[(i + 1) % validBeats.length]; // Wrap around to first beat
+
+			if (currentBeat.endPosition && nextBeat.startPosition) {
+				consecutivePairs.push({
+					from: currentBeat.endPosition,
+					to: nextBeat.startPosition
+				});
+			}
+		}
+
+		if (consecutivePairs.length === 0) {
+			return [];
+		}
+
+		// Check 2: Rotated CAP - all consecutive pairs show 90° rotation
+		const allQuartered = consecutivePairs.every(pair => {
+			const key = `${pair.from},${pair.to}`;
+			return QUARTERED_CAPS.has(key);
+		});
+
+		if (allQuartered) {
+			return ['rotated'] as const;
+		}
+
+		// Check 3: Mirrored CAP - all consecutive pairs show mirroring
+		const allMirrored = consecutivePairs.every(pair => {
+			const key = `${pair.from},${pair.to}`;
+
+			// Check halved caps (180° mirroring)
+			if (HALVED_CAPS.has(key)) {
+				return true;
+			}
+
+			// Check vertical mirror map
+			if (VERTICAL_MIRROR_POSITION_MAP[pair.from] === pair.to) {
+				return true;
+			}
+
+			// Check swapped positions
+			if (SWAPPED_POSITION_MAP[pair.from] === pair.to) {
+				return true;
+			}
+
+			// Check if same position (like alpha1 → alpha1 with mirrored turns)
+			if (pair.from === pair.to) {
+				return true;
+			}
+
+			return false;
+		});
+
+		if (allMirrored) {
+			return ['mirrored'] as const;
+		}
+
+		// If none of the patterns match, return empty
+		return [];
+	}
+
+	/**
 	 * Get possible CAP types based on circular type
 	 *
 	 * Mapping:
@@ -248,32 +365,33 @@ export class SequenceAnalysisService implements ISequenceAnalysisService {
 	}
 
 	/**
-	 * Extract beta number from a GridPosition
-	 *
-	 * @param position - Grid position like GridPosition.BETA1
-	 * @returns The beta number (1-8) or null if not a beta position
-	 *
-	 * @example
-	 * extractBetaNumber(GridPosition.BETA1) → 1
-	 * extractBetaNumber(GridPosition.BETA5) → 5
-	 * extractBetaNumber(GridPosition.ALPHA1) → null
+	 * Extract position group and number from a GridPosition
 	 */
-	private extractBetaNumber(position: GridPosition): number | null {
+	private extractPositionInfo(position: GridPosition): { group: string; number: number; groupSize: number } | null {
 		const positionStr = position.toString().toLowerCase();
+		const match = positionStr.match(/^(alpha|beta|gamma)(\d+)$/);
+		if (!match) return null;
 
-		// Check if it's a beta position and extract the number
-		const match = positionStr.match(/^beta(\d+)$/);
-		if (!match) {
+		const group = match[1];
+		const num = parseInt(match[2], 10);
+
+		let groupSize: number;
+		let maxNum: number;
+
+		if (group === 'alpha' || group === 'beta') {
+			groupSize = 8;
+			maxNum = 8;
+		} else if (group === 'gamma') {
+			groupSize = 16;
+			maxNum = 16;
+		} else {
 			return null;
 		}
 
-		const num = parseInt(match[1], 10);
-
-		// Validate it's in range 1-8
-		if (num < 1 || num > 8) {
+		if (num < 1 || num > maxNum) {
 			return null;
 		}
 
-		return num;
+		return { group, number: num, groupSize };
 	}
 }

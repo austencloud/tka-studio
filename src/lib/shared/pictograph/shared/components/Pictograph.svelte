@@ -18,7 +18,10 @@
   import { createPictographState } from "../state/pictograph-state.svelte";
 
   // Simplified Props interface - accepts either BeatData (with beat context) or PictographData (without)
-  let { pictographData = null, disableContentTransitions = false } = $props<{
+  let {
+    pictographData = null,
+    disableContentTransitions = false
+  } = $props<{
     pictographData?: (BeatData | PictographData) | null;
     disableContentTransitions?: boolean;
   }>();

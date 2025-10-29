@@ -1,4 +1,4 @@
-import { GridLocation, MotionType, type MotionData } from "$shared";
+import { GridLocation, MotionType, Orientation, type MotionData } from "$shared";
 import { injectable } from "inversify";
 
 export interface IArrowRotationCalculator {
@@ -16,22 +16,58 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
    * Each motion type has its own rotation strategy based on proven algorithms.
    */
 
-  private readonly staticRotationMap: Record<GridLocation, number> = {
-    [GridLocation.NORTH]: 180.0,
-    [GridLocation.NORTHEAST]: 225.0,
-    [GridLocation.EAST]: 270.0,
-    [GridLocation.SOUTHEAST]: 315.0,
-    [GridLocation.SOUTH]: 0.0,
-    [GridLocation.SOUTHWEST]: 45.0,
-    [GridLocation.WEST]: 90.0,
-    [GridLocation.NORTHWEST]: 135.0,
+  // Static arrow rotation for RADIAL orientations (IN/OUT) - Diamond Mode
+  private readonly staticRadialClockwiseMap: Record<GridLocation, number> = {
+    [GridLocation.NORTH]: 0,
+    [GridLocation.EAST]: 90,
+    [GridLocation.SOUTH]: 180,
+    [GridLocation.WEST]: 270,
+    [GridLocation.NORTHEAST]: 45,
+    [GridLocation.SOUTHEAST]: 135,
+    [GridLocation.SOUTHWEST]: 225,
+    [GridLocation.NORTHWEST]: 315,
   };
 
+  private readonly staticRadialCounterClockwiseMap: Record<GridLocation, number> = {
+    [GridLocation.NORTH]: 0,
+    [GridLocation.EAST]: 270,
+    [GridLocation.SOUTH]: 180,
+    [GridLocation.WEST]: 90,
+    [GridLocation.NORTHEAST]: 315,
+    [GridLocation.SOUTHEAST]: 225,
+    [GridLocation.SOUTHWEST]: 135,
+    [GridLocation.NORTHWEST]: 45,
+  };
+
+  // Static arrow rotation for NON-RADIAL orientations (CLOCK/COUNTER) - Box Mode
+  private readonly staticNonRadialClockwiseMap: Record<GridLocation, number> = {
+    [GridLocation.NORTH]: 180,
+    [GridLocation.EAST]: 270,
+    [GridLocation.SOUTH]: 0,
+    [GridLocation.WEST]: 90,
+    [GridLocation.NORTHEAST]: 225,
+    [GridLocation.SOUTHEAST]: 315,
+    [GridLocation.SOUTHWEST]: 45,
+    [GridLocation.NORTHWEST]: 135,
+  };
+
+  private readonly staticNonRadialCounterClockwiseMap: Record<GridLocation, number> = {
+    [GridLocation.NORTH]: 180,
+    [GridLocation.EAST]: 90,
+    [GridLocation.SOUTH]: 0,
+    [GridLocation.WEST]: 270,
+    [GridLocation.NORTHEAST]: 135,
+    [GridLocation.SOUTHEAST]: 45,
+    [GridLocation.SOUTHWEST]: 315,
+    [GridLocation.NORTHWEST]: 225,
+  };
+
+  // PRO rotation angles - FIXED to match legacy implementation
   private readonly proClockwiseMap: Record<GridLocation, number> = {
-    [GridLocation.NORTH]: 225,
-    [GridLocation.EAST]: 315,
-    [GridLocation.SOUTH]: 45,
-    [GridLocation.WEST]: 135,
+    [GridLocation.NORTH]: 315,
+    [GridLocation.EAST]: 45,
+    [GridLocation.SOUTH]: 135,
+    [GridLocation.WEST]: 225,
     [GridLocation.NORTHEAST]: 0,
     [GridLocation.SOUTHEAST]: 90,
     [GridLocation.SOUTHWEST]: 180,
@@ -39,9 +75,9 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
   };
 
   private readonly proCounterClockwiseMap: Record<GridLocation, number> = {
-    [GridLocation.NORTH]: 225,
+    [GridLocation.NORTH]: 45,
     [GridLocation.EAST]: 135,
-    [GridLocation.SOUTH]: 45,
+    [GridLocation.SOUTH]: 225,
     [GridLocation.WEST]: 315,
     [GridLocation.NORTHEAST]: 90,
     [GridLocation.SOUTHEAST]: 180,
@@ -49,17 +85,19 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     [GridLocation.NORTHWEST]: 0,
   };
 
+  // ANTI rotation angles - ANTI clockwise = PRO counter-clockwise
   private readonly antiClockwiseMap: Record<GridLocation, number> = {
-    [GridLocation.NORTH]: 315,
-    [GridLocation.EAST]: 225,
-    [GridLocation.SOUTH]: 135,
-    [GridLocation.WEST]: 45,
+    [GridLocation.NORTH]: 45,
+    [GridLocation.EAST]: 135,
+    [GridLocation.SOUTH]: 225,
+    [GridLocation.WEST]: 315,
     [GridLocation.NORTHEAST]: 90,
     [GridLocation.SOUTHEAST]: 180,
     [GridLocation.SOUTHWEST]: 270,
     [GridLocation.NORTHWEST]: 0,
   };
 
+  // ANTI counter-clockwise = PRO clockwise
   private readonly antiCounterClockwiseMap: Record<GridLocation, number> = {
     [GridLocation.NORTH]: 315,
     [GridLocation.EAST]: 45,
@@ -72,10 +110,10 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
   };
 
   private readonly dashClockwiseMap: Record<GridLocation, number> = {
-    [GridLocation.NORTH]: 270,
-    [GridLocation.EAST]: 0,
-    [GridLocation.SOUTH]: 90,
-    [GridLocation.WEST]: 180,
+    [GridLocation.NORTH]: 0,
+    [GridLocation.EAST]: 90,
+    [GridLocation.SOUTH]: 180,
+    [GridLocation.WEST]: 270,
     [GridLocation.NORTHEAST]: 315,
     [GridLocation.SOUTHEAST]: 45,
     [GridLocation.SOUTHWEST]: 135,
@@ -83,10 +121,10 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
   };
 
   private readonly dashCounterClockwiseMap: Record<GridLocation, number> = {
-    [GridLocation.NORTH]: 270,
-    [GridLocation.EAST]: 180,
-    [GridLocation.SOUTH]: 90,
-    [GridLocation.WEST]: 0,
+    [GridLocation.NORTH]: 0,
+    [GridLocation.EAST]: 90,
+    [GridLocation.SOUTH]: 180,
+    [GridLocation.WEST]: 270,
     [GridLocation.NORTHEAST]: 225,
     [GridLocation.SOUTHEAST]: 135,
     [GridLocation.SOUTHWEST]: 45,
@@ -119,7 +157,7 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
 
     switch (motionType) {
       case "static":
-        return this.calculateStaticRotation(location);
+        return this.calculateStaticRotation(motion, location);
       case "pro":
         return this.calculateProRotation(motion, location);
       case "anti":
@@ -134,9 +172,38 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     }
   }
 
-  private calculateStaticRotation(location: GridLocation): number {
-    /**Calculate rotation for static arrows (point inward).*/
-    return this.staticRotationMap[location] || 0.0;
+  private calculateStaticRotation(motion: MotionData, location: GridLocation): number {
+    /**
+     * Calculate rotation for static arrows.
+     * Uses different rotation maps based on whether orientation is radial (IN/OUT) or non-radial (CLOCK/COUNTER).
+     * Radial = Diamond mode, Non-radial = Box mode.
+     */
+    const startOrientation = motion.startOrientation;
+    const rotationDirection = motion.rotationDirection?.toLowerCase();
+
+    // Determine if this is a radial orientation (IN/OUT) or non-radial (CLOCK/COUNTER)
+    const isRadial = startOrientation === Orientation.IN || startOrientation === Orientation.OUT;
+
+    // Select the appropriate rotation map
+    let rotationMap: Record<GridLocation, number>;
+
+    if (isRadial) {
+      // Diamond mode - use radial maps
+      if (rotationDirection === "clockwise" || rotationDirection === "cw") {
+        rotationMap = this.staticRadialClockwiseMap;
+      } else {
+        rotationMap = this.staticRadialCounterClockwiseMap;
+      }
+    } else {
+      // Box mode - use non-radial maps
+      if (rotationDirection === "clockwise" || rotationDirection === "cw") {
+        rotationMap = this.staticNonRadialClockwiseMap;
+      } else {
+        rotationMap = this.staticNonRadialCounterClockwiseMap;
+      }
+    }
+
+    return rotationMap[location] || 0.0;
   }
 
   private calculateProRotation(

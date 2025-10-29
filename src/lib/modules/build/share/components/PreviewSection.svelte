@@ -33,37 +33,21 @@
   });
 </script>
 
-<div class="preview-section">
-  <!-- Section Header -->
-
-  <!-- Preview Status (for screen readers) -->
-  <div class="sr-only" aria-live="polite" aria-atomic="true">
-    {previewStatus}
-  </div>
-
-  <!-- Preview Container -->
-  <div class="preview-container">
-    <SharePreview
-      {currentSequence}
-      {previewUrl}
-      {isGenerating}
-      {error}
-      onRetry={handleRetry}
-    />
-  </div>
-
-
+<!-- Preview Status (for screen readers) -->
+<div class="sr-only" aria-live="polite" aria-atomic="true">
+  {previewStatus()}
 </div>
 
-<style>
-  .preview-section {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    height: 100%;
-    min-height: 0;
-  }
+<!-- Direct preview - no wrapper needed -->
+<SharePreview
+  {currentSequence}
+  {previewUrl}
+  {isGenerating}
+  {error}
+  onRetry={handleRetry}
+/>
 
+<style>
   /* Screen reader only content */
   .sr-only {
     position: absolute;
@@ -75,20 +59,5 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
-  }
-
-  /* Preview container */
-  .preview-container {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Responsive design */
-  @media (max-width: 767px) {
-    .preview-section {
-      gap: 0.75rem;
-    }
   }
 </style>

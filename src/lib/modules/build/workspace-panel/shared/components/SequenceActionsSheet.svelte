@@ -1,81 +1,56 @@
 <!-- Slide-up Sheet for Sequence Actions -->
 <script lang="ts">
-  import { onMount } from "svelte";
   import { BottomSheet } from "$shared";
 
   let {
     show = false,
     hasSequence = false,
-    toolPanelHeight = 0,
-    onAnimate,
+    combinedPanelHeight = 0,
     onMirror,
     onRotate,
     onColorSwap,
-    onEdit,
-    onSave,
     onCopyJSON,
     onClose,
   } = $props<{
     show: boolean;
     hasSequence: boolean;
-    toolPanelHeight?: number;
-    onAnimate?: () => void;
+    combinedPanelHeight?: number;
     onMirror?: () => void;
     onRotate?: () => void;
     onColorSwap?: () => void;
-    onEdit?: () => void;
-    onSave?: () => void;
     onCopyJSON?: () => void;
     onClose?: () => void;
   }>();
 
-  // Dynamically measured navigation bar height
-  let bottomNavHeight = $state(0);
-
-  // Measure navigation bar height proactively on mount, so it's ready when panel opens
-  onMount(() => {
-    const measureNavHeight = () => {
-      const bottomNav = document.querySelector('.bottom-navigation');
-      if (bottomNav) {
-        bottomNavHeight = bottomNav.clientHeight;
-      }
-    };
-
-    // Initial measure
-    measureNavHeight();
-
-    // Measure again after a brief delay to ensure DOM is fully rendered
-    const timeout = setTimeout(measureNavHeight, 50);
-
-    // Re-measure on window resize
-    const handleResize = () => measureNavHeight();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      clearTimeout(timeout);
-      window.removeEventListener('resize', handleResize);
-    };
-  });
-
-  // Calculate panel height dynamically - exact same logic as InlineAnimatorPanel (matching all panels)
+  // Calculate panel height dynamically to match tool panel + button panel
+  // This ensures the panel slides up exactly to not cover the sequence
   const panelHeightStyle = $derived(() => {
-    // Use tool panel height + navigation bar height + border + gap if available
-    if (toolPanelHeight > 0 && bottomNavHeight > 0) {
-      // Add 1px for border-top + 4px for grid gap between workspace and tool panel
-      const totalHeight = toolPanelHeight + bottomNavHeight + 1 + 4;
-      return `height: ${totalHeight}px;`;
+    if (combinedPanelHeight > 0) {
+      return `height: ${combinedPanelHeight}px;`;
     }
-
-    return 'height: 45vh;';
+    return 'height: 70vh;';
   });
 
-  // Action definitions - Animate and Edit removed (now have dedicated UI)
+  // Action type definition
+  type Action = {
+    id: string;
+    label: string;
+    icon: string;
+    description: string;
+    color: string;
+    requiresSequence: boolean;
+    handler?: () => void;
+  };
+
+  // Action definitions - Save removed, mirror icon updated
   const actions: Action[] = [
     {
       id: "mirror",
       label: "Mirror",
-      icon: '<i class="fas fa-arrows-alt-h"></i>',
-      description: "Flip sequence horizontally",
+      icon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="action-svg">
+        <path d="M11 2v20H9V2h2zm5 3v14c-2.5 0-4.5-2-4.5-4.5v-5C11.5 7 13.5 5 16 5zm0 2c-1.4 0-2.5.9-2.5 2.5v5c0 1.6 1.1 2.5 2.5 2.5V7zM8 5v14c-2.5 0-4.5-2-4.5-4.5v-5C3.5 7 5.5 5 8 5zm0 2c-1.4 0-2.5.9-2.5 2.5v5C5.5 16.1 6.6 17 8 17V7zm12-2v14c2.5 0 4.5-2 4.5-4.5v-5C24.5 7 22.5 5 20 5zm0 2c1.4 0 2.5.9 2.5 2.5v5c0 1.6-1.1 2.5-2.5 2.5V7zm-4-2v14c2.5 0 4.5-2 4.5-4.5v-5C20.5 7 18.5 5 16 5zm0 2c1.4 0 2.5.9 2.5 2.5v5c0 1.6-1.1 2.5-2.5 2.5V7z"/>
+      </svg>`,
+      description: "Flip horizontally",
       color: "#8b5cf6",
       requiresSequence: true,
       handler: onMirror,
@@ -84,7 +59,7 @@
       id: "rotate",
       label: "Rotate",
       icon: '<i class="fas fa-redo"></i>',
-      description: "Rotate sequence 90°",
+      description: "Rotate 90°",
       color: "#ec4899",
       requiresSequence: true,
       handler: onRotate,
@@ -93,26 +68,16 @@
       id: "colorSwap",
       label: "Color Swap",
       icon: '<i class="fas fa-palette"></i>',
-      description: "Swap blue and red",
+      description: "Swap blue/red",
       color: "#f59e0b",
       requiresSequence: true,
       handler: onColorSwap,
     },
     {
-      id: "save",
-      label: "Save",
-      icon: '<i class="fas fa-save"></i>',
-      description: "Save sequence (coming soon)",
-      color: "#10b981",
-      requiresSequence: true,
-      handler: onSave,
-      disabled: true, // Not implemented yet
-    },
-    {
       id: "copyJSON",
       label: "Copy JSON",
       icon: '<i class="fas fa-code"></i>',
-      description: "Copy sequence data (debug)",
+      description: "Debug data",
       color: "#6b7280",
       requiresSequence: true,
       handler: onCopyJSON,
@@ -123,23 +88,10 @@
   const availableActions = $derived(
     actions.filter((action) => !action.requiresSequence || hasSequence)
   );
-  // Action type definition
-  type Action = {
-    id: string;
-    label: string;
-    icon: string;
-    description: string;
-    color: string;
-    requiresSequence: boolean;
-    handler?: () => void;
-    disabled?: boolean;
-  };
 
   // Handle action click - keep sheet open to see immediate effects
   function handleActionClick(action: Action): void {
-    if (action.disabled) return;
     action.handler?.();
-    // Don't close the sheet - user can see the effect and apply more actions
   }
 
   // Handle close button click
@@ -161,94 +113,109 @@
   focusTrap={false}
   lockScroll={false}
   showHandle={false}
-  class="actions-sheet-container glass-surface"
+  class="actions-sheet-container"
   backdropClass="actions-sheet-backdrop"
 >
   <div
-    class="actions-sheet"
-    role="dialog"
-    aria-label="Sequence actions"
+    class="actions-panel"
     style={panelHeightStyle()}
+    role="dialog"
+    aria-labelledby="sequence-actions-title"
   >
-    <button class="close-button" onclick={handleClose} aria-label="Close actions sheet">
+    <button
+      class="close-button"
+      onclick={handleClose}
+      aria-label="Close actions sheet"
+    >
       <i class="fas fa-times"></i>
     </button>
 
-    <div class="sheet-header">
-      <h2 id="sequence-actions-title">Sequence Actions</h2>
+    <h3 id="sequence-actions-title" class="sr-only">Sequence Actions</h3>
+
+    <div class="actions-panel__header">
+      <h4>Sequence Actions</h4>
     </div>
 
-    <div class="actions-list">
+    <div class="actions-panel__content">
       {#if availableActions.length === 0}
         <div class="empty-state">
           <i class="fas fa-info-circle"></i>
           <p>Create a sequence to access actions</p>
         </div>
       {:else}
-        {#each availableActions as action}
-          <button
-            class="action-button"
-            class:disabled={action.disabled}
-            onclick={() => handleActionClick(action)}
-            disabled={action.disabled}
-            style="--action-color: {action.color}"
-          >
-            <span class="action-icon">{@html action.icon}</span>
-            <div class="action-info">
+        <div class="actions-grid">
+          {#each availableActions as action}
+            <button
+              class="action-button"
+              onclick={() => handleActionClick(action)}
+              style="--action-color: {action.color}"
+              title={action.description}
+              aria-label={`${action.label}: ${action.description}`}
+            >
+              <span class="action-icon">{@html action.icon}</span>
               <span class="action-label">{action.label}</span>
-              <span class="action-description">{action.description}</span>
-            </div>
-            {#if action.disabled}
-              <span class="action-badge">Coming soon</span>
-            {/if}
-          </button>
-        {/each}
+            </button>
+          {/each}
+        </div>
       {/if}
-    </div>
-
-    <div class="sheet-footer">
-      <button class="done-button" onclick={handleClose} aria-label="Close actions sheet">
-        Done
-      </button>
     </div>
   </div>
 </BottomSheet>
 
 <style>
+  /* Transparent backdrop to allow sequence visibility */
   :global(.bottom-sheet-backdrop.actions-sheet-backdrop) {
     background: transparent;
     backdrop-filter: none !important;
     pointer-events: none;
   }
 
+  /* Bottom Sheet Container */
   :global(.bottom-sheet.actions-sheet-container) {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: var(--glass-backdrop-strong);
-    border-top-left-radius: 24px;
-    border-top-right-radius: 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     display: flex;
     flex-direction: column;
     min-height: 300px;
-    padding-bottom: env(safe-area-inset-bottom);
     pointer-events: auto;
   }
 
   :global(.bottom-sheet.actions-sheet-container:hover) {
-    background: rgba(255, 255, 255, 0.08);
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     box-shadow: none;
   }
 
-  .actions-sheet {
-    position: relative;
+  /* Container */
+  .actions-panel {
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
-    height: 100%;
     width: 100%;
+    position: relative;
     overflow: hidden;
+    padding-bottom: env(safe-area-inset-bottom);
+
+    /* Gradient background matching SettingsSheet style */
+    background: linear-gradient(
+      135deg,
+      rgba(20, 25, 35, 0.98) 0%,
+      rgba(15, 20, 30, 0.95) 100%
+    );
   }
 
+  /* Screen reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  /* Close button */
   .close-button {
     position: absolute;
     top: 16px;
@@ -257,8 +224,7 @@
     height: 40px;
     border: none;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.9);
     cursor: pointer;
     transition: all 0.2s ease;
@@ -270,7 +236,7 @@
   }
 
   .close-button:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.16);
     transform: scale(1.05);
   }
 
@@ -278,157 +244,197 @@
     transform: scale(0.95);
   }
 
-  .sheet-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 16px 24px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
+  .close-button:focus-visible {
+    outline: 2px solid rgba(191, 219, 254, 0.7);
+    outline-offset: 2px;
   }
 
-  .sheet-header h2 {
+  /* Header */
+  .actions-panel__header {
+    padding: 16px 20px;
+    padding-top: 56px; /* Extra padding at top for close button */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+  }
+
+  .actions-panel__header h4 {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
   }
 
-  .actions-list {
-    padding: 12px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  /* Content area */
+  .actions-panel__content {
+    padding: 16px;
+    padding-bottom: 24px;
     flex: 1;
+    overflow-y: auto;
   }
 
+  /* Empty state */
   .empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 32px;
+    padding: 32px 16px;
     color: rgba(255, 255, 255, 0.5);
     gap: 12px;
   }
 
   .empty-state i {
-    font-size: 32px;
+    font-size: 28px;
   }
 
   .empty-state p {
     margin: 0;
     font-size: 14px;
+    text-align: center;
   }
 
+  /* Actions grid - responsive with container queries */
+  .actions-grid {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  /* Container query for larger spaces - horizontal layout */
+  @container (min-width: 500px) {
+    .actions-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Container query for medium spaces */
+  @container (min-width: 350px) and (max-width: 499px) {
+    .actions-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Container query for small spaces */
+  @container (max-width: 349px) {
+    .actions-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Action buttons - 2026 Level Brain Candy Effects */
   .action-button {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 16px;
-    padding: 16px;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 12px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
     color: rgba(255, 255, 255, 0.9);
     cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-    min-height: 64px;
+    min-height: 90px;
+    position: relative;
+    overflow: hidden;
+
+    /* Smooth spring animation like BeatCell */
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /* Subtle initial shadow */
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.15),
+      0 0 0 1px rgba(255, 255, 255, 0.05);
+  }
+
+  /* Gradient overlay that appears on hover */
+  .action-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      var(--action-color, rgba(255, 255, 255, 0.1)) 0%,
+      transparent 50%,
+      var(--action-color, rgba(255, 255, 255, 0.1)) 100%
+    );
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
   }
 
   .action-button:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--action-color, rgba(255, 255, 255, 0.2));
+    /* Elevated state with color-coded glow */
+    background: rgba(255, 255, 255, 0.12);
+    border-color: var(--action-color, rgba(255, 255, 255, 0.4));
+
+    /* Spring pop transform - signature 2026 effect */
+    transform: scale(1.05) translateY(-3px);
+
+    /* Layered luxury shadows with action color glow */
+    box-shadow:
+      0 0 20px color-mix(in srgb, var(--action-color) 40%, transparent),
+      0 8px 24px rgba(0, 0, 0, 0.25),
+      0 4px 12px color-mix(in srgb, var(--action-color) 25%, transparent),
+      0 0 0 1px var(--action-color, rgba(255, 255, 255, 0.3));
   }
 
+  .action-button:hover::before {
+    opacity: 0.15;
+  }
+
+  /* Active/press state - satisfying feedback */
   .action-button:active {
-    transform: scale(0.98);
+    transform: scale(0.97) translateY(0);
+    transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Intensify on press */
+    box-shadow:
+      0 0 15px color-mix(in srgb, var(--action-color) 50%, transparent),
+      0 2px 8px rgba(0, 0, 0, 0.3),
+      0 0 0 2px var(--action-color, rgba(255, 255, 255, 0.4));
   }
 
-  .action-button.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
+  .action-button:focus-visible {
+    outline: 3px solid rgba(191, 219, 254, 0.7);
+    outline-offset: 3px;
   }
 
-  .action-button.disabled:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .action-button.disabled:active {
-    transform: none;
-  }
-
+  /* Action icon */
   .action-icon {
     font-size: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
     color: var(--action-color, rgba(255, 255, 255, 0.9));
-  }
-
-  .action-info {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    flex: 1;
-  }
-
-  .action-label {
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  .action-description {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
-  }
-
-  .action-badge {
-    margin-left: auto;
-    padding: 4px 10px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.12);
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .sheet-footer {
-    padding: 12px 16px 20px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
   }
 
-  .done-button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.95);
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  .action-icon :global(.action-svg) {
+    width: 24px;
+    height: 24px;
   }
 
-  .done-button:hover {
-    background: rgba(255, 255, 255, 0.14);
-    border-color: rgba(255, 255, 255, 0.3);
-  }
-
-  .done-button:active {
-    transform: scale(0.98);
+  /* Action label */
+  .action-label {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.3;
   }
 
   /* High contrast mode */
   @media (prefers-contrast: high) {
-    .actions-sheet {
-      background: rgba(0, 0, 0, 0.95);
+    .actions-panel {
+      background: rgba(0, 0, 0, 0.98);
       border-top: 2px solid white;
+    }
+
+    .actions-panel__header {
+      border-bottom: 2px solid white;
     }
 
     .action-button {
@@ -444,12 +450,60 @@
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
+    .close-button,
     .action-button {
       transition: none;
     }
 
+    .close-button:hover,
+    .close-button:active,
+    .action-button:hover,
     .action-button:active {
       transform: none;
+    }
+  }
+
+  /* Mobile responsiveness for very small screens */
+  @media (max-width: 380px) {
+    .close-button {
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+      top: 12px;
+      right: 12px;
+    }
+
+    .actions-panel__header {
+      padding: 12px 16px;
+      padding-top: 52px;
+    }
+
+    .actions-panel__header h4 {
+      font-size: 16px;
+    }
+
+    .actions-panel__content {
+      padding: 12px;
+      padding-bottom: 20px;
+    }
+
+    .action-button {
+      min-height: 80px;
+      padding: 12px 8px;
+      gap: 8px;
+    }
+
+    .action-icon {
+      font-size: 20px;
+    }
+
+    .action-icon :global(.action-svg) {
+      width: 20px;
+      height: 20px;
+    }
+
+    .action-label {
+      font-size: 13px;
     }
   }
 </style>

@@ -193,8 +193,8 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 75vh;
-    max-height: 900px;
+    height: 90vh;
+    max-height: none;
     background: linear-gradient(
       135deg,
       rgba(20, 25, 35, 0.98) 0%,
@@ -268,6 +268,7 @@
   .settings-sheet__content {
     flex: 1;
     overflow-y: auto;
+    overflow-y: visible; /* No scrolling needed - everything fits on one screen */
     padding: 24px;
     background: rgba(255, 255, 255, 0.01);
   }

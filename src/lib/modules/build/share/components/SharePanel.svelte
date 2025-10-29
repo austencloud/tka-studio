@@ -1,4 +1,4 @@
-<!-- SharePanel.svelte - Refactored Share Interface with Proper Architecture -->
+<!-- SharePanel.svelte - Full-Screen Modern Share Interface -->
 <script lang="ts">
   import { browser } from "$app/environment";
   import type { IHapticFeedbackService, SequenceData } from "$shared";
@@ -6,25 +6,25 @@
   import { onMount } from "svelte";
   import type { IShareService } from "../services/contracts";
   import { createShareState } from "../state";
-  import OptionsModal from "./OptionsModal.svelte";
-  import PreviewSection from "./PreviewSection.svelte";
+  import ShareOptionsPanel from "./ShareOptionsPanel.svelte";
   import DownloadSection from "./ShareSection.svelte";
 
   // Component state
   let isMobile = $state(false);
-  let showShareModal = $state(false);
   let hapticService: IHapticFeedbackService;
 
   let {
     currentSequence = null,
+    onClose,
   }: {
     currentSequence?: SequenceData | null;
+    onClose?: () => void;
   } = $props();
 
   onMount(() => {
     // Device detection
     const checkMobile = () => {
-      isMobile = window.innerWidth <= 767;
+      isMobile = window.innerWidth <= 1024;
     };
 
     checkMobile();
@@ -66,18 +66,12 @@
     try {
       await shareState.downloadImage(currentSequence);
       hapticService?.trigger("success");
+      // Optionally close panel after successful download
+      // onClose?.();
     } catch (error) {
       console.error("Download failed:", error);
       hapticService?.trigger("error");
     }
-  }
-
-  function handleShowOptionsModal() {
-    showShareModal = true;
-  }
-
-  function handleCloseOptionsModal() {
-    showShareModal = false;
   }
 
   function handleRetryPreview() {
@@ -99,32 +93,45 @@
 </script>
 
 <div class="share-panel">
-  <!-- Header -->
-
-
-  <!-- Main content -->
-  <div class="share-content">
-    <!-- Top: Preview -->
-    <div class="preview-section">
-      <PreviewSection
-        {currentSequence}
-        previewUrl={shareState?.previewUrl}
-        isGenerating={shareState?.isGeneratingPreview || false}
-        error={shareState?.previewError}
-        onRetry={handleRetryPreview}
-      />
+  <div class="share-grid">
+    <!-- Left: Preview Image -->
+    <div class="preview-column">
+      {#if !currentSequence}
+        <div class="preview-placeholder">
+          <p>No sequence selected</p>
+          <span>Create or select a sequence to see preview</span>
+        </div>
+      {:else if currentSequence.beats?.length === 0}
+        <div class="preview-placeholder">
+          <p>Empty sequence</p>
+          <span>Add beats to generate preview</span>
+        </div>
+      {:else if shareState?.isGeneratingPreview}
+        <div class="preview-loading">
+          <div class="loading-spinner"></div>
+          <p>Generating preview...</p>
+        </div>
+      {:else if shareState?.previewError}
+        <div class="preview-error">
+          <p>Preview failed</p>
+          <span>{shareState.previewError}</span>
+          <button class="retry-button" onclick={handleRetryPreview}>Try Again</button>
+        </div>
+      {:else if shareState?.previewUrl}
+        <img src={shareState.previewUrl} alt="Sequence preview" class="preview-image" />
+      {:else}
+        <div class="preview-placeholder">
+          <p>Preview will appear here</p>
+        </div>
+      {/if}
     </div>
 
-    <!-- Bottom: Actions (Customize + Share/Download) -->
-    <div class="actions-section">
-      <button
-        class="customize-btn"
-        onclick={handleShowOptionsModal}
-        disabled={!canShare()}
-      >
-        <i class="fas fa-cog"></i>
-        Customize
-      </button>
+    <!-- Right: Options & Share Button -->
+    <div class="options-column">
+      <ShareOptionsPanel
+        options={shareState?.options}
+        onOptionsChange={(newOptions) => shareState?.updateOptions(newOptions)}
+      />
 
       <DownloadSection
         {currentSequence}
@@ -133,162 +140,166 @@
         {isMobile}
         {shareState}
         onDownload={handleDownload}
-        onShowExportModal={handleShowOptionsModal}
+        onShowExportModal={() => {}}
       />
     </div>
   </div>
-
-  <!-- Modal -->
-  <OptionsModal
-    show={showShareModal}
-    {currentSequence}
-    {shareState}
-    {isMobile}
-    onClose={handleCloseOptionsModal}
-    onDownload={handleDownload}
-  />
 </div>
 
 <style>
+  /* Clean container */
   .share-panel {
-    display: flex;
-    flex-direction: column;
-    /* Multi-layer fallback for reliable viewport height */
-    height: 100vh; /* Fallback 1: Static viewport height */
-    height: var(--viewport-height, 100vh); /* Fallback 2: JS-calculated height */
-    height: 100dvh; /* Preferred: Dynamic viewport height (when it works) */
-    max-height: 100vh;
-    max-height: var(--viewport-height, 100vh);
-    max-height: 100dvh;
-    padding: 1rem;
-    position: relative;
-    overflow: hidden;
-    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
   }
 
-  .share-content {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-    container-type: size;
-    container-name: share-content;
-    gap: 1rem;
+  /* Simple two-column grid - no height forcing */
+  .share-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 500px);
+    grid-auto-rows: max-content;
+    align-items: start;
+    gap: 20px;
+    height: 100%;
+    padding: 20px;
   }
 
-  .preview-section {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .actions-section {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: row;
-    gap: 0.75rem;
-  }
-
-  .actions-section > :global(*) {
-    flex: 1;
-  }
-
-  .customize-btn {
+  /* Preview Column - just contains the image */
+  .preview-column {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    padding: 0.875rem 1.5rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    position: relative;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 24px;
     overflow: hidden;
-    flex: 1;
-  }
-
-  .customize-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
   }
 
-  .customize-btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  /* Preview image - fits container naturally */
+  .preview-image {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   }
 
-  .customize-btn:hover:not(:disabled)::before {
-    left: 100%;
+  /* Preview states */
+  .preview-placeholder,
+  .preview-loading,
+  .preview-error {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.7);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
   }
 
-  .customize-btn:active:not(:disabled) {
-    transform: translateY(0);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  .preview-placeholder p,
+  .preview-loading p,
+  .preview-error p {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
   }
 
-  .customize-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+  .preview-placeholder span,
+  .preview-error span {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
   }
 
-  .customize-btn i {
-    font-size: 1.1rem;
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    border-top: 3px solid rgba(59, 130, 246, 0.8);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
   }
 
-  /* Container Queries for Responsive Gap */
-  @container share-content (max-height: 400px) {
-    .share-content {
-      gap: 0.5rem;
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .retry-button {
+    margin-top: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .retry-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+  }
+
+  /* Options Column - natural stacking, no forced spacing */
+  .options-column {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    padding: 24px;
+    gap: 20px;
+  }
+
+  /* Tablet/Mobile Layout */
+  @media (max-width: 1024px) {
+    .share-grid {
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 12px 16px 16px;
+    }
+
+    .preview-column,
+    .options-column {
+      padding: 14px;
     }
   }
 
-  @container share-content (min-height: 401px) and (max-height: 600px) {
-    .share-content {
-      gap: 1rem;
+  @media (max-width: 768px) {
+    .share-grid {
+      padding: 12px;
+      gap: 10px;
+    }
+
+    .preview-column,
+    .options-column {
+      padding: 12px;
+      border-radius: 10px;
     }
   }
 
-  @container share-content (min-height: 601px) and (max-height: 800px) {
-    .share-content {
-      gap: 1.5rem;
+  /* High contrast mode */
+  @media (prefers-contrast: high) {
+    .preview-column,
+    .options-column {
+      background: rgba(0, 0, 0, 0.95);
+      border: 2px solid white;
     }
   }
 
-  @container share-content (min-height: 801px) {
-    .share-content {
-      gap: 2rem;
-    }
-  }
-
-  /* Responsive Design */
-  @media (max-width: 767px) {
-    .share-panel {
-      padding: 0.75rem;
-      /* svh already applied above */
-    }
-
-
-
-    .preview-section {
-      min-height: 0;
-      flex: 1;
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
     }
   }
 </style>

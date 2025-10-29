@@ -11,6 +11,7 @@
     currentWord = "",
     onBeatSelected,
     onStartPositionSelected,
+    onBeatDelete,
     selectedBeatNumber = null,
     practiceBeatNumber = null,
     isSideBySideLayout = false,
@@ -23,6 +24,7 @@
     currentWord?: string;
     onBeatSelected?: (beatNumber: number) => void;
     onStartPositionSelected?: () => void;
+    onBeatDelete?: (beatNumber: number) => void;
     selectedBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     practiceBeatNumber?: number | null; // 0=start, 1=first beat, 2=second beat, etc.
     isSideBySideLayout?: boolean;
@@ -133,6 +135,7 @@
       <WorkspaceHeader
         word={displayWord}
         {isMultiSelectMode}
+        sequence={currentSequence}
       />
 
       <div
@@ -144,6 +147,7 @@
           startPosition={startPositionBeat() ?? undefined}
           onBeatClick={handleBeatClick}
           onStartClick={handleStartPositionClick}
+          {onBeatDelete}
           {selectedBeatNumber}
           {removingBeatIndex}
           {removingBeatIndices}

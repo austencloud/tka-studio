@@ -10,19 +10,22 @@
 -->
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared/application/services/contracts";
+  import type { SequenceData } from "$shared/foundation/domain/models/SequenceData";
   import { showSettingsDialog } from "$shared/application/state/app-state.svelte";
   import { resolve, TYPES } from "$shared/inversify";
   import WordLabel from "./WordLabel.svelte";
 
   let {
     word = "",
-    isMultiSelectMode = false
+    isMultiSelectMode = false,
+    sequence = null
   } = $props<{
     word?: string;
     isMultiSelectMode?: boolean;
+    sequence?: SequenceData | null;
   }>();
 
-  // Resolve haptic feedback service
+  // Resolve services
   const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
 
   function handleSettingsClick() {
@@ -33,9 +36,11 @@
 
 {#if !isMultiSelectMode}
   <div class="workspace-header">
-    <!-- Word Label (center/left) -->
-    <div class="word-label-wrapper">
-      <WordLabel {word} />
+    <div class="header-content">
+      <!-- Word Label (center/left) -->
+      <div class="word-label-wrapper">
+        <WordLabel {word} {sequence} />
+      </div>
     </div>
 
     <!-- Settings Button (top-right) -->
@@ -62,12 +67,19 @@
     pointer-events: none; /* Allow clicks to pass through to word label */
   }
 
-  .word-label-wrapper {
+  .header-content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+  }
+
+  .word-label-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: auto;
   }
 
   .settings-button {

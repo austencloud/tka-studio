@@ -10,6 +10,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import SimplifiedOrientationControl from '$lib/modules/build/edit/components/SimplifiedOrientationControl.svelte';
 import {
   GridLocation,
+  GridMode,
   MotionColor,
   MotionType,
   Orientation,
@@ -39,6 +40,7 @@ describe('SimplifiedOrientationControl - Layout Stability', () => {
         propType: PropType.STAFF,
         arrowLocation: GridLocation.NORTH,
         color: MotionColor.BLUE,
+        gridMode: GridMode.DIAMOND,
         arrowPlacementData: {} as any,
         propPlacementData: {} as any,
       },
@@ -54,6 +56,7 @@ describe('SimplifiedOrientationControl - Layout Stability', () => {
         propType: PropType.STAFF,
         arrowLocation: GridLocation.SOUTH,
         color: MotionColor.RED,
+        gridMode: GridMode.DIAMOND,
         arrowPlacementData: {} as any,
         propPlacementData: {} as any,
       },

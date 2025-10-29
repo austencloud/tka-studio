@@ -93,7 +93,7 @@ export class MotionQueryHandler implements IMotionQueryHandler {
     }
 
     // Simple implementation - filter based on criteria
-    const gridMode = criteria.gridMode || GridMode.DIAMOND;
+    const gridMode = (criteria.gridMode as GridMode) || GridMode.DIAMOND;
     const actualGridMode =
       gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
     const csvRows =
@@ -103,7 +103,8 @@ export class MotionQueryHandler implements IMotionQueryHandler {
     for (const row of csvRows.slice(0, 50)) {
       // Limit for performance
       const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
-        row as unknown as CSVRow
+        row as unknown as CSVRow,
+        actualGridMode
       );
       if (pictograph) {
         pictographs.push(pictograph);
@@ -130,7 +131,8 @@ export class MotionQueryHandler implements IMotionQueryHandler {
         this.parsedData[gridMode as keyof typeof this.parsedData] || [];
       for (const row of csvRows) {
         const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
-          row as unknown as CSVRow
+          row as unknown as CSVRow,
+          gridMode
         );
         if (pictograph && pictograph.id === motionId) {
           return pictograph;
@@ -171,7 +173,8 @@ export class MotionQueryHandler implements IMotionQueryHandler {
           data.redStartLocation?.toLowerCase().includes(lowerPattern)
         ) {
           const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
-            row as CSVRow
+            row as CSVRow,
+            gridMode
           );
           if (pictograph) {
             pictographs.push(pictograph);
@@ -187,7 +190,8 @@ export class MotionQueryHandler implements IMotionQueryHandler {
    * Get next options for sequence building - contextual filtering and orientation transformation
    */
   async getNextOptionsForSequence(
-    sequence: unknown[]
+    sequence: unknown[],
+    gridMode: GridMode
   ): Promise<PictographData[]> {
     try {
       await this.ensureInitialized();
@@ -197,15 +201,18 @@ export class MotionQueryHandler implements IMotionQueryHandler {
         return [];
       }
 
-      // Get all available pictographs for diamond mode
-      const csvRows = this.parsedData[GridMode.DIAMOND] || [];
+      // Get all available pictographs for the specified grid mode
+      // SKEWED mode falls back to DIAMOND mode (SKEWED doesn't have separate CSV data)
+      const effectiveMode = gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+      const csvRows = this.parsedData[effectiveMode] || [];
 
-      // Parse all available pictographs
+      // Parse all available pictographs with grid mode
       const allPictographs: PictographData[] = [];
       for (const row of csvRows) {
         try {
           const pictograph = this.csvPictographParser.parseCSVRowToPictograph(
-            row as unknown as CSVRow
+            row as unknown as CSVRow,
+            effectiveMode // Pass grid mode for correct positioning
           );
           if (pictograph) {
             allPictographs.push(pictograph);

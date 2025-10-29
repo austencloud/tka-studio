@@ -44,6 +44,13 @@ export interface PanelCoordinationState {
   get toolPanelHeight(): number;
   setToolPanelHeight(height: number): void;
 
+  // Button Panel Height (for accurate slide panel positioning)
+  get buttonPanelHeight(): number;
+  setButtonPanelHeight(height: number): void;
+
+  // Combined height for slide panels (tool + button)
+  get combinedPanelHeight(): number;
+
   // Practice Mode
   get practiceBeatIndex(): number | null;
   setPracticeBeatIndex(index: number | null): void;
@@ -68,6 +75,9 @@ export function createPanelCoordinationState(): PanelCoordinationState {
 
   // Tool panel height tracking
   let toolPanelHeight = $state(0);
+
+  // Button panel height tracking
+  let buttonPanelHeight = $state(0);
 
   // Practice mode
   let practiceBeatIndex = $state<number | null>(null);
@@ -143,6 +153,18 @@ export function createPanelCoordinationState(): PanelCoordinationState {
 
     setToolPanelHeight(height: number) {
       toolPanelHeight = height;
+    },
+
+    // Button Panel Height
+    get buttonPanelHeight() { return buttonPanelHeight; },
+
+    setButtonPanelHeight(height: number) {
+      buttonPanelHeight = height;
+    },
+
+    // Combined Height (tool + button panels)
+    get combinedPanelHeight() {
+      return toolPanelHeight + buttonPanelHeight;
     },
 
     // Practice Mode

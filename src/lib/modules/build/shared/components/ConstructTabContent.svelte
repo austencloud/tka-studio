@@ -5,7 +5,7 @@
   based on the current sequence state. Receives all state and handlers as props.
 -->
 <script lang="ts">
-	import type { PictographData } from "$shared";
+	import { GridMode, type PictographData } from "$shared";
 	import { fade } from "svelte/transition";
 	import { OptionViewer, StartPositionPicker } from "../../construct";
 	import type { SimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
@@ -77,6 +77,7 @@
             <OptionViewer
               {onOptionSelected}
               {currentSequence}
+              currentGridMode={startPositionState?.currentGridMode || GridMode.DIAMOND}
               {isClearingSequence}
               {isSideBySideLayout}
               {isUndoingOption}

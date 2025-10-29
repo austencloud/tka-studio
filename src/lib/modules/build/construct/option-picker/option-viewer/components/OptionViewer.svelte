@@ -9,7 +9,7 @@ Refactored to be a lightweight orchestrator that delegates to specialized compon
 Business logic moved to state management and utility services.
 -->
 <script lang="ts">
-  import type { IHapticFeedbackService, PictographData } from "$shared";
+  import type { GridMode, IHapticFeedbackService, PictographData } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
@@ -35,6 +35,7 @@ Business logic moved to state management and utility services.
   let {
     onOptionSelected,
     currentSequence = [],
+    currentGridMode,
     isClearingSequence = false,
     isUndoingOption = false,
     isSideBySideLayout = () => false,
@@ -44,6 +45,7 @@ Business logic moved to state management and utility services.
   }: {
     onOptionSelected: (option: PictographData) => void;
     currentSequence?: PictographData[];
+    currentGridMode: GridMode;
     isClearingSequence?: boolean;
     isUndoingOption?: boolean;
     isSideBySideLayout?: () => boolean;
@@ -91,11 +93,11 @@ Business logic moved to state management and utility services.
   function formatSectionTitle(rawTitle: string): string {
     // Handle grouped section - show all three types with colors
     if (rawTitle === "Types 4-6") {
-      // Format as: "Types 4,5,6: Dash, Dual-Dash, Static"
+      // Format as: "Types 4, 5, 6: Dash, Dual-Dash, Static"
       const dash = LetterTypeTextPainter.getColoredText("Dash");
       const dualDash = LetterTypeTextPainter.getColoredText("Dual-Dash");
       const staticText = LetterTypeTextPainter.getColoredText("Static");
-      return `Types 4,5,6:&nbsp;${dash}, ${dualDash}, ${staticText}`;
+      return `Types 4, 5, 6:&nbsp;${dash},&nbsp;${dualDash},&nbsp;${staticText}`;
     }
 
     // Handle individual types
@@ -292,7 +294,7 @@ Business logic moved to state management and utility services.
 
         // Reload options while still faded out (invisible data update)
         if (optionPickerState && currentSequence && currentSequence.length > 0) {
-          optionPickerState.loadOptions(currentSequence);
+          optionPickerState.loadOptions(currentSequence, currentGridMode);
         }
         performance.mark('options-reloaded-while-faded-out');
       }, FADE_OUT_DURATION / 2); // Halfway through fade-out
@@ -326,7 +328,7 @@ Business logic moved to state management and utility services.
     }
 
     if (optionPickerState && servicesReady && currentSequence && currentSequence.length > 0) {
-      optionPickerState.loadOptions(currentSequence);
+      optionPickerState.loadOptions(currentSequence, currentGridMode);
     } else if (optionPickerState && servicesReady && (!currentSequence || currentSequence.length === 0)) {
       optionPickerState.reset();
     }
@@ -344,7 +346,7 @@ Business logic moved to state management and utility services.
       // Reload options mid-transition (while faded out)
       setTimeout(() => {
         if (optionPickerState && currentSequence && currentSequence.length > 0) {
-          optionPickerState.loadOptions(currentSequence);
+          optionPickerState.loadOptions(currentSequence, currentGridMode);
         }
       }, FADE_OUT_DURATION / 2);
 

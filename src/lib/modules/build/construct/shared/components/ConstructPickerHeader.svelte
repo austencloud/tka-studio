@@ -98,6 +98,7 @@
     align-items: center;
     text-align: center;
     min-width: 0;
+    overflow: visible;
   }
 
   .header-title {
@@ -108,8 +109,7 @@
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    overflow: visible;
   }
 
   .header-title.rich :global(span) {

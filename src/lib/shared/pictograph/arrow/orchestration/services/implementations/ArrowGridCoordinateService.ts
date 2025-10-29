@@ -20,13 +20,14 @@ export class ArrowGridCoordinateService implements IArrowGridCoordinateService {
 
   getInitialPosition(motion: MotionData, location: GridLocation): Point {
     const motionType = motion.motionType?.toLowerCase();
+    const gridMode = motion.gridMode || GridMode.DIAMOND;
 
     if (["pro", "anti", "float"].includes(motionType || "")) {
       // Shift arrows use layer2 points
-      return this.getLayer2Coords(location);
+      return this.getLayer2Coords(location, gridMode);
     } else if (["static", "dash"].includes(motionType || "")) {
       // Static/dash arrows use hand points
-      return this.getHandPointCoords(location);
+      return this.getHandPointCoords(location, gridMode);
     } else {
       // Default fallback
       return this.getSceneCenter();
@@ -140,24 +141,24 @@ export class ArrowGridCoordinateService implements IArrowGridCoordinateService {
     ];
   }
 
-  private getLayer2Coords(location: GridLocation): Point {
-    const layer2Points = this.getAllLayer2Points();
+  private getLayer2Coords(location: GridLocation, gridMode: GridMode): Point {
+    const layer2Points = this.getAllLayer2Points(gridMode);
     const coords = layer2Points[location];
     if (!coords) {
       console.warn(
-        `No layer2 coordinates for location: ${location}, using center`
+        `No layer2 coordinates for location: ${location} in ${gridMode} mode, using center`
       );
       return this.getSceneCenter();
     }
     return coords;
   }
 
-  private getHandPointCoords(location: GridLocation): Point {
-    const handPoints = this.getAllHandPoints();
+  private getHandPointCoords(location: GridLocation, gridMode: GridMode): Point {
+    const handPoints = this.getAllHandPoints(gridMode);
     const coords = handPoints[location];
     if (!coords) {
       console.warn(
-        `No hand point coordinates for location: ${location}, using center`
+        `No hand point coordinates for location: ${location} in ${gridMode} mode, using center`
       );
       return this.getSceneCenter();
     }

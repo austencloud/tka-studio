@@ -8,5 +8,6 @@ export { default as VisibilityPreviewPictograph } from "./VisibilityPreviewPicto
 
 // Pictograph sub-components
 export { default as BeatNumber } from "./BeatNumber.svelte";
+export { default as CircularIndicator } from "./CircularIndicator.svelte";
 export { default as EmptyStateIndicator } from "./EmptyStateIndicator.svelte";
 export { default as ReversalIndicators } from "./ReversalIndicators.svelte";

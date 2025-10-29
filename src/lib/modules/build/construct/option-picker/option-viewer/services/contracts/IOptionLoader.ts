@@ -5,11 +5,11 @@
  * Extracted from OptionPickerService for better separation of concerns.
  */
 
-import type { PictographData } from "$shared";
+import type { GridMode, PictographData } from "$shared";
 
 export interface IOptionLoader {
   /**
-   * Load available options based on current sequence
+   * Load available options based on current sequence and grid mode
    */
-  loadOptions(sequence: PictographData[]): Promise<PictographData[]>;
+  loadOptions(sequence: PictographData[], gridMode: GridMode): Promise<PictographData[]>;
 }

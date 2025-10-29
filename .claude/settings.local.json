@@ -6,7 +6,8 @@
       "Bash(npm run test:*)",
       "Bash(cat:*)",
       "Bash(npm run dev:*)",
-      "Bash(timeout 5 echo:*)"
+      "Bash(timeout 5 echo:*)",
+      "Bash(dir:*)"
     ],
     "deny": [],
     "ask": []
