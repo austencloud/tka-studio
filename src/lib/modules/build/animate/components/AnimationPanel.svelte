@@ -1,74 +1,67 @@
 <!--
-Animation Panel - Main Container
+  AnimationPanel.svelte
 
-Refactored component focused on display and coordination.
-Business logic extracted to services, state, and utilities.
+  Slide-up animation panel with auto-start and minimal controls.
+  - Slides up from bottom using BottomSheet
+  - Auto-starts animation on open
+  - Shows speed slider and animated pictograph
+  - Loop is always enabled
 -->
 <script lang="ts">
+  import AnimatorCanvas from "$build/animate/components/AnimatorCanvas.svelte";
+  import type { IAnimationPlaybackController } from "$build/animate/services/contracts";
+  import { createAnimationPanelState } from "$build/animate/state/animation-panel-state.svelte";
+  import { loadSequenceForAnimation } from "$build/animate/utils/sequence-loader";
   import type { ISequenceService } from "$build/shared";
-  import { resolve, TYPES, type SequenceData } from "$shared";
+  import { BottomSheet, resolve, TYPES, type SequenceData } from "$shared";
+  import type { IHapticFeedbackService } from "$shared/application/services/contracts";
   import { onMount } from "svelte";
-  import type { IAnimationPlaybackController } from "../services/contracts";
-  import { createAnimationPanelState } from "../state/animation-panel-state.svelte";
-  import { loadSequenceForAnimation } from "../utils/sequence-loader";
-  import AnimateControls from "./AnimateControls.svelte";
-  import AnimatorCanvas from "./AnimatorCanvas.svelte";
 
-  // Local panel state interface expected by this component
-  type AnimationPanelState = {
-    isAnimationVisible: boolean;
-    isAnimationCollapsed: boolean;
-    toggleAnimationCollapse: () => void;
-    setAnimationVisible: (visible: boolean) => void;
-  };
-
-  // ✅ PURE RUNES: Props using modern Svelte 5 runes
+  // Props
   let {
     sequence = null,
-    panelState,
+    show = false,
     onClose = () => {},
-    animationStateRef = $bindable(null),
+    toolPanelHeight = 0,
   }: {
     sequence?: SequenceData | null;
-    panelState: AnimationPanelState;
+    show?: boolean;
     onClose?: () => void;
-    animationStateRef?: any | null; // Reference object to expose animation state/methods
+    toolPanelHeight?: number;
   } = $props();
 
-  // Services - resolved on mount to avoid SSR issues
+  // Services
   let sequenceService: ISequenceService | null = null;
   let playbackController: IAnimationPlaybackController | null = null;
+  let hapticService: IHapticFeedbackService | null = null;
 
-  // Component state using our factory
-  const state = createAnimationPanelState();
+  // Component state
+  const panelState = createAnimationPanelState();
 
-  // ✅ DERIVED RUNES: Panel state
-  let isVisible = $derived(panelState.isAnimationVisible);
-  let isCollapsed = $derived(panelState.isAnimationCollapsed);
-
-  // ✅ DERIVED RUNE: Current letter from sequence data and current beat
-  let currentLetter = $derived.by(() => {
-    if (!state.sequenceData) {
-      return null;
+  // Calculate panel height dynamically to match tool panel
+  const panelHeightStyle = $derived(() => {
+    if (toolPanelHeight > 0) {
+      return `height: ${toolPanelHeight}px;`;
     }
+    return 'height: 70vh;';
+  });
 
-    const currentBeat = state.currentBeat;
+  // Derived: Current letter from sequence data
+  let currentLetter = $derived.by(() => {
+    if (!panelState.sequenceData) return null;
+
+    const currentBeat = panelState.currentBeat;
 
     // Before animation starts (beat 0 and not playing) = start position
-    if (currentBeat === 0 && !state.isPlaying && state.sequenceData.startPosition) {
-      return state.sequenceData.startPosition.letter || null;
+    if (currentBeat === 0 && !panelState.isPlaying && panelState.sequenceData.startPosition) {
+      return panelState.sequenceData.startPosition.letter || null;
     }
 
-    // During animation or after: show beat letters
-    // currentBeat goes from 0 to totalBeats
-    // When currentBeat is 0.0-0.999... = show beats[0] (first beat)
-    // When currentBeat is 1.0-1.999... = show beats[1] (second beat)
-    // When currentBeat is 2.0-2.999... = show beats[2] (third beat)
-    if (state.sequenceData.beats && state.sequenceData.beats.length > 0) {
+    // During animation: show beat letters
+    if (panelState.sequenceData.beats && panelState.sequenceData.beats.length > 0) {
       const beatIndex = Math.floor(currentBeat);
-      const clampedIndex = Math.max(0, Math.min(beatIndex, state.sequenceData.beats.length - 1));
-
-      return state.sequenceData.beats[clampedIndex]?.letter || null;
+      const clampedIndex = Math.max(0, Math.min(beatIndex, panelState.sequenceData.beats.length - 1));
+      return panelState.sequenceData.beats[clampedIndex]?.letter || null;
     }
 
     return null;
@@ -81,85 +74,87 @@ Business logic extracted to services, state, and utilities.
       playbackController = resolve<IAnimationPlaybackController>(
         TYPES.IAnimationPlaybackController
       );
+      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
     } catch (error) {
       console.error("Failed to resolve animation services:", error);
-      state.setError("Failed to initialize animation services");
+      panelState.setError("Failed to initialize animation services");
     }
   });
 
-  // Expose animation state and methods via ref
+  // Load and auto-start animation when panel becomes visible
+  // CRITICAL: Delay to allow slide animation to complete first
   $effect(() => {
-    if (animationStateRef && playbackController) {
-      animationStateRef.isPlaying = state.isPlaying;
-      animationStateRef.currentBeat = state.currentBeat;
-      animationStateRef.totalBeats = state.totalBeats;
-      animationStateRef.speed = state.speed;
-      animationStateRef.shouldLoop = state.shouldLoop;
-      animationStateRef.play = () => playbackController?.togglePlayback();
-      animationStateRef.stop = () => playbackController?.stop();
-      animationStateRef.jumpToBeat = (beat: number) =>
-        playbackController?.jumpToBeat(beat);
-      animationStateRef.setSpeed = (speed: number) =>
-        playbackController?.setSpeed(speed);
-      animationStateRef.setShouldLoop = (loop: boolean) =>
-        state.setShouldLoop(loop);
-      animationStateRef.nextBeat = () => playbackController?.nextBeat();
-      animationStateRef.previousBeat = () => playbackController?.previousBeat();
+    if (show && sequence && sequenceService && playbackController) {
+      // Show loading state immediately
+      panelState.setLoading(true);
+      panelState.setError(null);
+
+      // Wait for BottomSheet slide animation to complete (300ms) before loading
+      const loadTimeout = setTimeout(() => {
+        loadAndStartAnimation();
+      }, 320); // Slightly longer than BottomSheet transition (300ms)
+
+      return () => clearTimeout(loadTimeout);
     }
   });
 
-  // Load sequence data when sequence changes or becomes visible
-  $effect(() => {
-    if (sequence && isVisible && sequenceService && playbackController) {
-      loadSequenceData();
-    }
-  });
-
-  async function loadSequenceData() {
+  async function loadAndStartAnimation() {
     if (!sequenceService || !playbackController) return;
 
-    state.setLoading(true);
-    state.setError(null);
+    panelState.setLoading(true);
+    panelState.setError(null);
 
     try {
-      // Load sequence using our utility
+      // Load sequence
       const result = await loadSequenceForAnimation(sequence, sequenceService);
 
       if (!result.success || !result.sequence) {
         throw new Error(result.error || "Failed to load sequence");
       }
 
-      // Initialize playback controller with sequence and state
-      const success = playbackController.initialize(result.sequence, state);
+      // Initialize playback controller with sequence and panelState
+      // Enable loop by default
+      panelState.setShouldLoop(true);
+      const success = playbackController.initialize(result.sequence, panelState);
 
       if (!success) {
         throw new Error("Failed to initialize animation playback");
       }
 
-      state.setSequenceData(result.sequence);
-      console.log("✅ Animation panel ready for playback");
+      panelState.setSequenceData(result.sequence);
+
+      // Auto-start animation after a brief delay
+      setTimeout(() => {
+        playbackController?.togglePlayback();
+      }, 100);
+
     } catch (err) {
       console.error("❌ Failed to load sequence:", err);
-      state.setError(
+      panelState.setError(
         err instanceof Error ? err.message : "Failed to load sequence"
       );
     } finally {
-      state.setLoading(false);
+      panelState.setLoading(false);
     }
   }
 
-  // ✅ PANEL ACTIONS: Use panel state manager
-  function handleToggle() {
-    panelState.toggleAnimationCollapse();
+  // Speed change handler
+  function handleSpeedChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const newSpeed = parseFloat(target.value);
+    hapticService?.trigger("selection");
+    playbackController?.setSpeed(newSpeed);
   }
 
+  // Close handler
   function handleClose() {
-    // Clean up playback controller
+    hapticService?.trigger("selection");
+
+    // Stop playback
     if (playbackController) {
       playbackController.dispose();
     }
 
-    panelState.setAnimationVisible(false);
     onClose();
   }
 
@@ -171,104 +166,266 @@ Business logic extracted to services, state, and utilities.
       }
     };
   });
+
+  function handleSheetClose() {
+    handleClose();
+  }
 </script>
 
-<div
-  class="animation-panel"
-  class:collapsed={isCollapsed}
-  class:visible={isVisible}
+<BottomSheet
+  isOpen={show}
+  on:close={handleSheetClose}
+  labelledBy="animation-panel-title"
+  closeOnBackdrop={false}
+  focusTrap={false}
+  lockScroll={false}
+  showHandle={false}
+  class="animation-panel-container glass-surface"
+  backdropClass="animation-panel-backdrop"
 >
-  <!-- Panel Content -->
-  <div class="panel-content">
-    {#if state.loading}
+  <div
+    class="animation-panel"
+    style={panelHeightStyle()}
+    role="dialog"
+    aria-labelledby="animation-panel-title"
+  >
+    <button class="close-button" onclick={handleClose} aria-label="Close animator">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <h2 id="animation-panel-title" class="sr-only">Animation Viewer</h2>
+
+    {#if panelState.loading}
       <div class="loading-message">Loading animation...</div>
-    {:else if state.error}
-      <div class="error-message">{state.error}</div>
+    {:else if panelState.error}
+      <div class="error-message">{panelState.error}</div>
     {:else}
-      <div class="animation-canvas-container">
+      <div class="canvas-container">
         <AnimatorCanvas
-          blueProp={state.bluePropState}
-          redProp={state.redPropState}
+          blueProp={panelState.bluePropState}
+          redProp={panelState.redPropState}
           gridVisible={true}
           letter={currentLetter}
         />
       </div>
 
-      <!-- Animation Controls -->
-      <div class="controls-container">
-        <AnimateControls
-          isPlaying={state.isPlaying}
-          currentBeat={state.currentBeat}
-          totalBeats={state.totalBeats}
-          speed={state.speed}
-          shouldLoop={state.shouldLoop}
-          onPlayPause={() => playbackController?.togglePlayback()}
-          onSpeedChange={(speed) => playbackController?.setSpeed(speed)}
-          onLoopToggle={() => state.setShouldLoop(!state.shouldLoop)}
-        />
+      <div class="speed-control-container">
+        <div class="speed-control">
+          <label for="speed-slider" class="speed-label">Speed</label>
+          <input
+            id="speed-slider"
+            type="range"
+            min="0.25"
+            max="2"
+            step="0.25"
+            value={panelState.speed}
+            oninput={handleSpeedChange}
+            aria-label="Animation speed"
+          />
+          <span class="speed-value">{panelState.speed.toFixed(2)}x</span>
+        </div>
       </div>
     {/if}
   </div>
-</div>
+</BottomSheet>
 
 <style>
+  :global(.bottom-sheet-backdrop.animation-panel-backdrop) {
+    background: transparent;
+    backdrop-filter: none !important;
+    pointer-events: none;
+  }
+
+  :global(.bottom-sheet.animation-panel-container) {
+    backdrop-filter: var(--glass-backdrop-strong);
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    pointer-events: auto;
+  }
+
+  :global(.bottom-sheet.animation-panel-container:hover) {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: none;
+  }
+
   .animation-panel {
+    position: relative;
     display: flex;
     flex-direction: column;
-    height: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    padding-top: 56px; /* Extra padding at top for close button */
+    padding-bottom: calc(24px + env(safe-area-inset-bottom));
+    /* height set via inline style for reactive sizing */
     width: 100%;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
-    overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  }
+    transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth height transitions */
 
-  .animation-panel.collapsed {
-    /* Collapsed state - only show minimal header */
-    overflow: visible;
-    background: rgba(255, 255, 255, 0.02);
-  }
-
-  /* Panel Content */
-  .panel-content {
-    flex: 1;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
+    /* Mesh gradient animation - moved here from BottomSheet to avoid blocking slide transition */
     background: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.02) 0%,
-      rgba(255, 255, 255, 0.01) 100%
+      rgba(102, 126, 234, 0.15) 0%,
+      rgba(118, 75, 162, 0.15) 25%,
+      rgba(240, 147, 251, 0.15) 50%,
+      rgba(245, 87, 108, 0.15) 75%,
+      rgba(79, 172, 254, 0.15) 100%
     );
-    /* Remove justify-content: center to allow natural flow */
-    align-items: center;
-    padding: 0.5rem;
-    gap: 0.5rem;
-    min-height: 0; /* Allow flex children to shrink */
+    background-size: 300% 300%;
+    animation: meshGradientFlow 15s ease infinite;
   }
 
-  .animation-canvas-container {
-    /* Enable container queries for BOTH width and height */
+  /* Mesh Gradient Flow Animation - Subtle organic color movement */
+  @keyframes meshGradientFlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 50% 100%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    75% {
+      background-position: 50% 0%;
+    }
+  }
+
+  .close-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 48px; /* Slightly larger for better visibility */
+    height: 48px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15); /* More visible */
+    backdrop-filter: blur(10px);
+    color: rgba(255, 255, 255, 1); /* Full white for contrast */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px; /* Larger icon */
+    z-index: 1000; /* Much higher z-index to ensure it's always on top */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); /* Shadow for visibility */
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .close-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+  }
+
+  .close-button:active {
+    transform: scale(0.95);
+  }
+
+  .canvas-container {
+    /* CRITICAL: Enable container queries for AnimatorCanvas */
     container-type: size;
-    /* Take available space but allow controls to have their space */
+    container-name: animator-canvas;
     flex: 1;
     width: 100%;
-    /* Don't set height: 100% - let it be constrained by flex and aspect-ratio */
+    max-width: 600px;
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 0; /* Allow shrinking */
+    justify-content: center;
+    min-height: 0;
   }
 
-  .controls-container {
-    /* Fixed height for controls - doesn't grow */
-    flex-shrink: 0;
+  .speed-control-container {
+    width: 100%;
+    max-width: 400px;
     display: flex;
     justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .speed-control {
+    display: flex;
     align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 16px;
     width: 100%;
+  }
+
+  .speed-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  #speed-slider {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    outline: none;
+    min-width: 80px;
+  }
+
+  #speed-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  #speed-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 3px 8px rgba(59, 130, 246, 0.5);
+  }
+
+  #speed-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  #speed-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 3px 8px rgba(59, 130, 246, 0.5);
+  }
+
+  .speed-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff;
+    min-width: 45px;
+    text-align: right;
   }
 
   .loading-message,
@@ -283,43 +440,139 @@ Business logic extracted to services, state, and utilities.
     color: rgba(255, 100, 100, 0.9);
   }
 
-  /* Responsive design */
+  /* Mobile responsive adjustments */
   @media (max-width: 768px) {
-    /* Mobile-specific styles can be added here */
+    .animation-panel {
+      padding: 16px;
+      padding-top: 56px; /* Keep space for close button */
+      padding-bottom: calc(16px + env(safe-area-inset-bottom));
+      gap: 12px;
+    }
+
+    .speed-control {
+      padding: 10px 14px;
+      gap: 10px;
+    }
+
+    .speed-label {
+      font-size: 11px;
+    }
+
+    .speed-value {
+      font-size: 12px;
+      min-width: 42px;
+    }
   }
 
-  /* Custom scrollbar for panel content */
-  .panel-content::-webkit-scrollbar {
-    width: 8px;
+  @media (max-width: 480px) {
+    .animation-panel {
+      padding: 12px;
+      padding-top: 48px; /* Keep space for close button */
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      gap: 8px;
+    }
+
+    .close-button {
+      top: 12px;
+      right: 12px;
+      width: 44px; /* Keep it large enough to tap easily */
+      height: 44px;
+      font-size: 18px;
+    }
+
+    .speed-control {
+      padding: 8px 12px;
+      gap: 8px;
+    }
+
+    .speed-label {
+      font-size: 10px;
+    }
+
+    .speed-value {
+      font-size: 11px;
+      min-width: 40px;
+    }
+
+    #speed-slider {
+      min-width: 60px;
+    }
   }
 
-  .panel-content::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
+  /* Very narrow viewports */
+  @media (max-width: 400px) {
+    .speed-control {
+      padding: 6px 10px;
+      gap: 6px;
+    }
+
+    .speed-label {
+      display: none; /* Hide label to save space */
+    }
+
+    .speed-value {
+      font-size: 10px;
+      min-width: 35px;
+    }
+
+    #speed-slider {
+      min-width: 50px;
+    }
   }
 
-  .panel-content::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 4px;
-    border: 2px solid transparent;
-    background-clip: content-box;
-  }
+  /* Landscape mobile: Adjust spacing */
+  @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
+    .animation-panel {
+      /* Height still calculated dynamically */
+      padding: 12px;
+      padding-top: 48px; /* Keep space for close button */
+      gap: 8px;
+    }
 
-  .panel-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.3);
-    background-clip: content-box;
+    .canvas-container {
+      max-width: 500px;
+    }
+
+    .speed-control-container {
+      max-width: 350px;
+    }
   }
 
   /* High contrast mode */
   @media (prefers-contrast: high) {
-    .animation-panel {
-      border-left-color: rgba(255, 255, 255, 0.5);
+    :global(.animation-panel-container) {
+      background: rgba(0, 0, 0, 0.95);
+      border-top: 2px solid white;
+    }
+
+    .speed-control {
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.3);
     }
   }
 
-  /* Reduced motion support */
+  /* Reduced motion - disable gradient animation but keep static gradient */
   @media (prefers-reduced-motion: reduce) {
     .animation-panel {
+      animation: none;
+      background-position: 0% 50%;
+    }
+
+    .close-button,
+    #speed-slider::-webkit-slider-thumb,
+    #speed-slider::-moz-range-thumb {
+      transition: none;
+    }
+
+    .close-button:hover,
+    .close-button:active,
+    #speed-slider::-webkit-slider-thumb:hover,
+    #speed-slider::-moz-range-thumb:hover {
+      transform: none;
+    }
+
+    /* Also disable BottomSheet slide transition for reduced motion */
+    :global(.bottom-sheet.animation-panel-container) {
       transition: none;
     }
   }

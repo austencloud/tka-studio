@@ -10,6 +10,7 @@ export const TYPES = {
   // === CORE SERVICES ===
   ISequenceService: Symbol.for("ISequenceService"),
   ISequenceDomainService: Symbol.for("ISequenceDomainService"),
+  ISequenceAnalysisService: Symbol.for("ISequenceAnalysisService"),
   IBeatNumberingService: Symbol.for("IBeatNumberingService"),
   ISequenceValidationService: Symbol.for("ISequenceValidationService"),
   ISequenceStatisticsService: Symbol.for("ISequenceStatisticsService"),

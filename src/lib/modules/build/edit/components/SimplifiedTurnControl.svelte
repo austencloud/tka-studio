@@ -124,15 +124,19 @@ Research-backed design for 344px portrait (Z Fold):
 <style>
   .simplified-turn-control {
     display: grid;
-    grid-template-columns: minmax(50px, 1fr) auto minmax(50px, 1fr);
+    /* Flexible grid - allows side columns to shrink below 50px if needed */
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
+    gap: 10px; /* Reduced from 12px for tighter spacing */
+    padding: 10px 12px; /* Reduced from 12px 16px */
     border-radius: 12px;
     border: 3px solid;
     background: white;
     min-height: 64px;
     container-type: inline-size;
+    /* Ensure grid respects container width */
+    width: 100%;
+    box-sizing: border-box;
   }
 
   /* Color theming */
@@ -166,16 +170,18 @@ Research-backed design for 344px portrait (Z Fold):
   .center-controls {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px; /* Reduced from 12px */
     justify-content: center;
+    /* Allow shrinking to fit container */
+    min-width: 0;
   }
 
-  /* Stepper buttons - 44x44px minimum touch target */
+  /* Stepper buttons - Reduced from 44x44px for better fit */
   .stepper-btn {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
+    width: 40px; /* Reduced from 44px */
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     border-radius: 8px;
     border: 2px solid;
     background: white;
@@ -184,7 +190,7 @@ Research-backed design for 344px portrait (Z Fold):
     justify-content: center;
     cursor: pointer;
     transition: all 0.15s ease;
-    font-size: 16px;
+    font-size: 14px; /* Reduced from 16px */
     flex-shrink: 0;
   }
 
@@ -216,25 +222,27 @@ Research-backed design for 344px portrait (Z Fold):
 
   /* Value display - matches orientation control sizing */
   .value-display {
-    font-size: 20px; /* Slightly larger than orientation text since numbers are shorter */
+    font-size: 18px; /* Reduced from 20px */
     font-weight: 700;
     color: #1a1a2e;
-    min-width: 60px;
+    min-width: 40px; /* Reduced from 60px */
     text-align: center;
+    /* Allow shrinking if needed */
+    flex-shrink: 1;
   }
 
   /* Motion type badge - right column, centered */
   .motion-badge {
-    padding: 6px 12px;
+    padding: 4px 8px; /* Reduced from 6px 12px */
     background: rgba(0, 0, 0, 0.08);
     border-radius: 6px;
-    font-size: 12px;
+    font-size: 10px; /* Reduced from 12px */
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px; /* Reduced from 0.5px */
     color: #666;
     white-space: nowrap;
-    min-width: 60px; /* Fixed width to prevent layout shifts when motion type changes */
+    min-width: 50px; /* Reduced from 60px */
     text-align: center;
     justify-self: center; /* Center within the right column */
   }

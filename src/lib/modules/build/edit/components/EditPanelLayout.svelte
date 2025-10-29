@@ -259,9 +259,7 @@ The container will change layout based on its OWN size, not viewport
       padding: 0;
     }
 
-    .pictograph-wrapper {
-      max-width: 150px; /* Very small pictograph */
-    }
+
   }
 
   /*

@@ -1,22 +1,23 @@
 <!--
-  ClearSequencePanelButton.svelte
+  ShareButton.svelte
 
-  Clear sequence button for ButtonPanel (panel-style, not floating).
-  Clears the entire sequence when clicked.
+  Opens the share sheet from the ButtonPanel. Highlights when the sheet is visible.
 -->
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
-  // Props
   const {
-    onclick
+    onclick,
+    isActive = false,
+    disabled = false,
   }: {
     onclick?: () => void;
+    isActive?: boolean;
+    disabled?: boolean;
   } = $props();
 
-  // Services
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
@@ -24,18 +25,22 @@
   });
 
   function handleClick() {
-    hapticService?.trigger("selection");
+    if (disabled) return;
+    hapticService?.trigger(isActive ? "navigation" : "selection");
     onclick?.();
   }
 </script>
 
 <button
-  class="panel-button clear-button"
+  class="panel-button share-button"
+  class:active={isActive}
   onclick={handleClick}
-  aria-label="Clear sequence"
-  title="Clear sequence"
+  aria-pressed={isActive}
+  aria-label={isActive ? "Close share panel" : "Open share panel"}
+  title="Share"
+  disabled={disabled}
 >
-  <i class="fa-solid fa-broom" aria-hidden="true"></i>
+  <i class="fas fa-share-nodes" aria-hidden="true"></i>
 </button>
 
 <style>
@@ -52,18 +57,21 @@
     font-size: 18px;
     color: #ffffff;
 
-    /* Base button styling */
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(236, 72, 153, 0.9));
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow:
+      0 2px 8px rgba(79, 70, 229, 0.35),
+      0 6px 18px rgba(236, 72, 153, 0.25);
   }
 
-  .panel-button:hover {
+  .panel-button:hover:not(:disabled) {
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow:
+      0 4px 12px rgba(79, 70, 229, 0.45),
+      0 8px 22px rgba(236, 72, 153, 0.35);
   }
 
-  .panel-button:active {
+  .panel-button:active:not(:disabled) {
     transform: scale(0.95);
     transition: all 0.1s ease;
   }
@@ -73,18 +81,19 @@
     outline-offset: 2px;
   }
 
-  .clear-button {
-    background: rgba(239, 68, 68, 0.8);
-    border-color: rgba(248, 113, 113, 0.3);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  .panel-button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    box-shadow: none;
   }
 
-  .clear-button:hover {
-    background: rgba(239, 68, 68, 0.9);
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.6);
+  .share-button.active {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(236, 72, 153, 1));
+    box-shadow:
+      0 4px 14px rgba(79, 70, 229, 0.55),
+      0 10px 26px rgba(236, 72, 153, 0.4);
   }
 
-  /* Mobile responsive adjustments */
   @media (max-width: 768px) {
     .panel-button {
       width: 44px;
@@ -109,7 +118,6 @@
     }
   }
 
-  /* 🎯 LANDSCAPE MOBILE: Compact buttons for Z Fold 5 horizontal (882x344) */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .panel-button {
       width: 36px;

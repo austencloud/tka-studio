@@ -10,13 +10,14 @@
     type PictographData
   } from "$shared";
   import { onMount } from "svelte";
+  import AnimationPanel from "../../animate/components/AnimationPanel.svelte";
   import OptionFilterPanel from "../../construct/option-picker/option-viewer/components/OptionFilterPanel.svelte";
   import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
   import { EditSlidePanel } from "../../edit/components";
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
-  import InlineAnimatorPanel from '../../workspace-panel/shared/components/InlineAnimatorPanel.svelte';
+  import SequenceActionsSheet from '../../workspace-panel/shared/components/SequenceActionsSheet.svelte';
   import type {
     IBeatOperationsService,
     IBuildTabService,
@@ -89,6 +90,12 @@
     const hasStart = sequenceState.hasStartPosition;
     const beatCount = sequenceState.currentSequence?.beats?.length ?? 0;
     return hasStart || beatCount > 0;
+  });
+
+  // Derived: Allow sharing when a sequence exists
+  const canShareSequence = $derived(() => {
+    if (!buildTabState) return false;
+    return buildTabState.hasSequence;
   });
 
   // Effect: Notify parent of tab accessibility changes
@@ -308,6 +315,14 @@
     panelState.openAnimationPanel();
   }
 
+  function handleOpenSharePanel() {
+    panelState.openSharePanel();
+  }
+
+  function handleCloseSharePanel() {
+    panelState.closeSharePanel();
+  }
+
   async function handleClearSequence() {
     if (!buildTabState) return;
 
@@ -319,6 +334,7 @@
       } else if (buildTabState.sequenceState?.clearSequence) {
         buildTabState.sequenceState.clearSequence();
       }
+      panelState.closeSharePanel();
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to clear sequence";
       error = errorMessage;
@@ -328,6 +344,10 @@
 
   function handleCloseAnimationPanel() {
     panelState.closeAnimationPanel();
+  }
+
+  function handleOpenFilterPanel() {
+    panelState.openFilterPanel();
   }
 
   function handleRemoveBeat(beatIndex: number) {
@@ -417,6 +437,40 @@
       logger.error("Failed to update turns", err);
     }
   }
+
+  // Sequence Actions Sheet state and handlers
+  let showSequenceActionsSheet = $state(false);
+
+  function handleOpenSequenceActions() {
+    showSequenceActionsSheet = true;
+  }
+
+  function handleCloseSequenceActions() {
+    showSequenceActionsSheet = false;
+  }
+
+  function handleMirror() {
+    // TODO: Implement mirror transformation
+    logger.log("Mirror action triggered");
+  }
+
+  function handleRotate() {
+    // TODO: Implement rotation transformation
+    logger.log("Rotate action triggered");
+  }
+
+  function handleColorSwap() {
+    // TODO: Implement color swap transformation
+    logger.log("Color swap action triggered");
+  }
+
+  function handleCopyJSON() {
+    if (!buildTabState?.sequenceState.currentSequence) return;
+    navigator.clipboard.writeText(
+      JSON.stringify(buildTabState.sequenceState.currentSequence, null, 2)
+    );
+    logger.log("Sequence JSON copied to clipboard");
+  }
 </script>
 
 {#if isLoading}
@@ -447,16 +501,19 @@
         canClearSequence={canClearSequence()}
         onClearSequence={handleClearSequence}
         onRemoveBeat={handleRemoveBeat}
+        showShareButton={canShareSequence()}
+        onShare={handleOpenSharePanel}
+        isShareOpen={panelState.isSharePanelOpen}
+        showSequenceActions={buildTabState.hasSequence}
+        onSequenceActionsClick={handleOpenSequenceActions}
       />
 
-      {#if panelState.isAnimationPanelOpen}
-        <InlineAnimatorPanel
-          sequence={buildTabState.sequenceState.currentSequence}
-          show={panelState.isAnimationPanelOpen}
-          onClose={handleCloseAnimationPanel}
-          toolPanelHeight={panelState.toolPanelHeight}
-        />
-      {/if}
+      <AnimationPanel
+        sequence={buildTabState.sequenceState.currentSequence}
+        show={panelState.isAnimationPanelOpen}
+        onClose={handleCloseAnimationPanel}
+        toolPanelHeight={panelState.toolPanelHeight}
+      />
     </div>
 
     <!-- Tool Panel -->
@@ -469,13 +526,14 @@
           onOptionSelected={handleOptionSelected}
           isSideBySideLayout={() => shouldUseSideBySideLayout}
           onPracticeBeatIndexChange={(index) => { panelState.setPracticeBeatIndex(index); }}
+          onOpenFilters={handleOpenFilterPanel}
         />
       {/if}
     </div>
   </div>
 
   <!-- Edit Slide Panel - Positioned outside grid layout to slide over content -->
-  {#if panelState.isEditPanelOpen && buildTabState}
+  {#if buildTabState}
     <EditSlidePanel
       isOpen={panelState.isEditPanelOpen}
       selectedBeatNumber={panelState.editPanelBeatIndex}
@@ -512,6 +570,24 @@
       }}
     />
   {/if}
+
+  <!-- Sequence Actions Sheet - Positioned outside grid layout to slide over content -->
+  {#if buildTabState}
+    <SequenceActionsSheet
+      show={showSequenceActionsSheet}
+      hasSequence={buildTabState.hasSequence}
+      toolPanelHeight={panelState.toolPanelHeight}
+      onMirror={handleMirror}
+      onRotate={handleRotate}
+      onColorSwap={handleColorSwap}
+      onSave={() => {
+        // TODO: Implement save
+        logger.log("Save action triggered");
+      }}
+      onCopyJSON={handleCopyJSON}
+      onClose={handleCloseSequenceActions}
+    />
+  {/if}
 {/if}
 
 <style>
@@ -535,20 +611,20 @@
   }
 
   .workspace-container {
-    flex: 5;
+    flex: 3;
     min-height: 0;
   }
 
   .tool-panel-container {
-    flex: 4;
+    flex: 2;
     min-width: 0;
   }
 
   .build-tab.side-by-side .workspace-container {
-    flex: 1;
+    flex: 3;
   }
 
   .build-tab.side-by-side .tool-panel-container {
-    flex: 1;
+    flex: 2;
   }
 </style>

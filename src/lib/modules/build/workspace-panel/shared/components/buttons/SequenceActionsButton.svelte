@@ -38,20 +38,19 @@
     justify-content: center;
     width: 48px;
     height: 48px;
-    border: none;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
     border-radius: 50%;
-    color: rgba(255, 255, 255, 0.9);
+    color: #ffffff;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+    box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
   }
 
   .sequence-actions-button:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 16px rgba(6, 182, 212, 0.6);
   }
 
   .sequence-actions-button:active {
@@ -60,7 +59,7 @@
   }
 
   .sequence-actions-button:focus-visible {
-    outline: 2px solid #818cf8;
+    outline: 2px solid var(--primary-light, #818cf8);
     outline-offset: 2px;
   }
 

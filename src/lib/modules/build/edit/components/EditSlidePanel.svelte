@@ -66,50 +66,13 @@ Features:
   let isMobile = $state(false);
   let windowWidth = $state(0);
 
-  // Dynamically measured navigation bar height
-  let bottomNavHeight = $state(0);
 
-  // Measure navigation bar height proactively on mount, so it's ready when panel opens
-  $effect(() => {
-    const measureNavHeight = () => {
-      const bottomNav = document.querySelector('.bottom-navigation');
-      if (bottomNav) {
-        bottomNavHeight = bottomNav.clientHeight;
-      }
-    };
-
-    // Initial measure
-    measureNavHeight();
-
-    // Measure again after a brief delay to ensure DOM is fully rendered
-    const timeout = setTimeout(measureNavHeight, 50);
-
-    // Re-measure on window resize
-    const handleResize = () => measureNavHeight();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      clearTimeout(timeout);
-      window.removeEventListener('resize', handleResize);
-    };
-  });
-
-  // Calculate panel height when using bottom-placement - matches other panels
+  // Calculate panel height dynamically to match tool panel
   const panelHeightStyle = $derived(() => {
-    if (!shouldUseBottomPlacement()) {
-      return '';
-    }
-    // Use tool panel height + navigation bar height + border + gap if available
-    if (toolPanelHeight > 0 && bottomNavHeight > 0) {
-      const totalHeight = toolPanelHeight + bottomNavHeight + 1 + 4;
-      return `height: ${totalHeight}px;`;
-    }
     if (toolPanelHeight > 0) {
-      const totalHeight = toolPanelHeight + 1 + 4;
-      return `height: ${totalHeight}px;`;
+      return `height: ${toolPanelHeight}px;`;
     }
-
-    return 'max-height: 75vh;';
+    return 'height: 70vh;';
   });
 
   // Keyboard handler
@@ -341,7 +304,7 @@ Features:
 
   :global(.bottom-sheet.edit-panel-container[data-placement="bottom"]) {
     width: 100%;
-    height: 100%;
+    /* Height controlled by inner .edit-panel div */
   }
 
   :global(.bottom-sheet.edit-panel-container[data-placement="right"]) {
@@ -353,7 +316,7 @@ Features:
   .edit-panel {
     position: relative;
     width: min(600px, 90vw);
-    height: 100%;
+    /* Height set dynamically via inline style */
 
     /* FULLY OPAQUE solid background - dark theme color */
     background: #1a1a2e;

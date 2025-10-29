@@ -50,7 +50,7 @@
     border: none;
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
     font-size: 18px;
     color: #ffffff;
 
@@ -71,7 +71,7 @@
   }
 
   .panel-button:focus-visible {
-    outline: 2px solid #818cf8;
+    outline: 2px solid var(--primary-light, #818cf8);
     outline-offset: 2px;
   }
 

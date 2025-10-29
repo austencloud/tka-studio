@@ -10,8 +10,8 @@
 -->
 <script lang="ts">
   import { createEventDispatcher, onDestroy, tick } from "svelte";
-  import { fade } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
+  import { fade } from "svelte/transition";
 
   type CloseReason = "backdrop" | "escape" | "programmatic";
 
@@ -59,6 +59,7 @@
   };
 
   let sheetElement = $state<HTMLElement | null>(null);
+  let backdropElement = $state<HTMLElement | null>(null);
   let previouslyFocused: HTMLElement | null = null;
   let lastOpenState = false;
 
@@ -67,8 +68,10 @@
       return;
     }
 
-    const state: ScrollLockState =
-      (globalThis as any)[SCROLL_LOCK_KEY] ?? { count: 0, overflow: null };
+    const state: ScrollLockState = (globalThis as any)[SCROLL_LOCK_KEY] ?? {
+      count: 0,
+      overflow: null,
+    };
 
     if (state.count === 0) {
       state.overflow = document.body.style.overflow || null;
@@ -140,7 +143,9 @@
       "[tabindex]:not([tabindex='-1'])",
     ];
 
-    return Array.from(root.querySelectorAll<HTMLElement>(selectors.join(","))).filter(
+    return Array.from(
+      root.querySelectorAll<HTMLElement>(selectors.join(","))
+    ).filter(
       (el) => !el.hasAttribute("disabled") && !el.getAttribute("aria-hidden")
     );
   }
@@ -188,6 +193,15 @@
 
     if (event.key === "Tab") {
       handleTabKey(event);
+    }
+  }
+
+  // Prevent pull-to-refresh on mobile when touching the backdrop or sheet
+  function handleTouchMove(event: TouchEvent) {
+    // Prevent pull-to-refresh on the backdrop
+    if (event.target === backdropElement) {
+      event.preventDefault();
+      return;
     }
   }
 
@@ -256,16 +270,18 @@
 {#if isOpen}
   <div
     class={`bottom-sheet-backdrop ${backdropClass}`.trim()}
+    bind:this={backdropElement}
     data-placement={placement}
     role="presentation"
     transition:fade|local={{ duration: 180 }}
     onclick={handleBackdropClick}
+    ontouchmove={handleTouchMove}
   >
     <div
       class={`bottom-sheet ${sheetClass}`.trim()}
       bind:this={sheetElement}
       data-placement={placement}
-      role={role}
+      {role}
       aria-modal="true"
       aria-labelledby={labelledBy}
       aria-label={ariaLabel}
@@ -293,6 +309,9 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    /* Prevent pull-to-refresh on mobile */
+    overscroll-behavior: contain;
+    touch-action: none;
   }
 
   .bottom-sheet-backdrop[data-placement="top"] {
@@ -320,10 +339,11 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.35);
     overflow: hidden;
-    padding-bottom: env(safe-area-inset-bottom, 16px);
     outline: none;
     display: flex;
     flex-direction: column;
+    /* Allow touch interactions within the sheet */
+    touch-action: auto;
   }
 
   .bottom-sheet[data-placement="right"],
@@ -345,8 +365,9 @@
     flex: 1;
     overflow-y: auto;
     width: 100%;
-    padding: 0 16px 16px;
     box-sizing: border-box;
+    /* Prevent overscroll from propagating to parent (pull-to-refresh) */
+    overscroll-behavior-y: contain;
   }
 
   @media (prefers-contrast: high) {
@@ -364,10 +385,6 @@
     .bottom-sheet {
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
-    }
-    .bottom-sheet__content {
-      padding-left: 12px;
-      padding-right: 12px;
     }
   }
 </style>

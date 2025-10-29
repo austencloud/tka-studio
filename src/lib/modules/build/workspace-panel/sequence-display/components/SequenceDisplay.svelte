@@ -17,8 +17,7 @@
     isMultiSelectMode = false,
     selectedBeatNumbers = new Set<number>(),
     onBeatLongPress,
-    onStartLongPress,
-    onSequenceActionsClick
+    onStartLongPress
   } = $props<{
     sequenceState: SequenceState;
     currentWord?: string;
@@ -31,7 +30,6 @@
     selectedBeatNumbers?: Set<number>;
     onBeatLongPress?: (beatNumber: number) => void;
     onStartLongPress?: () => void;
-    onSequenceActionsClick?: () => void;
   }>();
 
   // Services
@@ -131,11 +129,10 @@
 <div class="sequence-container">
   <div class="content-wrapper">
     <div class="label-and-beatframe-unit">
-      <!-- Workspace header with word label and sequence actions button -->
+      <!-- Workspace header with word label and settings button -->
       <WorkspaceHeader
         word={displayWord}
         {isMultiSelectMode}
-        onSequenceActionsClick={onSequenceActionsClick}
       />
 
       <div

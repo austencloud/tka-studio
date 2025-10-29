@@ -28,6 +28,12 @@ export interface PanelCoordinationState {
   closeAnimationPanel(): void;
   setAnimating(animating: boolean): void;
 
+  // Share Panel State
+  get isSharePanelOpen(): boolean;
+
+  openSharePanel(): void;
+  closeSharePanel(): void;
+
   // Filter Panel State
   get isFilterPanelOpen(): boolean;
 
@@ -53,6 +59,9 @@ export function createPanelCoordinationState(): PanelCoordinationState {
   // Animation panel state
   let isAnimationPanelOpen = $state(false);
   let isAnimating = $state(false);
+
+  // Share panel state
+  let isSharePanelOpen = $state(false);
 
   // Filter panel state
   let isFilterPanelOpen = $state(false);
@@ -105,6 +114,17 @@ export function createPanelCoordinationState(): PanelCoordinationState {
 
     setAnimating(animating: boolean) {
       isAnimating = animating;
+    },
+
+    // Share Panel Getters
+    get isSharePanelOpen() { return isSharePanelOpen; },
+
+    openSharePanel() {
+      isSharePanelOpen = true;
+    },
+
+    closeSharePanel() {
+      isSharePanelOpen = false;
     },
 
     // Filter Panel Getters

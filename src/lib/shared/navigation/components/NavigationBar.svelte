@@ -241,13 +241,15 @@
     class="nav-center"
     class:icon-only-mode={isNavOverflowing}
   >
-    <SubModeTabs
-      {subModeTabs}
-      {currentSubMode}
-      {navigationLayout}
-      {onSubModeChange}
-      forceIconOnly={isNavOverflowing}
-    />
+    {#if currentModule !== "build"}
+      <SubModeTabs
+        {subModeTabs}
+        {currentSubMode}
+        {navigationLayout}
+        {onSubModeChange}
+        forceIconOnly={isNavOverflowing}
+      />
+    {/if}
   </div>
 
   <!-- Right: App Actions -->

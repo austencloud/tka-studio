@@ -91,10 +91,11 @@ Business logic moved to state management and utility services.
   function formatSectionTitle(rawTitle: string): string {
     // Handle grouped section - show all three types with colors
     if (rawTitle === "Types 4-6") {
-      const type4 = LetterTypeTextPainter.formatSectionHeader("Type 4", "Dash");
-      const type5 = LetterTypeTextPainter.formatSectionHeader("Type 5", "Dual-Dash");
-      const type6 = LetterTypeTextPainter.formatSectionHeader("Type 6", "Static");
-      return `${type4} <span style="color: rgba(255, 255, 255, 0.4); margin: 0 6px;">|</span> ${type5} <span style="color: rgba(255, 255, 255, 0.4); margin: 0 6px;">|</span> ${type6}`;
+      // Format as: "Types 4,5,6: Dash, Dual-Dash, Static"
+      const dash = LetterTypeTextPainter.getColoredText("Dash");
+      const dualDash = LetterTypeTextPainter.getColoredText("Dual-Dash");
+      const staticText = LetterTypeTextPainter.getColoredText("Static");
+      return `Types 4,5,6:&nbsp;${dash}, ${dualDash}, ${staticText}`;
     }
 
     // Handle individual types
@@ -518,13 +519,13 @@ Business logic moved to state management and utility services.
       0 8px 32px rgba(0, 0, 0, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
 
-    overflow: hidden; /* Changed from visible to hidden to enable proper scrolling */
+    overflow: visible; /* Allow edge content to be fully visible */
   }
 
   .option-picker-content {
     flex: 1;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Allow edge content to be fully visible */
     min-height: 0; /* Crucial for flex child to allow proper scrolling */
   }
 

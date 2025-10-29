@@ -54,12 +54,12 @@ Renders a section with:
   // Get type info using shared infrastructure
   const typeInfo = $derived.by(() => {
     const typeDescriptions = {
-      Type1: { description: "Dual-Shift", typeName: "Type1" },
-      Type2: { description: "Shift", typeName: "Type2" },
-      Type3: { description: "Cross-Shift", typeName: "Type3" },
-      Type4: { description: "Dash", typeName: "Type4" },
-      Type5: { description: "Dual-Dash", typeName: "Type5" },
-      Type6: { description: "Static", typeName: "Type6" },
+      Type1: { description: "Dual-Shift", typeName: "Type 1" },
+      Type2: { description: "Shift", typeName: "Type 2" },
+      Type3: { description: "Cross-Shift", typeName: "Type 3" },
+      Type4: { description: "Dash", typeName: "Type 4" },
+      Type5: { description: "Dual-Dash", typeName: "Type 5" },
+      Type6: { description: "Static", typeName: "Type 6" },
     };
     const result = typeDescriptions[letterType as keyof typeof typeDescriptions] || {
       description: "Unknown",

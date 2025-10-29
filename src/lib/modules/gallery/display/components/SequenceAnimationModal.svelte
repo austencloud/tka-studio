@@ -26,26 +26,6 @@ Pattern: Instagram Stories / Pinterest / YouTube player
 
   let hapticService: IHapticFeedbackService | null = $state(null);
 
-  // Animation panel state
-  let animationVisible = $state(true);
-  let animationCollapsed = $state(false);
-
-  const animationPanelState = {
-    get isAnimationVisible() {
-      return animationVisible;
-    },
-    get isAnimationCollapsed() {
-      return animationCollapsed;
-    },
-    toggleAnimationCollapse: () => {
-      hapticService?.trigger("navigation");
-      animationCollapsed = !animationCollapsed;
-    },
-    setAnimationVisible: (v: boolean) => {
-      animationVisible = v;
-    },
-  };
-
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
@@ -114,11 +94,7 @@ Pattern: Instagram Stories / Pinterest / YouTube player
         <h2 id="animation-modal-title" class="visually-hidden">
           Animating: {sequence.word || sequence.name || "Sequence"}
         </h2>
-        <AnimationPanel
-          {sequence}
-          panelState={animationPanelState}
-          onClose={handleClose}
-        />
+        <AnimationPanel {sequence} show={isOpen} onClose={handleClose} />
       </div>
     </div>
   </div>

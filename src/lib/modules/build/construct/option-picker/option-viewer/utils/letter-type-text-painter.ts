@@ -1,6 +1,6 @@
 /**
  * Letter Type Text Painter
- * 
+ *
  * Based on the desktop app's LetterTypeTextPainter utility.
  * Colors specific words in letter type descriptions to match the desktop app styling.
  */
@@ -8,7 +8,7 @@
 export class LetterTypeTextPainter {
   static readonly COLORS = {
     "Shift": "#6F2DA8",  // Purple
-    "Dual": "#00b3ff",   // Blue  
+    "Dual": "#00b3ff",   // Blue
     "Dash": "#26e600",   // Green
     "Cross": "#26e600",  // Green
     "Static": "#eb7d00", // Orange
@@ -28,7 +28,7 @@ export class LetterTypeTextPainter {
       const fontWeight = bold ? ' font-weight: bold;' : '';
       return `<span style="color: ${color};${fontWeight}">${word}</span>`;
     });
-    
+
     if (text.includes("-")) {
       return styledWords.join("-");
     }
@@ -44,6 +44,6 @@ export class LetterTypeTextPainter {
    */
   static formatSectionHeader(typeName: string, description: string, bold: boolean = false): string {
     const coloredDescription = this.getColoredText(description, bold);
-    return `${typeName}: ${coloredDescription}`;
+    return `${typeName}:&nbsp;${coloredDescription}`;
   }
 }

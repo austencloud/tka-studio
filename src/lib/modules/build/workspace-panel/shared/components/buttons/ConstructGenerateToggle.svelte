@@ -3,12 +3,13 @@ ConstructGenerateToggle.svelte
 
 Single-icon toggle button that switches between Construct and Generate modes.
 Shows the opposite mode's icon (the action you can take).
+Uses Font Awesome icons: fa-hammer (construct) and fa-wand-magic-sparkles (generate).
 
 Design Principles:
 - Action-oriented: Shows what you'll switch TO, not what you're ON
 - Accessible: Full keyboard navigation and screen reader support
 - Adaptive: Shows text label when alone, icon-only when with other buttons
-- Consistent: Same size as other action buttons (48px circle)
+- Consistent: Same size as other action buttons (48px circle), neutral slate color
 -->
 <script lang="ts">
   import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
@@ -47,7 +48,7 @@ Design Principles:
 
   // Determine which icon and label to show (opposite of current mode)
   const targetMode = $derived(activeTab === "construct" ? "generate" : "construct");
-  const targetIcon = $derived(targetMode === "generate" ? "⚡" : "🔨");
+  const targetIcon = $derived(targetMode === "generate" ? "fa-wand-magic-sparkles" : "fa-hammer");
   const targetLabel = $derived(targetMode === "generate" ? "Generate" : "Construct");
   const ariaLabel = $derived(`Switch to ${targetLabel} mode`);
 </script>
@@ -62,7 +63,7 @@ Design Principles:
   onkeydown={handleKeyDown}
   title={ariaLabel}
 >
-  <span class="emoji">{targetIcon}</span>
+  <i class="fa-solid {targetIcon}"></i>
   {#if showLabels}
     <span class="label">{targetLabel}</span>
   {/if}
@@ -76,13 +77,12 @@ Design Principles:
     gap: 8px;
     width: 48px;
     height: 48px;
-    border: none;
+    border: 1px solid rgba(148, 163, 184, 0.3);
     border-radius: 50%;
     background: rgba(100, 116, 139, 0.8);
-    border: 1px solid rgba(148, 163, 184, 0.3);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
     color: #ffffff;
   }
 
@@ -106,14 +106,14 @@ Design Principles:
   }
 
   .toggle-button:focus-visible {
-    outline: 2px solid #818cf8;
+    outline: 2px solid var(--primary-light, #818cf8);
     outline-offset: 2px;
   }
 
-  /* Emoji styling */
-  .emoji {
-    font-size: 20px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Icon styling */
+  .toggle-button i {
+    font-size: 18px;
+    transition: all var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
   }
 
   /* Label text styling */
@@ -131,8 +131,8 @@ Design Principles:
       height: 44px;
     }
 
-    .emoji {
-      font-size: 18px;
+    .toggle-button i {
+      font-size: 16px;
     }
 
     .label {
@@ -146,8 +146,8 @@ Design Principles:
       height: 40px;
     }
 
-    .emoji {
-      font-size: 16px;
+    .toggle-button i {
+      font-size: 14px;
     }
 
     .label {
@@ -161,8 +161,8 @@ Design Principles:
       height: 36px;
     }
 
-    .emoji {
-      font-size: 14px;
+    .toggle-button i {
+      font-size: 12px;
     }
 
     .label {
@@ -177,8 +177,8 @@ Design Principles:
       height: 36px;
     }
 
-    .emoji {
-      font-size: 16px;
+    .toggle-button i {
+      font-size: 14px;
     }
   }
 </style>

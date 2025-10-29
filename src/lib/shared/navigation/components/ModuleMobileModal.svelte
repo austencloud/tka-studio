@@ -270,7 +270,7 @@
     font-size: 13px;
     color: rgba(255, 255, 255, 0.6);
   }
-
+Hey
   .current-indicator {
     color: var(--accent, #4f46e5);
     font-size: 16px;

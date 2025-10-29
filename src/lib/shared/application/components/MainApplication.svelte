@@ -20,7 +20,7 @@
   import type { Container } from "inversify";
   import { getContext, onMount } from "svelte";
   import MainInterface from "../../MainInterface.svelte";
-  import SettingsDialog from "../../settings/components/SettingsDialog.svelte";
+  import SettingsSheet from "../../settings/components/SettingsSheet.svelte";
   import type { IApplicationInitializer } from "../services";
   import {
     getInitializationError,
@@ -271,10 +271,8 @@
     <!-- Main Interface -->
     <MainInterface />
 
-    <!-- Settings dialog -->
-    {#if getShowSettings()}
-      <SettingsDialog />
-    {/if}
+    <!-- Settings slide panel -->
+    <SettingsSheet isOpen={getShowSettings()} />
   {/if}
 </div>
 

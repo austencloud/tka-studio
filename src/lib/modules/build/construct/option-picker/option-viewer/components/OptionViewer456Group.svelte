@@ -401,6 +401,8 @@ Matches the desktop version exactly:
     /* Fixed size policy like desktop to prevent stretching */
     flex-shrink: 0;
     flex-grow: 0;
+    overflow: visible; /* Ensure content isn't clipped */
+    box-sizing: border-box;
   }
 
   .layout-row {
@@ -408,8 +410,8 @@ Matches the desktop version exactly:
     align-items: flex-start;
     justify-content: center;
     width: 100%;
-    /* Prevent content from overflowing */
-    overflow: hidden;
+    /* Allow content to be fully visible */
+    overflow: visible;
     /* FLIP-inspired smooth layout transitions */
     transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
@@ -436,7 +438,7 @@ Matches the desktop version exactly:
     /* Ensure sections don't exceed their allocated width */
     min-width: 0;
     max-width: 100%; /* Prevent overflow */
-    overflow: hidden; /* Clip content that exceeds section width */
+    overflow: visible; /* Allow content to be fully visible */
     box-sizing: border-box; /* Include padding in width calculations */
   }
 

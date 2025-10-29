@@ -20,7 +20,6 @@
     onMouseLeave?: () => void;
   }>();
 
-  // Services
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
@@ -29,11 +28,8 @@
     );
   });
 
-  // Handle module selection
   function selectModule(module: ModuleDefinition) {
-    // Trigger navigation haptic feedback for module selection
     hapticService?.trigger("navigation");
-
     onModuleSelect(module.id);
   }
 </script>

@@ -28,14 +28,6 @@ export const BUILD_MODES: ModeOption[] = [
     color: "#f59e0b",
     gradient: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #f97316 100%)",
   },
-  {
-    id: "share",
-    label: "Share",
-    icon: '<i class="fas fa-share-nodes"></i>',
-    description: "Share and download sequences",
-    color: "#8b5cf6",
-    gradient: "linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)",
-  },
 ];
 
 // Learn modes configuration
@@ -147,6 +139,8 @@ export function createNavigationState() {
   // New module-based state
   let currentModule = $state<ModuleId>("build");
   let currentSubMode = $state<string>("construct");
+  const MODULE_LAST_SUB_MODES_KEY = "tka-module-last-sub-modes";
+  let lastSubModeByModule = $state<Partial<Record<ModuleId, string>>>({});
 
   // Load persisted state
   if (typeof localStorage !== "undefined") {
@@ -167,10 +161,54 @@ export function createNavigationState() {
       currentModule = savedModule as ModuleId;
     }
 
+    const savedLastSubModes = localStorage.getItem(MODULE_LAST_SUB_MODES_KEY);
+    if (savedLastSubModes) {
+      try {
+        const parsed = JSON.parse(savedLastSubModes) as Record<string, string>;
+        const filteredEntries = Object.entries(parsed).filter(
+          ([moduleId, subModeId]) => {
+            const moduleDefinition = MODULE_DEFINITIONS.find(
+              (m) => m.id === moduleId
+            );
+            return (
+              moduleDefinition?.subModes?.some((mode) => mode.id === subModeId) ??
+              false
+            );
+          }
+        );
+
+        if (filteredEntries.length > 0) {
+          lastSubModeByModule = filteredEntries.reduce<
+            Partial<Record<ModuleId, string>>
+          >((acc, [moduleId, subModeId]) => {
+            acc[moduleId as ModuleId] = subModeId;
+            return acc;
+          }, {});
+        }
+      } catch (error) {
+        console.warn(
+          "NavigationState: failed to parse saved module sub-mode map:",
+          error
+        );
+      }
+    }
+
     const savedSubMode = localStorage.getItem("tka-current-sub-mode");
     if (savedSubMode) {
       // Will validate and set in the getter functions
       currentSubMode = savedSubMode;
+    }
+
+    const rememberedSubMode = lastSubModeByModule[currentModule];
+    if (rememberedSubMode) {
+      const moduleDefinition = MODULE_DEFINITIONS.find(
+        (m) => m.id === currentModule
+      );
+      if (
+        moduleDefinition?.subModes?.some((mode) => mode.id === rememberedSubMode)
+      ) {
+        currentSubMode = rememberedSubMode;
+      }
     }
   }
 
@@ -195,6 +233,24 @@ export function createNavigationState() {
     }
   }
 
+  function persistLastSubModes() {
+    if (typeof localStorage === "undefined") {
+      return;
+    }
+
+    try {
+      localStorage.setItem(
+        MODULE_LAST_SUB_MODES_KEY,
+        JSON.stringify(lastSubModeByModule)
+      );
+    } catch (error) {
+      console.warn(
+        "NavigationState: failed to persist module sub-mode map:",
+        error
+      );
+    }
+  }
+
   // New module-based functions
   function setCurrentModule(moduleId: ModuleId) {
     if (MODULE_DEFINITIONS.some((m) => m.id === moduleId)) {
@@ -204,15 +260,38 @@ export function createNavigationState() {
       const moduleDefinition = MODULE_DEFINITIONS.find(
         (m) => m.id === moduleId
       );
+      let nextSubMode = currentSubMode;
       if (moduleDefinition && moduleDefinition.subModes.length > 0) {
-        currentSubMode = moduleDefinition.subModes[0].id;
+        const remembered = lastSubModeByModule[moduleId];
+        const fallbackSubMode = moduleDefinition.subModes[0].id;
+        const resolvedSubMode =
+          remembered &&
+          moduleDefinition.subModes.some((mode) => mode.id === remembered)
+            ? remembered
+            : fallbackSubMode;
+
+        nextSubMode = resolvedSubMode;
+        lastSubModeByModule = {
+          ...lastSubModeByModule,
+          [moduleId]: resolvedSubMode,
+        };
+      } else {
+        const updatedMap = { ...lastSubModeByModule };
+        delete updatedMap[moduleId];
+        lastSubModeByModule = updatedMap;
       }
+
+      currentSubMode = nextSubMode;
 
       // Persist both module and sub-mode
       if (typeof localStorage !== "undefined") {
         localStorage.setItem("tka-current-module", moduleId);
-        localStorage.setItem("tka-current-sub-mode", currentSubMode);
+        if (nextSubMode) {
+          localStorage.setItem("tka-current-sub-mode", nextSubMode);
+        }
       }
+
+      persistLastSubModes();
 
       // Sync with legacy state - use getters to avoid state reference warnings
       const subMode = getCurrentSubMode();
@@ -237,6 +316,12 @@ export function createNavigationState() {
       if (typeof localStorage !== "undefined") {
         localStorage.setItem("tka-current-sub-mode", subModeId);
       }
+
+      lastSubModeByModule = {
+        ...lastSubModeByModule,
+        [currentModule]: subModeId,
+      };
+      persistLastSubModes();
 
       // Sync with legacy state - use getters to avoid state reference warnings
       const module = getCurrentModule();

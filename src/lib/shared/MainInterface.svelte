@@ -381,11 +381,8 @@
   <UnifiedNavigationMenu
     currentModule={currentModule()}
     currentModuleName={currentModuleName()}
-    currentSubMode={currentSubMode()}
-    subModeTabs={subModeTabs()}
     modules={MODULE_DEFINITIONS}
     onModuleChange={handleModuleChange}
-    onSubModeChange={handleSubModeChange}
   />
 
   <!-- Main Content Area -->

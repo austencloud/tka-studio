@@ -9,8 +9,6 @@
   import SelectionToolbar from "../components/SelectionToolbar.svelte";
   import Toast from "../components/Toast.svelte";
   import SequenceDisplay from "../sequence-display/components/SequenceDisplay.svelte";
-  import InlineAnimatorPanel from "../shared/components/InlineAnimatorPanel.svelte";
-  import SequenceActionsSheet from "../shared/components/SequenceActionsSheet.svelte";
 
   // Props
   let {
@@ -71,9 +69,6 @@
 
   // Toast message for validation errors
   let toastMessage = $state<string | null>(null);
-
-  // Sequence Actions Sheet state
-  let showSequenceActionsSheet = $state(false);
 
   // Inline Animator Panel state
   let showInlineAnimator = $state(false);
@@ -151,72 +146,6 @@
       onBatchEdit();
     }
   }
-
-  // Sequence Actions Sheet handlers
-  function handleOpenSequenceActions() {
-    // Mutual exclusion: close other panels before opening this one
-    showInlineAnimator = false;
-    showSequenceActionsSheet = true;
-  }
-
-  function handleCloseSequenceActions() {
-    showSequenceActionsSheet = false;
-  }
-
-  function handleAnimate() {
-    // TODO: Implement animation - for now, navigate to animate tab would be handled by BuildTab
-    // This could trigger a modal/fullscreen animator instead
-    console.log("Animate action triggered");
-  }
-
-  function handleMirror() {
-    // TODO: Implement mirror transformation
-    console.log("Mirror action triggered");
-  }
-
-  function handleRotate() {
-    // TODO: Implement rotation transformation
-    console.log("Rotate action triggered");
-  }
-
-  function handleColorSwap() {
-    // TODO: Implement color swap transformation
-    console.log("Color swap action triggered");
-  }
-
-  function handleEdit() {
-    // Edit is now handled by BuildTab
-    console.log("Edit action triggered");
-  }
-
-  function handleSave() {
-    // Save is now handled by BuildTab
-    console.log("Save action triggered");
-  }
-
-  function handleCopyJSON() {
-    // Copy sequence JSON to clipboard
-    const sequence = sequenceState?.currentSequence;
-    if (sequence) {
-      navigator.clipboard.writeText(JSON.stringify(sequence, null, 2));
-      toastMessage = "Sequence JSON copied to clipboard";
-      setTimeout(() => toastMessage = null, 2000);
-    }
-  }
-
-  // Inline Animator Panel handlers
-  function handlePlayAnimation() {
-    // Toggle animator - if open, close it (Stop); if closed, open it (Play)
-    if (!showInlineAnimator) {
-      // Mutual exclusion: close other panels before opening animator
-      showSequenceActionsSheet = false;
-    }
-    showInlineAnimator = !showInlineAnimator;
-  }
-
-  function handleCloseAnimator() {
-    showInlineAnimator = false;
-  }
 </script>
 
 {#if sequenceState}
@@ -234,7 +163,6 @@
       selectedBeatNumbers={sequenceState?.selectedBeatNumbers ?? new Set<number>()}
       onBeatLongPress={handleBeatLongPress}
       onStartLongPress={() => handleBeatLongPress(0)}
-      onSequenceActionsClick={handleOpenSequenceActions}
     />
   </div>
 
@@ -260,29 +188,6 @@
   {#if isMultiSelectMode}
     <MultiSelectOverlay onCancel={handleExitMultiSelect} />
   {/if}
-
-  <!-- Sequence Actions Sheet -->
-  <SequenceActionsSheet
-    show={showSequenceActionsSheet}
-    hasSequence={!!sequenceState?.currentSequence}
-    {toolPanelHeight}
-    onAnimate={handleAnimate}
-    onMirror={handleMirror}
-    onRotate={handleRotate}
-    onColorSwap={handleColorSwap}
-    onEdit={handleEdit}
-    onSave={handleSave}
-    onCopyJSON={handleCopyJSON}
-    onClose={handleCloseSequenceActions}
-  />
-
-  <!-- Inline Animator Panel -->
-  <InlineAnimatorPanel
-    sequence={sequenceState?.currentSequence ?? null}
-    show={showInlineAnimator}
-    onClose={handleCloseAnimator}
-    {toolPanelHeight}
-  />
 
 </div>
 {:else}

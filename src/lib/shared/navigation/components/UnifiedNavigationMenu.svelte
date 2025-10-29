@@ -2,10 +2,10 @@
   Unified Navigation Menu - Slide-Up Panel Approach
 
   Displays a single floating menu button that opens a modern slide-up panel
-  containing ALL navigation options:
-  - Current module's tabs
-  - All available modules
-  - Settings
+  focused on module switching and context:
+  - Highlights the active module + mode
+  - Lists all available modules
+  - Provides quick access to Settings
 
   Uses 2025 UX trend: slide-up panel (bottom sheet) instead of center modal.
 -->
@@ -14,29 +14,23 @@
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { toggleSettingsDialog } from "../../application/state/app-state.svelte";
-  import type { ModeOption, ModuleDefinition, ModuleId } from "../domain/types";
+  import type { ModuleDefinition, ModuleId } from "../domain/types";
 
   let {
     // Current state
     currentModule,
     currentModuleName,
-    currentSubMode,
 
     // Available options
     modules = [],
-    subModeTabs = [],
 
     // Callbacks
     onModuleChange,
-    onSubModeChange,
   } = $props<{
     currentModule: ModuleId;
     currentModuleName: string;
-    currentSubMode: string;
     modules: ModuleDefinition[];
-    subModeTabs: ModeOption[];
     onModuleChange?: (moduleId: ModuleId) => void;
-    onSubModeChange?: (subModeId: string) => void;
   }>();
 
   let hapticService: IHapticFeedbackService;
@@ -76,6 +70,9 @@
   // Filter to main modules only
   const mainModules = $derived(
     modules.filter((m: ModuleDefinition) => m.isMain)
+  );
+  const devModules = $derived(
+    modules.filter((m: ModuleDefinition) => !m.isMain)
   );
 
   // Slide-up transition for the panel
@@ -145,12 +142,6 @@
   }
 
   function handleBackdropClick() {
-    closeMenu();
-  }
-
-  function handleSubModeSelect(subModeId: string) {
-    hapticService?.trigger("navigation");
-    onSubModeChange?.(subModeId);
     closeMenu();
   }
 
@@ -225,13 +216,6 @@
         <h2>Navigation</h2>
         <div class="current-location">
           <span class="module-name">{currentModuleName}</span>
-          {#if currentSubMode}
-            <span class="separator">›</span>
-            <span class="tab-name">
-              {subModeTabs.find((t: ModeOption) => t.id === currentSubMode)
-                ?.label || currentSubMode}
-            </span>
-          {/if}
         </div>
       </div>
       <button class="close-button" onclick={closeMenu} aria-label="Close menu">
@@ -240,37 +224,6 @@
     </div>
 
     <div class="menu-scroll">
-      <!-- Current Module Tabs Section -->
-      {#if subModeTabs.length > 0}
-        <section class="menu-section">
-          <h3 class="section-title">{currentModuleName} Tabs</h3>
-          <div class="menu-items">
-            {#each subModeTabs as tab}
-              <button
-                class="menu-item"
-                class:active={currentSubMode === tab.id}
-                class:disabled={tab.disabled}
-                onclick={() => !tab.disabled && handleSubModeSelect(tab.id)}
-                disabled={tab.disabled}
-              >
-                <span class="item-icon">{@html tab.icon}</span>
-                <div class="item-info">
-                  <span class="item-label">{tab.label}</span>
-                  {#if tab.description}
-                    <span class="item-description">{tab.description}</span>
-                  {/if}
-                </div>
-                {#if currentSubMode === tab.id}
-                  <span class="active-indicator"
-                    ><i class="fas fa-check"></i></span
-                  >
-                {/if}
-              </button>
-            {/each}
-          </div>
-        </section>
-      {/if}
-
       <!-- All Modules Section -->
       <section class="menu-section">
         <h3 class="section-title">Switch Module</h3>
@@ -297,6 +250,34 @@
           {/each}
         </div>
       </section>
+
+      {#if devModules.length > 0}
+        <section class="menu-section">
+          <h3 class="section-title">Developer Modules</h3>
+          <div class="menu-items">
+            {#each devModules as module}
+              <button
+                class="menu-item"
+                class:active={currentModule === module.id}
+                onclick={() => handleModuleSelect(module.id)}
+              >
+                <span class="item-icon">{@html module.icon}</span>
+                <div class="item-info">
+                  <span class="item-label">{module.label}</span>
+                  {#if module.description}
+                    <span class="item-description">{module.description}</span>
+                  {/if}
+                </div>
+                {#if currentModule === module.id}
+                  <span class="active-indicator"
+                    ><i class="fas fa-check"></i></span
+                  >
+                {/if}
+              </button>
+            {/each}
+          </div>
+        </section>
+      {/if}
 
       <!-- Settings Section -->
       <section class="menu-section">
@@ -578,6 +559,7 @@
     color: rgba(255, 255, 255, 0.6);
     line-height: 1.3;
   }
+
 
   .active-indicator {
     color: rgba(99, 102, 241, 1);

@@ -20,6 +20,8 @@
     FullscreenButton,
     PlayButton,
     RemoveBeatButton,
+    SequenceActionsButton,
+    ShareButton,
     UndoButton
   } from './buttons/index.js';
 
@@ -41,6 +43,15 @@
     // Clear Sequence button
     canClearSequence = false,
     onClearSequence,
+
+    // Sequence Actions button
+    showSequenceActions = false,
+    onSequenceActionsClick,
+
+    // Share button
+    showShareButton = false,
+    onShare,
+    isShareOpen = false,
 
     // Play button
     showPlayButton = false,
@@ -74,6 +85,15 @@
     // Clear Sequence button props
     canClearSequence?: boolean;
     onClearSequence?: () => void;
+
+    // Sequence Actions button props
+    showSequenceActions?: boolean;
+    onSequenceActionsClick?: () => void;
+
+    // Share button props
+    showShareButton?: boolean;
+    onShare?: () => void;
+    isShareOpen?: boolean;
 
     // Play button props
     showPlayButton?: boolean;
@@ -116,6 +136,12 @@
     // Count clear sequence button
     if (canClearSequence) count++;
 
+    // Count sequence actions button
+    if (showSequenceActions) count++;
+
+    // Count share button
+    if (showShareButton) count++;
+
     // Count play button
     if (showPlayButton) count++;
 
@@ -157,6 +183,16 @@
       <!-- Clear Sequence Button -->
       {#if canClearSequence}
         <ClearSequencePanelButton onclick={onClearSequence} />
+      {/if}
+
+      <!-- Sequence Actions Button -->
+      {#if showSequenceActions}
+        <SequenceActionsButton onclick={onSequenceActionsClick} />
+      {/if}
+
+      <!-- Share Button -->
+      {#if showShareButton && onShare}
+        <ShareButton onclick={onShare} isActive={isShareOpen} />
       {/if}
 
       <!-- Play Button -->
