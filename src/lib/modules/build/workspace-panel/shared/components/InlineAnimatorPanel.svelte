@@ -8,14 +8,14 @@
   - Loop is always enabled
 -->
 <script lang="ts">
-  import type { ISequenceService } from "$build/shared";
-  import { BottomSheet, resolve, TYPES, type SequenceData } from "$shared";
-  import { onMount } from "svelte";
+  import AnimatorCanvas from "$build/animate/components/AnimatorCanvas.svelte";
   import type { IAnimationPlaybackController } from "$build/animate/services/contracts";
   import { createAnimationPanelState } from "$build/animate/state/animation-panel-state.svelte";
   import { loadSequenceForAnimation } from "$build/animate/utils/sequence-loader";
-  import AnimatorCanvas from "$build/animate/components/AnimatorCanvas.svelte";
+  import type { ISequenceService } from "$build/shared";
+  import { BottomSheet, resolve, TYPES, type SequenceData } from "$shared";
   import type { IHapticFeedbackService } from "$shared/application/services/contracts";
+  import { onMount } from "svelte";
 
   // Props
   let {
