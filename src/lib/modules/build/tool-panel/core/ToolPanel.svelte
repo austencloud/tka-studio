@@ -56,9 +56,6 @@
     return false; // Toggle is always in ButtonPanel at right edge
   });
 
-  // Component refs
-  let constructTabContentRef: { handleStartPositionPickerBack: () => boolean } | null = $state(null);
-
   // Services
   let hapticService: IHapticFeedbackService;
   let deviceDetector: IDeviceDetector | null = null;
@@ -91,10 +88,6 @@
     nextBeat: () => {},
     previousBeat: () => {},
   });
-
-  // Navigation state
-  let isInAdvancedStartPositionPicker = $state(false);
-  let hasMovedFromStartPositionPicker = $state(false);
 
   // Transition state for undo animations
   let isUndoingOption = $state(false);
@@ -172,21 +165,6 @@
   // EFFECTS
   // ============================================================================
 
-  // Track transition from start position picker to option picker
-  $effect(() => {
-    if (
-      activeToolPanel === "construct" &&
-      shouldShowStartPositionPicker === false &&
-      !hasMovedFromStartPositionPicker
-    ) {
-      hasMovedFromStartPositionPicker = true;
-    }
-
-    if (shouldShowStartPositionPicker === true) {
-      hasMovedFromStartPositionPicker = false;
-    }
-  });
-
   // ============================================================================
   // PUBLIC API (Exposed to parent)
   // ============================================================================
@@ -201,12 +179,10 @@
 
   function handleNavigateToAdvanced() {
     hapticService?.trigger("navigation");
-    isInAdvancedStartPositionPicker = true;
   }
 
   function handleNavigateToDefault() {
     hapticService?.trigger("navigation");
-    isInAdvancedStartPositionPicker = false;
   }
 
   // ============================================================================
@@ -260,7 +236,6 @@
               </div>
             {:else}
               <ConstructTabContent
-                bind:this={constructTabContentRef}
                 shouldShowStartPositionPicker={shouldShowStartPositionPicker === true}
                 startPositionState={constructTabState.startPositionStateService}
                 currentSequence={currentSequenceData}

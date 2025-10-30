@@ -533,60 +533,60 @@
   .section-heading {
     display: flex;
     align-items: center;
-    gap: clamp(8px, 2cqw, 10px);
-    margin: 0 0 clamp(10px, 2cqh, 14px) 0;
-    font-size: clamp(13px, 3cqw, 15px);
+    gap: 14px;
+    margin: 0 0 14px 0;
+    font-size: 14px;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
   }
 
   .compact .section-heading {
-    font-size: clamp(12px, 2.5cqw, 14px);
-    margin-bottom: clamp(8px, 1.5cqh, 10px);
+    font-size: 14px;
+    margin-bottom: 14px;
   }
 
   .section-heading i {
     color: rgba(139, 92, 246, 1);
-    font-size: clamp(14px, 3cqw, 16px);
+    font-size: 14px;
   }
 
   /* Steps Section */
   .steps-section {
-    margin-bottom: clamp(12px, 3cqh, 20px);
+    margin-bottom: 14px;
   }
 
   .compact .steps-section {
-    margin-bottom: clamp(8px, 2cqh, 12px);
+    margin-bottom: 14px;
   }
 
   /* Steps Grid - Uses container queries for responsive columns */
   .steps-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: clamp(8px, 2cqh, 12px);
+    gap: 14px;
   }
 
   @container install-guide (min-width: 600px) {
     .steps-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: clamp(10px, 2cqh, 14px);
+      gap: 14px;
     }
   }
 
   .compact .steps-grid {
-    gap: clamp(6px, 1.5cqh, 8px);
+    gap: 14px;
   }
 
   .step-card {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: clamp(8px, 2cqw, 12px);
-    padding: clamp(10px, 2.5cqh, 14px);
+    border-radius: 14px;
+    padding: 14px;
     transition: all 0.2s ease;
   }
 
   .compact .step-card {
-    padding: clamp(8px, 2cqh, 10px);
+    padding: 14px;
   }
 
   .step-card:hover {
@@ -597,8 +597,8 @@
   .step-header {
     display: flex;
     align-items: flex-start;
-    gap: clamp(8px, 2cqw, 12px);
-    margin-bottom: clamp(6px, 1.5cqh, 10px);
+    gap: 14px;
+    margin-bottom: 14px;
   }
 
   .compact .step-header {
@@ -609,10 +609,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: clamp(26px, 6cqw, 30px);
-    height: clamp(26px, 6cqw, 30px);
+    width: 14px;
+    height: 14px;
     flex-shrink: 0;
-    border-radius: clamp(6px, 1.5cqw, 8px);
+    border-radius: 14px;
     background: linear-gradient(
       135deg,
       rgba(99, 102, 241, 0.3) 0%,
@@ -621,7 +621,7 @@
     border: 1px solid rgba(99, 102, 241, 0.4);
     color: rgba(139, 92, 246, 1);
     font-weight: 700;
-    font-size: clamp(13px, 3cqw, 15px);
+    font-size: 14px;
   }
 
   .step-text {
@@ -629,11 +629,11 @@
     margin: 0;
     color: rgba(255, 255, 255, 0.88);
     line-height: 1.5;
-    font-size: clamp(12px, 3cqw, 14px);
+    font-size: 14px;
   }
 
   .compact .step-text {
-    font-size: clamp(11px, 2.5cqw, 13px);
+    font-size: 14px;
     line-height: 1.4;
   }
 
@@ -645,11 +645,11 @@
   /* Step Screenshot Thumbnails - Fluid sizing */
   .step-image-container {
     position: relative;
-    margin-top: clamp(6px, 1.5cqh, 8px);
-    border-radius: clamp(6px, 1.5cqw, 8px);
+    margin-top: 14px;
+    border-radius: 14px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.12);
-    max-width: clamp(150px, 40cqw, 200px);
+    max-width: 14px;
   }
 
   .step-image {
@@ -663,70 +663,70 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(6px, 1.5cqh, 8px);
-    padding: clamp(12px, 3cqh, 20px);
+    gap: 14px;
+    padding: 14px;
     background: rgba(255, 255, 255, 0.03);
     color: rgba(255, 255, 255, 0.3);
     min-height: 80px;
   }
 
   .image-placeholder i {
-    font-size: clamp(18px, 4cqw, 24px);
+    font-size: 14px;
     opacity: 0.5;
   }
 
   .placeholder-text {
-    font-size: clamp(10px, 2cqw, 11px);
+    font-size: 14px;
     opacity: 0.6;
     font-style: italic;
   }
 
   /* Benefits Section - Fluid sizing */
   .benefits-section {
-    padding: clamp(10px, 2.5cqh, 16px);
+    padding: 14px;
     background: rgba(99, 102, 241, 0.1);
     border: 1px solid rgba(99, 102, 241, 0.2);
-    border-radius: clamp(8px, 2cqw, 12px);
+    border-radius: 14px;
   }
 
   .compact .benefits-section {
-    padding: clamp(8px, 2cqh, 12px);
+    padding: 14px;
   }
 
   .benefits-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: clamp(6px, 1.5cqh, 10px);
+    gap: 14px;
   }
 
   @container install-guide (min-width: 600px) {
     .benefits-grid {
       grid-template-columns: repeat(2, 1fr);
-      gap: clamp(8px, 2cqh, 12px);
+      gap: 14px;
     }
   }
 
   .compact .benefits-grid {
-    gap: clamp(5px, 1cqh, 8px);
+    gap: 14px;
   }
 
   .benefit-item {
     display: flex;
     align-items: center;
-    gap: clamp(8px, 2cqw, 12px);
+    gap: 14px;
     color: rgba(255, 255, 255, 0.88);
-    font-size: clamp(11px, 2.5cqw, 13px);
+    font-size: 14px;
     line-height: 1.5;
   }
 
   .compact .benefit-item {
-    font-size: clamp(10px, 2cqw, 12px);
+    font-size: 14px;
     line-height: 1.4;
   }
 
   .benefit-item i {
     color: rgba(139, 92, 246, 1);
-    font-size: clamp(13px, 3cqw, 15px);
+    font-size: 14px;
     flex-shrink: 0;
   }
 
@@ -735,20 +735,20 @@
     flex-shrink: 0;
     display: flex;
     justify-content: center;
-    padding: clamp(10px, 2.5cqh, 16px) clamp(14px, 4cqw, 20px);
+    padding: 14px 14px;
     background: rgba(26, 26, 46, 0.98);
     border-top: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   .compact .guide-footer {
-    padding: clamp(8px, 2cqh, 12px) clamp(12px, 3cqw, 16px);
+    padding: 14px 14px;
   }
 
   .got-it-btn {
     display: flex;
     align-items: center;
-    gap: clamp(6px, 1.5cqw, 8px);
-    padding: clamp(10px, 2.5cqh, 12px) clamp(20px, 6cqw, 32px);
+    gap: 14px;
+    padding: 14px 14px;
     background: linear-gradient(
       135deg,
       rgba(99, 102, 241, 0.9) 0%,
@@ -756,8 +756,8 @@
     );
     color: white;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: clamp(8px, 2cqw, 10px);
-    font-size: clamp(13px, 3cqw, 15px);
+    border-radius: 14px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -765,8 +765,8 @@
   }
 
   .compact .got-it-btn {
-    padding: clamp(8px, 2cqh, 10px) clamp(16px, 5cqw, 24px);
-    font-size: clamp(12px, 2.5cqw, 14px);
+    padding: 14px 14px;
+    font-size: 14px;
   }
 
   .got-it-btn:hover {
