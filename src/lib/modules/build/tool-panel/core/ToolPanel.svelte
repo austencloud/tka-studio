@@ -26,7 +26,6 @@
   import { fade } from "svelte/transition";
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
   import ConstructTabContent from "../../shared/components/ConstructTabContent.svelte";
-  import { ToolPanelNavigationController } from "../../shared/navigation/ToolPanelNavigationController";
   import type { IAnimationStateRef, IToolPanelProps } from "../../shared/types/build-tab-types";
   import ConstructGenerateToggle from "../../workspace-panel/shared/components/buttons/ConstructGenerateToggle.svelte";
 
@@ -62,7 +61,6 @@
 
   // Services
   let hapticService: IHapticFeedbackService;
-  let navigationController: ToolPanelNavigationController | null = null;
   let deviceDetector: IDeviceDetector | null = null;
   let navigationLayout = $state<"top" | "bottom" | "right">("top");
 
@@ -98,8 +96,7 @@
   let isInAdvancedStartPositionPicker = $state(false);
   let hasMovedFromStartPositionPicker = $state(false);
 
-  // Transition state
-  let isClearingSequence = $state(false);
+  // Transition state for undo animations
   let isUndoingOption = $state(false);
 
   // ============================================================================
@@ -108,7 +105,6 @@
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
-    navigationController = new ToolPanelNavigationController(buildTabState, constructTabState);
     deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
 
     // Initialize navigation layout
@@ -172,16 +168,6 @@
     shouldShowStartPositionPicker === null || constructTabState.isPickerStateLoading
   );
 
-  let canGoBack = $derived.by(() => {
-    if (!navigationController) return false;
-    return navigationController.canGoBack({
-      activePanel: activeToolPanel,
-      shouldShowStartPositionPicker,
-      hasMovedFromStartPositionPicker,
-      isInAdvancedStartPositionPicker,
-    });
-  });
-
   // ============================================================================
   // EFFECTS
   // ============================================================================
@@ -205,33 +191,8 @@
   // PUBLIC API (Exposed to parent)
   // ============================================================================
 
-  export function getCanGoBack() {
-    return canGoBack;
-  }
-
   export function getAnimationStateRef() {
     return animationStateRef;
-  }
-
-  export function handleBack() {
-    if (!navigationController) return;
-
-    navigationController.handleBack({
-      activePanel: activeToolPanel,
-      shouldShowStartPositionPicker,
-      hasMovedFromStartPositionPicker,
-      isInAdvancedStartPositionPicker,
-      constructTabContentRef: constructTabContentRef ?? undefined,
-      onClearingSequence: (isClearing) => {
-        isClearingSequence = isClearing;
-        if (!isClearing) {
-          hasMovedFromStartPositionPicker = false;
-        }
-      },
-      onUndoingOption: (isUndoing) => {
-        isUndoingOption = isUndoing;
-      },
-    });
   }
 
   // ============================================================================
@@ -304,7 +265,6 @@
                 startPositionState={constructTabState.startPositionStateService}
                 currentSequence={currentSequenceData}
                 {onOptionSelected}
-                {isClearingSequence}
                 {isUndoingOption}
                 onStartPositionNavigateToAdvanced={handleNavigateToAdvanced}
                 onStartPositionNavigateToDefault={handleNavigateToDefault}

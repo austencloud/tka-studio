@@ -174,9 +174,7 @@ export interface IToolPanelProps {
  * Public methods exposed by ToolPanel component via ref binding.
  */
 export interface IToolPanelMethods {
-  getCanGoBack: () => boolean;
   getAnimationStateRef: () => IAnimationStateRef;
-  handleBack: () => void;
 }
 
 /**

@@ -12,7 +12,7 @@
 -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import { fade, slide } from "svelte/transition";
+  import { fade, fly } from "svelte/transition";
 
   // Props
   let {
@@ -31,60 +31,55 @@
   // Container measurements for intelligent sizing
   let sheetElement = $state<HTMLElement | null>(null);
   let contentElement = $state<HTMLElement | null>(null);
-  let availableHeight = $state(0);
-  let contentHeight = $state(0);
   let needsCompactMode = $state(false);
 
   onMount(() => {
     detectPlatformAndBrowser();
-    measureAndAdapt();
 
-    // Set up resize observer for continuous adaptation
-    const resizeObserver = new ResizeObserver(() => {
+    // Delay measurement to allow DOM to render
+    setTimeout(() => {
       measureAndAdapt();
-    });
 
-    if (sheetElement) {
-      resizeObserver.observe(sheetElement);
-    }
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  });
-
-  // Reactive effect to adapt layout when content changes
-  $effect(() => {
-    if (showGuide && sheetElement) {
-      // Delay measurement to allow DOM to render
-      requestAnimationFrame(() => {
+      // Set up resize observer for continuous adaptation
+      const resizeObserver = new ResizeObserver(() => {
         measureAndAdapt();
       });
-    }
+
+      if (sheetElement) {
+        resizeObserver.observe(sheetElement);
+      }
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }, 100);
   });
 
   function measureAndAdapt() {
     if (!sheetElement || !contentElement) return;
 
-    // Get actual viewport height
-    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    try {
+      // Get actual viewport height
+      const viewportHeight = window.visualViewport?.height || window.innerHeight;
 
-    // Calculate fixed elements height (header + footer + handle + padding)
-    const headerHeight = sheetElement.querySelector('.guide-header')?.clientHeight || 70;
-    const footerHeight = sheetElement.querySelector('.guide-footer')?.clientHeight || 70;
-    const handleHeight = 25; // Handle + margins
+      // Calculate fixed elements height (header + footer + handle + padding)
+      const headerHeight = sheetElement.querySelector('.guide-header')?.clientHeight || 70;
+      const footerHeight = sheetElement.querySelector('.guide-footer')?.clientHeight || 70;
+      const handleHeight = 25; // Handle + margins
 
-    // Available space for scrollable content
-    const available = viewportHeight * 0.95 - headerHeight - footerHeight - handleHeight;
-    availableHeight = available;
+      // Available space for scrollable content
+      const available = viewportHeight * 0.95 - headerHeight - footerHeight - handleHeight;
 
-    // Measure actual content height
-    if (contentElement) {
-      const scrollHeight = contentElement.scrollHeight;
-      contentHeight = scrollHeight;
+      // Measure actual content height
+      if (contentElement) {
+        const scrollHeight = contentElement.scrollHeight;
 
-      // Determine if we need compact mode
-      needsCompactMode = scrollHeight > available;
+        // Determine if we need compact mode
+        needsCompactMode = scrollHeight > available;
+      }
+    } catch (error) {
+      // Silently fail if measurement doesn't work
+      console.warn('PWA guide measurement failed:', error);
     }
   }
 
@@ -133,17 +128,17 @@
           {
             text: 'Tap the <strong>Share</strong> button at the bottom of Safari',
             icon: "fas fa-share",
-            image: "/images/install-guides/ios-safari-step1.png", // Placeholder
+            image: null, // TODO: Add screenshot to /static/images/install-guides/ios-safari-step1.png
           },
           {
             text: 'Scroll down and tap <strong>"Add to Home Screen"</strong>',
             icon: "fas fa-plus-square",
-            image: "/images/install-guides/ios-safari-step2.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/ios-safari-step2.png
           },
           {
             text: 'Tap <strong>"Add"</strong> in the top-right corner',
             icon: "fas fa-check-circle",
-            image: "/images/install-guides/ios-safari-step3.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/ios-safari-step3.png
           },
           {
             text: "Find the TKA icon on your home screen and tap it to launch",
@@ -172,12 +167,12 @@
           {
             text: 'Tap the <strong>Share</strong> button at the bottom',
             icon: "fas fa-share",
-            image: "/images/install-guides/ios-safari-step1.png",
+            image: null, // TODO: Add screenshot
           },
           {
             text: 'Tap <strong>"Add to Home Screen"</strong>',
             icon: "fas fa-plus-square",
-            image: "/images/install-guides/ios-safari-step2.png",
+            image: null, // TODO: Add screenshot
           },
         ],
         benefits: [
@@ -196,17 +191,17 @@
           {
             text: 'Tap the <strong>menu (⋮)</strong> in the top-right corner',
             icon: "fas fa-ellipsis-v",
-            image: "/images/install-guides/android-chrome-step1.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/android-chrome-step1.png
           },
           {
             text: 'Select <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>',
             icon: "fas fa-download",
-            image: "/images/install-guides/android-chrome-step2.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/android-chrome-step2.png
           },
           {
             text: 'Tap <strong>"Install"</strong> or <strong>"Add"</strong> to confirm',
             icon: "fas fa-check-circle",
-            image: "/images/install-guides/android-chrome-step3.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/android-chrome-step3.png
           },
           {
             text: "Launch TKA from your home screen or app drawer",
@@ -230,12 +225,12 @@
           {
             text: 'Tap the <strong>menu (☰)</strong> at the bottom',
             icon: "fas fa-bars",
-            image: "/images/install-guides/android-samsung-step1.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/android-samsung-step1.png
           },
           {
             text: 'Select <strong>"Add page to"</strong> → <strong>"Home screen"</strong>',
             icon: "fas fa-plus-circle",
-            image: "/images/install-guides/android-samsung-step2.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/android-samsung-step2.png
           },
           {
             text: 'Tap <strong>"Add"</strong> to confirm',
@@ -264,12 +259,12 @@
           {
             text: 'Look for the <strong>install icon (⊕)</strong> in the address bar',
             icon: "fas fa-plus-circle",
-            image: "/images/install-guides/desktop-chrome-step1.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/desktop-chrome-step1.png
           },
           {
             text: 'Click the icon and select <strong>"Install"</strong>',
             icon: "fas fa-download",
-            image: "/images/install-guides/desktop-chrome-step2.png",
+            image: null, // TODO: Add screenshot to /static/images/install-guides/desktop-chrome-step2.png
           },
           {
             text: "Or open the menu (⋮) and select <strong>\"Install TKA\"</strong>",
@@ -331,7 +326,7 @@
     class="guide-sheet"
     class:compact={needsCompactMode}
     bind:this={sheetElement}
-    transition:slide={{ duration: 350, axis: 'y' }}
+    transition:fly={{ y: 500, duration: 350 }}
   >
     <!-- Handle bar for swipe affordance -->
     <div class="sheet-handle"></div>
@@ -360,29 +355,10 @@
                 <div class="step-number">{index + 1}</div>
                 <div class="step-text">{@html step.text}</div>
               </div>
-              {#if step.image && !needsCompactMode}
+              <!-- Show placeholder for future screenshots (only when not in compact mode) -->
+              {#if !needsCompactMode}
                 <div class="step-image-container">
-                  <img
-                    src={step.image}
-                    alt="Step {index + 1}"
-                    class="step-image"
-                    onerror={(e) => {
-                      const img = e.currentTarget as HTMLImageElement;
-                      img.style.display = 'none';
-                      const placeholder = img.nextElementSibling;
-                      if (placeholder) {
-                        (placeholder as HTMLElement).style.display = 'flex';
-                      }
-                    }}
-                    onload={(e) => {
-                      const img = e.currentTarget as HTMLImageElement;
-                      const placeholder = img.nextElementSibling;
-                      if (placeholder) {
-                        (placeholder as HTMLElement).style.display = 'none';
-                      }
-                    }}
-                  />
-                  <div class="image-placeholder" style="display: flex;">
+                  <div class="image-placeholder">
                     <i class="fas fa-image"></i>
                     <span class="placeholder-text">Screenshot coming soon</span>
                   </div>
