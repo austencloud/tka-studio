@@ -1,20 +1,56 @@
 <!--
 CAPModalHeader.svelte - Modal header with centered title for CAP Selection Modal
-Uses grid layout for perfect centering
+Uses grid layout for perfect centering with multi-select toggle
 -->
 <script lang="ts">
   let {
     title,
+    isMultiSelectMode,
+    onToggleMultiSelect,
     onClose
   } = $props<{
     title: string;
+    isMultiSelectMode: boolean;
+    onToggleMultiSelect: () => void;
     onClose: () => void;
   }>();
 </script>
 
 <div class="cap-modal-header">
-  <div class="header-spacer"></div>
+  <button
+    class="multi-select-toggle"
+    class:active={isMultiSelectMode}
+    onclick={onToggleMultiSelect}
+    aria-label={isMultiSelectMode ? "Exit multi-select mode" : "Enter multi-select mode"}
+    title={isMultiSelectMode ? "Single Select" : "Multi-Select"}
+  >
+    {#if isMultiSelectMode}
+      <!-- Multi-select mode: Multiple checkboxes (some checked) -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <!-- Top-left checkbox (checked) -->
+        <rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor"></rect>
+        <polyline points="5,7 7,9 11,5" stroke="white" stroke-width="1.5" fill="none"></polyline>
+
+        <!-- Top-right checkbox (checked) -->
+        <rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor"></rect>
+        <polyline points="15,7 17,9 21,5" stroke="white" stroke-width="1.5" fill="none"></polyline>
+
+        <!-- Bottom-left checkbox (unchecked) -->
+        <rect x="3" y="13" width="8" height="8" rx="1.5"></rect>
+
+        <!-- Bottom-right checkbox (unchecked) -->
+        <rect x="13" y="13" width="8" height="8" rx="1.5"></rect>
+      </svg>
+    {:else}
+      <!-- Single-select mode: One checkbox (unchecked) -->
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+      </svg>
+    {/if}
+  </button>
+
   <h2 id="cap-title">{title}</h2>
+
   <button
     class="cap-modal-close-button"
     onclick={onClose}
@@ -37,10 +73,6 @@ Uses grid layout for perfect centering
     min-height: 40px;
   }
 
-  .header-spacer {
-    width: 40px;
-  }
-
   .cap-modal-header h2 {
     color: white;
     font-size: 18px;
@@ -49,6 +81,44 @@ Uses grid layout for perfect centering
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
     text-align: center;
     white-space: nowrap;
+  }
+
+  .multi-select-toggle {
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    padding: 8px;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+  }
+
+  .multi-select-toggle:hover {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+  }
+
+  .multi-select-toggle.active {
+    background: rgba(139, 92, 246, 0.4);
+    border-color: rgba(139, 92, 246, 0.8);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+  }
+
+  .multi-select-toggle.active:hover {
+    background: rgba(139, 92, 246, 0.5);
+    border-color: rgba(139, 92, 246, 1);
+  }
+
+  .multi-select-toggle svg {
+    width: 60%;
+    height: 60%;
   }
 
   .cap-modal-close-button {
@@ -62,9 +132,8 @@ Uses grid layout for perfect centering
     justify-content: center;
     transition: all 0.2s ease;
     padding: 8px;
-    /* 44px minimum for touch targets on mobile */
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     flex-shrink: 0;
   }
 

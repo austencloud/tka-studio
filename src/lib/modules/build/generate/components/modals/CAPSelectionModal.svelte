@@ -26,18 +26,31 @@ Refactored to use BottomSheet component for consistent behavior
   }>();
 
   let hapticService: IHapticFeedbackService;
+  let capTypeService: any;
+  let isMultiSelectMode = $state(false);
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    capTypeService = resolve(TYPES.ICAPTypeService);
   });
 
   // Generate explanation text based on selected components
   const explanationText = $derived(generateExplanationText(selectedComponents));
 
+  // Check if the current combination is implemented
+  const isImplemented = $derived.by(() => {
+    if (!capTypeService || selectionCount === 0) return true;
+    return capTypeService.isImplemented(selectedComponents);
+  });
+
   // Derive selection count and adaptive button text
   const selectionCount = $derived(selectedComponents.size);
   const buttonText = $derived.by(() => {
+    if (!isMultiSelectMode) {
+      return 'Click a CAP Type';
+    }
     if (selectionCount === 0) return 'Select a CAP Type';
+    if (!isImplemented) return 'Coming Soon!';
     if (selectionCount === 1) {
       const component = Array.from(selectedComponents)[0];
       const formatted = component.charAt(0) + component.slice(1).toLowerCase();
@@ -45,10 +58,32 @@ Refactored to use BottomSheet component for consistent behavior
     }
     return `Apply ${selectionCount} Components`;
   });
-  const isButtonDisabled = $derived(selectionCount === 0);
+  const isButtonDisabled = $derived(!isMultiSelectMode || selectionCount === 0);
 
   function handleToggle(component: CAPComponent) {
     hapticService?.trigger("selection");
+
+    // Single-select mode: Apply immediately if clicking an unselected component
+    if (!isMultiSelectMode) {
+      // Create a set with just this component and apply
+      const singleComponent = new Set([component]);
+
+      // Clear any existing selection first
+      for (const existing of selectedComponents) {
+        onToggleComponent(existing);
+      }
+
+      // Select the new component
+      if (!selectedComponents.has(component)) {
+        onToggleComponent(component);
+      }
+
+      // Apply immediately and close
+      onConfirm();
+      return;
+    }
+
+    // Multi-select mode: Toggle selection
     onToggleComponent(component);
   }
 
@@ -60,6 +95,11 @@ Refactored to use BottomSheet component for consistent behavior
 
   function handleClose() {
     onClose();
+  }
+
+  function handleToggleMultiSelect() {
+    hapticService?.trigger("selection");
+    isMultiSelectMode = !isMultiSelectMode;
   }
 </script>
 
@@ -76,24 +116,39 @@ Refactored to use BottomSheet component for consistent behavior
 >
   <div class="cap-modal-content">
     <SheetDragHandle />
-    <CAPModalHeader title="Select CAP Type" onClose={handleClose} />
+    <CAPModalHeader
+      title="Select CAP Type"
+      {isMultiSelectMode}
+      onToggleMultiSelect={handleToggleMultiSelect}
+      onClose={handleClose}
+    />
 
     <CAPComponentGrid
       {selectedComponents}
       onToggleComponent={handleToggle}
     />
 
-    <CAPExplanationPanel {explanationText} />
+    <div class="info-section">
+      <CAPExplanationPanel {explanationText} />
+      {#if !isImplemented && selectionCount > 0}
+        <div class="coming-soon-badge">
+          🚧 This combination is under development
+        </div>
+      {/if}
+    </div>
 
-    <button
-      class="confirm-button"
-      class:disabled={isButtonDisabled}
-      onclick={handleConfirm}
-      disabled={isButtonDisabled}
-      aria-label={buttonText}
-    >
-      {buttonText}
-    </button>
+    {#if isMultiSelectMode}
+      <button
+        class="confirm-button"
+        class:disabled={isButtonDisabled}
+        class:coming-soon={!isImplemented && selectionCount > 0}
+        onclick={handleConfirm}
+        disabled={isButtonDisabled}
+        aria-label={buttonText}
+      >
+        {buttonText}
+      </button>
+    {/if}
   </div>
 </BottomSheet>
 
@@ -155,6 +210,35 @@ Refactored to use BottomSheet component for consistent behavior
     overflow: hidden;
   }
 
+  .info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .coming-soon-badge {
+    background: rgba(255, 193, 7, 0.2);
+    border: 2px solid rgba(255, 193, 7, 0.6);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #ffd54f;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
   .confirm-button {
     position: relative;
     z-index: 1;
@@ -202,6 +286,19 @@ Refactored to use BottomSheet component for consistent behavior
     cursor: not-allowed;
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .confirm-button.coming-soon {
+    background: rgba(255, 193, 7, 0.25);
+    border-color: rgba(255, 193, 7, 0.6);
+    color: #ffd54f;
+    cursor: pointer;
+  }
+
+  .confirm-button.coming-soon:hover {
+    background: rgba(255, 193, 7, 0.35);
+    border-color: #ffd54f;
+    transform: translateY(-2px) scale(1.02);
   }
 
   .cap-modal-content::before {

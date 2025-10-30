@@ -360,8 +360,8 @@
 
   @media (max-width: 480px) {
     .floating-fullscreen-button {
-      width: 40px;
-      height: 40px;
+      width: 44px; /* iOS/Android minimum touch target */
+      height: 44px;
       bottom: 12px;
       right: 12px;
     }
@@ -369,28 +369,28 @@
 
   @media (max-width: 320px) {
     .floating-fullscreen-button {
-      width: 36px;
-      height: 36px;
+      width: 44px; /* NEVER below 44px for accessibility */
+      height: 44px;
       bottom: 10px;
       right: 10px;
     }
   }
 
-  /* Landscape mobile: reduce size further to preserve space */
+  /* Landscape mobile: maintain 44px minimum */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .floating-fullscreen-button {
-      width: 36px;
-      height: 36px;
+      width: 44px; /* Maintain 44px minimum even in landscape */
+      height: 44px;
       bottom: 12px;
       right: 12px;
     }
   }
 
-  /* Extreme constraints: very narrow landscape mode */
+  /* Extreme constraints: still maintain 44px */
   @media (max-width: 500px) and (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .floating-fullscreen-button {
-      width: 32px;
-      height: 32px;
+      width: 44px; /* Accessibility trumps space constraints */
+      height: 44px;
       bottom: 8px;
       right: 8px;
     }

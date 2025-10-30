@@ -119,11 +119,11 @@
     }
   }
 
-  /* Landscape mobile: Ultra-compact */
+  /* Landscape mobile: Maintain 44px minimum */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .play-button {
-      width: 36px;
-      height: 36px;
+      width: 44px; /* Maintain 44px minimum for accessibility */
+      height: 44px;
     }
 
     .play-button i {

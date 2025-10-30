@@ -142,8 +142,8 @@ Design Principles:
 
   @media (max-width: 480px) {
     .toggle-button {
-      width: 40px;
-      height: 40px;
+      width: 44px; /* Maintain 44px minimum for accessibility */
+      height: 44px;
     }
 
     .toggle-button i {
@@ -157,8 +157,8 @@ Design Principles:
 
   @media (max-width: 320px) {
     .toggle-button {
-      width: 36px;
-      height: 36px;
+      width: 44px; /* NEVER below 44px for accessibility */
+      height: 44px;
     }
 
     .toggle-button i {
@@ -170,11 +170,11 @@ Design Principles:
     }
   }
 
-  /* Landscape mobile: Ultra-compact */
+  /* Landscape mobile: Maintain 44px minimum */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .toggle-button {
-      width: 36px;
-      height: 36px;
+      width: 44px; /* Maintain 44px minimum for accessibility */
+      height: 44px;
     }
 
     .toggle-button i {

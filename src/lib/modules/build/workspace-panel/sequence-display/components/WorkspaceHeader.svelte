@@ -158,15 +158,15 @@
     }
   }
 
-  /* 🎯 LANDSCAPE MOBILE: Compact buttons for Z Fold 5 horizontal (882x344) */
+  /* 🎯 LANDSCAPE MOBILE: Maintain 44px minimum for accessibility */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .workspace-header {
       min-height: 36px;
     }
 
     .settings-button {
-      width: 40px;
-      height: 40px;
+      width: 44px; /* Maintain 44px minimum for accessibility */
+      height: 44px;
     }
 
     .settings-button i {

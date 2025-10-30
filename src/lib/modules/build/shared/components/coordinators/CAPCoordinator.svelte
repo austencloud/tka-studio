@@ -34,6 +34,19 @@
   function handleConfirm() {
     // Apply pending changes if any
     if (pendingComponents && panelState.capOnChange) {
+      // Check if the combination is implemented
+      const isImplemented = capTypeService.isImplemented(pendingComponents);
+
+      if (!isImplemented) {
+        // Show "Coming Soon" message
+        const componentNames = Array.from(pendingComponents)
+          .map(c => c.charAt(0) + c.slice(1).toLowerCase())
+          .join(' + ');
+
+        alert(`${componentNames} combination is coming soon! This combination hasn't been implemented yet, but we're working on it.`);
+        return; // Don't close the panel, let user select a different combination
+      }
+
       const finalCAPType = capTypeService.generateCAPType(pendingComponents);
       panelState.capOnChange(finalCAPType);
     }

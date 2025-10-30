@@ -1,6 +1,8 @@
 <script lang="ts">
   import { UndoOperationType } from "$build/shared/services/contracts/IUndoService";
   import type { IBuildTabState } from "$build/shared/types/build-tab-types";
+  import type { IHapticFeedbackService } from "$shared/application/services/contracts";
+  import { resolve, TYPES } from "$shared/inversify";
 
   // Props
   let {
@@ -12,6 +14,9 @@
     onUndo?: () => void;
     showHistoryDropdown?: boolean;
   } = $props();
+
+  // Resolve haptic feedback service
+  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
 
   // Debug logging removed - this creates noise during reactive updates
   // $effect(() => {
@@ -58,6 +63,7 @@
 
   // Functions
   function handleUndo() {
+    hapticService?.trigger("selection");
     const success = buildTabState.undo();
     if (success) {
       onUndo();
@@ -167,11 +173,11 @@
     }
   }
 
-  /* 🎯 LANDSCAPE MOBILE: Compact buttons for Z Fold 5 horizontal (882x344) */
+  /* 🎯 LANDSCAPE MOBILE: Maintain 44px minimum for accessibility */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .undo-button {
-      width: 36px;
-      height: 36px;
+      width: 44px; /* Maintain 44px minimum for accessibility */
+      height: 44px;
       font-size: 14px;
     }
   }

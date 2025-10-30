@@ -32,6 +32,18 @@ export interface ICAPTypeService {
 	parseComponents(capType: CAPType): Set<CAPComponent>;
 
 	/**
+	 * Check if a component combination has been implemented
+	 *
+	 * Determines whether the selected combination of CAP components
+	 * has corresponding backend logic implemented. Used to show
+	 * "Coming Soon" messages for unimplemented combinations.
+	 *
+	 * @param components - Set of CAP components to check
+	 * @returns true if the combination is fully implemented
+	 */
+	isImplemented(components: Set<CAPComponent>): boolean;
+
+	/**
 	 * Generate a CAP type enum from a set of selected components
 	 *
 	 * Uses complex conditional logic to map component combinations to the
