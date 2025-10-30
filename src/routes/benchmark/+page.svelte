@@ -385,7 +385,6 @@ async function runBenchmark() {
     const sizeKB = (preview.length * 0.75) / 1024;
 
     results.push({
-      name: config.name,
       config: `Scale: ${config.beatScale}, Q: ${config.quality}, ${config.format}`,
       avgTime: avgTime.toFixed(0),
       sizeKB: sizeKB.toFixed(1),

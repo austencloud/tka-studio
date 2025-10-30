@@ -295,4 +295,35 @@ export class MobileFullscreenService implements IMobileFullscreenService {
 
     return "not-supported";
   }
+
+  async handleInstallRequest(): Promise<boolean> {
+    if (this.canInstallPWA()) {
+      // Try native install
+      try {
+        const accepted = await this.promptInstallPWA();
+        if (accepted) {
+          return true;
+        }
+        // If user dismissed, fall back to showing guide
+        this.showInstallGuide();
+        return true;
+      } catch (error) {
+        console.error("Failed to show native install prompt:", error);
+        // Fall back to showing guide
+        this.showInstallGuide();
+        return true;
+      }
+    } else {
+      // No native prompt available, show guide
+      this.showInstallGuide();
+      return true;
+    }
+  }
+
+  private showInstallGuide(): void {
+    // Dispatch event for PWA install guide to be shown
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("pwa:open-install-guide"));
+    }
+  }
 }

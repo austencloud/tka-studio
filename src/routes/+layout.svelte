@@ -66,9 +66,9 @@
 
         // Initialize glyph cache for faster preview rendering
         const { TYPES } = await import("$shared/inversify/types");
-        const { IGlyphCacheService } = await import("$lib/shared/render/services/implementations/GlyphCacheService");
-        const glyphCache = container.get<typeof IGlyphCacheService>(TYPES.IGlyphCacheService);
-        glyphCache.initialize().catch((error) => {
+        type IGlyphCacheService = { initialize: () => Promise<void> };
+        const glyphCache = container.get<IGlyphCacheService>(TYPES.IGlyphCacheService);
+        glyphCache.initialize().catch((error: unknown) => {
           console.warn("⚠️ Glyph cache initialization failed:", error);
         });
 

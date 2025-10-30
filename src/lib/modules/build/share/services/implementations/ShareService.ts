@@ -158,7 +158,7 @@ export class ShareService implements IShareService {
       notes: shareOptions.notes || 'Created with The Kinetic Alphabet',
 
       // Output format - Maximum speed optimization
-      format: 'JPEG', // JPEG encodes much faster than PNG
+      format: 'JPEG' as const, // JPEG encodes much faster than PNG
       quality: 0.4, // Minimum acceptable quality for instant speed
       scale: 0.15, // Match beatScale for consistency
       backgroundColor: shareOptions.backgroundColor,

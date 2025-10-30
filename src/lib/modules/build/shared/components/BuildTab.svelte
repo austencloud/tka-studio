@@ -1,4 +1,20 @@
 <script lang="ts">
+  /**
+   * Build Tab Component - REFACTORED
+   *
+   * Master container for the Build tab interface.
+   * Orchestrates Workspace, Tool Panel, and various modal panels.
+   *
+   * REFACTORING:
+   * - Extracted service initialization to ServiceInitializer
+   * - Extracted panel logic to coordinator components
+   * - Consolidated reactive effects into manager modules
+   * - Reduced from 19 functions to 6 core handlers
+   * - Reduced from 8+ effects to 5 managed effects
+   *
+   * Domain: Build Module - Tab Container
+   */
+
   import {
     createComponentLogger,
     ensureContainerInitialized,
@@ -6,42 +22,38 @@
     FloatingFullscreenButton,
     GridMode,
     navigationState,
-    resolve,
-    TYPES,
     type PictographData
   } from "$shared";
   import { onMount } from "svelte";
-  import AnimationPanel from "../../animate/components/AnimationPanel.svelte";
   import OptionFilterPanel from "../../construct/option-picker/option-viewer/components/OptionFilterPanel.svelte";
-  import type { IStartPositionService } from "../../construct/start-position-picker/services/contracts";
-  import { EditSlidePanel } from "../../edit/components";
-  import SharePanelSheet from "../../share/components/SharePanelSheet.svelte";
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
-  import SequenceActionsSheet from '../../workspace-panel/shared/components/SequenceActionsSheet.svelte';
-  import type {
-    IBeatOperationsService,
-    IBuildTabService,
-    INavigationSyncService,
-    IResponsiveLayoutService,
-    ISequencePersistenceService,
-    ISequenceService
-  } from "../services/contracts";
+  import type { BuildTabServices } from "../services/ServiceInitializer";
+  import { ServiceInitializer } from "../services/ServiceInitializer";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
   import { createBuildTabState, createConstructTabState } from "../state";
   import type { createBuildTabState as BuildTabStateType } from "../state/build-tab-state.svelte";
   import type { createConstructTabState as ConstructTabStateType } from "../state/construct-tab-state.svelte";
+  import {
+    createAutoEditPanelEffect,
+    createLayoutEffects,
+    createNavigationSyncEffects,
+    createPanelHeightTracker,
+    createPWAEngagementEffect,
+    createSingleBeatEditEffect
+  } from "../state/managers";
   import { createPanelCoordinationState } from "../state/panel-coordination-state.svelte";
-  import type { BatchEditChanges, IToolPanelMethods } from "../types/build-tab-types";
+  import type { IToolPanelMethods } from "../types/build-tab-types";
+  import {
+    AnimationCoordinator,
+    EditCoordinator,
+    SequenceActionsCoordinator,
+    ShareCoordinator
+  } from "./coordinators";
   import LoadingOverlay from './LoadingOverlay.svelte';
-  import type { IShareService } from "../../share/services/contracts";
-  import { createShareState } from "../../share/state";
 
   const logger = createComponentLogger('BuildTab');
-
-  // Constants
-  const START_POSITION_BEAT_NUMBER = 0; // Beat 0 = start position, beats 1+ are in the sequence
 
   // Type aliases for state objects
   type BuildTabState = ReturnType<typeof BuildTabStateType>;
@@ -52,30 +64,20 @@
     onTabAccessibilityChange?: (canAccessEditAndExport: boolean) => void
   } = $props();
 
-  // Services - resolved directly from DI container
-  let sequenceService: ISequenceService | null = $state(null);
-  let sequencePersistenceService: ISequencePersistenceService | null = $state(null);
-  let startPositionService: IStartPositionService | null = $state(null);
-  let buildTabService: IBuildTabService | null = $state(null);
-  let layoutService: IResponsiveLayoutService | null = $state(null);
-  let navigationSyncService: INavigationSyncService | null = $state(null);
-  let beatOperationsService: IBeatOperationsService | null = $state(null);
-  let shareService: IShareService | null = $state(null);
+  // Services
+  let services: BuildTabServices | null = $state(null);
 
   // State
   let buildTabState: BuildTabState | null = $state(null);
   let constructTabState: ConstructTabState | null = $state(null);
 
-  // Share state for background preview pre-rendering
-  let backgroundShareState = $state<ReturnType<typeof createShareState> | null>(null);
-
-  // Panel coordination state - centralized management
+  // Panel coordination state
   let panelState = createPanelCoordinationState();
 
-  // Animation state - track current animating beat
+  // Animation state
   let animatingBeatNumber = $state<number | null>(null);
 
-  // Layout state - managed by services
+  // Layout state
   let shouldUseSideBySideLayout = $state<boolean>(false);
 
   // UI state
@@ -88,11 +90,14 @@
   let toolPanelRef: IToolPanelMethods | null = $state(null);
   let buttonPanelElement: HTMLElement | null = $state(null);
 
-  // Derived: Toggle always shows in ButtonPanel (at right edge)
-  const shouldShowToggleInButtonPanel = $derived(() => {
-    // Always show toggle in ButtonPanel, regardless of layout
-    return true;
-  });
+  // Sequence actions sheet state
+  let showSequenceActionsSheet = $state(false);
+
+  // Cleanup functions for effects
+  let effectCleanups: (() => void)[] = [];
+
+  // Derived: Toggle always shows in ButtonPanel
+  const shouldShowToggleInButtonPanel = $derived(() => true);
 
   // Derived: Allow clearing when a start position or beats exist
   const canClearSequence = $derived(() => {
@@ -122,111 +127,61 @@
     }
   });
 
-  // Effect: Sync navigation state TO build tab state
+  // Effect: Setup all managed effects when services are initialized
   $effect(() => {
-    if (!buildTabState || !navigationSyncService) return;
+    if (!servicesInitialized || !buildTabState || !services) return;
 
-    navigationSyncService.syncNavigationToBuildTab(
+    // Clean up previous effects
+    effectCleanups.forEach(cleanup => cleanup());
+    effectCleanups = [];
+
+    // Navigation sync effects
+    const navigationCleanup = createNavigationSyncEffects({
       buildTabState,
-      navigationState
-    );
-  });
-
-  // Effect: Sync build tab state BACK to navigation state
-  $effect(() => {
-    if (!buildTabState || !navigationSyncService) return;
-    if (buildTabState.isUpdatingFromToggle) return;
-
-    navigationSyncService.syncBuildTabToNavigation(
-      buildTabState,
-      navigationState
-    );
-  });
-
-  // Effect: Handle responsive layout changes
-  $effect(() => {
-    if (!layoutService || !servicesInitialized) return;
-
-    // Initialize layout service
-    layoutService.initialize();
-
-    // Subscribe to layout changes
-    const unsubscribe = layoutService.onLayoutChange(() => {
-      if (layoutService) {
-        shouldUseSideBySideLayout = layoutService.shouldUseSideBySideLayout();
-      }
+      navigationState,
+      navigationSyncService: services.navigationSyncService
     });
+    effectCleanups.push(navigationCleanup);
 
-    // Initial layout calculation
-    shouldUseSideBySideLayout = layoutService.shouldUseSideBySideLayout();
+    // Layout effects
+    const layoutCleanup = createLayoutEffects({
+      layoutService: services.layoutService,
+      onLayoutChange: (layout) => { shouldUseSideBySideLayout = layout; }
+    });
+    effectCleanups.push(layoutCleanup);
 
-    // Cleanup
+    // Auto edit panel effects
+    const autoEditCleanup = createAutoEditPanelEffect({ buildTabState, panelState });
+    effectCleanups.push(autoEditCleanup);
+
+    const singleBeatCleanup = createSingleBeatEditEffect({ buildTabState, panelState });
+    effectCleanups.push(singleBeatCleanup);
+
+    // PWA engagement tracking
+    const pwaCleanup = createPWAEngagementEffect({ buildTabState });
+    effectCleanups.push(pwaCleanup);
+
+    // Cleanup on unmount
     return () => {
-      unsubscribe();
-      if (layoutService) {
-        layoutService.dispose();
-      }
+      effectCleanups.forEach(cleanup => cleanup());
+      effectCleanups = [];
     };
   });
 
-  // Effect: Auto-open edit panel when multiple beats selected
+  // Effect: Track panel heights
   $effect(() => {
-    if (!buildTabState) return;
+    if (!toolPanelElement && !buttonPanelElement) return;
 
-    const selectedBeatNumbers = buildTabState.sequenceState?.selectedBeatNumbers;
-    const selectedCount = selectedBeatNumbers?.size ?? 0;
-
-    if (selectedCount > 1 && !panelState.isEditPanelOpen) {
-      // Capture state reference for TypeScript null safety in closure
-      const state = buildTabState;
-
-      // Map beat numbers to beat data
-      const beatNumbersArray = Array.from(selectedBeatNumbers).sort((a, b) => a - b);
-      const beatsData = beatNumbersArray.map((beatNumber) => {
-        if (beatNumber === START_POSITION_BEAT_NUMBER) {
-          // Beat 0 is the start position
-          return state.sequenceState.selectedStartPosition;
-        } else {
-          // Beats are numbered 1, 2, 3... but stored in array at indices 0, 1, 2...
-          const beatIndex = beatNumber - 1;
-          return state.sequenceState.currentSequence?.beats[beatIndex];
-        }
-      }).filter(Boolean); // Remove any null values
-
-      logger.log(`Auto-opening batch edit panel: ${selectedCount} beats selected`);
-      panelState.openBatchEditPanel(beatsData);
-    }
-  });
-
-  // Effect: Track tool panel height for edit panel sizing
-  $effect(() => {
-    if (!toolPanelElement) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        panelState.setToolPanelHeight(entry.contentRect.height);
-      }
+    const cleanup = createPanelHeightTracker({
+      toolPanelElement,
+      buttonPanelElement,
+      panelState
     });
 
-    resizeObserver.observe(toolPanelElement);
-    return () => resizeObserver.disconnect();
+    return cleanup;
   });
 
-  // Effect: Track button panel height for accurate slide panel positioning
-  $effect(() => {
-    if (!buttonPanelElement) return;
-
-    const resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        panelState.setButtonPanelHeight(entry.contentRect.height);
-      }
-    });
-
-    resizeObserver.observe(buttonPanelElement);
-    return () => resizeObserver.disconnect();
-  });
-
-  // Component initialization - DIRECT SERVICE RESOLUTION
+  // Component initialization
   onMount(async () => {
     if (!ensureContainerInitialized()) {
       error = "Dependency injection container not initialized";
@@ -236,35 +191,28 @@
     isLoading = true;
 
     try {
-      // Resolve all services directly from DI container
-      sequenceService = resolve<ISequenceService>(TYPES.ISequenceService);
-      sequencePersistenceService = resolve<ISequencePersistenceService>(TYPES.ISequencePersistenceService);
-      startPositionService = resolve<IStartPositionService>(TYPES.IStartPositionService);
-      buildTabService = resolve<IBuildTabService>(TYPES.IBuildTabService);
-      layoutService = resolve<IResponsiveLayoutService>(TYPES.IResponsiveLayoutService);
-      navigationSyncService = resolve<INavigationSyncService>(TYPES.INavigationSyncService);
-      beatOperationsService = resolve<IBeatOperationsService>(TYPES.IBeatOperationsService);
-      shareService = resolve<IShareService>(TYPES.IShareService);
+      // Resolve all services
+      services = ServiceInitializer.resolveServices();
 
       // Wait a tick to ensure component context is fully established
       await new Promise(resolve => setTimeout(resolve, 0));
 
-      // Create state objects directly
+      // Create state objects
       buildTabState = createBuildTabState(
-        sequenceService,
-        sequencePersistenceService
+        services.sequenceService,
+        services.sequencePersistenceService
       );
 
       constructTabState = createConstructTabState(
-        buildTabService,
+        services.buildTabService,
         buildTabState.sequenceState,
-        sequencePersistenceService,
+        services.sequencePersistenceService,
         buildTabState,
         navigationState
       );
 
       // Initialize services
-      await buildTabService.initialize();
+      await ServiceInitializer.initializeServices(services);
 
       // Initialize state with persistence
       await buildTabState.initializeWithPersistence();
@@ -273,100 +221,42 @@
       // Mark services as initialized
       servicesInitialized = true;
 
-      // Initialize background share state for preview pre-rendering
-      if (shareService) {
-        backgroundShareState = createShareState(shareService);
-      }
-
       // Configure event callbacks
       const buildTabEventService = getBuildTabEventService();
 
-      // Set up sequence state callbacks for BuildTabEventService
       buildTabEventService.setSequenceStateCallbacks(
         () => buildTabState!.sequenceState.getCurrentSequence(),
         (sequence) => buildTabState!.sequenceState.setCurrentSequence(sequence)
       );
 
-      // Set up option history callback
       buildTabEventService.setAddOptionToHistoryCallback(
         (beatIndex, beatData) => buildTabState!.addOptionToHistory(beatIndex, beatData)
       );
 
-      // Set up undo snapshot callback
       buildTabEventService.setPushUndoSnapshotCallback(
         (type, metadata) => buildTabState!.pushUndoSnapshot(type, metadata)
       );
 
       // Load start positions
-      await startPositionService.getDefaultStartPositions(GridMode.DIAMOND);
+      await services.startPositionService.getDefaultStartPositions(GridMode.DIAMOND);
 
       logger.success("BuildTab initialized successfully");
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to initialize BuildTab";
       error = errorMessage;
-      console.error("❌ BuildTab: Initialization error:", err);
+      console.error("BuildTab: Initialization error:", err);
     } finally {
       isLoading = false;
     }
   });
 
-  // Effect: Open edit panel when a beat is selected
-  $effect(() => {
-    // Guard: Don't run until buildTabState is initialized
-    if (!buildTabState) return;
-
-    const selectedBeatNumber = buildTabState.sequenceState.selectedBeatNumber;
-    const selectedData = buildTabState.sequenceState.selectedBeatData;
-
-    // If a beat is selected, open the edit panel
-    if (selectedBeatNumber !== null && selectedData) {
-      panelState.openEditPanel(selectedBeatNumber, selectedData);
-      logger.log(`Opening edit panel for beat ${selectedBeatNumber}`);
-    }
-  });
-
-  // Effect: Track PWA engagement when user creates a sequence
-  let hasTrackedSequenceCreation = $state(false);
-  $effect(() => {
-    if (hasTrackedSequenceCreation) return;
-    if (!buildTabState?.hasSequence) return;
-
-    try {
-      const engagementService = resolve(TYPES.IPWAEngagementService) as any;
-      engagementService?.recordSequenceCreated?.();
-      engagementService?.recordInteraction?.(); // Also count as interaction
-      hasTrackedSequenceCreation = true;
-      logger.log("PWA engagement: sequence created");
-    } catch (error) {
-      // Service may not be available, that's ok
-    }
-  });
-
-  // Effect: Background pre-render share preview when sequence exists
-  // This makes the share panel instantly show preview on first open
-  $effect(() => {
-    if (!backgroundShareState) return;
-    if (!buildTabState?.sequenceState.currentSequence) return;
-
-    const sequence = buildTabState.sequenceState.currentSequence;
-
-    // Only pre-render if sequence has beats
-    if (sequence.beats?.length > 0) {
-      // Non-blocking background generation - don't await
-      backgroundShareState.generatePreview(sequence).catch((error) => {
-        // Silent failure - preview will generate when user opens share panel
-        logger.log("Background preview pre-rendering skipped:", error);
-      });
-    }
-  });
-
-  // Event handlers - delegate to services/state
+  // Event handlers
   async function handleOptionSelected(option: PictographData): Promise<void> {
     try {
-      if (!buildTabService) {
+      if (!services?.buildTabService) {
         throw new Error("Build tab service not initialized");
       }
-      await buildTabService.selectOption(option);
+      await services.buildTabService.selectOption(option);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to select option";
       error = errorMessage;
@@ -386,15 +276,10 @@
     panelState.openSharePanel();
   }
 
-  function handleCloseSharePanel() {
-    panelState.closeSharePanel();
-  }
-
   async function handleClearSequence() {
     if (!buildTabState) return;
 
     try {
-      // Push undo snapshot BEFORE clearing sequence
       buildTabState.pushUndoSnapshot('CLEAR_SEQUENCE', {
         description: 'Clear sequence'
       });
@@ -414,28 +299,14 @@
     }
   }
 
-  function handleCloseAnimationPanel() {
-    panelState.closeAnimationPanel();
-    // Clear animating beat when panel closes
-    animatingBeatNumber = null;
-  }
-
-  function handleAnimatingBeatChange(beatNumber: number) {
-    animatingBeatNumber = beatNumber;
-  }
-
-  function handleOpenFilterPanel() {
-    panelState.openFilterPanel();
-  }
-
   function handleRemoveBeat(beatIndex: number) {
-    if (!beatOperationsService) {
+    if (!services?.beatOperationsService) {
       logger.warn("Beat operations service not initialized");
       return;
     }
 
     try {
-      beatOperationsService.removeBeat(beatIndex, buildTabState);
+      services.beatOperationsService.removeBeat(beatIndex, buildTabState);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Failed to remove beat";
       error = errorMessage;
@@ -443,111 +314,12 @@
     }
   }
 
-  function handleBatchApply(changes: BatchEditChanges) {
-    if (!beatOperationsService) {
-      logger.warn("Beat operations service not initialized");
-      return;
-    }
-
-    try {
-      beatOperationsService.applyBatchChanges(changes, buildTabState);
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to apply changes";
-      error = errorMessage;
-      logger.error("Failed to apply batch changes", err);
-
-      // Error recovery: Clear selection and close panel to prevent stuck UI
-      buildTabState?.sequenceState.clearSelection();
-      panelState.closeEditPanel();
-    }
+  function handleOpenFilterPanel() {
+    panelState.openFilterPanel();
   }
-
-  function handleOrientationChange(color: string, orientation: string) {
-    if (!beatOperationsService) {
-      logger.warn("Beat operations service not initialized");
-      return;
-    }
-
-    const beatIndex = panelState.editPanelBeatIndex;
-    if (beatIndex === null) {
-      logger.warn("Cannot change orientation: no beat selected");
-      return;
-    }
-
-    try {
-      beatOperationsService.updateBeatOrientation(
-        beatIndex,
-        color,
-        orientation,
-        buildTabState,
-        panelState
-      );
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to update orientation";
-      error = errorMessage;
-      logger.error("Failed to update orientation", err);
-    }
-  }
-
-  function handleTurnAmountChange(color: string, turnAmount: number) {
-    if (!beatOperationsService) {
-      logger.warn("Beat operations service not initialized");
-      return;
-    }
-
-    const beatIndex = panelState.editPanelBeatIndex;
-    if (beatIndex === null) {
-      logger.warn("Cannot change turns: no beat selected");
-      return;
-    }
-
-    try {
-      beatOperationsService.updateBeatTurns(
-        beatIndex,
-        color,
-        turnAmount,
-        buildTabState,
-        panelState
-      );
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to update turns";
-      error = errorMessage;
-      logger.error("Failed to update turns", err);
-    }
-  }
-
-  // Sequence Actions Sheet state and handlers
-  let showSequenceActionsSheet = $state(false);
 
   function handleOpenSequenceActions() {
     showSequenceActionsSheet = true;
-  }
-
-  function handleCloseSequenceActions() {
-    showSequenceActionsSheet = false;
-  }
-
-  function handleMirror() {
-    // TODO: Implement mirror transformation
-    logger.log("Mirror action triggered");
-  }
-
-  function handleRotate() {
-    // TODO: Implement rotation transformation
-    logger.log("Rotate action triggered");
-  }
-
-  function handleColorSwap() {
-    // TODO: Implement color swap transformation
-    logger.log("Color swap action triggered");
-  }
-
-  function handleCopyJSON() {
-    if (!buildTabState?.sequenceState.currentSequence) return;
-    navigator.clipboard.writeText(
-      JSON.stringify(buildTabState.sequenceState.currentSequence, null, 2)
-    );
-    logger.log("Sequence JSON copied to clipboard");
   }
 </script>
 
@@ -555,7 +327,7 @@
   <LoadingOverlay message="Initializing Build Tab..." />
 {:else if error}
   <ErrorBanner message={error} onDismiss={clearError} />
-{:else if buildTabState && constructTabState}
+{:else if buildTabState && constructTabState && services}
   <div class="build-tab" class:side-by-side={shouldUseSideBySideLayout}>
     <!-- Workspace Panel -->
     <div class="workspace-container">
@@ -564,7 +336,7 @@
         {buildTabState}
         practiceBeatIndex={panelState.practiceBeatIndex}
         {animatingBeatNumber}
-        isMobilePortrait={layoutService?.isMobilePortrait() ?? false}
+        isMobilePortrait={services.layoutService.isMobilePortrait()}
         onPlayAnimation={handlePlayAnimation}
         animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
       />
@@ -589,95 +361,64 @@
         />
       </div>
 
-      <AnimationPanel
-        sequence={buildTabState.sequenceState.currentSequence}
-        show={panelState.isAnimationPanelOpen}
-        onClose={handleCloseAnimationPanel}
-        onCurrentBeatChange={handleAnimatingBeatChange}
-        combinedPanelHeight={panelState.combinedPanelHeight}
+      <!-- Animation Coordinator -->
+      <AnimationCoordinator
+        {buildTabState}
+        {panelState}
+        bind:animatingBeatNumber
       />
     </div>
 
     <!-- Tool Panel -->
     <div class="tool-panel-container" bind:this={toolPanelElement}>
-      {#if buildTabState && constructTabState}
-        <ToolPanel
-          bind:this={toolPanelRef}
-          buildTabState={buildTabState}
-          constructTabState={constructTabState}
-          onOptionSelected={handleOptionSelected}
-          isSideBySideLayout={() => shouldUseSideBySideLayout}
-          onPracticeBeatIndexChange={(index) => { panelState.setPracticeBeatIndex(index); }}
-          onOpenFilters={handleOpenFilterPanel}
-        />
-      {/if}
+      <ToolPanel
+        bind:this={toolPanelRef}
+        {buildTabState}
+        {constructTabState}
+        onOptionSelected={handleOptionSelected}
+        isSideBySideLayout={() => shouldUseSideBySideLayout}
+        onPracticeBeatIndexChange={(index) => { panelState.setPracticeBeatIndex(index); }}
+        onOpenFilters={handleOpenFilterPanel}
+      />
     </div>
   </div>
 
-  <!-- Edit Slide Panel - Positioned outside grid layout to slide over content -->
-  {#if buildTabState}
-    <EditSlidePanel
-      isOpen={panelState.isEditPanelOpen}
-      selectedBeatNumber={panelState.editPanelBeatIndex}
-      selectedBeatData={panelState.editPanelBeatData}
-      selectedBeatsData={panelState.editPanelBeatsData}
-      combinedPanelHeight={panelState.combinedPanelHeight}
-      isSideBySideLayout={shouldUseSideBySideLayout}
-      onClose={() => {
-        panelState.closeEditPanel();
-        // Exit multi-select mode when closing panel
-        const selectedCount = buildTabState?.sequenceState.selectedBeatNumbers?.size ?? 0;
-        if (selectedCount > 0) {
-          buildTabState?.sequenceState.exitMultiSelectMode();
-        }
-      }}
-      onOrientationChanged={handleOrientationChange}
-      onTurnAmountChanged={handleTurnAmountChange}
-      onBatchApply={handleBatchApply}
-      onRemoveBeat={(beatNumber) => handleRemoveBeat(beatNumber - 1)}
-    />
-  {/if}
+  <!-- Edit Coordinator -->
+  <EditCoordinator
+    {buildTabState}
+    {panelState}
+    beatOperationsService={services.beatOperationsService}
+    {shouldUseSideBySideLayout}
+    onError={(err) => { error = err; }}
+  />
 
-  <!-- Option Filter Panel - Positioned outside grid layout to slide over content -->
-  {#if panelState.isFilterPanelOpen && constructTabState}
+  <!-- Option Filter Panel -->
+  {#if panelState.isFilterPanelOpen}
     <OptionFilterPanel
       isOpen={panelState.isFilterPanelOpen}
       isContinuousOnly={constructTabState.isContinuousOnly}
-      onClose={() => {
-        panelState.closeFilterPanel();
-      }}
+      onClose={() => { panelState.closeFilterPanel(); }}
       onToggleContinuous={(isContinuousOnly: boolean) => {
-        if (constructTabState) {
-          constructTabState.setContinuousOnly(isContinuousOnly);
-        }
+        constructTabState?.setContinuousOnly(isContinuousOnly);
       }}
     />
   {/if}
 
-  <!-- Share Panel Sheet - Full-screen positioned outside grid layout -->
-  {#if buildTabState}
-    <SharePanelSheet
-      show={panelState.isSharePanelOpen}
-      sequence={buildTabState.sequenceState.currentSequence}
-      onClose={handleCloseSharePanel}
-    />
-  {/if}
+  <!-- Share Coordinator -->
+  <ShareCoordinator
+    {buildTabState}
+    {panelState}
+    shareService={services.shareService}
+  />
 
-  <!-- Sequence Actions Sheet - Positioned outside grid layout to slide over content -->
-  {#if buildTabState}
-    <SequenceActionsSheet
-      show={showSequenceActionsSheet}
-      hasSequence={buildTabState.hasSequence}
-      combinedPanelHeight={panelState.combinedPanelHeight}
-      onMirror={handleMirror}
-      onRotate={handleRotate}
-      onColorSwap={handleColorSwap}
-      onCopyJSON={handleCopyJSON}
-      onClose={handleCloseSequenceActions}
-    />
-  {/if}
+  <!-- Sequence Actions Coordinator -->
+  <SequenceActionsCoordinator
+    {buildTabState}
+    {panelState}
+    bind:show={showSequenceActionsSheet}
+  />
 
-  <!-- Floating Fullscreen Button - Fixed at bottom-right of viewport -->
+  <!-- Floating Fullscreen Button -->
   <FloatingFullscreenButton />
 {/if}
 

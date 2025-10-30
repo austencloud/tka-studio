@@ -71,4 +71,10 @@ export interface IMobileFullscreenService {
     | "fullscreen-api"
     | "viewport-only"
     | "not-supported";
+
+  /**
+   * Handle PWA installation with automatic fallback to guide
+   * Returns true if installation was triggered (native prompt or guide shown)
+   */
+  handleInstallRequest(): Promise<boolean>;
 }

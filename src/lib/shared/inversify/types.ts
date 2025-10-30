@@ -45,6 +45,8 @@ export const TYPES = {
 
   // === MOBILE SERVICES ===
   IMobileFullscreenService: Symbol.for("IMobileFullscreenService"),
+  IPlatformDetectionService: Symbol.for("IPlatformDetectionService"),
+  IGestureService: Symbol.for("IGestureService"),
   IPWAEngagementService: Symbol.for("IPWAEngagementService"),
   IPWAInstallDismissalService: Symbol.for("IPWAInstallDismissalService"),
 

@@ -15,7 +15,15 @@
       "Bash(move \"tests\\performance\\sequence-preview-optimization.test.ts\" \"tests\\unit\\performance\\sequence-preview-optimization.test.ts\")",
       "Bash(npx tsx:*)",
       "Bash(npx tsc:*)",
-      "Bash(npx svelte-check:*)"
+      "Bash(npx svelte-check:*)",
+      "Bash(while read f)",
+      "Bash(do wc -l \"$f\")",
+      "Bash(done)",
+      "Bash(mkdir:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(find:*)",
+      "Bash(npm install)",
+      "Bash(ls -la \"c:\\TKA\\docs\\refactoring\"\" 2>/dev/null || echo \"Directory does not exist or is empty \")"
     ],
     "deny": [],
     "ask": []

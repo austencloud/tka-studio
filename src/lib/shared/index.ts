@@ -75,6 +75,8 @@ export type { ISequenceExportService } from "../modules/build/shared/services/co
 
 // Mobile services (needed by components)
 export type { IMobileFullscreenService } from "./mobile/services/contracts/IMobileFullscreenService";
+export type { IPlatformDetectionService } from "./mobile/services/contracts/IPlatformDetectionService";
+export type { IGestureService } from "./mobile/services/contracts/IGestureService";
 
 // Beat grid models (needed by workbench)
 export type {

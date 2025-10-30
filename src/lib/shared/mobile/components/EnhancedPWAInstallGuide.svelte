@@ -9,10 +9,22 @@
   - Step-by-step visual guidance
   - Container-aware responsive layout
   - Runes-based reactive sizing
+
+  REFACTORED: Now uses composition and configuration-driven approach
+  - Platform detection separated into service
+  - Instructions extracted to configuration
+  - Sub-components for step display
+  - Measurement logic isolated to utility
 -->
 <script lang="ts">
   import { onMount } from "svelte";
   import { fade, fly } from "svelte/transition";
+  import { resolve, TYPES } from "$shared";
+  import type { IPlatformDetectionService } from "../services/contracts";
+  import type { Platform, Browser } from "../config/pwa-install-instructions";
+  import { getInstallInstructions } from "../config/pwa-install-instructions";
+  import { createViewportMeasurement } from "../utils/viewport-measurement.svelte";
+  import PlatformInstructions from "./PlatformInstructions.svelte";
 
   // Props
   let {
@@ -21,295 +33,28 @@
     showGuide?: boolean;
   } = $props();
 
-  // State
-  type Platform = "ios" | "android" | "desktop";
-  type Browser = "chrome" | "safari" | "edge" | "firefox" | "samsung" | "other";
-
+  // Platform/Browser detection state
   let platform = $state<Platform>("desktop");
   let browser = $state<Browser>("other");
 
-  // Container measurements for intelligent sizing
-  let sheetElement = $state<HTMLElement | null>(null);
-  let contentElement = $state<HTMLElement | null>(null);
-  let needsCompactMode = $state(false);
+  // Viewport measurement
+  const viewport = createViewportMeasurement({ initialDelay: 100 });
 
+  // Detect platform and browser on mount
   onMount(() => {
-    detectPlatformAndBrowser();
-
-    // Delay measurement to allow DOM to render
-    setTimeout(() => {
-      measureAndAdapt();
-
-      // Set up resize observer for continuous adaptation
-      const resizeObserver = new ResizeObserver(() => {
-        measureAndAdapt();
-      });
-
-      if (sheetElement) {
-        resizeObserver.observe(sheetElement);
-      }
-
-      return () => {
-        resizeObserver.disconnect();
-      };
-    }, 100);
+    const platformService = resolve<IPlatformDetectionService>(TYPES.IPlatformDetectionService);
+    const detected = platformService.detectPlatformAndBrowser();
+    platform = detected.platform;
+    browser = detected.browser;
   });
 
-  function measureAndAdapt() {
-    if (!sheetElement || !contentElement) return;
+  // Get instructions based on detected platform/browser
+  const instructions = $derived(getInstallInstructions(platform, browser));
 
-    try {
-      // Get actual viewport height
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
-
-      // Calculate fixed elements height (header + footer + handle + padding)
-      const headerHeight = sheetElement.querySelector('.guide-header')?.clientHeight || 70;
-      const footerHeight = sheetElement.querySelector('.guide-footer')?.clientHeight || 70;
-      const handleHeight = 25; // Handle + margins
-
-      // Available space for scrollable content
-      const available = viewportHeight * 0.95 - headerHeight - footerHeight - handleHeight;
-
-      // Measure actual content height
-      if (contentElement) {
-        const scrollHeight = contentElement.scrollHeight;
-
-        // Determine if we need compact mode
-        needsCompactMode = scrollHeight > available;
-      }
-    } catch (error) {
-      // Silently fail if measurement doesn't work
-      console.warn('PWA guide measurement failed:', error);
-    }
-  }
-
-  function detectPlatformAndBrowser() {
-    const ua = navigator.userAgent.toLowerCase();
-
-    // Detect platform
-    if (/iphone|ipad|ipod/.test(ua)) {
-      platform = "ios";
-    } else if (/android/.test(ua)) {
-      platform = "android";
-    } else {
-      platform = "desktop";
-    }
-
-    // Detect browser
-    const isSamsung = ua.includes("samsungbrowser");
-    const isEdge = ua.includes("edg/");
-    const isFirefox = ua.includes("firefox") || ua.includes("fxios");
-    const isChrome =
-      (ua.includes("chrome") || ua.includes("crios")) &&
-      !isEdge &&
-      !isSamsung;
-    const isSafari =
-      !isChrome && !isEdge && !isFirefox && ua.includes("safari");
-
-    if (isSamsung) browser = "samsung";
-    else if (isEdge) browser = "edge";
-    else if (isFirefox) browser = "firefox";
-    else if (isChrome) browser = "chrome";
-    else if (isSafari) browser = "safari";
-    else browser = "other";
-  }
-
+  // Handle close
   function handleClose() {
     showGuide = false;
   }
-
-  // Platform-specific instructions
-  const instructions = $derived(() => {
-    if (platform === "ios" && browser === "safari") {
-      return {
-        title: "Install TKA on iPhone/iPad",
-        icon: "fab fa-apple",
-        steps: [
-          {
-            text: 'Tap the <strong>Share</strong> button at the bottom of Safari',
-            icon: "fas fa-share",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/ios-safari-step1.png
-          },
-          {
-            text: 'Scroll down and tap <strong>"Add to Home Screen"</strong>',
-            icon: "fas fa-plus-square",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/ios-safari-step2.png
-          },
-          {
-            text: 'Tap <strong>"Add"</strong> in the top-right corner',
-            icon: "fas fa-check-circle",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/ios-safari-step3.png
-          },
-          {
-            text: "Find the TKA icon on your home screen and tap it to launch",
-            icon: "fas fa-mobile-alt",
-            image: null,
-          },
-        ],
-        benefits: [
-          "Opens in fullscreen without Safari UI",
-          "Faster loading with offline support",
-          "Quick access from home screen",
-        ],
-      };
-    }
-
-    if (platform === "ios" && browser !== "safari") {
-      return {
-        title: "Install TKA on iPhone/iPad",
-        icon: "fab fa-apple",
-        steps: [
-          {
-            text: 'Open this page in <strong>Safari</strong> (iOS only supports PWA installation in Safari)',
-            icon: "fab fa-safari",
-            image: null,
-          },
-          {
-            text: 'Tap the <strong>Share</strong> button at the bottom',
-            icon: "fas fa-share",
-            image: null, // TODO: Add screenshot
-          },
-          {
-            text: 'Tap <strong>"Add to Home Screen"</strong>',
-            icon: "fas fa-plus-square",
-            image: null, // TODO: Add screenshot
-          },
-        ],
-        benefits: [
-          "Fullscreen app-like experience",
-          "Works offline",
-          "No browser UI distractions",
-        ],
-      };
-    }
-
-    if (platform === "android" && (browser === "chrome" || browser === "edge")) {
-      return {
-        title: "Install TKA on Android",
-        icon: "fab fa-android",
-        steps: [
-          {
-            text: 'Tap the <strong>menu (⋮)</strong> in the top-right corner',
-            icon: "fas fa-ellipsis-v",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/android-chrome-step1.png
-          },
-          {
-            text: 'Select <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong>',
-            icon: "fas fa-download",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/android-chrome-step2.png
-          },
-          {
-            text: 'Tap <strong>"Install"</strong> or <strong>"Add"</strong> to confirm',
-            icon: "fas fa-check-circle",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/android-chrome-step3.png
-          },
-          {
-            text: "Launch TKA from your home screen or app drawer",
-            icon: "fas fa-rocket",
-            image: null,
-          },
-        ],
-        benefits: [
-          "Native app-like experience",
-          "Automatic fullscreen",
-          "Works offline",
-        ],
-      };
-    }
-
-    if (platform === "android" && browser === "samsung") {
-      return {
-        title: "Install TKA on Android (Samsung Internet)",
-        icon: "fab fa-android",
-        steps: [
-          {
-            text: 'Tap the <strong>menu (☰)</strong> at the bottom',
-            icon: "fas fa-bars",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/android-samsung-step1.png
-          },
-          {
-            text: 'Select <strong>"Add page to"</strong> → <strong>"Home screen"</strong>',
-            icon: "fas fa-plus-circle",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/android-samsung-step2.png
-          },
-          {
-            text: 'Tap <strong>"Add"</strong> to confirm',
-            icon: "fas fa-check",
-            image: null,
-          },
-          {
-            text: "Launch from your home screen",
-            icon: "fas fa-mobile-alt",
-            image: null,
-          },
-        ],
-        benefits: [
-          "Fullscreen experience",
-          "Quick home screen access",
-          "Offline support",
-        ],
-      };
-    }
-
-    if (platform === "desktop" && (browser === "chrome" || browser === "edge")) {
-      return {
-        title: "Install TKA on Desktop",
-        icon: "fas fa-desktop",
-        steps: [
-          {
-            text: 'Look for the <strong>install icon (⊕)</strong> in the address bar',
-            icon: "fas fa-plus-circle",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/desktop-chrome-step1.png
-          },
-          {
-            text: 'Click the icon and select <strong>"Install"</strong>',
-            icon: "fas fa-download",
-            image: null, // TODO: Add screenshot to /static/images/install-guides/desktop-chrome-step2.png
-          },
-          {
-            text: "Or open the menu (⋮) and select <strong>\"Install TKA\"</strong>",
-            icon: "fas fa-ellipsis-v",
-            image: null,
-          },
-          {
-            text: "Launch TKA from your desktop, taskbar, or start menu",
-            icon: "fas fa-window-maximize",
-            image: null,
-          },
-        ],
-        benefits: [
-          "Standalone window without browser chrome",
-          "Pin to taskbar or dock",
-          "Faster startup",
-        ],
-      };
-    }
-
-    // Fallback for unsupported browsers
-    return {
-      title: "Installation Not Available",
-      icon: "fas fa-info-circle",
-      steps: [
-        {
-          text: "Your current browser doesn't fully support PWA installation",
-          icon: "fas fa-exclamation-triangle",
-          image: null,
-        },
-        {
-          text: platform === "ios"
-            ? "On iOS, please use Safari for installation"
-            : "Try using Chrome, Edge, or Samsung Internet",
-          icon: "fas fa-browser",
-          image: null,
-        },
-      ],
-      benefits: [
-        "Better user experience",
-        "Offline support",
-        "App-like interface",
-      ],
-    };
-  });
 </script>
 
 {#if showGuide}
@@ -324,8 +69,8 @@
   <!-- Guide Bottom Sheet -->
   <div
     class="guide-sheet"
-    class:compact={needsCompactMode}
-    bind:this={sheetElement}
+    class:compact={viewport.needsCompactMode}
+    bind:this={viewport.sheetElement}
     transition:fly={{ y: 500, duration: 350 }}
   >
     <!-- Handle bar for swipe affordance -->
@@ -333,57 +78,16 @@
 
     <div class="guide-header">
       <div class="header-title">
-        <i class="{instructions().icon} title-icon"></i>
-        <h2>{instructions().title}</h2>
+        <i class="{instructions.icon} title-icon"></i>
+        <h2>{instructions.title}</h2>
       </div>
       <button class="close-btn" onclick={handleClose} aria-label="Close guide">
         <i class="fas fa-times"></i>
       </button>
     </div>
 
-    <div class="guide-content" bind:this={contentElement}>
-      <!-- Steps with Screenshots -->
-      <div class="steps-section">
-        <h3 class="section-heading">
-          <i class="fas fa-list-ol"></i>
-          <span>Follow These Steps</span>
-        </h3>
-        <div class="steps-grid">
-          {#each instructions().steps as step, index}
-            <div class="step-card">
-              <div class="step-header">
-                <div class="step-number">{index + 1}</div>
-                <div class="step-text">{@html step.text}</div>
-              </div>
-              <!-- Show placeholder for future screenshots (only when not in compact mode) -->
-              {#if !needsCompactMode}
-                <div class="step-image-container">
-                  <div class="image-placeholder">
-                    <i class="fas fa-image"></i>
-                    <span class="placeholder-text">Screenshot coming soon</span>
-                  </div>
-                </div>
-              {/if}
-            </div>
-          {/each}
-        </div>
-      </div>
-
-      <!-- Benefits -->
-      <div class="benefits-section">
-        <h3 class="section-heading">
-          <i class="fas fa-star"></i>
-          <span>Why Install?</span>
-        </h3>
-        <div class="benefits-grid">
-          {#each instructions().benefits as benefit}
-            <div class="benefit-item">
-              <i class="fas fa-check-circle"></i>
-              <span>{benefit}</span>
-            </div>
-          {/each}
-        </div>
-      </div>
+    <div class="guide-content" bind:this={viewport.contentElement}>
+      <PlatformInstructions {instructions} compact={viewport.needsCompactMode} />
     </div>
 
     <!-- Sticky Footer -->
@@ -527,207 +231,6 @@
   /* Compact mode content */
   .compact .guide-content {
     padding: 12px 16px;
-  }
-
-  /* Section Headings - Fluid sizing */
-  .section-heading {
-    display: flex;
-    align-items: center;
-    gap: clamp(8px, 2cqw, 10px);
-    margin: 0 0 clamp(10px, 2cqh, 14px) 0;
-    font-size: clamp(13px, 3cqw, 15px);
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .compact .section-heading {
-    font-size: clamp(12px, 2.5cqw, 14px);
-    margin-bottom: clamp(8px, 1.5cqh, 10px);
-  }
-
-  .section-heading i {
-    color: rgba(139, 92, 246, 1);
-    font-size: clamp(14px, 3cqw, 16px);
-  }
-
-  /* Steps Section */
-  .steps-section {
-    margin-bottom: clamp(12px, 3cqh, 20px);
-  }
-
-  .compact .steps-section {
-    margin-bottom: clamp(8px, 2cqh, 12px);
-  }
-
-  /* Steps Grid - Uses container queries for responsive columns */
-  .steps-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(8px, 2cqh, 12px);
-  }
-
-  @container install-guide (min-width: 600px) {
-    .steps-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: clamp(10px, 2cqh, 14px);
-    }
-  }
-
-  .compact .steps-grid {
-    gap: clamp(6px, 1.5cqh, 8px);
-  }
-
-  .step-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: clamp(8px, 2cqw, 12px);
-    padding: clamp(10px, 2.5cqh, 14px);
-    transition: all 0.2s ease;
-  }
-
-  .compact .step-card {
-    padding: clamp(8px, 2cqh, 10px);
-  }
-
-  .step-card:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-
-  .step-header {
-    display: flex;
-    align-items: flex-start;
-    gap: clamp(8px, 2cqw, 12px);
-    margin-bottom: clamp(6px, 1.5cqh, 10px);
-  }
-
-  .compact .step-header {
-    margin-bottom: 0;
-  }
-
-  .step-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: clamp(26px, 6cqw, 30px);
-    height: clamp(26px, 6cqw, 30px);
-    flex-shrink: 0;
-    border-radius: clamp(6px, 1.5cqw, 8px);
-    background: linear-gradient(
-      135deg,
-      rgba(99, 102, 241, 0.3) 0%,
-      rgba(139, 92, 246, 0.3) 100%
-    );
-    border: 1px solid rgba(99, 102, 241, 0.4);
-    color: rgba(139, 92, 246, 1);
-    font-weight: 700;
-    font-size: clamp(13px, 3cqw, 15px);
-  }
-
-  .step-text {
-    flex: 1;
-    margin: 0;
-    color: rgba(255, 255, 255, 0.88);
-    line-height: 1.5;
-    font-size: clamp(12px, 3cqw, 14px);
-  }
-
-  .compact .step-text {
-    font-size: clamp(11px, 2.5cqw, 13px);
-    line-height: 1.4;
-  }
-
-  .step-text :global(strong) {
-    color: rgba(255, 255, 255, 0.98);
-    font-weight: 600;
-  }
-
-  /* Step Screenshot Thumbnails - Fluid sizing */
-  .step-image-container {
-    position: relative;
-    margin-top: clamp(6px, 1.5cqh, 8px);
-    border-radius: clamp(6px, 1.5cqw, 8px);
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    max-width: clamp(150px, 40cqw, 200px);
-  }
-
-  .step-image {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  .image-placeholder {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: clamp(6px, 1.5cqh, 8px);
-    padding: clamp(12px, 3cqh, 20px);
-    background: rgba(255, 255, 255, 0.03);
-    color: rgba(255, 255, 255, 0.3);
-    min-height: 80px;
-  }
-
-  .image-placeholder i {
-    font-size: clamp(18px, 4cqw, 24px);
-    opacity: 0.5;
-  }
-
-  .placeholder-text {
-    font-size: clamp(10px, 2cqw, 11px);
-    opacity: 0.6;
-    font-style: italic;
-  }
-
-  /* Benefits Section - Fluid sizing */
-  .benefits-section {
-    padding: clamp(10px, 2.5cqh, 16px);
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    border-radius: clamp(8px, 2cqw, 12px);
-  }
-
-  .compact .benefits-section {
-    padding: clamp(8px, 2cqh, 12px);
-  }
-
-  .benefits-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(6px, 1.5cqh, 10px);
-  }
-
-  @container install-guide (min-width: 600px) {
-    .benefits-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: clamp(8px, 2cqh, 12px);
-    }
-  }
-
-  .compact .benefits-grid {
-    gap: clamp(5px, 1cqh, 8px);
-  }
-
-  .benefit-item {
-    display: flex;
-    align-items: center;
-    gap: clamp(8px, 2cqw, 12px);
-    color: rgba(255, 255, 255, 0.88);
-    font-size: clamp(11px, 2.5cqw, 13px);
-    line-height: 1.5;
-  }
-
-  .compact .benefit-item {
-    font-size: clamp(10px, 2cqw, 12px);
-    line-height: 1.4;
-  }
-
-  .benefit-item i {
-    color: rgba(139, 92, 246, 1);
-    font-size: clamp(13px, 3cqw, 15px);
-    flex-shrink: 0;
   }
 
   /* Sticky Footer - Fluid sizing */

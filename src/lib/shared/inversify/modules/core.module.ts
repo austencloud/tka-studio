@@ -19,6 +19,8 @@ import { SeoService } from "../../foundation/services/implementations/SeoService
 import { StorageService } from "../../foundation/services/implementations/StorageService";
 import { SvgImageService } from "../../foundation/services/implementations/SvgImageService";
 import { MobileFullscreenService } from "../../mobile/services/implementations/MobileFullscreenService";
+import { PlatformDetectionService } from "../../mobile/services/implementations/PlatformDetectionService";
+import { GestureService } from "../../mobile/services/implementations/GestureService";
 import { PWAEngagementService } from "../../mobile/services/implementations/PWAEngagementService";
 import { PWAInstallDismissalService } from "../../mobile/services/implementations/PWAInstallDismissalService";
 import { SettingsState } from "../../settings/state/SettingsState.svelte.js";
@@ -41,6 +43,8 @@ export const coreModule = new ContainerModule(
 
     // === MOBILE SERVICES ===
     options.bind(TYPES.IMobileFullscreenService).to(MobileFullscreenService);
+    options.bind(TYPES.IPlatformDetectionService).to(PlatformDetectionService);
+    options.bind(TYPES.IGestureService).to(GestureService);
     options.bind(TYPES.IPWAEngagementService).to(PWAEngagementService);
     options
       .bind(TYPES.IPWAInstallDismissalService)

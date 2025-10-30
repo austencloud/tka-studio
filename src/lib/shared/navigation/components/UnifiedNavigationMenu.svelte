@@ -10,11 +10,14 @@
   Uses 2025 UX trend: slide-up panel (bottom sheet) instead of center modal.
 -->
 <script lang="ts">
-  import type { IHapticFeedbackService } from "$shared";
+  import type { IHapticFeedbackService, IMobileFullscreenService, IGestureService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import { toggleSettingsDialog } from "../../application/state/app-state.svelte";
   import type { ModuleDefinition, ModuleId } from "../domain/types";
+  import { slideTransition, fadeTransition } from "$shared/utils";
+  import ModuleList from "./ModuleList.svelte";
+  import InstallPromptButton from "./InstallPromptButton.svelte";
+  import SettingsMenuItem from "./SettingsMenuItem.svelte";
 
   let {
     // Current state
@@ -34,6 +37,8 @@
   }>();
 
   let hapticService: IHapticFeedbackService;
+  let fullscreenService: IMobileFullscreenService;
+  let gestureService: IGestureService;
   let showMenu = $state(false);
   let panelElement: HTMLDivElement | undefined = $state(undefined);
   let contentHeight = $state(0);
@@ -42,14 +47,36 @@
   let showInstallOption = $state(false);
   let canUseNativeInstall = $state(false);
 
+  function closeMenu() {
+    showMenu = false;
+  }
+
+  // Setup gesture handler for swipe-to-dismiss
+  let gestureHandler = $state<ReturnType<IGestureService['createSwipeGestureHandler']>>();
+
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
     );
+    fullscreenService = resolve<IMobileFullscreenService>(
+      TYPES.IMobileFullscreenService
+    );
+    gestureService = resolve<IGestureService>(
+      TYPES.IGestureService
+    );
+
+    // Initialize gesture handler
+    gestureHandler = gestureService.createSwipeGestureHandler({
+      direction: 'vertical',
+      dismissOrientation: 'down',
+      threshold: 100,
+      onDismiss: () => closeMenu(),
+      onDrag: (delta) => gestureService.applyDragTransform(panelElement ?? null, delta, 'vertical'),
+      onSnapBack: () => gestureService.snapBackTransform(panelElement ?? null, 'vertical'),
+    });
 
     // Check if PWA install should be shown
     try {
-      const fullscreenService = resolve(TYPES.IMobileFullscreenService) as any;
       const isPWA = fullscreenService?.isPWA?.() ?? false;
 
       // Only show install option if not already installed as PWA
@@ -103,78 +130,9 @@
     }
   });
 
-  // Filter to main modules only
-  const mainModules = $derived(
-    modules.filter((m: ModuleDefinition) => m.isMain)
-  );
-  const devModules = $derived(
-    modules.filter((m: ModuleDefinition) => !m.isMain)
-  );
-
-  // Slide-up transition for the panel
-  function slideTransition(node: Element) {
-    return {
-      duration: 350,
-      css: (t: number) => {
-        // Cubic easing out: 1 - (1-t)^3
-        const easeOut = 1 - Math.pow(1 - t, 3);
-        return `transform: translateY(${(1 - easeOut) * 100}%)`;
-      },
-    };
-  }
-
-  // Fade transition for backdrop
-  function fadeTransition(node: Element) {
-    return {
-      duration: 250,
-      css: (t: number) => `opacity: ${t}`,
-    };
-  }
-
-  // Touch gesture handling for swipe-to-dismiss
-  let touchStartY = $state(0);
-  let touchCurrentY = $state(0);
-  let isDragging = $state(false);
-
-  function handleTouchStart(e: TouchEvent) {
-    touchStartY = e.touches[0].clientY;
-    touchCurrentY = touchStartY;
-    isDragging = true;
-  }
-
-  function handleTouchMove(e: TouchEvent) {
-    if (!isDragging) return;
-    touchCurrentY = e.touches[0].clientY;
-    const deltaY = touchCurrentY - touchStartY;
-
-    // Only allow downward swipes (positive deltaY)
-    if (deltaY > 0) {
-      e.preventDefault();
-    }
-  }
-
-  function handleTouchEnd() {
-    if (!isDragging) return;
-
-    const deltaY = touchCurrentY - touchStartY;
-    const threshold = 100; // Minimum swipe distance to close
-
-    if (deltaY > threshold) {
-      closeMenu();
-    }
-
-    isDragging = false;
-    touchStartY = 0;
-    touchCurrentY = 0;
-  }
-
   function toggleMenu() {
     hapticService?.trigger("navigation");
     showMenu = !showMenu;
-  }
-
-  function closeMenu() {
-    showMenu = false;
   }
 
   function handleBackdropClick() {
@@ -182,38 +140,15 @@
   }
 
   function handleModuleSelect(moduleId: ModuleId) {
-    hapticService?.trigger("navigation");
     onModuleChange?.(moduleId);
     closeMenu();
   }
 
-  function handleSettingsTap() {
-    hapticService?.trigger("navigation");
-    toggleSettingsDialog();
+  function handleSettingsClose() {
     closeMenu();
   }
 
-  async function handleInstallTap() {
-    hapticService?.trigger("selection");
-
-    if (canUseNativeInstall) {
-      // Try native install
-      try {
-        const fullscreenService = resolve(TYPES.IMobileFullscreenService) as any;
-        const accepted = await fullscreenService?.promptInstallPWA?.();
-        if (accepted) {
-          showInstallOption = false;
-        }
-      } catch (error) {
-        console.error("Failed to install PWA:", error);
-        // Fall back to showing guide
-        window.dispatchEvent(new CustomEvent("pwa:open-install-guide"));
-      }
-    } else {
-      // Show installation guide
-      window.dispatchEvent(new CustomEvent("pwa:open-install-guide"));
-    }
-
+  function handleInstallClose() {
     closeMenu();
   }
 
@@ -263,9 +198,9 @@
     tabindex="-1"
     onclick={(e) => e.stopPropagation()}
     onkeydown={(e) => e.stopPropagation()}
-    ontouchstart={handleTouchStart}
-    ontouchmove={handleTouchMove}
-    ontouchend={handleTouchEnd}
+    ontouchstart={gestureHandler?.handleTouchStart}
+    ontouchmove={gestureHandler?.handleTouchMove}
+    ontouchend={gestureHandler?.handleTouchEnd}
   >
     <!-- Handle bar for swipe affordance -->
     <div class="sheet-handle"></div>
@@ -284,94 +219,24 @@
     </div>
 
     <div class="menu-scroll">
-      <!-- All Modules Section -->
-      <section class="menu-section">
-        <h3 class="section-title">Switch Module</h3>
-        <div class="menu-items">
-          {#each mainModules as module}
-            <button
-              class="menu-item"
-              class:active={currentModule === module.id}
-              onclick={() => handleModuleSelect(module.id)}
-            >
-              <span class="item-icon">{@html module.icon}</span>
-              <div class="item-info">
-                <span class="item-label">{module.label}</span>
-                {#if module.description}
-                  <span class="item-description">{module.description}</span>
-                {/if}
-              </div>
-              {#if currentModule === module.id}
-                <span class="active-indicator"
-                  ><i class="fas fa-check"></i></span
-                >
-              {/if}
-            </button>
-          {/each}
-        </div>
-      </section>
-
-      {#if devModules.length > 0}
-        <section class="menu-section">
-          <h3 class="section-title">Developer Modules</h3>
-          <div class="menu-items">
-            {#each devModules as module}
-              <button
-                class="menu-item"
-                class:active={currentModule === module.id}
-                onclick={() => handleModuleSelect(module.id)}
-              >
-                <span class="item-icon">{@html module.icon}</span>
-                <div class="item-info">
-                  <span class="item-label">{module.label}</span>
-                  {#if module.description}
-                    <span class="item-description">{module.description}</span>
-                  {/if}
-                </div>
-                {#if currentModule === module.id}
-                  <span class="active-indicator"
-                    ><i class="fas fa-check"></i></span
-                  >
-                {/if}
-              </button>
-            {/each}
-          </div>
-        </section>
-      {/if}
+      <!-- Module Selection -->
+      <ModuleList
+        {currentModule}
+        {modules}
+        onModuleSelect={handleModuleSelect}
+      />
 
       <!-- App Actions Section -->
       <section class="menu-section">
         <div class="menu-items">
           {#if showInstallOption}
-            <button
-              class="menu-item install-item"
-              onclick={handleInstallTap}
-            >
-              <span class="item-icon install-icon">
-                <i class="fas fa-plus-circle"></i>
-              </span>
-              <div class="item-info">
-                <span class="item-label">
-                  {canUseNativeInstall ? "Install App" : "Add to Home Screen"}
-                </span>
-                <span class="item-description">
-                  {canUseNativeInstall
-                    ? "Install for fullscreen experience"
-                    : "Learn how to install"}
-                </span>
-              </div>
-            </button>
+            <InstallPromptButton
+              {canUseNativeInstall}
+              onInstall={handleInstallClose}
+            />
           {/if}
 
-          <button class="menu-item" onclick={handleSettingsTap}>
-            <span class="item-icon"><i class="fas fa-cog"></i></span>
-            <div class="item-info">
-              <span class="item-label">Settings</span>
-              <span class="item-description"
-                >App preferences and configuration</span
-              >
-            </div>
-          </button>
+          <SettingsMenuItem onSettingsClick={handleSettingsClose} />
         </div>
       </section>
     </div>
@@ -508,14 +373,6 @@
     color: rgba(255, 255, 255, 0.8);
   }
 
-  .separator {
-    color: rgba(255, 255, 255, 0.4);
-  }
-
-  .tab-name {
-    color: rgba(255, 255, 255, 0.6);
-  }
-
   /* Close button */
   .close-button {
     width: 36px;
@@ -559,116 +416,10 @@
     margin-bottom: 0;
   }
 
-  .section-title {
-    margin: 0 0 12px 0;
-    padding: 0 8px;
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: rgba(255, 255, 255, 0.5);
-  }
-
   .menu-items {
     display: flex;
     flex-direction: column;
     gap: 4px;
-  }
-
-  /* Menu items */
-  .menu-item {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 14px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
-    color: rgba(255, 255, 255, 0.9);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: left;
-    min-height: 56px;
-  }
-
-  .menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.15);
-    transform: translateX(4px);
-  }
-
-  .menu-item:active {
-    transform: translateX(4px) scale(0.98);
-  }
-
-  .menu-item.active {
-    background: rgba(99, 102, 241, 0.2);
-    border-color: rgba(99, 102, 241, 0.4);
-  }
-
-  .menu-item.disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
-
-  /* Install button special styling */
-  .menu-item.install-item {
-    background: linear-gradient(
-      135deg,
-      rgba(99, 102, 241, 0.15) 0%,
-      rgba(139, 92, 246, 0.15) 100%
-    );
-    border-color: rgba(99, 102, 241, 0.3);
-  }
-
-  .menu-item.install-item:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(99, 102, 241, 0.25) 0%,
-      rgba(139, 92, 246, 0.25) 100%
-    );
-    border-color: rgba(99, 102, 241, 0.5);
-  }
-
-  .menu-item.install-item .install-icon {
-    color: rgba(139, 92, 246, 1);
-  }
-
-  .item-icon {
-    font-size: 24px;
-    width: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .item-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0;
-  }
-
-  .item-label {
-    font-size: 16px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-  }
-
-  .item-description {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.3;
-  }
-
-
-  .active-indicator {
-    color: rgba(99, 102, 241, 1);
-    font-size: 16px;
-    flex-shrink: 0;
   }
 
   /* ============================================================================
@@ -693,7 +444,6 @@
      ============================================================================ */
   @media (prefers-reduced-motion: reduce) {
     .floating-menu-button,
-    .menu-item,
     .close-button,
     .sheet-handle {
       transition: none;
@@ -701,8 +451,6 @@
 
     .floating-menu-button:hover,
     .floating-menu-button:active,
-    .menu-item:hover,
-    .menu-item:active,
     .close-button:active {
       transform: none;
     }
@@ -717,16 +465,6 @@
     .menu-sheet {
       background: rgba(0, 0, 0, 0.98);
       border-top: 2px solid white;
-    }
-
-    .menu-item {
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .menu-item.active {
-      background: rgba(255, 255, 255, 0.3);
-      border-color: white;
     }
   }
 </style>
