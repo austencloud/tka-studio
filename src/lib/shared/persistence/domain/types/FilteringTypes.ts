@@ -7,4 +7,4 @@
 /**
  * Simple filter value - just strings, numbers, or booleans
  */
-export type GalleryFilterValue = string | number | boolean | string[] | null;
+export type ExploreFilterValue = string | number | boolean | string[] | null;

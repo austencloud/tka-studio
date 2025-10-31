@@ -10,4 +10,4 @@ export {
   UserWorkType,
 } from "./UserWorkType";
 
-export { GalleryFilterType } from "./FilteringEnums";
+export { ExploreFilterType } from "./FilteringEnums";

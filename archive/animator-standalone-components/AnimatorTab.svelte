@@ -82,7 +82,7 @@ Sub-modes are controlled via the global navigation state.
         <div class="info-banner">
           <p class="info-text">
             <span class="info-icon">ℹ️</span>
-            Select a sequence from the Gallery to animate it here, or load a default
+            Select a sequence from the Explore to animate it here, or load a default
             sequence to explore.
           </p>
         </div>

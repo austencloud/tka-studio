@@ -104,21 +104,22 @@ export class DeviceDetector implements IDeviceDetector {
 
   /**
    * Check if device is in landscape mobile mode
-   * Detects phone-like landscape viewports that should use left navigation
+   * Detects phone-like landscape viewports that should use side navigation
    *
-   * Criteria for landscape mobile navigation (very restrictive):
+   * Criteria for landscape mobile navigation:
    * - Currently in landscape orientation (width > height)
-   * - Very wide aspect ratio (> 2.0:1) indicating phone proportions
-   * - Low height (< 500px) indicating actual phone, not tablet
+   * - Very wide aspect ratio (> 1.7:1) indicating phone-like proportions
+   * - Low height (<= 600px) indicating phone/small tablet, not desktop
    *
    * This works for:
    * - Actual mobile phones rotated sideways (e.g., 844x390, 932x430)
+   * - Small tablets in landscape (e.g., 1024x600)
    * - Desktop windows resized to phone-like proportions (for testing)
    *
-   * This excludes (all use top navigation):
-   * - Tablets in landscape (e.g., 829x690, 1024x768)
+   * This excludes (all use bottom navigation):
+   * - Large tablets in landscape (e.g., 1024x768)
    * - Large foldables (e.g., 2208x1768)
-   * - Ultra-wide displays
+   * - Desktop displays
    *
    * Note: This is intentionally independent of touch detection to allow desktop testing
    */
@@ -132,9 +133,9 @@ export class DeviceDetector implements IDeviceDetector {
 
     // Phone landscape criteria - wider aspect ratio threshold to include iPhone 6/7/8 landscape (1.78:1)
     const isWideAspectRatio = aspectRatio > 1.7; // Includes most phone landscape orientations
-    const isLowHeight = viewportHeight < 500; // Actual phone height
+    const isLowHeight = viewportHeight <= 600; // Phone and small tablet height (increased from 500)
 
-    // Only phones in landscape should use left navigation
+    // Only phones and small tablets in landscape should use side navigation
     const result = isLandscape && isWideAspectRatio && isLowHeight;
 
     if (result) {

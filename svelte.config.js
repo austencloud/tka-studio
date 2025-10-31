@@ -49,8 +49,8 @@ const config = {
       $learn: "./src/lib/modules/learn",
       "$learn/*": "./src/lib/modules/learn/*",
 
-      $gallery: "./src/lib/modules/gallery",
-      "$gallery/*": "./src/lib/modules/gallery/*",
+      $Explore: "./src/lib/modules/Explore",
+      "$Explore/*": "./src/lib/modules/explore/*",
 
       $animator: "./src/lib/modules/build/animate",
       "$animator/*": "./src/lib/modules/build/animate/*",

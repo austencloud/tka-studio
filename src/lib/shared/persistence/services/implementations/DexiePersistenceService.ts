@@ -8,7 +8,7 @@
 
 import type {
     AppSettings,
-    CompleteGalleryState,
+    CompleteExploreState,
     PictographData,
     SequenceData,
     TabId,
@@ -211,26 +211,26 @@ export class DexiePersistenceService implements IPersistenceService {
   }
 
   // ============================================================================
-  // GALLERY STATE PERSISTENCE
+  // Explore STATE PERSISTENCE
   // ============================================================================
 
-  async saveGalleryState(state: CompleteGalleryState): Promise<void> {
+  async saveExploreState(state: CompleteExploreState): Promise<void> {
     try {
-      await this.saveUserWork(UserWorkType.GALLERY_STATE, "browse", state);
+      await this.saveUserWork(UserWorkType.Explore_STATE, "browse", state);
     } catch (error) {
-      console.error("❌ Failed to save gallery state:", error);
+      console.error("❌ Failed to save Explore state:", error);
       throw error;
     }
   }
 
-  async loadGalleryState(): Promise<CompleteGalleryState | null> {
+  async loadExploreState(): Promise<CompleteExploreState | null> {
     try {
       return (await this.loadUserWork(
-        UserWorkType.GALLERY_STATE,
+        UserWorkType.Explore_STATE,
         "browse"
-      )) as CompleteGalleryState | null;
+      )) as CompleteExploreState | null;
     } catch (error) {
-      console.error("❌ Failed to load gallery state:", error);
+      console.error("❌ Failed to load Explore state:", error);
       return null;
     }
   }

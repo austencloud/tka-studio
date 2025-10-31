@@ -572,11 +572,7 @@ body.deep-ocean-flow::before {
   box-shadow: var(--shadow-glass);
 }
 
-.glass-surface:hover {
-  background: var(--surface-hover);
-  border: var(--glass-border-hover);
-  box-shadow: var(--shadow-glass-hover);
-}
+
 
 /* Button Styles */
 .btn {

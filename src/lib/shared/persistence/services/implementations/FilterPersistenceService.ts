@@ -5,8 +5,8 @@
  */
 
 import { injectable } from "inversify";
-import { GalleryFilterType } from "../../domain/enums/FilteringEnums";
-import type { GalleryFilterValue } from "../../domain/types/FilteringTypes";
+import { ExploreFilterType } from "../../domain/enums/FilteringEnums";
+import type { ExploreFilterValue } from "../../domain/types/FilteringTypes";
 import type {
   FilterHistoryEntry,
   IFilterPersistenceService,
@@ -103,8 +103,8 @@ export class FilterPersistenceService implements IFilterPersistenceService {
       // Convert date strings back to Date objects
       return parsed.map((filter: unknown) => {
         const f = filter as {
-          type: GalleryFilterType;
-          value: GalleryFilterValue;
+          type: ExploreFilterType;
+          value: ExploreFilterValue;
           appliedAt: string;
         };
         return {
@@ -195,7 +195,7 @@ export class FilterPersistenceService implements IFilterPersistenceService {
   async loadFilterState(): Promise<FilterHistoryEntry> {
     // Return a default filter state matching the interface
     return {
-      type: GalleryFilterType.ALL_SEQUENCES,
+      type: ExploreFilterType.ALL_SEQUENCES,
       value: null,
       appliedAt: new Date(),
     };

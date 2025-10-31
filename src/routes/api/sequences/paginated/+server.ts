@@ -28,7 +28,7 @@ interface ManifestSequence {
   hasWebP: boolean;
 }
 
-interface GalleryManifest {
+interface ExploreManifest {
   version: string;
   generatedAt: string;
   totalCount: number;
@@ -149,11 +149,11 @@ async function loadSequencesFromManifest(): Promise<SequenceMetadata[]> {
 
   try {
     const staticDir = join(__dirname, "../../../../../static");
-    const manifestPath = join(staticDir, "gallery-manifest.json");
+    const manifestPath = join(staticDir, "Explore-manifest.json");
 
     // Read manifest file
     const manifestContent = await readFile(manifestPath, "utf-8");
-    const manifest: GalleryManifest = JSON.parse(manifestContent);
+    const manifest: ExploreManifest = JSON.parse(manifestContent);
 
     const duration = Math.round(performance.now() - startTime);
 
@@ -192,10 +192,10 @@ async function loadAllSequenceMetadataFallback(): Promise<SequenceMetadata[]> {
 
   const { readdir } = await import("fs/promises");
   const staticDir = join(__dirname, "../../../../../static");
-  const galleryDir = join(staticDir, "gallery");
+  const ExploreDir = join(staticDir, "Explore");
 
   try {
-    const sequenceDirectories = await readdir(galleryDir, {
+    const sequenceDirectories = await readdir(ExploreDir, {
       withFileTypes: true,
     });
     const sequences: SequenceMetadata[] = [];
@@ -215,7 +215,7 @@ async function loadAllSequenceMetadataFallback(): Promise<SequenceMetadata[]> {
         continue;
       }
 
-      const sequenceDir = join(galleryDir, sequenceName);
+      const sequenceDir = join(ExploreDir, sequenceName);
 
       try {
         const files = await readdir(sequenceDir);

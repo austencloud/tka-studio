@@ -37,8 +37,8 @@ interface AutoSyncConfig {
  *
  * @example
  * ```typescript
- * // In your existing createGalleryState factory
- * export function createGalleryState(services) {
+ * // In your existing createExploreState factory
+ * export function createExploreState(services) {
  *   const autoSyncState = createAutoSyncState<BrowseState>({
  *     key: 'tka-browse-state-v3',
  *     debounceMs: 300,
@@ -212,12 +212,12 @@ export function createAutoSyncState<T>(config: AutoSyncConfig) {
 // ============================================================================
 
 /**
- * Auto-sync factory specifically for gallery state
+ * Auto-sync factory specifically for Explore state
  */
-export function createGalleryAutoSync() {
+export function createExploreAutoSync() {
   return createAutoSyncState({
-    key: "tka-gallery-state-v3",
-    debounceMs: 300, // Faster saves for gallery interactions
+    key: "tka-Explore-state-v3",
+    debounceMs: 300, // Faster saves for Explore interactions
     validate: (state: unknown) =>
       Boolean(state && typeof state === "object" && state !== null),
     beforeSave: (state: unknown) => {

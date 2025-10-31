@@ -56,8 +56,7 @@
 
 <div class="tab-content">
   <SettingCard
-    title="Select Prop Type"
-    description="Choose your primary prop type for sequences"
+    title="Select Prop"
     helpText="Your prop type determines the visual appearance of movements in pictographs. Different props have unique shapes and rotation patterns."
   >
     <div class="prop-grid">

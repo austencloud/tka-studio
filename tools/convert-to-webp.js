@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * WebP Conversion Tool for TKA Gallery Optimization
+ * WebP Conversion Tool for TKA Explore Optimization
  *
  * Converts PNG thumbnails to WebP format for 70-80% file size reduction
  * Maintains original PNG files as fallbacks for older browsers
@@ -22,7 +22,7 @@ const __dirname = path.dirname(__filename);
 // Configuration
 const CONFIG = {
   // Source directory containing PNG files
-  sourceDir: path.join(__dirname, "../static/gallery"),
+  sourceDir: path.join(__dirname, "../static/Explore"),
 
   // WebP quality settings (0-100, higher = better quality but larger files)
   webpQuality: 85,
@@ -157,7 +157,7 @@ async function processBatch(files, startIndex) {
  * Main conversion function
  */
 async function convertAllImages() {
-  console.log("🚀 Starting WebP conversion for TKA Gallery optimization...\n");
+  console.log("🚀 Starting WebP conversion for TKA Explore optimization...\n");
 
   // Check if source directory exists
   try {
@@ -228,7 +228,7 @@ async function convertAllImages() {
     });
   }
 
-  console.log("🏆 Gallery optimization Phase 2 complete!");
+  console.log("🏆 Explore optimization Phase 2 complete!");
   console.log(
     "   Next: Update thumbnail service to serve WebP with PNG fallback"
   );

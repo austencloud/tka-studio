@@ -71,17 +71,19 @@
   .sidebar-item {
     display: flex;
     align-items: center;
-    gap: clamp(8px, 1vw, 16px);
-    padding: clamp(12px, 1.5vw, 20px);
+    gap: clamp(10px, 1vw, 16px);
+    padding: clamp(14px, 1.5vw, 20px);
     background: transparent;
-    border: none;
-    border-radius: 8px;
+    border: 1.5px solid transparent;
+    border-radius: 10px; /* More rounded for modern feel */
     color: rgba(255, 255, 255, 0.8);
     cursor: pointer;
-    transition: all var(--transition-fast);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
     text-align: left;
-    font-size: clamp(12px, 1.2vw, 16px);
+    font-size: clamp(15px, 1.4vw, 18px); /* Increased from 12-16px to 15-18px */
     font-weight: 500;
+    position: relative;
+    overflow: hidden;
   }
 
   /* Container query for sidebar responsiveness */
@@ -119,19 +121,41 @@
 
   .sidebar-item:hover {
     background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
     color: #ffffff;
+    transform: scale(1.02); /* Subtle scale */
+  }
+
+  .sidebar-item:active {
+    transform: scale(0.98); /* Press feedback */
   }
 
   .sidebar-item.active {
-    background: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.25); /* Indigo theme */
     color: #ffffff;
-    border: 1px solid rgba(99, 102, 241, 0.5);
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.3); /* Subtle glow */
+    font-weight: 600; /* Emphasize active tab */
+  }
+
+  .sidebar-item.active:hover {
+    background: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
   }
 
   .sidebar-icon {
-    font-size: 16px;
-    width: 20px;
+    font-size: 18px; /* Increased from 16px */
+    width: 22px;
     text-align: center;
+    transition: transform 0.2s ease;
+  }
+
+  .sidebar-item:hover .sidebar-icon {
+    transform: scale(1.1); /* Icon emphasis on hover */
+  }
+
+  .sidebar-label {
+    transition: opacity 0.2s ease;
   }
 
   /* Mobile responsive with intelligent layout switching */

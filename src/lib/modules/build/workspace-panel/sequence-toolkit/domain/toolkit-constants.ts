@@ -131,7 +131,7 @@ export const TOOL_OPERATIONS: Record<ToolOperationType, ToolOperationMetadata> =
   [ToolOperationType.ADD_TO_DICTIONARY]: {
     type: ToolOperationType.ADD_TO_DICTIONARY,
     name: "Save",
-    description: "Add sequence to gallery",
+    description: "Add sequence to Explore",
     icon: "📚",
     isDestructive: false,
     requiresConfirmation: false,

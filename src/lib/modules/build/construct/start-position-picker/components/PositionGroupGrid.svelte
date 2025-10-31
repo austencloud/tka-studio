@@ -61,7 +61,7 @@
 <style>
   .pictograph-container {
     position: relative;
-    aspect-ratio: 1;
+    aspect-ratio: 1; /* Maintain square aspect ratio */
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -70,9 +70,15 @@
     overflow: hidden;
     background: var(--row-tint, rgba(255, 255, 255, 0.05));
     border: 2px solid transparent;
+    /* Inherit size from parent grid - allows intelligent scaling */
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 0; /* Allow shrinking below default minimums */
+    min-height: 0;
     border-radius: 0px;
+    box-sizing: border-box;
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.1),
       0 2px 4px rgba(0, 0, 0, 0.06);
@@ -124,9 +130,14 @@
   .pictograph-wrapper {
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    min-width: 0;
+    min-height: 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
   }
 
   @keyframes slideInFade {

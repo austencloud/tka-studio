@@ -1,15 +1,18 @@
 <!--
-OptionFilterPanel.svelte - Filter options slide-up panel
+OptionFilterPanel.svelte - Filter options dropdown panel
 
 Provides a dedicated UI for filtering option viewer content:
 - All/Continuous toggle
 - Future filter options (grid mode, difficulty, etc.)
-- Slide-up interaction matching existing panels
+- Dropdown interaction sliding down from header
+- Auto-dismisses on selection
 -->
 
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
-  import { BottomSheet, resolve, TYPES } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { fly, fade } from "svelte/transition";
+  import { cubicOut } from "svelte/easing";
 
   // Props
   const {
@@ -33,22 +36,44 @@ Provides a dedicated UI for filtering option viewer content:
   function handleContinuityToggle(value: boolean) {
     hapticService?.trigger("selection");
     onToggleContinuous(value);
+    // Auto-dismiss after selection
+    setTimeout(() => {
+      onClose();
+    }, 150); // Small delay for haptic feedback to register
+  }
+
+  // Close on backdrop click
+  function handleBackdropClick() {
+    handleClose();
+  }
+
+  // Close on escape key
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === "Escape" && isOpen) {
+      handleClose();
+    }
   }
 </script>
 
-<BottomSheet
-  {isOpen}
-  labelledBy="filter-panel-title"
-  on:close={handleClose}
-  closeOnBackdrop={true}
-  focusTrap={false}
-  lockScroll={false}
-  showHandle={true}
-  placement="bottom"
-  class="filter-panel-container"
-  backdropClass="filter-panel-backdrop"
->
-  <div class="filter-panel">
+<svelte:window on:keydown={handleKeydown} />
+
+{#if isOpen}
+  <!-- Backdrop -->
+  <div
+    class="filter-backdrop"
+    transition:fade={{ duration: 200, easing: cubicOut }}
+    onclick={handleBackdropClick}
+    role="presentation"
+  ></div>
+
+  <!-- Dropdown Panel -->
+  <div
+    class="filter-panel"
+    transition:fly={{ y: -20, duration: 300, easing: cubicOut }}
+    role="dialog"
+    aria-labelledby="filter-panel-title"
+    aria-modal="true"
+  >
     <div class="filter-panel-header">
       <h2 id="filter-panel-title" class="filter-panel-title">
         <i class="fas fa-filter"></i>
@@ -67,7 +92,7 @@ Provides a dedicated UI for filtering option viewer content:
     <div class="filter-panel-content">
       <!-- Continuity Filter Section -->
       <div class="filter-section">
-        <h3 class="section-title">Option Type</h3>
+        <h3 class="section-title">Show Options</h3>
         <div class="toggle-group">
           <button
             class="toggle-option"
@@ -100,45 +125,39 @@ Provides a dedicated UI for filtering option viewer content:
           </button>
         </div>
       </div>
-
-      <!-- Future filter sections can be added here -->
-      <div class="filter-section future">
-        <p class="future-note">
-          <i class="fas fa-info-circle"></i>
-          More filter options coming soon!
-        </p>
-      </div>
     </div>
   </div>
-</BottomSheet>
+{/if}
 
 <style>
-  :global(.filter-panel-backdrop) {
-    background: rgba(0, 0, 0, 0.4);
+  /* Backdrop overlay */
+  .filter-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
+    z-index: 999;
   }
 
-  :global(.bottom-sheet.filter-panel-container) {
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    width: 100%;
-    max-height: 60vh;
-    padding-bottom: 0;
-  }
-
+  /* Dropdown panel */
   .filter-panel {
-    position: relative;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    max-height: 70vh;
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
-    border-radius: 24px 24px 0 0;
+    border-radius: 0 0 16px 16px;
     box-shadow:
-      0 -8px 32px rgba(0, 0, 0, 0.4),
-      0 -4px 16px rgba(0, 0, 0, 0.3);
+      0 8px 32px rgba(0, 0, 0, 0.4),
+      0 4px 16px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    z-index: 1000;
   }
 
   .filter-panel-header {
@@ -193,20 +212,20 @@ Provides a dedicated UI for filtering option viewer content:
   .filter-panel-content {
     flex: 1;
     overflow-y: auto;
-    padding: 24px;
+    padding: 20px 24px 24px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 20px;
   }
 
   .filter-section {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
   }
 
   .section-title {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;

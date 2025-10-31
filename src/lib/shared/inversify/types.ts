@@ -120,20 +120,20 @@ export const TYPES = {
   IGridModeDeriver: Symbol.for("IGridModeDeriver"),
 
   // === BROWSE SERVICES ===
-  // Specialized gallery services (no orchestration layer - use directly!)
-  IGalleryThumbnailService: Symbol.for("IGalleryThumbnailService"),
-  IGalleryCacheService: Symbol.for("IGalleryCacheService"),
-  IGalleryFilterService: Symbol.for("IGalleryFilterService"),
-  IGalleryLoader: Symbol.for("IGalleryLoader"),
-  IGalleryMetadataExtractor: Symbol.for("IGalleryMetadataExtractor"),
-  IGallerySortService: Symbol.for("IGallerySortService"),
-  IOptimizedGalleryService: Symbol.for("IOptimizedGalleryService"),
+  // Specialized Explore services (no orchestration layer - use directly!)
+  IExploreThumbnailService: Symbol.for("IExploreThumbnailService"),
+  IExploreCacheService: Symbol.for("IExploreCacheService"),
+  IExploreFilterService: Symbol.for("IExploreFilterService"),
+  IExploreLoader: Symbol.for("IExploreLoader"),
+  IExploreMetadataExtractor: Symbol.for("IExploreMetadataExtractor"),
+  IExploreSortService: Symbol.for("IExploreSortService"),
+  IOptimizedExploreService: Symbol.for("IOptimizedExploreService"),
   INavigationService: Symbol.for("INavigationService"),
   IFavoritesService: Symbol.for("IFavoritesService"),
   IDeleteService: Symbol.for("IDeleteService"),
   ISectionService: Symbol.for("ISectionService"),
   ISequenceIndexService: Symbol.for("ISequenceIndexService"),
-  IGalleryPanelManager: Symbol.for("IGalleryPanelManager"),
+  IExplorePanelManager: Symbol.for("IExplorePanelManager"),
   IFilterPersistenceService: Symbol.for("IFilterPersistenceService"),
   // === WORKBENCH SERVICES ===
   IWorkbenchService: Symbol.for("IWorkbenchService"),

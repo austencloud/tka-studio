@@ -2,7 +2,7 @@
  * Word Card State Factory
  *
  * Connects word card display state with existing microservices.
- * NO REDUNDANT LOGIC - uses GalleryService for data, PageLayoutService for layout.
+ * NO REDUNDANT LOGIC - uses ExploreService for data, PageLayoutService for layout.
  */
 
 import type { SequenceData } from "$shared";
@@ -54,7 +54,7 @@ export function createWordCardState(
   const isLoadingSequences = $state(false);
   const sequenceLoadError = $state<string | null>(null);
 
-  // Filtered sequences using EXISTING GalleryService
+  // Filtered sequences using EXISTING ExploreService
   const filteredSequences = $derived(() => {
     if (displayState.selectedLength === 0) {
       return allSequences;

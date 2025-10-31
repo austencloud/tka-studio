@@ -42,7 +42,9 @@
     activeTab,
     onTabChange,
     onOpenFilters = () => {},
-  }: IToolPanelProps & { onOpenFilters?: () => void } = $props();
+    onCloseFilters = () => {},
+    isFilterPanelOpen = false,
+  }: IToolPanelProps = $props();
 
   // ============================================================================
   // REACTIVE STATE
@@ -245,6 +247,8 @@
                 onStartPositionNavigateToDefault={handleNavigateToDefault}
                 {isSideBySideLayout}
                 {onOpenFilters}
+                {onCloseFilters}
+                {isFilterPanelOpen}
                 isContinuousOnly={constructTabState.isContinuousOnly}
                 onToggleContinuous={(value) => constructTabState.setContinuousOnly(value)}
               />
@@ -300,6 +304,7 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
+    min-height: 0;
   }
 
   .sub-tab-content {

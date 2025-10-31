@@ -77,7 +77,7 @@ This component could be valuable in:
 - Only show icon (no label) for advanced users
 - Collapsible educational panel
 
-### Gallery
+### Explore
 - Show CAP types for saved sequences
 - Filter sequences by CAP type
 - Educational annotations on shared sequences

@@ -1,5 +1,5 @@
 import type { SequenceData, TabId } from "$shared";
-import type { IGalleryThumbnailService } from "../../../../modules/gallery/display";
+import type { IExploreThumbnailService } from "../../../../modules/explore/display";
 
 // Centralized UI state leveraging Svelte 5 runes.
 const uiState = $state({
@@ -10,7 +10,7 @@ const uiState = $state({
   isWaitingForTabLoad: false,
   showSpotlight: false,
   spotlightSequence: null as SequenceData | null,
-  spotlightThumbnailService: null as IGalleryThumbnailService | null,
+  spotlightThumbnailService: null as IExploreThumbnailService | null,
 });
 
 export function getActiveTab(): TabId | null {
@@ -73,13 +73,13 @@ export function getSpotlightSequence(): SequenceData | null {
   return uiState.spotlightSequence;
 }
 
-export function getSpotlightThumbnailService(): IGalleryThumbnailService | null {
+export function getSpotlightThumbnailService(): IExploreThumbnailService | null {
   return uiState.spotlightThumbnailService;
 }
 
 export function showSpotlight(
   sequence: SequenceData,
-  thumbnailService: IGalleryThumbnailService
+  thumbnailService: IExploreThumbnailService
 ): void {
   uiState.spotlightSequence = sequence;
   uiState.spotlightThumbnailService = thumbnailService;

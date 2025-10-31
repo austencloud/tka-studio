@@ -1,7 +1,9 @@
-<!-- AccessibilityTab.svelte - User Experience and Accessibility Settings -->
+<!-- AccessibilityTab.svelte - Modern User Experience Settings -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import ToggleSetting from "../ToggleSetting.svelte";
+  import type { IHapticFeedbackService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
 
   interface Props {
     currentSettings: {
@@ -12,6 +14,15 @@
   }
 
   let { currentSettings, onSettingUpdate }: Props = $props();
+
+  // Services
+  let hapticService: IHapticFeedbackService;
+
+  onMount(() => {
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
+  });
 
   // Local state for immediate UI feedback
   let hapticEnabled = $state(currentSettings.hapticFeedback ?? true);
@@ -40,7 +51,9 @@
     }
   }
 
-  function handleHapticToggle(enabled: boolean) {
+  function handleHapticToggle(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const enabled = target.checked;
     hapticEnabled = enabled;
 
     // Trigger haptic feedback test if enabling
@@ -52,12 +65,15 @@
     onSettingUpdate({ key: "hapticFeedback", value: enabled });
   }
 
-  function handleReducedMotionToggle(enabled: boolean) {
+  function handleReducedMotionToggle(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const enabled = target.checked;
     reducedMotion = enabled;
 
     // If reduced motion is enabled, also disable haptic feedback
     if (enabled && hapticEnabled) {
-      handleHapticToggle(false);
+      hapticEnabled = false;
+      onSettingUpdate({ key: "hapticFeedback", value: false });
     }
 
     // Update parent settings
@@ -65,255 +81,340 @@
   }
 </script>
 
-<div class="accessibility-tab">
-  <div class="settings-section">
-    <div class="section-header">
-      <h3>🎯 User Experience</h3>
-      <p>Customize interaction feedback and motion preferences</p>
+<div class="experience-tab">
+  <!-- Haptic Feedback Card -->
+  <div class="setting-card" class:disabled={!isHapticSupported}>
+    <div class="card-icon haptic-icon">
+      <i class="fas fa-hand-paper"></i>
     </div>
-
-    <div class="setting-group">
-      <!-- Haptic Feedback Setting -->
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-label">
-            <span class="label-text">Haptic Feedback</span>
-            {#if !isHapticSupported}
-              <span class="not-supported-badge">Not Supported</span>
-            {/if}
-          </div>
-          <div class="setting-description">
-            Enable vibration feedback for touch interactions on mobile devices
-          </div>
-        </div>
-        <div class="setting-control">
-          <ToggleSetting
-            checked={hapticEnabled && isHapticSupported}
-            disabled={!isHapticSupported}
-            onchange={(enabled: boolean) => handleHapticToggle(enabled)}
-            label="Toggle haptic feedback"
-            compact={true}
-          />
-        </div>
-      </div>
-
-      <!-- Reduced Motion Setting -->
-      <div class="setting-item">
-        <div class="setting-info">
-          <div class="setting-label">
-            <span class="label-text">Reduce Motion</span>
-          </div>
-          <div class="setting-description">
-            Minimize animations and transitions throughout the app for better
-            accessibility
-          </div>
-        </div>
-        <div class="setting-control">
-          <ToggleSetting
-            checked={reducedMotion}
-            onchange={(enabled: boolean) => handleReducedMotionToggle(enabled)}
-            label="Toggle reduced motion"
-            compact={true}
-          />
-        </div>
+    <div class="card-content">
+      <div class="card-header">
+        <h3>Haptic Feedback</h3>
+        {#if !isHapticSupported}
+          <span class="badge">Not Available</span>
+        {/if}
       </div>
     </div>
-
-    {#if !isHapticSupported}
-      <div class="info-note">
-        <span class="info-icon">ℹ️</span>
-        <div class="info-content">
-          <strong>Haptic feedback is not available on this device.</strong>
-          <br />This feature requires a mobile device with vibration support.
-        </div>
-      </div>
-    {/if}
+    <label class="toggle-switch">
+      <input
+        type="checkbox"
+        checked={hapticEnabled && isHapticSupported}
+        disabled={!isHapticSupported}
+        onchange={handleHapticToggle}
+        aria-label="Toggle haptic feedback"
+      />
+      <span class="toggle-slider"></span>
+    </label>
   </div>
+
+  <!-- Reduced Motion Card -->
+  <div class="setting-card">
+    <div class="card-icon motion-icon">
+      <i class="fas fa-running"></i>
+    </div>
+    <div class="card-content">
+      <div class="card-header">
+        <h3>Reduce Motion</h3>
+      </div>
+    </div>
+    <label class="toggle-switch">
+      <input
+        type="checkbox"
+        checked={reducedMotion}
+        onchange={handleReducedMotionToggle}
+        aria-label="Toggle reduced motion"
+      />
+      <span class="toggle-slider"></span>
+    </label>
+  </div>
+
+  <!-- Info Note (only if haptic not supported) -->
+  {#if !isHapticSupported}
+    <div class="info-banner">
+      <i class="fas fa-info-circle"></i>
+      <span>Haptic feedback requires a device with vibration support</span>
+    </div>
+  {/if}
 </div>
 
 <style>
-  .accessibility-tab {
-    padding: 0;
-    max-width: 100%;
-    width: 100%;
-    overflow-x: hidden; /* Prevent horizontal overflow */
-  }
-
-  .settings-section {
-    margin-bottom: 0;
-  }
-
-  .section-header {
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  .section-header h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--text-color, white);
-    margin: 0 0 6px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .section-header p {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.7);
-    margin: 0;
-    line-height: 1.4;
-  }
-
-  .setting-group {
+  .experience-tab {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 8px;
   }
 
-  .setting-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* Align center instead of flex-start for compact layout */
-    gap: 12px;
-    padding: 12px 10px;
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-    transition: background-color 0.2s ease;
-    max-width: 100%;
-  }
-
-  /* Mobile - even more compact */
-  @media (max-width: 480px) {
-    .setting-item {
-      padding: 10px 8px;
-      gap: 10px;
-    }
-  }
-
-  .setting-item:hover {
-    background: rgba(255, 255, 255, 0.04);
-  }
-
-  .setting-info {
-    flex: 1;
-    min-width: 0; /* Allow text to wrap properly */
-    max-width: calc(100% - 70px); /* Reserve space for toggle */
-  }
-
-  .setting-label {
+  /* Setting Card - Modern iOS/Material Design style */
+  .setting-card {
     display: flex;
     align-items: center;
-    gap: 6px;
-    margin-bottom: 4px;
-    flex-wrap: wrap; /* Allow badge to wrap if needed */
+    gap: 16px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1.5px solid rgba(255, 255, 255, 0.12);
+    border-radius: 16px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 80px;
   }
 
-  .label-text {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-color, white);
+  .setting-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
-  /* Mobile - smaller text */
-  @media (max-width: 480px) {
-    .label-text {
-      font-size: 13px;
-    }
-
-    .setting-info {
-      max-width: calc(100% - 60px); /* Less space for smaller toggle */
-    }
+  .setting-card.disabled {
+    opacity: 0.5;
+    pointer-events: none;
   }
 
-  .not-supported-badge {
-    background: rgba(239, 68, 68, 0.2);
-    color: #f87171;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.025em;
-    white-space: nowrap;
-  }
-
-  .setting-description {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1.3;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-  }
-
-  /* Mobile - even smaller description */
-  @media (max-width: 480px) {
-    .setting-description {
-      font-size: 11px;
-      line-height: 1.25;
-    }
-  }
-
-  .setting-control {
-    flex: 0 0 auto;
+  /* Card Icon - Large colorful icons */
+  .card-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
+    font-size: 22px;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1));
+    color: #8b8ff8;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .info-note {
+  .haptic-icon {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1));
+    color: #f472b6;
+  }
+
+  .motion-icon {
+    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+    color: #4ade80;
+  }
+
+  .setting-card:hover .card-icon {
+    transform: scale(1.1) rotate(-5deg);
+  }
+
+  /* Card Content */
+  .card-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .card-header {
     display: flex;
-    gap: 10px;
-    padding: 12px;
-    background: rgba(59, 130, 246, 0.1);
-    border: 1px solid rgba(59, 130, 246, 0.2);
-    border-radius: 10px;
-    margin-top: 12px;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
   }
 
-  .info-icon {
-    font-size: 18px;
+  .card-header h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  /* Badge for unavailable features */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #f87171;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Modern Toggle Switch */
+  .toggle-switch {
     flex-shrink: 0;
-    margin-top: 1px;
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 32px;
+    cursor: pointer;
   }
 
-  .info-content {
+  .toggle-switch input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    margin: 0;
+    z-index: 1; /* Ensure it's above the slider */
+  }
+
+  .toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 16px;
+  }
+
+  .toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 2px;
+    bottom: 2px;
+    background: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  input:checked + .toggle-slider {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    border-color: #6366f1;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+  }
+
+  input:checked + .toggle-slider:before {
+    transform: translateX(20px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  input:focus-visible + .toggle-slider {
+    outline: 2px solid #6366f1;
+    outline-offset: 2px;
+  }
+
+  input:disabled + .toggle-slider {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Hover effect on toggle */
+  .toggle-switch:hover .toggle-slider {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  .toggle-switch:hover input:checked + .toggle-slider {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.5);
+  }
+
+  /* Info Banner */
+  .info-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1.5px solid rgba(59, 130, 246, 0.25);
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.85);
     font-size: 13px;
-    color: rgba(255, 255, 255, 0.8);
     line-height: 1.4;
   }
 
-  /* Mobile - smaller info note */
+  .info-banner i {
+    font-size: 16px;
+    color: #60a5fa;
+    flex-shrink: 0;
+  }
+
+  /* Responsive adjustments */
   @media (max-width: 480px) {
-    .info-note {
-      padding: 10px;
-      gap: 8px;
+    .experience-tab {
+      padding: 4px;
+      gap: 12px;
     }
 
-    .info-icon {
+    .setting-card {
+      padding: 16px;
+      min-height: 72px;
+      gap: 12px;
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      font-size: 20px;
+    }
+
+    .card-header h3 {
       font-size: 16px;
     }
 
-    .info-content {
+    .toggle-switch {
+      width: 48px;
+      height: 28px;
+    }
+
+    .toggle-slider:before {
+      height: 22px;
+      width: 22px;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(18px);
+    }
+
+    .badge {
+      font-size: 10px;
+      padding: 3px 8px;
+    }
+
+    .info-banner {
+      padding: 12px 14px;
       font-size: 12px;
-      line-height: 1.3;
     }
   }
 
-  .info-content strong {
-    color: var(--text-color, white);
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .setting-card,
+    .card-icon,
+    .toggle-slider,
+    .toggle-slider:before {
+      transition: none;
+    }
+
+    .setting-card:hover {
+      transform: none;
+    }
+
+    .setting-card:hover .card-icon {
+      transform: none;
+    }
   }
 
-  /* Remove the mobile responsive that causes stacking */
-  /* We want to keep the toggle on the right side always */
+  /* High contrast */
+  @media (prefers-contrast: high) {
+    .setting-card {
+      border-width: 2px;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
 
-  /* Reduced motion support */
-  @media (prefers-reduced-motion: reduce) {
-    .setting-item {
-      transition: none;
+    .setting-card:hover {
+      border-color: #6366f1;
+    }
+
+    .toggle-slider {
+      border-width: 2px;
     }
   }
 </style>

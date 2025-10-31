@@ -58,13 +58,13 @@ export const LEARN_MODES: ModeOption[] = [
   },
 ];
 
-// Gallery modes configuration (single mode for now)
-export const GALLERY_MODES: ModeOption[] = [
+// Explore modes configuration
+export const EXPLORE_MODES: ModeOption[] = [
   {
-    id: "gallery",
-    label: "Gallery",
-    icon: '<i class="fas fa-th-large"></i>',
-    description: "Browse and explore sequences",
+    id: "explore",
+    label: "Explore",
+    icon: '<i class="fas fa-compass"></i>',
+    description: "Explore and discover sequences",
     color: "#a855f7",
     gradient: "linear-gradient(135deg, #c084fc 0%, #a855f7 100%)",
   },
@@ -81,12 +81,12 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     subModes: BUILD_MODES,
   },
   {
-    id: "gallery",
-    label: "Gallery",
-    icon: '<i class="fas fa-images" style="color: #a855f7;"></i>', // Purple - art gallery/display
-    description: "Browse and explore sequences",
+    id: "explore",
+    label: "Explore",
+    icon: '<i class="fas fa-compass" style="color: #a855f7;"></i>', // Purple - discovery/exploration
+    description: "Explore and discover sequences",
     isMain: true,
-    subModes: GALLERY_MODES,
+    subModes: EXPLORE_MODES,
   },
   {
     id: "learn",
@@ -384,8 +384,12 @@ export function createNavigationState() {
     get learnModes() {
       return LEARN_MODES;
     },
-    get galleryModes() {
-      return GALLERY_MODES;
+    get exploreModes() {
+      return EXPLORE_MODES;
+    },
+    // Legacy getter for backward compatibility
+    get ExploreModes() {
+      return EXPLORE_MODES;
     },
     get moduleDefinitions() {
       return MODULE_DEFINITIONS;

@@ -25,7 +25,6 @@
     type PictographData
   } from "$shared";
   import { onMount, setContext } from "svelte";
-  import OptionFilterPanel from "../../construct/option-picker/option-viewer/components/OptionFilterPanel.svelte";
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
@@ -391,6 +390,8 @@
         isSideBySideLayout={() => shouldUseSideBySideLayout}
         onPracticeBeatIndexChange={(index) => { panelState.setPracticeBeatIndex(index); }}
         onOpenFilters={handleOpenFilterPanel}
+        onCloseFilters={() => { panelState.closeFilterPanel(); }}
+        isFilterPanelOpen={panelState.isFilterPanelOpen}
       />
     </div>
   </div>
@@ -403,18 +404,6 @@
     {shouldUseSideBySideLayout}
     onError={(err) => { error = err; }}
   />
-
-  <!-- Option Filter Panel -->
-  {#if panelState.isFilterPanelOpen}
-    <OptionFilterPanel
-      isOpen={panelState.isFilterPanelOpen}
-      isContinuousOnly={constructTabState.isContinuousOnly}
-      onClose={() => { panelState.closeFilterPanel(); }}
-      onToggleContinuous={(isContinuousOnly: boolean) => {
-        constructTabState?.setContinuousOnly(isContinuousOnly);
-      }}
-    />
-  {/if}
 
   <!-- Share Coordinator -->
   <ShareCoordinator
@@ -446,8 +435,7 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
-    /* Account for bottom navigation */
-    padding-bottom: max(64px, env(safe-area-inset-bottom));
+    /* Navigation spacing handled by parent MainInterface.content-area */
   }
 
   .build-tab.side-by-side {

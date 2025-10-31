@@ -26,7 +26,7 @@
     "src/**/*.ts",
     "src/**/*.svelte",
     "tests/**/*.ts",
-    "src/lib/modules/gallery/domain/models/gallery-sorting-models.ts",
+    "src/lib/modules/explore/domain/models/Explore-sorting-models.ts",
     "src/lib/shared/application/state/app-state-factory.svelte.ts",
     "src/lib/shared/application/state/app-state-factory.svelte.ts"
   ],

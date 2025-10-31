@@ -21,7 +21,9 @@
     onStartPositionNavigateToDefault,
     isSideBySideLayout = () => false,
     onOpenFilters = () => {},
+    onCloseFilters = () => {},
     isContinuousOnly = false,
+    isFilterPanelOpen = false,
     onToggleContinuous = () => {},
   } = $props<{
     shouldShowStartPositionPicker: boolean;
@@ -33,7 +35,9 @@
     onStartPositionNavigateToDefault?: () => void;
     isSideBySideLayout?: () => boolean;
     onOpenFilters?: () => void;
+    onCloseFilters?: () => void;
     isContinuousOnly?: boolean;
+    isFilterPanelOpen?: boolean;
     onToggleContinuous?: (value: boolean) => void;
   }>();
 </script>
@@ -66,7 +70,9 @@
               {isSideBySideLayout}
               {isUndoingOption}
               {onOpenFilters}
+              {onCloseFilters}
               {isContinuousOnly}
+              {isFilterPanelOpen}
               {onToggleContinuous}
             />
           {/if}
@@ -98,6 +104,7 @@
     overflow: visible;
     height: 100%;
     width: 100%;
+    min-height: 0;
   }
 
 

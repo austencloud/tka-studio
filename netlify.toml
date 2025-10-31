@@ -4,10 +4,10 @@
 [build]
   # Build command for SvelteKit
   command = "npm run build"
-  
+
   # Output directory after build
   publish = "build"
-  
+
   # Functions directory (if you add serverless functions later)
   functions = "netlify/functions"
 
@@ -32,15 +32,15 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache gallery thumbnails for 1 year
+# Cache Explore thumbnails for 1 year
 [[headers]]
-  for = "/gallery_thumbnails/*"
+  for = "/Explore_thumbnails/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
-# Cache gallery images for 1 year
+# Cache Explore images for 1 year
 [[headers]]
-  for = "/gallery/*"
+  for = "/Explore/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 

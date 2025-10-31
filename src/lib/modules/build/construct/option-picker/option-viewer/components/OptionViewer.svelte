@@ -24,6 +24,7 @@ Business logic moved to state management and utility services.
   } from "../services/contracts";
   import { createContainerDimensionTracker, createOptionPickerState } from "../state";
   import { LetterTypeTextPainter } from "../utils/letter-type-text-painter";
+  import OptionFilterPanel from "./OptionFilterPanel.svelte";
   import OptionViewerGridLayout from "./OptionViewerGridLayout.svelte";
   import OptionViewerSwipeLayout from "./OptionViewerSwipeLayout.svelte";
 
@@ -39,7 +40,9 @@ Business logic moved to state management and utility services.
     isUndoingOption = false,
     isSideBySideLayout = () => false,
     onOpenFilters = () => {},
+    onCloseFilters = () => {},
     isContinuousOnly = false,
+    isFilterPanelOpen = false,
     onToggleContinuous = () => {},
   }: {
     onOptionSelected: (option: PictographData) => void;
@@ -48,7 +51,9 @@ Business logic moved to state management and utility services.
     isUndoingOption?: boolean;
     isSideBySideLayout?: () => boolean;
     onOpenFilters?: () => void;
+    onCloseFilters?: () => void;
     isContinuousOnly?: boolean;
+    isFilterPanelOpen?: boolean;
     onToggleContinuous?: (value: boolean) => void;
   } = $props();
 
@@ -95,7 +100,7 @@ Business logic moved to state management and utility services.
       const dash = LetterTypeTextPainter.getColoredText("Dash");
       const dualDash = LetterTypeTextPainter.getColoredText("Dual-Dash");
       const staticText = LetterTypeTextPainter.getColoredText("Static");
-      return `Types 4, 5, 6:&nbsp;${dash},&nbsp;${dualDash},&nbsp;${staticText}`;
+      return `Types 4-6:&nbsp;${dash},&nbsp;${dualDash},&nbsp;${staticText}`;
     }
 
     // Handle individual types
@@ -447,12 +452,14 @@ Business logic moved to state management and utility services.
       <p>Initializing option picker...</p>
     </div>
   {:else}
-    <!-- Shared header with Filter button -->
+    <!-- Shared header with interactive title button -->
     <ConstructPickerHeader
       variant="options"
       title="Options"
       titleHtml={formattedSectionTitle}
-      onOpenFilters={onOpenFilters}
+      {isContinuousOnly}
+      {isFilterPanelOpen}
+      {onOpenFilters}
     />
 
     <!-- Main content -->
@@ -501,11 +508,20 @@ Business logic moved to state management and utility services.
         {/if}
       {/if}
     </div>
+
+    <!-- Filter Panel Dropdown -->
+    <OptionFilterPanel
+      isOpen={isFilterPanelOpen}
+      {isContinuousOnly}
+      onClose={onCloseFilters}
+      onToggleContinuous={onToggleContinuous}
+    />
   {/if}
 </div>
 
 <style>
   .option-picker-container {
+    position: relative;
     display: flex;
     flex-direction: column;
     height: 100%;

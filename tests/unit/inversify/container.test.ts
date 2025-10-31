@@ -176,10 +176,10 @@ describe("Inversify Container", () => {
       expect(service).toBeDefined();
     });
 
-    it("should load gallery module services", async () => {
+    it("should load Explore module services", async () => {
       await initializeContainer();
 
-      const service = await resolve(TYPES.IGalleryLoader);
+      const service = await resolve(TYPES.IExploreLoader);
       expect(service).toBeDefined();
     });
 

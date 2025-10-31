@@ -100,7 +100,7 @@ server: {
 The app is organized into domain modules under `src/lib/modules/`:
 
 - `build/` - Sequence construction and editing
-- `gallery/` - Sequence browsing and display
+- `Explore/` - Sequence browsing and display
 - `learn/` - Educational content (PDFs, codex, quizzes)
 - `write/` - Act creation and music integration
 - `animator/` - Sequence animation
@@ -174,7 +174,7 @@ if (import.meta.hot) {
 ### Critical Import Rules
 
 1. **Within modules**: Use relative imports, NEVER barrel exports (`$shared`)
-2. **Cross-module**: Use module aliases (`$build`, `$gallery`, etc.)
+2. **Cross-module**: Use module aliases (`$build`, `$Explore`, etc.)
 3. **Services**: Always use DI container resolution
 4. **Types only**: Use `import type` for type-only imports
 
@@ -192,7 +192,7 @@ import { BackgroundSystem } from "$shared"; // From within shared module
 ### Module Aliases (svelte.config.js)
 
 - `$shared` - Shared utilities, services, components
-- `$build`, `$gallery`, `$learn`, `$write`, `$animator`, `$wordcard` - Module aliases
+- `$build`, `$Explore`, `$learn`, `$write`, `$animator`, `$wordcard` - Module aliases
 - Use these for cross-module imports only
 
 ## Development Workflows

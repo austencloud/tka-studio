@@ -3,6 +3,7 @@
   import type { Container } from "inversify";
   import type { Snippet } from "svelte";
   import { onMount, setContext } from "svelte";
+  import { authStore } from "$shared/auth";
   import "../app.css";
 
   let { children } = $props<{
@@ -50,6 +51,9 @@
   }
 
   onMount(() => {
+    // Initialize Firebase Auth listener
+    authStore.initialize();
+
     // Async initialization
     (async () => {
       try {
@@ -98,6 +102,9 @@
 
     // Return synchronous cleanup function
     return () => {
+      // Clean up auth listener
+      authStore.cleanup();
+
       if (window.visualViewport) {
         window.visualViewport.removeEventListener(
           "resize",

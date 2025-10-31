@@ -2,7 +2,7 @@
  * Navigation Components
  */
 
-export { default as BottomNavigation } from "./BottomNavigation.svelte";
+export { default as PrimaryNavigation } from "./PrimaryNavigation.svelte";
 export { default as DesktopDropdown } from "./DesktopDropdown.svelte";
 export { default as HamburgerMenuButton } from "./HamburgerMenuButton.svelte";
 export { default as MobileModal } from "./MobileModal.svelte";

@@ -89,7 +89,7 @@ export class ModernMetadataService {
    */
   private getSidecarPath(sequenceName: string): string {
     // Extract directory and filename from sequence name
-    // e.g., "ΩXΔZ_ver1" -> "/gallery/Ω/ΩXΔZ/ΩXΔZ_ver1.meta.json"
+    // e.g., "ΩXΔZ_ver1" -> "/Explore/Ω/ΩXΔZ/ΩXΔZ_ver1.meta.json"
 
     const parts = sequenceName.split("_");
     const baseName = parts[0]; // e.g., "ΩXΔZ"
@@ -103,7 +103,7 @@ export class ModernMetadataService {
   }
 
   /**
-   * Determine gallery directory for a sequence
+   * Determine Explore directory for a sequence
    */
   private getDirectoryForSequence(firstChar: string, baseName: string): string {
     // Handle special cases and long sequences

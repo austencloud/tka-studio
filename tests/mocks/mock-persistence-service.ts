@@ -7,7 +7,7 @@
 
 import type {
     AppSettings,
-    CompleteGalleryState,
+    CompleteExploreState,
     IPersistenceService,
     PictographData,
     SequenceData,
@@ -26,7 +26,7 @@ export class MockPersistenceService implements IPersistenceService {
   private userWork = new Map<string, unknown>();
   private activeTab: TabId | null = null;
   private tabStates = new Map<TabId, unknown>();
-  private galleryState: CompleteGalleryState | null = null;
+  private ExploreState: CompleteExploreState | null = null;
   private currentSequenceState: unknown | null = null;
 
   private _isInitialized = false;
@@ -141,15 +141,15 @@ export class MockPersistenceService implements IPersistenceService {
   }
 
   // ============================================================================
-  // GALLERY STATE PERSISTENCE
+  // Explore STATE PERSISTENCE
   // ============================================================================
 
-  async saveGalleryState(state: CompleteGalleryState): Promise<void> {
-    this.galleryState = state;
+  async saveExploreState(state: CompleteExploreState): Promise<void> {
+    this.ExploreState = state;
   }
 
-  async loadGalleryState(): Promise<CompleteGalleryState | null> {
-    return this.galleryState;
+  async loadExploreState(): Promise<CompleteExploreState | null> {
+    return this.ExploreState;
   }
 
   // ============================================================================
@@ -217,7 +217,7 @@ export class MockPersistenceService implements IPersistenceService {
     this.userWork.clear();
     this.activeTab = null;
     this.tabStates.clear();
-    this.galleryState = null;
+    this.ExploreState = null;
     this.currentSequenceState = null;
   }
 

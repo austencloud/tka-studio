@@ -168,14 +168,18 @@
       <button
         class="settings-sheet__button settings-sheet__button--cancel"
         onclick={handleClose}
+        aria-label="Cancel changes"
       >
+        <i class="fas fa-times"></i>
         Cancel
       </button>
       <button
         class="settings-sheet__button settings-sheet__button--apply"
         onclick={handleApply}
         disabled={!hasUnsavedChanges}
+        aria-label="Apply changes"
       >
+        <i class="fas fa-check"></i>
         Apply Changes
       </button>
     </footer>
@@ -268,16 +272,29 @@
   .settings-sheet__content {
     flex: 1;
     overflow-y: auto;
-    overflow-y: visible; /* No scrolling needed - everything fits on one screen */
     padding: 24px;
     background: rgba(255, 255, 255, 0.01);
+    /* Smooth fade-slide animation when content changes */
+    animation: contentFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  /* Footer */
+  /* Content entrance animation */
+  @keyframes contentFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Footer - 2025 Standard: Cancel left, Apply right */
   .settings-sheet__footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between; /* Changed from flex-end to space-between */
     gap: 12px;
     padding: 16px 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -286,44 +303,76 @@
   }
 
   .settings-sheet__button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 12px 24px;
-    border-radius: 8px;
+    border-radius: 10px; /* Slightly increased for modern feel */
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
     border: none;
+    min-height: 44px; /* Touch target */
   }
 
+  /* Cancel button - secondary action */
   .settings-sheet__button--cancel {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
   }
 
   .settings-sheet__button--cancel:hover {
     background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: scale(1.02); /* Subtle scale up */
   }
 
+  .settings-sheet__button--cancel:active {
+    transform: scale(0.98); /* Press feedback */
+  }
+
+  /* Apply button - primary action with indigo theme */
   .settings-sheet__button--apply {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #6366f1, #4f46e5); /* Indigo gradient */
     color: white;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+    box-shadow:
+      0 2px 8px rgba(99, 102, 241, 0.3),
+      0 0 12px rgba(99, 102, 241, 0.2); /* Subtle glow */
   }
 
   .settings-sheet__button--apply:hover:not(:disabled) {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
-    transform: translateY(-1px);
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    box-shadow:
+      0 4px 12px rgba(99, 102, 241, 0.4),
+      0 0 20px rgba(99, 102, 241, 0.3); /* Enhanced glow */
+    transform: scale(1.02);
+  }
+
+  .settings-sheet__button--apply:active:not(:disabled) {
+    transform: scale(0.98); /* Press feedback */
   }
 
   .settings-sheet__button--apply:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    box-shadow: none;
   }
 
   .settings-sheet__button:focus-visible {
-    outline: 2px solid rgba(191, 219, 254, 0.7);
+    outline: 2px solid #6366f1; /* Indigo focus ring */
     outline-offset: 2px;
+  }
+
+  /* Icon spacing within buttons */
+  .settings-sheet__button i {
+    font-size: 14px;
+    transition: transform 0.2s ease;
+  }
+
+  .settings-sheet__button:hover:not(:disabled) i {
+    transform: scale(1.1); /* Subtle icon emphasis */
   }
 
   /* Loading state */

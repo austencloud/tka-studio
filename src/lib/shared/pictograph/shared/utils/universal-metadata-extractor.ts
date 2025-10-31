@@ -27,7 +27,7 @@ export class UniversalMetadataExtractor {
   /**
    * Extract sequence metadata with bulletproof fallback strategy
    * @param sequenceName - Name of the sequence
-   * @param basePath - Base path without extension (e.g., '/static/gallery/ABC/ABC_ver1')
+   * @param basePath - Base path without extension (e.g., '/static/Explore/ABC/ABC_ver1')
    * @returns Promise<MetadataExtractionResult> - Complete metadata with extraction info
    */
   static async extractMetadata(

@@ -18,7 +18,7 @@ All interactive buttons maintain the **44px × 44px minimum** touch target acros
 
 #### Updated Buttons (15 total):
 1. ✅ PlayButton
-2. ✅ ShareButton  
+2. ✅ ShareButton
 3. ✅ BackButton
 4. ✅ **UndoButton** (haptic feedback added!)
 5. ✅ SequenceActionsButton
@@ -27,7 +27,7 @@ All interactive buttons maintain the **44px × 44px minimum** touch target acros
 8. ✅ ConstructGenerateToggle
 9. ✅ FloatingFullscreenButton
 10. ✅ Settings Button
-11. ✅ RemoveBeatButton  
+11. ✅ RemoveBeatButton
 12. ✅ SaveSequenceButton
 13. ✅ All Close Buttons (44px+)
 14. ✅ HamburgerMenuButton (48px)
@@ -163,7 +163,7 @@ All interactive elements include proper ARIA attributes:
 <!-- Descriptive labels -->
 <button aria-label="Close animator">
 
-<!-- Context-aware labels -->  
+<!-- Context-aware labels -->
 <button aria-label="Current module: {currentModuleName}. Select to change modules">
 
 <!-- Expanded state -->
@@ -226,7 +226,7 @@ All close/exit buttons now have consistent circular appearance:
 - PWAInstallGuide
 - CameraSettingsDialog
 - SettingsModal
-- GalleryDeleteDialog
+- ExploreDeleteDialog
 - SequenceAnimationModal
 
 ### Unified Sheet System
@@ -265,7 +265,7 @@ Consistent drag handles across all sheets for clear affordance:
 
 Run automated contrast checks on:
 - Button text vs background
-- Focus indicators vs background  
+- Focus indicators vs background
 - Disabled state visibility
 
 **Tool**: Use [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
@@ -311,10 +311,10 @@ test('accessibility check', async ({ page }) => {
 Your application demonstrates **exceptional accessibility compliance**. The recent work on touch targets, haptic feedback, and button consistency has brought the app to **professional-grade accessibility standards**.
 
 ### Key Achievements:
-✅ **100% compliant** touch targets (44px minimum)  
-✅ **100% coverage** haptic feedback  
-✅ **69 files** with motion preference support  
-✅ **Consistent** focus states and ARIA labels  
+✅ **100% compliant** touch targets (44px minimum)
+✅ **100% coverage** haptic feedback
+✅ **69 files** with motion preference support
+✅ **Consistent** focus states and ARIA labels
 ✅ **Unified** visual design for better affordance
 
 ### Next Steps (Optional):

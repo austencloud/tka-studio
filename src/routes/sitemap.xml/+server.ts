@@ -23,10 +23,10 @@ const pages = [
     description: "Flow Arts Constructor - Sequence Builder",
   },
   {
-    url: "gallery",
+    url: "Explore",
     priority: "0.8",
     changefreq: "weekly",
-    description: "Gallery - Flow Arts Sequence Library",
+    description: "Explore - Flow Arts Sequence Library",
   },
   {
     url: "learn",

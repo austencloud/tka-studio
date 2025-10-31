@@ -35,10 +35,10 @@
       aria-pressed={selectedCategory === "animated"}
       aria-label="Select animated backgrounds"
     >
-      <span class="chip-icon">🎬</span>
+      <span class="chip-icon"><i class="fas fa-film"></i></span>
       <span class="chip-label">Animated</span>
       {#if selectedCategory === "animated"}
-        <span class="chip-checkmark">✓</span>
+        <span class="chip-checkmark"><i class="fas fa-check"></i></span>
       {/if}
     </button>
 
@@ -49,10 +49,10 @@
       aria-pressed={selectedCategory === "simple"}
       aria-label="Select simple backgrounds"
     >
-      <span class="chip-icon">🎨</span>
+      <span class="chip-icon"><i class="fas fa-palette"></i></span>
       <span class="chip-label">Simple</span>
       {#if selectedCategory === "simple"}
-        <span class="chip-checkmark">✓</span>
+        <span class="chip-checkmark"><i class="fas fa-check"></i></span>
       {/if}
     </button>
   </div>
@@ -78,26 +78,27 @@
   .filter-chip {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border-radius: 8px;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 10px; /* More rounded */
     border: 1.5px solid rgba(255, 255, 255, 0.25);
     background: rgba(255, 255, 255, 0.06);
     color: #ffffff;
-    font-size: clamp(14px, 1.5cqw, 16px);
+    font-size: clamp(15px, 1.5cqw, 17px); /* Slightly larger */
     font-weight: 500;
     line-height: 1.5;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    min-height: 44px; /* Touch target size */
-    min-width: 120px;
+    min-height: 46px; /* Slightly larger touch target */
+    min-width: 130px;
   }
 
   .filter-chip:hover {
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(99, 102, 241, 0.6);
+    transform: scale(1.02); /* Subtle scale */
   }
 
   .filter-chip:active {
@@ -106,30 +107,52 @@
   }
 
   .filter-chip.selected {
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(99, 102, 241, 0.25); /* Indigo theme */
     border-color: #6366f1;
     color: #ffffff;
     font-weight: 600;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.3); /* Subtle glow */
   }
 
   .filter-chip.selected:hover {
     background: rgba(99, 102, 241, 0.3);
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
   }
 
   .chip-icon {
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1;
+    transition: transform 0.2s ease;
+  }
+
+  .filter-chip:hover .chip-icon {
+    transform: scale(1.1); /* Icon emphasis */
   }
 
   .chip-label {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: inherit;
   }
 
   .chip-checkmark {
-    font-size: 16px;
-    color: var(--mio-theme-color-primary, #6442d6);
+    font-size: 14px;
+    color: #6366f1; /* Indigo checkmark */
     font-weight: bold;
+    animation: checkmarkPop 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes checkmarkPop {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 
   /* Focus styles for accessibility */

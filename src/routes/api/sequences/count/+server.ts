@@ -37,9 +37,9 @@ export const GET: RequestHandler = async () => {
     console.log("🔄 Count API: Calculating sequence count...");
 
     const staticDir = join(__dirname, "../../../../../static");
-    const galleryDir = join(staticDir, "gallery");
+    const ExploreDir = join(staticDir, "Explore");
 
-    const sequenceDirectories = await readdir(galleryDir, {
+    const sequenceDirectories = await readdir(ExploreDir, {
       withFileTypes: true,
     });
     let count = 0;
@@ -61,7 +61,7 @@ export const GET: RequestHandler = async () => {
 
       // Quick check - just verify directory has content
       try {
-        const sequenceDir = join(galleryDir, sequenceName);
+        const sequenceDir = join(ExploreDir, sequenceName);
         const files = await readdir(sequenceDir);
 
         // Check if it has any PNG files

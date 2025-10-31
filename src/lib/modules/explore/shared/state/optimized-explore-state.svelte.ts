@@ -1,0 +1,308 @@
+/**
+ * Optimized Explore State - Mobile Performance
+ *
+ * Progressive loading gallery state with:
+ * - Pagination and virtual scrolling
+ * - Intelligent image preloading
+ * - Mobile-first performance optimizations
+ * - Skeleton loading states
+ */
+
+import { resolve } from "$shared";
+import { TYPES } from "$shared/inversify/types";
+import type {
+  IOptimizedExploreService,
+  SequenceMetadata
+} from "../services/contracts/IOptimizedExploreService";
+
+export function createOptimizedExploreState() {
+  // Services
+  const galleryService = resolve(
+    TYPES.IOptimizedExploreService
+  ) as IOptimizedExploreService;
+
+  // Core state
+  let sequences = $state<SequenceMetadata[]>([]);
+  let loadingState = $state<ExploreLoadingState>({
+    isInitialLoading: false,
+    isLoadingMore: false,
+    error: null,
+    loadedCount: 0,
+    totalCount: 0,
+  });
+
+  // Pagination state
+  let currentPage = $state(1);
+  let hasMore = $state(true);
+  let isInfiniteScrollEnabled = $state(true);
+
+  // Search state
+  let searchQuery = $state("");
+  let isSearching = $state(false);
+  let searchResults = $state<SequenceMetadata[]>([]);
+
+  // Performance tracking
+  let loadStartTime = $state<number | null>(null);
+  let lastLoadDuration = $state<number | null>(null);
+
+  // Computed values
+  const isLoading = $derived(
+    () => loadingState.isInitialLoading || loadingState.isLoadingMore
+  );
+
+  const displayedSequences = $derived(() =>
+    searchQuery.length > 0 ? searchResults : sequences
+  );
+
+  const loadingProgress = $derived(() => {
+    if (loadingState.totalCount === 0) return 0;
+    return Math.round(
+      (loadingState.loadedCount / loadingState.totalCount) * 100
+    );
+  });
+
+  const canLoadMore = $derived(
+    () => hasMore && !isLoading && !loadingState.error
+  );
+
+  // Load initial sequences
+  async function loadInitialSequences(): Promise<void> {
+    if (loadingState.isInitialLoading) return;
+
+    try {
+      console.log("🚀 OptimizedGalleryState: Starting initial load...");
+      loadStartTime = performance.now();
+
+      loadingState.isInitialLoading = true;
+      loadingState.error = null;
+
+      const result = await galleryService.loadInitialSequences();
+
+      sequences = result.sequences;
+      loadingState.loadedCount = result.sequences.length;
+      loadingState.totalCount = result.totalCount;
+      hasMore = result.hasMore;
+      currentPage = result.nextPage;
+
+      // Start preloading next batch
+      if (result.sequences.length > 0) {
+        galleryService.preloadNextBatch(result.sequences.slice(10, 20));
+      }
+
+      const duration = performance.now() - (loadStartTime || 0);
+      lastLoadDuration = Math.round(duration);
+
+      console.log(
+        `✅ OptimizedGalleryState: Initial load complete in ${lastLoadDuration}ms`
+      );
+      console.log(
+        `📊 Loaded ${result.sequences.length} of ${result.totalCount} sequences`
+      );
+    } catch (error) {
+      console.error("❌ OptimizedGalleryState: Initial load failed:", error);
+      loadingState.error =
+        error instanceof Error ? error.message : "Failed to load sequences";
+    } finally {
+      loadingState.isInitialLoading = false;
+    }
+  }
+
+  // Load more sequences (infinite scroll)
+  async function loadMoreSequences(): Promise<void> {
+    if (!canLoadMore) return;
+
+    try {
+      console.log(`🔄 OptimizedGalleryState: Loading page ${currentPage}...`);
+
+      loadingState.isLoadingMore = true;
+      loadingState.error = null;
+
+      const result = await galleryService.loadMoreSequences(currentPage);
+
+      // Append new sequences
+      sequences = [...sequences, ...result.sequences];
+      loadingState.loadedCount = sequences.length;
+      hasMore = result.hasMore;
+      currentPage = result.nextPage;
+
+      // Preload next batch
+      if (result.sequences.length > 0) {
+        galleryService.preloadNextBatch(result.sequences);
+      }
+
+      console.log(`✅ OptimizedGalleryState: Loaded page ${currentPage - 1}`);
+      console.log(
+        `📊 Total sequences: ${sequences.length} of ${result.totalCount}`
+      );
+    } catch (error) {
+      console.error(
+        `❌ OptimizedGalleryState: Failed to load page ${currentPage}:`,
+        error
+      );
+      loadingState.error =
+        error instanceof Error
+          ? error.message
+          : "Failed to load more sequences";
+    } finally {
+      loadingState.isLoadingMore = false;
+    }
+  }
+
+  // Search sequences with debouncing
+  let searchTimeout: number | null = null;
+  async function searchSequences(query: string): Promise<void> {
+    // Clear previous timeout
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+
+    searchQuery = query.trim();
+
+    // If empty query, show all sequences
+    if (searchQuery.length === 0) {
+      searchResults = [];
+      isSearching = false;
+      return;
+    }
+
+    // Debounce search
+    searchTimeout = window.setTimeout(async () => {
+      try {
+        console.log(
+          `🔍 OptimizedGalleryState: Searching for "${searchQuery}"...`
+        );
+
+        isSearching = true;
+
+        const result = await galleryService.searchSequences(searchQuery);
+        searchResults = result.sequences;
+
+        console.log(
+          `✅ OptimizedGalleryState: Found ${result.sequences.length} search results`
+        );
+      } catch (error) {
+        console.error("❌ OptimizedGalleryState: Search failed:", error);
+        searchResults = [];
+      } finally {
+        isSearching = false;
+      }
+    }, 300); // 300ms debounce
+  }
+
+  // Clear search and return to main gallery
+  function clearSearch(): void {
+    searchQuery = "";
+    searchResults = [];
+    isSearching = false;
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+      searchTimeout = null;
+    }
+  }
+
+  // Refresh gallery (clear cache and reload)
+  async function refreshGallery(): Promise<void> {
+    console.log("🔄 OptimizedGalleryState: Refreshing gallery...");
+
+    // Clear cache
+    galleryService.clearCache();
+
+    // Reset state
+    sequences = [];
+    searchResults = [];
+    currentPage = 1;
+    hasMore = true;
+    loadingState = {
+      isInitialLoading: false,
+      isLoadingMore: false,
+      error: null,
+      loadedCount: 0,
+      totalCount: 0,
+    };
+
+    // Reload
+    await loadInitialSequences();
+  }
+
+  // Intersection observer for infinite scroll
+  function setupInfiniteScroll(element: HTMLElement): (() => void) | void {
+    if (!isInfiniteScrollEnabled) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && canLoadMore()) {
+            loadMoreSequences();
+          }
+        });
+      },
+      {
+        rootMargin: "200px", // Start loading 200px before reaching bottom
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(element);
+
+    // Return cleanup function
+    return () => observer.disconnect();
+  }
+
+  return {
+    // State
+    get sequences() {
+      return sequences;
+    },
+    get loadingState() {
+      return loadingState;
+    },
+    get searchQuery() {
+      return searchQuery;
+    },
+    get searchResults() {
+      return searchResults;
+    },
+    get isSearching() {
+      return isSearching;
+    },
+    get currentPage() {
+      return currentPage;
+    },
+    get hasMore() {
+      return hasMore;
+    },
+    get lastLoadDuration() {
+      return lastLoadDuration;
+    },
+
+    // Computed
+    get isLoading() {
+      return isLoading;
+    },
+    get displayedSequences() {
+      return displayedSequences;
+    },
+    get loadingProgress() {
+      return loadingProgress;
+    },
+    get canLoadMore() {
+      return canLoadMore;
+    },
+
+    // Actions
+    loadInitialSequences,
+    loadMoreSequences,
+    searchSequences,
+    clearSearch,
+    refreshGallery,
+    setupInfiniteScroll,
+
+    // Settings
+    get isInfiniteScrollEnabled() {
+      return isInfiniteScrollEnabled;
+    },
+    set isInfiniteScrollEnabled(value: boolean) {
+      isInfiniteScrollEnabled = value;
+    },
+  };
+}

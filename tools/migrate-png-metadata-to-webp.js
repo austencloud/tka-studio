@@ -26,7 +26,7 @@ const __dirname = path.dirname(__filename);
 // Configuration
 const CONFIG = {
   sourceDir: path.join(__dirname, "..", "..", "desktop", "data", "dictionary"), // Desktop PNG source
-  targetDir: path.join(__dirname, "..", "static", "gallery"), // Web WebP target
+  targetDir: path.join(__dirname, "..", "static", "Explore"), // Web WebP target
   batchSize: 5, // Smaller batches for metadata operations
   validateAfterMigration: true,
   backupOriginalWebP: true,
@@ -449,7 +449,7 @@ function mapPngToWebpPath(pngPath) {
   // Convert PNG to WebP filename
   const webpRelativePath = relativeToDictionary.replace(".png", ".webp");
 
-  // Build target path in web gallery
+  // Build target path in web Explore
   const webpPath = path.join(CONFIG.targetDir, webpRelativePath);
 
   return webpPath;

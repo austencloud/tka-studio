@@ -71,10 +71,11 @@
   }
 
   .section-title {
-    font-size: clamp(18px, 1.8vw, 22px); /* Increased from 16-20px to 18-22px */
-    font-weight: 700; /* Increased from 600 to 700 */
+    font-size: clamp(20px, 2vw, 24px); /* Further increased for 2025 standards */
+    font-weight: 700;
     color: #ffffff;
     margin: 0;
+    letter-spacing: -0.01em; /* Tighter tracking for modern look */
   }
 
   .help-button {

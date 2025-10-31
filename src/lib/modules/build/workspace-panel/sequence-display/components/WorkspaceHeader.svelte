@@ -43,15 +43,7 @@
       </div>
     </div>
 
-    <!-- Settings Button (top-right) -->
-    <button
-      class="settings-button glass-button"
-      onclick={handleSettingsClick}
-      aria-label="Settings"
-      title="Settings (Ctrl+,)"
-    >
-      <i class="fas fa-cog"></i>
-    </button>
+
   </div>
 {/if}
 

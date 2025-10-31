@@ -1,17 +1,17 @@
-import type { GalleryFilterType } from "../../domain/enums/FilteringEnums";
-import type { GalleryFilterValue } from "../../domain/types/FilteringTypes";
+import type { ExploreFilterType } from "../../domain/enums/FilteringEnums";
+import type { ExploreFilterValue } from "../../domain/types/FilteringTypes";
 
 // Simple filter history entry type
 export interface FilterHistoryEntry {
-  type: GalleryFilterType;
-  value: GalleryFilterValue;
+  type: ExploreFilterType;
+  value: ExploreFilterValue;
   appliedAt: Date;
 }
 
 // Simple browse state for persistence
 export interface SimpleBrowseState {
-  filterType: GalleryFilterType | null;
-  filterValue: GalleryFilterValue;
+  filterType: ExploreFilterType | null;
+  filterValue: ExploreFilterValue;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   sortMethod: any; // Will be typed properly when we consolidate sort enums
 }

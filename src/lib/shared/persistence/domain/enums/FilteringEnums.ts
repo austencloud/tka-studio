@@ -7,7 +7,7 @@
 /**
  * Simple filter types for Browse tab - Keep It Simple!
  */
-export enum GalleryFilterType {
+export enum ExploreFilterType {
   STARTING_LETTER = "starting_letter",
   CONTAINS_LETTERS = "contains_letters",
   LENGTH = "length",

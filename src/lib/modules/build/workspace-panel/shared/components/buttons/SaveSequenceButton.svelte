@@ -2,7 +2,7 @@
   SaveSequencePanelButton.svelte
 
   Save sequence button for ButtonPanel (panel-style, not floating).
-  Saves the current sequence to the gallery.
+  Saves the current sequence to the Explore.
 -->
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";

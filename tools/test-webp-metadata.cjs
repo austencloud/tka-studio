@@ -9,7 +9,7 @@ async function checkMetadata() {
   ];
 
   for (const { file, dir } of testFiles) {
-    const fullPath = path.join("..", "static", "gallery", dir, file);
+    const fullPath = path.join("..", "static", "Explore", dir, file);
     try {
       const metadata = await sharp(fullPath).metadata();
       console.log(`\n=== ${file} ===`);

@@ -169,30 +169,22 @@
           out:fade={{ duration: 150 }}
           in:fade={{ duration: 150, delay: 150 }}
         >
-          <!-- Remove Beat Button -->
-          {#if shouldShowRemoveBeat()}
-            <div>
-              <RemoveBeatButton
-                beatNumber={selectedBeatData.beatNumber}
-                onclick={() => onRemoveBeat?.(selectedBeatIndex!)}
-              />
-            </div>
-          {/if}
 
-          <!-- Play Button -->
-          {#if showPlayButton}
-            <div>
-              <PlayButton onclick={onPlayAnimation} {isAnimating} />
-            </div>
-          {/if}
 
-          <!-- Sequence Actions Button -->
-          {#if showSequenceActions}
-            <div>
-              <SequenceActionsButton onclick={onSequenceActionsClick} />
-            </div>
-          {/if}
+        <!-- Sequence Actions Button -->
+        {#if showSequenceActions}
+        <div>
+          <SequenceActionsButton onclick={onSequenceActionsClick} />
+        </div>
+        {/if}
 
+        <!-- Play Button -->
+        {#if showPlayButton}
+          <div>
+            <PlayButton onclick={onPlayAnimation} {isAnimating} />
+          </div>
+        {/if}
+        
           <!-- Share Button -->
           {#if showShareButton && onShare}
             <div>

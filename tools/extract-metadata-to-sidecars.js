@@ -20,7 +20,7 @@ const __dirname = path.dirname(__filename);
 // Configuration
 const CONFIG = {
   sourceDir: path.join(__dirname, "..", "..", "desktop", "data", "dictionary"),
-  targetDir: path.join(__dirname, "..", "static", "gallery"),
+  targetDir: path.join(__dirname, "..", "static", "Explore"),
   batchSize: 10,
 };
 

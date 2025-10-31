@@ -13,7 +13,7 @@
 
 export * from "./about";
 export * from "./build";
-export * from "./gallery";
+export * from "./explore";
 export * from "./learn";
 export * from "./word-card";
 export * from "./write";

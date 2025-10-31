@@ -301,8 +301,8 @@
   .floating-fullscreen-button {
     /* Fixed positioning at bottom-right */
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    top: 4px;
+    right: 4px;
     z-index: 9999; /* High z-index to ensure it's always on top */
 
     /* Button styling */
@@ -354,27 +354,12 @@
       width: 44px;
       height: 44px;
       bottom: 16px;
-      right: 16px;
     }
   }
 
-  @media (max-width: 480px) {
-    .floating-fullscreen-button {
-      width: 44px; /* iOS/Android minimum touch target */
-      height: 44px;
-      bottom: 12px;
-      right: 12px;
-    }
-  }
 
-  @media (max-width: 320px) {
-    .floating-fullscreen-button {
-      width: 44px; /* NEVER below 44px for accessibility */
-      height: 44px;
-      bottom: 10px;
-      right: 10px;
-    }
-  }
+
+
 
   /* Landscape mobile: maintain 44px minimum */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {

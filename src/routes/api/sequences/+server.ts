@@ -11,9 +11,9 @@ const __dirname = fileURLToPath(new URL(".", import.meta.url));
 export async function GET() {
   try {
     const staticDir = join(__dirname, "../../../../static");
-    const dictionaryDir = join(staticDir, "gallery");
+    const dictionaryDir = join(staticDir, "Explore");
 
-    // Read all directories in the gallery
+    // Read all directories in the Explore
     const sequenceDirectories = await readdir(dictionaryDir, {
       withFileTypes: true,
     });
@@ -63,7 +63,7 @@ export async function GET() {
     }
 
     // Note: Removed thumbnails directory scanning as it was including fake/test sequences
-    // Only use real sequences from gallery directories
+    // Only use real sequences from Explore directories
 
     // Sort by word name
     sequences.sort((a, b) => a.word.localeCompare(b.word));

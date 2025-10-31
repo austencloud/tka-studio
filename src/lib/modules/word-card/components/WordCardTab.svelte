@@ -3,12 +3,12 @@
   import type { SequenceData } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import type { IGalleryLoader } from "../../gallery/display/services/contracts/IGalleryLoader";
+  import type { IExploreLoader } from "../../explore/display/services/contracts/IExploreLoader";
   import WordCardNavigation from "./Navigation.svelte";
   import PageDisplay from "./PageDisplay.svelte";
 
-  // Use the gallery loader service directly
-  const loaderService = resolve(TYPES.IGalleryLoader) as IGalleryLoader;
+  // Use the explore loader service directly
+  const loaderService = resolve(TYPES.IExploreLoader) as IExploreLoader;
 
   // Simple state matching legacy desktop
   let sequences: SequenceData[] = $state([]);
@@ -17,7 +17,7 @@
   let columnCount = $state(3); // Default like desktop
   let error = $state<string | null>(null);
 
-  // Note: We load directly from gallery API instead of using sequence service
+  // Note: We load directly from explore API instead of using sequence service
 
   // Filtered sequences based on selected length
   let filteredSequences = $derived(() => {
@@ -43,7 +43,7 @@
       error = null;
 
       // Load sequences directly from the loader service
-      console.log("🔄 WordCard: Loading sequences from GalleryLoader...");
+      console.log("🔄 WordCard: Loading sequences from ExploreLoader...");
       const loadedSequences = await loaderService.loadSequenceMetadata();
 
       console.log(`✅ WordCard: Loaded ${loadedSequences.length} sequences`);

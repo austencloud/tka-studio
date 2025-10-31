@@ -7,11 +7,11 @@
  */
 
 import type {
-  AppSettings,
-  CompleteGalleryState,
-  PictographData,
-  SequenceData,
-  TabId,
+    AppSettings,
+    CompleteExploreState,
+    PictographData,
+    SequenceData,
+    TabId,
 } from "$shared";
 import type { UserProject } from "../../domain/models";
 
@@ -117,18 +117,18 @@ export interface IPersistenceService {
   loadTabState<T = unknown>(tabId: TabId): Promise<T | null>;
 
   // ============================================================================
-  // GALLERY STATE PERSISTENCE
+  // Explore STATE PERSISTENCE
   // ============================================================================
 
   /**
-   * Save complete gallery state (filters, sorts, scroll position, etc.)
+   * Save complete Explore state (filters, sorts, scroll position, etc.)
    */
-  saveGalleryState(state: CompleteGalleryState): Promise<void>;
+  saveExploreState(state: CompleteExploreState): Promise<void>;
 
   /**
-   * Load gallery state
+   * Load Explore state
    */
-  loadGalleryState(): Promise<CompleteGalleryState | null>;
+  loadExploreState(): Promise<CompleteExploreState | null>;
 
   // ============================================================================
   // SETTINGS PERSISTENCE

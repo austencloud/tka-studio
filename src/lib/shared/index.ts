@@ -30,7 +30,7 @@ export * from "../modules/build/generate/circular/domain";
 export * from "../modules/build/generate/shared/domain";
 export * from "../modules/build/shared/domain/factories";
 export * from "../modules/build/shared/domain/models";
-export * from "../modules/gallery/shared/domain";
+export * from "../modules/explore/shared/domain";
 export * from "../modules/learn/codex/domain";
 export * from "../modules/learn/quiz/domain";
 export * from "../modules/word-card/domain";
@@ -74,9 +74,9 @@ export type { IGenerationOrchestrationService } from "../modules/build/generate/
 export type { ISequenceExportService } from "../modules/build/shared/services/contracts/ISequenceExportService";
 
 // Mobile services (needed by components)
+export type { IGestureService } from "./mobile/services/contracts/IGestureService";
 export type { IMobileFullscreenService } from "./mobile/services/contracts/IMobileFullscreenService";
 export type { IPlatformDetectionService } from "./mobile/services/contracts/IPlatformDetectionService";
-export type { IGestureService } from "./mobile/services/contracts/IGestureService";
 
 // Beat grid models (needed by workbench)
 export type {

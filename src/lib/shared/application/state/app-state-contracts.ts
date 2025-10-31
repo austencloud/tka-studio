@@ -8,7 +8,7 @@
 import type { TabId } from "$shared";
 
 // TODO: Import IBrowseStatePersister when it's properly exported
-// import type { IBrowseStatePersister } from "../../../../modules/browse/gallery/services/contracts";
+// import type { IBrowseStatePersister } from "../../../../modules/browse/Explore/services/contracts";
 
 // ============================================================================
 // SERVICE INTERFACES

@@ -69,34 +69,7 @@
   </div>
 </section>
 
-<!-- Developer Modules Section -->
-{#if devModules.length > 0}
-  <section class="module-section">
-    <h3 class="section-title">Developer Modules</h3>
-    <div class="module-items">
-      {#each devModules as module}
-        <button
-          class="module-item"
-          class:active={currentModule === module.id}
-          onclick={() => handleModuleClick(module.id)}
-        >
-          <span class="item-icon">{@html module.icon}</span>
-          <div class="item-info">
-            <span class="item-label">{module.label}</span>
-            {#if module.description}
-              <span class="item-description">{module.description}</span>
-            {/if}
-          </div>
-          {#if currentModule === module.id}
-            <span class="active-indicator">
-              <i class="fas fa-check"></i>
-            </span>
-          {/if}
-        </button>
-      {/each}
-    </div>
-  </section>
-{/if}
+
 
 <style>
   .module-section {

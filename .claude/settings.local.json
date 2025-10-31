@@ -7,7 +7,17 @@
       "Bash(cmd /c start \"\" \"f:\\_THE KINETIC ALPHABET\\_TKA APP\\button-animation-test.html\")",
       "Bash(tree:*)",
       "Bash(wc -l \"f:/_THE KINETIC ALPHABET/_TKA APP/src/lib/modules/build\"/**/*.{ts,svelte})",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(git mv:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 45 npx tsc:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(dir:*)",
+      "Bash(mv:*)",
+      "Bash(cat:*)",
+      "Bash(timeout 10 echo:*)",
+      "Bash(npm run lint)"
     ],
     "deny": [],
     "ask": []

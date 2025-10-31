@@ -167,8 +167,8 @@ Landscape: Left half decrements, right half increments (horizontal layout)
     min-height: 0;
     min-width: 0;
 
-    /* Responsive padding */
-    padding: clamp(6px, 2cqh, 12px) clamp(4px, 1.5cqw, 8px);
+    /* Responsive padding - reduced minimums for small screens like iPhone SE */
+    padding: clamp(3px, 1cqh, 12px) clamp(3px, 1.5cqw, 8px);
 
     /* Modern border-radius matching BaseCard */
     border-radius: 16px;

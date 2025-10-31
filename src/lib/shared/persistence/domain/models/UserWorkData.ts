@@ -11,7 +11,7 @@ import type { UserWorkType } from "../enums";
  * User's work-in-progress data
  *
  * This stores things like partially built sequences, tab states, user preferences,
- * gallery states, and other user-specific data that needs to persist across sessions.
+ * Explore states, and other user-specific data that needs to persist across sessions.
  */
 export interface UserWorkData {
   /**

@@ -21,18 +21,18 @@
   // Cross-module imports: Direct component imports (bulletproof default imports)
   import AboutTab from "../modules/about/components/AboutTab.svelte";
   import BuildTab from "../modules/build/shared/components/BuildTab.svelte";
-  import SpotlightViewer from "../modules/gallery/spotlight/components/SpotlightViewer.svelte";
+  import SpotlightViewer from "../modules/explore/spotlight/components/SpotlightViewer.svelte";
   import LearnTab from "../modules/learn/LearnTab.svelte";
   import WordCardTab from "../modules/word-card/components/WordCardTab.svelte";
   import WriteTab from "../modules/write/components/WriteTab.svelte";
   // Shared components: Direct relative paths (bulletproof standard)
-  import { GalleryTab } from "../modules";
+  import { ExploreTab } from "../modules";
   import FullscreenHint from "./mobile/components/FullscreenHint.svelte";
   import MobileFullscreenPrompt from "./mobile/components/MobileFullscreenPrompt.svelte";
   import EnhancedPWAInstallGuide from "./mobile/components/EnhancedPWAInstallGuide.svelte";
   import SubtleInstallBanner from "./mobile/components/SubtleInstallBanner.svelte";
   import UnifiedNavigationMenu from "./navigation/components/UnifiedNavigationMenu.svelte";
-  import BottomNavigation from "./navigation/components/BottomNavigation.svelte";
+  import PrimaryNavigation from "./navigation/components/PrimaryNavigation.svelte";
   import {
     MODULE_DEFINITIONS,
     navigationState,
@@ -242,6 +242,18 @@
     canAccessEditAndExportTabs = canAccess;
   }
 
+  // Window dimensions for reactive layout tracking
+  let windowInnerWidth = $state(0);
+  let windowInnerHeight = $state(0);
+
+  // Navigation layout state - updated by PrimaryNavigation
+  let isPrimaryNavLandscape = $state(false);
+
+  // Callback for PrimaryNavigation to notify us of layout changes
+  function handlePrimaryNavLayoutChange(isLandscape: boolean) {
+    isPrimaryNavLandscape = isLandscape;
+  }
+
   // Resolve animation service - only when container is ready
   const animationService = $derived(() => {
     if (!isContainerReady()) {
@@ -280,7 +292,7 @@
   // App tab configuration - using correct TabId values that match content switching logic
   const allTabs = [
     { id: "construct", label: "Build", icon: "🔧", isMain: true },
-    { id: "gallery", label: "Gallery", icon: "🔍", isMain: true },
+    { id: "Explore", label: "Explore", icon: "🔍", isMain: true },
     { id: "learn", label: "Learn", icon: "🧠", isMain: true },
     // { id: "about", label: "About", icon: "ℹ️", isMain: true },
     { id: "word_card", label: "Word Card", icon: "🎴", isMain: false },
@@ -354,7 +366,7 @@
     // Map module to tab for existing tab switching logic
     const moduleToTabMap: Record<string, string> = {
       build: "construct",
-      gallery: "gallery",
+      explore: "explore",
       learn: "learn",
       write: "write",
       word_card: "word_card",
@@ -389,7 +401,10 @@
 
 </script>
 
-<div class="main-interface">
+<!-- Bind to window dimensions for reactive layout adjustments -->
+<svelte:window bind:innerWidth={windowInnerWidth} bind:innerHeight={windowInnerHeight} />
+
+<div class="main-interface" class:nav-landscape={isPrimaryNavLandscape}>
   <!-- Unified Navigation Menu - Single Floating Button -->
   <UnifiedNavigationMenu
     currentModule={currentModule()}
@@ -402,7 +417,8 @@
   <main
     class="content-area"
     class:about-active={isTabActive("about")}
-    class:has-bottom-nav={currentModule() === 'build' || currentModule() === 'learn'}
+    class:has-primary-nav={currentModule() === 'build' || currentModule() === 'learn' || currentModule() === 'explore'}
+    class:nav-landscape={isPrimaryNavLandscape}
   >
     {#if isTabLoading}
       <!-- Loading state while tab is being restored -->
@@ -421,8 +437,8 @@
         >
           {#if isTabActive("construct")}
             <BuildTab onTabAccessibilityChange={handleTabAccessibilityChange} />
-          {:else if isTabActive("gallery")}
-            <GalleryTab />
+          {:else if isTabActive("explore")}
+            <ExploreTab />
           {:else if isTabActive("learn")}
             <LearnTab />
           {:else if isTabActive("word_card")}
@@ -437,9 +453,9 @@
     {/if}
   </main>
 
-  <!-- Bottom Navigation (Build & Learn Modules) -->
-  {#if currentModule() === 'build' || currentModule() === 'learn'}
-    <BottomNavigation
+  <!-- Primary Navigation (Build, Learn & Explore Modules) - Responsive Bottom/Side -->
+  {#if currentModule() === 'build' || currentModule() === 'learn' || currentModule() === 'explore'}
+    <PrimaryNavigation
       subModeTabs={subModeTabs()}
       currentSubMode={currentSubMode()}
       onSubModeChange={(subModeId) => {
@@ -448,6 +464,9 @@
         } else if (currentModule() === 'build') {
           // Use the NEW navigation system (currentSubMode) not the legacy setBuildMode
           navigationState.setCurrentSubMode(subModeId);
+        } else if (currentModule() === 'explore') {
+          // Explore uses the new navigation system
+          navigationState.setCurrentSubMode(subModeId);
         }
       }}
       onModuleSwitcherTap={() => {
@@ -455,6 +474,7 @@
         const event = new CustomEvent('unified-menu-toggle');
         window.dispatchEvent(event);
       }}
+      onLayoutChange={handlePrimaryNavLayoutChange}
     />
   {/if}
 
@@ -506,6 +526,12 @@
     background: transparent;
   }
 
+  /* Debug: Show landscape state on main interface */
+  /* .main-interface.nav-landscape {
+    outline: 5px solid orange !important;
+    outline-offset: -5px;
+  } */
+
   /* Allow main interface to overflow when About tab is active */
   .main-interface:has(.content-area.about-active) {
     overflow: visible !important;
@@ -521,11 +547,21 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
+    min-height: 0;
   }
 
-  /* Reserve space for bottom navigation when present */
-  .content-area.has-bottom-nav {
+  /* Reserve space for primary navigation when present */
+  .content-area.has-primary-nav {
+    /* Default: Bottom padding for portrait mode (navigation at bottom) */
     padding-bottom: max(64px, env(safe-area-inset-bottom));
+    padding-left: 0;
+  }
+
+  /* Landscape mode: Reserve space on the left instead of bottom */
+  .content-area.has-primary-nav.nav-landscape {
+    padding-bottom: 0 !important;
+    padding-left: 72px !important;
+    padding-left: max(72px, env(safe-area-inset-left)) !important;
   }
 
   .tab-content {
@@ -538,6 +574,20 @@
     flex-direction: column;
     overflow: hidden;
     width: 100%;
+    height: 100%;
+  }
+
+  /* Adjust tab-content for portrait mode - navigation at bottom */
+  .content-area.has-primary-nav .tab-content {
+    bottom: max(64px, env(safe-area-inset-bottom));
+    height: calc(100% - max(64px, env(safe-area-inset-bottom)));
+  }
+
+  /* Adjust tab-content for landscape navigation - navigation on left */
+  .content-area.has-primary-nav.nav-landscape .tab-content {
+    left: 72px;
+    bottom: 0;
+    width: calc(100% - 72px);
     height: 100%;
   }
 

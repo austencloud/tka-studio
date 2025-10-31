@@ -166,6 +166,9 @@ export interface IToolPanelProps {
   isSideBySideLayout?: () => boolean;
   activeTab?: ActiveBuildTab | null;
   onTabChange?: (tab: ActiveBuildTab) => void;
+  onOpenFilters?: () => void;
+  onCloseFilters?: () => void;
+  isFilterPanelOpen?: boolean;
 }
 
 /**

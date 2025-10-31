@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Metadata Validation Tool for TKA Gallery Optimization
+ * Metadata Validation Tool for TKA Explore Optimization
  *
  * Validates 100% metadata accuracy after PNG-to-WebP migration.
  * This tool ensures no data is lost during the optimization process.
@@ -27,7 +27,7 @@ const __dirname = path.dirname(__filename);
 
 // Configuration
 const CONFIG = {
-  sourceDir: path.join(__dirname, "../static/gallery"),
+  sourceDir: path.join(__dirname, "../static/Explore"),
   maxSequencesToTest: 50, // Limit for performance testing
   detailedLogging: false,
   performanceBenchmark: true,
@@ -220,7 +220,7 @@ async function getSequenceDirectories(maxSequences = null) {
       }
     }
   } catch (error) {
-    console.error(`Error reading gallery directory: ${error.message}`);
+    console.error(`Error reading Explore directory: ${error.message}`);
   }
 
   return directories;
@@ -407,7 +407,7 @@ function generatePerformanceAnalysis() {
  * Main validation function
  */
 async function validateMetadataAccuracy() {
-  console.log("🔍 Starting metadata validation for gallery optimization...\n");
+  console.log("🔍 Starting metadata validation for Explore optimization...\n");
 
   // Get sequences to test
   const sequences = await getSequenceDirectories(CONFIG.maxSequencesToTest);
@@ -540,11 +540,11 @@ async function validateMetadataAccuracy() {
     stats.metadataMatches === stats.bothFormatsAvailable
   ) {
     console.log(
-      `   • Gallery can safely use WebP-first strategy for ${stats.webpAvailable} sequences`
+      `   • Explore can safely use WebP-first strategy for ${stats.webpAvailable} sequences`
     );
   }
 
-  console.log("\n🚀 Gallery optimization validation complete!");
+  console.log("\n🚀 Explore optimization validation complete!");
 }
 
 // Helper functions for binary data parsing (reused from other tools)

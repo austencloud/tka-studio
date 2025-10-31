@@ -179,7 +179,7 @@ function initializeContainer() {
       const {
         coreModule,
         animatorModule,
-        galleryModule,
+        exploreModule,
         buildModule,
         navigationModule,
         pictographModule,
@@ -196,7 +196,7 @@ function initializeContainer() {
         dataModule,
         pictographModule,
         animatorModule,
-        galleryModule,
+        exploreModule,
         buildModule,
         navigationModule,
         renderModule,

@@ -1,7 +1,7 @@
 /**
- * Gallery Manifest Generator
+ * Explore Manifest Generator
  *
- * Scans the static/gallery directory and generates a static JSON manifest
+ * Scans the static/Explore directory and generates a static JSON manifest
  * with all sequence metadata, image paths, and dimensions.
  *
  * This eliminates the need for runtime filesystem scanning, dramatically
@@ -34,18 +34,18 @@ function shouldExcludeSequence(sequenceName) {
   );
 }
 
-async function generateGalleryManifest() {
-  console.log('🚀 Gallery Manifest Generator');
+async function generateExploreManifest() {
+  console.log('🚀 Explore Manifest Generator');
   console.log('=' .repeat(50));
 
   const startTime = performance.now();
   const staticDir = join(__dirname, '..', 'static');
-  const galleryDir = join(staticDir, 'gallery');
-  const manifestPath = join(staticDir, 'gallery-manifest.json');
+  const ExploreDir = join(staticDir, 'Explore');
+  const manifestPath = join(staticDir, 'Explore-manifest.json');
 
   try {
-    console.log('📂 Scanning gallery directory...');
-    const sequenceDirectories = await readdir(galleryDir, { withFileTypes: true });
+    console.log('📂 Scanning Explore directory...');
+    const sequenceDirectories = await readdir(ExploreDir, { withFileTypes: true });
 
     const sequences = [];
     const errors = [];
@@ -63,12 +63,12 @@ async function generateGalleryManifest() {
         continue;
       }
 
-      const sequenceDir = join(galleryDir, sequenceName);
+      const sequenceDir = join(ExploreDir, sequenceName);
 
       try {
         const files = await readdir(sequenceDir);
 
-        // Look for WebP image files (your gallery uses WebP, not PNG!)
+        // Look for WebP image files (your Explore uses WebP, not PNG!)
         let imageFile = files.find(file => file.endsWith('_ver1.webp'));
         if (!imageFile) {
           imageFile = files.find(file => file.endsWith('_ver2.webp'));
@@ -152,7 +152,7 @@ async function generateGalleryManifest() {
     console.log(`   • Skipped: ${skippedCount}`);
     console.log(`   • Errors: ${errors.length}`);
     console.log(`   • Generation time: ${duration}ms`);
-    console.log(`   • Output: static/gallery-manifest.json`);
+    console.log(`   • Output: static/Explore-manifest.json`);
 
     if (errors.length > 0) {
       console.log('');
@@ -163,7 +163,7 @@ async function generateGalleryManifest() {
     }
 
     console.log('');
-    console.log('🎉 Done! Your gallery will now load much faster.');
+    console.log('🎉 Done! Your Explore will now load much faster.');
 
   } catch (error) {
     console.error('❌ Failed to generate manifest:', error);
@@ -172,4 +172,4 @@ async function generateGalleryManifest() {
 }
 
 // Run the generator
-generateGalleryManifest();
+generateExploreManifest();

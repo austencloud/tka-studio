@@ -17,7 +17,6 @@
   import { slideTransition, fadeTransition } from "$shared/utils";
   import ModuleList from "./ModuleList.svelte";
   import InstallPromptButton from "./InstallPromptButton.svelte";
-  import SettingsMenuItem from "./SettingsMenuItem.svelte";
 
   let {
     // Current state
@@ -250,7 +249,6 @@
             />
           {/if}
 
-          <SettingsMenuItem onSettingsClick={handleSettingsClose} />
         </div>
       </section>
     </div>

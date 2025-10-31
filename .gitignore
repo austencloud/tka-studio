@@ -73,7 +73,7 @@ Thumbs.db
 # package-lock.json
 
 # Generated thumbnail cache
-static/gallery_thumbnails/
+static/Explore_thumbnails/
 
-# Generated gallery manifest (auto-generated during build)
-static/gallery-manifest.json
+# Generated Explore manifest (auto-generated during build)
+static/Explore-manifest.json

@@ -1,22 +1,22 @@
 <!--
-Optimized Gallery Test Page
+Optimized Explore Test Page
 
-Test the new mobile-optimized gallery implementation with:
+Test the new mobile-optimized Explore implementation with:
 - Progressive loading
 - Infinite scroll
 - Skeleton states
 - Performance monitoring
 -->
 <script lang="ts">
-  import OptimizedGalleryGrid from "$lib/modules/gallery/display/components/OptimizedGalleryGrid.svelte";
-  import type { IGalleryThumbnailService } from "$lib/modules/gallery/display/services/contracts/IGalleryThumbnailService";
+  import OptimizedExploreGrid from "$lib/modules/explore/display/components/OptimizedExploreGrid.svelte";
+  import type { IExploreThumbnailService } from "$lib/modules/explore/display/services/contracts/IExploreThumbnailService";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
   // Services (resolved immediately, no need for reactivity)
-  const thumbnailService = resolve<IGalleryThumbnailService>(
-    TYPES.IGalleryThumbnailService
+  const thumbnailService = resolve<IExploreThumbnailService>(
+    TYPES.IExploreThumbnailService
   );
   let hapticService: IHapticFeedbackService;
 
@@ -39,11 +39,11 @@ Test the new mobile-optimized gallery implementation with:
     // Track page load performance
     performanceMetrics.pageLoadTime = Math.round(performance.now() - startTime);
 
-    console.log("🚀 Gallery Test Page: Initialized");
+    console.log("🚀 Explore Test Page: Initialized");
   });
 
   function handleAction(action: string, sequence: any) {
-    console.log(`Gallery Action: ${action}`, sequence);
+    console.log(`Explore Action: ${action}`, sequence);
   }
 
   function toggleViewMode() {
@@ -54,15 +54,15 @@ Test the new mobile-optimized gallery implementation with:
 </script>
 
 <svelte:head>
-  <title>Gallery Performance Test - TKA</title>
-  <meta name="description" content="Testing optimized gallery performance" />
+  <title>Explore Performance Test - TKA</title>
+  <meta name="description" content="Testing optimized Explore performance" />
 </svelte:head>
 
 <div class="test-page">
   <!-- Header -->
   <header class="test-header">
-    <h1>🚀 Optimized Gallery Test</h1>
-    <p>Mobile-first gallery with progressive loading</p>
+    <h1>🚀 Optimized Explore Test</h1>
+    <p>Mobile-first Explore with progressive loading</p>
 
     <!-- Controls -->
     <div class="controls">
@@ -80,9 +80,9 @@ Test the new mobile-optimized gallery implementation with:
     </div>
   </header>
 
-  <!-- Gallery -->
-  <main class="gallery-main">
-    <OptimizedGalleryGrid
+  <!-- Explore -->
+  <main class="Explore-main">
+    <OptimizedExploreGrid
       {thumbnailService}
       {viewMode}
       onAction={handleAction}
@@ -92,7 +92,7 @@ Test the new mobile-optimized gallery implementation with:
   <!-- Footer -->
   <footer class="test-footer">
     <p>
-      🔬 This is a test page for the optimized gallery implementation.
+      🔬 This is a test page for the optimized Explore implementation.
       <br />
       Check browser DevTools for performance metrics and network activity.
     </p>
@@ -181,7 +181,7 @@ Test the new mobile-optimized gallery implementation with:
     color: #60a5fa;
   }
 
-  .gallery-main {
+  .Explore-main {
     max-width: 1200px;
     margin: 0 auto;
   }

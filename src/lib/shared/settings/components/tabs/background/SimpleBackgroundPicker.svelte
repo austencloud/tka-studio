@@ -266,12 +266,15 @@
 <style>
   .simple-background-picker {
     width: 100%;
-    padding: clamp(16px, 3cqh, 24px);
+    max-height: 100%; /* Constrain height */
+    padding: clamp(12px, 2.5cqh, 20px); /* Reduced padding */
     display: flex;
     flex-direction: column;
-    gap: clamp(16px, 2cqh, 24px);
+    gap: clamp(12px, 1.5cqh, 18px); /* Reduced gap */
     container-type: inline-size;
     container-name: simple-picker;
+    overflow-y: auto; /* Enable scrolling */
+    overflow-x: hidden;
   }
 
   .type-selector {
@@ -281,22 +284,33 @@
   }
 
   .type-button {
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
     border: 1.5px solid rgba(255, 255, 255, 0.25);
     background: rgba(255, 255, 255, 0.06);
     color: #ffffff;
     font-size: clamp(14px, 1.5cqw, 16px);
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     min-height: 44px;
   }
 
+  .type-button:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(99, 102, 241, 0.5);
+    transform: scale(1.02);
+  }
+
+  .type-button:active {
+    transform: scale(0.98);
+  }
+
   .type-button.selected {
-    background: rgba(99, 102, 241, 0.2);
+    background: rgba(99, 102, 241, 0.25);
     border-color: #6366f1;
     font-weight: 600;
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.3);
   }
 
   .preview-container {
@@ -357,8 +371,15 @@
 
   .preset-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    grid-template-columns: repeat(2, 1fr); /* Fixed 2 columns for balanced layout */
     gap: 12px;
+  }
+
+  /* Responsive: 4 columns on wider screens */
+  @media (min-width: 600px) {
+    .preset-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
   .preset-card {
@@ -366,14 +387,20 @@
     border-radius: 12px;
     border: 2px solid rgba(255, 255, 255, 0.25);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+    min-height: 80px; /* Ensure reasonable touch target */
   }
 
   .preset-card:hover {
     transform: scale(1.05);
     border-color: #6366f1;
+    box-shadow: 0 0 16px rgba(99, 102, 241, 0.4); /* Indigo glow */
+  }
+
+  .preset-card:active {
+    transform: scale(1.00); /* Press feedback */
   }
 
   .preset-checkmark {

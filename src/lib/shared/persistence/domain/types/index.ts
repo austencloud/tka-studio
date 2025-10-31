@@ -15,4 +15,4 @@ export type {
   UserWorkFilter,
 } from "./PersistenceTypes";
 
-export type { GalleryFilterValue } from "./FilteringTypes";
+export type { ExploreFilterValue } from "./FilteringTypes";
