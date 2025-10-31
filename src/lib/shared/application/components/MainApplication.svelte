@@ -38,6 +38,9 @@
     switchTab,
     updateSettings,
   } from "../state";
+  import { getCurrentSheet, onSheetChange, closeSheet, openSheet } from "../../navigation/utils/sheet-router";
+  import type { SheetType } from "../../navigation/utils/sheet-router";
+  import ProfileSettingsSheet from "../../navigation/components/ProfileSettingsSheet.svelte";
   // Import app state management - BULLETPROOF RELATIVE IMPORTS
 
   // Get DI container from context
@@ -55,6 +58,11 @@
   let initializationError = $derived(getInitializationError());
   let initializationProgress = $derived(getInitializationProgress());
   let settings = $derived(getSettings());
+
+  // Route-based sheet state
+  let currentSheetType = $state<SheetType>(null);
+  let showProfileSettings = $derived(() => currentSheetType === 'profile-settings');
+  let showRouteBasedSettings = $derived(() => currentSheetType === 'settings');
 
   // Resolve services when container is available
   $effect(() => {
@@ -104,6 +112,24 @@
 
   // Initialize application
   onMount(async () => {
+    // Set up route-based sheet listening
+    currentSheetType = getCurrentSheet();
+
+    const cleanupSheetListener = onSheetChange((sheetType) => {
+      currentSheetType = sheetType;
+
+      // Sync with legacy settings dialog state
+      if (sheetType === 'settings') {
+        // Opening settings via route
+        if (!getShowSettings()) {
+          showSettingsDialog();
+        }
+      } else if (sheetType === null && getShowSettings()) {
+        // Closing settings via back button
+        hideSettingsDialog();
+      }
+    });
+
     try {
       // Initialize the app state first
       setInitializationState(false, true, null, 0);
@@ -171,6 +197,10 @@
         error instanceof Error ? error.message : "Unknown initialization error"
       );
     }
+
+    return () => {
+      cleanupSheetListener();
+    };
   });
 
   // Handle keyboard shortcuts
@@ -179,9 +209,11 @@
       // Settings dialog toggle (Ctrl/Cmd + ,)
       if ((event.ctrlKey || event.metaKey) && event.key === ",") {
         event.preventDefault();
-        if (getShowSettings()) {
+        if (getShowSettings() || currentSheetType === 'settings') {
+          closeSheet();
           hideSettingsDialog();
         } else {
+          openSheet('settings');
           showSettingsDialog();
         }
       }
@@ -271,8 +303,14 @@
     <!-- Main Interface -->
     <MainInterface />
 
-    <!-- Settings slide panel -->
-    <SettingsSheet isOpen={getShowSettings()} />
+    <!-- Settings slide panel (route-aware) -->
+    <SettingsSheet isOpen={getShowSettings() || showRouteBasedSettings()} />
+
+    <!-- Profile Settings sheet (route-based, 95vh) -->
+    <ProfileSettingsSheet
+      isOpen={showProfileSettings()}
+      onClose={() => closeSheet()}
+    />
   {/if}
 </div>
 

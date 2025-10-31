@@ -72,9 +72,16 @@
 
   function handleProfileSettings() {
     hapticService?.trigger("selection");
-    // TODO: Implement Profile Settings
-    console.log("Profile Settings - Coming Soon");
+    // Close this sheet and navigate to profile settings
     onClose();
+
+    // Small delay to allow sheet to close smoothly before opening new one
+    setTimeout(() => {
+      // Import dynamically to avoid circular deps
+      import("../utils/sheet-router").then(({ openSheet }) => {
+        openSheet("profile-settings");
+      });
+    }, 200);
   }
 </script>
 
@@ -146,14 +153,12 @@
         </button>
 
         <button
-          class="profile-sheet__menu-item profile-sheet__menu-item--disabled"
+          class="profile-sheet__menu-item"
           onclick={handleProfileSettings}
-          disabled
-          title="Coming Soon"
         >
           <i class="fas fa-cog"></i>
           <span>Settings</span>
-          <span class="profile-sheet__badge">Soon</span>
+          <i class="fas fa-chevron-right profile-sheet__menu-arrow"></i>
         </button>
       </nav>
 

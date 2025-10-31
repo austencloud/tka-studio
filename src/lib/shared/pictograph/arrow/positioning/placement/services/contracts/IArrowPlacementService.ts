@@ -35,8 +35,15 @@ export interface ISpecialPlacementService {
   getSpecialAdjustment(
     motionData: MotionData,
     pictographData: PictographData,
-    arrowColor?: string
+    arrowColor?: string,
+    attributeKey?: string
   ): Promise<Point | null>;
+
+  hasRotationAngleOverride(
+    motionData: MotionData,
+    pictographData: PictographData,
+    rotationOverrideKey: string
+  ): Promise<boolean>;
 }
 
 export interface IDefaultPlacementService {

@@ -155,9 +155,10 @@ async function waitForServicesInitialized(
 
     // If we have a grid, the component is initialized enough to start rendering
     if (hasGrid) {
-      console.log(
-        `✅ Services initialized (detected after ${attempts * 100}ms)`
-      );
+      // Debug logging disabled to prevent console flooding
+      // console.log(
+      //   `✅ Services initialized (detected after ${attempts * 100}ms)`
+      // );
 
       // Give effects a moment to start running after service initialization
       await new Promise((resolve) => setTimeout(resolve, 150));
@@ -207,9 +208,10 @@ async function waitForArrowsAndPropsCalculated(
   let attempts = 0;
   const maxAttempts = 100; // 10 seconds max (100ms intervals)
 
-  console.log(
-    `🔍 Waiting for ${expectedArrowCount} arrows and ${expectedPropCount} props...`
-  );
+  // Debug logging disabled to prevent console flooding
+  // console.log(
+  //   `🔍 Waiting for ${expectedArrowCount} arrows and ${expectedPropCount} props...`
+  // );
 
   while (attempts < maxAttempts) {
     // Look for arrow SVG elements (they have class "arrow-svg")
@@ -227,15 +229,17 @@ async function waitForArrowsAndPropsCalculated(
     const hasEnoughProps = propGroups.length >= expectedPropCount;
 
     if (attempts % 10 === 0 && attempts > 0) {
-      console.log(
-        `⏳ Still waiting... (${attempts * 100}ms) arrows: ${arrowGroups.length}/${expectedArrowCount}, props: ${propGroups.length}/${expectedPropCount}`
-      );
+      // Debug logging disabled to prevent console flooding
+      // console.log(
+      //   `⏳ Still waiting... (${attempts * 100}ms) arrows: ${arrowGroups.length}/${expectedArrowCount}, props: ${propGroups.length}/${expectedPropCount}`
+      // );
     }
 
     if (hasEnoughArrows && hasEnoughProps) {
-      console.log(
-        `✅ Arrows and props calculated (found ${arrowGroups.length} arrow groups, ${propGroups.length} prop groups after ${attempts * 100}ms)`
-      );
+      // Debug logging disabled to prevent console flooding
+      // console.log(
+      //   `✅ Arrows and props calculated (found ${arrowGroups.length} arrow groups, ${propGroups.length} prop groups after ${attempts * 100}ms)`
+      // );
       return;
     }
 

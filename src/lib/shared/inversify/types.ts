@@ -327,6 +327,9 @@ export const TYPES = {
   ArrowPlacementKeyService: Symbol.for("ArrowPlacementKeyService"),
   ITurnsTupleKeyGenerator: Symbol.for("ITurnsTupleKeyGenerator"),
   IAttributeKeyGenerator: Symbol.for("IAttributeKeyGenerator"),
+  IRotationAngleOverrideKeyGenerator: Symbol.for(
+    "IRotationAngleOverrideKeyGenerator"
+  ),
   IDirectionalTupleProcessor: Symbol.for("IDirectionalTupleProcessor"),
   IDirectionalTupleCalculator: Symbol.for("IDirectionalTupleCalculator"),
   IQuadrantIndexCalculator: Symbol.for("IQuadrantIndexCalculator"),

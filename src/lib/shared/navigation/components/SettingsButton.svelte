@@ -7,7 +7,6 @@
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
-  import { showSettingsDialog } from "../../application/state/app-state.svelte";
   import { authStore } from "$shared/auth";
 
   let { navigationLayout = "top" } = $props<{
@@ -27,7 +26,10 @@
   // Handle settings button click
   function handleSettingsClick() {
     hapticService?.trigger("selection");
-    showSettingsDialog();
+    // Use route-based navigation
+    import("../utils/sheet-router").then(({ openSheet }) => {
+      openSheet("settings");
+    });
   }
 </script>
 

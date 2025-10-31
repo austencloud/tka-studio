@@ -3,7 +3,7 @@
   import { ErrorBanner, resolve, TYPES } from "$shared";
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onDestroy, onMount } from "svelte";
-  import { showSpotlight } from "../../../../shared/application/state/app-state.svelte";
+  import { openSpotlightViewer } from "../../../../shared/application/state/app-state.svelte";
 
   import type { IExploreThumbnailService } from "../../display";
   import { SequenceDisplayPanel } from "../../display/components";
@@ -96,7 +96,12 @@
 
   function handleSpotlightView(sequence: SequenceData) {
     console.log("🎭 BrowseTab: Opening spotlight for sequence:", sequence.id);
-    showSpotlight(sequence, thumbnailService);
+    openSpotlightViewer(sequence, thumbnailService);
+
+    // Also update URL for sharing/bookmarking
+    import("$shared/navigation/utils/sheet-router").then(({ openSpotlight }) => {
+      openSpotlight(sequence.id);
+    });
   }
 
   async function handleDeleteConfirm() {

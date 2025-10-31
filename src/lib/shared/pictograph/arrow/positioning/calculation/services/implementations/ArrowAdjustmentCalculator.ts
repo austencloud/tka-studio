@@ -116,6 +116,14 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
      * Calculate arrow position adjustment with proper error handling.
      * IDENTICAL logic to original ArrowAdjustmentCalculator.
      */
+    // Debug logging disabled to prevent console flooding
+    // console.group(`📦 [ArrowAdjustmentCalculator] calculateAdjustmentResult`);
+    // console.log(`   Letter: ${letter}`);
+    // console.log(`   Motion: ${motionData.startLocation}→${motionData.endLocation}`);
+    // console.log(`   Motion Type: ${motionData.motionType}`);
+    // console.log(`   Turns: ${motionData.turns}, Rotation: ${motionData.rotationDirection}`);
+    // console.log(`   Arrow Location: ${location}`);
+
     try {
       // STEP 1: Look up base adjustment (special → default) - EXACTLY like legacy
       const baseAdjustment = await this.getBaseAdjustment(
@@ -124,6 +132,8 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         letter,
         arrowColor
       );
+
+      // console.log(`   📊 Base Adjustment retrieved: (${baseAdjustment.x}, ${baseAdjustment.y})`);
 
       // STEP 2: Process directional tuples for ALL motion types
       // JSON values are reference adjustments for a specific location (e.g., North)
@@ -135,11 +145,15 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         location
       );
 
+      // console.log(`   ✅ Final Adjustment: (${finalAdjustment.x}, ${finalAdjustment.y})`);
+      // console.groupEnd();
+
       return new Point(finalAdjustment.x, finalAdjustment.y);
     } catch (error) {
       console.error(
         `Adjustment calculation failed for letter ${letter}: ${error}`
       );
+      // console.groupEnd();
       throw new Error(`Arrow adjustment calculation failed: ${error}`);
     }
   }
@@ -162,26 +176,33 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
 
     try {
       // Generate required keys for special placement lookup
-      const [_oriKey, _turnsTuple, _attrKey] = this.generateLookupKeys(
+      const [oriKey, turnsTuple, attrKey] = this.generateLookupKeys(
         pictographData,
         motionData
       );
 
-      // Keys generated for special placement lookup
+      // console.log(`   🔑 Generated keys for special placement lookup:`);
+      // console.log(`      Orientation Key: ${oriKey}`);
+      // console.log(`      Turns Tuple: ${turnsTuple}`);
+      // console.log(`      Attribute Key: ${attrKey}`);
 
       try {
         const specialAdjustment = await this.lookupSpecialPlacement(
           motionData,
           pictographData,
-          arrowColor
+          arrowColor,
+          attrKey
         );
 
         if (specialAdjustment) {
+          // console.log(`   ✅ Special placement found: (${specialAdjustment.x}, ${specialAdjustment.y})`);
           return specialAdjustment;
         }
 
+        // console.log(`   ℹ️ No special placement found - falling back to default`);
         // No special placement found - fall back to default
       } catch (error) {
+        // console.warn(`   ⚠️ Error in special placement lookup - falling back to default:`, error);
         // Error in special placement lookup - fall back to default
       }
 
@@ -242,7 +263,8 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
   private async lookupSpecialPlacement(
     motionData: MotionData,
     pictographData: PictographData,
-    arrowColor?: string
+    arrowColor?: string,
+    attributeKey?: string
   ): Promise<Point | null> {
     /**
      * Look up special placement using exact legacy logic.
@@ -253,7 +275,8 @@ export class ArrowAdjustmentCalculator implements IArrowAdjustmentCalculator {
         await this.specialPlacementService.getSpecialAdjustment(
           motionData,
           pictographData,
-          arrowColor
+          arrowColor,
+          attributeKey
         );
 
       if (adjustment) {

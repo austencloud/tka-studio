@@ -67,10 +67,11 @@ const config = {
   },
 
   // ============================================================================
-  // SVELTE 5 HMR CONFIGURATION - Enable hot module replacement
+  // SVELTE 5 HMR CONFIGURATION - DISABLED to prevent white screen bug
+  // All Svelte changes will trigger full page reload via forceReloadPlugin
   // ============================================================================
   compilerOptions: {
-    hmr: true,
+    hmr: false,
   },
 };
 

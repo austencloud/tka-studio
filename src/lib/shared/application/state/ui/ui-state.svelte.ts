@@ -77,7 +77,7 @@ export function getSpotlightThumbnailService(): IExploreThumbnailService | null 
   return uiState.spotlightThumbnailService;
 }
 
-export function showSpotlight(
+export function openSpotlightViewer(
   sequence: SequenceData,
   thumbnailService: IExploreThumbnailService
 ): void {
@@ -86,7 +86,7 @@ export function showSpotlight(
   uiState.showSpotlight = true;
 }
 
-export function hideSpotlight(): void {
+export function closeSpotlightViewer(): void {
   uiState.showSpotlight = false;
   uiState.spotlightSequence = null;
   uiState.spotlightThumbnailService = null;

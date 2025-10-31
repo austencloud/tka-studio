@@ -2,10 +2,34 @@ import { sveltekit } from "@sveltejs/kit/vite";
 import fs from "fs";
 import type { IncomingMessage, ServerResponse } from "http";
 import path from "path";
-import type { ViteDevServer } from "vite";
+import type { ViteDevServer, HmrContext } from "vite";
 import { defineConfig } from "vite";
 
 const isDev = process.env.NODE_ENV !== "production";
+
+// Custom plugin to force full reload for ALL Svelte files
+// This completely disables HMR for Svelte to prevent white screen issues
+const forceReloadPlugin = () => ({
+  name: "force-reload-svelte",
+  handleHotUpdate({ file, server }: HmrContext) {
+    // Force full reload for ANY Svelte file or runes state file
+    // This is aggressive but prevents the white screen bug
+    if (
+      file.endsWith(".svelte") ||
+      file.endsWith(".svelte.ts") ||
+      file.includes("app-state") ||
+      file.includes("navigation-state") ||
+      file.includes("ui-state")
+    ) {
+      console.log(`[🔄 Full Reload] ${file.split("\\").pop()}`);
+      server.ws.send({
+        type: "full-reload",
+        path: "*",
+      });
+      return [];
+    }
+  },
+});
 
 // Custom plugin to serve PNG files from desktop directory
 const dictionaryPlugin = () => ({
@@ -43,7 +67,7 @@ const dictionaryPlugin = () => ({
 });
 
 export default defineConfig({
-  plugins: [sveltekit(), dictionaryPlugin()],
+  plugins: [forceReloadPlugin(), sveltekit(), dictionaryPlugin()],
 
   resolve: {
     alias: {
@@ -92,7 +116,9 @@ export default defineConfig({
       "fabric",
       "file-saver",
     ],
-    exclude: ["@sveltejs/kit/src/runtime/client/entry.js", "pdfjs-dist"],
+    // FIXED: Removed @sveltejs/kit/src/runtime/client/entry.js from exclude
+    // Excluding it caused white screen on refresh due to path with spaces
+    exclude: ["pdfjs-dist"],
     // Only force re-optimization when dependencies change, not on every start
     force: false,
   },
@@ -112,6 +138,8 @@ export default defineConfig({
       clientPort: 5173,
       overlay: true,
       protocol: "ws", // Force WebSocket protocol
+      // Add timeout to prevent stale connections
+      timeout: 30000,
     },
     cors: true,
     watch: {
@@ -121,6 +149,8 @@ export default defineConfig({
       // Ignore node_modules and other large directories
       ignored: ["**/node_modules/**", "**/.git/**", "**/dist/**"],
     },
+    // Force page reload on certain events instead of HMR
+    middlewareMode: false,
   },
 
   define: {

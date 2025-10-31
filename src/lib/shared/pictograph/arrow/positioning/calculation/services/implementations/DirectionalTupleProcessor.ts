@@ -50,6 +50,13 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
     const mt = String(motion.motionType).toLowerCase();
     const rot = String(motion.rotationDirection).toLowerCase();
 
+    // Debug logging disabled to prevent console flooding
+    // console.group(`🔢 [DirectionalTupleCalculator] generateDirectionalTuples`);
+    // console.log(`   Motion: ${motion.startLocation}→${motion.endLocation}`);
+    // console.log(`   Base: (${baseX}, ${baseY})`);
+    // console.log(`   Motion Type (raw): "${motion.motionType}" → normalized: "${mt}"`);
+    // console.log(`   Rotation (raw): "${motion.rotationDirection}" → normalized: "${rot}"`);
+
     const NE = GridLocation.NORTHEAST;
     const SE = GridLocation.SOUTHEAST;
     const SW = GridLocation.SOUTHWEST;
@@ -71,6 +78,9 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
     const isCW = rot === "clockwise" || rot === "cw";
     const isCCW = rot === "counter_clockwise" || rot === "ccw";
     const isNoRot = rot === "noRotation";
+
+    // console.log(`   Grid Mode: ${gridIsDiamond ? "DIAMOND" : "BOX"}`);
+    // console.log(`   Rotation Detection: CW=${isCW}, CCW=${isCCW}, NoRot=${isNoRot}`);
 
     // Mapping builders
     const tuple = (a: number, b: number) => [a, b] as [number, number];
@@ -305,14 +315,51 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
 
     // Dispatch by motion type and grid
     let result: Array<[number, number]>;
+    let branchTaken = '';
+
     if (mt === "dash") {
-      result = gridIsDiamond ? dashDiamond() : dashBox();
+      if (gridIsDiamond) {
+        branchTaken = 'dashDiamond()';
+        result = dashDiamond();
+      } else {
+        branchTaken = 'dashBox()';
+        result = dashBox();
+      }
     } else if (mt === "static") {
-      result = gridIsDiamond ? staticDiamond() : staticBox();
+      if (gridIsDiamond) {
+        branchTaken = 'staticDiamond()';
+        result = staticDiamond();
+      } else {
+        branchTaken = 'staticBox()';
+        result = staticBox();
+      }
     } else {
       // pro/anti/float
-      result = gridIsDiamond ? shiftDiamond() : shiftBox();
+      if (gridIsDiamond) {
+        branchTaken = 'shiftDiamond()';
+        result = shiftDiamond();
+      } else {
+        branchTaken = 'shiftBox()';
+        result = shiftBox();
+      }
     }
+
+    // console.log(`   🎯 Branch selected: ${branchTaken}`);
+    // console.log(`   📊 Generated tuples:`);
+    // result.forEach((tuple, index) => {
+    //   const quadrant = ['NE (0)', 'SE (1)', 'SW (2)', 'NW (3)'][index];
+    //   console.log(`      ${quadrant}: (${tuple[0]}, ${tuple[1]})`);
+    // });
+
+    // // Check if transformation was applied
+    // const allSameAsBase = result.every(t => t[0] === baseX && t[1] === baseY);
+    // if (allSameAsBase) {
+    //   console.warn(`   ⚠️ WARNING: All tuples are IDENTICAL to base (${baseX}, ${baseY})`);
+    //   console.warn(`   ⚠️ NO TRANSFORMATION was applied!`);
+    // } else {
+    //   console.log(`   ✅ Transformation applied (tuples differ from base)`);
+    // }
+    // console.groupEnd();
 
     return result;
   }
@@ -363,6 +410,12 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
      * Returns:
      *     Final adjustment point after directional processing
      */
+    // Debug logging disabled to prevent console flooding
+    // console.group(`✨ [DirectionalTupleProcessor] processDirectionalTuples`);
+    // console.log(`   Motion: ${motion.startLocation}→${motion.endLocation}`);
+    // console.log(`   Arrow Location: ${location}`);
+    // console.log(`   Base Adjustment: (${baseAdjustment.x}, ${baseAdjustment.y})`);
+
     try {
       // Generate directional tuples from base adjustment
       const directionalTuples =
@@ -378,8 +431,22 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
         location
       );
 
+      // console.log(`   🎯 Quadrant Index: ${quadrantIndex} (${['NE', 'SE', 'SW', 'NW'][quadrantIndex]})`);
+
       // Select the appropriate tuple based on quadrant (legacy parity)
       const selectedTuple = directionalTuples[quadrantIndex] || [0, 0];
+
+      // console.log(`   📍 Selected Tuple: (${selectedTuple[0]}, ${selectedTuple[1]})`);
+
+      // // Check if final differs from base
+      // if (selectedTuple[0] === baseAdjustment.x && selectedTuple[1] === baseAdjustment.y) {
+      //   console.warn(`   ⚠️ WARNING: Selected tuple EQUALS base adjustment!`);
+      //   console.warn(`   ⚠️ NO transformation was applied to final result!`);
+      // } else {
+      //   console.log(`   ✅ Final adjustment differs from base (transformation applied)`);
+      // }
+
+      // console.groupEnd();
 
       // Final adjustment = selected tuple only (baseAdjustment already used to build tuples)
       return new Point(selectedTuple[0], selectedTuple[1]);
@@ -388,6 +455,7 @@ export class DirectionalTupleProcessor implements IDirectionalTupleProcessor {
         "Directional tuple processing failed, using base adjustment:",
         error
       );
+      // console.groupEnd();
       return baseAdjustment;
     }
   }

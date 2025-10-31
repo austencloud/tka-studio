@@ -39,7 +39,9 @@
       "Bash(findstr:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm run flows:*)",
+      "Bash(npm run dev:clean:*)"
     ],
     "deny": [],
     "ask": []

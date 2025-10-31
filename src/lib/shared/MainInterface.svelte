@@ -7,10 +7,13 @@
     getShowSpotlight,
     getSpotlightSequence,
     getSpotlightThumbnailService,
-    hideSpotlight,
+    closeSpotlightViewer,
+    openSpotlightViewer,
     isTabActive,
     switchTab,
   } from "./application/state/app-state.svelte";
+  import { getCurrentSpotlight, onRouteChange, closeSpotlight } from "./navigation/utils/sheet-router";
+  import type { RouteState } from "./navigation/utils/sheet-router";
   // Import background types - BULLETPROOF RELATIVE IMPORTS
   import { onMount } from "svelte";
   import type { IAnimationService } from "./application/services/contracts";
@@ -36,11 +39,13 @@
   import UnifiedNavigationMenu from "./navigation/components/UnifiedNavigationMenu.svelte";
   import PrimaryNavigation from "./navigation/components/PrimaryNavigation.svelte";
   import TopBar from "./navigation/components/TopBar.svelte";
+  import ProfileSheet from "./navigation/components/ProfileSheet.svelte";
   import {
     MODULE_DEFINITIONS,
     navigationState,
   } from "./navigation/state/navigation-state.svelte";
   import type { ModuleId } from "./navigation/domain/types";
+  import { handleHMRInit } from "./hmr-helper";
 
   // Reactive state for template using proper derived
   let activeTab = $derived(getActiveTab());
@@ -54,6 +59,12 @@
   // Mobile PWA install prompt state
   let showMobileInstallPrompt = $state(false);
   let showPWAInstallGuide = $state(false);
+
+  // Profile sheet state
+  let showProfileSheet = $state(false);
+
+  // Route-based spotlight state
+  let spotlightSequenceId = $state<string | null>(null);
 
   const INSTALL_REPROMPT_DELAY_MS = 45000;
   let deviceDetector: IDeviceDetector | null = null;
@@ -91,6 +102,9 @@
     if (typeof window === "undefined") {
       return;
     }
+
+    // Initialize HMR handling to prevent white screen issues
+    handleHMRInit();
 
     const cleanupFns: Array<() => void> = [];
 
@@ -195,6 +209,40 @@
         handleOpenInstallGuide
       )
     );
+
+    // Listen for custom event to toggle profile sheet
+    const handleProfileSheetToggle = () => {
+      showProfileSheet = !showProfileSheet;
+    };
+    window.addEventListener("profile-sheet-toggle", handleProfileSheetToggle);
+    cleanupFns.push(() =>
+      window.removeEventListener(
+        "profile-sheet-toggle",
+        handleProfileSheetToggle
+      )
+    );
+
+    // Listen for route changes (spotlight, etc.)
+    const cleanupRouteListener = onRouteChange((state: RouteState) => {
+      spotlightSequenceId = state.spotlight || null;
+
+      // Sync with legacy spotlight state if needed
+      // This allows components using the old API to still work
+      if (state.spotlight && !getShowSpotlight()) {
+        // Route opened spotlight - need to fetch the sequence
+        // For now, we'll let the SpotlightViewer handle this
+      } else if (!state.spotlight && getShowSpotlight()) {
+        // Route closed spotlight
+        closeSpotlightViewer();
+      }
+    });
+    cleanupFns.push(cleanupRouteListener);
+
+    // Initialize spotlight from URL on mount
+    const initialSpotlight = getCurrentSpotlight();
+    if (initialSpotlight) {
+      spotlightSequenceId = initialSpotlight;
+    }
 
     return () => {
       cleanupFns.forEach((cleanup) => {
@@ -554,14 +602,29 @@
   <EnhancedPWAInstallGuide bind:showGuide={showPWAInstallGuide} />
 
   <!-- Spotlight Viewer - rendered at root level for proper z-index -->
-  {#if showSpotlight && spotlightSequence && spotlightThumbnailService}
+  <!-- Route-aware: Opens via ?spotlight={id} or legacy showSpotlight state -->
+  {#if (showSpotlight && spotlightSequence && spotlightThumbnailService) || spotlightSequenceId}
     <SpotlightViewer
-      show={showSpotlight}
+      show={showSpotlight || !!spotlightSequenceId}
       sequence={spotlightSequence}
+      sequenceId={spotlightSequenceId}
       thumbnailService={spotlightThumbnailService}
-      onClose={hideSpotlight}
+      onClose={() => {
+        closeSpotlightViewer();
+        if (spotlightSequenceId) {
+          closeSpotlight();
+        }
+      }}
     />
   {/if}
+
+  <!-- Profile Sheet - rendered at root level for proper positioning -->
+  <ProfileSheet
+    isOpen={showProfileSheet}
+    onClose={() => {
+      showProfileSheet = false;
+    }}
+  />
 </div>
 
 <style>

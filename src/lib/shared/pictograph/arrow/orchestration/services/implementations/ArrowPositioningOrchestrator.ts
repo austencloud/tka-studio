@@ -89,9 +89,10 @@ export class ArrowPositioningOrchestrator
         this.dataProcessor.ensureValidPosition(initialPosition);
 
       // STEP 3: Calculate rotation
-      const rotation = this.rotationCalculator.calculateRotation(
+      const rotation = await this.rotationCalculator.calculateRotation(
         motion,
-        location
+        location,
+        pictographData
       );
 
       // STEP 4: Calculate adjustment using sophisticated service

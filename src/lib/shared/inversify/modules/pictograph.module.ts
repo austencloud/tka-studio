@@ -23,6 +23,7 @@ import {
 import { ArrowPlacementKeyService } from "../../pictograph/arrow/positioning/key-generation/services/implementations/ArrowPlacementKeyService";
 import { AttributeKeyGenerator } from "../../pictograph/arrow/positioning/key-generation/services/implementations/AttributeKeyGenerator";
 import { SpecialPlacementOriKeyGenerator } from "../../pictograph/arrow/positioning/key-generation/services/implementations/SpecialPlacementOriKeyGenerator";
+import { RotationAngleOverrideKeyGenerator } from "../../pictograph/arrow/positioning/key-generation/services/implementations/RotationAngleOverrideKeyGenerator";
 import { TurnsTupleKeyGenerator } from "../../pictograph/arrow/positioning/key-generation/services/implementations/TurnsTupleKeyGenerator";
 import { ArrowPlacementService } from "../../pictograph/arrow/positioning/placement/services/implementations/ArrowPlacementService";
 import { DefaultPlacementService } from "../../pictograph/arrow/positioning/placement/services/implementations/DefaultPlacementService";
@@ -98,6 +99,9 @@ export const pictographModule = new ContainerModule(
       .to(SpecialPlacementOriKeyGenerator);
     options.bind(TYPES.ITurnsTupleKeyGenerator).to(TurnsTupleKeyGenerator);
     options.bind(TYPES.IAttributeKeyGenerator).to(AttributeKeyGenerator);
+    options
+      .bind(TYPES.IRotationAngleOverrideKeyGenerator)
+      .to(RotationAngleOverrideKeyGenerator);
     options
       .bind(TYPES.IDirectionalTupleProcessor)
       .to(DirectionalTupleProcessor);

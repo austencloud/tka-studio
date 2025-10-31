@@ -37,10 +37,10 @@ export {
   getSpotlightSequence,
   getSpotlightThumbnailService,
   hideSettingsDialog,
-  hideSpotlight,
+  closeSpotlightViewer,
   setFullScreen,
   showSettingsDialog,
-  showSpotlight,
+  openSpotlightViewer,
   toggleSettingsDialog,
 } from "./ui/ui-state.svelte";
 

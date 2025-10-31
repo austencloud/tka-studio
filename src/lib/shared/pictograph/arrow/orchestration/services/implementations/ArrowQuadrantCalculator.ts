@@ -16,7 +16,7 @@ export class ArrowQuadrantCalculator implements IArrowQuadrantCalculator {
      * Calculate quadrant index for the given motion and arrow location.
      * Uses motion-type-specific and grid-mode-specific mappings.
      */
-    const gridMode = this.determineGridMode(motion, location); // ✅ FIXED: Pass calculated location
+    const gridMode = this.determineGridMode(motion, location);
     const motionType = motion.motionType;
 
     // Apply sophisticated quadrant mapping based on grid mode and motion type
@@ -44,16 +44,27 @@ export class ArrowQuadrantCalculator implements IArrowQuadrantCalculator {
     calculatedLocation?: GridLocation
   ): GridMode {
     /**
-     * Determine grid mode (diamond/box) based on calculated arrow location.
-     * For shift motions, use the calculated arrow location (e.g., N+W=NW).
-     * Diagonal locations (NE, SE, SW, NW) indicate diamond mode.
-     * Cardinal locations (N, E, S, W) indicate box mode.
+     * Determine grid mode (diamond/box) based on motion locations.
+     *
+     * GRID MODE LOGIC:
+     * - DIAMOND mode: Motion uses CARDINALS (N,E,S,W) → arrows placed at DIAGONALS
+     * - BOX mode: Motion uses DIAGONALS (NE,SE,SW,NW) → arrows placed at CARDINALS
+     *
+     * For shift motions (PRO/ANTI/FLOAT), the calculated arrow location follows this pattern.
+     * For dash/static motions, use the motion's start/end locations to determine the mode.
      */
     const diagonalLocations = [
       GridLocation.NORTHEAST,
       GridLocation.SOUTHEAST,
       GridLocation.SOUTHWEST,
       GridLocation.NORTHWEST,
+    ];
+
+    const cardinalLocations = [
+      GridLocation.NORTH,
+      GridLocation.EAST,
+      GridLocation.SOUTH,
+      GridLocation.WEST,
     ];
 
     // For shift motions (PRO, ANTI, FLOAT), use the calculated arrow location
@@ -67,15 +78,17 @@ export class ArrowQuadrantCalculator implements IArrowQuadrantCalculator {
       }
     }
 
-    // Fallback: Check both start and end locations for diagonal positions
-    const startIsDiagonal = diagonalLocations.includes(motion.startLocation);
-    const endIsDiagonal = diagonalLocations.includes(motion.endLocation);
+    // For dash/static motions: Check motion start/end locations
+    // If motion uses CARDINALS → DIAMOND mode (arrows at diagonals)
+    // If motion uses DIAGONALS → BOX mode (arrows at cardinals)
+    const startIsCardinal = cardinalLocations.includes(motion.startLocation);
+    const endIsCardinal = cardinalLocations.includes(motion.endLocation);
 
-    // If either start or end is diagonal, it's diamond mode
-    if (startIsDiagonal || endIsDiagonal) {
+    if (startIsCardinal || endIsCardinal) {
       return GridMode.DIAMOND;
     }
 
+    // Motion uses diagonal locations → BOX mode
     return GridMode.BOX;
   }
 

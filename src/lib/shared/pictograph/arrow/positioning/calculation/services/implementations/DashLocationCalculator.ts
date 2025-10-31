@@ -314,34 +314,54 @@ export class DashLocationCalculator implements IDashLocationCalculator {
     /**
      * Calculate dash arrow location using proven calculation algorithms.
      */
+    console.group(`📍 [DashLocationCalculator] calculateDashLocation`);
+    console.log(`   Motion: ${motion.startLocation}→${motion.endLocation}`);
+    console.log(`   Turns: ${motion.turns}, Rotation: ${motion.rotationDirection}`);
+    console.log(`   Letter Type: ${letterType || 'unknown'}`);
+    console.log(`   Grid Mode: ${gridMode || 'unknown'}`);
 
     // Φ_DASH and Ψ_DASH special handling
     if (isPhiDash || isPsiDash) {
-      return this.getPhiDashPsiDashLocation(motion, otherMotion);
+      const location = this.getPhiDashPsiDashLocation(motion, otherMotion);
+      console.log(`   🎯 Result: ${location} (Φ/Ψ DASH special case)`);
+      console.groupEnd();
+      return location;
     }
 
     // Λ (Lambda) zero turns special case
     if (isLambda && motion.turns === 0 && otherMotion) {
-      return this.getLambdaZeroTurnsLocation(motion, otherMotion);
+      const location = this.getLambdaZeroTurnsLocation(motion, otherMotion);
+      console.log(`   🎯 Result: ${location} (Λ zero turns)`);
+      console.groupEnd();
+      return location;
     }
 
     // Λ_DASH (Lambda Dash) zero turns special case
     if (isLambdaDash && motion.turns === 0 && otherMotion) {
-      return this.getLambdaDashZeroTurnsLocation(motion, otherMotion);
+      const location = this.getLambdaDashZeroTurnsLocation(motion, otherMotion);
+      console.log(`   🎯 Result: ${location} (Λ_DASH zero turns)`);
+      console.groupEnd();
+      return location;
     }
 
     // Zero turns - check for Type 3 or default
     if (motion.turns === 0) {
-      return this.defaultZeroTurnsDashLocation(
+      const location = this.defaultZeroTurnsDashLocation(
         motion,
         letterType,
         gridMode,
         shiftLocation
       );
+      console.log(`   🎯 Result: ${location} (zero turns default)`);
+      console.groupEnd();
+      return location;
     }
 
     // Non-zero turns
-    return this.dashLocationNonZeroTurns(motion);
+    const location = this.dashLocationNonZeroTurns(motion);
+    console.log(`   🎯 Result: ${location} (non-zero turns: ${motion.turns}T ${motion.rotationDirection})`);
+    console.groupEnd();
+    return location;
   }
 
   private getLambdaDashZeroTurnsLocation(

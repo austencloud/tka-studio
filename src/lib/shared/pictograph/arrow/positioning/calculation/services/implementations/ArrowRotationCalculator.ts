@@ -3,11 +3,19 @@ import {
   MotionType,
   Orientation,
   type MotionData,
+  type PictographData,
 } from "$shared";
-import { injectable } from "inversify";
+import type { ISpecialPlacementService } from "$shared/pictograph/arrow/positioning/placement/services/contracts";
+import type { IRotationAngleOverrideKeyGenerator } from "$shared/pictograph/arrow/positioning/key-generation/services/implementations/RotationAngleOverrideKeyGenerator";
+import { injectable, inject, optional } from "inversify";
+import { TYPES } from "$shared/inversify/types";
 
 export interface IArrowRotationCalculator {
-  calculateRotation(motion: MotionData, location: GridLocation): number;
+  calculateRotation(
+    motion: MotionData,
+    location: GridLocation,
+    pictographData?: PictographData
+  ): Promise<number>;
   getSupportedMotionTypes(): MotionType[];
   validateMotionData(motion: MotionData): boolean;
 }
@@ -19,7 +27,25 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
    *
    * Implements rotation calculation algorithms without any UI dependencies.
    * Each motion type has its own rotation strategy based on proven algorithms.
+   *
+   * ROTATION OVERRIDE SYSTEM:
+   * - For DASH and STATIC motions, certain pictographs require different rotation angles
+   * - These overrides are flagged in special placement JSON data
+   * - When override flag is present, uses override rotation maps instead of normal maps
    */
+
+  private specialPlacementService?: ISpecialPlacementService;
+  private rotationOverrideKeyGenerator?: IRotationAngleOverrideKeyGenerator;
+
+  constructor(
+    @inject(TYPES.ISpecialPlacementService) @optional()
+    specialPlacementService?: ISpecialPlacementService,
+    @inject(TYPES.IRotationAngleOverrideKeyGenerator) @optional()
+    rotationOverrideKeyGenerator?: IRotationAngleOverrideKeyGenerator
+  ) {
+    this.specialPlacementService = specialPlacementService;
+    this.rotationOverrideKeyGenerator = rotationOverrideKeyGenerator;
+  }
 
   // Static arrow rotation for RADIAL orientations (IN/OUT) - Diamond Mode
   private readonly staticRadialClockwiseMap: Record<GridLocation, number> = {
@@ -153,13 +179,45 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     [`${GridLocation.NORTHEAST},${GridLocation.SOUTHWEST}`]: 135,
   };
 
-  calculateRotation(motion: MotionData, location: GridLocation): number {
+  // ROTATION OVERRIDE MAPS - Used when rotation_override flag is set
+  // These are DIFFERENT angles used for specific pictograph configurations
+
+  // Static from RADIAL (IN/OUT) override angles
+  private readonly staticRadialOverrideMap: Record<GridLocation, number | Record<string, number>> = {
+    [GridLocation.NORTH]: 0,
+    [GridLocation.EAST]: { cw: 270, ccw: 90 },
+    [GridLocation.SOUTH]: 180,
+    [GridLocation.WEST]: { cw: 90, ccw: 270 },
+    [GridLocation.NORTHEAST]: { cw: 225, ccw: 135 },
+    [GridLocation.SOUTHEAST]: { cw: 315, ccw: 45 },
+    [GridLocation.SOUTHWEST]: { cw: 45, ccw: 315 },
+    [GridLocation.NORTHWEST]: { cw: 135, ccw: 225 },
+  };
+
+  // Static from NON-RADIAL (CLOCK/COUNTER) override angles
+  private readonly staticNonRadialOverrideMap: Record<GridLocation, number | Record<string, number>> = {
+    [GridLocation.NORTH]: 0,
+    [GridLocation.EAST]: { cw: 90, ccw: 270 },
+    [GridLocation.SOUTH]: 180,
+    [GridLocation.WEST]: { cw: 270, ccw: 90 },
+    [GridLocation.NORTHEAST]: { cw: 45, ccw: 315 },
+    [GridLocation.SOUTHEAST]: { cw: 135, ccw: 225 },
+    [GridLocation.SOUTHWEST]: { cw: 225, ccw: 135 },
+    [GridLocation.NORTHWEST]: { cw: 315, ccw: 45 },
+  };
+
+  async calculateRotation(
+    motion: MotionData,
+    location: GridLocation,
+    pictographData?: PictographData
+  ): Promise<number> {
     /**
      * Calculate arrow rotation angle based on motion type and location.
      *
      * Args:
      *     motion: Motion data containing type and rotation direction
      *     location: Calculated arrow location
+     *     pictographData: Optional pictograph data for rotation override checking
      *
      * Returns:
      *     Rotation angle in degrees (0-360)
@@ -168,13 +226,13 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
 
     switch (motionType) {
       case "static":
-        return this.calculateStaticRotation(motion, location);
+        return await this.calculateStaticRotation(motion, location, pictographData);
       case "pro":
         return this.calculateProRotation(motion, location);
       case "anti":
         return this.calculateAntiRotation(motion, location);
       case "dash":
-        return this.calculateDashRotation(motion, location);
+        return await this.calculateDashRotation(motion, location, pictographData);
       case "float":
         return this.calculateFloatRotation(motion, location);
       default:
@@ -183,14 +241,19 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     }
   }
 
-  private calculateStaticRotation(
+  private async calculateStaticRotation(
     motion: MotionData,
-    location: GridLocation
-  ): number {
+    location: GridLocation,
+    pictographData?: PictographData
+  ): Promise<number> {
     /**
      * Calculate rotation for static arrows.
      * Uses different rotation maps based on whether orientation is radial (IN/OUT) or non-radial (CLOCK/COUNTER).
      * Radial = Diamond mode, Non-radial = Box mode.
+     *
+     * ROTATION OVERRIDE CHECK:
+     * For specific pictographs, rotation override flag may be set in special placements.
+     * When override is active, uses different rotation angles.
      */
     const startOrientation = motion.startOrientation;
     const rotationDirection = motion.rotationDirection?.toLowerCase();
@@ -200,7 +263,34 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
       startOrientation === Orientation.IN ||
       startOrientation === Orientation.OUT;
 
-    // Select the appropriate rotation map
+    // STEP 1: Check for rotation override
+    if (pictographData && this.specialPlacementService && this.rotationOverrideKeyGenerator) {
+      try {
+        const overrideKey = this.rotationOverrideKeyGenerator.generateRotationAngleOverrideKey(
+          motion,
+          pictographData
+        );
+        const hasOverride = await this.specialPlacementService.hasRotationAngleOverride(
+          motion,
+          pictographData,
+          overrideKey
+        );
+
+        if (hasOverride) {
+          // Use override rotation maps
+          return this.getRotationFromOverrideMap(
+            isRadial,
+            location,
+            rotationDirection || ""
+          );
+        }
+      } catch (error) {
+        // If override check fails, fall through to normal rotation
+        console.warn("Rotation override check failed:", error);
+      }
+    }
+
+    // STEP 2: Use normal rotation maps (no override)
     let rotationMap: Record<GridLocation, number>;
 
     if (isRadial) {
@@ -220,6 +310,32 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     }
 
     return rotationMap[location] || 0.0;
+  }
+
+  private getRotationFromOverrideMap(
+    isRadial: boolean,
+    location: GridLocation,
+    rotationDirection: string
+  ): number {
+    /**
+     * Get rotation angle from override maps.
+     * Override maps have conditional angles based on rotation direction.
+     */
+    const overrideMap = isRadial
+      ? this.staticRadialOverrideMap
+      : this.staticNonRadialOverrideMap;
+
+    const angleValue = overrideMap[location];
+
+    if (typeof angleValue === "number") {
+      return angleValue;
+    } else if (typeof angleValue === "object") {
+      // Angle depends on rotation direction
+      const dir = rotationDirection === "clockwise" || rotationDirection === "cw" ? "cw" : "ccw";
+      return angleValue[dir] || 0.0;
+    }
+
+    return 0.0;
   }
 
   private calculateProRotation(
@@ -248,13 +364,48 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     }
   }
 
-  private calculateDashRotation(
+  private async calculateDashRotation(
     motion: MotionData,
-    location: GridLocation
-  ): number {
-    /**Calculate rotation for DASH arrows with special NO_ROTATION handling.*/
+    location: GridLocation,
+    pictographData?: PictographData
+  ): Promise<number> {
+    /**
+     * Calculate rotation for DASH arrows with special NO_ROTATION handling.
+     *
+     * ROTATION OVERRIDE CHECK:
+     * Dash arrows can also have rotation overrides for specific pictographs.
+     */
     const rotationDirection = motion.rotationDirection?.toLowerCase();
 
+    // STEP 1: Check for rotation override
+    if (pictographData && this.specialPlacementService && this.rotationOverrideKeyGenerator) {
+      try {
+        const overrideKey = this.rotationOverrideKeyGenerator.generateRotationAngleOverrideKey(
+          motion,
+          pictographData
+        );
+        const hasOverride = await this.specialPlacementService.hasRotationAngleOverride(
+          motion,
+          pictographData,
+          overrideKey
+        );
+
+        if (hasOverride) {
+          // For dash, override uses same logic as STATIC radial override
+          // (This matches legacy behavior - dash overrides use radial maps)
+          return this.getRotationFromOverrideMap(
+            true, // Dash overrides always use radial maps
+            location,
+            rotationDirection || ""
+          );
+        }
+      } catch (error) {
+        // If override check fails, fall through to normal rotation
+        console.warn("Dash rotation override check failed:", error);
+      }
+    }
+
+    // STEP 2: Use normal rotation maps (no override)
     if (
       rotationDirection === "norotation" ||
       rotationDirection === "none" ||

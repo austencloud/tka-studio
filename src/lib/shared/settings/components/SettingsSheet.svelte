@@ -105,6 +105,11 @@
     await updateSettings(settingsToApply);
     hasUnsavedChanges = false;
     hideSettingsDialog();
+
+    // Close via route if route-based
+    import("../../navigation/utils/sheet-router").then(({ closeSheet }) => {
+      closeSheet();
+    });
   }
 
   // Handle close/cancel with unsaved changes warning
@@ -122,6 +127,11 @@
     console.log("❌ Settings cancelled");
     hasUnsavedChanges = false;
     hideSettingsDialog();
+
+    // Close via route if route-based
+    import("../../navigation/utils/sheet-router").then(({ closeSheet }) => {
+      closeSheet();
+    });
   }
 </script>
 

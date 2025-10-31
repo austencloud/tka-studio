@@ -4,6 +4,7 @@
   import type { Snippet } from "svelte";
   import { onMount, setContext } from "svelte";
   import { authStore } from "$shared/auth";
+  import { registerCacheClearShortcut } from "$lib/shared/utils/cache-buster";
   import "../app.css";
 
   let { children } = $props<{
@@ -51,6 +52,12 @@
   }
 
   onMount(() => {
+    // Register cache clear shortcut (Ctrl+Shift+Delete)
+    registerCacheClearShortcut();
+
+    // REMOVED: checkAndClearIfBroken() - it was causing infinite reload loops in mobile emulation
+    // Use ?clear-cache URL parameter or Ctrl+Shift+Delete instead
+
     // Initialize Firebase Auth listener
     authStore.initialize();
 

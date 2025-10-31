@@ -19,3 +19,4 @@ export { default as UnifiedNavigationMenu } from "./UnifiedNavigationMenu.svelte
 export { default as TopBar } from "./TopBar.svelte";
 export { default as ProfileButton } from "./ProfileButton.svelte";
 export { default as ProfileSheet } from "./ProfileSheet.svelte";
+export { default as ProfileSettingsSheet } from "./ProfileSettingsSheet.svelte";
