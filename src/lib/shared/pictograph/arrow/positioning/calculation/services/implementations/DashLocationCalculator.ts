@@ -13,7 +13,16 @@
  */
 
 import type { IGridModeDeriver } from "$shared";
-import { getLetterType, GridLocation, GridMode, Letter, LetterType, resolve, type MotionData, type PictographData } from "$shared";
+import {
+  getLetterType,
+  GridLocation,
+  GridMode,
+  Letter,
+  LetterType,
+  resolve,
+  type MotionData,
+  type PictographData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { injectable } from "inversify";
 import { ShiftLocationCalculator } from "./ShiftLocationCalculator";
@@ -408,7 +417,11 @@ export class DashLocationCalculator implements IDashLocationCalculator {
   private dashLocationNonZeroTurns(motion: MotionData): GridLocation {
     /**Calculate dash location for non-zero turns.*/
     const rotationDirection = motion.rotationDirection?.toLowerCase();
-    if (rotationDirection === "norotation" || rotationDirection === "none" || rotationDirection === "no_rotation") {
+    if (
+      rotationDirection === "norotation" ||
+      rotationDirection === "none" ||
+      rotationDirection === "no_rotation"
+    ) {
       // Fallback for no rotation
       return motion.startLocation;
     }
@@ -418,15 +431,22 @@ export class DashLocationCalculator implements IDashLocationCalculator {
     let normalizedDirection: string;
     if (rotationDirection === "cw" || rotationDirection === "clockwise") {
       normalizedDirection = "clockwise";
-    } else if (rotationDirection === "ccw" || rotationDirection === "counter_clockwise" || rotationDirection === "counterclockwise") {
+    } else if (
+      rotationDirection === "ccw" ||
+      rotationDirection === "counter_clockwise" ||
+      rotationDirection === "counterclockwise"
+    ) {
       normalizedDirection = "counter_clockwise";
     } else {
       // If we don't recognize it, default to clockwise
-      console.warn(`Unrecognized rotation direction: ${rotationDirection}, defaulting to clockwise`);
+      console.warn(
+        `Unrecognized rotation direction: ${rotationDirection}, defaulting to clockwise`
+      );
       normalizedDirection = "clockwise";
     }
 
-    const directionMap = this.NON_ZERO_TURNS_DASH_LOCATION_MAP[normalizedDirection];
+    const directionMap =
+      this.NON_ZERO_TURNS_DASH_LOCATION_MAP[normalizedDirection];
     return directionMap?.[motion.startLocation] || motion.startLocation;
   }
 

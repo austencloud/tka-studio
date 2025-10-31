@@ -33,9 +33,14 @@
 
   onMount(() => {
     try {
-      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+      hapticService = resolve<IHapticFeedbackService>(
+        TYPES.IHapticFeedbackService
+      );
     } catch (error) {
-      console.warn("ModuleMobileModal: failed to resolve IHapticFeedbackService", error);
+      console.warn(
+        "ModuleMobileModal: failed to resolve IHapticFeedbackService",
+        error
+      );
     }
   });
 
@@ -96,7 +101,11 @@
       <h2 id="module-selector-title">Choose Module</h2>
       <p>Select a primary experience. Developer tools live below.</p>
     </div>
-    <button class="close-button" onclick={handleSheetClose} aria-label="Close module selector">
+    <button
+      class="close-button"
+      onclick={handleSheetClose}
+      aria-label="Close module selector"
+    >
       <span aria-hidden="true">&times;</span>
     </button>
   </header>
@@ -142,7 +151,8 @@
             {/if}
           </div>
           {#if module.id === currentModule}
-            <span class="current-indicator developer" aria-hidden="true">●</span>
+            <span class="current-indicator developer" aria-hidden="true">●</span
+            >
           {/if}
         </button>
       {/each}
@@ -222,7 +232,10 @@
     color: rgba(255, 255, 255, 0.95);
     text-align: left;
     cursor: pointer;
-    transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+    transition:
+      transform 0.18s ease,
+      border-color 0.18s ease,
+      background 0.18s ease;
   }
 
   .module-card:hover {
@@ -296,7 +309,9 @@
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
   }
 
   .cancel-button:hover {

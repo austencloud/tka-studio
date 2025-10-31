@@ -33,7 +33,7 @@ mobile/
 
 ```svelte
 <script lang="ts">
-  import EnhancedPWAInstallGuide from '$lib/shared/mobile/components/EnhancedPWAInstallGuide.svelte';
+  import EnhancedPWAInstallGuide from "$lib/shared/mobile/components/EnhancedPWAInstallGuide.svelte";
 
   let showGuide = $state(false);
 
@@ -49,7 +49,10 @@ mobile/
 ### Using Platform Detection
 
 ```typescript
-import { detectPlatformAndBrowser, supportsPWAInstall } from '$lib/shared/mobile/utils/platform-detection.service';
+import {
+  detectPlatformAndBrowser,
+  supportsPWAInstall,
+} from "$lib/shared/mobile/utils/platform-detection.service";
 
 // Detect user's platform and browser
 const { platform, browser } = detectPlatformAndBrowser();
@@ -64,13 +67,16 @@ if (supportsPWAInstall(platform, browser)) {
 
 ```svelte
 <script lang="ts">
-  import { createViewportMeasurement } from '$lib/shared/mobile/utils/viewport-measurement.svelte';
+  import { createViewportMeasurement } from "$lib/shared/mobile/utils/viewport-measurement.svelte";
 
   const viewport = createViewportMeasurement();
 </script>
 
 <div bind:this={viewport.sheetElement}>
-  <div bind:this={viewport.contentElement} class:compact={viewport.needsCompactMode}>
+  <div
+    bind:this={viewport.contentElement}
+    class:compact={viewport.needsCompactMode}
+  >
     <!-- Your content here -->
   </div>
 </div>
@@ -79,11 +85,14 @@ if (supportsPWAInstall(platform, browser)) {
 ### Getting Install Instructions
 
 ```typescript
-import { getInstallInstructions } from '$lib/shared/mobile/config/pwa-install-instructions';
-import type { Platform, Browser } from '$lib/shared/mobile/config/pwa-install-instructions';
+import { getInstallInstructions } from "$lib/shared/mobile/config/pwa-install-instructions";
+import type {
+  Platform,
+  Browser,
+} from "$lib/shared/mobile/config/pwa-install-instructions";
 
-const platform: Platform = 'ios';
-const browser: Browser = 'safari';
+const platform: Platform = "ios";
+const browser: Browser = "safari";
 
 const instructions = getInstallInstructions(platform, browser);
 // instructions.title
@@ -98,9 +107,11 @@ const instructions = getInstallInstructions(platform, browser);
 **Purpose**: Full-featured PWA installation guide with platform-specific instructions
 
 **Props**:
+
 - `showGuide: boolean` (bindable) - Controls visibility
 
 **Features**:
+
 - Automatic platform/browser detection
 - Platform-specific installation instructions
 - Responsive layout with compact mode
@@ -109,6 +120,7 @@ const instructions = getInstallInstructions(platform, browser);
 - Screenshot placeholders
 
 **Example**:
+
 ```svelte
 <EnhancedPWAInstallGuide bind:showGuide={showPWAGuide} />
 ```
@@ -118,10 +130,12 @@ const instructions = getInstallInstructions(platform, browser);
 **Purpose**: Displays platform-specific instructions and benefits
 
 **Props**:
+
 - `instructions: InstallInstructions` - Instruction configuration
 - `compact?: boolean` - Enable compact mode
 
 **Example**:
+
 ```svelte
 <PlatformInstructions {instructions} {compact} />
 ```
@@ -131,11 +145,13 @@ const instructions = getInstallInstructions(platform, browser);
 **Purpose**: Displays a single instruction step
 
 **Props**:
+
 - `step: InstructionStep` - Step configuration
 - `index: number` - Step number (0-indexed)
 - `compact?: boolean` - Enable compact mode
 
 **Example**:
+
 ```svelte
 <InstructionStep {step} index={0} {compact} />
 ```
@@ -145,12 +161,14 @@ const instructions = getInstallInstructions(platform, browser);
 ### platform-detection.service.ts
 
 **Exports**:
+
 - `detectPlatformAndBrowser(): PlatformInfo` - Detect platform and browser
 - `supportsPWAInstall(platform, browser): boolean` - Check PWA support
 - `getBrowserDisplayName(browser): string` - Get friendly browser name
 - `getPlatformDisplayName(platform): string` - Get friendly platform name
 
 **Types**:
+
 - `Platform`: "ios" | "android" | "desktop"
 - `Browser`: "chrome" | "safari" | "edge" | "firefox" | "samsung" | "other"
 - `PlatformInfo`: { platform: Platform, browser: Browser }
@@ -158,13 +176,16 @@ const instructions = getInstallInstructions(platform, browser);
 ### viewport-measurement.svelte.ts
 
 **Exports**:
+
 - `createViewportMeasurement(options?): ViewportMeasurement` - Create measurement manager
 
 **Options**:
+
 - `onMeasure?: (needsCompact: boolean) => void` - Callback on measurement
 - `initialDelay?: number` - Delay before first measurement (default: 100ms)
 
 **Returns**:
+
 - `sheetElement: HTMLElement | null` - Bind to sheet container
 - `contentElement: HTMLElement | null` - Bind to scrollable content
 - `needsCompactMode: boolean` - Whether compact mode is needed
@@ -175,25 +196,28 @@ const instructions = getInstallInstructions(platform, browser);
 ### pwa-install-instructions.ts
 
 **Exports**:
+
 - `getInstallInstructions(platform, browser): InstallInstructions` - Get instructions
 
 **Types**:
+
 ```typescript
 interface InstructionStep {
-  text: string;          // HTML string with formatting
-  icon: string;          // Font Awesome icon class
-  image: string | null;  // Screenshot path or null
+  text: string; // HTML string with formatting
+  icon: string; // Font Awesome icon class
+  image: string | null; // Screenshot path or null
 }
 
 interface InstallInstructions {
-  title: string;              // Guide title
-  icon: string;               // Font Awesome icon class
-  steps: InstructionStep[];   // Installation steps
-  benefits: string[];         // Benefits list
+  title: string; // Guide title
+  icon: string; // Font Awesome icon class
+  steps: InstructionStep[]; // Installation steps
+  benefits: string[]; // Benefits list
 }
 ```
 
 **Supported Platforms**:
+
 - iOS + Safari ✅
 - iOS + Other browsers (redirects to Safari)
 - Android + Chrome ✅
@@ -213,6 +237,7 @@ The EnhancedPWAInstallGuide component follows a layered architecture:
 4. **Display Layer**: Renders the UI
 
 This separation enables:
+
 - Easy testing of individual layers
 - Reusability of utilities
 - Simple maintenance and updates
@@ -232,25 +257,28 @@ See [REFACTORING_SUMMARY.md](../../../../REFACTORING_SUMMARY.md) for details.
 ## Testing
 
 ### Unit Tests
+
 ```typescript
 // Test platform detection
-import { detectPlatformAndBrowser } from './utils/platform-detection.service';
+import { detectPlatformAndBrowser } from "./utils/platform-detection.service";
 
 // Test instructions retrieval
-import { getInstallInstructions } from './config/pwa-install-instructions';
+import { getInstallInstructions } from "./config/pwa-install-instructions";
 ```
 
 ### Component Tests
+
 ```typescript
 // Test components in isolation
-import { render } from '@testing-library/svelte';
-import InstructionStep from './components/InstructionStep.svelte';
+import { render } from "@testing-library/svelte";
+import InstructionStep from "./components/InstructionStep.svelte";
 ```
 
 ### Integration Tests
+
 ```typescript
 // Test full component
-import EnhancedPWAInstallGuide from './components/EnhancedPWAInstallGuide.svelte';
+import EnhancedPWAInstallGuide from "./components/EnhancedPWAInstallGuide.svelte";
 ```
 
 ## Contributing

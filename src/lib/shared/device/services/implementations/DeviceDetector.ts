@@ -35,14 +35,14 @@ export class DeviceDetector implements IDeviceDetector {
       const newCapabilities = this.getCapabilities();
 
       // Notify all registered callbacks about the change
-      this.capabilitiesCallbacks.forEach(callback => {
+      this.capabilitiesCallbacks.forEach((callback) => {
         callback(newCapabilities);
       });
 
       this.logger.log("Viewport changed, notified callbacks", {
         width: this.viewportService.width,
         height: this.viewportService.height,
-        callbackCount: this.capabilitiesCallbacks.length
+        callbackCount: this.capabilitiesCallbacks.length,
       });
     });
   }
@@ -279,9 +279,10 @@ export class DeviceDetector implements IDeviceDetector {
         viewportWidth,
         viewportHeight,
         hasTouch,
-        reason: deviceType === DeviceType.DESKTOP
-          ? "Desktop-class device (≥1024px) - web convention"
-          : "Non-touch device - mouse-optimized placement",
+        reason:
+          deviceType === DeviceType.DESKTOP
+            ? "Desktop-class device (≥1024px) - web convention"
+            : "Non-touch device - mouse-optimized placement",
       });
       return "top";
     }
@@ -307,7 +308,8 @@ export class DeviceDetector implements IDeviceDetector {
         viewportHeight,
         orientation: "portrait",
         hasTouch,
-        reason: "Portrait orientation - preserving vertical space, thumb-optimized",
+        reason:
+          "Portrait orientation - preserving vertical space, thumb-optimized",
       });
       return "bottom";
     }
@@ -333,7 +335,8 @@ export class DeviceDetector implements IDeviceDetector {
         viewportHeight,
         orientation: "landscape",
         hasTouch,
-        reason: "Landscape orientation - preserving vertical space with navigation rail",
+        reason:
+          "Landscape orientation - preserving vertical space with navigation rail",
       });
       return "left";
     }

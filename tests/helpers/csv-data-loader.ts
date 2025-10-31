@@ -30,7 +30,10 @@ interface CSVRow {
  * Loads raw CSV data from the Diamond dataframe
  */
 export function loadDiamondCSV(): string {
-  const csvPath = resolve(__dirname, "../../static/DiamondPictographDataframe.csv");
+  const csvPath = resolve(
+    __dirname,
+    "../../static/DiamondPictographDataframe.csv"
+  );
   return readFileSync(csvPath, "utf-8");
 }
 
@@ -72,7 +75,7 @@ export function parseCSV(csvText: string): CSVRow[] {
 export function getCSVRowsForLetter(letter: Letter): CSVRow[] {
   const csvText = loadDiamondCSV();
   const allRows = parseCSV(csvText);
-  return allRows.filter(row => row.letter === letter);
+  return allRows.filter((row) => row.letter === letter);
 }
 
 /**
@@ -89,7 +92,7 @@ export function getFirstCSVRowForLetter(letter: Letter): CSVRow | null {
 export function getAllLettersFromCSV(): Letter[] {
   const csvText = loadDiamondCSV();
   const allRows = parseCSV(csvText);
-  const uniqueLetters = new Set(allRows.map(row => row.letter));
+  const uniqueLetters = new Set(allRows.map((row) => row.letter));
   return Array.from(uniqueLetters) as Letter[];
 }
 
@@ -160,7 +163,9 @@ export function validatePictographMatchesCSV(
   const errors: string[] = [];
 
   if (pictograph.letter !== letter) {
-    errors.push(`Letter mismatch: expected ${letter}, got ${pictograph.letter}`);
+    errors.push(
+      `Letter mismatch: expected ${letter}, got ${pictograph.letter}`
+    );
   }
 
   const csvRows = getCSVRowsForLetter(letter);
@@ -170,7 +175,7 @@ export function validatePictographMatchesCSV(
   }
 
   // Check if pictograph matches ANY valid CSV variant
-  const matches = csvRows.some(row => {
+  const matches = csvRows.some((row) => {
     const data = convertCSVRowToLetterData(row);
     // Add more specific validation here
     return true; // Simplified for now

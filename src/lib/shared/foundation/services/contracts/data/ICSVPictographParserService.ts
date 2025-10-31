@@ -36,7 +36,10 @@ export interface ICSVPictographParserService {
    * @param letterRows - CSV rows to parse
    * @param gridMode - Grid mode (diamond/box) for correct positioning
    */
-  parseLetterPictographs(letterRows: CSVRow[], gridMode: GridMode): PictographData[];
+  parseLetterPictographs(
+    letterRows: CSVRow[],
+    gridMode: GridMode
+  ): PictographData[];
 
   /**
    * Validate that a CSV row has the expected structure

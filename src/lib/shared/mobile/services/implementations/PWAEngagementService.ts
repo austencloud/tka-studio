@@ -127,7 +127,8 @@ export class PWAEngagementService implements IPWAEngagementService {
 
   shouldShowInstallPrompt(): boolean {
     // Check all engagement signals
-    const hasEnoughVisits = this.metrics.visitCount >= ENGAGEMENT_THRESHOLDS.VISITS;
+    const hasEnoughVisits =
+      this.metrics.visitCount >= ENGAGEMENT_THRESHOLDS.VISITS;
     const hasEnoughInteractions =
       this.metrics.interactionCount >= ENGAGEMENT_THRESHOLDS.INTERACTIONS;
     const hasEnoughTimeSpent =

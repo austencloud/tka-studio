@@ -10,40 +10,59 @@
 import type { AppSettings, PerformanceSnapshot } from "$shared";
 import { BackgroundType } from "../../background";
 import { GridMode } from "../../pictograph";
-import { areServicesInitialized, getSettingsServiceSync } from "./services.svelte";
+import {
+  areServicesInitialized,
+  getSettingsServiceSync,
+} from "./services.svelte";
 
 export {
-    getInitializationComplete, getInitializationError,
-    getInitializationProgress, getIsInitialized,
-    getIsInitializing, initializeAppState, setInitializationError,
-    setInitializationProgress, setInitializationState
+  getInitializationComplete,
+  getInitializationError,
+  getInitializationProgress,
+  getIsInitialized,
+  getIsInitializing,
+  initializeAppState,
+  setInitializationError,
+  setInitializationProgress,
+  setInitializationState,
 } from "./initialization-state.svelte";
 
 export {
-    getActiveTab,
-    getActiveTabOrDefault, getIsFullScreen,
-    getIsTransitioning, getShowSettings, getShowSpotlight,
-    getSpotlightSequence,
-    getSpotlightThumbnailService, hideSettingsDialog, hideSpotlight, setFullScreen,
-    showSettingsDialog, showSpotlight, toggleSettingsDialog
+  getActiveTab,
+  getActiveTabOrDefault,
+  getIsFullScreen,
+  getIsTransitioning,
+  getShowSettings,
+  getShowSpotlight,
+  getSpotlightSequence,
+  getSpotlightThumbnailService,
+  hideSettingsDialog,
+  hideSpotlight,
+  setFullScreen,
+  showSettingsDialog,
+  showSpotlight,
+  toggleSettingsDialog,
 } from "./ui/ui-state.svelte";
 
 export {
-    getInitialTabFromCache, initializeTabPersistence, isTabActive, switchTab
+  getInitialTabFromCache,
+  initializeTabPersistence,
+  isTabActive,
+  switchTab,
 } from "./ui/tab-state";
 
 import {
-    getInitializationError,
-    getIsInitialized,
-    getIsInitializing,
-    resetInitializationState
+  getInitializationError,
+  getIsInitialized,
+  getIsInitializing,
+  resetInitializationState,
 } from "./initialization-state.svelte";
 import { initializeTabPersistence as initializeTabPersistenceInternal } from "./ui/tab-state";
 import {
-    getIsFullScreen,
-    getIsTransitioning,
-    getShowSettings,
-    resetUIState,
+  getIsFullScreen,
+  getIsTransitioning,
+  getShowSettings,
+  resetUIState,
 } from "./ui/ui-state.svelte";
 
 // ============================================================================
@@ -103,7 +122,10 @@ export function getCanUseApp() {
 export async function updateSettings(
   newSettings: Partial<AppSettings>
 ): Promise<void> {
-  console.log("📝 app-state.updateSettings called with:", JSON.stringify(newSettings, null, 2));
+  console.log(
+    "📝 app-state.updateSettings called with:",
+    JSON.stringify(newSettings, null, 2)
+  );
 
   if (!areServicesInitialized()) {
     console.warn("Settings service not initialized, cannot update settings");

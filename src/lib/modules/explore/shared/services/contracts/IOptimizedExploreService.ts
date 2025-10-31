@@ -5,7 +5,6 @@
  * to dramatically improve mobile gallery performance.
  */
 
-
 export interface SequenceMetadata {
   id: string;
   word: string;

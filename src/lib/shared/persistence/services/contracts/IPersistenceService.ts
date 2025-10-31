@@ -7,11 +7,11 @@
  */
 
 import type {
-    AppSettings,
-    CompleteExploreState,
-    PictographData,
-    SequenceData,
-    TabId,
+  AppSettings,
+  CompleteExploreState,
+  PictographData,
+  SequenceData,
+  TabId,
 } from "$shared";
 import type { UserProject } from "../../domain/models";
 

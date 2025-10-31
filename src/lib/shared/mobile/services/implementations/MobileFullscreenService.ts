@@ -85,10 +85,15 @@ export class MobileFullscreenService implements IMobileFullscreenService {
 
     // Check if running in standalone mode (PWA)
     // Multiple display modes indicate PWA: standalone, fullscreen, minimal-ui
-    const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-    const isFullscreenMode = window.matchMedia("(display-mode: fullscreen)").matches;
+    const isStandalone = window.matchMedia(
+      "(display-mode: standalone)"
+    ).matches;
+    const isFullscreenMode = window.matchMedia(
+      "(display-mode: fullscreen)"
+    ).matches;
     const isMinimalUI = window.matchMedia("(display-mode: minimal-ui)").matches;
-    const iOSStandalone = (window.navigator as VendorNavigator).standalone === true;
+    const iOSStandalone =
+      (window.navigator as VendorNavigator).standalone === true;
     const isAndroidTWA = document.referrer.includes("android-app://");
 
     return (

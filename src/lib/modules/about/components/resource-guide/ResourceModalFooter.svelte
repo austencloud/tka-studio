@@ -8,7 +8,11 @@
     ctaText?: string;
   }
 
-  let { url, onNavigate, ctaText = "Visit Original Resource →" }: Props = $props();
+  let {
+    url,
+    onNavigate,
+    ctaText = "Visit Original Resource →",
+  }: Props = $props();
 </script>
 
 <footer class="resource-footer">

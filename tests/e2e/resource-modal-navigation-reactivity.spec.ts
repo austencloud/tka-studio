@@ -125,9 +125,7 @@ test.describe("ResourceModalNavigation Reactivity", () => {
 
     const resourceNav = page.locator(".resource-nav");
     if ((await resourceNav.count()) === 0) {
-      console.log(
-        "⚠️ Resource navigation not found - skipping observer test"
-      );
+      console.log("⚠️ Resource navigation not found - skipping observer test");
       return;
     }
 

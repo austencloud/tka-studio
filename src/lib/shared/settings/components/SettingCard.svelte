@@ -71,7 +71,11 @@
   }
 
   .section-title {
-    font-size: clamp(20px, 2vw, 24px); /* Further increased for 2025 standards */
+    font-size: clamp(
+      20px,
+      2vw,
+      24px
+    ); /* Further increased for 2025 standards */
     font-weight: 700;
     color: #ffffff;
     margin: 0;

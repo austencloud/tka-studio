@@ -204,10 +204,7 @@
           // Suppress benign ResizeObserver errors (common with container queries)
           // These occur when ResizeObserver callbacks trigger more resizes in the same frame
           // This is expected behavior with CSS container queries and doesn't indicate a problem
-          if (
-            event.message &&
-            event.message.includes("ResizeObserver loop")
-          ) {
+          if (event.message && event.message.includes("ResizeObserver loop")) {
             event.preventDefault();
             event.stopPropagation();
             event.stopImmediatePropagation();

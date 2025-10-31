@@ -5,7 +5,15 @@
  * This replaces the PictographRenderingService with explicit composition.
  */
 
-import { GridMode, MotionColor, resolve, type IArrowPositioningOrchestrator, type IGridModeDeriver, type MotionData, type PictographData } from "$shared";
+import {
+  GridMode,
+  MotionColor,
+  resolve,
+  type IArrowPositioningOrchestrator,
+  type IGridModeDeriver,
+  type MotionData,
+  type PictographData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { Point } from "fabric";
 // TODO: These services have been archived - need to refactor this file

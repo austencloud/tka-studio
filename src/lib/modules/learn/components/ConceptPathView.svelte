@@ -5,20 +5,18 @@ Shows all TKA concepts grouped by category in a scrollable view.
 Displays progression from Foundation → Letters → Combinations → Advanced.
 -->
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
   import {
     TKA_CONCEPTS,
     CONCEPT_CATEGORIES,
     getConceptsByCategory,
     type LearnConcept,
-    type ConceptCategory
-  } from '../domain';
-  import { conceptProgressService } from '../services/ConceptProgressService';
-  import ConceptCard from './ConceptCard.svelte';
+    type ConceptCategory,
+  } from "../domain";
+  import { conceptProgressService } from "../services/ConceptProgressService";
+  import ConceptCard from "./ConceptCard.svelte";
 
-  let {
-    onConceptClick
-  } = $props<{
+  let { onConceptClick } = $props<{
     onConceptClick?: (concept: LearnConcept) => void;
   }>();
 
@@ -35,7 +33,12 @@ Displays progression from Foundation → Letters → Combinations → Advanced.
   });
 
   // Categories in order
-  const categories: ConceptCategory[] = ['foundation', 'letters', 'combinations', 'advanced'];
+  const categories: ConceptCategory[] = [
+    "foundation",
+    "letters",
+    "combinations",
+    "advanced",
+  ];
 </script>
 
 <div class="concept-path">
@@ -46,7 +49,8 @@ Displays progression from Foundation → Letters → Combinations → Advanced.
     <section class="category-section" data-category={category}>
       <!-- Category header -->
       <div class="category-header">
-        <span class="category-icon" aria-hidden="true">{categoryInfo.icon}</span>
+        <span class="category-icon" aria-hidden="true">{categoryInfo.icon}</span
+        >
         <div class="category-title-group">
           <h2 class="category-title">{categoryInfo.name}</h2>
           <p class="category-description">{categoryInfo.description}</p>
@@ -57,7 +61,9 @@ Displays progression from Foundation → Letters → Combinations → Advanced.
       <div class="concept-list">
         {#each concepts as concept (concept.id)}
           {@const status = conceptProgressService.getConceptStatus(concept.id)}
-          {@const conceptProgress = conceptProgressService.getConceptProgress(concept.id)}
+          {@const conceptProgress = conceptProgressService.getConceptProgress(
+            concept.id
+          )}
 
           <ConceptCard
             {concept}
@@ -77,8 +83,8 @@ Displays progression from Foundation → Letters → Combinations → Advanced.
         <span class="celebration-icon">🎉</span>
         <h3 class="celebration-title">Congratulations!</h3>
         <p class="celebration-text">
-          You've completed the entire Kinetic Alphabet Level 1 curriculum.
-          Keep practicing to maintain mastery!
+          You've completed the entire Kinetic Alphabet Level 1 curriculum. Keep
+          practicing to maintain mastery!
         </p>
       </div>
     {:else}
@@ -188,7 +194,11 @@ Displays progression from Foundation → Letters → Combinations → Advanced.
   }
 
   .completion-celebration {
-    background: linear-gradient(135deg, rgba(80, 200, 120, 0.2), rgba(74, 144, 226, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(80, 200, 120, 0.2),
+      rgba(74, 144, 226, 0.2)
+    );
     border: 2px solid rgba(80, 200, 120, 0.3);
     border-radius: 16px;
     padding: 2rem;
@@ -202,7 +212,8 @@ Displays progression from Foundation → Letters → Combinations → Advanced.
   }
 
   @keyframes bounce {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateY(0);
     }
     50% {

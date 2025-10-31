@@ -29,6 +29,7 @@ npx tsx scripts/benchmark-preview-rendering.ts
 ## 🎯 Recommended Settings by Use Case
 
 ### Current Settings (Balanced)
+
 ```typescript
 {
   beatScale: 0.15,
@@ -36,12 +37,14 @@ npx tsx scripts/benchmark-preview-rendering.ts
   format: 'JPEG'
 }
 ```
+
 - **Speed**: Good (500-1500ms estimated)
 - **Quality**: Acceptable
 - **Size**: ~80-150KB
 - **Best for**: General use, decent phones
 
 ### Recommended for Phone Screens
+
 ```typescript
 {
   beatScale: 0.22,  // Better visibility
@@ -49,12 +52,14 @@ npx tsx scripts/benchmark-preview-rendering.ts
   format: 'JPEG'
 }
 ```
+
 - **Speed**: Good (700-2000ms estimated)
 - **Quality**: Better
 - **Size**: ~120-200KB
 - **Best for**: Phone screens, requires background pre-rendering
 
 ### Speed Priority
+
 ```typescript
 {
   beatScale: 0.10,
@@ -62,12 +67,14 @@ npx tsx scripts/benchmark-preview-rendering.ts
   format: 'JPEG'
 }
 ```
+
 - **Speed**: Fastest (300-1000ms estimated)
 - **Quality**: Lower
 - **Size**: ~40-80KB
 - **Best for**: Slow devices, poor connections
 
 ### Quality Priority
+
 ```typescript
 {
   beatScale: 0.25,
@@ -75,6 +82,7 @@ npx tsx scripts/benchmark-preview-rendering.ts
   format: 'JPEG'
 }
 ```
+
 - **Speed**: Slower (1000-2500ms estimated)
 - **Quality**: Best
 - **Size**: ~200-300KB
@@ -132,31 +140,35 @@ private convertToPreviewOptions(shareOptions: ShareOptions) {
 
 ## 📏 Phone Screen Reference
 
-| Device | Width | Height | Preview Width (0.15) | Preview Width (0.22) |
-|--------|-------|--------|---------------------|---------------------|
-| iPhone SE | 375px | 667px | ~126px | ~185px |
-| iPhone 14 | 390px | 844px | ~126px | ~185px |
-| iPhone 14 Pro | 393px | 852px | ~126px | ~185px |
-| Pixel 7 | 412px | 915px | ~126px | ~185px |
-| Galaxy S23 | 360px | 780px | ~126px | ~185px |
+| Device        | Width | Height | Preview Width (0.15) | Preview Width (0.22) |
+| ------------- | ----- | ------ | -------------------- | -------------------- |
+| iPhone SE     | 375px | 667px  | ~126px               | ~185px               |
+| iPhone 14     | 390px | 844px  | ~126px               | ~185px               |
+| iPhone 14 Pro | 393px | 852px  | ~126px               | ~185px               |
+| Pixel 7       | 412px | 915px  | ~126px               | ~185px               |
+| Galaxy S23    | 360px | 780px  | ~126px               | ~185px               |
 
 **Recommendation**: 0.22 scale provides ~185px wide previews, which is much better for phone screens.
 
 ## ⚡ Performance Targets
 
 ### Excellent
+
 - ✅ < 300ms: Instant, no optimization needed
 - ✅ File size < 100KB
 
 ### Good
+
 - ✅ 300-500ms: Fast enough for real-time
 - ✅ File size 100-200KB
 
 ### Acceptable (with background pre-rendering)
+
 - ⚠️ 500-1000ms: Noticeable delay, pre-render recommended
 - ⚠️ File size 200-300KB
 
 ### Poor (requires optimization)
+
 - ❌ > 1000ms: Too slow, requires background pre-rendering + progressive loading
 - ❌ File size > 300KB: Too large, reduce quality/scale
 
@@ -169,17 +181,19 @@ const start = performance.now();
 const preview = await renderService.generatePreview(sequence, options);
 const duration = performance.now() - start;
 
-console.log(`Preview: ${duration.toFixed(0)}ms, ${(preview.length * 0.75 / 1024).toFixed(1)}KB`);
+console.log(
+  `Preview: ${duration.toFixed(0)}ms, ${((preview.length * 0.75) / 1024).toFixed(1)}KB`
+);
 ```
 
 ### Check Preview Quality
 
 ```typescript
 // Log preview to console to visually inspect
-console.log('Preview URL:', preview.substring(0, 100) + '...');
+console.log("Preview URL:", preview.substring(0, 100) + "...");
 
 // Or create an img element to view
-const img = document.createElement('img');
+const img = document.createElement("img");
 img.src = preview;
 document.body.appendChild(img);
 ```

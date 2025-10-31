@@ -41,7 +41,11 @@ export class ParallaxStarSystem {
       const density = pCfg.density * this.qualitySettings.densityMultiplier;
       const count = Math.floor(dim.width * dim.height * density);
       const stars: Star[] = Array.from({ length: count }).map(() => {
-        const star = this.calculationService.makeStar(dim, this.starConfig, a11y);
+        const star = this.calculationService.makeStar(
+          dim,
+          this.starConfig,
+          a11y
+        );
 
         // Apply Internet Consensus 3-Layer Classic approach (2023-2025)
         // Size: Fixed per layer (1px/2px/3px)
@@ -82,21 +86,24 @@ export class ParallaxStarSystem {
 
     // Pre-populate: Simulate animation already running
     // Randomize twinkle phases so stars appear mid-animation
-    (["far", "mid", "near"] as Array<keyof typeof this.layers>).forEach((key) => {
-      const L = this.layers[key];
-      if (L && L.stars && Array.isArray(L.stars)) {
-        L.stars.forEach((star: Star) => {
-          // Random twinkle phase (0 to 2π)
-          star.twinklePhase = Math.random() * Math.PI * 2;
-          // Set current opacity based on random phase
-          if (star.isTwinkling) {
-            star.currentOpacity = star.baseOpacity * (0.7 + 0.3 * Math.sin(star.twinklePhase));
-          } else {
-            star.currentOpacity = star.baseOpacity;
-          }
-        });
+    (["far", "mid", "near"] as Array<keyof typeof this.layers>).forEach(
+      (key) => {
+        const L = this.layers[key];
+        if (L && L.stars && Array.isArray(L.stars)) {
+          L.stars.forEach((star: Star) => {
+            // Random twinkle phase (0 to 2π)
+            star.twinklePhase = Math.random() * Math.PI * 2;
+            // Set current opacity based on random phase
+            if (star.isTwinkling) {
+              star.currentOpacity =
+                star.baseOpacity * (0.7 + 0.3 * Math.sin(star.twinklePhase));
+            } else {
+              star.currentOpacity = star.baseOpacity;
+            }
+          });
+        }
       }
-    });
+    );
 
     // Set lastDimensions so future updates can detect changes
     this.lastDimensions = dim;
@@ -187,7 +194,12 @@ export class ParallaxStarSystem {
   /**
    * Draw a proper 5-pointed star with glow (like real stars)
    */
-  private drawSparkle(ctx: CanvasRenderingContext2D, x: number, y: number, radius: number) {
+  private drawSparkle(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    radius: number
+  ) {
     const outerRadius = radius * 2.5; // Outer points
     const innerRadius = radius * 1; // Inner points
     const spikes = 5;
@@ -200,10 +212,17 @@ export class ParallaxStarSystem {
     const starColor = ctx.fillStyle as string;
 
     // Draw glow first (behind the star)
-    const glowGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, outerRadius * 1.5);
+    const glowGradient = ctx.createRadialGradient(
+      0,
+      0,
+      0,
+      0,
+      0,
+      outerRadius * 1.5
+    );
     glowGradient.addColorStop(0, starColor);
-    glowGradient.addColorStop(0.5, starColor + '40'); // 25% opacity
-    glowGradient.addColorStop(1, 'transparent');
+    glowGradient.addColorStop(0.5, starColor + "40"); // 25% opacity
+    glowGradient.addColorStop(1, "transparent");
 
     ctx.fillStyle = glowGradient;
     ctx.beginPath();

@@ -1,17 +1,17 @@
 import { ContainerModule, type ContainerModuleLoadOptions } from "inversify";
 import {
-    BuildTabService,
-    ConstructCoordinator,
-    ReversalDetectionService,
-    SequenceDeletionService,
-    SequenceDomainService,
-    SequenceExportService,
-    SequenceImportService,
-    SequenceIndexService,
-    SequencePersistenceService,
-    SequenceService,
-    SequenceTransformService,
-    WorkbenchService,
+  BuildTabService,
+  ConstructCoordinator,
+  ReversalDetectionService,
+  SequenceDeletionService,
+  SequenceDomainService,
+  SequenceExportService,
+  SequenceImportService,
+  SequenceIndexService,
+  SequencePersistenceService,
+  SequenceService,
+  SequenceTransformService,
+  WorkbenchService,
 } from "../../../modules";
 import { SequenceAnalysisService } from "../../../modules/build/shared/services/implementations/SequenceAnalysisService";
 import { OptionSizer } from "../../../modules/build/construct/option-picker/option-viewer/services/implementations";
@@ -29,52 +29,52 @@ import { NavigationSyncService } from "../../../modules/build/shared/services/im
 import { ResponsiveLayoutService } from "../../../modules/build/shared/services/implementations/ResponsiveLayoutService";
 // Refactored Generation Services
 import {
-    OptionFilter,
-    OptionLoader,
-    OptionOrganizer,
-    OptionSorter,
-    PositionAnalyzer,
-    ReversalChecker,
+  OptionFilter,
+  OptionLoader,
+  OptionOrganizer,
+  OptionSorter,
+  PositionAnalyzer,
+  ReversalChecker,
 } from "../../../modules/build/construct/option-picker/option-viewer/services/implementations";
 import { FilterPersistenceService } from "../../../modules/build/construct/option-picker/services/FilterPersistenceService";
 import { LayoutDetectionService } from "../../../modules/build/construct/option-picker/services/implementations/LayoutDetectionService";
 import { TurnControlService } from "../../../modules/build/edit/services/TurnControlService";
 // Shared Generation Services - ACTIVE ONLY (deprecated moved to _deprecated/)
 import {
-    BeatConverterService,
-    BeatGenerationOrchestrator,
-    ComplementaryLetterService,
-    GenerationOrchestrationService,
-    PictographFilterService,
-    SequenceMetadataService,
-    StartPositionSelector,
-    TurnAllocationCalculator,
-    TurnIntensityLevelService,
-    TurnManagementService
+  BeatConverterService,
+  BeatGenerationOrchestrator,
+  ComplementaryLetterService,
+  GenerationOrchestrationService,
+  PictographFilterService,
+  SequenceMetadataService,
+  StartPositionSelector,
+  TurnAllocationCalculator,
+  TurnIntensityLevelService,
+  TurnManagementService,
 } from "../../../modules/build/generate/shared/services/implementations";
 // Circular Generation Services
 import {
-    CAPEndPositionSelector,
-    CAPExecutorSelector,
-    MirroredComplementaryCAPExecutor,
-    MirroredSwappedCAPExecutor,
-    PartialSequenceGenerator,
-    RotatedComplementaryCAPExecutor,
-    RotatedEndPositionSelector,
-    RotatedSwappedCAPExecutor,
-    RotationDirectionService,
-    StrictComplementaryCAPExecutor,
-    StrictMirroredCAPExecutor,
-    StrictRotatedCAPExecutor,
-    StrictSwappedCAPExecutor,
-    SwappedComplementaryCAPExecutor,
+  CAPEndPositionSelector,
+  CAPExecutorSelector,
+  MirroredComplementaryCAPExecutor,
+  MirroredSwappedCAPExecutor,
+  PartialSequenceGenerator,
+  RotatedComplementaryCAPExecutor,
+  RotatedEndPositionSelector,
+  RotatedSwappedCAPExecutor,
+  RotationDirectionService,
+  StrictComplementaryCAPExecutor,
+  StrictMirroredCAPExecutor,
+  StrictRotatedCAPExecutor,
+  StrictSwappedCAPExecutor,
+  SwappedComplementaryCAPExecutor,
 } from "../../../modules/build/generate/circular/services/implementations";
 // Generation UI Services (SRP Refactoring - Dec 2024) - ACTIVE ONLY
 import {
-    CAPTypeService,
-    CardConfigurationService,
-    LevelConversionService,
-    ResponsiveTypographyService,
+  CAPTypeService,
+  CardConfigurationService,
+  LevelConversionService,
+  ResponsiveTypographyService,
 } from "../../../modules/build/generate/shared/services/implementations";
 import { TYPES } from "../types";
 
@@ -83,7 +83,9 @@ export const buildModule = new ContainerModule(
     // === BUILD TAB SERVICES ===
     options.bind(TYPES.IBuildTabService).to(BuildTabService);
     options.bind(TYPES.IBuildTabLayoutService).to(BuildTabLayoutService);
-    options.bind(TYPES.IBuildTabInitializationService).to(BuildTabInitializationService);
+    options
+      .bind(TYPES.IBuildTabInitializationService)
+      .to(BuildTabInitializationService);
     options.bind(TYPES.IResponsiveLayoutService).to(ResponsiveLayoutService);
     options.bind(TYPES.INavigationSyncService).to(NavigationSyncService);
     options.bind(TYPES.IBeatOperationsService).to(BeatOperationsService);
@@ -116,7 +118,9 @@ export const buildModule = new ContainerModule(
     options.bind(TYPES.ITurnManagementService).to(TurnManagementService);
     // TurnIntensityLevelService provides UI-level turn intensity values
     // TurnIntensityManagerService is instantiated directly with constructor params for sequence generation
-    options.bind(TYPES.ITurnIntensityManagerService).to(TurnIntensityLevelService);
+    options
+      .bind(TYPES.ITurnIntensityManagerService)
+      .to(TurnIntensityLevelService);
     options.bind(TYPES.ISequenceMetadataService).to(SequenceMetadataService);
 
     // New Focused Generation Services (composable, single-responsibility)
@@ -129,30 +133,50 @@ export const buildModule = new ContainerModule(
     options.bind(TYPES.IPartialSequenceGenerator).to(PartialSequenceGenerator);
 
     // Circular Generation (CAP) Services
-    options.bind(TYPES.IComplementaryLetterService).to(ComplementaryLetterService);
+    options
+      .bind(TYPES.IComplementaryLetterService)
+      .to(ComplementaryLetterService);
     options
       .bind(TYPES.IRotatedEndPositionSelector)
       .to(RotatedEndPositionSelector);
     options.bind(TYPES.ICAPEndPositionSelector).to(CAPEndPositionSelector);
     options.bind(TYPES.IStrictRotatedCAPExecutor).to(StrictRotatedCAPExecutor);
-    options.bind(TYPES.IStrictMirroredCAPExecutor).to(StrictMirroredCAPExecutor);
+    options
+      .bind(TYPES.IStrictMirroredCAPExecutor)
+      .to(StrictMirroredCAPExecutor);
     options.bind(TYPES.IStrictSwappedCAPExecutor).to(StrictSwappedCAPExecutor);
-    options.bind(TYPES.IStrictComplementaryCAPExecutor).to(StrictComplementaryCAPExecutor);
-    options.bind(TYPES.IMirroredSwappedCAPExecutor).to(MirroredSwappedCAPExecutor);
-    options.bind(TYPES.ISwappedComplementaryCAPExecutor).to(SwappedComplementaryCAPExecutor);
-    options.bind(TYPES.IMirroredComplementaryCAPExecutor).to(MirroredComplementaryCAPExecutor);
-    options.bind(TYPES.IRotatedSwappedCAPExecutor).to(RotatedSwappedCAPExecutor);
-    options.bind(TYPES.IRotatedComplementaryCAPExecutor).to(RotatedComplementaryCAPExecutor);
+    options
+      .bind(TYPES.IStrictComplementaryCAPExecutor)
+      .to(StrictComplementaryCAPExecutor);
+    options
+      .bind(TYPES.IMirroredSwappedCAPExecutor)
+      .to(MirroredSwappedCAPExecutor);
+    options
+      .bind(TYPES.ISwappedComplementaryCAPExecutor)
+      .to(SwappedComplementaryCAPExecutor);
+    options
+      .bind(TYPES.IMirroredComplementaryCAPExecutor)
+      .to(MirroredComplementaryCAPExecutor);
+    options
+      .bind(TYPES.IRotatedSwappedCAPExecutor)
+      .to(RotatedSwappedCAPExecutor);
+    options
+      .bind(TYPES.IRotatedComplementaryCAPExecutor)
+      .to(RotatedComplementaryCAPExecutor);
     options.bind(TYPES.ICAPExecutorSelector).to(CAPExecutorSelector);
 
     // Generation UI Services (SRP Refactoring - Dec 2024)
     options.bind(TYPES.ILevelConversionService).to(LevelConversionService);
-    options.bind(TYPES.IResponsiveTypographyService).to(ResponsiveTypographyService);
+    options
+      .bind(TYPES.IResponsiveTypographyService)
+      .to(ResponsiveTypographyService);
     options.bind(TYPES.ICardConfigurationService).to(CardConfigurationService);
     options.bind(TYPES.ICAPTypeService).to(CAPTypeService);
 
     // Generation Orchestration Services (SRP Refactoring - Dec 2024)
-    options.bind(TYPES.IGenerationOrchestrationService).to(GenerationOrchestrationService);
+    options
+      .bind(TYPES.IGenerationOrchestrationService)
+      .to(GenerationOrchestrationService);
 
     // === BEAT GRID SERVICES ===
     // Note: BeatFallbackRenderer moved to render module
@@ -167,9 +191,15 @@ export const buildModule = new ContainerModule(
 
     // Focused sequence services (refactored from monolithic SequenceStateService)
     options.bind(TYPES.IBeatNumberingService).to(BeatNumberingService);
-    options.bind(TYPES.ISequenceValidationService).to(SequenceValidationService);
-    options.bind(TYPES.ISequenceStatisticsService).to(SequenceStatisticsService);
-    options.bind(TYPES.ISequenceTransformationService).to(SequenceTransformationService);
+    options
+      .bind(TYPES.ISequenceValidationService)
+      .to(SequenceValidationService);
+    options
+      .bind(TYPES.ISequenceStatisticsService)
+      .to(SequenceStatisticsService);
+    options
+      .bind(TYPES.ISequenceTransformationService)
+      .to(SequenceTransformationService);
 
     options.bind(TYPES.ISequenceExportService).to(SequenceExportService);
     options.bind(TYPES.ISequenceImportService).to(SequenceImportService);

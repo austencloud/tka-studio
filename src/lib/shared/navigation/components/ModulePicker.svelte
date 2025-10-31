@@ -26,7 +26,9 @@
   });
 
   // Filter to main modules only
-  const mainModules = $derived(modules.filter((m: ModuleDefinition) => m.isMain));
+  const mainModules = $derived(
+    modules.filter((m: ModuleDefinition) => m.isMain)
+  );
 
   // Handle backdrop click
   function handleBackdropClick() {
@@ -77,7 +79,12 @@
   ></div>
 
   <!-- Sheet -->
-  <div class="module-picker-sheet glass-surface" transition:slideTransition role="dialog" aria-label="Select module">
+  <div
+    class="module-picker-sheet glass-surface"
+    transition:slideTransition
+    role="dialog"
+    aria-label="Select module"
+  >
     <!-- Handle bar for visual affordance -->
     <div class="sheet-handle"></div>
 

@@ -9,11 +9,11 @@ export interface Snowflake {
   opacity: number;
   shape: Path2D;
   color: string;
-  rotation: number;      // Current rotation angle
+  rotation: number; // Current rotation angle
   rotationSpeed: number; // How fast it rotates
-  sparkle: number;       // Sparkle intensity (0-1)
-  sparklePhase: number;  // For sparkle animation
-  depth: number;         // For depth-based effects (0-1)
+  sparkle: number; // Sparkle intensity (0-1)
+  sparklePhase: number; // For sparkle animation
+  depth: number; // For depth-based effects (0-1)
 }
 
 export interface ShootingStar {

@@ -4,5 +4,5 @@
  * Exports all domain types, constants, and concept definitions
  */
 
-export * from './types';
-export * from './concepts';
+export * from "./types";
+export * from "./concepts";

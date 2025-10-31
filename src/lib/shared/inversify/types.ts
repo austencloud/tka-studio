@@ -207,19 +207,29 @@ export const TYPES = {
   IStrictRotatedCAPExecutor: Symbol.for("IStrictRotatedCAPExecutor"),
   IStrictMirroredCAPExecutor: Symbol.for("IStrictMirroredCAPExecutor"),
   IStrictSwappedCAPExecutor: Symbol.for("IStrictSwappedCAPExecutor"),
-  IStrictComplementaryCAPExecutor: Symbol.for("IStrictComplementaryCAPExecutor"),
+  IStrictComplementaryCAPExecutor: Symbol.for(
+    "IStrictComplementaryCAPExecutor"
+  ),
   IMirroredSwappedCAPExecutor: Symbol.for("IMirroredSwappedCAPExecutor"),
-  ISwappedComplementaryCAPExecutor: Symbol.for("ISwappedComplementaryCAPExecutor"),
-  IMirroredComplementaryCAPExecutor: Symbol.for("IMirroredComplementaryCAPExecutor"),
+  ISwappedComplementaryCAPExecutor: Symbol.for(
+    "ISwappedComplementaryCAPExecutor"
+  ),
+  IMirroredComplementaryCAPExecutor: Symbol.for(
+    "IMirroredComplementaryCAPExecutor"
+  ),
   IRotatedSwappedCAPExecutor: Symbol.for("IRotatedSwappedCAPExecutor"),
-  IRotatedComplementaryCAPExecutor: Symbol.for("IRotatedComplementaryCAPExecutor"),
+  IRotatedComplementaryCAPExecutor: Symbol.for(
+    "IRotatedComplementaryCAPExecutor"
+  ),
   ICAPExecutorSelector: Symbol.for("ICAPExecutorSelector"),
   // Generation UI Services (SRP Refactoring - Dec 2024)
   ILevelConversionService: Symbol.for("ILevelConversionService"),
   IResponsiveTypographyService: Symbol.for("IResponsiveTypographyService"),
   ICardConfigurationService: Symbol.for("ICardConfigurationService"),
   ICAPTypeService: Symbol.for("ICAPTypeService"),
-  IGenerationOrchestrationService: Symbol.for("IGenerationOrchestrationService"),
+  IGenerationOrchestrationService: Symbol.for(
+    "IGenerationOrchestrationService"
+  ),
   IPresetFormatterService: Symbol.for("IPresetFormatterService"),
 
   // === CODEX SERVICES ===

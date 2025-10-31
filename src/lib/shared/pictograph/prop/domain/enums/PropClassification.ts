@@ -121,7 +121,10 @@ export function isSmallProp(propType: string): boolean {
  * Box mode applies diagonal compensation (÷√2) since diagonal vectors travel 1.414x farther
  * than cardinal vectors, resulting in equal visual spacing between diamond and box modes.
  */
-export function getBetaOffsetSize(propType: string, gridMode?: "diamond" | "box" | "skewed"): number {
+export function getBetaOffsetSize(
+  propType: string,
+  gridMode?: "diamond" | "box" | "skewed"
+): number {
   const normalizedType = propType.toLowerCase();
 
   let baseOffset: number;

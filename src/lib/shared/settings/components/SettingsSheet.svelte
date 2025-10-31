@@ -5,7 +5,12 @@
   Maintains all existing settings logic and tab navigation.
 -->
 <script lang="ts">
-  import { resolve, TYPES, type IHapticFeedbackService, BottomSheet } from "$shared";
+  import {
+    resolve,
+    TYPES,
+    type IHapticFeedbackService,
+    BottomSheet,
+  } from "$shared";
   import { onMount } from "svelte";
   import {
     getSettings,
@@ -92,7 +97,10 @@
     console.log("✅ Apply button clicked");
 
     const settingsToApply = $state.snapshot(settings);
-    console.log("✅ Settings snapshot to be applied:", JSON.stringify(settingsToApply, null, 2));
+    console.log(
+      "✅ Settings snapshot to be applied:",
+      JSON.stringify(settingsToApply, null, 2)
+    );
 
     await updateSettings(settingsToApply);
     hasUnsavedChanges = false;

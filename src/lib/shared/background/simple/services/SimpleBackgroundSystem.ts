@@ -81,9 +81,7 @@ export class SimpleBackgroundSystem implements IBackgroundSystem {
     // Calculate gradient start and end points based on angle
     const centerX = dimensions.width / 2;
     const centerY = dimensions.height / 2;
-    const maxDist = Math.sqrt(
-      centerX * centerX + centerY * centerY
-    );
+    const maxDist = Math.sqrt(centerX * centerX + centerY * centerY);
 
     const x0 = centerX - Math.cos(angleRad) * maxDist;
     const y0 = centerY - Math.sin(angleRad) * maxDist;

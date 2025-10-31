@@ -3,11 +3,14 @@
 ## Test Scenarios
 
 ### Scenario 1: 8-Card Layout (Circular + Intermediate/Advanced)
+
 **Settings:**
+
 - Generation Mode: Circular
 - Level: Intermediate (2) or Advanced (3)
 
 **Expected Layout:**
+
 ```
 Row 1: [Level] [Length] [TurnIntensity]    (3 cards @ 2 cols)
 Row 2: [GenMode] [Grid] [PropContinuity]   (3 cards @ 2 cols)
@@ -15,6 +18,7 @@ Row 3: [SliceSize (50%)] [CAP (50%)]        (2 cards @ 3 cols) ✅ NO EMPTY SPAC
 ```
 
 **Verification:**
+
 - [ ] All 8 cards are visible
 - [ ] SliceSize card takes up exactly half the row width
 - [ ] CAP card takes up exactly half the row width
@@ -23,11 +27,14 @@ Row 3: [SliceSize (50%)] [CAP (50%)]        (2 cards @ 3 cols) ✅ NO EMPTY SPAC
 ---
 
 ### Scenario 2: 6-Card Layout (Circular + Beginner)
+
 **Settings:**
+
 - Generation Mode: Circular
 - Level: Beginner (1)
 
 **Expected Layout:**
+
 ```
 Row 1: [Level] [Length] [GenMode]          (3 cards @ 2 cols)
 Row 2: [Grid] [PropContinuity] [SliceSize] (3 cards @ 2 cols)
@@ -35,6 +42,7 @@ Row 3: [CAP] [empty] [empty]                (1 card @ 2 cols)
 ```
 
 **Verification:**
+
 - [ ] Turn Intensity card is NOT visible
 - [ ] 6 cards total are visible
 - [ ] SliceSize and CAP use default 2-column span
@@ -43,17 +51,21 @@ Row 3: [CAP] [empty] [empty]                (1 card @ 2 cols)
 ---
 
 ### Scenario 3: 5-Card Layout (Freeform + Beginner)
+
 **Settings:**
+
 - Generation Mode: Freeform
 - Level: Beginner (1)
 
 **Expected Layout:**
+
 ```
 Row 1: [Level] [Length] [GenMode]    (3 cards @ 2 cols)
 Row 2: [Grid] [PropContinuity] [empty] (2 cards @ 2 cols)
 ```
 
 **Verification:**
+
 - [ ] Turn Intensity card is NOT visible
 - [ ] SliceSize card is NOT visible
 - [ ] CAP card is NOT visible
@@ -62,17 +74,21 @@ Row 2: [Grid] [PropContinuity] [empty] (2 cards @ 2 cols)
 ---
 
 ### Scenario 4: 6-Card Layout (Freeform + Intermediate)
+
 **Settings:**
+
 - Generation Mode: Freeform
 - Level: Intermediate (2)
 
 **Expected Layout:**
+
 ```
 Row 1: [Level] [Length] [TurnIntensity] (3 cards @ 2 cols)
 Row 2: [GenMode] [Grid] [PropContinuity] (3 cards @ 2 cols)
 ```
 
 **Verification:**
+
 - [ ] Turn Intensity card IS visible
 - [ ] SliceSize card is NOT visible
 - [ ] CAP card is NOT visible
@@ -82,17 +98,21 @@ Row 2: [GenMode] [Grid] [PropContinuity] (3 cards @ 2 cols)
 ---
 
 ### Scenario 5: 6-Card Layout (Freeform + Advanced)
+
 **Settings:**
+
 - Generation Mode: Freeform
 - Level: Advanced (3)
 
 **Expected Layout:**
+
 ```
 Row 1: [Level] [Length] [TurnIntensity] (3 cards @ 2 cols)
 Row 2: [GenMode] [Grid] [PropContinuity] (3 cards @ 2 cols)
 ```
 
 **Verification:**
+
 - [ ] Turn Intensity card IS visible (with more intensity options)
 - [ ] SliceSize card is NOT visible
 - [ ] CAP card is NOT visible

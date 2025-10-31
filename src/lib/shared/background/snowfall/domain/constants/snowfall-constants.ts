@@ -1,12 +1,12 @@
 // src/lib/components/backgrounds/snowfall/constants.ts
 
 export const backgroundGradient = [
-  { stop: 0, color: "#0a0e1a" },      // Deep midnight blue
-  { stop: 0.2, color: "#1a1d3a" },   // Rich indigo
-  { stop: 0.4, color: "#2d2560" },   // Deep purple-blue
-  { stop: 0.65, color: "#1e2a4a" },  // Winter evening blue
-  { stop: 0.85, color: "#0f1c3d" },  // Deep ocean blue
-  { stop: 1, color: "#041426" },     // Deepest night
+  { stop: 0, color: "#0a0e1a" }, // Deep midnight blue
+  { stop: 0.2, color: "#1a1d3a" }, // Rich indigo
+  { stop: 0.4, color: "#2d2560" }, // Deep purple-blue
+  { stop: 0.65, color: "#1e2a4a" }, // Winter evening blue
+  { stop: 0.85, color: "#0f1c3d" }, // Deep ocean blue
+  { stop: 1, color: "#041426" }, // Deepest night
 ];
 
 export const performanceThresholds = {

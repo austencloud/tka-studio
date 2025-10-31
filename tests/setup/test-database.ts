@@ -24,7 +24,7 @@ export async function createTestDatabase(testName: string): Promise<void> {
   await Dexie.delete(dbName);
 
   // Reinitialize with test name
-  Object.defineProperty(db, 'name', {
+  Object.defineProperty(db, "name", {
     value: dbName,
     writable: true,
   });

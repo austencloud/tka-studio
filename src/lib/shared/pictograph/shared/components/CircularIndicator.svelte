@@ -12,10 +12,7 @@
    * - Can be extended later to show different indicators for completed circular sequences
    */
 
-  let {
-    isCircularCapable = false,
-    isStartPosition = false,
-  } = $props<{
+  let { isCircularCapable = false, isStartPosition = false } = $props<{
     isCircularCapable?: boolean;
     isStartPosition?: boolean;
   }>();
@@ -29,13 +26,7 @@
     <!-- Golden star indicator in top-right corner -->
     <g transform="translate(810, 140)">
       <!-- Subtle glow background -->
-      <circle
-        cx="0"
-        cy="0"
-        r="50"
-        fill="url(#starGlow)"
-        opacity="0.6"
-      />
+      <circle cx="0" cy="0" r="50" fill="url(#starGlow)" opacity="0.6" />
 
       <!-- Star shape (5-pointed) -->
       <path
@@ -47,10 +38,12 @@
 
       <!-- Sparkle effect -->
       <g opacity="0.9">
-        <path d="M 0,-50 L 0,-44 M 0,50 L 0,44 M -50,0 L -44,0 M 50,0 L 44,0"
-              stroke="#fbbf24"
-              stroke-width="2"
-              stroke-linecap="round">
+        <path
+          d="M 0,-50 L 0,-44 M 0,50 L 0,44 M -50,0 L -44,0 M 50,0 L 44,0"
+          stroke="#fbbf24"
+          stroke-width="2"
+          stroke-linecap="round"
+        >
           <animate
             attributeName="opacity"
             values="0.5;1;0.5"

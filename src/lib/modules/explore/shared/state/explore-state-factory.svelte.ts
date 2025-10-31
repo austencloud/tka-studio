@@ -17,7 +17,7 @@ import type {
 import type {
   ExploreNavigationConfig,
   ExploreNavigationItem,
-  INavigationService
+  INavigationService,
 } from "../../navigation";
 import { ExploreSortMethod } from "../domain/enums/explore-enums";
 import type {

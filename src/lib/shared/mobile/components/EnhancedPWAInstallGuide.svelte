@@ -42,7 +42,9 @@
 
   // Detect platform and browser on mount
   onMount(() => {
-    const platformService = resolve<IPlatformDetectionService>(TYPES.IPlatformDetectionService);
+    const platformService = resolve<IPlatformDetectionService>(
+      TYPES.IPlatformDetectionService
+    );
     const detected = platformService.detectPlatformAndBrowser();
     platform = detected.platform;
     browser = detected.browser;
@@ -87,7 +89,10 @@
     </div>
 
     <div class="guide-content" bind:this={viewport.contentElement}>
-      <PlatformInstructions {instructions} compact={viewport.needsCompactMode} />
+      <PlatformInstructions
+        {instructions}
+        compact={viewport.needsCompactMode}
+      />
     </div>
 
     <!-- Sticky Footer -->

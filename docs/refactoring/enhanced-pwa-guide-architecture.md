@@ -61,6 +61,7 @@
 ## Separation of Concerns
 
 ### 1. Detection Layer
+
 **File**: `utils/platform-detection.service.ts`
 
 **Responsibility**: Detect user's platform and browser
@@ -76,6 +77,7 @@ detectPlatformAndBrowser() → {
 ```
 
 ### 2. Configuration Layer
+
 **File**: `config/pwa-install-instructions.ts`
 
 **Responsibility**: Store all instruction variations
@@ -93,6 +95,7 @@ getInstallInstructions(platform, browser) → {
 ```
 
 ### 3. Measurement Layer
+
 **File**: `utils/viewport-measurement.svelte.ts`
 
 **Responsibility**: Measure viewport and determine compact mode
@@ -110,7 +113,9 @@ createViewportMeasurement() → {
 ```
 
 ### 4. Display Layer
+
 **Files**:
+
 - `components/EnhancedPWAInstallGuide.svelte` (Main container)
 - `components/PlatformInstructions.svelte` (Instruction orchestrator)
 - `components/InstructionStep.svelte` (Step display)
@@ -120,6 +125,7 @@ createViewportMeasurement() → {
 ## State Management
 
 ### Main Component State
+
 ```typescript
 // Platform/Browser detection
 let platform = $state<Platform>("desktop");
@@ -133,6 +139,7 @@ const instructions = $derived(getInstallInstructions(platform, browser));
 ```
 
 ### Reactive Dependencies
+
 ```
 platform + browser
     │
@@ -178,56 +185,61 @@ src/lib/shared/mobile/
 
 ## Platform/Browser Matrix
 
-| Platform | Browser | Supported | Instructions Config |
-|----------|---------|-----------|-------------------|
-| iOS | Safari | ✅ Yes | `ios-safari` |
-| iOS | Chrome | ⚠️ Limited | `ios-other` (redirects to Safari) |
-| iOS | Firefox | ⚠️ Limited | `ios-other` (redirects to Safari) |
-| iOS | Edge | ⚠️ Limited | `ios-other` (redirects to Safari) |
-| Android | Chrome | ✅ Yes | `android-chrome` |
-| Android | Edge | ✅ Yes | `android-chrome` |
-| Android | Samsung Internet | ✅ Yes | `android-samsung` |
-| Android | Firefox | ❌ No | Fallback |
-| Desktop | Chrome | ✅ Yes | `desktop-chrome` |
-| Desktop | Edge | ✅ Yes | `desktop-chrome` |
-| Desktop | Firefox | ❌ No | Fallback |
-| Desktop | Safari | ❌ No | Fallback |
+| Platform | Browser          | Supported  | Instructions Config               |
+| -------- | ---------------- | ---------- | --------------------------------- |
+| iOS      | Safari           | ✅ Yes     | `ios-safari`                      |
+| iOS      | Chrome           | ⚠️ Limited | `ios-other` (redirects to Safari) |
+| iOS      | Firefox          | ⚠️ Limited | `ios-other` (redirects to Safari) |
+| iOS      | Edge             | ⚠️ Limited | `ios-other` (redirects to Safari) |
+| Android  | Chrome           | ✅ Yes     | `android-chrome`                  |
+| Android  | Edge             | ✅ Yes     | `android-chrome`                  |
+| Android  | Samsung Internet | ✅ Yes     | `android-samsung`                 |
+| Android  | Firefox          | ❌ No      | Fallback                          |
+| Desktop  | Chrome           | ✅ Yes     | `desktop-chrome`                  |
+| Desktop  | Edge             | ✅ Yes     | `desktop-chrome`                  |
+| Desktop  | Firefox          | ❌ No      | Fallback                          |
+| Desktop  | Safari           | ❌ No      | Fallback                          |
 
 ## Configuration Schema
 
 ### InstructionStep
+
 ```typescript
 interface InstructionStep {
-  text: string;          // HTML string with <strong> tags
-  icon: string;          // Font Awesome icon class
-  image: string | null;  // Path to screenshot or null for placeholder
+  text: string; // HTML string with <strong> tags
+  icon: string; // Font Awesome icon class
+  image: string | null; // Path to screenshot or null for placeholder
 }
 ```
 
 ### InstallInstructions
+
 ```typescript
 interface InstallInstructions {
-  title: string;              // Main title for this platform/browser
-  icon: string;               // Font Awesome icon class
-  steps: InstructionStep[];   // Array of instruction steps
-  benefits: string[];         // Array of benefit strings
+  title: string; // Main title for this platform/browser
+  icon: string; // Font Awesome icon class
+  steps: InstructionStep[]; // Array of instruction steps
+  benefits: string[]; // Array of benefit strings
 }
 ```
 
 ## Styling Architecture
 
 ### CSS Organization
+
 1. **Main Component**: Container, backdrop, header, footer styles
 2. **PlatformInstructions**: Section layout, grid, spacing
 3. **InstructionStep**: Card styling, step number, image placeholder
 
 ### Compact Mode Strategy
+
 - Detected by viewport measurement utility
 - Passed as prop through component hierarchy
 - Applied via CSS classes: `class:compact={needsCompactMode}`
 - Reduces padding, font sizes, margins using `clamp()` and CSS container queries
 
 ### Responsive Design
+
 - Uses CSS container queries for adaptive layouts
 - Fluid typography with `clamp()`
 - Dynamic viewport height (`95dvh`)
@@ -238,6 +250,7 @@ interface InstallInstructions {
 ### Unit Tests
 
 #### 1. Platform Detection Service
+
 ```typescript
 describe('platform-detection.service', () => {
   describe('detectPlatformAndBrowser', () => {
@@ -254,6 +267,7 @@ describe('platform-detection.service', () => {
 ```
 
 #### 2. Instructions Configuration
+
 ```typescript
 describe('pwa-install-instructions', () => {
   describe('getInstallInstructions', () => {
@@ -264,6 +278,7 @@ describe('pwa-install-instructions', () => {
 ```
 
 #### 3. Viewport Measurement
+
 ```typescript
 describe('viewport-measurement', () => {
   test('detects when compact mode is needed', () => {...});
@@ -274,6 +289,7 @@ describe('viewport-measurement', () => {
 ### Component Tests
 
 #### 1. InstructionStep
+
 ```typescript
 describe('InstructionStep', () => {
   test('renders step number and text', () => {...});
@@ -283,6 +299,7 @@ describe('InstructionStep', () => {
 ```
 
 #### 2. PlatformInstructions
+
 ```typescript
 describe('PlatformInstructions', () => {
   test('renders all steps', () => {...});
@@ -292,6 +309,7 @@ describe('PlatformInstructions', () => {
 ```
 
 #### 3. EnhancedPWAInstallGuide
+
 ```typescript
 describe('EnhancedPWAInstallGuide', () => {
   test('detects platform on mount', () => {...});
@@ -301,6 +319,7 @@ describe('EnhancedPWAInstallGuide', () => {
 ```
 
 ### Integration Tests
+
 1. **E2E flow**: Open guide → Detect platform → Show instructions → Close
 2. **Platform switching**: Mock different user agents, verify instructions change
 3. **Responsive behavior**: Resize viewport, verify compact mode triggers
@@ -308,33 +327,40 @@ describe('EnhancedPWAInstallGuide', () => {
 ## Performance Considerations
 
 ### Initial Load
+
 - Detection runs once on mount
 - Instructions retrieved via pure function (fast lookup)
 - No heavy computations
 
 ### Runtime
+
 - ResizeObserver efficiently tracks viewport changes
 - Svelte's reactivity minimizes re-renders
 - Compact mode detection is debounced
 
 ### Bundle Size
+
 - Config file: ~10KB uncompressed
 - Services/utilities: ~8KB uncompressed
 - Components: ~15KB uncompressed
 - Total: ~33KB (compresses well with gzip)
 
 ### Code Splitting Opportunities
+
 ```typescript
 // Lazy load instructions config
-const instructions = await import('./config/pwa-install-instructions');
+const instructions = await import("./config/pwa-install-instructions");
 
 // Lazy load detection service
-const { detectPlatformAndBrowser } = await import('./utils/platform-detection.service');
+const { detectPlatformAndBrowser } = await import(
+  "./utils/platform-detection.service"
+);
 ```
 
 ## Extensibility Patterns
 
 ### Adding New Platform
+
 ```typescript
 // 1. Add to type definition
 type Platform = "ios" | "android" | "desktop" | "chromeos"; // Add chromeos
@@ -347,18 +373,21 @@ function detectPlatform(ua: string): Platform {
 
 // 3. Add instructions config
 const INSTRUCTIONS_MAP = {
-  "chromeos-chrome": { /* config */ },
+  "chromeos-chrome": {
+    /* config */
+  },
   // ... existing configs
 };
 ```
 
 ### Adding Localization
+
 ```typescript
 // 1. Create locale-specific configs
 export function getInstallInstructions(
   platform: Platform,
   browser: Browser,
-  locale: string = 'en'
+  locale: string = "en"
 ): InstallInstructions {
   const key = `${platform}-${browser}`;
   const localeKey = `${key}-${locale}`;
@@ -368,19 +397,20 @@ export function getInstallInstructions(
 ```
 
 ### Adding Analytics
+
 ```typescript
 // 1. Track instruction views
 onMount(() => {
   const detected = detectPlatformAndBrowser();
-  analytics.track('pwa_guide_opened', {
+  analytics.track("pwa_guide_opened", {
     platform: detected.platform,
-    browser: detected.browser
+    browser: detected.browser,
   });
 });
 
 // 2. Track step interactions
 function handleStepClick(stepIndex: number) {
-  analytics.track('pwa_guide_step_viewed', { stepIndex });
+  analytics.track("pwa_guide_step_viewed", { stepIndex });
 }
 ```
 
@@ -414,15 +444,15 @@ function handleStepClick(stepIndex: number) {
 
 ```typescript
 // Use detection service elsewhere
-import { detectPlatformAndBrowser } from '$lib/shared/mobile/utils/platform-detection.service';
+import { detectPlatformAndBrowser } from "$lib/shared/mobile/utils/platform-detection.service";
 const { platform, browser } = detectPlatformAndBrowser();
 
 // Use viewport measurement for other sheets
-import { createViewportMeasurement } from '$lib/shared/mobile/utils/viewport-measurement.svelte';
+import { createViewportMeasurement } from "$lib/shared/mobile/utils/viewport-measurement.svelte";
 const viewport = createViewportMeasurement();
 
 // Reuse instruction step component
-import InstructionStep from '$lib/shared/mobile/components/InstructionStep.svelte';
+import InstructionStep from "$lib/shared/mobile/components/InstructionStep.svelte";
 ```
 
 ---

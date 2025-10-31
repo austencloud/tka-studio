@@ -1,4 +1,7 @@
-import { areServicesInitialized, initializeAppServices } from "./services.svelte";
+import {
+  areServicesInitialized,
+  initializeAppServices,
+} from "./services.svelte";
 
 const initializationState = $state({
   isInitialized: areServicesInitialized(),

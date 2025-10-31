@@ -144,4 +144,3 @@ export class GradientGeneratorService {
     return colors.every((color) => hexRegex.test(color));
   }
 }
-

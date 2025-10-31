@@ -1,396 +1,438 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sequence Preview Performance Benchmark</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            color: #333;
-        }
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          Cantarell, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+        color: #333;
+      }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 30px;
-        }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        padding: 30px;
+      }
 
-        h1 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 32px;
-        }
+      h1 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 32px;
+      }
 
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
+      .subtitle {
+        color: #666;
+        margin-bottom: 30px;
+        font-size: 14px;
+      }
 
-        .controls {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
+      .controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+      }
 
-        .control-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+      .control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
 
-        label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #555;
-        }
+      label {
+        font-weight: 600;
+        font-size: 14px;
+        color: #555;
+      }
 
-        input, select {
-            padding: 8px 12px;
-            border: 2px solid #e1e8ed;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.2s;
-        }
+      input,
+      select {
+        padding: 8px 12px;
+        border: 2px solid #e1e8ed;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.2s;
+      }
 
-        input:focus, select:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+      input:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+      }
 
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            grid-column: 1 / -1;
-        }
+      button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s;
+        grid-column: 1 / -1;
+      }
 
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
 
-        button:active {
-            transform: translateY(0);
-        }
+      button:active {
+        transform: translateY(0);
+      }
 
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
+      button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
 
-        #status {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-weight: 500;
-            text-align: center;
-            display: none;
-        }
+      #status {
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+        text-align: center;
+        display: none;
+      }
 
-        #status.running {
-            display: block;
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeaa7;
-        }
+      #status.running {
+        display: block;
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+      }
 
-        #status.complete {
-            display: block;
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+      #status.complete {
+        display: block;
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
 
-        #results {
-            margin-top: 30px;
-        }
+      #results {
+        margin-top: 30px;
+      }
 
-        .result-section {
-            margin-bottom: 30px;
-        }
+      .result-section {
+        margin-bottom: 30px;
+      }
 
-        .result-section h2 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 24px;
-            border-bottom: 2px solid #e1e8ed;
-            padding-bottom: 10px;
-        }
+      .result-section h2 {
+        color: #667eea;
+        margin-bottom: 15px;
+        font-size: 24px;
+        border-bottom: 2px solid #e1e8ed;
+        padding-bottom: 10px;
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            overflow: hidden;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+      }
 
-        th {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
+      th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 12px;
+        text-align: left;
+        font-weight: 600;
+      }
 
-        td {
-            padding: 12px;
-            border-bottom: 1px solid #e1e8ed;
-        }
+      td {
+        padding: 12px;
+        border-bottom: 1px solid #e1e8ed;
+      }
 
-        tr:last-child td {
-            border-bottom: none;
-        }
+      tr:last-child td {
+        border-bottom: none;
+      }
 
-        tr:nth-child(even) {
-            background: #f8f9fa;
-        }
+      tr:nth-child(even) {
+        background: #f8f9fa;
+      }
 
-        .metric {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 13px;
-        }
+      .metric {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+        font-size: 13px;
+      }
 
-        .metric.excellent {
-            background: #d4edda;
-            color: #155724;
-        }
+      .metric.excellent {
+        background: #d4edda;
+        color: #155724;
+      }
 
-        .metric.good {
-            background: #fff3cd;
-            color: #856404;
-        }
+      .metric.good {
+        background: #fff3cd;
+        color: #856404;
+      }
 
-        .metric.poor {
-            background: #f8d7da;
-            color: #721c24;
-        }
+      .metric.poor {
+        background: #f8d7da;
+        color: #721c24;
+      }
 
-        .preview-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
+      .preview-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+      }
 
-        .preview-item {
-            border: 1px solid #e1e8ed;
-            border-radius: 8px;
-            padding: 10px;
-            background: #f8f9fa;
-        }
+      .preview-item {
+        border: 1px solid #e1e8ed;
+        border-radius: 8px;
+        padding: 10px;
+        background: #f8f9fa;
+      }
 
-        .preview-item img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            background: white;
-        }
+      .preview-item img {
+        width: 100%;
+        height: auto;
+        border-radius: 4px;
+        background: white;
+      }
 
-        .preview-label {
-            margin-top: 8px;
-            font-size: 12px;
-            color: #666;
-            text-align: center;
-        }
+      .preview-label {
+        margin-top: 8px;
+        font-size: 12px;
+        color: #666;
+        text-align: center;
+      }
 
-        .recommendation {
-            background: #e7f3ff;
-            border-left: 4px solid #667eea;
-            padding: 15px 20px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
+      .recommendation {
+        background: #e7f3ff;
+        border-left: 4px solid #667eea;
+        padding: 15px 20px;
+        margin: 20px 0;
+        border-radius: 4px;
+      }
 
-        .recommendation h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
+      .recommendation h3 {
+        color: #667eea;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
 
-        .recommendation ul {
-            margin-left: 20px;
-        }
+      .recommendation ul {
+        margin-left: 20px;
+      }
 
-        .recommendation li {
-            margin: 8px 0;
-            line-height: 1.6;
-        }
+      .recommendation li {
+        margin: 8px 0;
+        line-height: 1.6;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1>🎨 Sequence Preview Performance Benchmark</h1>
-        <p class="subtitle">Test rendering performance for share panel previews on phone screens</p>
+      <h1>🎨 Sequence Preview Performance Benchmark</h1>
+      <p class="subtitle">
+        Test rendering performance for share panel previews on phone screens
+      </p>
 
-        <div class="controls">
-            <div class="control-group">
-                <label for="beatScale">Beat Scale</label>
-                <input type="number" id="beatScale" min="0.05" max="1.0" step="0.05" value="0.15">
-            </div>
-
-            <div class="control-group">
-                <label for="quality">Quality</label>
-                <input type="number" id="quality" min="0.1" max="1.0" step="0.1" value="0.4">
-            </div>
-
-            <div class="control-group">
-                <label for="format">Format</label>
-                <select id="format">
-                    <option value="image/jpeg">JPEG</option>
-                    <option value="image/png">PNG</option>
-                    <option value="image/webp">WebP</option>
-                </select>
-            </div>
-
-            <div class="control-group">
-                <label for="runs">Test Runs</label>
-                <input type="number" id="runs" min="1" max="10" value="3">
-            </div>
-
-            <button id="runTest" onclick="runBenchmark()">Run Benchmark</button>
-            <button onclick="runComparison()">Run Full Comparison</button>
+      <div class="controls">
+        <div class="control-group">
+          <label for="beatScale">Beat Scale</label>
+          <input
+            type="number"
+            id="beatScale"
+            min="0.05"
+            max="1.0"
+            step="0.05"
+            value="0.15"
+          />
         </div>
 
-        <div id="status"></div>
+        <div class="control-group">
+          <label for="quality">Quality</label>
+          <input
+            type="number"
+            id="quality"
+            min="0.1"
+            max="1.0"
+            step="0.1"
+            value="0.4"
+          />
+        </div>
 
-        <div id="results"></div>
+        <div class="control-group">
+          <label for="format">Format</label>
+          <select id="format">
+            <option value="image/jpeg">JPEG</option>
+            <option value="image/png">PNG</option>
+            <option value="image/webp">WebP</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="runs">Test Runs</label>
+          <input type="number" id="runs" min="1" max="10" value="3" />
+        </div>
+
+        <button id="runTest" onclick="runBenchmark()">Run Benchmark</button>
+        <button onclick="runComparison()">Run Full Comparison</button>
+      </div>
+
+      <div id="status"></div>
+
+      <div id="results"></div>
     </div>
 
     <script>
-        // Simple mock sequence rendering function
-        // This simulates the actual rendering without requiring the full app
-        async function renderPreview(beatScale, quality, format) {
-            const canvas = document.createElement('canvas');
-            const beatSize = 144 * beatScale; // Base size * scale
-            const cols = 6;
-            const rows = 3;
+      // Simple mock sequence rendering function
+      // This simulates the actual rendering without requiring the full app
+      async function renderPreview(beatScale, quality, format) {
+        const canvas = document.createElement("canvas");
+        const beatSize = 144 * beatScale; // Base size * scale
+        const cols = 6;
+        const rows = 3;
 
-            canvas.width = cols * beatSize;
-            canvas.height = rows * beatSize + (50 * beatScale); // Add title space
+        canvas.width = cols * beatSize;
+        canvas.height = rows * beatSize + 50 * beatScale; // Add title space
 
-            const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext("2d");
 
-            // Fill background
-            ctx.fillStyle = 'white';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        // Fill background
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw title
-            ctx.fillStyle = '#333';
-            ctx.font = `${20 * beatScale}px Arial`;
-            ctx.textAlign = 'center';
-            ctx.fillText('XΔX-ΔXΔX-ΔXΔX-ΔXΔX-Δ', canvas.width / 2, 30 * beatScale);
+        // Draw title
+        ctx.fillStyle = "#333";
+        ctx.font = `${20 * beatScale}px Arial`;
+        ctx.textAlign = "center";
+        ctx.fillText("XΔX-ΔXΔX-ΔXΔX-ΔXΔX-Δ", canvas.width / 2, 30 * beatScale);
 
-            // Draw grid cells (simplified pictographs)
-            for (let row = 0; row < rows; row++) {
-                for (let col = 0; col < cols; col++) {
-                    const x = col * beatSize;
-                    const y = row * beatSize + (50 * beatScale);
+        // Draw grid cells (simplified pictographs)
+        for (let row = 0; row < rows; row++) {
+          for (let col = 0; col < cols; col++) {
+            const x = col * beatSize;
+            const y = row * beatSize + 50 * beatScale;
 
-                    // Draw cell border
-                    ctx.strokeStyle = '#e0e0e0';
-                    ctx.strokeRect(x, y, beatSize, beatSize);
+            // Draw cell border
+            ctx.strokeStyle = "#e0e0e0";
+            ctx.strokeRect(x, y, beatSize, beatSize);
 
-                    // Draw simplified "pictograph" (circle)
-                    ctx.fillStyle = col % 2 === 0 ? '#4a90e2' : '#e24a4a';
-                    ctx.beginPath();
-                    ctx.arc(x + beatSize / 2, y + beatSize / 2, beatSize * 0.3, 0, Math.PI * 2);
-                    ctx.fill();
+            // Draw simplified "pictograph" (circle)
+            ctx.fillStyle = col % 2 === 0 ? "#4a90e2" : "#e24a4a";
+            ctx.beginPath();
+            ctx.arc(
+              x + beatSize / 2,
+              y + beatSize / 2,
+              beatSize * 0.3,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
 
-                    // Draw beat number
-                    ctx.fillStyle = '#666';
-                    ctx.font = `${10 * beatScale}px Arial`;
-                    ctx.textAlign = 'center';
-                    ctx.fillText(row * cols + col + 1, x + beatSize / 2, y + beatSize - 5);
-                }
-            }
-
-            // Convert to data URL
-            return new Promise((resolve) => {
-                canvas.toBlob((blob) => {
-                    const url = URL.createObjectURL(blob);
-                    const img = new Image();
-                    img.onload = () => {
-                        resolve(canvas.toDataURL(format, quality));
-                    };
-                    img.src = url;
-                }, format, quality);
-            });
+            // Draw beat number
+            ctx.fillStyle = "#666";
+            ctx.font = `${10 * beatScale}px Arial`;
+            ctx.textAlign = "center";
+            ctx.fillText(
+              row * cols + col + 1,
+              x + beatSize / 2,
+              y + beatSize - 5
+            );
+          }
         }
 
-        function formatTime(ms) {
-            if (ms < 100) return `<span class="metric excellent">${ms.toFixed(0)}ms</span>`;
-            if (ms < 500) return `<span class="metric good">${ms.toFixed(0)}ms</span>`;
-            return `<span class="metric poor">${ms.toFixed(0)}ms</span>`;
+        // Convert to data URL
+        return new Promise((resolve) => {
+          canvas.toBlob(
+            (blob) => {
+              const url = URL.createObjectURL(blob);
+              const img = new Image();
+              img.onload = () => {
+                resolve(canvas.toDataURL(format, quality));
+              };
+              img.src = url;
+            },
+            format,
+            quality
+          );
+        });
+      }
+
+      function formatTime(ms) {
+        if (ms < 100)
+          return `<span class="metric excellent">${ms.toFixed(0)}ms</span>`;
+        if (ms < 500)
+          return `<span class="metric good">${ms.toFixed(0)}ms</span>`;
+        return `<span class="metric poor">${ms.toFixed(0)}ms</span>`;
+      }
+
+      function formatSize(dataUrl) {
+        const sizeKB = (dataUrl.length * 0.75) / 1024;
+        if (sizeKB < 100)
+          return `<span class="metric excellent">${sizeKB.toFixed(1)}KB</span>`;
+        if (sizeKB < 200)
+          return `<span class="metric good">${sizeKB.toFixed(1)}KB</span>`;
+        return `<span class="metric poor">${sizeKB.toFixed(1)}KB</span>`;
+      }
+
+      async function runBenchmark() {
+        const status = document.getElementById("status");
+        const results = document.getElementById("results");
+        const runButton = document.getElementById("runTest");
+
+        runButton.disabled = true;
+        status.className = "running";
+        status.textContent = "⏳ Running benchmark...";
+
+        const beatScale = parseFloat(
+          document.getElementById("beatScale").value
+        );
+        const quality = parseFloat(document.getElementById("quality").value);
+        const format = document.getElementById("format").value;
+        const runs = parseInt(document.getElementById("runs").value);
+
+        const times = [];
+        let dataUrl = "";
+
+        for (let i = 0; i < runs; i++) {
+          const start = performance.now();
+          dataUrl = await renderPreview(beatScale, quality, format);
+          const end = performance.now();
+          times.push(end - start);
+          status.textContent = `⏳ Running benchmark... (${i + 1}/${runs})`;
         }
 
-        function formatSize(dataUrl) {
-            const sizeKB = (dataUrl.length * 0.75) / 1024;
-            if (sizeKB < 100) return `<span class="metric excellent">${sizeKB.toFixed(1)}KB</span>`;
-            if (sizeKB < 200) return `<span class="metric good">${sizeKB.toFixed(1)}KB</span>`;
-            return `<span class="metric poor">${sizeKB.toFixed(1)}KB</span>`;
-        }
+        const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
+        const minTime = Math.min(...times);
+        const maxTime = Math.max(...times);
+        const sizeKB = (dataUrl.length * 0.75) / 1024;
 
-        async function runBenchmark() {
-            const status = document.getElementById('status');
-            const results = document.getElementById('results');
-            const runButton = document.getElementById('runTest');
-
-            runButton.disabled = true;
-            status.className = 'running';
-            status.textContent = '⏳ Running benchmark...';
-
-            const beatScale = parseFloat(document.getElementById('beatScale').value);
-            const quality = parseFloat(document.getElementById('quality').value);
-            const format = document.getElementById('format').value;
-            const runs = parseInt(document.getElementById('runs').value);
-
-            const times = [];
-            let dataUrl = '';
-
-            for (let i = 0; i < runs; i++) {
-                const start = performance.now();
-                dataUrl = await renderPreview(beatScale, quality, format);
-                const end = performance.now();
-                times.push(end - start);
-                status.textContent = `⏳ Running benchmark... (${i + 1}/${runs})`;
-            }
-
-            const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
-            const minTime = Math.min(...times);
-            const maxTime = Math.max(...times);
-            const sizeKB = (dataUrl.length * 0.75) / 1024;
-
-            results.innerHTML = `
+        results.innerHTML = `
                 <div class="result-section">
                     <h2>📊 Test Results</h2>
                     <table>
@@ -400,7 +442,7 @@
                         </tr>
                         <tr>
                             <td>Configuration</td>
-                            <td>Scale: ${beatScale}, Quality: ${quality}, Format: ${format.split('/')[1].toUpperCase()}</td>
+                            <td>Scale: ${beatScale}, Quality: ${quality}, Format: ${format.split("/")[1].toUpperCase()}</td>
                         </tr>
                         <tr>
                             <td>Average Time</td>
@@ -435,69 +477,112 @@
                 <div class="recommendation">
                     <h3>💡 Analysis</h3>
                     <ul>
-                        <li><strong>Render Time:</strong> ${avgTime < 300 ? '✅ Excellent - No optimization needed' : avgTime < 500 ? '✅ Good - Acceptable for real-time use' : avgTime < 1000 ? '⚠️ Acceptable - Consider background pre-rendering' : '❌ Poor - Background pre-rendering required'}</li>
-                        <li><strong>File Size:</strong> ${sizeKB < 100 ? '✅ Excellent - Great for mobile' : sizeKB < 200 ? '✅ Good - Acceptable for mobile' : '⚠️ Large - May be slow on poor connections'}</li>
-                        <li><strong>Preview Quality:</strong> ${beatScale >= 0.20 ? '✅ Good visibility on phone screens' : '⚠️ May be too small for phone screens'}</li>
+                        <li><strong>Render Time:</strong> ${avgTime < 300 ? "✅ Excellent - No optimization needed" : avgTime < 500 ? "✅ Good - Acceptable for real-time use" : avgTime < 1000 ? "⚠️ Acceptable - Consider background pre-rendering" : "❌ Poor - Background pre-rendering required"}</li>
+                        <li><strong>File Size:</strong> ${sizeKB < 100 ? "✅ Excellent - Great for mobile" : sizeKB < 200 ? "✅ Good - Acceptable for mobile" : "⚠️ Large - May be slow on poor connections"}</li>
+                        <li><strong>Preview Quality:</strong> ${beatScale >= 0.2 ? "✅ Good visibility on phone screens" : "⚠️ May be too small for phone screens"}</li>
                     </ul>
                 </div>
             `;
 
-            status.className = 'complete';
-            status.textContent = '✅ Benchmark complete!';
-            runButton.disabled = false;
+        status.className = "complete";
+        status.textContent = "✅ Benchmark complete!";
+        runButton.disabled = false;
+      }
+
+      async function runComparison() {
+        const status = document.getElementById("status");
+        const results = document.getElementById("results");
+        const buttons = document.querySelectorAll("button");
+
+        buttons.forEach((btn) => (btn.disabled = true));
+        status.className = "running";
+        status.textContent = "⏳ Running full comparison...";
+
+        const configs = [
+          {
+            beatScale: 0.15,
+            quality: 0.4,
+            format: "image/jpeg",
+            name: "CURRENT (Share Preview)",
+          },
+          {
+            beatScale: 0.12,
+            quality: 0.4,
+            format: "image/jpeg",
+            name: "Lower Scale",
+          },
+          {
+            beatScale: 0.15,
+            quality: 0.3,
+            format: "image/jpeg",
+            name: "Lower Quality",
+          },
+          {
+            beatScale: 0.1,
+            quality: 0.3,
+            format: "image/jpeg",
+            name: "Aggressive Optimization",
+          },
+          {
+            beatScale: 0.22,
+            quality: 0.45,
+            format: "image/jpeg",
+            name: "RECOMMENDED (Phone)",
+          },
+          {
+            beatScale: 0.15,
+            quality: 0.4,
+            format: "image/png",
+            name: "PNG Format",
+          },
+          {
+            beatScale: 0.25,
+            quality: 0.6,
+            format: "image/jpeg",
+            name: "High Quality",
+          },
+        ];
+
+        const comparisonResults = [];
+
+        for (let i = 0; i < configs.length; i++) {
+          const config = configs[i];
+          status.textContent = `⏳ Running full comparison... (${i + 1}/${configs.length})`;
+
+          const times = [];
+          let dataUrl = "";
+
+          for (let j = 0; j < 3; j++) {
+            const start = performance.now();
+            dataUrl = await renderPreview(
+              config.beatScale,
+              config.quality,
+              config.format
+            );
+            const end = performance.now();
+            times.push(end - start);
+          }
+
+          const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
+          const sizeKB = (dataUrl.length * 0.75) / 1024;
+
+          comparisonResults.push({
+            ...config,
+            avgTime,
+            sizeKB,
+            dataUrl,
+          });
         }
 
-        async function runComparison() {
-            const status = document.getElementById('status');
-            const results = document.getElementById('results');
-            const buttons = document.querySelectorAll('button');
+        const currentConfig = comparisonResults[0];
+        const fastest = comparisonResults.reduce((prev, curr) =>
+          curr.avgTime < prev.avgTime ? curr : prev
+        );
+        const smallest = comparisonResults.reduce((prev, curr) =>
+          curr.sizeKB < prev.sizeKB ? curr : prev
+        );
 
-            buttons.forEach(btn => btn.disabled = true);
-            status.className = 'running';
-            status.textContent = '⏳ Running full comparison...';
-
-            const configs = [
-                { beatScale: 0.15, quality: 0.4, format: 'image/jpeg', name: 'CURRENT (Share Preview)' },
-                { beatScale: 0.12, quality: 0.4, format: 'image/jpeg', name: 'Lower Scale' },
-                { beatScale: 0.15, quality: 0.3, format: 'image/jpeg', name: 'Lower Quality' },
-                { beatScale: 0.10, quality: 0.3, format: 'image/jpeg', name: 'Aggressive Optimization' },
-                { beatScale: 0.22, quality: 0.45, format: 'image/jpeg', name: 'RECOMMENDED (Phone)' },
-                { beatScale: 0.15, quality: 0.4, format: 'image/png', name: 'PNG Format' },
-                { beatScale: 0.25, quality: 0.6, format: 'image/jpeg', name: 'High Quality' },
-            ];
-
-            const comparisonResults = [];
-
-            for (let i = 0; i < configs.length; i++) {
-                const config = configs[i];
-                status.textContent = `⏳ Running full comparison... (${i + 1}/${configs.length})`;
-
-                const times = [];
-                let dataUrl = '';
-
-                for (let j = 0; j < 3; j++) {
-                    const start = performance.now();
-                    dataUrl = await renderPreview(config.beatScale, config.quality, config.format);
-                    const end = performance.now();
-                    times.push(end - start);
-                }
-
-                const avgTime = times.reduce((a, b) => a + b, 0) / times.length;
-                const sizeKB = (dataUrl.length * 0.75) / 1024;
-
-                comparisonResults.push({
-                    ...config,
-                    avgTime,
-                    sizeKB,
-                    dataUrl
-                });
-            }
-
-            const currentConfig = comparisonResults[0];
-            const fastest = comparisonResults.reduce((prev, curr) => curr.avgTime < prev.avgTime ? curr : prev);
-            const smallest = comparisonResults.reduce((prev, curr) => curr.sizeKB < prev.sizeKB ? curr : prev);
-
-            results.innerHTML = `
+        results.innerHTML = `
                 <div class="result-section">
                     <h2>📊 Comparison Results</h2>
                     <table>
@@ -507,14 +592,18 @@
                             <th>Size</th>
                             <th>Dimensions</th>
                         </tr>
-                        ${comparisonResults.map(r => `
+                        ${comparisonResults
+                          .map(
+                            (r) => `
                             <tr>
                                 <td><strong>${r.name}</strong><br><small>Scale: ${r.beatScale}, Q: ${r.quality}</small></td>
                                 <td>${formatTime(r.avgTime)}</td>
                                 <td>${formatSize(r.dataUrl)}</td>
                                 <td>${Math.round(6 * 144 * r.beatScale)} × ${Math.round(3 * 144 * r.beatScale + 50 * r.beatScale)}px</td>
                             </tr>
-                        `).join('')}
+                        `
+                          )
+                          .join("")}
                     </table>
                 </div>
 
@@ -526,19 +615,19 @@
                     </div>
                     <div class="recommendation">
                         <h3>Fastest Configuration</h3>
-                        <p><strong>${fastest.name}</strong> - ${fastest.avgTime.toFixed(0)}ms (${((currentConfig.avgTime - fastest.avgTime) / currentConfig.avgTime * 100).toFixed(1)}% faster)</p>
+                        <p><strong>${fastest.name}</strong> - ${fastest.avgTime.toFixed(0)}ms (${(((currentConfig.avgTime - fastest.avgTime) / currentConfig.avgTime) * 100).toFixed(1)}% faster)</p>
                     </div>
                     <div class="recommendation">
                         <h3>Smallest Size</h3>
-                        <p><strong>${smallest.name}</strong> - ${smallest.sizeKB.toFixed(1)}KB (${((currentConfig.sizeKB - smallest.sizeKB) / currentConfig.sizeKB * 100).toFixed(1)}% smaller)</p>
+                        <p><strong>${smallest.name}</strong> - ${smallest.sizeKB.toFixed(1)}KB (${(((currentConfig.sizeKB - smallest.sizeKB) / currentConfig.sizeKB) * 100).toFixed(1)}% smaller)</p>
                     </div>
                     <div class="recommendation">
                         <h3>💡 Recommendations</h3>
                         <ul>
                             <li><strong>Best UX:</strong> Implement background pre-rendering - preview appears instantly regardless of generation time</li>
                             <li><strong>Phone Screens:</strong> Use beatScale 0.22-0.25 for better visibility (current 0.15 is too small at ~${Math.round(6 * 144 * 0.15)}px wide)</li>
-                            <li><strong>Performance:</strong> ${currentConfig.avgTime > 500 ? 'Background pre-rendering recommended (>500ms)' : 'Current performance is acceptable'}</li>
-                            <li><strong>Format:</strong> JPEG is optimal (PNG is ${((comparisonResults.find(r => r.name === 'PNG Format')?.avgTime || 0) / currentConfig.avgTime * 100 - 100).toFixed(0)}% slower)</li>
+                            <li><strong>Performance:</strong> ${currentConfig.avgTime > 500 ? "Background pre-rendering recommended (>500ms)" : "Current performance is acceptable"}</li>
+                            <li><strong>Format:</strong> JPEG is optimal (PNG is ${(((comparisonResults.find((r) => r.name === "PNG Format")?.avgTime || 0) / currentConfig.avgTime) * 100 - 100).toFixed(0)}% slower)</li>
                         </ul>
                     </div>
                 </div>
@@ -546,7 +635,9 @@
                 <div class="result-section">
                     <h2>👁️ Visual Comparison</h2>
                     <div class="preview-container">
-                        ${comparisonResults.map(r => `
+                        ${comparisonResults
+                          .map(
+                            (r) => `
                             <div class="preview-item">
                                 <img src="${r.dataUrl}" alt="${r.name}">
                                 <div class="preview-label">
@@ -554,15 +645,17 @@
                                     ${r.avgTime.toFixed(0)}ms, ${r.sizeKB.toFixed(1)}KB
                                 </div>
                             </div>
-                        `).join('')}
+                        `
+                          )
+                          .join("")}
                     </div>
                 </div>
             `;
 
-            status.className = 'complete';
-            status.textContent = '✅ Comparison complete!';
-            buttons.forEach(btn => btn.disabled = false);
-        }
+        status.className = "complete";
+        status.textContent = "✅ Comparison complete!";
+        buttons.forEach((btn) => (btn.disabled = false));
+      }
     </script>
-</body>
+  </body>
 </html>

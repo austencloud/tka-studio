@@ -115,19 +115,32 @@
   }
 
   @keyframes -global-aurora-animation {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
   }
 
   /* Snowfall Animation - Dark blue background with falling snow */
   .background-thumbnail:global(.snow-fall) .background-preview {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+    background: linear-gradient(
+      135deg,
+      #1a1a2e 0%,
+      #16213e 50%,
+      #0f3460 100%
+    ) !important;
   }
 
   .background-thumbnail:global(.snow-fall) .background-preview::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background:
       radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
       radial-gradient(1.5px 1.5px at 40px 70px, #f8faff, transparent),
@@ -139,19 +152,31 @@
   }
 
   @keyframes -global-snowfall {
-    0% { transform: translateY(-30px) translateX(0px); }
-    100% { transform: translateY(220px) translateX(2px); }
+    0% {
+      transform: translateY(-30px) translateX(0px);
+    }
+    100% {
+      transform: translateY(220px) translateX(2px);
+    }
   }
 
   /* Night Sky Animation - Deep purple with twinkling stars */
   .background-thumbnail:global(.star-twinkle) .background-preview {
-    background: linear-gradient(135deg, #0a0e2c 0%, #1a2040 50%, #2a3060 100%) !important;
+    background: linear-gradient(
+      135deg,
+      #0a0e2c 0%,
+      #1a2040 50%,
+      #2a3060 100%
+    ) !important;
   }
 
   .background-thumbnail:global(.star-twinkle) .background-preview::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background:
       radial-gradient(1px 1px at 25px 25px, #ffffff, transparent),
       radial-gradient(2px 2px at 75px 50px, #ffeb3b, transparent),
@@ -163,32 +188,63 @@
   }
 
   @keyframes -global-star-twinkle-animation {
-    0%, 100% { opacity: 0.9; }
-    50% { opacity: 0.4; }
+    0%,
+    100% {
+      opacity: 0.9;
+    }
+    50% {
+      opacity: 0.4;
+    }
   }
 
   /* Ocean Animation - Very dark blue with rising bubbles */
   .background-thumbnail:global(.bubble-float) .background-preview {
-    background: linear-gradient(135deg, #001122 0%, #000c1e 50%, #000511 100%) !important;
+    background: linear-gradient(
+      135deg,
+      #001122 0%,
+      #000c1e 50%,
+      #000511 100%
+    ) !important;
   }
 
   .background-thumbnail:global(.bubble-float) .background-preview::before {
     content: "";
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background:
-      radial-gradient(circle at 30px 140px, rgba(255, 255, 255, 0.4) 3px, transparent 4px),
-      radial-gradient(circle at 80px 160px, rgba(255, 255, 255, 0.3) 5px, transparent 6px),
-      radial-gradient(circle at 120px 120px, rgba(255, 255, 255, 0.35) 2px, transparent 3px);
+      radial-gradient(
+        circle at 30px 140px,
+        rgba(255, 255, 255, 0.4) 3px,
+        transparent 4px
+      ),
+      radial-gradient(
+        circle at 80px 160px,
+        rgba(255, 255, 255, 0.3) 5px,
+        transparent 6px
+      ),
+      radial-gradient(
+        circle at 120px 120px,
+        rgba(255, 255, 255, 0.35) 2px,
+        transparent 3px
+      );
     background-size: 250px 200px;
     animation: -global-bubble-rise 8s ease-in-out infinite;
     opacity: 0.8;
   }
 
   @keyframes -global-bubble-rise {
-    0% { transform: translateY(30px); }
-    50% { transform: translateY(-15px) translateX(-3px); }
-    100% { transform: translateY(30px); }
+    0% {
+      transform: translateY(30px);
+    }
+    50% {
+      transform: translateY(-15px) translateX(-3px);
+    }
+    100% {
+      transform: translateY(30px);
+    }
   }
 
   /* ===== COMPONENT STYLES ===== */
@@ -258,7 +314,10 @@
   }
 
   /* Fallback background for non-animated backgrounds */
-  .background-thumbnail:not(:global(.aurora-flow)):not(:global(.snow-fall)):not(:global(.star-twinkle)):not(:global(.bubble-float)) :global(.background-preview) {
+  .background-thumbnail:not(:global(.aurora-flow)):not(:global(.snow-fall)):not(
+      :global(.star-twinkle)
+    ):not(:global(.bubble-float))
+    :global(.background-preview) {
     background: var(--bg-gradient);
   }
 

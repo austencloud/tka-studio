@@ -7,12 +7,12 @@
 
 import type { CSVRow, ICSVPictographParser } from "$shared";
 import {
-    GridMode,
-    MotionColor,
-    Orientation,
-    createMotionData,
-    type MotionData,
-    type PictographData,
+  GridMode,
+  MotionColor,
+  Orientation,
+  createMotionData,
+  type MotionData,
+  type PictographData,
 } from "$shared";
 import { inject, injectable } from "inversify";
 import type { ParsedCsvRow } from "../../../../../modules/build/generate/shared/domain";
@@ -203,7 +203,8 @@ export class MotionQueryHandler implements IMotionQueryHandler {
 
       // Get all available pictographs for the specified grid mode
       // SKEWED mode falls back to DIAMOND mode (SKEWED doesn't have separate CSV data)
-      const effectiveMode = gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+      const effectiveMode =
+        gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
       const csvRows = this.parsedData[effectiveMode] || [];
 
       // Parse all available pictographs with grid mode

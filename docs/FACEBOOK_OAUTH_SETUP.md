@@ -117,6 +117,7 @@ If you haven't added the Firebase callback URL to Facebook:
 ### Step 10: Test Login
 
 1. Start your development server:
+
    ```bash
    npm run dev
    ```
@@ -134,16 +135,19 @@ If you haven't added the Firebase callback URL to Facebook:
 ### Troubleshooting Test Issues
 
 **"App Not Set Up: This app is still in development..."**
+
 - This is normal! Your app is in Development mode
 - You can test with your Facebook account
 - Add test users (see Step 13) to let others test
 
 **"URL Blocked: This redirect failed..."**
+
 - Check that your redirect URI in Facebook matches Firebase callback URL exactly
 - Make sure it starts with `https://` (not `http://`)
 - No trailing slashes
 
 **"Invalid OAuth Redirect URI"**
+
 - Double-check the callback URL in Facebook Login > Settings
 - Make sure you clicked "Save Changes" in Facebook
 
@@ -226,8 +230,8 @@ If you need more than basic profile data:
 import { FacebookAuthProvider } from "firebase/auth";
 
 const provider = new FacebookAuthProvider();
-provider.addScope('user_birthday');
-provider.addScope('user_location');
+provider.addScope("user_birthday");
+provider.addScope("user_location");
 // Add more scopes as needed
 ```
 
@@ -237,7 +241,7 @@ Available scopes: [Facebook Permissions Reference](https://developers.facebook.c
 
 ```typescript
 provider.setCustomParameters({
-  'display': 'popup' // or 'page'
+  display: "popup", // or 'page'
 });
 ```
 
@@ -246,28 +250,34 @@ provider.setCustomParameters({
 ### Development Mode Issues
 
 **Issue**: Friends can't log in to test
+
 - **Solution**: Add them as Test Users or Developers in Roles section
 
 **Issue**: "This app is not available"
+
 - **Solution**: Your app is in Development mode. Either add user as tester or make app Live
 
 ### Production Issues
 
 **Issue**: Users can't log in after making app Live
+
 - **Solution**:
   - Check that all Policy URLs are accessible
   - Verify App Category is set
   - Make sure app icon is uploaded
 
 **Issue**: "Permissions Error"
+
 - **Solution**: Some permissions require App Review. Check App Review > Permissions
 
 ### General Issues
 
 **Issue**: "Can't Load URL: The domain of this URL isn't included..."
+
 - **Solution**: Add your domain to App Domains in Settings > Basic
 
 **Issue**: Login works on desktop but not mobile
+
 - **Solution**:
   - Check that your OAuth redirect URIs include your mobile-accessible domain
   - Ensure your site uses HTTPS in production
@@ -299,6 +309,7 @@ provider.setCustomParameters({
 ### What Data Facebook Provides
 
 With basic permissions, you get:
+
 - Name
 - Email (if user granted permission)
 - Profile picture
@@ -307,6 +318,7 @@ With basic permissions, you get:
 ### GDPR Compliance
 
 You must:
+
 - Provide a Privacy Policy
 - Explain what data you collect
 - Allow users to delete their data
@@ -318,7 +330,7 @@ Facebook requires a Data Deletion endpoint:
 
 ```typescript
 // src/routes/auth/facebook/deletion/+server.ts
-import type { RequestHandler } from './$types';
+import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ request }) => {
   const { signed_request } = await request.json();
@@ -327,10 +339,12 @@ export const POST: RequestHandler = async ({ request }) => {
   // Delete user data from your database
   // Return confirmation URL
 
-  return new Response(JSON.stringify({
-    url: 'https://yourdomain.com/deletion-confirmed',
-    confirmation_code: 'unique-code'
-  }));
+  return new Response(
+    JSON.stringify({
+      url: "https://yourdomain.com/deletion-confirmed",
+      confirmation_code: "unique-code",
+    })
+  );
 };
 ```
 

@@ -11,7 +11,10 @@
  */
 
 import { GridLocation } from "../../../grid/domain/enums/grid-enums";
-import { MotionColor, VectorDirection } from "../../../shared/domain/enums/pictograph-enums";
+import {
+  MotionColor,
+  VectorDirection,
+} from "../../../shared/domain/enums/pictograph-enums";
 
 // Location type aliases
 type Loc = `${GridLocation}`;

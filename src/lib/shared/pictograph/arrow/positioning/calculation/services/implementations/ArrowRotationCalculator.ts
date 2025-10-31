@@ -1,4 +1,9 @@
-import { GridLocation, MotionType, Orientation, type MotionData } from "$shared";
+import {
+  GridLocation,
+  MotionType,
+  Orientation,
+  type MotionData,
+} from "$shared";
 import { injectable } from "inversify";
 
 export interface IArrowRotationCalculator {
@@ -28,7 +33,10 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     [GridLocation.NORTHWEST]: 315,
   };
 
-  private readonly staticRadialCounterClockwiseMap: Record<GridLocation, number> = {
+  private readonly staticRadialCounterClockwiseMap: Record<
+    GridLocation,
+    number
+  > = {
     [GridLocation.NORTH]: 0,
     [GridLocation.EAST]: 270,
     [GridLocation.SOUTH]: 180,
@@ -51,7 +59,10 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     [GridLocation.NORTHWEST]: 135,
   };
 
-  private readonly staticNonRadialCounterClockwiseMap: Record<GridLocation, number> = {
+  private readonly staticNonRadialCounterClockwiseMap: Record<
+    GridLocation,
+    number
+  > = {
     [GridLocation.NORTH]: 180,
     [GridLocation.EAST]: 90,
     [GridLocation.SOUTH]: 0,
@@ -172,7 +183,10 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     }
   }
 
-  private calculateStaticRotation(motion: MotionData, location: GridLocation): number {
+  private calculateStaticRotation(
+    motion: MotionData,
+    location: GridLocation
+  ): number {
     /**
      * Calculate rotation for static arrows.
      * Uses different rotation maps based on whether orientation is radial (IN/OUT) or non-radial (CLOCK/COUNTER).
@@ -182,7 +196,9 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     const rotationDirection = motion.rotationDirection?.toLowerCase();
 
     // Determine if this is a radial orientation (IN/OUT) or non-radial (CLOCK/COUNTER)
-    const isRadial = startOrientation === Orientation.IN || startOrientation === Orientation.OUT;
+    const isRadial =
+      startOrientation === Orientation.IN ||
+      startOrientation === Orientation.OUT;
 
     // Select the appropriate rotation map
     let rotationMap: Record<GridLocation, number>;

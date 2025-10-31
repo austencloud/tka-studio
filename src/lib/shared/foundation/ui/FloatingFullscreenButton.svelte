@@ -29,7 +29,9 @@
     const cleanupFns: Array<() => void> = [];
 
     try {
-      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+      hapticService = resolve<IHapticFeedbackService>(
+        TYPES.IHapticFeedbackService
+      );
     } catch (error) {
       console.warn("Failed to resolve haptic feedback service:", error);
     }
@@ -181,7 +183,10 @@
         try {
           cleanup();
         } catch (error) {
-          console.warn("Failed to clean up floating fullscreen listeners:", error);
+          console.warn(
+            "Failed to clean up floating fullscreen listeners:",
+            error
+          );
         }
       });
     };
@@ -356,10 +361,6 @@
       bottom: 16px;
     }
   }
-
-
-
-
 
   /* Landscape mobile: maintain 44px minimum */
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {

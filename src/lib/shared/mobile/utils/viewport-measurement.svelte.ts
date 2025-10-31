@@ -26,7 +26,9 @@ export interface ViewportMeasurementOptions {
  *
  * @returns An object containing reactive state and measurement functions
  */
-export function createViewportMeasurement(options: ViewportMeasurementOptions = {}) {
+export function createViewportMeasurement(
+  options: ViewportMeasurementOptions = {}
+) {
   const { onMeasure, initialDelay = 100 } = options;
 
   let sheetElement = $state<HTMLElement | null>(null);
@@ -41,11 +43,14 @@ export function createViewportMeasurement(options: ViewportMeasurementOptions = 
 
     try {
       // Get actual viewport height
-      const viewportHeight = window.visualViewport?.height || window.innerHeight;
+      const viewportHeight =
+        window.visualViewport?.height || window.innerHeight;
 
       // Calculate fixed elements height (header + footer + handle + padding)
-      const headerHeight = sheetElement.querySelector(".guide-header")?.clientHeight || 70;
-      const footerHeight = sheetElement.querySelector(".guide-footer")?.clientHeight || 70;
+      const headerHeight =
+        sheetElement.querySelector(".guide-header")?.clientHeight || 70;
+      const footerHeight =
+        sheetElement.querySelector(".guide-footer")?.clientHeight || 70;
       const handleHeight = 25; // Handle + margins
 
       // Available space for scrollable content
@@ -75,11 +80,10 @@ export function createViewportMeasurement(options: ViewportMeasurementOptions = 
   onMount(() => {
     // Use double RAF for reliable post-render measurement
     // This avoids console violations and ensures DOM is fully rendered
-    let rafId: number;
     let rafId2: number;
     let resizeObserver: ResizeObserver | null = null;
 
-    rafId = requestAnimationFrame(() => {
+    const rafId = requestAnimationFrame(() => {
       rafId2 = requestAnimationFrame(() => {
         measureAndAdapt();
 

@@ -14,9 +14,9 @@ Features:
 - Desktop: Side panel (600px width)
 -->
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import CodexComponent from '../codex/components/CodexComponent.svelte';
-  import type { PictographData } from '$shared';
+  import { onMount } from "svelte";
+  import CodexComponent from "../codex/components/CodexComponent.svelte";
+  import type { PictographData } from "$shared";
 
   interface Props {
     /** Whether the panel is currently open */
@@ -33,7 +33,7 @@ Features:
     isOpen = $bindable(false),
     onClose,
     filterByProgress = false,
-    title = 'Letters Reference'
+    title = "Letters Reference",
   }: Props = $props();
 
   // Panel animation state
@@ -42,7 +42,7 @@ Features:
 
   // Handle Escape key to close panel
   function handleKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && isOpen) {
+    if (event.key === "Escape" && isOpen) {
       closePanel();
     }
   }
@@ -64,7 +64,7 @@ Features:
 
   // Handle pictograph selection
   function handlePictographSelected(pictograph: PictographData) {
-    console.log('📖 CodexPanel: Pictograph selected:', pictograph);
+    console.log("📖 CodexPanel: Pictograph selected:", pictograph);
     // Keep panel open for reference - user can close manually
   }
 
@@ -78,9 +78,9 @@ Features:
   // Prevent body scroll when panel is open
   $effect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
   });
 </script>
@@ -131,7 +131,10 @@ Features:
 
       <!-- Panel content -->
       <div class="panel-content">
-        <CodexComponent isVisible={isOpen} onPictographSelected={handlePictographSelected} />
+        <CodexComponent
+          isVisible={isOpen}
+          onPictographSelected={handlePictographSelected}
+        />
       </div>
 
       <!-- Quick tip -->

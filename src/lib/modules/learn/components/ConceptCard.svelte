@@ -9,32 +9,32 @@ Displays:
 - Visual feedback on hover/tap
 -->
 <script lang="ts">
-  import type { LearnConcept, ConceptProgress, ConceptStatus } from '../domain';
-  import { resolve, TYPES, type IHapticFeedbackService } from '$shared';
+  import type { LearnConcept, ConceptProgress, ConceptStatus } from "../domain";
+  import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
 
-  let {
-    concept,
-    progress,
-    status,
-    onClick
-  } = $props<{
+  let { concept, progress, status, onClick } = $props<{
     concept: LearnConcept;
     progress?: ConceptProgress;
     status: ConceptStatus;
     onClick?: (concept: LearnConcept) => void;
   }>();
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
-  const isClickable = $derived(status !== 'locked');
+  const isClickable = $derived(status !== "locked");
   const percentComplete = $derived(progress?.percentComplete || 0);
 
   // Status display config
-  const statusConfig: Record<ConceptStatus, { icon: string; label: string; color: string }> = {
-    locked: { icon: '🔒', label: 'Locked', color: '#6B7280' },
-    available: { icon: '⭕', label: 'Ready', color: '#4A90E2' },
-    'in-progress': { icon: '▶️', label: 'In Progress', color: '#7B68EE' },
-    completed: { icon: '✅', label: 'Mastered', color: '#50C878' }
+  const statusConfig: Record<
+    ConceptStatus,
+    { icon: string; label: string; color: string }
+  > = {
+    locked: { icon: "🔒", label: "Locked", color: "#6B7280" },
+    available: { icon: "⭕", label: "Ready", color: "#4A90E2" },
+    "in-progress": { icon: "▶️", label: "In Progress", color: "#7B68EE" },
+    completed: { icon: "✅", label: "Mastered", color: "#50C878" },
   };
 
   const currentStatus = $derived(statusConfig[status]);
@@ -42,12 +42,12 @@ Displays:
   function handleClick() {
     if (!isClickable) return;
 
-    hapticService?.trigger('selection');
+    hapticService?.trigger("selection");
     onClick?.(concept);
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       handleClick();
     }
@@ -56,10 +56,10 @@ Displays:
 
 <button
   class="concept-card"
-  class:locked={status === 'locked'}
-  class:available={status === 'available'}
-  class:in-progress={status === 'in-progress'}
-  class:completed={status === 'completed'}
+  class:locked={status === "locked"}
+  class:available={status === "available"}
+  class:in-progress={status === "in-progress"}
+  class:completed={status === "completed"}
   class:clickable={isClickable}
   onclick={handleClick}
   onkeydown={handleKeydown}
@@ -69,7 +69,7 @@ Displays:
   tabindex={isClickable ? 0 : -1}
 >
   <!-- Progress ring (for in-progress/completed) -->
-  {#if status === 'in-progress' || status === 'completed'}
+  {#if status === "in-progress" || status === "completed"}
     <div class="progress-ring">
       <svg width="56" height="56" viewBox="0 0 56 56">
         <circle
@@ -107,7 +107,10 @@ Displays:
   <div class="concept-content">
     <div class="concept-header">
       <h3 class="concept-name">{concept.shortName}</h3>
-      <span class="status-badge" style="background-color: {currentStatus.color}">
+      <span
+        class="status-badge"
+        style="background-color: {currentStatus.color}"
+      >
         <span class="status-icon">{currentStatus.icon}</span>
       </span>
     </div>
@@ -358,7 +361,7 @@ Displays:
 
   /* Accessibility */
   .concept-card:focus-visible {
-    outline: 2px solid #4A90E2;
+    outline: 2px solid #4a90e2;
     outline-offset: 2px;
   }
 

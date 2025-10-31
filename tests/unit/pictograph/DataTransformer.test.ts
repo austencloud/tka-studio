@@ -11,9 +11,17 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import type { BeatData } from "../../../src/lib/modules/build/shared/domain/models/BeatData";
 import { Letter } from "../../../src/lib/shared/foundation/domain/models/Letter";
-import { GridLocation, GridMode } from "../../../src/lib/shared/pictograph/grid/domain/enums/grid-enums";
+import {
+  GridLocation,
+  GridMode,
+} from "../../../src/lib/shared/pictograph/grid/domain/enums/grid-enums";
 import { PropType } from "../../../src/lib/shared/pictograph/prop/domain/enums/PropType";
-import { MotionColor, MotionType, Orientation, RotationDirection } from "../../../src/lib/shared/pictograph/shared/domain/enums/pictograph-enums";
+import {
+  MotionColor,
+  MotionType,
+  Orientation,
+  RotationDirection,
+} from "../../../src/lib/shared/pictograph/shared/domain/enums/pictograph-enums";
 import { createMotionData } from "../../../src/lib/shared/pictograph/shared/domain/models/MotionData";
 import { DataTransformer } from "../../../src/lib/shared/pictograph/shared/services/implementations/DataTransformer";
 
@@ -197,7 +205,9 @@ describe("DataTransformer", () => {
       expect(result.motions.blue?.motionType).toBe(MotionType.PRO);
       expect(result.motions.blue?.startLocation).toBe(GridLocation.NORTH);
       expect(result.motions.blue?.endLocation).toBe(GridLocation.SOUTH);
-      expect(result.motions.blue?.rotationDirection).toBe(RotationDirection.CLOCKWISE);
+      expect(result.motions.blue?.rotationDirection).toBe(
+        RotationDirection.CLOCKWISE
+      );
       expect(result.motions.blue?.turns).toBe(1.5);
     });
 
@@ -243,7 +253,9 @@ describe("DataTransformer", () => {
 
       expect(result.gridMode).toBe(GridMode.DIAMOND);
       expect(result.gridPointData.allLayer2PointsNormal.NORTH).toBeDefined();
-      expect(result.gridPointData.allLayer2PointsNormal.NORTH.coordinates).toEqual({
+      expect(
+        result.gridPointData.allLayer2PointsNormal.NORTH.coordinates
+      ).toEqual({
         x: 475,
         y: 100,
       });
@@ -304,7 +316,10 @@ describe("DataTransformer", () => {
 
       const result = service.adaptGridData(rawGridData, GridMode.DIAMOND);
 
-      expect(result.gridPointData.centerPoint.coordinates).toEqual({ x: 475, y: 475 });
+      expect(result.gridPointData.centerPoint.coordinates).toEqual({
+        x: 475,
+        y: 475,
+      });
     });
 
     it("should initialize empty strict and outer point collections", () => {

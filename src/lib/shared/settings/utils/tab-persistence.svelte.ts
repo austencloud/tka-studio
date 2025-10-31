@@ -14,7 +14,10 @@ export interface TabConfig {
 /**
  * Load the last active tab from localStorage (synchronous for initialization)
  */
-export function loadActiveTab(validTabIds: string[], defaultTab: string): string {
+export function loadActiveTab(
+  validTabIds: string[],
+  defaultTab: string
+): string {
   if (typeof localStorage === "undefined") return defaultTab;
 
   try {

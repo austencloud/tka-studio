@@ -29,7 +29,8 @@ export class RealPictographLoader {
   static async getInstance(): Promise<RealPictographLoader> {
     if (!RealPictographLoader.instance) {
       RealPictographLoader.instance = new RealPictographLoader();
-      RealPictographLoader.initializationPromise = RealPictographLoader.instance.initialize();
+      RealPictographLoader.initializationPromise =
+        RealPictographLoader.instance.initialize();
     }
 
     // Always await initialization to complete, even if called in parallel
@@ -71,7 +72,10 @@ export class RealPictographLoader {
       throw new Error("RealPictographLoader not initialized");
     }
 
-    return await this.letterQueryHandler.getPictographByLetter(letter, gridMode);
+    return await this.letterQueryHandler.getPictographByLetter(
+      letter,
+      gridMode
+    );
   }
 
   /**
@@ -85,8 +89,9 @@ export class RealPictographLoader {
       throw new Error("RealPictographLoader not initialized");
     }
 
-    const allPictographs = await this.letterQueryHandler.getAllCodexPictographs(gridMode);
-    return allPictographs.filter(p => p.letter === letter);
+    const allPictographs =
+      await this.letterQueryHandler.getAllCodexPictographs(gridMode);
+    return allPictographs.filter((p) => p.letter === letter);
   }
 
   /**

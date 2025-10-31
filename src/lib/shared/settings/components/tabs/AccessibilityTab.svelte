@@ -182,18 +182,30 @@
     align-items: center;
     justify-content: center;
     font-size: 22px;
-    background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(99, 102, 241, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.2),
+      rgba(99, 102, 241, 0.1)
+    );
     color: #8b8ff8;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .haptic-icon {
-    background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(236, 72, 153, 0.2),
+      rgba(236, 72, 153, 0.1)
+    );
     color: #f472b6;
   }
 
   .motion-icon {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.2),
+      rgba(34, 197, 94, 0.1)
+    );
     color: #4ade80;
   }
 

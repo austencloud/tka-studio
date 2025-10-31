@@ -1,5 +1,10 @@
 import { injectable } from "inversify";
-import type { IPlatformDetectionService, Platform, Browser, PlatformInfo } from "../contracts/IPlatformDetectionService";
+import type {
+  IPlatformDetectionService,
+  Platform,
+  Browser,
+  PlatformInfo,
+} from "../contracts/IPlatformDetectionService";
 
 /**
  * Platform Detection Service Implementation
@@ -8,7 +13,6 @@ import type { IPlatformDetectionService, Platform, Browser, PlatformInfo } from 
  */
 @injectable()
 export class PlatformDetectionService implements IPlatformDetectionService {
-
   detectPlatformAndBrowser(): PlatformInfo {
     return {
       platform: this.detectPlatform(),

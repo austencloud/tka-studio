@@ -1,0 +1,13 @@
+# Generated files
+.svelte-kit/
+.netlify/
+build/
+*.generated.*
+dist/
+coverage/
+
+# Dependencies
+node_modules/
+
+# Archive folders
+archive/

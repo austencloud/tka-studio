@@ -71,7 +71,10 @@ describe("StorageService", () => {
 
       it("should return default value for non-existent key", () => {
         const defaultValue = { default: true };
-        const result = service.safeSessionStorageGet("missing-key", defaultValue);
+        const result = service.safeSessionStorageGet(
+          "missing-key",
+          defaultValue
+        );
         expect(result).toEqual(defaultValue);
       });
 
@@ -82,33 +85,45 @@ describe("StorageService", () => {
 
       it("should handle undefined string value", () => {
         sessionStorageMock.setItem("test-key", "undefined");
-        const result = service.safeSessionStorageGet("test-key", { default: true });
+        const result = service.safeSessionStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle null string value", () => {
         sessionStorageMock.setItem("test-key", "null");
-        const result = service.safeSessionStorageGet("test-key", { default: true });
+        const result = service.safeSessionStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle empty string value", () => {
         sessionStorageMock.setItem("test-key", "");
-        const result = service.safeSessionStorageGet("test-key", { default: true });
+        const result = service.safeSessionStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle whitespace-only value", () => {
         sessionStorageMock.setItem("test-key", "   ");
-        const result = service.safeSessionStorageGet("test-key", { default: true });
+        const result = service.safeSessionStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle invalid JSON gracefully", () => {
         sessionStorageMock.setItem("test-key", "{invalid json}");
-        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
 
-        const result = service.safeSessionStorageGet("test-key", { default: true });
+        const result = service.safeSessionStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
         expect(consoleSpy).toHaveBeenCalled();
 
@@ -156,7 +171,9 @@ describe("StorageService", () => {
       });
 
       it("should handle storage errors gracefully", () => {
-        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
         vi.spyOn(sessionStorageMock, "setItem").mockImplementation(() => {
           throw new Error("Storage quota exceeded");
         });
@@ -176,7 +193,9 @@ describe("StorageService", () => {
       });
 
       it("should handle removal errors gracefully", () => {
-        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
         vi.spyOn(sessionStorageMock, "removeItem").mockImplementation(() => {
           throw new Error("Remove failed");
         });
@@ -216,33 +235,45 @@ describe("StorageService", () => {
 
       it("should handle undefined string value", () => {
         localStorageMock.setItem("test-key", "undefined");
-        const result = service.safeLocalStorageGet("test-key", { default: true });
+        const result = service.safeLocalStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle null string value", () => {
         localStorageMock.setItem("test-key", "null");
-        const result = service.safeLocalStorageGet("test-key", { default: true });
+        const result = service.safeLocalStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle empty string value", () => {
         localStorageMock.setItem("test-key", "");
-        const result = service.safeLocalStorageGet("test-key", { default: true });
+        const result = service.safeLocalStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle whitespace-only value", () => {
         localStorageMock.setItem("test-key", "   ");
-        const result = service.safeLocalStorageGet("test-key", { default: true });
+        const result = service.safeLocalStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
       });
 
       it("should handle invalid JSON gracefully", () => {
         localStorageMock.setItem("test-key", "{invalid json}");
-        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
 
-        const result = service.safeLocalStorageGet("test-key", { default: true });
+        const result = service.safeLocalStorageGet("test-key", {
+          default: true,
+        });
         expect(result).toEqual({ default: true });
         expect(consoleSpy).toHaveBeenCalled();
 
@@ -290,7 +321,9 @@ describe("StorageService", () => {
       });
 
       it("should handle storage errors gracefully", () => {
-        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
         vi.spyOn(localStorageMock, "setItem").mockImplementation(() => {
           throw new Error("Storage quota exceeded");
         });
@@ -310,7 +343,9 @@ describe("StorageService", () => {
       });
 
       it("should handle removal errors gracefully", () => {
-        const consoleSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+        const consoleSpy = vi
+          .spyOn(console, "warn")
+          .mockImplementation(() => {});
         vi.spyOn(localStorageMock, "removeItem").mockImplementation(() => {
           throw new Error("Remove failed");
         });

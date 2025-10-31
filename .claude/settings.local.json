@@ -22,7 +22,8 @@
       "Bash(test:*)",
       "Bash(npx svelte-kit sync:*)",
       "Bash(taskkill:*)",
-      "Bash(npx prettier:*)"
+      "Bash(npx prettier:*)",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "ask": []

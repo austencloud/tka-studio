@@ -6,9 +6,9 @@
  * by converting external <image> references to inline data URLs.
  */
 
-import { injectable } from 'inversify';
-import { getLetterImagePath } from '$shared/pictograph/tka-glyph/utils';
-import { Letter } from '$shared';
+import { injectable } from "inversify";
+import { getLetterImagePath } from "$shared/pictograph/tka-glyph/utils";
+import { Letter } from "$shared";
 
 export interface IGlyphCacheService {
   /**
@@ -44,39 +44,83 @@ export class GlyphCacheService implements IGlyphCacheService {
   // All possible TKA letters across all types
   private readonly LETTERS_TO_CACHE: Letter[] = [
     // Type1: Latin letters A-V + lowercase gamma
-    Letter.A, Letter.B, Letter.C, Letter.D, Letter.E, Letter.F, Letter.G, Letter.H,
-    Letter.I, Letter.J, Letter.K, Letter.L, Letter.M, Letter.N, Letter.O, Letter.P,
-    Letter.Q, Letter.R, Letter.S, Letter.T, Letter.U, Letter.V, Letter.GAMMA_LOWERCASE,
+    Letter.A,
+    Letter.B,
+    Letter.C,
+    Letter.D,
+    Letter.E,
+    Letter.F,
+    Letter.G,
+    Letter.H,
+    Letter.I,
+    Letter.J,
+    Letter.K,
+    Letter.L,
+    Letter.M,
+    Letter.N,
+    Letter.O,
+    Letter.P,
+    Letter.Q,
+    Letter.R,
+    Letter.S,
+    Letter.T,
+    Letter.U,
+    Letter.V,
+    Letter.GAMMA_LOWERCASE,
     // Type2: W-Z + Greek uppercase + μ, ν
-    Letter.W, Letter.X, Letter.Y, Letter.Z,
-    Letter.SIGMA, Letter.DELTA, Letter.THETA, Letter.OMEGA,
-    Letter.MU, Letter.NU,
+    Letter.W,
+    Letter.X,
+    Letter.Y,
+    Letter.Z,
+    Letter.SIGMA,
+    Letter.DELTA,
+    Letter.THETA,
+    Letter.OMEGA,
+    Letter.MU,
+    Letter.NU,
     // Type3: Cross-Shift variants
-    Letter.W_DASH, Letter.X_DASH, Letter.Y_DASH, Letter.Z_DASH,
-    Letter.SIGMA_DASH, Letter.DELTA_DASH, Letter.THETA_DASH, Letter.OMEGA_DASH,
+    Letter.W_DASH,
+    Letter.X_DASH,
+    Letter.Y_DASH,
+    Letter.Z_DASH,
+    Letter.SIGMA_DASH,
+    Letter.DELTA_DASH,
+    Letter.THETA_DASH,
+    Letter.OMEGA_DASH,
     // Type4: Dash Greek letters
-    Letter.PHI, Letter.PSI, Letter.LAMBDA,
+    Letter.PHI,
+    Letter.PSI,
+    Letter.LAMBDA,
     // Type5: Dual-Dash variants
-    Letter.PHI_DASH, Letter.PSI_DASH, Letter.LAMBDA_DASH,
+    Letter.PHI_DASH,
+    Letter.PSI_DASH,
+    Letter.LAMBDA_DASH,
     // Type6: Static Greek letters (α, β, Γ, ζ, η, τ, ⊕)
-    Letter.ALPHA, Letter.BETA, Letter.GAMMA,
-    Letter.ZETA, Letter.ETA, Letter.TAU, Letter.TERRA,
+    Letter.ALPHA,
+    Letter.BETA,
+    Letter.GAMMA,
+    Letter.ZETA,
+    Letter.ETA,
+    Letter.TAU,
+    Letter.TERRA,
   ];
 
   async initialize(): Promise<void> {
     if (this.ready) {
-      console.log('✅ GlyphCache: Already initialized');
+      console.log("✅ GlyphCache: Already initialized");
       return;
     }
 
-    console.log(`🔄 GlyphCache: Preloading ${this.LETTERS_TO_CACHE.length} glyphs...`);
+    console.log(
+      `🔄 GlyphCache: Preloading ${this.LETTERS_TO_CACHE.length} glyphs...`
+    );
     const startTime = performance.now();
 
     // Load all glyphs in parallel (max 10 at a time to avoid overwhelming the browser)
     const BATCH_SIZE = 10;
     for (let i = 0; i < this.LETTERS_TO_CACHE.length; i += BATCH_SIZE) {
       const batch = this.LETTERS_TO_CACHE.slice(i, i + BATCH_SIZE);
-      await Promise.all(batch.map(letter => this.loadGlyph(letter)));
+      await Promise.all(batch.map((letter) => this.loadGlyph(letter)));
     }
 
     this.ready = true;

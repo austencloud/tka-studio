@@ -73,7 +73,8 @@ export const createSnowflakeSystem = () => {
       speed:
         (Math.random() *
           (config.snowflake.maxSpeed - config.snowflake.minSpeed) +
-        config.snowflake.minSpeed) * (0.5 + depth * 0.5), // Vary speed by depth
+          config.snowflake.minSpeed) *
+        (0.5 + depth * 0.5), // Vary speed by depth
       size: size * (0.4 + depth * 0.6), // Smaller flakes appear further away
       sway: (Math.random() * 1 - 0.5) * (1 + depth),
       opacity: (Math.random() * 0.6 + 0.3) * (0.6 + depth * 0.4),
@@ -122,11 +123,13 @@ export const createSnowflakeSystem = () => {
     return flakes.map((flake) => {
       // Enhanced movement with gentle curves
       const swayOffset = Math.sin(flake.y * 0.01 + flake.sparklePhase) * 0.5;
-      const newX = flake.x + (flake.sway + windStrength + swayOffset) * frameMultiplier;
+      const newX =
+        flake.x + (flake.sway + windStrength + swayOffset) * frameMultiplier;
       const newY = flake.y + flake.speed * frameMultiplier;
 
       // Update rotation for gentle spinning
-      const newRotation = flake.rotation + flake.rotationSpeed * frameMultiplier;
+      const newRotation =
+        flake.rotation + flake.rotationSpeed * frameMultiplier;
 
       // Update sparkle animation
       const newSparklePhase = flake.sparklePhase + 0.05 * frameMultiplier;
@@ -176,9 +179,10 @@ export const createSnowflakeSystem = () => {
       ctx.rotate(flake.rotation);
 
       // Calculate sparkle intensity with smoother animation
-      const sparkleIntensity = flake.sparkle > 0
-        ? flake.sparkle * (0.6 + 0.4 * Math.sin(flake.sparklePhase))
-        : 0;
+      const sparkleIntensity =
+        flake.sparkle > 0
+          ? flake.sparkle * (0.6 + 0.4 * Math.sin(flake.sparklePhase))
+          : 0;
 
       // Enhanced depth-based effects
       const depthFactor = 0.3 + flake.depth * 0.7;
@@ -189,14 +193,14 @@ export const createSnowflakeSystem = () => {
       if (sparkleIntensity > 0.05) {
         // Outer soft glow
         ctx.globalAlpha = sparkleIntensity * 0.15;
-        ctx.fillStyle = '#ffffff';
-        ctx.shadowColor = '#b3d9ff';
+        ctx.fillStyle = "#ffffff";
+        ctx.shadowColor = "#b3d9ff";
         ctx.shadowBlur = bloomRadius * 3;
         ctx.fill(flake.shape);
 
         // Inner bright glow
         ctx.globalAlpha = sparkleIntensity * 0.25;
-        ctx.shadowColor = '#ffffff';
+        ctx.shadowColor = "#ffffff";
         ctx.shadowBlur = bloomRadius * 1.5;
         ctx.fill(flake.shape);
 
@@ -207,7 +211,7 @@ export const createSnowflakeSystem = () => {
       ctx.globalAlpha = baseOpacity + sparkleIntensity * 0.3;
       ctx.fillStyle = flake.color;
       ctx.strokeStyle = flake.color;
-      ctx.lineWidth = (0.3 + depthFactor * 0.4);
+      ctx.lineWidth = 0.3 + depthFactor * 0.4;
 
       // Enhanced rendering with both fill and stroke
       ctx.fill(flake.shape);
@@ -218,14 +222,14 @@ export const createSnowflakeSystem = () => {
         ctx.globalAlpha = sparkleIntensity * 0.9;
 
         // Central bright spot
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(0, 0, flake.size * 0.15, 0, Math.PI * 2);
         ctx.fill();
 
         // Cross sparkle effect
         const sparkleSize = flake.size * 0.4;
-        ctx.strokeStyle = '#f8faff';
+        ctx.strokeStyle = "#f8faff";
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.moveTo(-sparkleSize, 0);
@@ -238,7 +242,7 @@ export const createSnowflakeSystem = () => {
       // Subtle edge glow for depth
       if (flake.depth > 0.7) {
         ctx.globalAlpha = 0.1;
-        ctx.strokeStyle = '#e6f3ff';
+        ctx.strokeStyle = "#e6f3ff";
         ctx.lineWidth = 2;
         ctx.stroke(flake.shape);
       }
@@ -253,7 +257,8 @@ export const createSnowflakeSystem = () => {
     newDimensions: Dimensions,
     quality: string
   ): Snowflake[] => {
-    const densityMultiplier = quality === "low" ? 0.4 : quality === "medium" ? 0.7 : 1;
+    const densityMultiplier =
+      quality === "low" ? 0.4 : quality === "medium" ? 0.7 : 1;
     const targetCount = Math.floor(
       newDimensions.width *
         newDimensions.height *

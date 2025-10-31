@@ -23,6 +23,7 @@ I've successfully integrated **Firebase Authentication** into your TKA app with 
 ### ✅ Documentation
 
 Complete guides in the `docs/` folder:
+
 - **AUTH_README.md** - Start here! Quick overview
 - **FIREBASE_SETUP.md** - Create Firebase project (15 min)
 - **FACEBOOK_OAUTH_SETUP.md** - Enable Facebook login (20 min)
@@ -99,6 +100,7 @@ npm run dev
 ```
 
 Then visit:
+
 - `http://localhost:5173/auth/login` - Try logging in!
 - `http://localhost:5173/profile` - See your profile
 
@@ -175,11 +177,13 @@ Everything is customizable! The code is clean and well-commented:
 ## 📦 What You Got (vs What You Asked For)
 
 You asked for:
+
 - ✅ Facebook OAuth
 - ✅ Instagram connection (via Facebook - same login)
 - ✅ User account connection
 
 I also included:
+
 - ✅ Google OAuth (free bonus!)
 - ✅ User profile page
 - ✅ Complete documentation
@@ -190,6 +194,7 @@ I also included:
 ## 🔐 Security
 
 Already handled for you:
+
 - ✅ Environment variables (`.env` is gitignored)
 - ✅ HTTPS requirement (Netlify provides this)
 - ✅ Token validation (Firebase handles it)
@@ -197,6 +202,7 @@ Already handled for you:
 - ✅ XSS/CSRF protection (Firebase + SvelteKit handle it)
 
 You just need to:
+
 - Keep your Firebase config secret (already in `.env`)
 - Set up proper authorization rules (what users can access)
 - Add privacy policy and terms (required by Facebook)
@@ -206,12 +212,14 @@ You just need to:
 ### "Cannot find module '$env/static/public'"
 
 **This is normal!** It will go away once you:
+
 1. Add your Firebase config to `.env`
 2. Restart your dev server
 
 ### Other issues?
 
 Check the documentation:
+
 - [FIREBASE_SETUP.md - Common Issues](./docs/FIREBASE_SETUP.md#common-issues)
 - [FACEBOOK_OAUTH_SETUP.md - Troubleshooting](./docs/FACEBOOK_OAUTH_SETUP.md#common-issues--solutions)
 
@@ -235,6 +243,7 @@ After you complete the setup:
 ## 📝 Summary
 
 **What works RIGHT NOW:**
+
 - Authentication system (complete)
 - Login/logout (complete)
 - User profile (complete)
@@ -243,6 +252,7 @@ After you complete the setup:
 - Documentation (complete)
 
 **What you need to do:**
+
 - [ ] Follow [FIREBASE_SETUP.md](./docs/FIREBASE_SETUP.md) (15 min)
 - [ ] Update `.env` with Firebase config (2 min)
 - [ ] Follow [FACEBOOK_OAUTH_SETUP.md](./docs/FACEBOOK_OAUTH_SETUP.md) (20 min)

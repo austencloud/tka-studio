@@ -165,8 +165,8 @@ Import and use these pre-built components:
 
 ```typescript
 import {
-  SocialAuthButton,  // Branded login buttons
-  UserMenu           // User avatar + dropdown
+  SocialAuthButton, // Branded login buttons
+  UserMenu, // User avatar + dropdown
 } from "$shared/auth/components";
 ```
 
@@ -176,10 +176,10 @@ Use these reactive stores anywhere:
 
 ```typescript
 import {
-  user,            // Current user object
+  user, // Current user object
   isAuthenticated, // true/false
-  isLoading,       // true while checking auth
-  authStore        // Full store with methods
+  isLoading, // true while checking auth
+  authStore, // Full store with methods
 } from "$shared/auth";
 ```
 
@@ -225,9 +225,7 @@ import {
 4. Use in your code:
 
 ```svelte
-<SocialAuthButton provider="github">
-  Sign in with GitHub
-</SocialAuthButton>
+<SocialAuthButton provider="github">Sign in with GitHub</SocialAuthButton>
 ```
 
 ### Customize the Login Page
@@ -325,12 +323,14 @@ More troubleshooting in [Firebase Setup](./FIREBASE_SETUP.md#common-issues) and 
 ### What's Protected
 
 Firebase handles:
+
 - Token validation
 - Session management
 - XSS protection
 - CSRF protection
 
 You handle:
+
 - Authorization (what users can access)
 - Data validation
 - Business logic
@@ -340,12 +340,14 @@ You handle:
 Before going live:
 
 ### Firebase
+
 - [ ] Authorized domains configured
 - [ ] Security rules set (if using Firestore/Storage)
 - [ ] App Check enabled (optional but recommended)
 - [ ] Monitoring enabled
 
 ### Facebook App
+
 - [ ] Privacy Policy published and linked
 - [ ] Terms of Service published and linked
 - [ ] Data Deletion endpoint working
@@ -354,6 +356,7 @@ Before going live:
 - [ ] App Mode set to "Live"
 
 ### Your App
+
 - [ ] `.env` values are correct for production
 - [ ] Error handling implemented
 - [ ] Loading states look good
@@ -377,6 +380,7 @@ Before going live:
 ### Example Code
 
 Look at the working examples:
+
 - [src/routes/auth/login/+page.svelte](../src/routes/auth/login/+page.svelte) - Login page
 - [src/routes/profile/+page.svelte](../src/routes/profile/+page.svelte) - Profile page
 - [src/lib/shared/auth/](../src/lib/shared/auth/) - Auth system

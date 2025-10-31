@@ -8,12 +8,9 @@ Shows:
 - Quick stats
 -->
 <script lang="ts">
-  import type { LearningProgress } from '../domain';
+  import type { LearningProgress } from "../domain";
 
-  let {
-    progress,
-    compact = false
-  } = $props<{
+  let { progress, compact = false } = $props<{
     progress: LearningProgress;
     compact?: boolean;
   }>();
@@ -25,14 +22,14 @@ Shows:
 
   // Motivational messages based on progress
   const getMessage = (percent: number): string => {
-    if (percent === 0) return 'Begin your journey!';
-    if (percent < 10) return 'Taking your first steps...';
-    if (percent < 25) return 'Building foundations!';
-    if (percent < 50) return 'Making great progress!';
-    if (percent < 75) return 'Over halfway there!';
-    if (percent < 90) return 'Almost a master!';
-    if (percent < 100) return 'So close to mastery!';
-    return 'TKA Master! 🎉';
+    if (percent === 0) return "Begin your journey!";
+    if (percent < 10) return "Taking your first steps...";
+    if (percent < 25) return "Building foundations!";
+    if (percent < 50) return "Making great progress!";
+    if (percent < 75) return "Over halfway there!";
+    if (percent < 90) return "Almost a master!";
+    if (percent < 100) return "So close to mastery!";
+    return "TKA Master! 🎉";
   };
 
   const message = $derived(getMessage(progressPercent));
@@ -111,7 +108,7 @@ Shows:
     top: 0;
     left: 0;
     height: 100%;
-    background: linear-gradient(90deg, #4A90E2, #7B68EE, #50C878);
+    background: linear-gradient(90deg, #4a90e2, #7b68ee, #50c878);
     border-radius: 999px;
     transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;

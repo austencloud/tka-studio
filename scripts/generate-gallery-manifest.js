@@ -10,10 +10,10 @@
  * Run: npm run build:manifest
  */
 
-import { readdir, writeFile } from 'fs/promises';
-import { dirname, join } from 'path';
-import sharp from 'sharp';
-import { fileURLToPath } from 'url';
+import { readdir, writeFile } from "fs/promises";
+import { dirname, join } from "path";
+import sharp from "sharp";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -28,24 +28,26 @@ function calculateSequenceLength(word) {
 // Check if a sequence should be excluded
 function shouldExcludeSequence(sequenceName) {
   return (
-    sequenceName === 'A_A' ||
+    sequenceName === "A_A" ||
     sequenceName.length < 2 ||
-    sequenceName.toLowerCase().includes('test')
+    sequenceName.toLowerCase().includes("test")
   );
 }
 
 async function generateExploreManifest() {
-  console.log('🚀 Explore Manifest Generator');
-  console.log('=' .repeat(50));
+  console.log("🚀 Explore Manifest Generator");
+  console.log("=".repeat(50));
 
   const startTime = performance.now();
-  const staticDir = join(__dirname, '..', 'static');
-  const ExploreDir = join(staticDir, 'Explore');
-  const manifestPath = join(staticDir, 'Explore-manifest.json');
+  const staticDir = join(__dirname, "..", "static");
+  const ExploreDir = join(staticDir, "Explore");
+  const manifestPath = join(staticDir, "Explore-manifest.json");
 
   try {
-    console.log('📂 Scanning Explore directory...');
-    const sequenceDirectories = await readdir(ExploreDir, { withFileTypes: true });
+    console.log("📂 Scanning Explore directory...");
+    const sequenceDirectories = await readdir(ExploreDir, {
+      withFileTypes: true,
+    });
 
     const sequences = [];
     const errors = [];
@@ -69,16 +71,22 @@ async function generateExploreManifest() {
         const files = await readdir(sequenceDir);
 
         // Look for WebP image files (your Explore uses WebP, not PNG!)
-        let imageFile = files.find(file => file.endsWith('_ver1.webp'));
+        let imageFile = files.find((file) => file.endsWith("_ver1.webp"));
         if (!imageFile) {
-          imageFile = files.find(file => file.endsWith('_ver2.webp'));
+          imageFile = files.find((file) => file.endsWith("_ver2.webp"));
         }
         if (!imageFile) {
-          imageFile = files.find(file => file.endsWith('.webp') && !file.includes('test') && !file.includes('TEST') && !file.includes('backup'));
+          imageFile = files.find(
+            (file) =>
+              file.endsWith(".webp") &&
+              !file.includes("test") &&
+              !file.includes("TEST") &&
+              !file.includes("backup")
+          );
         }
 
         if (!imageFile) {
-          errors.push({ sequence: sequenceName, error: 'No WebP file found' });
+          errors.push({ sequence: sequenceName, error: "No WebP file found" });
           continue;
         }
 
@@ -95,7 +103,9 @@ async function generateExploreManifest() {
           height = metadata.height;
         } catch (sharpError) {
           // If sharp fails, use default dimensions
-          console.warn(`⚠️  Could not read dimensions for ${sequenceName}, using defaults`);
+          console.warn(
+            `⚠️  Could not read dimensions for ${sequenceName}, using defaults`
+          );
           width = 400;
           height = 400;
         }
@@ -121,7 +131,7 @@ async function generateExploreManifest() {
       } catch (error) {
         errors.push({
           sequence: sequenceName,
-          error: error.message
+          error: error.message,
         });
       }
     }
@@ -131,7 +141,7 @@ async function generateExploreManifest() {
 
     // Generate manifest
     const manifest = {
-      version: '1.0.0',
+      version: "1.0.0",
       generatedAt: new Date().toISOString(),
       totalCount: sequences.length,
       sequences,
@@ -142,31 +152,32 @@ async function generateExploreManifest() {
 
     const duration = Math.round(performance.now() - startTime);
 
-    console.log('');
-    console.log('✅ Manifest generated successfully!');
-    console.log('=' .repeat(50));
+    console.log("");
+    console.log("✅ Manifest generated successfully!");
+    console.log("=".repeat(50));
     console.log(`📊 Statistics:`);
     console.log(`   • Total sequences: ${sequences.length}`);
-    console.log(`   • WebP available: ${sequences.filter(s => s.hasWebP).length}`);
-    console.log(`   • PNG only: ${sequences.filter(s => !s.hasWebP).length}`);
+    console.log(
+      `   • WebP available: ${sequences.filter((s) => s.hasWebP).length}`
+    );
+    console.log(`   • PNG only: ${sequences.filter((s) => !s.hasWebP).length}`);
     console.log(`   • Skipped: ${skippedCount}`);
     console.log(`   • Errors: ${errors.length}`);
     console.log(`   • Generation time: ${duration}ms`);
     console.log(`   • Output: static/Explore-manifest.json`);
 
     if (errors.length > 0) {
-      console.log('');
-      console.log('⚠️  Errors encountered:');
+      console.log("");
+      console.log("⚠️  Errors encountered:");
       errors.forEach(({ sequence, error }) => {
         console.log(`   • ${sequence}: ${error}`);
       });
     }
 
-    console.log('');
-    console.log('🎉 Done! Your Explore will now load much faster.');
-
+    console.log("");
+    console.log("🎉 Done! Your Explore will now load much faster.");
   } catch (error) {
-    console.error('❌ Failed to generate manifest:', error);
+    console.error("❌ Failed to generate manifest:", error);
     process.exit(1);
   }
 }

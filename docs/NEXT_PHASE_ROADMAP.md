@@ -5,6 +5,7 @@ Now that authentication is set up, here's the roadmap for maximizing user engage
 ## Overview
 
 Transform TKA from a sequence explorer into a **social platform** where users can:
+
 - Save favorite sequences
 - Create personal collections
 - Rate and review sequences
@@ -77,6 +78,7 @@ firestore/
 ## Phase 2A: Favorites System (Week 1-2)
 
 ### Features
+
 1. **Heart Button** on each sequence
 2. **My Favorites** section in Explore
 3. **Quick access** to saved sequences
@@ -86,7 +88,14 @@ firestore/
 
 ```typescript
 // src/lib/shared/user-content/services/FavoritesService.ts
-import { doc, setDoc, deleteDoc, collection, query, where } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  deleteDoc,
+  collection,
+  query,
+  where,
+} from "firebase/firestore";
 import { db } from "$shared/auth";
 
 export class FavoritesService {
@@ -94,7 +103,7 @@ export class FavoritesService {
     const favoriteRef = doc(db, `users/${userId}/favorites/${sequenceId}`);
     await setDoc(favoriteRef, {
       sequenceId,
-      savedAt: new Date().toISOString()
+      savedAt: new Date().toISOString(),
     });
   }
 
@@ -106,7 +115,7 @@ export class FavoritesService {
   async getFavorites(userId: string) {
     const favoritesRef = collection(db, `users/${userId}/favorites`);
     const snapshot = await getDocs(favoritesRef);
-    return snapshot.docs.map(doc => doc.data());
+    return snapshot.docs.map((doc) => doc.data());
   }
 
   async isFavorited(userId: string, sequenceId: string) {
@@ -156,8 +165,9 @@ export class FavoritesService {
   // Check if favorited on mount
   $effect(() => {
     if ($user) {
-      favoritesService.isFavorited($user.uid, sequenceId)
-        .then(result => isFavorited = result);
+      favoritesService
+        .isFavorited($user.uid, sequenceId)
+        .then((result) => (isFavorited = result));
     }
   });
 </script>
@@ -174,6 +184,7 @@ export class FavoritesService {
 ```
 
 ### Integration Points
+
 - Add to: `OptimizedGalleryGrid.svelte`
 - Add to: `SequenceDisplayPanel.svelte`
 - New route: `/gallery/favorites`
@@ -181,6 +192,7 @@ export class FavoritesService {
 ## Phase 2B: User Profiles (Week 3-4)
 
 ### Features
+
 1. **Public profile pages** (`/users/{username}`)
 2. **Profile editing** (`/settings/profile`)
 3. **User statistics** (sequences created, favorites, etc.)
@@ -192,7 +204,7 @@ export class FavoritesService {
 ```typescript
 export interface UserProfile {
   userId: string;
-  username: string;          // Unique username for URLs
+  username: string; // Unique username for URLs
   displayName: string;
   photoURL: string | null;
   bio: string;
@@ -228,21 +240,21 @@ export class UserProfileService {
       userId,
       ...data,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
   }
 
   async getProfile(userId: string): Promise<UserProfile | null> {
     const profileRef = doc(db, `users/${userId}/profile/main`);
     const snapshot = await getDoc(profileRef);
-    return snapshot.exists() ? snapshot.data() as UserProfile : null;
+    return snapshot.exists() ? (snapshot.data() as UserProfile) : null;
   }
 
   async updateProfile(userId: string, updates: Partial<UserProfile>) {
     const profileRef = doc(db, `users/${userId}/profile/main`);
     await updateDoc(profileRef, {
       ...updates,
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
   }
 
@@ -260,6 +272,7 @@ export class UserProfileService {
 ### UI Components
 
 **Profile Page** (`/users/[username]/+page.svelte`):
+
 ```svelte
 <script lang="ts">
   import { page } from "$app/stores";
@@ -270,11 +283,10 @@ export class UserProfileService {
 
   $effect(() => {
     const username = $page.params.username;
-    userProfileService.getUserByUsername(username)
-      .then(data => {
-        profile = data;
-        loading = false;
-      });
+    userProfileService.getUserByUsername(username).then((data) => {
+      profile = data;
+      loading = false;
+    });
   });
 </script>
 
@@ -312,6 +324,7 @@ export class UserProfileService {
 ## Phase 2C: Collections (Week 5-6)
 
 ### Features
+
 1. **Create collections** of sequences
 2. **Organize favorites** into collections
 3. **Share collections** with others
@@ -328,7 +341,7 @@ export interface Collection {
   sequenceIds: string[];
 
   metadata: {
-    coverImage: string;      // First sequence thumbnail
+    coverImage: string; // First sequence thumbnail
     sequenceCount: number;
   };
 
@@ -349,6 +362,7 @@ export interface Collection {
 ## Phase 2D: Ratings & Reviews (Week 7)
 
 ### Features
+
 1. **5-star rating** system
 2. **Written reviews** (optional)
 3. **Average rating** display
@@ -385,14 +399,19 @@ export interface SequenceStats {
 ```typescript
 // RatingService.ts
 export class RatingService {
-  async rateSequence(sequenceId: string, userId: string, rating: number, review?: string) {
+  async rateSequence(
+    sequenceId: string,
+    userId: string,
+    rating: number,
+    review?: string
+  ) {
     const ratingRef = doc(db, `ratings/${sequenceId}/${userId}`);
 
     await setDoc(ratingRef, {
       rating,
       review,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     });
 
     // Update sequence stats
@@ -403,22 +422,22 @@ export class RatingService {
     const ratingsRef = collection(db, `ratings/${sequenceId}`);
     const snapshot = await getDocs(ratingsRef);
 
-    const ratings = snapshot.docs.map(doc => doc.data().rating);
+    const ratings = snapshot.docs.map((doc) => doc.data().rating);
     const average = ratings.reduce((a, b) => a + b, 0) / ratings.length;
 
     const distribution = {
-      5: ratings.filter(r => r === 5).length,
-      4: ratings.filter(r => r === 4).length,
-      3: ratings.filter(r => r === 3).length,
-      2: ratings.filter(r => r === 2).length,
-      1: ratings.filter(r => r === 1).length,
+      5: ratings.filter((r) => r === 5).length,
+      4: ratings.filter((r) => r === 4).length,
+      3: ratings.filter((r) => r === 3).length,
+      2: ratings.filter((r) => r === 2).length,
+      1: ratings.filter((r) => r === 1).length,
     };
 
     const statsRef = doc(db, `sequences/${sequenceId}/stats`);
     await setDoc(statsRef, {
       averageRating: average,
       ratingCount: ratings.length,
-      ratingDistribution: distribution
+      ratingDistribution: distribution,
     });
   }
 }
@@ -427,6 +446,7 @@ export class RatingService {
 ## Phase 2E: Social Features (Week 8-9)
 
 ### Features
+
 1. **Follow users**
 2. **Activity feed** (following tab)
 3. **Comments** on sequences
@@ -439,7 +459,7 @@ export class SocialService {
   async followUser(followerId: string, followedId: string) {
     const followRef = doc(db, `social/followers/${followedId}/${followerId}`);
     await setDoc(followRef, {
-      followedAt: new Date().toISOString()
+      followedAt: new Date().toISOString(),
     });
 
     // Update stats
@@ -458,7 +478,7 @@ export class SocialService {
   async getFollowers(userId: string) {
     const followersRef = collection(db, `social/followers/${userId}`);
     const snapshot = await getDocs(followersRef);
-    return snapshot.docs.map(doc => doc.id);
+    return snapshot.docs.map((doc) => doc.id);
   }
 }
 ```
@@ -611,6 +631,7 @@ export class CachedFavoritesService {
 ## Implementation Order (Recommended)
 
 ### Sprint 1: Foundation (Week 1-2)
+
 - [ ] Set up Firestore
 - [ ] Create base services (Favorites, UserProfile)
 - [ ] Add Firestore to DI container
@@ -618,6 +639,7 @@ export class CachedFavoritesService {
 - [ ] Add "My Favorites" page in Explore
 
 ### Sprint 2: Profiles (Week 3-4)
+
 - [ ] User profile schema & service
 - [ ] Profile page UI
 - [ ] Profile settings page
@@ -625,6 +647,7 @@ export class CachedFavoritesService {
 - [ ] Profile picture upload (optional)
 
 ### Sprint 3: Collections (Week 5-6)
+
 - [ ] Collections service
 - [ ] Collection creation UI
 - [ ] Collection detail page
@@ -632,6 +655,7 @@ export class CachedFavoritesService {
 - [ ] Drag-and-drop reordering
 
 ### Sprint 4: Ratings (Week 7)
+
 - [ ] Rating service
 - [ ] Rating widget component
 - [ ] Display average ratings
@@ -639,6 +663,7 @@ export class CachedFavoritesService {
 - [ ] Review system
 
 ### Sprint 5: Social (Week 8-9)
+
 - [ ] Follow system
 - [ ] Activity feed
 - [ ] Comments (optional)

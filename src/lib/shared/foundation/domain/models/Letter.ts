@@ -150,7 +150,17 @@ export function getLetterType(letter: Letter): LetterType {
   }
 
   // Type6: Static (α, β, Γ, ζ, η, τ, ⊕)
-  if ([Letter.ALPHA, Letter.BETA, Letter.GAMMA, Letter.ZETA, Letter.ETA, Letter.TAU, Letter.TERRA].includes(letter)) {
+  if (
+    [
+      Letter.ALPHA,
+      Letter.BETA,
+      Letter.GAMMA,
+      Letter.ZETA,
+      Letter.ETA,
+      Letter.TAU,
+      Letter.TERRA,
+    ].includes(letter)
+  ) {
     return LetterType.TYPE6;
   }
 

@@ -1,9 +1,9 @@
 // Clean Shared Background Models - Only truly shared interfaces
 
 import type {
-    Dimensions,
-    PerformanceMetrics,
-    QualityLevel,
+  Dimensions,
+  PerformanceMetrics,
+  QualityLevel,
 } from "../types/background-types";
 
 export interface GradientStop {

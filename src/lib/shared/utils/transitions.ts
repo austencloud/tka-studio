@@ -4,7 +4,7 @@
  * Provides reusable transition functions for Svelte components
  */
 
-import type { TransitionConfig } from 'svelte/transition';
+import type { TransitionConfig } from "svelte/transition";
 
 export interface SlideTransitionOptions {
   /**
@@ -17,13 +17,13 @@ export interface SlideTransitionOptions {
    * Direction to slide from
    * @default 'bottom'
    */
-  direction?: 'top' | 'bottom' | 'left' | 'right';
+  direction?: "top" | "bottom" | "left" | "right";
 
   /**
    * Easing function
    * @default 'cubic'
    */
-  easing?: 'cubic' | 'linear';
+  easing?: "cubic" | "linear";
 }
 
 export interface FadeTransitionOptions {
@@ -55,27 +55,23 @@ export function slideTransition(
   node: Element,
   options: SlideTransitionOptions = {}
 ): TransitionConfig {
-  const {
-    duration = 350,
-    direction = 'bottom',
-    easing = 'cubic',
-  } = options;
+  const { duration = 350, direction = "bottom", easing = "cubic" } = options;
 
   const computedStyle = getComputedStyle(node);
   const opacity = parseFloat(computedStyle.opacity);
 
   // Determine transform based on direction
   const getTransform = (t: number) => {
-    const easedT = easing === 'cubic' ? cubicOut(t) : t;
+    const easedT = easing === "cubic" ? cubicOut(t) : t;
 
     switch (direction) {
-      case 'bottom':
+      case "bottom":
         return `translateY(${(1 - easedT) * 100}%)`;
-      case 'top':
+      case "top":
         return `translateY(${(easedT - 1) * 100}%)`;
-      case 'right':
+      case "right":
         return `translateX(${(1 - easedT) * 100}%)`;
-      case 'left':
+      case "left":
         return `translateX(${(easedT - 1) * 100}%)`;
       default:
         return `translateY(${(1 - easedT) * 100}%)`;
@@ -101,10 +97,7 @@ export function fadeTransition(
   node: Element,
   options: FadeTransitionOptions = {}
 ): TransitionConfig {
-  const {
-    duration = 250,
-    delay = 0,
-  } = options;
+  const { duration = 250, delay = 0 } = options;
 
   return {
     duration,
@@ -209,15 +202,15 @@ export function springScaleTransition(
       } else if (t < 0.7) {
         // Second phase: settle from 1.2 to 0.92 (deeper undershoot)
         const phase = (t - 0.45) / 0.25;
-        scale = 1.2 - (phase * 0.28);
+        scale = 1.2 - phase * 0.28;
       } else if (t < 0.85) {
         // Third phase: bounce back from 0.92 to 1.04 (subtle bounce)
         const phase = (t - 0.7) / 0.15;
-        scale = 0.92 + (phase * 0.12);
+        scale = 0.92 + phase * 0.12;
       } else {
         // Final phase: settle to 1.0
         const phase = (t - 0.85) / 0.15;
-        scale = 1.04 - (phase * 0.04);
+        scale = 1.04 - phase * 0.04;
       }
 
       return `

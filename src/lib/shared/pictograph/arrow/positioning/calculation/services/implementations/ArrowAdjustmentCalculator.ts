@@ -23,7 +23,12 @@ import type {
   ISpecialPlacementService,
   ITurnsTupleKeyGenerator,
 } from "$shared";
-import { type MotionData, type PictographData, GridLocation, GridMode } from "$shared";
+import {
+  type MotionData,
+  type PictographData,
+  GridLocation,
+  GridMode,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { Point } from "fabric";
 import { inject, injectable } from "inversify";

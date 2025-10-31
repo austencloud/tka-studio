@@ -6,15 +6,15 @@
 export const SnowfallConfig = {
   snowflake: {
     colors: [
-      "#ffffff",    // Pure crystalline white
-      "#f8faff",    // Soft cloud white
-      "#e8f4f8",    // Icy blue-white
-      "#e6f2ff",    // Gentle sky blue
-      "#f0f8ff",    // Alice blue
-      "#dde7ff",    // Soft periwinkle
-      "#e8e8ff",    // Lavender mist
-      "#f5f5ff",    // Faint purple-white
-      "#e0f0ff",    // Winter morning blue
+      "#ffffff", // Pure crystalline white
+      "#f8faff", // Soft cloud white
+      "#e8f4f8", // Icy blue-white
+      "#e6f2ff", // Gentle sky blue
+      "#f0f8ff", // Alice blue
+      "#dde7ff", // Soft periwinkle
+      "#e8e8ff", // Lavender mist
+      "#f5f5ff", // Faint purple-white
+      "#e0f0ff", // Winter morning blue
     ],
     minSize: 1.5,
     maxSize: 12,
@@ -25,13 +25,13 @@ export const SnowfallConfig = {
   },
   shootingStar: {
     colors: [
-      "#ffffff",    // Pure white
-      "#f8faff",    // Soft white
-      "#e8f4f8",    // Icy blue
-      "#dde7ff",    // Soft blue
-      "#f0f8ff",    // Alice blue
-      "#e6f2ff",    // Gentle sky
-      "#fff8e7",    // Warm white
+      "#ffffff", // Pure white
+      "#f8faff", // Soft white
+      "#e8f4f8", // Icy blue
+      "#dde7ff", // Soft blue
+      "#f0f8ff", // Alice blue
+      "#e6f2ff", // Gentle sky
+      "#fff8e7", // Warm white
     ],
     minSize: 1.5,
     maxSize: 3.5,
@@ -51,12 +51,12 @@ export const SnowfallConfig = {
  */
 export const CoreBackgroundConfig = {
   gradientStops: [
-    { position: 0, color: "#0a0e1a" },      // Deep midnight blue
-    { position: 0.2, color: "#1a1d3a" },   // Rich indigo
-    { position: 0.4, color: "#2d2560" },   // Deep purple-blue
-    { position: 0.65, color: "#1e2a4a" },  // Winter evening blue
-    { position: 0.85, color: "#0f1c3d" },  // Deep ocean blue
-    { position: 1, color: "#041426" },     // Deepest night
+    { position: 0, color: "#0a0e1a" }, // Deep midnight blue
+    { position: 0.2, color: "#1a1d3a" }, // Rich indigo
+    { position: 0.4, color: "#2d2560" }, // Deep purple-blue
+    { position: 0.65, color: "#1e2a4a" }, // Winter evening blue
+    { position: 0.85, color: "#0f1c3d" }, // Deep ocean blue
+    { position: 1, color: "#041426" }, // Deepest night
   ],
 } as const;
 

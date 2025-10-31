@@ -307,8 +307,10 @@ h6 {
   /* Sheet Shadows */
   --sheet-shadow-bottom: 0 -12px 32px rgba(0, 0, 0, 0.35);
   --sheet-shadow-top: 0 12px 32px rgba(0, 0, 0, 0.35);
-  --sheet-shadow-right: -8px 0 32px rgba(0, 0, 0, 0.3), -2px 0 8px rgba(0, 0, 0, 0.2);
-  --sheet-shadow-left: 8px 0 32px rgba(0, 0, 0, 0.3), 2px 0 8px rgba(0, 0, 0, 0.2);
+  --sheet-shadow-right:
+    -8px 0 32px rgba(0, 0, 0, 0.3), -2px 0 8px rgba(0, 0, 0, 0.2);
+  --sheet-shadow-left:
+    8px 0 32px rgba(0, 0, 0, 0.3), 2px 0 8px rgba(0, 0, 0, 0.2);
   --sheet-shadow-elevated: 0 -20px 60px rgba(0, 0, 0, 0.5);
 
   /* Sheet Borders */
@@ -571,8 +573,6 @@ body.deep-ocean-flow::before {
   border-radius: 12px;
   box-shadow: var(--shadow-glass);
 }
-
-
 
 /* Button Styles */
 .btn {

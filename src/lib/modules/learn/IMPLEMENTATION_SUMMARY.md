@@ -17,6 +17,7 @@ After analyzing your Build tab patterns and weighing the pros/cons, we chose **b
 ## 🏗️ Core Components
 
 ### 1. LearnTab.svelte (Master Container)
+
 - **No header bar** - Maximizes screen space
 - **Bottom nav controls mode** - Via existing BottomNavigation component
 - **Three mode panels**: Concepts | Drills | Read
@@ -25,6 +26,7 @@ After analyzing your Build tab patterns and weighing the pros/cons, we chose **b
 - **Safe area insets** - Respects iPhone notches
 
 **2026 Features**:
+
 - Container query responsive sizing (no media queries!)
 - Modern glass morphism with `backdrop-filter: blur(16px) saturate(180%)`
 - Reactive state throughout
@@ -32,6 +34,7 @@ After analyzing your Build tab patterns and weighing the pros/cons, we chose **b
 - Adaptive positioning (moves Codex button to thumb zone on mobile)
 
 ### 2. Navigation State Updates
+
 - Updated `LEARN_MODES` with Font Awesome icons:
   - 🎓 Concepts: `<i class="fas fa-graduation-cap"></i>`
   - ⚡ Drills: `<i class="fas fa-bolt"></i>`
@@ -50,8 +53,9 @@ border-radius: 14px;
 
 /* Hover: Lift and glow */
 transform: translateY(-2px) scale(1.02);
-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2),
-            0 0 20px rgba(255, 255, 255, 0.1);
+box-shadow:
+  0 8px 24px rgba(0, 0, 0, 0.2),
+  0 0 20px rgba(255, 255, 255, 0.1);
 
 /* Active state: Accent color */
 background: rgba(74, 158, 255, 0.15);
@@ -59,6 +63,7 @@ border-color: rgba(74, 158, 255, 0.3);
 ```
 
 **Responsive Behavior**:
+
 - Desktop: Top-right, full label "Letters"
 - Mobile portrait: Bottom-right (above nav), icon only
 - Safe areas: Respects notches via `env(safe-area-inset-*)`
@@ -66,11 +71,13 @@ border-color: rgba(74, 158, 255, 0.3);
 ### 4. Progressive Learning Components (Already Built)
 
 ✅ **Domain Layer**:
+
 - `concepts.ts` - 28 TKA concepts mapped from Level 1 PDF
 - `types.ts` - Full type system
 - `ConceptProgressService.ts` - localStorage persistence + spaced repetition
 
 ✅ **UI Components**:
+
 - `ConceptPathView` - Scrollable card-based path
 - `ConceptCard` - Interactive concept cards with 4 states
 - `ConceptDetailView` - Full detail with Learn/Practice/Stats tabs
@@ -80,6 +87,7 @@ border-color: rgba(74, 158, 255, 0.3);
 ## 🎨 2026 Code Patterns Used
 
 ### 1. Container Queries (No Hardcoded Breakpoints!)
+
 ```css
 /* Enable container queries */
 container-type: size;
@@ -97,6 +105,7 @@ container-name: learn-tab;
 ```
 
 ### 2. Modern Glass Morphism
+
 ```css
 background: rgba(255, 255, 255, 0.08); /* Very low opacity */
 backdrop-filter: blur(16px) saturate(180%);
@@ -104,8 +113,9 @@ border: 1px solid rgba(255, 255, 255, 0.12);
 ```
 
 ### 3. Reactive Svelte 5 Runes
+
 ```typescript
-let activeMode = $state<LearnMode>('concepts');
+let activeMode = $state<LearnMode>("concepts");
 let isCodexOpen = $state(false);
 
 // Reactive effects
@@ -116,12 +126,14 @@ $effect(() => {
 ```
 
 ### 4. Hardware-Accelerated Animations
+
 ```css
 transform: translateY(-2px) scale(1.02); /* GPU accelerated */
 transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1); /* Material easing */
 ```
 
 ### 5. Safe Area Insets (Notched Devices)
+
 ```css
 @supports (top: env(safe-area-inset-top)) {
   .floating-codex-button {
@@ -132,6 +144,7 @@ transition: all 250ms cubic-bezier(0.4, 0, 0.2, 1); /* Material easing */
 ```
 
 ### 6. Reduced Motion Accessibility
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   .floating-codex-button {
@@ -179,18 +192,21 @@ src/lib/shared/navigation/
 ## 🎯 What Remains (Future Enhancements)
 
 ### Short-Term Polish:
+
 1. **Replace emoji icons in concepts.ts** with Font Awesome (minor visual upgrade)
 2. **Add glassmorphism to ConceptCard** - Match floating button style
 3. **Add container queries to ConceptPathView** - Remove media query breakpoints
 4. **Polish ConceptDetailView** - Modern button styling
 
 ### Medium-Term Features:
+
 1. **Concept-specific practice** - Connect Practice tab to quiz system
 2. **Spaced repetition reviews** - Surface concepts due for review
 3. **Badge display** - Show earned achievements
 4. **PDF integration** - Embed relevant pages in Learn tab
 
 ### Long-Term Vision:
+
 1. **Adaptive learning** - AI-powered question generation
 2. **Video tutorials** - Embedded instructional videos
 3. **Community content** - User-generated practice questions
@@ -198,11 +214,13 @@ src/lib/shared/navigation/
 ## 🚀 How to Test
 
 ### In Development:
+
 ```bash
 npm run dev
 ```
 
 ### Test Scenarios:
+
 1. **Open Learn tab** → See Concepts view with 28 cards
 2. **Click bottom nav tabs** → Switch between Concepts/Drills/Read
 3. **Click floating "Letters" button** → Codex panel slides in
@@ -213,6 +231,7 @@ npm run dev
 8. **Refresh page** → Last viewed mode is restored
 
 ### Expected Behavior:
+
 - ✅ Bottom nav shows 3 tabs with Font Awesome icons
 - ✅ Floating Codex button has glass morphism effect
 - ✅ Codex button moves position based on screen size/orientation
@@ -224,6 +243,7 @@ npm run dev
 ## 📊 Performance Notes
 
 ### Optimizations Implemented:
+
 - **Component reuse** - Mode panels use `display: none` instead of unmounting
 - **Container queries** - Less JavaScript, more CSS
 - **Hardware acceleration** - Transform/opacity animations
@@ -231,6 +251,7 @@ npm run dev
 - **Lazy state management** - ConceptProgressService only loads on demand
 
 ### Bundle Size Impact:
+
 - No additional dependencies
 - Removed LearnTabHeader (code reduction)
 - Existing components reused (QuizTab, ReadTab, CodexPanel)
@@ -238,6 +259,7 @@ npm run dev
 ## 🎨 Design Philosophy
 
 ### Mobile-First 2026 Patterns:
+
 1. **Bottom navigation for primary nav** - Thumb-reachable
 2. **Floating action buttons for tools** - Quick access, minimal UI
 3. **Glass morphism over solid backgrounds** - Modern, depth-creating
@@ -246,6 +268,7 @@ npm run dev
 6. **Reduced motion support** - Accessibility first
 
 ### Why This Architecture Works:
+
 - **Scales to more learning modes** - Just add another tab
 - **Consistent with mobile UX trends** - Users understand it instantly
 - **Different from Build (by design)** - Learn navigates, Build manipulates
@@ -253,6 +276,7 @@ npm run dev
 - **Accessible** - Keyboard nav, screen readers, reduced motion
 
 ## 🔧 Technical Debt Removed:
+
 - ❌ LearnTabHeader - Deleted (not needed with bottom nav)
 - ❌ Emoji icons in navigation - Replaced with Font Awesome
 - ❌ Hardcoded breakpoints - Replaced with container queries
@@ -261,6 +285,7 @@ npm run dev
 ## 🎉 Result
 
 You now have a **gorgeous, modern, mobile-first Learn tab** that:
+
 - Uses industry-standard bottom navigation
 - Features 2026-style glass morphism
 - Adapts to any screen size with container queries

@@ -5,14 +5,14 @@
   Handles both native install prompts and fallback to instruction guide.
 -->
 <script lang="ts">
-  import type { IHapticFeedbackService, IMobileFullscreenService } from "$shared";
+  import type {
+    IHapticFeedbackService,
+    IMobileFullscreenService,
+  } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
-  let {
-    canUseNativeInstall = false,
-    onInstall,
-  } = $props<{
+  let { canUseNativeInstall = false, onInstall } = $props<{
     canUseNativeInstall?: boolean;
     onInstall?: () => void;
   }>();

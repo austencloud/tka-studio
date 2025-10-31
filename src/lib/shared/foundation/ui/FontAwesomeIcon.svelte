@@ -11,7 +11,7 @@ Renders Font Awesome icons with customizable size, color, and style
     class: className = "",
     title,
     ariaLabel,
-    ariaHidden = false
+    ariaHidden = false,
   } = $props<{
     icon: string;
     style?: "solid" | "regular" | "brands";
@@ -43,7 +43,7 @@ Renders Font Awesome icons with customizable size, color, and style
 <i
   class={iconClass}
   style:font-size={size}
-  style:color={color}
+  style:color
   {title}
   aria-label={ariaLabel}
   aria-hidden={ariaHidden}
@@ -55,4 +55,3 @@ Renders Font Awesome icons with customizable size, color, and style
     line-height: 1;
   }
 </style>
-

@@ -29,7 +29,9 @@ test.describe("SequenceDisplay Reactivity", () => {
     const sequenceContainer = page.locator(".sequence-container");
 
     if ((await sequenceContainer.count()) === 0) {
-      console.log("⚠️ Sequence display not visible - may need to create sequence first");
+      console.log(
+        "⚠️ Sequence display not visible - may need to create sequence first"
+      );
       return;
     }
 
@@ -282,7 +284,9 @@ test.describe("SequenceDisplay Reactivity", () => {
     const beatGridWrapper = page.locator(".beat-grid-wrapper");
 
     if ((await beatGridWrapper.count()) === 0) {
-      console.log("⚠️ Beat grid wrapper not found - skipping rapid events test");
+      console.log(
+        "⚠️ Beat grid wrapper not found - skipping rapid events test"
+      );
       return;
     }
 
@@ -304,13 +308,16 @@ test.describe("SequenceDisplay Reactivity", () => {
         });
 
         // Complete at the end
-        setTimeout(() => {
-          wrapper.dispatchEvent(
-            new CustomEvent("sequential-animation-complete", {
-              bubbles: true,
-            })
-          );
-        }, letters.length * 50 + 100);
+        setTimeout(
+          () => {
+            wrapper.dispatchEvent(
+              new CustomEvent("sequential-animation-complete", {
+                bubbles: true,
+              })
+            );
+          },
+          letters.length * 50 + 100
+        );
       }
     });
 
@@ -435,7 +442,10 @@ test.describe("SequenceDisplay Reactivity", () => {
     const wordLabel = page.locator(".word-label");
     const beatGridWrapper = page.locator(".beat-grid-wrapper");
 
-    if ((await wordLabel.count()) === 0 || (await beatGridWrapper.count()) === 0) {
+    if (
+      (await wordLabel.count()) === 0 ||
+      (await beatGridWrapper.count()) === 0
+    ) {
       console.log("⚠️ Components not found - skipping position test");
       return;
     }

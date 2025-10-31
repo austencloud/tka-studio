@@ -1,309 +1,345 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Button Panel Clear Test</title>
-  <script src="https://cdn.jsdelivr.net/npm/@formkit/auto-animate@1.0.0-beta.6/index.min.js"></script>
-  <style>
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      padding: 40px;
-      background: #1a1a1a;
-      color: white;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Button Panel Clear Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@formkit/auto-animate@1.0.0-beta.6/index.min.js"></script>
+    <style>
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        padding: 40px;
+        background: #1a1a1a;
+        color: white;
+      }
 
-    .test-container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+      .test-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
 
-    .button-panel {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      background: #2a2a2a;
-      border-radius: 24px;
-      padding: 16px 24px;
-      margin: 20px 0;
-    }
+      .button-panel {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        background: #2a2a2a;
+        border-radius: 24px;
+        padding: 16px 24px;
+        margin: 20px 0;
+      }
 
-    .left-zone, .right-zone {
-      display: flex;
-      gap: 12px;
-      flex-shrink: 0;
-    }
+      .left-zone,
+      .right-zone {
+        display: flex;
+        gap: 12px;
+        flex-shrink: 0;
+      }
 
-    .center-zone {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      flex-grow: 1;
-    }
+      .center-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        flex-grow: 1;
+      }
 
-    .center-zone > div {
-      display: inline-block;
-    }
+      .center-zone > div {
+        display: inline-block;
+      }
 
-    button {
-      padding: 12px 20px;
-      border-radius: 12px;
-      border: none;
-      background: #4a4a4a;
-      color: white;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: background 0.2s;
-    }
+      button {
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: none;
+        background: #4a4a4a;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: background 0.2s;
+      }
 
-    button:hover {
-      background: #5a5a5a;
-    }
+      button:hover {
+        background: #5a5a5a;
+      }
 
-    .controls {
-      display: flex;
-      gap: 12px;
-      margin: 20px 0;
-    }
+      .controls {
+        display: flex;
+        gap: 12px;
+        margin: 20px 0;
+      }
 
-    .controls button {
-      background: #0066cc;
-    }
+      .controls button {
+        background: #0066cc;
+      }
 
-    .controls button:hover {
-      background: #0052a3;
-    }
+      .controls button:hover {
+        background: #0052a3;
+      }
 
-    .log {
-      background: #000;
-      padding: 16px;
-      border-radius: 8px;
-      font-family: 'Courier New', monospace;
-      font-size: 12px;
-      max-height: 400px;
-      overflow-y: auto;
-      margin-top: 20px;
-    }
+      .log {
+        background: #000;
+        padding: 16px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        max-height: 400px;
+        overflow-y: auto;
+        margin-top: 20px;
+      }
 
-    .log-entry {
-      margin: 4px 0;
-      padding: 4px;
-    }
+      .log-entry {
+        margin: 4px 0;
+        padding: 4px;
+      }
 
-    .log-entry.info { color: #00ff00; }
-    .log-entry.warn { color: #ffaa00; }
-    .log-entry.error { color: #ff0000; }
-    .log-entry.debug { color: #00aaff; }
+      .log-entry.info {
+        color: #00ff00;
+      }
+      .log-entry.warn {
+        color: #ffaa00;
+      }
+      .log-entry.error {
+        color: #ff0000;
+      }
+      .log-entry.debug {
+        color: #00aaff;
+      }
 
-    .state-display {
-      background: #2a2a2a;
-      padding: 16px;
-      border-radius: 8px;
-      margin: 20px 0;
-    }
+      .state-display {
+        background: #2a2a2a;
+        padding: 16px;
+        border-radius: 8px;
+        margin: 20px 0;
+      }
 
-    .state-display h3 {
-      margin-top: 0;
-    }
+      .state-display h3 {
+        margin-top: 0;
+      }
 
-    .state-item {
-      margin: 8px 0;
-      padding: 8px;
-      background: #3a3a3a;
-      border-radius: 4px;
-    }
+      .state-item {
+        margin: 8px 0;
+        padding: 8px;
+        background: #3a3a3a;
+        border-radius: 4px;
+      }
 
-    .state-item.active {
-      background: #005500;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <div class="test-container">
-    <h1>Button Panel Clear Test</h1>
-    <p>Testing AutoAnimate guard to prevent repositioning during clear sequence</p>
+      .state-item.active {
+        background: #005500;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="test-container">
+      <h1>Button Panel Clear Test</h1>
+      <p>
+        Testing AutoAnimate guard to prevent repositioning during clear sequence
+      </p>
 
-    <div class="state-display">
-      <h3>Current State</h3>
-      <div class="state-item" id="centerZoneCount">Center Zone Buttons: 0</div>
-      <div class="state-item" id="clearingState">isClearing: false</div>
-      <div class="state-item" id="animationPlugin">Custom Plugin Active: false</div>
+      <div class="state-display">
+        <h3>Current State</h3>
+        <div class="state-item" id="centerZoneCount">
+          Center Zone Buttons: 0
+        </div>
+        <div class="state-item" id="clearingState">isClearing: false</div>
+        <div class="state-item" id="animationPlugin">
+          Custom Plugin Active: false
+        </div>
+      </div>
+
+      <div class="controls">
+        <button onclick="addStartPosition()">
+          Add Start Position (Clear Only)
+        </button>
+        <button onclick="addFirstBeat()">Add First Beat (All Buttons)</button>
+        <button onclick="clearSequence()">Clear Sequence</button>
+      </div>
+
+      <div class="button-panel">
+        <div class="left-zone">
+          <button>Undo</button>
+        </div>
+        <div class="center-zone" id="centerZone">
+          <!-- Buttons will be added here dynamically -->
+        </div>
+        <div class="right-zone">
+          <button>Toggle</button>
+        </div>
+      </div>
+
+      <div class="log" id="log"></div>
     </div>
 
-    <div class="controls">
-      <button onclick="addStartPosition()">Add Start Position (Clear Only)</button>
-      <button onclick="addFirstBeat()">Add First Beat (All Buttons)</button>
-      <button onclick="clearSequence()">Clear Sequence</button>
-    </div>
+    <script>
+      const centerZone = document.getElementById("centerZone");
+      let previousCenterZoneCount = 0;
+      let isClearing = false;
+      let clearTimeout = null;
 
-    <div class="button-panel">
-      <div class="left-zone">
-        <button>Undo</button>
-      </div>
-      <div class="center-zone" id="centerZone">
-        <!-- Buttons will be added here dynamically -->
-      </div>
-      <div class="right-zone">
-        <button>Toggle</button>
-      </div>
-    </div>
+      // Initialize AutoAnimate
+      let autoAnimateInstance = null;
 
-    <div class="log" id="log"></div>
-  </div>
+      function log(message, type = "info") {
+        const logDiv = document.getElementById("log");
+        const entry = document.createElement("div");
+        entry.className = `log-entry ${type}`;
+        const timestamp = new Date().toLocaleTimeString();
+        entry.textContent = `[${timestamp}] ${message}`;
+        logDiv.appendChild(entry);
+        logDiv.scrollTop = logDiv.scrollHeight;
+        console.log(message);
+      }
 
-  <script>
-    const centerZone = document.getElementById('centerZone');
-    let previousCenterZoneCount = 0;
-    let isClearing = false;
-    let clearTimeout = null;
+      function updateStateDisplay() {
+        const count = centerZone.children.length;
+        document.getElementById("centerZoneCount").textContent =
+          `Center Zone Buttons: ${count}`;
+        document.getElementById("clearingState").textContent =
+          `isClearing: ${isClearing}`;
+        document.getElementById("clearingState").className = isClearing
+          ? "state-item active"
+          : "state-item";
+        document.getElementById("animationPlugin").textContent =
+          `Custom Plugin Active: ${isClearing}`;
+        document.getElementById("animationPlugin").className = isClearing
+          ? "state-item active"
+          : "state-item";
+      }
 
-    // Initialize AutoAnimate
-    let autoAnimateInstance = null;
-
-    function log(message, type = 'info') {
-      const logDiv = document.getElementById('log');
-      const entry = document.createElement('div');
-      entry.className = `log-entry ${type}`;
-      const timestamp = new Date().toLocaleTimeString();
-      entry.textContent = `[${timestamp}] ${message}`;
-      logDiv.appendChild(entry);
-      logDiv.scrollTop = logDiv.scrollHeight;
-      console.log(message);
-    }
-
-    function updateStateDisplay() {
-      const count = centerZone.children.length;
-      document.getElementById('centerZoneCount').textContent = `Center Zone Buttons: ${count}`;
-      document.getElementById('clearingState').textContent = `isClearing: ${isClearing}`;
-      document.getElementById('clearingState').className = isClearing ? 'state-item active' : 'state-item';
-      document.getElementById('animationPlugin').textContent = `Custom Plugin Active: ${isClearing}`;
-      document.getElementById('animationPlugin').className = isClearing ? 'state-item active' : 'state-item';
-    }
-
-    function getAutoAnimateConfig() {
-      const config = {
-        duration: 450,
-        easing: 'ease-out'
-      };
-
-      if (isClearing) {
-        log('🚨 Using custom animation plugin (clearing mode)', 'warn');
-        config.animation = (el, action, oldCoords, newCoords) => {
-          log(`  Animation called: action="${action}", element="${el.textContent}"`, 'debug');
-
-          if (action === 'remove') {
-            log(`  ✅ Applying fade-out for: ${el.textContent}`, 'info');
-            return new KeyframeEffect(
-              el,
-              [
-                { opacity: 1, transform: 'scale(1)' },
-                { opacity: 0, transform: 'scale(0.95)' }
-              ],
-              { duration: 300, easing: 'ease-out' }
-            );
-          }
-
-          log(`  ⏭️ Skipping ${action} animation for: ${el.textContent}`, 'warn');
-          return new KeyframeEffect(el, [], { duration: 0 });
+      function getAutoAnimateConfig() {
+        const config = {
+          duration: 450,
+          easing: "ease-out",
         };
-      } else {
-        log('Using default AutoAnimate behavior', 'info');
-      }
 
-      return config;
-    }
+        if (isClearing) {
+          log("🚨 Using custom animation plugin (clearing mode)", "warn");
+          config.animation = (el, action, oldCoords, newCoords) => {
+            log(
+              `  Animation called: action="${action}", element="${el.textContent}"`,
+              "debug"
+            );
 
-    function reinitializeAutoAnimate() {
-      // Remove existing AutoAnimate
-      if (autoAnimateInstance) {
-        autoAnimateInstance.disable();
-        log('AutoAnimate instance disabled', 'debug');
-      }
+            if (action === "remove") {
+              log(`  ✅ Applying fade-out for: ${el.textContent}`, "info");
+              return new KeyframeEffect(
+                el,
+                [
+                  { opacity: 1, transform: "scale(1)" },
+                  { opacity: 0, transform: "scale(0.95)" },
+                ],
+                { duration: 300, easing: "ease-out" }
+              );
+            }
 
-      // Get new config
-      const config = getAutoAnimateConfig();
-
-      // Reinitialize with new config
-      autoAnimateInstance = autoAnimate(centerZone, config);
-      log('AutoAnimate reinitialized', 'info');
-    }
-
-    function detectClearing() {
-      const currentCount = centerZone.children.length;
-
-      log(`Center zone count: ${previousCenterZoneCount} -> ${currentCount}`, 'info');
-
-      // Detect if we're going from multiple buttons to zero
-      if (previousCenterZoneCount >= 2 && currentCount === 0) {
-        log('🚨 CLEARING DETECTED - activating guard', 'error');
-        isClearing = true;
-
-        // Reinitialize AutoAnimate with custom plugin
-        reinitializeAutoAnimate();
-
-        // Clear previous timeout if exists
-        if (clearTimeout) {
-          clearTimeout(clearTimeout);
+            log(
+              `  ⏭️ Skipping ${action} animation for: ${el.textContent}`,
+              "warn"
+            );
+            return new KeyframeEffect(el, [], { duration: 0 });
+          };
+        } else {
+          log("Using default AutoAnimate behavior", "info");
         }
 
-        // Deactivate after 500ms
-        clearTimeout = setTimeout(() => {
-          isClearing = false;
-          log('✅ Guard deactivated', 'info');
-
-          // Reinitialize AutoAnimate back to default
-          reinitializeAutoAnimate();
-          updateStateDisplay();
-        }, 500);
+        return config;
       }
 
-      previousCenterZoneCount = currentCount;
+      function reinitializeAutoAnimate() {
+        // Remove existing AutoAnimate
+        if (autoAnimateInstance) {
+          autoAnimateInstance.disable();
+          log("AutoAnimate instance disabled", "debug");
+        }
+
+        // Get new config
+        const config = getAutoAnimateConfig();
+
+        // Reinitialize with new config
+        autoAnimateInstance = autoAnimate(centerZone, config);
+        log("AutoAnimate reinitialized", "info");
+      }
+
+      function detectClearing() {
+        const currentCount = centerZone.children.length;
+
+        log(
+          `Center zone count: ${previousCenterZoneCount} -> ${currentCount}`,
+          "info"
+        );
+
+        // Detect if we're going from multiple buttons to zero
+        if (previousCenterZoneCount >= 2 && currentCount === 0) {
+          log("🚨 CLEARING DETECTED - activating guard", "error");
+          isClearing = true;
+
+          // Reinitialize AutoAnimate with custom plugin
+          reinitializeAutoAnimate();
+
+          // Clear previous timeout if exists
+          if (clearTimeout) {
+            clearTimeout(clearTimeout);
+          }
+
+          // Deactivate after 500ms
+          clearTimeout = setTimeout(() => {
+            isClearing = false;
+            log("✅ Guard deactivated", "info");
+
+            // Reinitialize AutoAnimate back to default
+            reinitializeAutoAnimate();
+            updateStateDisplay();
+          }, 500);
+        }
+
+        previousCenterZoneCount = currentCount;
+        updateStateDisplay();
+      }
+
+      function addStartPosition() {
+        log("=== Adding Start Position (Clear button only) ===", "info");
+        centerZone.innerHTML = "";
+
+        const clearBtn = document.createElement("div");
+        clearBtn.innerHTML = "<button>Clear Sequence</button>";
+        centerZone.appendChild(clearBtn);
+
+        detectClearing();
+      }
+
+      function addFirstBeat() {
+        log("=== Adding First Beat (All buttons) ===", "info");
+        centerZone.innerHTML = "";
+
+        const buttons = ["Play", "Actions", "Share", "Clear Sequence"];
+        buttons.forEach((text) => {
+          const div = document.createElement("div");
+          div.innerHTML = `<button>${text}</button>`;
+          centerZone.appendChild(div);
+        });
+
+        detectClearing();
+      }
+
+      function clearSequence() {
+        log("=== CLEAR SEQUENCE CLICKED ===", "error");
+
+        // This should trigger the guard
+        centerZone.innerHTML = "";
+
+        detectClearing();
+      }
+
+      // Initialize
+      reinitializeAutoAnimate();
+      log("Test initialized", "info");
       updateStateDisplay();
-    }
-
-    function addStartPosition() {
-      log('=== Adding Start Position (Clear button only) ===', 'info');
-      centerZone.innerHTML = '';
-
-      const clearBtn = document.createElement('div');
-      clearBtn.innerHTML = '<button>Clear Sequence</button>';
-      centerZone.appendChild(clearBtn);
-
-      detectClearing();
-    }
-
-    function addFirstBeat() {
-      log('=== Adding First Beat (All buttons) ===', 'info');
-      centerZone.innerHTML = '';
-
-      const buttons = ['Play', 'Actions', 'Share', 'Clear Sequence'];
-      buttons.forEach(text => {
-        const div = document.createElement('div');
-        div.innerHTML = `<button>${text}</button>`;
-        centerZone.appendChild(div);
-      });
-
-      detectClearing();
-    }
-
-    function clearSequence() {
-      log('=== CLEAR SEQUENCE CLICKED ===', 'error');
-
-      // This should trigger the guard
-      centerZone.innerHTML = '';
-
-      detectClearing();
-    }
-
-    // Initialize
-    reinitializeAutoAnimate();
-    log('Test initialized', 'info');
-    updateStateDisplay();
-  </script>
-</body>
+    </script>
+  </body>
 </html>

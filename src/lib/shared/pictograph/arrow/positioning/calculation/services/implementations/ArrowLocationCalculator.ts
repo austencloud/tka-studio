@@ -13,7 +13,12 @@
  */
 
 import type { IArrowLocationCalculator } from "$shared";
-import { GridLocation, MotionType, type MotionData, type PictographData } from "$shared";
+import {
+  GridLocation,
+  MotionType,
+  type MotionData,
+  type PictographData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import { DashLocationCalculator } from "./DashLocationCalculator";

@@ -65,6 +65,7 @@ npm run test:seo:debug     # Run SEO tests in debug mode
 - **Count**: 13 test files, 309 tests (all passing ✅)
 
 **Key Test Files:**
+
 - `GridPositionDeriver.test.ts` - Core domain logic (37 tests)
 - `DimensionCalculationService.test.ts` - Rendering calculations (64 tests)
 - `BeatNumberingService.test.ts` - Data integrity (15 tests)
@@ -86,6 +87,7 @@ npm run test:seo:debug     # Run SEO tests in debug mode
 - **Dependencies**: Real browser, real services
 
 **Key Test Files:**
+
 - `navigation-layout-visual.spec.ts` - Visual regression tests
 - `navigation-landscape-mobile.spec.ts` - Mobile navigation
 - `navigation-dropdown.spec.ts` - Dropdown interactions
@@ -135,12 +137,14 @@ import { MyService } from "../../../src/lib/services/MyService";
 Removed zero-value tests that provided no automated testing benefit:
 
 **Deleted:**
+
 - `tests/debug/` - Debug scripts (not automated tests)
 - `tests/manual/` - Manual test scripts (not in test suite)
 - Standalone test files (cap-minimal-test.mjs, test-cap-simple.ts, etc.)
 - Investigation E2E tests (investigate-types456-layout.spec.ts, navigation-layout-debug.spec.ts)
 
 **Impact:**
+
 - Removed 8-10 files
 - Zero loss of test coverage
 - Cleaner, more maintainable test suite

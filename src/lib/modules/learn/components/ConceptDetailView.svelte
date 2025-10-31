@@ -7,27 +7,32 @@ Shows three tabs:
 - Stats: Progress, accuracy, streaks
 -->
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { resolve, TYPES, type IHapticFeedbackService } from '$shared';
-  import type { LearnConcept, ConceptDetailView, ConceptProgress } from '../domain';
-  import { conceptProgressService } from '../services/ConceptProgressService';
+  import { onMount } from "svelte";
+  import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
+  import type {
+    LearnConcept,
+    ConceptDetailView,
+    ConceptProgress,
+  } from "../domain";
+  import { conceptProgressService } from "../services/ConceptProgressService";
 
-  let {
-    concept,
-    onClose
-  } = $props<{
+  let { concept, onClose } = $props<{
     concept: LearnConcept;
     onClose?: () => void;
   }>();
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
-  let activeTab = $state<ConceptDetailView>('learn');
-  let progress = $state<ConceptProgress>(conceptProgressService.getConceptProgress(concept.id));
+  let activeTab = $state<ConceptDetailView>("learn");
+  let progress = $state<ConceptProgress>(
+    conceptProgressService.getConceptProgress(concept.id)
+  );
 
   // Start the concept when detail view opens
   onMount(() => {
-    if (progress.status === 'available') {
+    if (progress.status === "available") {
       conceptProgressService.startConcept(concept.id);
     }
 
@@ -40,12 +45,12 @@ Shows three tabs:
   });
 
   function handleTabChange(tab: ConceptDetailView) {
-    hapticService?.trigger('selection');
+    hapticService?.trigger("selection");
     activeTab = tab;
   }
 
   function handleClose() {
-    hapticService?.trigger('selection');
+    hapticService?.trigger("selection");
     onClose?.();
   }
 </script>
@@ -74,7 +79,8 @@ Shows three tabs:
       {#if progress.percentComplete > 0}
         <div class="stat-pill">
           <span class="stat-label">Progress</span>
-          <span class="stat-value">{Math.round(progress.percentComplete)}%</span>
+          <span class="stat-value">{Math.round(progress.percentComplete)}%</span
+          >
         </div>
       {/if}
       {#if progress.accuracy > 0}
@@ -90,10 +96,10 @@ Shows three tabs:
   <nav class="tab-bar" role="tablist">
     <button
       class="tab"
-      class:active={activeTab === 'learn'}
-      onclick={() => handleTabChange('learn')}
+      class:active={activeTab === "learn"}
+      onclick={() => handleTabChange("learn")}
       role="tab"
-      aria-selected={activeTab === 'learn'}
+      aria-selected={activeTab === "learn"}
       aria-controls="learn-panel"
     >
       <span class="tab-icon">📖</span>
@@ -102,10 +108,10 @@ Shows three tabs:
 
     <button
       class="tab"
-      class:active={activeTab === 'practice'}
-      onclick={() => handleTabChange('practice')}
+      class:active={activeTab === "practice"}
+      onclick={() => handleTabChange("practice")}
       role="tab"
-      aria-selected={activeTab === 'practice'}
+      aria-selected={activeTab === "practice"}
       aria-controls="practice-panel"
     >
       <span class="tab-icon">🎯</span>
@@ -114,10 +120,10 @@ Shows three tabs:
 
     <button
       class="tab"
-      class:active={activeTab === 'stats'}
-      onclick={() => handleTabChange('stats')}
+      class:active={activeTab === "stats"}
+      onclick={() => handleTabChange("stats")}
       role="tab"
-      aria-selected={activeTab === 'stats'}
+      aria-selected={activeTab === "stats"}
       aria-controls="stats-panel"
     >
       <span class="tab-icon">📊</span>
@@ -127,7 +133,7 @@ Shows three tabs:
 
   <!-- Tab content -->
   <div class="tab-content">
-    {#if activeTab === 'learn'}
+    {#if activeTab === "learn"}
       <div class="tab-panel" role="tabpanel" id="learn-panel">
         <div class="learn-content">
           <h2 class="section-title">Key Concepts</h2>
@@ -140,33 +146,37 @@ Shows three tabs:
           <div class="pdf-reference">
             <h3 class="subsection-title">Reference Material</h3>
             <p class="pdf-info">
-              See pages <strong>{concept.pdfPages.join(', ')}</strong> in
+              See pages <strong>{concept.pdfPages.join(", ")}</strong> in
               <em>The Kinetic Alphabet Level 1</em>
             </p>
             <p class="hint-text">
-              💡 Tip: Open the Codex panel for quick pictograph reference while learning!
+              💡 Tip: Open the Codex panel for quick pictograph reference while
+              learning!
             </p>
           </div>
 
           <div class="practice-prompt">
-            <p>Ready to practice? Switch to the <strong>Practice</strong> tab to test your knowledge!</p>
+            <p>
+              Ready to practice? Switch to the <strong>Practice</strong> tab to test
+              your knowledge!
+            </p>
           </div>
         </div>
       </div>
-    {:else if activeTab === 'practice'}
+    {:else if activeTab === "practice"}
       <div class="tab-panel" role="tabpanel" id="practice-panel">
         <div class="practice-content">
           <div class="coming-soon">
             <span class="coming-soon-icon">🚧</span>
             <h2 class="coming-soon-title">Practice Mode Coming Soon!</h2>
             <p class="coming-soon-text">
-              We're building concept-specific quizzes for targeted practice.
-              For now, use the general quiz mode to practice TKA letters.
+              We're building concept-specific quizzes for targeted practice. For
+              now, use the general quiz mode to practice TKA letters.
             </p>
           </div>
         </div>
       </div>
-    {:else if activeTab === 'stats'}
+    {:else if activeTab === "stats"}
       <div class="tab-panel" role="tabpanel" id="stats-panel">
         <div class="stats-content">
           <h2 class="section-title">Your Progress</h2>
@@ -186,7 +196,9 @@ Shows three tabs:
 
             <div class="stat-card">
               <span class="stat-card-icon">🎯</span>
-              <span class="stat-card-value">{Math.round(progress.accuracy)}%</span>
+              <span class="stat-card-value"
+                >{Math.round(progress.accuracy)}%</span
+              >
               <span class="stat-card-label">Accuracy</span>
             </div>
 
@@ -204,24 +216,32 @@ Shows three tabs:
 
             <div class="stat-card">
               <span class="stat-card-icon">⏱️</span>
-              <span class="stat-card-value">{Math.round(progress.timeSpentSeconds / 60)}</span>
+              <span class="stat-card-value"
+                >{Math.round(progress.timeSpentSeconds / 60)}</span
+              >
               <span class="stat-card-label">Minutes</span>
             </div>
           </div>
 
-          {#if progress.status === 'completed'}
+          {#if progress.status === "completed"}
             <div class="completion-badge">
               <span class="badge-icon">🏆</span>
               <span class="badge-text">Concept Mastered!</span>
               {#if progress.completedAt}
                 <span class="badge-date">
-                  Completed on {new Date(progress.completedAt).toLocaleDateString()}
+                  Completed on {new Date(
+                    progress.completedAt
+                  ).toLocaleDateString()}
                 </span>
               {/if}
             </div>
           {:else}
             <div class="progress-info">
-              <p>Keep practicing to master this concept! You're {Math.round(progress.percentComplete)}% of the way there.</p>
+              <p>
+                Keep practicing to master this concept! You're {Math.round(
+                  progress.percentComplete
+                )}% of the way there.
+              </p>
             </div>
           {/if}
         </div>
@@ -362,7 +382,7 @@ Shows three tabs:
 
   .tab.active {
     color: white;
-    border-bottom-color: #4A90E2;
+    border-bottom-color: #4a90e2;
     background: rgba(74, 144, 226, 0.1);
   }
 
@@ -420,7 +440,7 @@ Shows three tabs:
     padding: 0.75rem;
     margin-bottom: 0.5rem;
     background: rgba(255, 255, 255, 0.05);
-    border-left: 3px solid #4A90E2;
+    border-left: 3px solid #4a90e2;
     border-radius: 4px;
     color: rgba(255, 255, 255, 0.9);
   }

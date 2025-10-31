@@ -24,27 +24,27 @@ export const NightSkyConfig = {
     // 3-Layer Classic (Internet Consensus 2023-2025)
     // Far layer: 70% of stars, 1px, 0.4 opacity, slowest animation
     far: {
-      density: 0.00014,  // 70% of total stars (increased from 0.00008)
-      drift: 0.00002,    // Slowest drift
-      sizeMultiplier: 1.0,  // 1px stars
-      opacityMultiplier: 0.4,  // Dimmest
-      sparkleChance: 0.0,  // No sparkles on distant stars
+      density: 0.00014, // 70% of total stars (increased from 0.00008)
+      drift: 0.00002, // Slowest drift
+      sizeMultiplier: 1.0, // 1px stars
+      opacityMultiplier: 0.4, // Dimmest
+      sparkleChance: 0.0, // No sparkles on distant stars
     },
     // Mid layer: 20% of stars, 2px, 0.6 opacity, medium animation
     mid: {
-      density: 0.00004,  // 20% of total stars (reduced from 0.00006)
-      drift: 0.00004,    // Medium drift
-      sizeMultiplier: 2.0,  // 2px stars
-      opacityMultiplier: 0.6,  // Medium brightness
-      sparkleChance: 0.05,  // 5% sparkles (internet consensus)
+      density: 0.00004, // 20% of total stars (reduced from 0.00006)
+      drift: 0.00004, // Medium drift
+      sizeMultiplier: 2.0, // 2px stars
+      opacityMultiplier: 0.6, // Medium brightness
+      sparkleChance: 0.05, // 5% sparkles (internet consensus)
     },
     // Near layer: 10% of stars, 3px, 0.8 opacity, slowest animation (heavier feel)
     near: {
-      density: 0.00002,  // 10% of total stars (reduced from 0.00004)
-      drift: 0.00006,    // Fastest drift (but slower animation = heavier)
-      sizeMultiplier: 3.0,  // 3px stars (largest)
-      opacityMultiplier: 0.8,  // Brightest
-      sparkleChance: 0.05,  // 5% sparkles (only on brightest stars)
+      density: 0.00002, // 10% of total stars (reduced from 0.00004)
+      drift: 0.00006, // Fastest drift (but slower animation = heavier)
+      sizeMultiplier: 3.0, // 3px stars (largest)
+      opacityMultiplier: 0.8, // Brightest
+      sparkleChance: 0.05, // 5% sparkles (only on brightest stars)
     },
   },
   nebula: {
@@ -135,12 +135,12 @@ export const NightSkyConfig = {
   },
   background: {
     gradientStops: [
-      { position: 0, color: "#0a0a1a" },      // Deep space black
-      { position: 0.2, color: "#0f0f24" },   // Dark midnight
-      { position: 0.4, color: "#1a1a2e" },   // Rich indigo
-      { position: 0.6, color: "#16213e" },   // Deep blue
-      { position: 0.8, color: "#0f3460" },   // Ocean blue
-      { position: 1, color: "#0a1e3d" },     // Deepest night
+      { position: 0, color: "#0a0a1a" }, // Deep space black
+      { position: 0.2, color: "#0f0f24" }, // Dark midnight
+      { position: 0.4, color: "#1a1a2e" }, // Rich indigo
+      { position: 0.6, color: "#16213e" }, // Deep blue
+      { position: 0.8, color: "#0f3460" }, // Ocean blue
+      { position: 1, color: "#0a1e3d" }, // Deepest night
     ],
   },
   animation: {

@@ -13,7 +13,7 @@ import { TYPES } from "$shared/inversify/types";
 import type {
   ExploreLoadingState,
   IOptimizedExploreService,
-  SequenceMetadata
+  SequenceMetadata,
 } from "../services/contracts/IOptimizedExploreService";
 
 export function createOptimizedExploreState() {

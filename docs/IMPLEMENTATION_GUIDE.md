@@ -42,6 +42,7 @@ npm run dev
 ```
 
 Visit:
+
 - `/auth/login` - Login page
 - `/profile` - User profile (requires login)
 
@@ -69,11 +70,11 @@ The authentication system provides reactive stores you can use anywhere in your 
 
 ```typescript
 import {
-  user,            // Firebase User object (or null)
+  user, // Firebase User object (or null)
   isAuthenticated, // boolean - true if logged in
-  isLoading,       // boolean - true while checking auth state
-  isInitialized,   // boolean - true after first auth check
-  authStore        // Full store with helper methods
+  isLoading, // boolean - true while checking auth state
+  isInitialized, // boolean - true after first auth check
+  authStore, // Full store with helper methods
 } from "$shared/auth";
 ```
 
@@ -83,22 +84,23 @@ When a user is logged in, `$user` contains:
 
 ```typescript
 {
-  uid: string;              // Unique user ID
-  email: string | null;     // User's email
+  uid: string; // Unique user ID
+  email: string | null; // User's email
   displayName: string | null; // User's name
-  photoURL: string | null;  // Profile picture URL
-  emailVerified: boolean;   // Email verification status
-  providerData: Array<{     // Info about login providers
-    providerId: string;     // "facebook.com", "google.com", etc.
+  photoURL: string | null; // Profile picture URL
+  emailVerified: boolean; // Email verification status
+  providerData: Array<{
+    // Info about login providers
+    providerId: string; // "facebook.com", "google.com", etc.
     uid: string;
     displayName: string | null;
     email: string | null;
     photoURL: string | null;
   }>;
   metadata: {
-    creationTime: string;   // Account creation date
+    creationTime: string; // Account creation date
     lastSignInTime: string; // Last login date
-  };
+  }
 }
 ```
 
@@ -152,7 +154,9 @@ Create a protected layout for multiple pages:
   onMount(() => {
     const unsubscribe = isAuthenticated.subscribe((authenticated) => {
       if (!authenticated && !$isLoading) {
-        goto("/auth/login?redirect=" + encodeURIComponent(window.location.pathname));
+        goto(
+          "/auth/login?redirect=" + encodeURIComponent(window.location.pathname)
+        );
       }
     });
 
@@ -242,7 +246,7 @@ src/routes/
     justify-content: space-between;
     padding: 1rem 2rem;
     background: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .nav-links {
@@ -385,11 +389,11 @@ Create your own styled login button:
   import { user } from "$shared/auth";
 
   const isLoggedInWithFacebook = $derived(
-    $user?.providerData?.some(p => p.providerId === "facebook.com") ?? false
+    $user?.providerData?.some((p) => p.providerId === "facebook.com") ?? false
   );
 
   const isLoggedInWithGoogle = $derived(
-    $user?.providerData?.some(p => p.providerId === "google.com") ?? false
+    $user?.providerData?.some((p) => p.providerId === "google.com") ?? false
   );
 </script>
 
@@ -410,8 +414,8 @@ async function loginWithExtraPermissions() {
   const provider = new FacebookAuthProvider();
 
   // Request additional Facebook permissions
-  provider.addScope('user_birthday');
-  provider.addScope('user_location');
+  provider.addScope("user_birthday");
+  provider.addScope("user_location");
 
   try {
     const result = await signInWithPopup(auth, provider);
@@ -455,7 +459,9 @@ async function handleLogin() {
         break;
 
       case "auth/account-exists-with-different-credential":
-        alert("An account already exists with the same email using a different sign-in method");
+        alert(
+          "An account already exists with the same email using a different sign-in method"
+        );
         break;
 
       case "auth/cancelled-popup-request":
@@ -508,7 +514,7 @@ async function updateUserProfile(displayName: string, photoURL: string) {
   try {
     await updateProfile(user, {
       displayName,
-      photoURL
+      photoURL,
     });
 
     console.log("Profile updated!");
@@ -593,7 +599,12 @@ Here's a complete example showing how to build a user settings page:
     <div class="settings-section">
       <h2>Profile</h2>
 
-      <form onsubmit={(e) => { e.preventDefault(); handleSave(); }}>
+      <form
+        onsubmit={(e) => {
+          e.preventDefault();
+          handleSave();
+        }}
+      >
         <div class="form-group">
           <label for="displayName">Display Name</label>
           <input
@@ -606,11 +617,7 @@ Here's a complete example showing how to build a user settings page:
 
         <div class="form-group">
           <label>Email</label>
-          <input
-            type="email"
-            value={$user?.email || ""}
-            disabled
-          />
+          <input type="email" value={$user?.email || ""} disabled />
           <small>Email cannot be changed</small>
         </div>
 
@@ -626,9 +633,7 @@ Here's a complete example showing how to build a user settings page:
 
     <div class="settings-section danger-zone">
       <h2>Account</h2>
-      <button onclick={handleSignOut} class="btn-danger">
-        Sign Out
-      </button>
+      <button onclick={handleSignOut} class="btn-danger"> Sign Out </button>
     </div>
   </div>
 {/if}
@@ -645,7 +650,7 @@ Here's a complete example showing how to build a user settings page:
     padding: 2rem;
     border-radius: 0.5rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .form-group {

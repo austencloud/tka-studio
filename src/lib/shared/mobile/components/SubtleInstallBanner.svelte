@@ -70,9 +70,11 @@
     }
 
     // Listen for install prompt availability
-    const unsubscribe = fullscreenService.onInstallPromptAvailable((available) => {
-      canInstallPWA = available;
-    });
+    const unsubscribe = fullscreenService.onInstallPromptAvailable(
+      (available) => {
+        canInstallPWA = available;
+      }
+    );
 
     // Listen for app installation
     const handleAppInstalled = () => {
@@ -127,11 +129,17 @@
       <span class="banner-icon">
         <i class="fas fa-mobile-alt"></i>
       </span>
-      <span class="banner-text">Add TKA to your home screen for quick access</span>
+      <span class="banner-text"
+        >Add TKA to your home screen for quick access</span
+      >
 
       <div class="banner-actions">
         {#if canInstallPWA}
-          <button class="install-btn" onclick={handleInstall} disabled={isInstalling}>
+          <button
+            class="install-btn"
+            onclick={handleInstall}
+            disabled={isInstalling}
+          >
             <i class="fas fa-download"></i>
             <span>{isInstalling ? "Installing..." : "Install"}</span>
           </button>
@@ -141,7 +149,11 @@
             <span>Learn How</span>
           </button>
         {/if}
-        <button class="dismiss-btn" onclick={handleDismiss} aria-label="Dismiss">
+        <button
+          class="dismiss-btn"
+          onclick={handleDismiss}
+          aria-label="Dismiss"
+        >
           <i class="fas fa-times"></i>
         </button>
       </div>

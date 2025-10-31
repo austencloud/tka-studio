@@ -187,7 +187,10 @@
     };
     window.addEventListener("pwa:open-install-guide", handleOpenInstallGuide);
     cleanupFns.push(() =>
-      window.removeEventListener("pwa:open-install-guide", handleOpenInstallGuide)
+      window.removeEventListener(
+        "pwa:open-install-guide",
+        handleOpenInstallGuide
+      )
     );
 
     return () => {
@@ -232,7 +235,6 @@
     }
     scheduleInstallRePrompt();
   }
-
 
   // Tab accessibility state - updated by BuildTab via callback
   let canAccessEditAndExportTabs = $state(false);
@@ -398,11 +400,13 @@
       switchTab("learn");
     }
   }
-
 </script>
 
 <!-- Bind to window dimensions for reactive layout adjustments -->
-<svelte:window bind:innerWidth={windowInnerWidth} bind:innerHeight={windowInnerHeight} />
+<svelte:window
+  bind:innerWidth={windowInnerWidth}
+  bind:innerHeight={windowInnerHeight}
+/>
 
 <div class="main-interface" class:nav-landscape={isPrimaryNavLandscape}>
   <!-- Unified Navigation Menu - Single Floating Button -->
@@ -417,7 +421,9 @@
   <main
     class="content-area"
     class:about-active={isTabActive("about")}
-    class:has-primary-nav={currentModule() === 'build' || currentModule() === 'learn' || currentModule() === 'explore'}
+    class:has-primary-nav={currentModule() === "build" ||
+      currentModule() === "learn" ||
+      currentModule() === "explore"}
     class:nav-landscape={isPrimaryNavLandscape}
   >
     {#if isTabLoading}
@@ -454,24 +460,24 @@
   </main>
 
   <!-- Primary Navigation (Build, Learn & Explore Modules) - Responsive Bottom/Side -->
-  {#if currentModule() === 'build' || currentModule() === 'learn' || currentModule() === 'explore'}
+  {#if currentModule() === "build" || currentModule() === "learn" || currentModule() === "explore"}
     <PrimaryNavigation
       subModeTabs={subModeTabs()}
       currentSubMode={currentSubMode()}
       onSubModeChange={(subModeId) => {
-        if (currentModule() === 'learn') {
+        if (currentModule() === "learn") {
           navigationState.setLearnMode(subModeId);
-        } else if (currentModule() === 'build') {
+        } else if (currentModule() === "build") {
           // Use the NEW navigation system (currentSubMode) not the legacy setBuildMode
           navigationState.setCurrentSubMode(subModeId);
-        } else if (currentModule() === 'explore') {
+        } else if (currentModule() === "explore") {
           // Explore uses the new navigation system
           navigationState.setCurrentSubMode(subModeId);
         }
       }}
       onModuleSwitcherTap={() => {
         // Open unified menu for module switching
-        const event = new CustomEvent('unified-menu-toggle');
+        const event = new CustomEvent("unified-menu-toggle");
         window.dispatchEvent(event);
       }}
       onLayoutChange={handlePrimaryNavLayoutChange}
@@ -506,7 +512,6 @@
       onClose={hideSpotlight}
     />
   {/if}
-
 </div>
 
 <style>

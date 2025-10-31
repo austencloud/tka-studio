@@ -184,8 +184,7 @@ test.describe("FullscreenHint Reactivity", () => {
     // Positions should be different (reactive to resize)
     if (initialHintBox && newHintBox) {
       const positionChanged =
-        initialHintBox.y !== newHintBox.y ||
-        initialHintBox.x !== newHintBox.x;
+        initialHintBox.y !== newHintBox.y || initialHintBox.x !== newHintBox.x;
 
       // Hint should update position reactively
       expect(positionChanged).toBe(true);

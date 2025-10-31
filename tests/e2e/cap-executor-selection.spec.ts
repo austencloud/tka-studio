@@ -1,29 +1,34 @@
-import { expect, test } from '@playwright/test';
+import { expect, test } from "@playwright/test";
 
-test.describe('CAP Executor Selection - All 9 Variations', () => {
+test.describe("CAP Executor Selection - All 9 Variations", () => {
   // Increase timeout for these tests as they involve complex generation
   test.setTimeout(60000);
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('/');
+    await page.goto("/");
     // Use domcontentloaded instead of networkidle for faster/more reliable loading
-    await page.waitForLoadState('domcontentloaded');
+    await page.waitForLoadState("domcontentloaded");
 
     // Wait for the Build button to be visible and ready
-    await page.getByRole('button', { name: 'Build' }).waitFor({ state: 'visible' });
+    await page
+      .getByRole("button", { name: "Build" })
+      .waitFor({ state: "visible" });
     await page.waitForTimeout(1000);
 
     // Navigate to Build tab and Generate sub-tab
-    await page.getByRole('button', { name: 'Build' }).click();
-    await page.getByRole('button', { name: 'Generate' }).click();
+    await page.getByRole("button", { name: "Build" }).click();
+    await page.getByRole("button", { name: "Generate" }).click();
     await page.waitForTimeout(500);
   });
 
   // ===== STRICT TYPES (4 tests) =====
 
-  test('should generate sequence with Strict Rotated CAP', async ({ page }) => {
+  test("should generate sequence with Strict Rotated CAP", async ({ page }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -32,8 +37,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Click CAP Type card to open modal (force: true to handle background animations)
@@ -45,37 +50,43 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await expect(rotatedButton).toHaveClass(/selected/);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener to check for success
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Click generate button
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
 
     // Wait for generation to complete
     await page.waitForTimeout(3000);
 
     // Check console logs for successful generation
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete') ||
-      msg.includes('🎉')
+    const successLog = consoleMessages.find(
+      (msg) => msg.includes("Circular sequence complete") || msg.includes("🎉")
     );
 
     expect(successLog).toBeTruthy();
     expect(errorMessages.length).toBe(0);
   });
 
-  test('should generate sequence with Strict Mirrored CAP', async ({ page }) => {
+  test("should generate sequence with Strict Mirrored CAP", async ({
+    page,
+  }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -83,8 +94,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -104,36 +115,37 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await expect(mirroredButton).toHaveClass(/selected/);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
 
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       const text = msg.text();
       consoleMessages.push(text);
-      if (msg.type() === 'error') {
+      if (msg.type() === "error") {
         errorMessages.push(text);
       }
     });
 
     // Click generate button
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
 
     // Wait for generation
     await page.waitForTimeout(5000);
 
     // Check for successful generation
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete') ||
-      msg.includes('🎉')
+    const successLog = consoleMessages.find(
+      (msg) => msg.includes("Circular sequence complete") || msg.includes("🎉")
     );
 
-    const mirroredExecutorLog = consoleMessages.find(msg =>
-      msg.includes('Using CAP executor: strict_mirrored')
+    const mirroredExecutorLog = consoleMessages.find((msg) =>
+      msg.includes("Using CAP executor: strict_mirrored")
     );
 
     expect(mirroredExecutorLog).toBeTruthy();
@@ -141,9 +153,12 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     expect(errorMessages.length).toBe(0);
   });
 
-  test('should generate sequence with Strict Swapped CAP', async ({ page }) => {
+  test("should generate sequence with Strict Swapped CAP", async ({ page }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -151,8 +166,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -169,33 +184,40 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await page.waitForTimeout(200);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Generate
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
     await page.waitForTimeout(5000);
 
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete')
+    const successLog = consoleMessages.find((msg) =>
+      msg.includes("Circular sequence complete")
     );
 
     expect(successLog).toBeTruthy();
     expect(errorMessages.length).toBe(0);
   });
 
-  test('should generate sequence with Strict Complementary CAP', async ({ page }) => {
+  test("should generate sequence with Strict Complementary CAP", async ({
+    page,
+  }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -203,8 +225,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -216,29 +238,33 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await rotatedButton.click();
     await page.waitForTimeout(200);
 
-    const complementaryButton = page.locator('button:has-text("Complementary")').first();
+    const complementaryButton = page
+      .locator('button:has-text("Complementary")')
+      .first();
     await complementaryButton.click();
     await page.waitForTimeout(200);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Generate
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
     await page.waitForTimeout(5000);
 
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete')
+    const successLog = consoleMessages.find((msg) =>
+      msg.includes("Circular sequence complete")
     );
 
     expect(successLog).toBeTruthy();
@@ -247,9 +273,14 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
 
   // ===== COMBINATION TYPES (5 tests) =====
 
-  test('should generate sequence with Mirrored + Swapped CAP', async ({ page }) => {
+  test("should generate sequence with Mirrored + Swapped CAP", async ({
+    page,
+  }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -257,8 +288,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -281,28 +312,30 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await page.waitForTimeout(200);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Generate
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
     await page.waitForTimeout(5000);
 
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete')
+    const successLog = consoleMessages.find((msg) =>
+      msg.includes("Circular sequence complete")
     );
 
-    const mirroredSwappedLog = consoleMessages.find(msg =>
-      msg.includes('Using CAP executor: mirrored_swapped')
+    const mirroredSwappedLog = consoleMessages.find((msg) =>
+      msg.includes("Using CAP executor: mirrored_swapped")
     );
 
     expect(successLog).toBeTruthy();
@@ -310,9 +343,14 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     expect(errorMessages.length).toBe(0);
   });
 
-  test('should generate sequence with Swapped + Complementary CAP', async ({ page }) => {
+  test("should generate sequence with Swapped + Complementary CAP", async ({
+    page,
+  }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -320,8 +358,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -339,33 +377,37 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await page.waitForTimeout(200);
 
     // Select Complementary
-    const complementaryButton = page.locator('button:has-text("Complementary")').first();
+    const complementaryButton = page
+      .locator('button:has-text("Complementary")')
+      .first();
     await complementaryButton.click();
     await page.waitForTimeout(200);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Generate
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
     await page.waitForTimeout(5000);
 
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete')
+    const successLog = consoleMessages.find((msg) =>
+      msg.includes("Circular sequence complete")
     );
 
-    const swappedComplementaryLog = consoleMessages.find(msg =>
-      msg.includes('Using CAP executor: swapped_complementary')
+    const swappedComplementaryLog = consoleMessages.find((msg) =>
+      msg.includes("Using CAP executor: swapped_complementary")
     );
 
     expect(successLog).toBeTruthy();
@@ -373,9 +415,14 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     expect(errorMessages.length).toBe(0);
   });
 
-  test('should generate sequence with Mirrored + Complementary CAP', async ({ page }) => {
+  test("should generate sequence with Mirrored + Complementary CAP", async ({
+    page,
+  }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -383,8 +430,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -402,33 +449,37 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await page.waitForTimeout(200);
 
     // Select Complementary
-    const complementaryButton = page.locator('button:has-text("Complementary")').first();
+    const complementaryButton = page
+      .locator('button:has-text("Complementary")')
+      .first();
     await complementaryButton.click();
     await page.waitForTimeout(200);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Generate
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
     await page.waitForTimeout(5000);
 
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete')
+    const successLog = consoleMessages.find((msg) =>
+      msg.includes("Circular sequence complete")
     );
 
-    const mirroredComplementaryLog = consoleMessages.find(msg =>
-      msg.includes('Using CAP executor: mirrored_complementary')
+    const mirroredComplementaryLog = consoleMessages.find((msg) =>
+      msg.includes("Using CAP executor: mirrored_complementary")
     );
 
     expect(successLog).toBeTruthy();
@@ -436,9 +487,14 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     expect(errorMessages.length).toBe(0);
   });
 
-  test('should generate sequence with Rotated + Swapped CAP', async ({ page }) => {
+  test("should generate sequence with Rotated + Swapped CAP", async ({
+    page,
+  }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -446,8 +502,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -460,28 +516,30 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await page.waitForTimeout(200);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Generate
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
     await page.waitForTimeout(5000);
 
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete')
+    const successLog = consoleMessages.find((msg) =>
+      msg.includes("Circular sequence complete")
     );
 
-    const rotatedSwappedLog = consoleMessages.find(msg =>
-      msg.includes('Using CAP executor: rotated_swapped')
+    const rotatedSwappedLog = consoleMessages.find((msg) =>
+      msg.includes("Using CAP executor: rotated_swapped")
     );
 
     expect(successLog).toBeTruthy();
@@ -489,9 +547,14 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     expect(errorMessages.length).toBe(0);
   });
 
-  test('should generate sequence with Rotated + Complementary CAP', async ({ page }) => {
+  test("should generate sequence with Rotated + Complementary CAP", async ({
+    page,
+  }) => {
     // Set mode to circular
-    const modeCard = page.locator('.card-settings-container').locator('text=Mode').first();
+    const modeCard = page
+      .locator(".card-settings-container")
+      .locator("text=Mode")
+      .first();
     await modeCard.click();
     await page.waitForTimeout(200);
 
@@ -499,8 +562,8 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await circularButton.click();
 
     // Wait for CAP Type card to appear (it only shows in circular mode)
-    const capCard = page.locator('text=CAP Type').first();
-    await capCard.waitFor({ state: 'visible', timeout: 10000 });
+    const capCard = page.locator("text=CAP Type").first();
+    await capCard.waitFor({ state: "visible", timeout: 10000 });
     await page.waitForTimeout(1000); // Extra wait for animations to settle
 
     // Open CAP Type modal (force: true to handle background animations)
@@ -508,33 +571,37 @@ test.describe('CAP Executor Selection - All 9 Variations', () => {
     await page.waitForTimeout(300);
 
     // Rotated is already selected by default, just add Complementary
-    const complementaryButton = page.locator('button:has-text("Complementary")').first();
+    const complementaryButton = page
+      .locator('button:has-text("Complementary")')
+      .first();
     await complementaryButton.click();
     await page.waitForTimeout(200);
 
     // Close modal
-    await page.locator('.close-button').first().click();
+    await page.locator(".close-button").first().click();
     await page.waitForTimeout(200);
 
     // Set up console listener
     const consoleMessages: string[] = [];
     const errorMessages: string[] = [];
-    page.on('console', msg => {
+    page.on("console", (msg) => {
       consoleMessages.push(msg.text());
-      if (msg.type() === 'error') errorMessages.push(msg.text());
+      if (msg.type() === "error") errorMessages.push(msg.text());
     });
 
     // Generate
-    const generateButton = page.getByRole('button', { name: /Generate/i }).last();
+    const generateButton = page
+      .getByRole("button", { name: /Generate/i })
+      .last();
     await generateButton.click();
     await page.waitForTimeout(5000);
 
-    const successLog = consoleMessages.find(msg =>
-      msg.includes('Circular sequence complete')
+    const successLog = consoleMessages.find((msg) =>
+      msg.includes("Circular sequence complete")
     );
 
-    const rotatedComplementaryLog = consoleMessages.find(msg =>
-      msg.includes('Using CAP executor: rotated_complementary')
+    const rotatedComplementaryLog = consoleMessages.find((msg) =>
+      msg.includes("Using CAP executor: rotated_complementary")
     );
 
     expect(successLog).toBeTruthy();

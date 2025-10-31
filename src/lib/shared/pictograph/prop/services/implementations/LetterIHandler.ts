@@ -13,7 +13,10 @@ import {
 import type { IDirectionCalculator } from "../contracts/IDirectionCalculator";
 import type { IOrientationChecker } from "../contracts/IOrientationChecker";
 import { getEndLocation } from "./DirectionUtils";
-import { MotionColor, VectorDirection } from "../../../shared/domain/enums/pictograph-enums";
+import {
+  MotionColor,
+  VectorDirection,
+} from "../../../shared/domain/enums/pictograph-enums";
 
 export class LetterIHandler implements IDirectionCalculator {
   constructor(private orientationChecker: IOrientationChecker) {}

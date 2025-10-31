@@ -10,7 +10,11 @@
   import "./background-thumbnail-animations.css";
   import BackgroundThumbnail from "./BackgroundThumbnail.svelte";
 
-  const { selectedBackground, onBackgroundSelect, orientation = "square" } = $props<{
+  const {
+    selectedBackground,
+    onBackgroundSelect,
+    orientation = "square",
+  } = $props<{
     selectedBackground: BackgroundType;
     onBackgroundSelect: (type: BackgroundType) => void;
     orientation?: "portrait" | "landscape" | "square";

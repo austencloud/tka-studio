@@ -52,15 +52,21 @@ describe("SequenceValidationService", () => {
       const result = service.validateSequence(seq);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.message.includes("name"))).toBe(true);
+      expect(result.errors.some((e) => e.message.includes("name"))).toBe(true);
     });
 
     it("should fail for wrong beat numbers", () => {
-      const seq = createSeq("Test", [createBeat(1), createBeat(99), createBeat(3)]);
+      const seq = createSeq("Test", [
+        createBeat(1),
+        createBeat(99),
+        createBeat(3),
+      ]);
       const result = service.validateSequence(seq);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.message.includes("incorrect beat number"))).toBe(true);
+      expect(
+        result.errors.some((e) => e.message.includes("incorrect beat number"))
+      ).toBe(true);
     });
 
     it("should fail for negative duration", () => {
@@ -68,7 +74,9 @@ describe("SequenceValidationService", () => {
       const result = service.validateSequence(seq);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.message.includes("invalid duration"))).toBe(true);
+      expect(
+        result.errors.some((e) => e.message.includes("invalid duration"))
+      ).toBe(true);
     });
 
     it("should fail for too many beats", () => {
@@ -77,13 +85,19 @@ describe("SequenceValidationService", () => {
       const result = service.validateSequence(seq);
 
       expect(result.isValid).toBe(false);
-      expect(result.errors.some(e => e.message.includes("more than 64"))).toBe(true);
+      expect(
+        result.errors.some((e) => e.message.includes("more than 64"))
+      ).toBe(true);
     });
   });
 
   describe("isValidBeatIndex", () => {
     it("should validate beat indices", () => {
-      const seq = createSeq("Test", [createBeat(1), createBeat(2), createBeat(3)]);
+      const seq = createSeq("Test", [
+        createBeat(1),
+        createBeat(2),
+        createBeat(3),
+      ]);
 
       expect(service.isValidBeatIndex(seq, 0)).toBe(true);
       expect(service.isValidBeatIndex(seq, 2)).toBe(true);

@@ -10,7 +10,11 @@
   Uses 2025 UX trend: slide-up panel (bottom sheet) instead of center modal.
 -->
 <script lang="ts">
-  import type { IHapticFeedbackService, IMobileFullscreenService, IGestureService } from "$shared";
+  import type {
+    IHapticFeedbackService,
+    IMobileFullscreenService,
+    IGestureService,
+  } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import type { ModuleDefinition, ModuleId } from "../domain/types";
@@ -51,7 +55,8 @@
   }
 
   // Setup gesture handler for swipe-to-dismiss
-  let gestureHandler = $state<ReturnType<IGestureService['createSwipeGestureHandler']>>();
+  let gestureHandler =
+    $state<ReturnType<IGestureService["createSwipeGestureHandler"]>>();
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
@@ -60,18 +65,22 @@
     fullscreenService = resolve<IMobileFullscreenService>(
       TYPES.IMobileFullscreenService
     );
-    gestureService = resolve<IGestureService>(
-      TYPES.IGestureService
-    );
+    gestureService = resolve<IGestureService>(TYPES.IGestureService);
 
     // Initialize gesture handler
     gestureHandler = gestureService.createSwipeGestureHandler({
-      direction: 'vertical',
-      dismissOrientation: 'down',
+      direction: "vertical",
+      dismissOrientation: "down",
       threshold: 100,
       onDismiss: () => closeMenu(),
-      onDrag: (delta) => gestureService.applyDragTransform(panelElement ?? null, delta, 'vertical'),
-      onSnapBack: () => gestureService.snapBackTransform(panelElement ?? null, 'vertical'),
+      onDrag: (delta) =>
+        gestureService.applyDragTransform(
+          panelElement ?? null,
+          delta,
+          "vertical"
+        ),
+      onSnapBack: () =>
+        gestureService.snapBackTransform(panelElement ?? null, "vertical"),
     });
 
     // Check if PWA install should be shown
@@ -170,10 +179,10 @@
     const handleToggleEvent = () => {
       toggleMenu();
     };
-    window.addEventListener('unified-menu-toggle', handleToggleEvent);
+    window.addEventListener("unified-menu-toggle", handleToggleEvent);
 
     return () => {
-      window.removeEventListener('unified-menu-toggle', handleToggleEvent);
+      window.removeEventListener("unified-menu-toggle", handleToggleEvent);
     };
   });
 </script>
@@ -248,7 +257,6 @@
               onInstall={handleInstallClose}
             />
           {/if}
-
         </div>
       </section>
     </div>
@@ -289,8 +297,6 @@
   .floating-menu-button:active {
     transform: scale(0.95);
   }
-
-
 
   /* ============================================================================
      SLIDE-UP PANEL (BOTTOM SHEET)

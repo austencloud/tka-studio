@@ -68,7 +68,10 @@ export const GET: RequestHandler = async ({ url }) => {
     const validationResult = paginationSchema.safeParse(rawParams);
 
     if (!validationResult.success) {
-      console.error("❌ Invalid pagination parameters:", validationResult.error);
+      console.error(
+        "❌ Invalid pagination parameters:",
+        validationResult.error
+      );
       return json(
         {
           success: false,
@@ -157,7 +160,9 @@ async function loadSequencesFromManifest(): Promise<SequenceMetadata[]> {
 
     const duration = Math.round(performance.now() - startTime);
 
-    console.log(`✅ Loaded ${manifest.sequences.length} sequences from manifest in ${duration}ms`);
+    console.log(
+      `✅ Loaded ${manifest.sequences.length} sequences from manifest in ${duration}ms`
+    );
     console.log(`📊 Manifest generated at: ${manifest.generatedAt}`);
 
     // Convert manifest format to API format
@@ -175,7 +180,10 @@ async function loadSequencesFromManifest(): Promise<SequenceMetadata[]> {
 
     return sequences;
   } catch (error) {
-    console.error("❌ Failed to load manifest, falling back to filesystem scan:", error);
+    console.error(
+      "❌ Failed to load manifest, falling back to filesystem scan:",
+      error
+    );
 
     // Fallback to old method if manifest doesn't exist
     return await loadAllSequenceMetadataFallback();
@@ -256,7 +264,9 @@ async function loadAllSequenceMetadataFallback(): Promise<SequenceMetadata[]> {
     // Sort alphabetically for consistent pagination
     sequences.sort((a, b) => a.word.localeCompare(b.word));
 
-    console.log(`✅ Loaded metadata for ${sequences.length} sequences (fallback)`);
+    console.log(
+      `✅ Loaded metadata for ${sequences.length} sequences (fallback)`
+    );
     return sequences;
   } catch (error) {
     console.error("❌ Failed to load sequence metadata:", error);

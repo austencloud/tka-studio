@@ -182,9 +182,7 @@ test.describe("OptionViewerSection Reactivity", () => {
     expect(newBox).toBeTruthy();
 
     if (initialBox && newBox) {
-      console.log(
-        `Size adapted: width ${initialBox.width} -> ${newBox.width}`
-      );
+      console.log(`Size adapted: width ${initialBox.width} -> ${newBox.width}`);
       console.log(
         `Size adapted: height ${initialBox.height} -> ${newBox.height}`
       );
@@ -301,9 +299,7 @@ test.describe("OptionViewerSection Reactivity", () => {
     const pictographs = page.locator(".pictograph-option");
 
     if ((await pictographs.count()) === 0) {
-      console.log(
-        "⚠️ No pictographs - skipping reversal indicator test"
-      );
+      console.log("⚠️ No pictographs - skipping reversal indicator test");
       return;
     }
 

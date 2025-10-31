@@ -171,8 +171,9 @@ export function createNavigationState() {
               (m) => m.id === moduleId
             );
             return (
-              moduleDefinition?.subModes?.some((mode) => mode.id === subModeId) ??
-              false
+              moduleDefinition?.subModes?.some(
+                (mode) => mode.id === subModeId
+              ) ?? false
             );
           }
         );
@@ -205,7 +206,9 @@ export function createNavigationState() {
         (m) => m.id === currentModule
       );
       if (
-        moduleDefinition?.subModes?.some((mode) => mode.id === rememberedSubMode)
+        moduleDefinition?.subModes?.some(
+          (mode) => mode.id === rememberedSubMode
+        )
       ) {
         currentSubMode = rememberedSubMode;
       }

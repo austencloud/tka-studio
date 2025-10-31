@@ -6,9 +6,18 @@ import { afterEach, beforeEach, vi } from "vitest";
 
 // Preload CSV data into window for tests
 // This allows CsvLoader to use window.csvData instead of trying to fetch files
-const diamondCsvPath = resolve(__dirname, "../../static/DiamondPictographDataframe.csv");
-const boxCsvPath = resolve(__dirname, "../../static/BoxPictographDataframe.csv");
-const letterMappingsPath = resolve(__dirname, "../../static/data/learn/letter-mappings.json");
+const diamondCsvPath = resolve(
+  __dirname,
+  "../../static/DiamondPictographDataframe.csv"
+);
+const boxCsvPath = resolve(
+  __dirname,
+  "../../static/BoxPictographDataframe.csv"
+);
+const letterMappingsPath = resolve(
+  __dirname,
+  "../../static/data/learn/letter-mappings.json"
+);
 
 try {
   const diamondData = readFileSync(diamondCsvPath, "utf-8");
@@ -24,20 +33,24 @@ try {
 
   // Mock fetch for static files
   const originalFetch = globalThis.fetch;
-  globalThis.fetch = vi.fn((url: string | URL | Request, init?: RequestInit) => {
-    const urlStr = typeof url === "string" ? url : url.toString();
+  globalThis.fetch = vi.fn(
+    (url: string | URL | Request, init?: RequestInit) => {
+      const urlStr = typeof url === "string" ? url : url.toString();
 
-    // Handle letter-mappings.json
-    if (urlStr.includes("letter-mappings.json")) {
-      return Promise.resolve(new Response(letterMappingsData, {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }));
+      // Handle letter-mappings.json
+      if (urlStr.includes("letter-mappings.json")) {
+        return Promise.resolve(
+          new Response(letterMappingsData, {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          })
+        );
+      }
+
+      // Fall back to original fetch for other URLs
+      return originalFetch(url, init);
     }
-
-    // Fall back to original fetch for other URLs
-    return originalFetch(url, init);
-  }) as any;
+  ) as any;
 
   console.log("✅ Preloaded CSV data and mocked fetch for tests");
 } catch (error) {
@@ -51,12 +64,18 @@ vi.hoisted(async () => {
   await import("../../src/lib/shared/inversify/types");
   // Import domain enums that are used in module-level object literals
   await import("../../src/lib/shared/pictograph/grid/domain/enums/grid-enums");
-  await import("../../src/lib/shared/pictograph/shared/domain/enums/pictograph-enums");
+  await import(
+    "../../src/lib/shared/pictograph/shared/domain/enums/pictograph-enums"
+  );
   await import("../../src/lib/shared/foundation/domain/models/LetterType");
   // Import files that use enums in module-level object literals
-  await import("../../src/lib/shared/pictograph/shared/domain/constants/pictograph-constants");
+  await import(
+    "../../src/lib/shared/pictograph/shared/domain/constants/pictograph-constants"
+  );
   // Import factory functions that are used by services
-  await import("../../src/lib/shared/pictograph/shared/domain/factories/createPictographData");
+  await import(
+    "../../src/lib/shared/pictograph/shared/domain/factories/createPictographData"
+  );
 });
 
 // Global Inversify container for tests

@@ -41,12 +41,8 @@
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
     );
-    gradingService = resolve<IQuizGradingService>(
-      TYPES.IQuizGradingService
-    );
-    feedbackService = resolve<IQuizFeedbackService>(
-      TYPES.IQuizFeedbackService
-    );
+    gradingService = resolve<IQuizGradingService>(TYPES.IQuizGradingService);
+    feedbackService = resolve<IQuizFeedbackService>(TYPES.IQuizFeedbackService);
     achievementService = resolve<IQuizAchievementService>(
       TYPES.IQuizAchievementService
     );

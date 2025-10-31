@@ -4,8 +4,8 @@
  * Provides reusable touch gesture handling for common interaction patterns.
  */
 
-export type GestureDirection = 'vertical' | 'horizontal';
-export type GestureOrientation = 'down' | 'up' | 'left' | 'right';
+export type GestureDirection = "vertical" | "horizontal";
+export type GestureOrientation = "down" | "up" | "left" | "right";
 
 export interface SwipeGestureConfig {
   /**

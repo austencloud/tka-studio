@@ -136,7 +136,9 @@ test.describe("Navigation Overflow Detection", () => {
         console.log(`  Tab count: ${afterAddingSequence.tabCount}`);
         console.log(`  Label count: ${afterAddingSequence.labelCount}`);
         console.log(`  Labels visible: ${afterAddingSequence.labelsVisible}`);
-        console.log(`  Icon-only class: ${afterAddingSequence.hasIconOnlyClass}`);
+        console.log(
+          `  Icon-only class: ${afterAddingSequence.hasIconOnlyClass}`
+        );
         console.log(
           `  scrollWidth: ${afterAddingSequence.measurements.scrollWidth}px, clientWidth: ${afterAddingSequence.measurements.clientWidth}px`
         );
@@ -166,9 +168,7 @@ test.describe("Navigation Overflow Detection", () => {
 
           console.log("✅ TEST PASSED: Icon-only mode correctly activated");
         } else {
-          console.log(
-            "\n✓ NO OVERFLOW: Enough space for all tabs with labels"
-          );
+          console.log("\n✓ NO OVERFLOW: Enough space for all tabs with labels");
           console.log(
             "  (This is OK - viewport might be wide enough for all tabs)"
           );

@@ -16,15 +16,13 @@ interface SwipeState {
   isSwiping: boolean;
 }
 
-export function swipeGesture(node: HTMLElement, options: SwipeGestureOptions = {}) {
-  const {
-    onSwipeDown,
-    onSwipeUp,
-    threshold = 50,
-    maxDuration = 500,
-  } = options;
+export function swipeGesture(
+  node: HTMLElement,
+  options: SwipeGestureOptions = {}
+) {
+  const { onSwipeDown, onSwipeUp, threshold = 50, maxDuration = 500 } = options;
 
-  let state: SwipeState = {
+  const state: SwipeState = {
     startY: 0,
     startTime: 0,
     isSwiping: false,
@@ -101,21 +99,21 @@ export function swipeGesture(node: HTMLElement, options: SwipeGestureOptions = {
   }
 
   // Add event listeners
-  node.addEventListener('touchstart', handleTouchStart, { passive: true });
-  node.addEventListener('touchmove', handleTouchMove, { passive: false });
-  node.addEventListener('touchend', handleTouchEnd, { passive: true });
-  node.addEventListener('mousedown', handleMouseDown);
-  node.addEventListener('mousemove', handleMouseMove);
-  node.addEventListener('mouseup', handleMouseUp);
+  node.addEventListener("touchstart", handleTouchStart, { passive: true });
+  node.addEventListener("touchmove", handleTouchMove, { passive: false });
+  node.addEventListener("touchend", handleTouchEnd, { passive: true });
+  node.addEventListener("mousedown", handleMouseDown);
+  node.addEventListener("mousemove", handleMouseMove);
+  node.addEventListener("mouseup", handleMouseUp);
 
   return {
     destroy() {
-      node.removeEventListener('touchstart', handleTouchStart);
-      node.removeEventListener('touchmove', handleTouchMove);
-      node.removeEventListener('touchend', handleTouchEnd);
-      node.removeEventListener('mousedown', handleMouseDown);
-      node.removeEventListener('mousemove', handleMouseMove);
-      node.removeEventListener('mouseup', handleMouseUp);
+      node.removeEventListener("touchstart", handleTouchStart);
+      node.removeEventListener("touchmove", handleTouchMove);
+      node.removeEventListener("touchend", handleTouchEnd);
+      node.removeEventListener("mousedown", handleMouseDown);
+      node.removeEventListener("mousemove", handleMouseMove);
+      node.removeEventListener("mouseup", handleMouseUp);
     },
   };
 }

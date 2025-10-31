@@ -89,7 +89,10 @@ describe("DeviceDetector", () => {
 
     it("should detect tablet device (touch + 768-1024px)", () => {
       mockViewportService.setDimensions(768, 1024);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
 
       expect(detector.detectDeviceType()).toBe(DeviceType.TABLET);
     });
@@ -101,7 +104,10 @@ describe("DeviceDetector", () => {
 
     it("should detect desktop even with touch on large screen", () => {
       mockViewportService.setDimensions(1920, 1080);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
 
       expect(detector.detectDeviceType()).toBe(DeviceType.DESKTOP);
     });
@@ -132,13 +138,19 @@ describe("DeviceDetector", () => {
       expect(detector.detectDeviceType()).toBe(DeviceType.MOBILE);
 
       mockViewportService.setDimensions(768, 1024);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
       expect(detector.detectDeviceType()).toBe(DeviceType.TABLET);
     });
 
     it("should handle edge case at 1024px boundary", () => {
       mockViewportService.setDimensions(1023, 768);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
       expect(detector.detectDeviceType()).toBe(DeviceType.TABLET);
 
       mockViewportService.setDimensions(1024, 768);
@@ -152,7 +164,10 @@ describe("DeviceDetector", () => {
 
   describe("isTouchDevice", () => {
     it("should detect touch via ontouchstart", () => {
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
       expect(detector.isTouchDevice()).toBe(true);
     });
 
@@ -180,7 +195,10 @@ describe("DeviceDetector", () => {
 
     it("isTablet should return true for tablet devices", () => {
       mockViewportService.setDimensions(768, 1024);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
 
       expect(detector.isMobile()).toBe(false);
       expect(detector.isTablet()).toBe(true);
@@ -299,8 +317,14 @@ describe("DeviceDetector", () => {
     it("should return capabilities for desktop", () => {
       mockViewportService.setDimensions(1920, 1080);
       // Set screen dimensions to ≤1440 to get "desktop" instead of "largeDesktop"
-      Object.defineProperty(window.screen, "width", { value: 1366, configurable: true });
-      Object.defineProperty(window.screen, "height", { value: 768, configurable: true });
+      Object.defineProperty(window.screen, "width", {
+        value: 1366,
+        configurable: true,
+      });
+      Object.defineProperty(window.screen, "height", {
+        value: 768,
+        configurable: true,
+      });
 
       const caps = detector.getCapabilities();
 
@@ -313,7 +337,10 @@ describe("DeviceDetector", () => {
 
     it("should return capabilities for mobile with touch", () => {
       mockViewportService.setDimensions(375, 667);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
 
       const caps = detector.getCapabilities();
 
@@ -378,10 +405,19 @@ describe("DeviceDetector", () => {
   describe("getResponsiveSettings", () => {
     it("should return mobile settings", () => {
       mockViewportService.setDimensions(375, 667);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
       // Set screen dimensions to match viewport for correct orientation detection
-      Object.defineProperty(window.screen, "width", { value: 375, configurable: true });
-      Object.defineProperty(window.screen, "height", { value: 667, configurable: true });
+      Object.defineProperty(window.screen, "width", {
+        value: 375,
+        configurable: true,
+      });
+      Object.defineProperty(window.screen, "height", {
+        value: 667,
+        configurable: true,
+      });
 
       const settings = detector.getResponsiveSettings();
 
@@ -398,7 +434,10 @@ describe("DeviceDetector", () => {
 
     it("should return tablet settings", () => {
       mockViewportService.setDimensions(768, 1024);
-      Object.defineProperty(window, "ontouchstart", { value: true, configurable: true });
+      Object.defineProperty(window, "ontouchstart", {
+        value: true,
+        configurable: true,
+      });
 
       const settings = detector.getResponsiveSettings();
 
@@ -436,8 +475,14 @@ describe("DeviceDetector", () => {
     it("should detect portrait orientation", () => {
       mockViewportService.setDimensions(1080, 1920);
       // Set screen dimensions to match viewport for correct orientation detection
-      Object.defineProperty(window.screen, "width", { value: 1080, configurable: true });
-      Object.defineProperty(window.screen, "height", { value: 1920, configurable: true });
+      Object.defineProperty(window.screen, "width", {
+        value: 1080,
+        configurable: true,
+      });
+      Object.defineProperty(window.screen, "height", {
+        value: 1920,
+        configurable: true,
+      });
 
       const settings = detector.getResponsiveSettings();
       expect(settings.orientation).toBe("portrait");

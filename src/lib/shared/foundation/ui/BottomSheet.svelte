@@ -215,7 +215,9 @@
     // If so, don't interfere with the click - let it through
     const target = event.target as HTMLElement;
     const isInteractive =
-      target.closest('button, a, input, select, textarea, [role="button"], [onclick]') !== null;
+      target.closest(
+        'button, a, input, select, textarea, [role="button"], [onclick]'
+      ) !== null;
 
     if (isInteractive) {
       // Don't start drag tracking for interactive elements - let the click work
@@ -311,7 +313,9 @@
     // Check if the touch is on an interactive element
     const target = event.target as HTMLElement;
     const isInteractive =
-      target.closest('button, a, input, select, textarea, [role="button"], [onclick]') !== null;
+      target.closest(
+        'button, a, input, select, textarea, [role="button"], [onclick]'
+      ) !== null;
 
     if (isInteractive) {
       // Don't prevent default for interactive elements - let the touch/click work
@@ -367,7 +371,9 @@
       // Check if the touch is on an interactive element
       const target = e.target as HTMLElement;
       const isInteractive =
-        target.closest('button, a, input, select, textarea, [role="button"], [onclick]') !== null;
+        target.closest(
+          'button, a, input, select, textarea, [role="button"], [onclick]'
+        ) !== null;
 
       if (isInteractive) {
         // Don't prevent default for interactive elements - let the touch/click work
@@ -440,7 +446,9 @@
       aria-labelledby={labelledBy}
       aria-label={ariaLabel}
       tabindex="-1"
-      style={dragTranslateY > 0 ? `transform: translateY(${dragTranslateY}px);` : ''}
+      style={dragTranslateY > 0
+        ? `transform: translateY(${dragTranslateY}px);`
+        : ""}
       onclick={(e) => e.stopPropagation()}
       onpointerdown={handlePointerDown}
       onpointermove={handlePointerMove}
@@ -491,11 +499,23 @@
   .bottom-sheet {
     position: relative;
     width: var(--sheet-width, min(720px, 100%));
-    max-height: var(--sheet-max-height, min(95vh, var(--modal-max-height, 95vh)));
+    max-height: var(
+      --sheet-max-height,
+      min(95vh, var(--modal-max-height, 95vh))
+    );
     background: var(--sheet-bg, var(--sheet-bg-glass));
-    backdrop-filter: var(--sheet-filter, var(--glass-backdrop-strong, blur(24px)));
-    border-top-left-radius: var(--sheet-border-radius-top-left, var(--sheet-radius-large));
-    border-top-right-radius: var(--sheet-border-radius-top-right, var(--sheet-radius-large));
+    backdrop-filter: var(
+      --sheet-filter,
+      var(--glass-backdrop-strong, blur(24px))
+    );
+    border-top-left-radius: var(
+      --sheet-border-radius-top-left,
+      var(--sheet-radius-large)
+    );
+    border-top-right-radius: var(
+      --sheet-border-radius-top-right,
+      var(--sheet-radius-large)
+    );
     border: var(--sheet-border, var(--sheet-border-subtle));
     box-shadow: var(--sheet-shadow, var(--sheet-shadow-bottom));
     pointer-events: var(--sheet-pointer-events, auto);
@@ -506,7 +526,8 @@
     /* Allow taps and pans but prevent double-tap zoom and other browser gestures */
     touch-action: manipulation;
     /* Smooth transition when not dragging */
-    transition: transform var(--sheet-transition, var(--sheet-transition-smooth));
+    transition: transform
+      var(--sheet-transition, var(--sheet-transition-smooth));
   }
 
   .bottom-sheet.is-dragging {
@@ -558,8 +579,14 @@
 
   @media (max-width: 480px) {
     .bottom-sheet {
-      border-top-left-radius: var(--sheet-border-radius-top-left, var(--sheet-radius-medium));
-      border-top-right-radius: var(--sheet-border-radius-top-right, var(--sheet-radius-medium));
+      border-top-left-radius: var(
+        --sheet-border-radius-top-left,
+        var(--sheet-radius-medium)
+      );
+      border-top-right-radius: var(
+        --sheet-border-radius-top-right,
+        var(--sheet-radius-medium)
+      );
     }
   }
 </style>

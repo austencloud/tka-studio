@@ -7,14 +7,19 @@
 
 import type { CodexLetterMapping } from "$learn/codex";
 import type { ICodexLetterMappingRepo } from "$learn/codex/services/contracts";
-import type { CSVRow, ICSVPictographParser, MotionType, PictographData } from "$shared";
+import type {
+  CSVRow,
+  ICSVPictographParser,
+  MotionType,
+  PictographData,
+} from "$shared";
 import { GridMode, Letter } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { ParsedCsvRow } from "../../../../../modules/build/generate/shared/domain";
 import type {
-    ICSVLoader,
-    ILetterQueryHandler,
+  ICSVLoader,
+  ILetterQueryHandler,
 } from "../../../../foundation/services/contracts/data";
 
 interface CsvParseError {

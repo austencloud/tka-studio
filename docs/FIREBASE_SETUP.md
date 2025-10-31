@@ -37,7 +37,7 @@ const firebaseConfig = {
   projectId: "your-project-id",
   storageBucket: "your-project.appspot.com",
   messagingSenderId: "123456789012",
-  appId: "1:123456789012:web:abcdef1234567890"
+  appId: "1:123456789012:web:abcdef1234567890",
 };
 ```
 
@@ -102,6 +102,7 @@ That's it! Google login is now working.
 ## Step 9: Test Your Setup
 
 1. Start your development server:
+
    ```bash
    npm run dev
    ```
@@ -150,16 +151,20 @@ If you need to store user-uploaded files:
 ## Common Issues
 
 ### "Firebase: Error (auth/unauthorized-domain)"
+
 - Solution: Add your domain to Authorized domains in Authentication > Settings
 
 ### "Firebase: Error (auth/configuration-not-found)"
+
 - Solution: Make sure you've enabled the authentication provider in Firebase Console
 
 ### Environment Variables Not Loading
+
 - Solution: Restart your dev server after changing `.env`
 - Make sure variable names start with `PUBLIC_`
 
 ### "Invalid API key"
+
 - Solution: Double-check your API key in `.env` matches Firebase Console
 - Make sure there are no extra spaces or quotes
 

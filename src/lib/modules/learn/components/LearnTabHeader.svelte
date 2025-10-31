@@ -13,38 +13,40 @@ Features:
 - 44px minimum touch targets
 -->
 <script lang="ts">
-  import { navigationState, resolve, TYPES } from '$shared';
-  import type { IHapticFeedbackService } from '$shared';
+  import { navigationState, resolve, TYPES } from "$shared";
+  import type { IHapticFeedbackService } from "$shared";
 
   interface Props {
     /** Currently active sub-tab */
-    activeTab?: 'concepts' | 'drills' | 'read';
+    activeTab?: "concepts" | "drills" | "read";
     /** Callback when tab changes */
-    onTabChange?: (tab: 'concepts' | 'drills' | 'read') => void;
+    onTabChange?: (tab: "concepts" | "drills" | "read") => void;
     /** Callback when codex button clicked */
     onCodexClick?: () => void;
   }
 
   let {
-    activeTab = $bindable('concepts'),
+    activeTab = $bindable("concepts"),
     onTabChange,
-    onCodexClick
+    onCodexClick,
   }: Props = $props();
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   // Tab configuration
   const tabs = [
-    { id: 'concepts' as const, label: 'Concepts', icon: '🎯' },
-    { id: 'drills' as const, label: 'Drills', icon: '⚡' },
-    { id: 'read' as const, label: 'Read', icon: '📖' }
+    { id: "concepts" as const, label: "Concepts", icon: "🎯" },
+    { id: "drills" as const, label: "Drills", icon: "⚡" },
+    { id: "read" as const, label: "Read", icon: "📖" },
   ];
 
   // Handle tab click
   function handleTabClick(tabId: typeof activeTab) {
     if (tabId === activeTab) return;
 
-    hapticService?.trigger('selection');
+    hapticService?.trigger("selection");
     activeTab = tabId;
 
     // Update navigation state for persistence
@@ -55,7 +57,7 @@ Features:
 
   // Handle codex button click
   function handleCodexClick() {
-    hapticService?.trigger('selection');
+    hapticService?.trigger("selection");
     onCodexClick?.();
   }
 </script>
@@ -81,7 +83,8 @@ Features:
     <!-- Active indicator (underline) -->
     <div
       class="tab-indicator"
-      style="transform: translateX({tabs.findIndex(t => t.id === activeTab) * 100}%)"
+      style="transform: translateX({tabs.findIndex((t) => t.id === activeTab) *
+        100}%)"
     ></div>
   </nav>
 
@@ -104,7 +107,9 @@ Features:
       stroke-linejoin="round"
     >
       <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+      <path
+        d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"
+      />
     </svg>
     <span class="codex-label">Letters</span>
   </button>

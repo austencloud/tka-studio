@@ -7,11 +7,11 @@
  */
 
 import type {
-    AppSettings,
-    CompleteExploreState,
-    PictographData,
-    SequenceData,
-    TabId,
+  AppSettings,
+  CompleteExploreState,
+  PictographData,
+  SequenceData,
+  TabId,
 } from "$shared";
 import { injectable } from "inversify";
 import { db } from "../../database/TKADatabase";

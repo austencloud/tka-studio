@@ -37,8 +37,5 @@ export interface IRippleEffectService {
    * @param options - Optional configuration for the ripple
    * @returns Cleanup function to remove event listeners
    */
-  attachRipple(
-    element: HTMLElement,
-    options?: RippleOptions
-  ): () => void;
+  attachRipple(element: HTMLElement, options?: RippleOptions): () => void;
 }

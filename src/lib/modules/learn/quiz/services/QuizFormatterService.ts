@@ -1,7 +1,10 @@
 import { injectable } from "inversify";
 import type { QuizResults } from "../domain";
 
-export type LessonType = "pictograph_to_letter" | "letter_to_pictograph" | "valid_next_pictograph";
+export type LessonType =
+  | "pictograph_to_letter"
+  | "letter_to_pictograph"
+  | "valid_next_pictograph";
 export type QuizMode = "fixed_question" | "countdown";
 
 export interface IQuizFormatterService {

@@ -83,7 +83,9 @@ class SettingsState implements ISettingsService {
     // Object.assign doesn't trigger Svelte 5 runes reactivity
     for (const key in newSettings) {
       if (Object.prototype.hasOwnProperty.call(newSettings, key)) {
-        settingsState[key as keyof AppSettings] = newSettings[key as keyof AppSettings] as never;
+        settingsState[key as keyof AppSettings] = newSettings[
+          key as keyof AppSettings
+        ] as never;
       }
     }
 
@@ -183,4 +185,3 @@ export { SettingsState };
 
 // Singleton instance
 export const settingsService = new SettingsState();
-

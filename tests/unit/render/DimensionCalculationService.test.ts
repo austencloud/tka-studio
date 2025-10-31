@@ -50,34 +50,54 @@ describe("DimensionCalculationService", () => {
 
   describe("determineAdditionalHeights - Desktop Compatibility", () => {
     it("should calculate heights for 0 beats (no word area)", () => {
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 0, 1.0);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        0,
+        1.0
+      );
 
       expect(top).toBe(0); // No word area for 0 beats
       expect(bottom).toBe(55); // User info area
     });
 
     it("should calculate heights for 1 beat", () => {
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 1, 1.0);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        1,
+        1.0
+      );
 
       expect(top).toBe(150); // Word area for 1 beat
       expect(bottom).toBe(55); // User info area
     });
 
     it("should calculate heights for 2 beats", () => {
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 2, 1.0);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        2,
+        1.0
+      );
 
       expect(top).toBe(200); // Word area for 2 beats
       expect(bottom).toBe(75); // User info area
     });
 
     it("should calculate heights for 3+ beats", () => {
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 3, 1.0);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        3,
+        1.0
+      );
 
       expect(top).toBe(300); // Word area for 3+ beats
       expect(bottom).toBe(150); // User info area
 
       // Verify same for higher beat counts
-      const [top10, bottom10] = service.determineAdditionalHeights(baseOptions, 10, 1.0);
+      const [top10, bottom10] = service.determineAdditionalHeights(
+        baseOptions,
+        10,
+        1.0
+      );
       expect(top10).toBe(300);
       expect(bottom10).toBe(150);
     });
@@ -85,32 +105,60 @@ describe("DimensionCalculationService", () => {
     it("should respect addWord option", () => {
       const noWordOptions = { ...baseOptions, addWord: false };
 
-      const [top0, bottom0] = service.determineAdditionalHeights(noWordOptions, 0, 1.0);
+      const [top0, bottom0] = service.determineAdditionalHeights(
+        noWordOptions,
+        0,
+        1.0
+      );
       expect(top0).toBe(0);
 
-      const [top1, bottom1] = service.determineAdditionalHeights(noWordOptions, 1, 1.0);
+      const [top1, bottom1] = service.determineAdditionalHeights(
+        noWordOptions,
+        1,
+        1.0
+      );
       expect(top1).toBe(0);
 
-      const [top3, bottom3] = service.determineAdditionalHeights(noWordOptions, 3, 1.0);
+      const [top3, bottom3] = service.determineAdditionalHeights(
+        noWordOptions,
+        3,
+        1.0
+      );
       expect(top3).toBe(0);
     });
 
     it("should respect addUserInfo option", () => {
       const noUserInfoOptions = { ...baseOptions, addUserInfo: false };
 
-      const [top0, bottom0] = service.determineAdditionalHeights(noUserInfoOptions, 0, 1.0);
+      const [top0, bottom0] = service.determineAdditionalHeights(
+        noUserInfoOptions,
+        0,
+        1.0
+      );
       expect(bottom0).toBe(0);
 
-      const [top1, bottom1] = service.determineAdditionalHeights(noUserInfoOptions, 1, 1.0);
+      const [top1, bottom1] = service.determineAdditionalHeights(
+        noUserInfoOptions,
+        1,
+        1.0
+      );
       expect(bottom1).toBe(0);
 
-      const [top3, bottom3] = service.determineAdditionalHeights(noUserInfoOptions, 3, 1.0);
+      const [top3, bottom3] = service.determineAdditionalHeights(
+        noUserInfoOptions,
+        3,
+        1.0
+      );
       expect(bottom3).toBe(0);
     });
 
     it("should apply beat scale correctly", () => {
       const scale2x = 2.0;
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 3, scale2x);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        3,
+        scale2x
+      );
 
       // 300 * 2.0 = 600, floor(600) = 600
       expect(top).toBe(600);
@@ -120,7 +168,11 @@ describe("DimensionCalculationService", () => {
 
     it("should floor scaled values", () => {
       const scale = 1.5;
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 3, scale);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        3,
+        scale
+      );
 
       // 300 * 1.5 = 450, floor(450) = 450
       expect(top).toBe(450);
@@ -146,13 +198,21 @@ describe("DimensionCalculationService", () => {
     });
 
     it("should throw error for invalid base size", () => {
-      expect(() => service.calculateScaledBeatSize(0, 1.0)).toThrow("Invalid size parameters");
-      expect(() => service.calculateScaledBeatSize(-10, 1.0)).toThrow("Invalid size parameters");
+      expect(() => service.calculateScaledBeatSize(0, 1.0)).toThrow(
+        "Invalid size parameters"
+      );
+      expect(() => service.calculateScaledBeatSize(-10, 1.0)).toThrow(
+        "Invalid size parameters"
+      );
     });
 
     it("should throw error for invalid scale", () => {
-      expect(() => service.calculateScaledBeatSize(144, 0)).toThrow("Invalid size parameters");
-      expect(() => service.calculateScaledBeatSize(144, -1)).toThrow("Invalid size parameters");
+      expect(() => service.calculateScaledBeatSize(144, 0)).toThrow(
+        "Invalid size parameters"
+      );
+      expect(() => service.calculateScaledBeatSize(144, -1)).toThrow(
+        "Invalid size parameters"
+      );
     });
   });
 
@@ -173,12 +233,18 @@ describe("DimensionCalculationService", () => {
     });
 
     it("should throw error for negative margin", () => {
-      expect(() => service.calculateScaledMargin(-10, 1.0)).toThrow("Invalid margin parameters");
+      expect(() => service.calculateScaledMargin(-10, 1.0)).toThrow(
+        "Invalid margin parameters"
+      );
     });
 
     it("should throw error for invalid scale", () => {
-      expect(() => service.calculateScaledMargin(50, 0)).toThrow("Invalid margin parameters");
-      expect(() => service.calculateScaledMargin(50, -1)).toThrow("Invalid margin parameters");
+      expect(() => service.calculateScaledMargin(50, 0)).toThrow(
+        "Invalid margin parameters"
+      );
+      expect(() => service.calculateScaledMargin(50, -1)).toThrow(
+        "Invalid margin parameters"
+      );
     });
   });
 
@@ -235,8 +301,16 @@ describe("DimensionCalculationService", () => {
     });
 
     it("should handle zero heights", () => {
-      const noExtrasOptions = { ...baseOptions, addWord: false, addUserInfo: false };
-      const total = service.calculateTotalAdditionalHeight(noExtrasOptions, 3, 1.0);
+      const noExtrasOptions = {
+        ...baseOptions,
+        addWord: false,
+        addUserInfo: false,
+      };
+      const total = service.calculateTotalAdditionalHeight(
+        noExtrasOptions,
+        3,
+        1.0
+      );
       expect(total).toBe(0);
     });
   });
@@ -486,18 +560,30 @@ describe("DimensionCalculationService", () => {
 
   describe("Real-World Export Scenarios", () => {
     it("should handle typical 16-beat sequence export", () => {
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 16, 1.0);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        16,
+        1.0
+      );
 
       expect(top).toBe(300); // Word area for 16 beats
       expect(bottom).toBe(150); // User info area
 
-      const total = service.calculateTotalAdditionalHeight(baseOptions, 16, 1.0);
+      const total = service.calculateTotalAdditionalHeight(
+        baseOptions,
+        16,
+        1.0
+      );
       expect(total).toBe(450);
     });
 
     it("should handle high-resolution export (2x scale)", () => {
       const scale = 2.0;
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 16, scale);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        16,
+        scale
+      );
 
       expect(top).toBe(600); // 300 * 2.0
       expect(bottom).toBe(300); // 150 * 2.0
@@ -516,7 +602,11 @@ describe("DimensionCalculationService", () => {
         addUserInfo: false,
       };
 
-      const [top, bottom] = service.determineAdditionalHeights(minimalOptions, 16, 1.0);
+      const [top, bottom] = service.determineAdditionalHeights(
+        minimalOptions,
+        16,
+        1.0
+      );
 
       expect(top).toBe(0);
       expect(bottom).toBe(0);
@@ -545,11 +635,17 @@ describe("DimensionCalculationService", () => {
 
   describe("Edge Cases", () => {
     it("should handle zero beat count", () => {
-      expect(() => service.determineAdditionalHeights(baseOptions, 0, 1.0)).not.toThrow();
+      expect(() =>
+        service.determineAdditionalHeights(baseOptions, 0, 1.0)
+      ).not.toThrow();
     });
 
     it("should handle very large beat count", () => {
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 1000, 1.0);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        1000,
+        1.0
+      );
 
       // Should still use 3+ beats logic
       expect(top).toBe(300);
@@ -557,24 +653,28 @@ describe("DimensionCalculationService", () => {
     });
 
     it("should handle fractional beat scale", () => {
-      const [top, bottom] = service.determineAdditionalHeights(baseOptions, 3, 0.75);
+      const [top, bottom] = service.determineAdditionalHeights(
+        baseOptions,
+        3,
+        0.75
+      );
 
       expect(top).toBe(225); // floor(300 * 0.75)
       expect(bottom).toBe(112); // floor(150 * 0.75)
     });
 
     it("should throw error for invalid parameters in determineAdditionalHeights", () => {
-      expect(() => service.determineAdditionalHeights(baseOptions, -1, 1.0)).toThrow(
-        "Invalid dimension parameters"
-      );
+      expect(() =>
+        service.determineAdditionalHeights(baseOptions, -1, 1.0)
+      ).toThrow("Invalid dimension parameters");
 
-      expect(() => service.determineAdditionalHeights(baseOptions, 10, 0)).toThrow(
-        "Invalid dimension parameters"
-      );
+      expect(() =>
+        service.determineAdditionalHeights(baseOptions, 10, 0)
+      ).toThrow("Invalid dimension parameters");
 
-      expect(() => service.determineAdditionalHeights(baseOptions, 10, 11)).toThrow(
-        "Invalid dimension parameters"
-      );
+      expect(() =>
+        service.determineAdditionalHeights(baseOptions, 10, 11)
+      ).toThrow("Invalid dimension parameters");
     });
   });
 });

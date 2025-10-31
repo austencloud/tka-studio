@@ -70,7 +70,8 @@
       } else if (err.code === "auth/popup-blocked") {
         error = "Popup was blocked. Please allow popups for this site.";
       } else if (err.code === "auth/account-exists-with-different-credential") {
-        error = "An account already exists with this email using a different sign-in method.";
+        error =
+          "An account already exists with this email using a different sign-in method.";
       } else {
         error = err.message || "An error occurred during sign-in";
       }
@@ -86,7 +87,8 @@
     twitter: "bg-[#1da1f2] hover:bg-[#1a91da]",
   };
 
-  const colorClass = providerColors[provider] || "bg-gray-600 hover:bg-gray-700";
+  const colorClass =
+    providerColors[provider] || "bg-gray-600 hover:bg-gray-700";
 </script>
 
 <button

@@ -6,7 +6,13 @@
  */
 
 export type Platform = "ios" | "android" | "desktop";
-export type Browser = "chrome" | "safari" | "edge" | "firefox" | "samsung" | "other";
+export type Browser =
+  | "chrome"
+  | "safari"
+  | "edge"
+  | "firefox"
+  | "samsung"
+  | "other";
 
 export interface PlatformInfo {
   platform: Platform;

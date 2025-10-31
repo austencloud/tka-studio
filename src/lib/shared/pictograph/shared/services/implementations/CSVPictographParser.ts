@@ -5,8 +5,22 @@
  * Uses the correct position mapping based on hand location combinations.
  */
 
-import type { CSVRow, ICSVPictographParser, IEnumMapper, IOrientationCalculationService } from "$shared";
-import { GridMode, GridPosition, Letter, MotionColor, createMotionData, createPictographData, type PictographData } from "$shared";
+import type {
+  CSVRow,
+  ICSVPictographParser,
+  IEnumMapper,
+  IGridPositionDeriver,
+  IOrientationCalculationService,
+} from "$shared";
+import {
+  GridMode,
+  GridPosition,
+  Letter,
+  MotionColor,
+  createMotionData,
+  createPictographData,
+  type PictographData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { Orientation } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 import { inject, injectable } from "inversify";
@@ -15,7 +29,7 @@ import { inject, injectable } from "inversify";
 export class CSVPictographParser implements ICSVPictographParser {
   constructor(
     @inject(TYPES.IGridPositionDeriver)
-    private readonly positionMapper: any,
+    private readonly positionMapper: IGridPositionDeriver,
     @inject(TYPES.IEnumMapper)
     private readonly enumMapper: IEnumMapper,
     @inject(TYPES.IOrientationCalculationService)
@@ -139,7 +153,10 @@ export class CSVPictographParser implements ICSVPictographParser {
    * @param letterRows - CSV rows to parse
    * @param gridMode - Grid mode (diamond/box) for correct positioning
    */
-  parseLetterPictographs(letterRows: CSVRow[], gridMode: GridMode): PictographData[] {
+  parseLetterPictographs(
+    letterRows: CSVRow[],
+    gridMode: GridMode
+  ): PictographData[] {
     return letterRows.map((row) => this.parseCSVRowToPictograph(row, gridMode));
   }
 

@@ -116,8 +116,6 @@ export class CodexLetterMappingRepo implements ICodexLetterMappingRepo {
         rows: data.rows,
         categories: data.categories,
       };
-
-
     } catch (error) {
       console.error("Failed to load codex configuration:", error);
       throw error;

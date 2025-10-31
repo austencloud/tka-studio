@@ -74,7 +74,12 @@
   ></div>
 
   <!-- Sheet -->
-  <div class="sub-mode-sheet glass-surface" transition:slideTransition role="dialog" aria-label="Select mode">
+  <div
+    class="sub-mode-sheet glass-surface"
+    transition:slideTransition
+    role="dialog"
+    aria-label="Select mode"
+  >
     <!-- Handle bar for visual affordance -->
     <div class="sheet-handle"></div>
 

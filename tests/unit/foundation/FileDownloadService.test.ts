@@ -28,7 +28,9 @@ describe("FileDownloadService", () => {
     } as unknown as HTMLAnchorElement;
 
     // Mock document.createElement
-    createElementSpy = vi.spyOn(document, "createElement").mockReturnValue(mockAnchor);
+    createElementSpy = vi
+      .spyOn(document, "createElement")
+      .mockReturnValue(mockAnchor);
 
     // Mock document.body methods
     vi.spyOn(document.body, "appendChild").mockImplementation(() => mockAnchor);
@@ -48,8 +50,12 @@ describe("FileDownloadService", () => {
       });
     }
 
-    createObjectURLSpy = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:mock-url");
-    revokeObjectURLSpy = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => {});
+    createObjectURLSpy = vi
+      .spyOn(URL, "createObjectURL")
+      .mockReturnValue("blob:mock-url");
+    revokeObjectURLSpy = vi
+      .spyOn(URL, "revokeObjectURL")
+      .mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -111,7 +117,11 @@ describe("FileDownloadService", () => {
     it("should handle different blob types", async () => {
       const testCases = [
         { content: "text content", type: "text/plain", filename: "test.txt" },
-        { content: '{"key":"value"}', type: "application/json", filename: "data.json" },
+        {
+          content: '{"key":"value"}',
+          type: "application/json",
+          filename: "data.json",
+        },
         { content: "<html></html>", type: "text/html", filename: "page.html" },
       ];
 
@@ -159,9 +169,18 @@ describe("FileDownloadService", () => {
   describe("downloadBlobBatch", () => {
     it("should download multiple blobs successfully", async () => {
       const blobs = [
-        { blob: new Blob(["content 1"], { type: "text/plain" }), filename: "file1.txt" },
-        { blob: new Blob(["content 2"], { type: "text/plain" }), filename: "file2.txt" },
-        { blob: new Blob(["content 3"], { type: "text/plain" }), filename: "file3.txt" },
+        {
+          blob: new Blob(["content 1"], { type: "text/plain" }),
+          filename: "file1.txt",
+        },
+        {
+          blob: new Blob(["content 2"], { type: "text/plain" }),
+          filename: "file2.txt",
+        },
+        {
+          blob: new Blob(["content 3"], { type: "text/plain" }),
+          filename: "file3.txt",
+        },
       ];
 
       const results = await service.downloadBlobBatch(blobs, { delay: 0 });
@@ -175,8 +194,14 @@ describe("FileDownloadService", () => {
 
     it("should apply delay between downloads", async () => {
       const blobs = [
-        { blob: new Blob(["1"], { type: "text/plain" }), filename: "file1.txt" },
-        { blob: new Blob(["2"], { type: "text/plain" }), filename: "file2.txt" },
+        {
+          blob: new Blob(["1"], { type: "text/plain" }),
+          filename: "file1.txt",
+        },
+        {
+          blob: new Blob(["2"], { type: "text/plain" }),
+          filename: "file2.txt",
+        },
       ];
 
       const startTime = Date.now();
@@ -189,8 +214,14 @@ describe("FileDownloadService", () => {
 
     it("should use default delay of 100ms when not specified", async () => {
       const blobs = [
-        { blob: new Blob(["1"], { type: "text/plain" }), filename: "file1.txt" },
-        { blob: new Blob(["2"], { type: "text/plain" }), filename: "file2.txt" },
+        {
+          blob: new Blob(["1"], { type: "text/plain" }),
+          filename: "file1.txt",
+        },
+        {
+          blob: new Blob(["2"], { type: "text/plain" }),
+          filename: "file2.txt",
+        },
       ];
 
       const startTime = Date.now();
@@ -202,7 +233,10 @@ describe("FileDownloadService", () => {
 
     it("should not delay after last download", async () => {
       const blobs = [
-        { blob: new Blob(["1"], { type: "text/plain" }), filename: "file1.txt" },
+        {
+          blob: new Blob(["1"], { type: "text/plain" }),
+          filename: "file1.txt",
+        },
       ];
 
       const startTime = Date.now();
@@ -220,9 +254,18 @@ describe("FileDownloadService", () => {
 
     it("should continue batch download even if one fails", async () => {
       const blobs = [
-        { blob: new Blob(["1"], { type: "text/plain" }), filename: "file1.txt" },
-        { blob: new Blob(["2"], { type: "text/plain" }), filename: "file2.txt" },
-        { blob: new Blob(["3"], { type: "text/plain" }), filename: "file3.txt" },
+        {
+          blob: new Blob(["1"], { type: "text/plain" }),
+          filename: "file1.txt",
+        },
+        {
+          blob: new Blob(["2"], { type: "text/plain" }),
+          filename: "file2.txt",
+        },
+        {
+          blob: new Blob(["3"], { type: "text/plain" }),
+          filename: "file3.txt",
+        },
       ];
 
       // Make the second download fail
@@ -244,8 +287,14 @@ describe("FileDownloadService", () => {
 
     it("should handle zero delay", async () => {
       const blobs = [
-        { blob: new Blob(["1"], { type: "text/plain" }), filename: "file1.txt" },
-        { blob: new Blob(["2"], { type: "text/plain" }), filename: "file2.txt" },
+        {
+          blob: new Blob(["1"], { type: "text/plain" }),
+          filename: "file1.txt",
+        },
+        {
+          blob: new Blob(["2"], { type: "text/plain" }),
+          filename: "file2.txt",
+        },
       ];
 
       const results = await service.downloadBlobBatch(blobs, { delay: 0 });
@@ -262,9 +311,18 @@ describe("FileDownloadService", () => {
   describe("Integration Tests", () => {
     it("should handle mixed content types in batch", async () => {
       const blobs = [
-        { blob: new Blob(["text"], { type: "text/plain" }), filename: "text.txt" },
-        { blob: new Blob(['{"key":"value"}'], { type: "application/json" }), filename: "data.json" },
-        { blob: new Blob(["<html></html>"], { type: "text/html" }), filename: "page.html" },
+        {
+          blob: new Blob(["text"], { type: "text/plain" }),
+          filename: "text.txt",
+        },
+        {
+          blob: new Blob(['{"key":"value"}'], { type: "application/json" }),
+          filename: "data.json",
+        },
+        {
+          blob: new Blob(["<html></html>"], { type: "text/html" }),
+          filename: "page.html",
+        },
       ];
 
       const results = await service.downloadBlobBatch(blobs, { delay: 0 });

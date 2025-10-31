@@ -7,18 +7,21 @@ export * from "./simple";
 export * from "./snowfall";
 
 // Export BackgroundType and BackgroundCategory enums
-export { BackgroundCategory, BackgroundType } from "./shared/domain/enums/background-enums";
+export {
+  BackgroundCategory,
+  BackgroundType,
+} from "./shared/domain/enums/background-enums";
 
 // Export specific types that are needed across modules
 export type {
-    Bubble,
-    DeepOceanState,
-    MarineLife,
-    OceanParticle
+  Bubble,
+  DeepOceanState,
+  MarineLife,
+  OceanParticle,
 } from "./deep-ocean/domain/models/DeepOceanModels";
 export { updateBodyBackground } from "./shared/background-preloader";
 export type {
-    ShootingStar,
-    ShootingStarState,
-    Snowflake
+  ShootingStar,
+  ShootingStarState,
+  Snowflake,
 } from "./snowfall/domain/models/snowfall-models";

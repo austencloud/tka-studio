@@ -153,7 +153,10 @@ export class ArrowGridCoordinateService implements IArrowGridCoordinateService {
     return coords;
   }
 
-  private getHandPointCoords(location: GridLocation, gridMode: GridMode): Point {
+  private getHandPointCoords(
+    location: GridLocation,
+    gridMode: GridMode
+  ): Point {
     const handPoints = this.getAllHandPoints(gridMode);
     const coords = handPoints[location];
     if (!coords) {

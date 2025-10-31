@@ -19,12 +19,12 @@ export type { ScrollbarVariant, UISize, UIVariant } from "./types";
 
 // Export UI types that are missing from shared exports
 export type {
-    ActiveBuildTab,
-    ExportResult,
-    Html2CanvasFunction,
-    PerformanceSnapshot,
-    TabId,
-    UIPerformanceMetrics,
-    UITheme,
-    WindowWithHtml2Canvas
+  ActiveBuildTab,
+  ExportResult,
+  Html2CanvasFunction,
+  PerformanceSnapshot,
+  TabId,
+  UIPerformanceMetrics,
+  UITheme,
+  WindowWithHtml2Canvas,
 } from "./UITypes";

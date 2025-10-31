@@ -139,7 +139,9 @@ export async function renderPictographToSVG(
  * Services (ArrowLifecycleManager, PropSvgLoader, etc.) are resolved asynchronously
  * This must complete before arrow/prop calculations can begin
  */
-async function waitForServicesInitialized(container: HTMLElement): Promise<void> {
+async function waitForServicesInitialized(
+  container: HTMLElement
+): Promise<void> {
   // Poll for signs that services are initialized
   // We can't directly access servicesInitialized flag, but we can detect when
   // the component is ready to render content
@@ -148,12 +150,14 @@ async function waitForServicesInitialized(container: HTMLElement): Promise<void>
 
   while (attempts < maxAttempts) {
     // Check if the SVG has any meaningful content (grid, etc.)
-    const svg = container.querySelector('svg');
+    const svg = container.querySelector("svg");
     const hasGrid = svg?.querySelector('.grid-svg, [class*="grid"]');
 
     // If we have a grid, the component is initialized enough to start rendering
     if (hasGrid) {
-      console.log(`✅ Services initialized (detected after ${attempts * 100}ms)`);
+      console.log(
+        `✅ Services initialized (detected after ${attempts * 100}ms)`
+      );
 
       // Give effects a moment to start running after service initialization
       await new Promise((resolve) => setTimeout(resolve, 150));
@@ -164,7 +168,9 @@ async function waitForServicesInitialized(container: HTMLElement): Promise<void>
     attempts++;
   }
 
-  console.warn(`⚠️ Service initialization timeout after ${maxAttempts * 100}ms`);
+  console.warn(
+    `⚠️ Service initialization timeout after ${maxAttempts * 100}ms`
+  );
 }
 
 /**
@@ -177,7 +183,8 @@ async function waitForArrowsAndPropsCalculated(
   pictographData: BeatData | PictographData
 ): Promise<void> {
   // Check if this pictograph should have arrows or props
-  const shouldHaveArrows = pictographData?.motions?.blue || pictographData?.motions?.red;
+  const shouldHaveArrows =
+    pictographData?.motions?.blue || pictographData?.motions?.red;
 
   if (!shouldHaveArrows) {
     // No motions = no arrows/props expected, return immediately
@@ -200,27 +207,35 @@ async function waitForArrowsAndPropsCalculated(
   let attempts = 0;
   const maxAttempts = 100; // 10 seconds max (100ms intervals)
 
-  console.log(`🔍 Waiting for ${expectedArrowCount} arrows and ${expectedPropCount} props...`);
+  console.log(
+    `🔍 Waiting for ${expectedArrowCount} arrows and ${expectedPropCount} props...`
+  );
 
   while (attempts < maxAttempts) {
     // Look for arrow SVG elements (they have class "arrow-svg")
-    const arrowGroups = container.querySelectorAll('.arrow-svg');
-    const arrowPaths = container.querySelectorAll('.arrow-svg path');
+    const arrowGroups = container.querySelectorAll(".arrow-svg");
+    const arrowPaths = container.querySelectorAll(".arrow-svg path");
 
     // Look for prop SVG elements (they have class "prop-svg")
-    const propGroups = container.querySelectorAll('.prop-svg');
-    const propImages = container.querySelectorAll('.prop-svg image, .prop-svg use');
+    const propGroups = container.querySelectorAll(".prop-svg");
+    const propImages = container.querySelectorAll(
+      ".prop-svg image, .prop-svg use"
+    );
 
     // Check if we have expected number of arrows and props
     const hasEnoughArrows = arrowGroups.length >= expectedArrowCount;
     const hasEnoughProps = propGroups.length >= expectedPropCount;
 
     if (attempts % 10 === 0 && attempts > 0) {
-      console.log(`⏳ Still waiting... (${attempts * 100}ms) arrows: ${arrowGroups.length}/${expectedArrowCount}, props: ${propGroups.length}/${expectedPropCount}`);
+      console.log(
+        `⏳ Still waiting... (${attempts * 100}ms) arrows: ${arrowGroups.length}/${expectedArrowCount}, props: ${propGroups.length}/${expectedPropCount}`
+      );
     }
 
     if (hasEnoughArrows && hasEnoughProps) {
-      console.log(`✅ Arrows and props calculated (found ${arrowGroups.length} arrow groups, ${propGroups.length} prop groups after ${attempts * 100}ms)`);
+      console.log(
+        `✅ Arrows and props calculated (found ${arrowGroups.length} arrow groups, ${propGroups.length} prop groups after ${attempts * 100}ms)`
+      );
       return;
     }
 
@@ -230,21 +245,23 @@ async function waitForArrowsAndPropsCalculated(
   }
 
   // Timeout - log warning but continue (better to have incomplete render than fail completely)
-  const actualArrowGroups = container.querySelectorAll('.arrow-svg').length;
-  const actualPropGroups = container.querySelectorAll('.prop-svg').length;
+  const actualArrowGroups = container.querySelectorAll(".arrow-svg").length;
+  const actualPropGroups = container.querySelectorAll(".prop-svg").length;
   console.warn(
     `⚠️ Arrow/prop calculation timeout after ${maxAttempts * 100}ms - ` +
-    `expected ${expectedArrowCount} arrows (found ${actualArrowGroups} groups), ` +
-    `expected ${expectedPropCount} props (found ${actualPropGroups} groups)`
+      `expected ${expectedArrowCount} arrows (found ${actualArrowGroups} groups), ` +
+      `expected ${expectedPropCount} props (found ${actualPropGroups} groups)`
   );
 
   // Log additional debug info
-  const svg = container.querySelector('svg');
+  const svg = container.querySelector("svg");
   if (svg) {
-    console.log('📊 SVG debug:', {
+    console.log("📊 SVG debug:", {
       hasGrid: !!svg.querySelector('.grid-svg, [class*="grid"]'),
-      hasGlyph: !!svg.querySelector('.tka-glyph'),
-      allClasses: Array.from(svg.querySelectorAll('[class]')).map((el) => el.className),
+      hasGlyph: !!svg.querySelector(".tka-glyph"),
+      allClasses: Array.from(svg.querySelectorAll("[class]")).map(
+        (el) => el.className
+      ),
     });
   }
 }
@@ -279,7 +296,9 @@ async function waitForImagesLoaded(container: HTMLElement): Promise<void> {
   }
 
   // Get glyph cache service
-  const glyphCache = await resolveService<IGlyphCacheService>(TYPES.IGlyphCacheService);
+  const glyphCache = await resolveService<IGlyphCacheService>(
+    TYPES.IGlyphCacheService
+  );
 
   const imagePromises = Array.from(images).map((img) => {
     return new Promise<void>((resolve) => {

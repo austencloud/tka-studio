@@ -63,9 +63,7 @@ test.describe("Generate Panel Card Layout", () => {
     await levelCard.waitFor({ state: "visible" });
 
     // Get current level value
-    const levelValue = await levelCard
-      .locator(".card-value")
-      .textContent();
+    const levelValue = await levelCard.locator(".card-value").textContent();
 
     // If level is Beginner (1), click to increment to Intermediate (2)
     if (levelValue?.includes("Beginner")) {

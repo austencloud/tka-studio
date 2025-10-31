@@ -9,6 +9,9 @@ coverage/
 # Dependencies
 node_modules/
 
+# Archive folders
+archive/
+
 # Logs
 *.log
 

@@ -31,11 +31,7 @@ describe("BeatNumberingService - Pure Utility", () => {
 
   describe("renumberBeats", () => {
     it("should renumber beats sequentially from 1", () => {
-      const beats = [
-        createBeat(5),
-        createBeat(99),
-        createBeat(1),
-      ];
+      const beats = [createBeat(5), createBeat(99), createBeat(1)];
 
       const result = service.renumberBeats(beats);
 
@@ -52,7 +48,7 @@ describe("BeatNumberingService - Pure Utility", () => {
     it("should handle single beat", () => {
       const beats = [createBeat(99)];
       const result = service.renumberBeats(beats);
-      
+
       expect(result).toHaveLength(1);
       expect(result[0].beatNumber).toBe(1);
     });
@@ -118,10 +114,10 @@ describe("BeatNumberingService - Pure Utility", () => {
 
     it("should find all incorrectly numbered beats", () => {
       const beats = [
-        createBeat(1),   // Correct (index 0)
-        createBeat(5),   // Wrong (index 1, should be 2)
-        createBeat(3),   // Correct (index 2)
-        createBeat(99),  // Wrong (index 3, should be 4)
+        createBeat(1), // Correct (index 0)
+        createBeat(5), // Wrong (index 1, should be 2)
+        createBeat(3), // Correct (index 2)
+        createBeat(99), // Wrong (index 3, should be 4)
       ];
 
       const gaps = service.findNumberingGaps(beats);

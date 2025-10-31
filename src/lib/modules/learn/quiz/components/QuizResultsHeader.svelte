@@ -5,7 +5,11 @@
     backButtonText?: string;
   }
 
-  let { lessonName, onBack, backButtonText = "← Back to Lessons" }: Props = $props();
+  let {
+    lessonName,
+    onBack,
+    backButtonText = "← Back to Lessons",
+  }: Props = $props();
 </script>
 
 <div class="results-header glass-surface">

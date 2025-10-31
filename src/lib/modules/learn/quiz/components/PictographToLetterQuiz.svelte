@@ -91,8 +91,6 @@
             .filter((letter): letter is Letter => letter != null)
         ),
       ].sort();
-
-
     } catch (error) {
       console.error("❌ Failed to load pictograph data:", error);
     } finally {

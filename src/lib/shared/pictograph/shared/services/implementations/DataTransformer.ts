@@ -8,7 +8,10 @@
 import { injectable } from "inversify";
 import type { BeatData } from "../../../../../modules/build/shared/domain/models/BeatData";
 import { GridMode } from "../../../grid/domain/enums/grid-enums";
-import type { GridData, GridPointData as RawGridData } from "../../../grid/domain/models/grid-models";
+import type {
+  GridData,
+  GridPointData as RawGridData,
+} from "../../../grid/domain/models/grid-models";
 import { createPictographData } from "../../domain/factories/createPictographData";
 import type { MotionData, PictographData } from "../../domain/models";
 import type { IDataTransformer } from "../contracts/IDataTransformer";

@@ -6,7 +6,12 @@
     completionTime: string;
   }
 
-  let { correctAnswers, incorrectGuesses, totalQuestions, completionTime }: Props = $props();
+  let {
+    correctAnswers,
+    incorrectGuesses,
+    totalQuestions,
+    completionTime,
+  }: Props = $props();
 </script>
 
 <div class="stats-grid">

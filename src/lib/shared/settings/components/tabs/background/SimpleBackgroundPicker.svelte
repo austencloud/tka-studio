@@ -371,7 +371,10 @@
 
   .preset-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Fixed 2 columns for balanced layout */
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* Fixed 2 columns for balanced layout */
     gap: 12px;
   }
 
@@ -400,7 +403,7 @@
   }
 
   .preset-card:active {
-    transform: scale(1.00); /* Press feedback */
+    transform: scale(1); /* Press feedback */
   }
 
   .preset-checkmark {

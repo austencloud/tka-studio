@@ -2,9 +2,9 @@
 // Background Factory - Creates background animation systems
 
 import type {
-    AccessibilitySettings,
-    BackgroundSystem,
-    QualityLevel,
+  AccessibilitySettings,
+  BackgroundSystem,
+  QualityLevel,
 } from "../../domain";
 import { BackgroundType } from "../../domain/enums/background-enums";
 

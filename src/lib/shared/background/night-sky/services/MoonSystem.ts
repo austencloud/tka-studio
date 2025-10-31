@@ -2,9 +2,9 @@
 
 // Removed resolve import - calculation service now injected via constructor
 import type {
-    AccessibilitySettings,
-    Dimensions,
-    QualityLevel,
+  AccessibilitySettings,
+  Dimensions,
+  QualityLevel,
 } from "../../shared";
 import type { Moon } from "../domain";
 import type { INightSkyCalculationService } from "./contracts/INightSkyCalculationService";
@@ -151,10 +151,10 @@ export class MoonSystem {
 
     // ENHANCEMENT 1: Outer glow/halo for ethereal beauty
     const glowGradient = ctx.createRadialGradient(x, y, R * 0.8, x, y, R * 2.5);
-    glowGradient.addColorStop(0, 'rgba(245, 245, 220, 0.15)'); // Soft beige glow
-    glowGradient.addColorStop(0.4, 'rgba(245, 245, 220, 0.08)');
-    glowGradient.addColorStop(0.7, 'rgba(200, 200, 255, 0.03)'); // Hint of blue at edges
-    glowGradient.addColorStop(1, 'rgba(200, 200, 255, 0)');
+    glowGradient.addColorStop(0, "rgba(245, 245, 220, 0.15)"); // Soft beige glow
+    glowGradient.addColorStop(0.4, "rgba(245, 245, 220, 0.08)");
+    glowGradient.addColorStop(0.7, "rgba(200, 200, 255, 0.03)"); // Hint of blue at edges
+    glowGradient.addColorStop(1, "rgba(200, 200, 255, 0)");
 
     ctx.fillStyle = glowGradient;
     ctx.beginPath();
@@ -163,14 +163,18 @@ export class MoonSystem {
 
     // ENHANCEMENT 2: Textured moon surface with radial gradient
     const moonGradient = ctx.createRadialGradient(
-      x - R * 0.3, y - R * 0.3, R * 0.1,  // Light source from upper-left
-      x, y, R
+      x - R * 0.3,
+      y - R * 0.3,
+      R * 0.1, // Light source from upper-left
+      x,
+      y,
+      R
     );
-    moonGradient.addColorStop(0, '#fffef0');      // Bright highlight
-    moonGradient.addColorStop(0.3, '#f5f5dc');    // Beige
-    moonGradient.addColorStop(0.6, '#e8e8d0');    // Slightly darker
-    moonGradient.addColorStop(0.85, '#d0d0b8');   // Edge darkening
-    moonGradient.addColorStop(1, '#b8b8a0');      // Soft edge
+    moonGradient.addColorStop(0, "#fffef0"); // Bright highlight
+    moonGradient.addColorStop(0.3, "#f5f5dc"); // Beige
+    moonGradient.addColorStop(0.6, "#e8e8d0"); // Slightly darker
+    moonGradient.addColorStop(0.85, "#d0d0b8"); // Edge darkening
+    moonGradient.addColorStop(1, "#b8b8a0"); // Soft edge
 
     ctx.fillStyle = moonGradient;
     ctx.beginPath();
@@ -180,27 +184,31 @@ export class MoonSystem {
     // ENHANCEMENT 3: Consistent, realistic crater positions (seeded by moon position)
     // Using deterministic positions based on moon's x/y so craters don't jump around
     const craters = [
-      { offsetX: 0.3, offsetY: -0.2, size: 0.15 },   // Upper right
-      { offsetX: -0.4, offsetY: 0.1, size: 0.12 },   // Left center
-      { offsetX: 0.1, offsetY: 0.35, size: 0.18 },   // Lower center
-      { offsetX: -0.15, offsetY: -0.3, size: 0.1 },  // Upper left
-      { offsetX: 0.45, offsetY: 0.2, size: 0.08 },   // Right
-      { offsetX: -0.25, offsetY: 0.4, size: 0.11 },  // Lower left
+      { offsetX: 0.3, offsetY: -0.2, size: 0.15 }, // Upper right
+      { offsetX: -0.4, offsetY: 0.1, size: 0.12 }, // Left center
+      { offsetX: 0.1, offsetY: 0.35, size: 0.18 }, // Lower center
+      { offsetX: -0.15, offsetY: -0.3, size: 0.1 }, // Upper left
+      { offsetX: 0.45, offsetY: 0.2, size: 0.08 }, // Right
+      { offsetX: -0.25, offsetY: 0.4, size: 0.11 }, // Lower left
     ];
 
     ctx.globalAlpha = 0.08; // More subtle
-    craters.forEach(crater => {
+    craters.forEach((crater) => {
       const craterX = x + crater.offsetX * R;
       const craterY = y + crater.offsetY * R;
       const craterR = R * crater.size;
 
       const craterGradient = ctx.createRadialGradient(
-        craterX, craterY, 0,
-        craterX, craterY, craterR
+        craterX,
+        craterY,
+        0,
+        craterX,
+        craterY,
+        craterR
       );
-      craterGradient.addColorStop(0, 'rgba(80, 80, 60, 0.6)');
-      craterGradient.addColorStop(0.5, 'rgba(80, 80, 60, 0.3)');
-      craterGradient.addColorStop(1, 'rgba(80, 80, 60, 0)');
+      craterGradient.addColorStop(0, "rgba(80, 80, 60, 0.6)");
+      craterGradient.addColorStop(0.5, "rgba(80, 80, 60, 0.3)");
+      craterGradient.addColorStop(1, "rgba(80, 80, 60, 0)");
 
       ctx.fillStyle = craterGradient;
       ctx.beginPath();
@@ -218,7 +226,10 @@ export class MoonSystem {
 
       // Only draw noise inside moon circle
       if (distance < R) {
-        ctx.fillStyle = Math.random() > 0.5 ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)';
+        ctx.fillStyle =
+          Math.random() > 0.5
+            ? "rgba(255, 255, 255, 0.3)"
+            : "rgba(0, 0, 0, 0.3)";
         ctx.fillRect(noiseX, noiseY, 1, 1);
       }
     }
@@ -237,13 +248,17 @@ export class MoonSystem {
 
       // Draw darker gradient shadow for better contrast
       const shadowGradient = ctx.createRadialGradient(
-        shadowDiscCenterX, y, 0,
-        shadowDiscCenterX, y, R * 1.2
+        shadowDiscCenterX,
+        y,
+        0,
+        shadowDiscCenterX,
+        y,
+        R * 1.2
       );
-      shadowGradient.addColorStop(0, 'rgba(5, 5, 15, 0.95)');     // Very dark center
-      shadowGradient.addColorStop(0.4, 'rgba(8, 8, 20, 0.85)');   // Dark
-      shadowGradient.addColorStop(0.7, 'rgba(10, 10, 25, 0.6)');  // Medium dark
-      shadowGradient.addColorStop(1, 'rgba(15, 15, 30, 0.2)');    // Soft edge
+      shadowGradient.addColorStop(0, "rgba(5, 5, 15, 0.95)"); // Very dark center
+      shadowGradient.addColorStop(0.4, "rgba(8, 8, 20, 0.85)"); // Dark
+      shadowGradient.addColorStop(0.7, "rgba(10, 10, 25, 0.6)"); // Medium dark
+      shadowGradient.addColorStop(1, "rgba(15, 15, 30, 0.2)"); // Soft edge
 
       ctx.fillStyle = shadowGradient;
       ctx.beginPath();
@@ -255,7 +270,7 @@ export class MoonSystem {
 
     // ENHANCEMENT 6: Subtle edge glow for depth
     ctx.globalAlpha = 0.3;
-    ctx.strokeStyle = 'rgba(255, 255, 240, 0.4)';
+    ctx.strokeStyle = "rgba(255, 255, 240, 0.4)";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(x, y, R, 0, 2 * Math.PI);

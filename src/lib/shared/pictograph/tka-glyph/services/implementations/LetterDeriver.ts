@@ -15,11 +15,11 @@ interface LetterDerivationResult {
 }
 
 import {
-    GridMode,
-    Letter,
-    MotionType,
-    type MotionData,
-    type PictographData,
+  GridMode,
+  Letter,
+  MotionType,
+  type MotionData,
+  type PictographData,
 } from "$shared";
 import { injectable } from "inversify";
 

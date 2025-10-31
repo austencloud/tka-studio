@@ -1,15 +1,15 @@
 import { resolve, TYPES } from "../../../inversify";
 import type {
-    Dimensions,
-    QualityLevel,
+  Dimensions,
+  QualityLevel,
 } from "../../shared/domain/types/background-types";
 import type { IBackgroundConfigurationService } from "../../shared/services/contracts/IBackgroundConfigurationService";
 import type { IBackgroundRenderingService } from "../../shared/services/contracts/IBackgroundRenderingService";
 import type { IBackgroundSystem } from "../../shared/services/contracts/IBackgroundSystem";
 import { createShootingStarSystem } from "../../shared/services/implementations/ShootingStarSystem";
 import type {
-    ShootingStarState,
-    Snowflake,
+  ShootingStarState,
+  Snowflake,
 } from "../domain/models/snowfall-models";
 import { createSnowflakeSystem } from "./SnowflakeSystem";
 

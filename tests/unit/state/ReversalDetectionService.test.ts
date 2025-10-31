@@ -33,8 +33,12 @@ describe("ReversalDetectionService", () => {
     startPosition: null,
     endPosition: null,
     motions: {
-      [MotionColor.BLUE]: blueDir ? { rotationDirection: blueDir } as any : undefined,
-      [MotionColor.RED]: redDir ? { rotationDirection: redDir } as any : undefined,
+      [MotionColor.BLUE]: blueDir
+        ? ({ rotationDirection: blueDir } as any)
+        : undefined,
+      [MotionColor.RED]: redDir
+        ? ({ rotationDirection: redDir } as any)
+        : undefined,
     },
   });
 
@@ -67,10 +71,7 @@ describe("ReversalDetectionService", () => {
     });
 
     it("should detect NO reversal when same direction", () => {
-      const beats = [
-        createBeat(1, "cw", "cw"),
-        createBeat(2, "cw", "cw"),
-      ];
+      const beats = [createBeat(1, "cw", "cw"), createBeat(2, "cw", "cw")];
       const result = service.processReversals(createSeq(beats));
 
       expect(result.beats[1].blueReversal).toBe(false);
@@ -84,8 +85,8 @@ describe("ReversalDetectionService", () => {
       ];
       const result = service.processReversals(createSeq(beats));
 
-      expect(result.beats[1].blueReversal).toBe(true);  // cw → ccw
-      expect(result.beats[1].redReversal).toBe(true);   // ccw → cw
+      expect(result.beats[1].blueReversal).toBe(true); // cw → ccw
+      expect(result.beats[1].redReversal).toBe(true); // ccw → cw
     });
 
     it("should skip blank beats when detecting reversals", () => {
@@ -109,14 +110,14 @@ describe("ReversalDetectionService", () => {
       const result = service.processReversals(createSeq(beats));
 
       expect(result.beats[1].blueReversal).toBe(false); // Blue stays cw
-      expect(result.beats[1].redReversal).toBe(true);   // Red reverses
+      expect(result.beats[1].redReversal).toBe(true); // Red reverses
     });
 
     it("should handle multiple reversals in sequence", () => {
       const beats = [
         createBeat(1, "cw", "cw"),
-        createBeat(2, "ccw", "ccw"),  // Reversal
-        createBeat(3, "cw", "cw"),    // Reversal again
+        createBeat(2, "ccw", "ccw"), // Reversal
+        createBeat(3, "cw", "cw"), // Reversal again
       ];
       const result = service.processReversals(createSeq(beats));
 

@@ -1,678 +1,755 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CAP Card Design Options - 2025</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
-      color: white;
-      padding: 40px 20px;
-      min-height: 100vh;
-    }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .subtitle {
-      text-align: center;
-      color: #9ca3af;
-      margin-bottom: 3rem;
-      font-size: 1.1rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 30px;
-      margin-bottom: 40px;
-    }
-
-    .card-demo {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      padding: 30px;
-      backdrop-filter: blur(10px);
-    }
-
-    .card-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: #fff;
-    }
-
-    .card-description {
-      font-size: 0.9rem;
-      color: #9ca3af;
-      margin-bottom: 1.5rem;
-      line-height: 1.5;
-    }
-
-    .demo-card {
-      width: 100%;
-      aspect-ratio: 1.5;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .demo-card:hover {
-      transform: scale(1.02);
-    }
-
-    .demo-card-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-
-    .demo-card-label {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 8px;
-      font-weight: 600;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .demo-card-value {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: white;
-      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Option 1: Animated Mesh Gradient */
-    .option-1 {
-      background: linear-gradient(135deg,
-        #4338ca 0%,
-        #6b21a8 12.5%,
-        #db2777 25%,
-        #f97316 37.5%,
-        #eab308 50%,
-        #22c55e 62.5%,
-        #0891b2 75%,
-        #3b82f6 87.5%,
-        #6366f1 100%
-      );
-      background-size: 300% 300%;
-      animation: meshGradient 15s ease infinite;
-    }
-
-    @keyframes meshGradient {
-      0%, 100% {
-        background-position: 0% 50%;
-      }
-      25% {
-        background-position: 50% 100%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      75% {
-        background-position: 50% 0%;
-      }
-    }
-
-    /* Option 2: Iridescent Shimmer */
-    .option-2 {
-      background: linear-gradient(135deg, #4338ca 0%, #6b21a8 25%, #db2777 50%, #0891b2 75%, #059669 100%);
-      position: relative;
-    }
-
-    .option-2::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      right: -50%;
-      bottom: -50%;
-      background: linear-gradient(
-        120deg,
-        transparent,
-        transparent 40%,
-        rgba(255, 255, 255, 0.3) 50%,
-        transparent 60%,
-        transparent
-      );
-      animation: shimmer 3s ease-in-out infinite;
-      pointer-events: none;
-    }
-
-    @keyframes shimmer {
-      0% {
-        transform: translateX(-100%) translateY(-100%) rotate(30deg);
-      }
-      100% {
-        transform: translateX(100%) translateY(100%) rotate(30deg);
-      }
-    }
-
-    /* Option 3: Glassmorphism with Floating Particles */
-    .option-3 {
-      background: linear-gradient(135deg,
-        rgba(67, 56, 202, 0.8) 0%,
-        rgba(107, 33, 168, 0.8) 25%,
-        rgba(219, 39, 119, 0.8) 50%,
-        rgba(8, 145, 178, 0.8) 75%,
-        rgba(5, 150, 105, 0.8) 100%
-      );
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    }
-
-    .option-3::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
-      background-size: 50px 50px, 80px 80px, 100px 100px;
-      background-position: 0 0, 40px 60px, 80px 20px;
-      animation: floatParticles 20s linear infinite;
-      opacity: 0.3;
-    }
-
-    @keyframes floatParticles {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(-100px);
-      }
-    }
-
-    /* Option 4: Color-Shifting Border Glow */
-    .option-4 {
-      background: linear-gradient(135deg, #4338ca 0%, #6b21a8 25%, #db2777 50%, #0891b2 75%, #059669 100%);
-      box-shadow:
-        0 0 20px rgba(139, 92, 246, 0.5),
-        0 0 40px rgba(139, 92, 246, 0.3),
-        0 0 60px rgba(139, 92, 246, 0.2);
-      animation: borderGlow 4s ease-in-out infinite;
-    }
-
-    @keyframes borderGlow {
-      0%, 100% {
-        box-shadow:
-          0 0 20px rgba(139, 92, 246, 0.6),
-          0 0 40px rgba(139, 92, 246, 0.4),
-          0 0 60px rgba(139, 92, 246, 0.2);
-        filter: hue-rotate(0deg);
-      }
-      25% {
-        box-shadow:
-          0 0 25px rgba(236, 72, 153, 0.6),
-          0 0 50px rgba(236, 72, 153, 0.4),
-          0 0 75px rgba(236, 72, 153, 0.2);
-        filter: hue-rotate(90deg);
-      }
-      50% {
-        box-shadow:
-          0 0 20px rgba(14, 165, 233, 0.6),
-          0 0 40px rgba(14, 165, 233, 0.4),
-          0 0 60px rgba(14, 165, 233, 0.2);
-        filter: hue-rotate(180deg);
-      }
-      75% {
-        box-shadow:
-          0 0 25px rgba(34, 197, 94, 0.6),
-          0 0 50px rgba(34, 197, 94, 0.4),
-          0 0 75px rgba(34, 197, 94, 0.2);
-        filter: hue-rotate(270deg);
-      }
-    }
-
-    /* Option 5: Liquid Metal Effect */
-    .option-5 {
-      background: conic-gradient(
-        from 0deg at 50% 50%,
-        #8b5cf6 0deg,
-        #d946ef 72deg,
-        #f97316 144deg,
-        #eab308 216deg,
-        #22c55e 288deg,
-        #8b5cf6 360deg
-      );
-      background-size: 200% 200%;
-      animation: liquidMetal 8s linear infinite;
-    }
-
-    .option-5::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        135deg,
-        rgba(255, 255, 255, 0.4) 0%,
-        transparent 50%,
-        rgba(0, 0, 0, 0.2) 100%
-      );
-      pointer-events: none;
-    }
-
-    @keyframes liquidMetal {
-      0% {
-        transform: rotate(0deg);
-      }
-      100% {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* Option 6: Recommended Combo */
-    .option-6 {
-      background: linear-gradient(135deg,
-        #4338ca 0%,
-        #6b21a8 12.5%,
-        #db2777 25%,
-        #f97316 37.5%,
-        #eab308 50%,
-        #22c55e 62.5%,
-        #0891b2 75%,
-        #3b82f6 87.5%,
-        #6366f1 100%
-      );
-      background-size: 300% 300%;
-      animation: meshGradient 15s ease infinite, borderGlowCombo 4s ease-in-out infinite;
-      box-shadow:
-        0 0 20px rgba(139, 92, 246, 0.5),
-        0 0 40px rgba(139, 92, 246, 0.3),
-        0 0 60px rgba(139, 92, 246, 0.2);
-    }
-
-    @keyframes borderGlowCombo {
-      0%, 100% {
-        box-shadow:
-          0 0 20px rgba(139, 92, 246, 0.6),
-          0 0 40px rgba(139, 92, 246, 0.4);
-      }
-      50% {
-        box-shadow:
-          0 0 30px rgba(236, 72, 153, 0.7),
-          0 0 60px rgba(236, 72, 153, 0.5);
-      }
-    }
-
-    .pros-cons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 15px;
-      font-size: 0.85rem;
-    }
-
-    .pros, .cons {
-      padding: 12px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .pros {
-      border-left: 3px solid #22c55e;
-    }
-
-    .cons {
-      border-left: 3px solid #ef4444;
-    }
-
-    .pros h4, .cons h4 {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-      opacity: 0.7;
-    }
-
-    .pros ul, .cons ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    .pros li, .cons li {
-      padding: 4px 0;
-      padding-left: 16px;
-      position: relative;
-    }
-
-    .pros li::before {
-      content: '✓';
-      position: absolute;
-      left: 0;
-      color: #22c55e;
-    }
-
-    .cons li::before {
-      content: '×';
-      position: absolute;
-      left: 0;
-      color: #ef4444;
-      font-size: 1.2em;
-    }
-
-    .recommended-badge {
-      display: inline-block;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-left: 10px;
-      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
-    }
-
-    .controls {
-      text-align: center;
-      margin-top: 40px;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .controls button {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      padding: 14px 32px;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      margin: 0 10px;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .controls button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    @media (max-width: 768px) {
-      .grid {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAP Card Design Options - 2025</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      .pros-cons {
-        grid-template-columns: 1fr;
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+          sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+        color: white;
+        padding: 40px 20px;
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
       }
 
       h1 {
-        font-size: 1.8rem;
+        text-align: center;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        background: linear-gradient(
+          135deg,
+          #667eea 0%,
+          #764ba2 50%,
+          #f093fb 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>✨ CAP Card Design Options</h1>
-    <p class="subtitle">Explore 5 modern, tasteful approaches for 2025 • Click any card to see it in action</p>
 
-    <div class="grid">
-      <!-- Option 1 -->
-      <div class="card-demo">
-        <h3 class="card-title">1. Animated Mesh Gradient</h3>
-        <p class="card-description">Smooth, organic color flow that creates a living, breathing effect. Trendy mesh gradients seen across 2025 award winners.</p>
-        <div class="demo-card option-1">
-          <div class="demo-card-content">
-            <div class="demo-card-label">CAP Type</div>
-            <div class="demo-card-value">Strict Rotated</div>
+      .subtitle {
+        text-align: center;
+        color: #9ca3af;
+        margin-bottom: 3rem;
+        font-size: 1.1rem;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 30px;
+        margin-bottom: 40px;
+      }
+
+      .card-demo {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 20px;
+        padding: 30px;
+        backdrop-filter: blur(10px);
+      }
+
+      .card-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: #fff;
+      }
+
+      .card-description {
+        font-size: 0.9rem;
+        color: #9ca3af;
+        margin-bottom: 1.5rem;
+        line-height: 1.5;
+      }
+
+      .demo-card {
+        width: 100%;
+        aspect-ratio: 1.5;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .demo-card:hover {
+        transform: scale(1.02);
+      }
+
+      .demo-card-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+      }
+
+      .demo-card-label {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 8px;
+        font-weight: 600;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .demo-card-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      }
+
+      /* Option 1: Animated Mesh Gradient */
+      .option-1 {
+        background: linear-gradient(
+          135deg,
+          #4338ca 0%,
+          #6b21a8 12.5%,
+          #db2777 25%,
+          #f97316 37.5%,
+          #eab308 50%,
+          #22c55e 62.5%,
+          #0891b2 75%,
+          #3b82f6 87.5%,
+          #6366f1 100%
+        );
+        background-size: 300% 300%;
+        animation: meshGradient 15s ease infinite;
+      }
+
+      @keyframes meshGradient {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        25% {
+          background-position: 50% 100%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        75% {
+          background-position: 50% 0%;
+        }
+      }
+
+      /* Option 2: Iridescent Shimmer */
+      .option-2 {
+        background: linear-gradient(
+          135deg,
+          #4338ca 0%,
+          #6b21a8 25%,
+          #db2777 50%,
+          #0891b2 75%,
+          #059669 100%
+        );
+        position: relative;
+      }
+
+      .option-2::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        right: -50%;
+        bottom: -50%;
+        background: linear-gradient(
+          120deg,
+          transparent,
+          transparent 40%,
+          rgba(255, 255, 255, 0.3) 50%,
+          transparent 60%,
+          transparent
+        );
+        animation: shimmer 3s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%) translateY(-100%) rotate(30deg);
+        }
+        100% {
+          transform: translateX(100%) translateY(100%) rotate(30deg);
+        }
+      }
+
+      /* Option 3: Glassmorphism with Floating Particles */
+      .option-3 {
+        background: linear-gradient(
+          135deg,
+          rgba(67, 56, 202, 0.8) 0%,
+          rgba(107, 33, 168, 0.8) 25%,
+          rgba(219, 39, 119, 0.8) 50%,
+          rgba(8, 145, 178, 0.8) 75%,
+          rgba(5, 150, 105, 0.8) 100%
+        );
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow:
+          0 8px 32px rgba(0, 0, 0, 0.3),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      }
+
+      .option-3::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-image:
+          radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.8) 1px,
+            transparent 1px
+          ),
+          radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.6) 1px,
+            transparent 1px
+          ),
+          radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+        background-size:
+          50px 50px,
+          80px 80px,
+          100px 100px;
+        background-position:
+          0 0,
+          40px 60px,
+          80px 20px;
+        animation: floatParticles 20s linear infinite;
+        opacity: 0.3;
+      }
+
+      @keyframes floatParticles {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-100px);
+        }
+      }
+
+      /* Option 4: Color-Shifting Border Glow */
+      .option-4 {
+        background: linear-gradient(
+          135deg,
+          #4338ca 0%,
+          #6b21a8 25%,
+          #db2777 50%,
+          #0891b2 75%,
+          #059669 100%
+        );
+        box-shadow:
+          0 0 20px rgba(139, 92, 246, 0.5),
+          0 0 40px rgba(139, 92, 246, 0.3),
+          0 0 60px rgba(139, 92, 246, 0.2);
+        animation: borderGlow 4s ease-in-out infinite;
+      }
+
+      @keyframes borderGlow {
+        0%,
+        100% {
+          box-shadow:
+            0 0 20px rgba(139, 92, 246, 0.6),
+            0 0 40px rgba(139, 92, 246, 0.4),
+            0 0 60px rgba(139, 92, 246, 0.2);
+          filter: hue-rotate(0deg);
+        }
+        25% {
+          box-shadow:
+            0 0 25px rgba(236, 72, 153, 0.6),
+            0 0 50px rgba(236, 72, 153, 0.4),
+            0 0 75px rgba(236, 72, 153, 0.2);
+          filter: hue-rotate(90deg);
+        }
+        50% {
+          box-shadow:
+            0 0 20px rgba(14, 165, 233, 0.6),
+            0 0 40px rgba(14, 165, 233, 0.4),
+            0 0 60px rgba(14, 165, 233, 0.2);
+          filter: hue-rotate(180deg);
+        }
+        75% {
+          box-shadow:
+            0 0 25px rgba(34, 197, 94, 0.6),
+            0 0 50px rgba(34, 197, 94, 0.4),
+            0 0 75px rgba(34, 197, 94, 0.2);
+          filter: hue-rotate(270deg);
+        }
+      }
+
+      /* Option 5: Liquid Metal Effect */
+      .option-5 {
+        background: conic-gradient(
+          from 0deg at 50% 50%,
+          #8b5cf6 0deg,
+          #d946ef 72deg,
+          #f97316 144deg,
+          #eab308 216deg,
+          #22c55e 288deg,
+          #8b5cf6 360deg
+        );
+        background-size: 200% 200%;
+        animation: liquidMetal 8s linear infinite;
+      }
+
+      .option-5::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.4) 0%,
+          transparent 50%,
+          rgba(0, 0, 0, 0.2) 100%
+        );
+        pointer-events: none;
+      }
+
+      @keyframes liquidMetal {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* Option 6: Recommended Combo */
+      .option-6 {
+        background: linear-gradient(
+          135deg,
+          #4338ca 0%,
+          #6b21a8 12.5%,
+          #db2777 25%,
+          #f97316 37.5%,
+          #eab308 50%,
+          #22c55e 62.5%,
+          #0891b2 75%,
+          #3b82f6 87.5%,
+          #6366f1 100%
+        );
+        background-size: 300% 300%;
+        animation:
+          meshGradient 15s ease infinite,
+          borderGlowCombo 4s ease-in-out infinite;
+        box-shadow:
+          0 0 20px rgba(139, 92, 246, 0.5),
+          0 0 40px rgba(139, 92, 246, 0.3),
+          0 0 60px rgba(139, 92, 246, 0.2);
+      }
+
+      @keyframes borderGlowCombo {
+        0%,
+        100% {
+          box-shadow:
+            0 0 20px rgba(139, 92, 246, 0.6),
+            0 0 40px rgba(139, 92, 246, 0.4);
+        }
+        50% {
+          box-shadow:
+            0 0 30px rgba(236, 72, 153, 0.7),
+            0 0 60px rgba(236, 72, 153, 0.5);
+        }
+      }
+
+      .pros-cons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 15px;
+        font-size: 0.85rem;
+      }
+
+      .pros,
+      .cons {
+        padding: 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.03);
+      }
+
+      .pros {
+        border-left: 3px solid #22c55e;
+      }
+
+      .cons {
+        border-left: 3px solid #ef4444;
+      }
+
+      .pros h4,
+      .cons h4 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+        opacity: 0.7;
+      }
+
+      .pros ul,
+      .cons ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .pros li,
+      .cons li {
+        padding: 4px 0;
+        padding-left: 16px;
+        position: relative;
+      }
+
+      .pros li::before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #22c55e;
+      }
+
+      .cons li::before {
+        content: "×";
+        position: absolute;
+        left: 0;
+        color: #ef4444;
+        font-size: 1.2em;
+      }
+
+      .recommended-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-left: 10px;
+        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+      }
+
+      .controls {
+        text-align: center;
+        margin-top: 40px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .controls button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 12px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin: 0 10px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      .controls button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      @media (max-width: 768px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .pros-cons {
+          grid-template-columns: 1fr;
+        }
+
+        h1 {
+          font-size: 1.8rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>✨ CAP Card Design Options</h1>
+      <p class="subtitle">
+        Explore 5 modern, tasteful approaches for 2025 • Click any card to see
+        it in action
+      </p>
+
+      <div class="grid">
+        <!-- Option 1 -->
+        <div class="card-demo">
+          <h3 class="card-title">1. Animated Mesh Gradient</h3>
+          <p class="card-description">
+            Smooth, organic color flow that creates a living, breathing effect.
+            Trendy mesh gradients seen across 2025 award winners.
+          </p>
+          <div class="demo-card option-1">
+            <div class="demo-card-content">
+              <div class="demo-card-label">CAP Type</div>
+              <div class="demo-card-value">Strict Rotated</div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>Pros</h4>
+              <ul>
+                <li>Very modern & trendy</li>
+                <li>Hypnotic, calming motion</li>
+                <li>Pure CSS, performant</li>
+                <li>Great readability</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>Cons</h4>
+              <ul>
+                <li>Constant motion (subtle)</li>
+                <li>May distract some users</li>
+              </ul>
+            </div>
           </div>
         </div>
-        <div class="pros-cons">
-          <div class="pros">
-            <h4>Pros</h4>
-            <ul>
-              <li>Very modern & trendy</li>
-              <li>Hypnotic, calming motion</li>
-              <li>Pure CSS, performant</li>
-              <li>Great readability</li>
-            </ul>
+
+        <!-- Option 2 -->
+        <div class="card-demo">
+          <h3 class="card-title">2. Iridescent Shimmer</h3>
+          <p class="card-description">
+            Elegant holographic effect that catches light like premium metallic
+            surfaces. Think luxury credit cards.
+          </p>
+          <div class="demo-card option-2">
+            <div class="demo-card-content">
+              <div class="demo-card-label">CAP Type</div>
+              <div class="demo-card-value">Mirrored Rotated</div>
+            </div>
           </div>
-          <div class="cons">
-            <h4>Cons</h4>
-            <ul>
-              <li>Constant motion (subtle)</li>
-              <li>May distract some users</li>
-            </ul>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>Pros</h4>
+              <ul>
+                <li>Premium, luxe feel</li>
+                <li>Intermittent shimmer</li>
+                <li>Attention-grabbing</li>
+                <li>Pure CSS</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>Cons</h4>
+              <ul>
+                <li>Can feel "flashy"</li>
+                <li>May overwhelm</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option 3 -->
+        <div class="card-demo">
+          <h3 class="card-title">3. Glassmorphism + Particles</h3>
+          <p class="card-description">
+            Modern frosted glass with subtle floating sparkles. Very on-trend
+            glassmorphism with depth.
+          </p>
+          <div class="demo-card option-3">
+            <div class="demo-card-content">
+              <div class="demo-card-label">CAP Type</div>
+              <div class="demo-card-value">Strict Swapped</div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>Pros</h4>
+              <ul>
+                <li>Very 2025 aesthetic</li>
+                <li>Depth & dimension</li>
+                <li>Magical particles</li>
+                <li>Subtle motion</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>Cons</h4>
+              <ul>
+                <li>Lower contrast</li>
+                <li>Particles may be busy</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option 4 -->
+        <div class="card-demo">
+          <h3 class="card-title">4. Color-Shifting Border Glow</h3>
+          <p class="card-description">
+            Keep card as-is but add animated rainbow glow. Signals "special"
+            status without overwhelming.
+          </p>
+          <div class="demo-card option-4">
+            <div class="demo-card-content">
+              <div class="demo-card-label">CAP Type</div>
+              <div class="demo-card-value">Strict Complementary</div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>Pros</h4>
+              <ul>
+                <li>Minimal change</li>
+                <li>Clear "special" signal</li>
+                <li>Great contrast</li>
+                <li>Not distracting</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>Cons</h4>
+              <ul>
+                <li>Less dramatic</li>
+                <li>Glow may clip</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option 5 -->
+        <div class="card-demo">
+          <h3 class="card-title">5. Liquid Metal Effect</h3>
+          <p class="card-description">
+            Metallic gradient that flows like liquid mercury. Modern take on
+            metallics—refined, not 90s chrome.
+          </p>
+          <div class="demo-card option-5">
+            <div class="demo-card-content">
+              <div class="demo-card-label">CAP Type</div>
+              <div class="demo-card-value">Mirrored Swapped</div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>Pros</h4>
+              <ul>
+                <li>Bold & memorable</li>
+                <li>Unique effect</li>
+                <li>Premium metallic</li>
+                <li>Pure CSS</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>Cons</h4>
+              <ul>
+                <li>Very bold choice</li>
+                <li>Constant spinning</li>
+                <li>May cause motion sickness</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Option 6: Recommended Combo -->
+        <div class="card-demo">
+          <h3 class="card-title">
+            6. Mesh + Glow Combo
+            <span class="recommended-badge">Recommended</span>
+          </h3>
+          <p class="card-description">
+            Best of both worlds: organic mesh gradient flow with subtle pulsing
+            border glow. Magical but not overwhelming.
+          </p>
+          <div class="demo-card option-6">
+            <div class="demo-card-content">
+              <div class="demo-card-label">CAP Type</div>
+              <div class="demo-card-value">Mirrored Complementary</div>
+            </div>
+          </div>
+          <div class="pros-cons">
+            <div class="pros">
+              <h4>Pros</h4>
+              <ul>
+                <li>Perfect balance</li>
+                <li>Multiple visual layers</li>
+                <li>Very delightful</li>
+                <li>Clear special status</li>
+                <li>Great readability</li>
+              </ul>
+            </div>
+            <div class="cons">
+              <h4>Cons</h4>
+              <ul>
+                <li>Most complex</li>
+                <li>(Still very performant)</li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Option 2 -->
-      <div class="card-demo">
-        <h3 class="card-title">2. Iridescent Shimmer</h3>
-        <p class="card-description">Elegant holographic effect that catches light like premium metallic surfaces. Think luxury credit cards.</p>
-        <div class="demo-card option-2">
-          <div class="demo-card-content">
-            <div class="demo-card-label">CAP Type</div>
-            <div class="demo-card-value">Mirrored Rotated</div>
-          </div>
-        </div>
-        <div class="pros-cons">
-          <div class="pros">
-            <h4>Pros</h4>
-            <ul>
-              <li>Premium, luxe feel</li>
-              <li>Intermittent shimmer</li>
-              <li>Attention-grabbing</li>
-              <li>Pure CSS</li>
-            </ul>
-          </div>
-          <div class="cons">
-            <h4>Cons</h4>
-            <ul>
-              <li>Can feel "flashy"</li>
-              <li>May overwhelm</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Option 3 -->
-      <div class="card-demo">
-        <h3 class="card-title">3. Glassmorphism + Particles</h3>
-        <p class="card-description">Modern frosted glass with subtle floating sparkles. Very on-trend glassmorphism with depth.</p>
-        <div class="demo-card option-3">
-          <div class="demo-card-content">
-            <div class="demo-card-label">CAP Type</div>
-            <div class="demo-card-value">Strict Swapped</div>
-          </div>
-        </div>
-        <div class="pros-cons">
-          <div class="pros">
-            <h4>Pros</h4>
-            <ul>
-              <li>Very 2025 aesthetic</li>
-              <li>Depth & dimension</li>
-              <li>Magical particles</li>
-              <li>Subtle motion</li>
-            </ul>
-          </div>
-          <div class="cons">
-            <h4>Cons</h4>
-            <ul>
-              <li>Lower contrast</li>
-              <li>Particles may be busy</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Option 4 -->
-      <div class="card-demo">
-        <h3 class="card-title">4. Color-Shifting Border Glow</h3>
-        <p class="card-description">Keep card as-is but add animated rainbow glow. Signals "special" status without overwhelming.</p>
-        <div class="demo-card option-4">
-          <div class="demo-card-content">
-            <div class="demo-card-label">CAP Type</div>
-            <div class="demo-card-value">Strict Complementary</div>
-          </div>
-        </div>
-        <div class="pros-cons">
-          <div class="pros">
-            <h4>Pros</h4>
-            <ul>
-              <li>Minimal change</li>
-              <li>Clear "special" signal</li>
-              <li>Great contrast</li>
-              <li>Not distracting</li>
-            </ul>
-          </div>
-          <div class="cons">
-            <h4>Cons</h4>
-            <ul>
-              <li>Less dramatic</li>
-              <li>Glow may clip</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Option 5 -->
-      <div class="card-demo">
-        <h3 class="card-title">5. Liquid Metal Effect</h3>
-        <p class="card-description">Metallic gradient that flows like liquid mercury. Modern take on metallics—refined, not 90s chrome.</p>
-        <div class="demo-card option-5">
-          <div class="demo-card-content">
-            <div class="demo-card-label">CAP Type</div>
-            <div class="demo-card-value">Mirrored Swapped</div>
-          </div>
-        </div>
-        <div class="pros-cons">
-          <div class="pros">
-            <h4>Pros</h4>
-            <ul>
-              <li>Bold & memorable</li>
-              <li>Unique effect</li>
-              <li>Premium metallic</li>
-              <li>Pure CSS</li>
-            </ul>
-          </div>
-          <div class="cons">
-            <h4>Cons</h4>
-            <ul>
-              <li>Very bold choice</li>
-              <li>Constant spinning</li>
-              <li>May cause motion sickness</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <!-- Option 6: Recommended Combo -->
-      <div class="card-demo">
-        <h3 class="card-title">
-          6. Mesh + Glow Combo
-          <span class="recommended-badge">Recommended</span>
-        </h3>
-        <p class="card-description">Best of both worlds: organic mesh gradient flow with subtle pulsing border glow. Magical but not overwhelming.</p>
-        <div class="demo-card option-6">
-          <div class="demo-card-content">
-            <div class="demo-card-label">CAP Type</div>
-            <div class="demo-card-value">Mirrored Complementary</div>
-          </div>
-        </div>
-        <div class="pros-cons">
-          <div class="pros">
-            <h4>Pros</h4>
-            <ul>
-              <li>Perfect balance</li>
-              <li>Multiple visual layers</li>
-              <li>Very delightful</li>
-              <li>Clear special status</li>
-              <li>Great readability</li>
-            </ul>
-          </div>
-          <div class="cons">
-            <h4>Cons</h4>
-            <ul>
-              <li>Most complex</li>
-              <li>(Still very performant)</li>
-            </ul>
-          </div>
-        </div>
+      <div class="controls">
+        <p style="margin-bottom: 20px; color: #9ca3af">
+          Which option speaks to you? Let's implement your favorite!
+        </p>
+        <button onclick="window.location.reload()">
+          🔄 Restart Animations
+        </button>
+        <button
+          onclick="alert('Open your browser console and let me know which option number you prefer! (1-6)')"
+        >
+          💬 Ready to Choose
+        </button>
       </div>
     </div>
 
-    <div class="controls">
-      <p style="margin-bottom: 20px; color: #9ca3af;">Which option speaks to you? Let's implement your favorite!</p>
-      <button onclick="window.location.reload()">🔄 Restart Animations</button>
-      <button onclick="alert('Open your browser console and let me know which option number you prefer! (1-6)')">💬 Ready to Choose</button>
-    </div>
-  </div>
-
-  <script>
-    // Add hover pause for motion-sensitive users
-    document.querySelectorAll('.demo-card').forEach(card => {
-      card.addEventListener('mouseenter', function() {
-        this.style.animationPlayState = 'paused';
-        if (this.querySelector('::before')) {
-          const style = document.createElement('style');
-          style.textContent = `
+    <script>
+      // Add hover pause for motion-sensitive users
+      document.querySelectorAll(".demo-card").forEach((card) => {
+        card.addEventListener("mouseenter", function () {
+          this.style.animationPlayState = "paused";
+          if (this.querySelector("::before")) {
+            const style = document.createElement("style");
+            style.textContent = `
             .demo-card:hover::before {
               animation-play-state: paused !important;
             }
           `;
-          document.head.appendChild(style);
-        }
+            document.head.appendChild(style);
+          }
+        });
+
+        card.addEventListener("mouseleave", function () {
+          this.style.animationPlayState = "running";
+        });
+
+        card.addEventListener("click", function () {
+          const title =
+            this.closest(".card-demo").querySelector(".card-title").textContent;
+          console.log("Selected:", title);
+        });
       });
 
-      card.addEventListener('mouseleave', function() {
-        this.style.animationPlayState = 'running';
-      });
-
-      card.addEventListener('click', function() {
-        const title = this.closest('.card-demo').querySelector('.card-title').textContent;
-        console.log('Selected:', title);
-      });
-    });
-
-    // Accessibility: Respect prefers-reduced-motion
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.querySelectorAll('.demo-card').forEach(card => {
-        card.style.animation = 'none';
-      });
-      console.log('Animations paused due to prefers-reduced-motion');
-    }
-  </script>
-</body>
+      // Accessibility: Respect prefers-reduced-motion
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.querySelectorAll(".demo-card").forEach((card) => {
+          card.style.animation = "none";
+        });
+        console.log("Animations paused due to prefers-reduced-motion");
+      }
+    </script>
+  </body>
 </html>

@@ -32,10 +32,12 @@ export function updateBodyBackground(backgroundType: BackgroundType): void {
   try {
     const newGradient =
       BACKGROUND_GRADIENTS[backgroundType] || BACKGROUND_GRADIENTS.nightSky;
-    const newAnimation = BACKGROUND_ANIMATIONS[backgroundType] || BACKGROUND_ANIMATIONS.nightSky;
+    const newAnimation =
+      BACKGROUND_ANIMATIONS[backgroundType] || BACKGROUND_ANIMATIONS.nightSky;
 
     // Get current gradient
-    const currentGradient = document.documentElement.style.getPropertyValue("--gradient-cosmic");
+    const currentGradient =
+      document.documentElement.style.getPropertyValue("--gradient-cosmic");
 
     // Skip if already set to this gradient
     if (currentGradient === newGradient) {
@@ -63,16 +65,18 @@ export function updateBodyBackground(backgroundType: BackgroundType): void {
 
     // Step 2: Fade in the ::before overlay (showing NEW gradient on top of OLD)
     requestAnimationFrame(() => {
-      body.classList.add('background-transitioning');
+      body.classList.add("background-transitioning");
     });
 
     // Step 3: After transition completes, swap the gradients
     setTimeout(() => {
-      document.documentElement.style.setProperty("--gradient-cosmic", newGradient);
-      body.classList.remove('background-transitioning');
+      document.documentElement.style.setProperty(
+        "--gradient-cosmic",
+        newGradient
+      );
+      body.classList.remove("background-transitioning");
       isTransitioning = false;
     }, 1500);
-
   } catch (error) {
     console.warn("Failed to update body background:", error);
     isTransitioning = false;

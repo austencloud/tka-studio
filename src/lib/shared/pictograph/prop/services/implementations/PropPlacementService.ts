@@ -10,7 +10,10 @@ import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import { GridMode } from "../../../grid/domain/enums/grid-enums";
 import type { IGridModeDeriver } from "../../../grid/services/contracts/IGridModeDeriver";
-import { Orientation, VectorDirection } from "../../../shared/domain/enums/pictograph-enums";
+import {
+  Orientation,
+  VectorDirection,
+} from "../../../shared/domain/enums/pictograph-enums";
 import type { MotionData } from "../../../shared/domain/models/MotionData";
 import type { PictographData } from "../../../shared/domain/models/PictographData";
 import {
@@ -156,7 +159,11 @@ export class PropPlacementService implements IPropPlacementService {
     }
 
     // Calculate the offset based on the direction and prop type
-    const offset = this.getOffsetForDirection(direction, motionData.propType, gridMode);
+    const offset = this.getOffsetForDirection(
+      direction,
+      motionData.propType,
+      gridMode
+    );
     return { x: offset.x, y: offset.y };
   }
 

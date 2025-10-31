@@ -1,5 +1,5 @@
 <script lang="ts">
-	  import type { SequenceSection } from './../../shared/domain/models/explore-models.ts';
+  import type { SequenceSection } from "./../../shared/domain/models/explore-models.ts";
   import type { IHapticFeedbackService, SequenceData } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";

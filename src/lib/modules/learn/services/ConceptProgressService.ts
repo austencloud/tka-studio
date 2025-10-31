@@ -11,10 +11,10 @@ import {
   isConceptUnlocked,
   type ConceptProgress,
   type ConceptStatus,
-  type LearningProgress
-} from '../domain';
+  type LearningProgress,
+} from "../domain";
 
-const STORAGE_KEY = 'tka_learning_progress';
+const STORAGE_KEY = "tka_learning_progress";
 
 export class ConceptProgressService {
   private progress: LearningProgress;
@@ -36,11 +36,11 @@ export class ConceptProgressService {
           ...data,
           concepts: new Map(Object.entries(data.concepts || {})),
           completedConcepts: new Set(data.completedConcepts || []),
-          lastUpdated: new Date(data.lastUpdated)
+          lastUpdated: new Date(data.lastUpdated),
         };
       }
     } catch (error) {
-      console.warn('Failed to load learning progress:', error);
+      console.warn("Failed to load learning progress:", error);
     }
 
     // Create fresh progress
@@ -51,7 +51,7 @@ export class ConceptProgressService {
       totalCorrect: 0,
       totalTimeSpent: 0,
       badges: [],
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
   }
 
@@ -64,12 +64,12 @@ export class ConceptProgressService {
         ...this.progress,
         concepts: Object.fromEntries(this.progress.concepts),
         completedConcepts: Array.from(this.progress.completedConcepts),
-        lastUpdated: this.progress.lastUpdated.toISOString()
+        lastUpdated: this.progress.lastUpdated.toISOString(),
       };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
       this.notifySubscribers();
     } catch (error) {
-      console.error('Failed to save learning progress:', error);
+      console.error("Failed to save learning progress:", error);
     }
   }
 
@@ -85,7 +85,7 @@ export class ConceptProgressService {
    * Notify all subscribers of progress changes
    */
   private notifySubscribers(): void {
-    this.subscribers.forEach(callback => callback(this.progress));
+    this.subscribers.forEach((callback) => callback(this.progress));
   }
 
   /**
@@ -104,10 +104,10 @@ export class ConceptProgressService {
 
     // Check if unlocked
     if (isConceptUnlocked(conceptId, this.progress.completedConcepts)) {
-      return 'available';
+      return "available";
     }
 
-    return 'locked';
+    return "locked";
   }
 
   /**
@@ -129,7 +129,7 @@ export class ConceptProgressService {
       accuracy: 0,
       currentStreak: 0,
       bestStreak: 0,
-      timeSpentSeconds: 0
+      timeSpentSeconds: 0,
     };
   }
 
@@ -138,14 +138,14 @@ export class ConceptProgressService {
    */
   startConcept(conceptId: string): void {
     const status = this.getConceptStatus(conceptId);
-    if (status === 'locked') {
+    if (status === "locked") {
       throw new Error(`Concept ${conceptId} is locked`);
     }
 
     const progress = this.getConceptProgress(conceptId);
 
-    if (progress.status === 'available') {
-      progress.status = 'in-progress';
+    if (progress.status === "available") {
+      progress.status = "in-progress";
       progress.startedAt = new Date();
     }
 
@@ -159,7 +159,11 @@ export class ConceptProgressService {
   /**
    * Record a practice attempt
    */
-  recordPracticeAttempt(conceptId: string, correct: boolean, timeSpentSeconds: number = 0): void {
+  recordPracticeAttempt(
+    conceptId: string,
+    correct: boolean,
+    timeSpentSeconds: number = 0
+  ): void {
     const progress = this.getConceptProgress(conceptId);
 
     progress.totalAttempts++;
@@ -168,7 +172,10 @@ export class ConceptProgressService {
     if (correct) {
       progress.correctAnswers++;
       progress.currentStreak++;
-      progress.bestStreak = Math.max(progress.bestStreak, progress.currentStreak);
+      progress.bestStreak = Math.max(
+        progress.bestStreak,
+        progress.currentStreak
+      );
       this.progress.totalCorrect++;
     } else {
       progress.incorrectAnswers++;
@@ -176,17 +183,25 @@ export class ConceptProgressService {
     }
 
     // Calculate accuracy
-    progress.accuracy = (progress.correctAnswers / progress.totalAttempts) * 100;
+    progress.accuracy =
+      (progress.correctAnswers / progress.totalAttempts) * 100;
 
     // Calculate progress percentage (example: 10 correct answers = 100%)
-    progress.percentComplete = Math.min((progress.correctAnswers / 10) * 100, 100);
+    progress.percentComplete = Math.min(
+      (progress.correctAnswers / 10) * 100,
+      100
+    );
 
     // Update practice timing
     progress.lastPracticedAt = new Date();
     progress.nextPracticeAt = this.calculateNextPracticeDate(progress);
 
     // Check if concept is completed
-    if (progress.percentComplete >= 100 && progress.accuracy >= 80 && progress.status !== 'completed') {
+    if (
+      progress.percentComplete >= 100 &&
+      progress.accuracy >= 80 &&
+      progress.status !== "completed"
+    ) {
       this.completeConcept(conceptId);
     } else {
       this.progress.concepts.set(conceptId, progress);
@@ -204,7 +219,7 @@ export class ConceptProgressService {
   completeConcept(conceptId: string): void {
     const progress = this.getConceptProgress(conceptId);
 
-    progress.status = 'completed';
+    progress.status = "completed";
     progress.completedAt = new Date();
     progress.percentComplete = 100;
 
@@ -255,32 +270,32 @@ export class ConceptProgressService {
     const completed = this.progress.completedConcepts.size;
 
     // Category completion badges
-    if (this.isCategoryComplete('foundation')) {
-      badges.add('foundation-master');
+    if (this.isCategoryComplete("foundation")) {
+      badges.add("foundation-master");
     }
-    if (this.isCategoryComplete('letters')) {
-      badges.add('letter-master');
+    if (this.isCategoryComplete("letters")) {
+      badges.add("letter-master");
     }
-    if (this.isCategoryComplete('combinations')) {
-      badges.add('combination-master');
+    if (this.isCategoryComplete("combinations")) {
+      badges.add("combination-master");
     }
-    if (this.isCategoryComplete('advanced')) {
-      badges.add('advanced-master');
+    if (this.isCategoryComplete("advanced")) {
+      badges.add("advanced-master");
     }
 
     // Milestone badges
-    if (completed >= 5) badges.add('first-five');
-    if (completed >= 10) badges.add('halfway-there');
-    if (completed >= 20) badges.add('almost-there');
-    if (completed >= 28) badges.add('tka-master');
+    if (completed >= 5) badges.add("first-five");
+    if (completed >= 10) badges.add("halfway-there");
+    if (completed >= 20) badges.add("almost-there");
+    if (completed >= 28) badges.add("tka-master");
 
     // Streak badges
     const maxStreak = Math.max(
-      ...Array.from(this.progress.concepts.values()).map(p => p.bestStreak)
+      ...Array.from(this.progress.concepts.values()).map((p) => p.bestStreak)
     );
-    if (maxStreak >= 10) badges.add('streak-10');
-    if (maxStreak >= 25) badges.add('streak-25');
-    if (maxStreak >= 50) badges.add('streak-50');
+    if (maxStreak >= 10) badges.add("streak-10");
+    if (maxStreak >= 25) badges.add("streak-25");
+    if (maxStreak >= 50) badges.add("streak-50");
 
     this.progress.badges = Array.from(badges);
   }
@@ -289,8 +304,12 @@ export class ConceptProgressService {
    * Check if all concepts in a category are completed
    */
   private isCategoryComplete(category: string): boolean {
-    const categoryConcepts = TKA_CONCEPTS.filter(c => c.category === category);
-    return categoryConcepts.every(c => this.progress.completedConcepts.has(c.id));
+    const categoryConcepts = TKA_CONCEPTS.filter(
+      (c) => c.category === category
+    );
+    return categoryConcepts.every((c) =>
+      this.progress.completedConcepts.has(c.id)
+    );
   }
 
   /**
@@ -302,7 +321,7 @@ export class ConceptProgressService {
 
     this.progress.concepts.forEach((progress, conceptId) => {
       if (
-        progress.status === 'completed' &&
+        progress.status === "completed" &&
         progress.nextPracticeAt &&
         new Date(progress.nextPracticeAt) <= now
       ) {
@@ -324,7 +343,7 @@ export class ConceptProgressService {
       totalCorrect: 0,
       totalTimeSpent: 0,
       badges: [],
-      lastUpdated: new Date()
+      lastUpdated: new Date(),
     };
     this.saveProgress();
   }
@@ -333,16 +352,20 @@ export class ConceptProgressService {
    * Export progress as JSON (for backup/transfer)
    */
   exportProgress(): string {
-    return JSON.stringify({
-      concepts: Object.fromEntries(this.progress.concepts),
-      completedConcepts: Array.from(this.progress.completedConcepts),
-      currentConceptId: this.progress.currentConceptId,
-      overallProgress: this.progress.overallProgress,
-      totalCorrect: this.progress.totalCorrect,
-      totalTimeSpent: this.progress.totalTimeSpent,
-      badges: this.progress.badges,
-      lastUpdated: this.progress.lastUpdated.toISOString()
-    }, null, 2);
+    return JSON.stringify(
+      {
+        concepts: Object.fromEntries(this.progress.concepts),
+        completedConcepts: Array.from(this.progress.completedConcepts),
+        currentConceptId: this.progress.currentConceptId,
+        overallProgress: this.progress.overallProgress,
+        totalCorrect: this.progress.totalCorrect,
+        totalTimeSpent: this.progress.totalTimeSpent,
+        badges: this.progress.badges,
+        lastUpdated: this.progress.lastUpdated.toISOString(),
+      },
+      null,
+      2
+    );
   }
 
   /**
@@ -359,12 +382,12 @@ export class ConceptProgressService {
         totalCorrect: data.totalCorrect || 0,
         totalTimeSpent: data.totalTimeSpent || 0,
         badges: data.badges || [],
-        lastUpdated: new Date(data.lastUpdated || Date.now())
+        lastUpdated: new Date(data.lastUpdated || Date.now()),
       };
       this.saveProgress();
     } catch (error) {
-      console.error('Failed to import progress:', error);
-      throw new Error('Invalid progress data');
+      console.error("Failed to import progress:", error);
+      throw new Error("Invalid progress data");
     }
   }
 }

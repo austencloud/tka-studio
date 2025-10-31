@@ -77,7 +77,10 @@ export function useKeyboardShortcut(
 /**
  * Simplified version for Escape key handling (common use case)
  */
-export function useEscapeKey(onEscape: () => void, enabled: boolean = true): () => void {
+export function useEscapeKey(
+  onEscape: () => void,
+  enabled: boolean = true
+): () => void {
   return useKeyboardShortcut({
     key: "Escape",
     onKeyPress: onEscape,

@@ -13,7 +13,11 @@ export * from "./device/domain";
 export * from "./device/services";
 export * from "./foundation";
 // Modern Swipe Components (Embla-based)
-export { BottomSheet, FontAwesomeIcon, HorizontalSwipeContainer } from "./foundation/ui";
+export {
+  BottomSheet,
+  FontAwesomeIcon,
+  HorizontalSwipeContainer,
+} from "./foundation/ui";
 export * from "./inversify";
 export * from "./navigation";
 export * from "./persistence";
@@ -80,7 +84,7 @@ export type { IPlatformDetectionService } from "./mobile/services/contracts/IPla
 
 // Beat grid models (needed by workbench)
 export type {
-    BeatGridConfig,
-    ContainerDimensions,
-    LayoutInfo
+  BeatGridConfig,
+  ContainerDimensions,
+  LayoutInfo,
 } from "../modules/build/workspace-panel/sequence-display/domain/models/beat-grid-models";

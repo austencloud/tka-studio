@@ -69,8 +69,6 @@
   </div>
 </section>
 
-
-
 <style>
   .module-section {
     margin-bottom: 24px;

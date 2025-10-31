@@ -10,21 +10,21 @@
  */
 
 import type {
-    AccessibilitySettings,
-    Dimensions,
-    IBackgroundSystem,
-    PerformanceMetrics,
-    QualityLevel,
+  AccessibilitySettings,
+  Dimensions,
+  IBackgroundSystem,
+  PerformanceMetrics,
+  QualityLevel,
 } from "../../shared";
 import type {
-    Bubble,
-    DeepOceanState,
-    FishMarineLife,
-    FishSprite,
-    JellyfishMarineLife,
-    MarineLife,
-    MarineLifeType,
-    OceanParticle
+  Bubble,
+  DeepOceanState,
+  FishMarineLife,
+  FishSprite,
+  JellyfishMarineLife,
+  MarineLife,
+  MarineLifeType,
+  OceanParticle,
 } from "../domain/models/DeepOceanModels";
 
 export class DeepOceanBackgroundSystem implements IBackgroundSystem {

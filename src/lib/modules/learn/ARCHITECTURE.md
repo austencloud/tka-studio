@@ -46,6 +46,7 @@ Learn Tab
 ## Key Components
 
 ### 1. LearnTab.svelte (Main Container)
+
 - **Location**: `src/lib/modules/learn/LearnTab.svelte`
 - **Purpose**: Top-level coordinator for all learn modes
 - **Features**:
@@ -55,6 +56,7 @@ Learn Tab
   - Syncs with navigationState for persistence
 
 ### 2. LearnTabHeader.svelte
+
 - **Location**: `src/lib/modules/learn/components/LearnTabHeader.svelte`
 - **Purpose**: Navigation header with sub-tabs and Codex button
 - **Features**:
@@ -66,6 +68,7 @@ Learn Tab
   - 44px minimum touch targets
 
 ### 3. ConceptPathView.svelte
+
 - **Location**: `src/lib/modules/learn/components/ConceptPathView.svelte`
 - **Purpose**: Main scrollable view showing all 28 concepts
 - **Features**:
@@ -77,6 +80,7 @@ Learn Tab
   - Auto-subscribes to progress updates
 
 ### 4. ConceptCard.svelte
+
 - **Location**: `src/lib/modules/learn/components/ConceptCard.svelte`
 - **Purpose**: Interactive card representing a single concept
 - **Features**:
@@ -90,6 +94,7 @@ Learn Tab
   - 44px minimum touch target
 
 ### 5. ConceptDetailView.svelte
+
 - **Location**: `src/lib/modules/learn/components/ConceptDetailView.svelte`
 - **Purpose**: Full-screen detail view when concept is selected
 - **Features**:
@@ -105,6 +110,7 @@ Learn Tab
   - Haptic feedback on tab switches
 
 ### 6. ProgressHeader.svelte
+
 - **Location**: `src/lib/modules/learn/components/ProgressHeader.svelte`
 - **Purpose**: Animated progress display for overall completion
 - **Features**:
@@ -115,6 +121,7 @@ Learn Tab
   - Fully responsive
 
 ### 7. CodexPanel.svelte
+
 - **Location**: `src/lib/modules/learn/components/CodexPanel.svelte`
 - **Purpose**: Slide-in reference panel for quick letter lookup
 - **Features**:
@@ -129,6 +136,7 @@ Learn Tab
 ## Domain Layer
 
 ### Types (types.ts)
+
 - **Location**: `src/lib/modules/learn/domain/types.ts`
 - **Exports**:
   - `ConceptCategory`: 'foundation' | 'letters' | 'combinations' | 'advanced'
@@ -140,6 +148,7 @@ Learn Tab
   - `ConceptStats`: Achievement statistics
 
 ### Concepts (concepts.ts)
+
 - **Location**: `src/lib/modules/learn/domain/concepts.ts`
 - **Exports**:
   - `TKA_CONCEPTS`: Array of all 28 concepts mapped from Level 1 PDF
@@ -155,6 +164,7 @@ Learn Tab
 Mapped directly from TKA Level 1.pdf:
 
 #### Foundation (13 concepts)
+
 1. Grid - Diamond/Box grid system (p7)
 2. Positions - Beta/Gamma/Alpha positions (p8)
 3. Staff Motions - Basic staff movements (p9)
@@ -170,6 +180,7 @@ Mapped directly from TKA Level 1.pdf:
 13. Type Application - Using all 6 motion types (p20)
 
 #### Letters (8 concepts)
+
 14. Type 1 Letters - Dash/Static/Shift letters (p21)
 15. Type 2 Letters - Vertical crossers (p22)
 16. Type 3 Letters - Horizontal crossers (p23)
@@ -180,6 +191,7 @@ Mapped directly from TKA Level 1.pdf:
 21. Letter Construction - Building your own (p28)
 
 #### Combinations (6 concepts)
+
 22. Words - Combining letters (p29-32)
 23. CAPs Introduction - Continuous Angular Patterns (p33-35)
 24. Simple CAPs - Basic 2-3 letter patterns (p36-37)
@@ -188,9 +200,11 @@ Mapped directly from TKA Level 1.pdf:
 27. CAP Variations - Expanding pattern vocabulary (p41)
 
 #### Advanced (1 concept)
+
 28. Motion Type Mastery - Fluently using all concepts (p42-47)
 
 Each concept includes:
+
 - Prerequisites (unlocked progressively)
 - PDF page references
 - Estimated completion time (5-30 minutes)
@@ -199,6 +213,7 @@ Each concept includes:
 ## Services
 
 ### ConceptProgressService
+
 - **Location**: `src/lib/modules/learn/services/ConceptProgressService.ts`
 - **Purpose**: Manages user progress with localStorage persistence
 - **Key Methods**:
@@ -223,6 +238,7 @@ Each concept includes:
 ## Technical Specifications
 
 ### Mobile-First Design
+
 - **Touch Targets**: 44x44px minimum (WCAG 2.2 Level AA)
 - **Touch Spacing**: 16px between interactive elements
 - **Breakpoints**:
@@ -232,12 +248,14 @@ Each concept includes:
   - 1200px: Large desktop
 
 ### Animations
+
 - **Duration**: 200-300ms for interactions
 - **Easing**: cubic-bezier(0.16, 1, 0.3, 1) for natural motion
 - **Properties**: transform, opacity (hardware-accelerated)
 - **Reduced Motion**: Respects `prefers-reduced-motion: reduce`
 
 ### Accessibility
+
 - **ARIA Labels**: All interactive elements properly labeled
 - **Keyboard Navigation**: Full support with visible focus indicators
 - **Screen Readers**: Semantic HTML with role attributes
@@ -245,6 +263,7 @@ Each concept includes:
 - **Color Contrast**: WCAG AA compliant
 
 ### State Management
+
 - **Svelte 5 Runes**: $state, $derived, $props, $effect
 - **Navigation State**: Synced with navigationState for persistence
 - **Observable Pattern**: ConceptProgressService with subscribers
@@ -253,6 +272,7 @@ Each concept includes:
 ## Integration Points
 
 ### 1. Navigation State
+
 The Learn module integrates with the global navigation state:
 
 ```typescript
@@ -268,7 +288,9 @@ navigationState.setLearnMode('concepts');
 ```
 
 ### 2. Existing Quiz System
+
 The flash card drills (QuizTab) are the existing quiz infrastructure:
+
 - 3 lesson types: Pictograph→Letter, Letter→Pictograph, Valid Next Pictograph
 - Quiz modes: Fixed questions, Countdown timer
 - Progress tracking: Accuracy, streaks, time
@@ -277,13 +299,17 @@ The flash card drills (QuizTab) are the existing quiz infrastructure:
 **Future**: Concept-specific practice mode will integrate with this quiz infrastructure.
 
 ### 3. Codex Service
+
 CodexPanel embeds the existing CodexComponent which uses ICodexService:
+
 - Pictograph grid display
 - Filtering and search
 - Pictograph selection callbacks
 
 ### 4. PDF Flipbook
+
 ReadTab remains unchanged, displaying Level 1.pdf with:
+
 - Page turning animations
 - Zoom controls
 - Page navigation
@@ -292,6 +318,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ## User Flow
 
 ### First-Time User
+
 1. Lands on **Concepts** tab (default)
 2. Sees ProgressHeader showing 0% completion
 3. Sees 28 concept cards:
@@ -305,6 +332,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 9. Can click **Letters** button for Codex reference panel
 
 ### Returning User (50% Complete)
+
 1. Lands on **Concepts** tab
 2. ProgressHeader shows "50% Complete - Halfway there!"
 3. Concepts #1-14 show as **Completed** ✅
@@ -314,6 +342,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 7. Can continue from concept #15
 
 ### Completed User (100%)
+
 1. Lands on **Concepts** tab
 2. ProgressHeader shows "100% Complete - You've mastered all concepts!"
 3. All 28 concepts show **Completed** ✅
@@ -324,6 +353,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ## Future Enhancements
 
 ### Short-Term (Next Iteration)
+
 1. **Concept-Specific Practice**:
    - Generate quiz questions per concept
    - Map questions to concept topics
@@ -341,6 +371,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
    - Achievement notifications
 
 ### Medium-Term
+
 1. **PDF Integration**:
    - Embed relevant PDF pages in Learn tab
    - Deep link from concept → specific pages
@@ -357,6 +388,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
    - Challenge others
 
 ### Long-Term
+
 1. **Adaptive Learning**:
    - AI-powered question generation
    - Difficulty adjustment based on performance
@@ -373,6 +405,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ## Files Created/Modified
 
 ### New Files
+
 - `src/lib/modules/learn/domain/types.ts` - Type definitions
 - `src/lib/modules/learn/domain/concepts.ts` - 28 concept curriculum
 - `src/lib/modules/learn/domain/index.ts` - Domain exports
@@ -386,6 +419,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 - `src/lib/modules/learn/ARCHITECTURE.md` - This document
 
 ### Modified Files
+
 - `src/lib/modules/learn/LearnTab.svelte` - Complete restructure with new routing
 - `src/lib/modules/learn/index.ts` - Added exports for new components
 - `src/lib/shared/navigation/state/navigation-state.svelte.ts` - Updated LEARN_MODES and default
@@ -393,6 +427,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ## Testing Recommendations
 
 ### Manual Testing Checklist
+
 - [ ] Concepts tab loads with 28 cards
 - [ ] Only first concept is unlocked by default
 - [ ] Click concept card → Opens detail view
@@ -413,6 +448,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 - [ ] Animations respect reduced motion preference
 
 ### Unit Tests to Add
+
 - ConceptProgressService state management
 - Concept unlock logic based on prerequisites
 - Progress calculation accuracy
@@ -420,6 +456,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 - Badge earning conditions
 
 ### Integration Tests to Add
+
 - Complete concept flow (start → practice → complete)
 - Progress persistence across sessions
 - Tab navigation state synchronization
@@ -428,6 +465,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ## Performance Considerations
 
 ### Optimizations Implemented
+
 - **Component Reuse**: Tab panels use `display: none` instead of conditional rendering to preserve state
 - **Background PDF Loading**: PDF loads in background on mount for instant ReadTab access
 - **Lazy Rendering**: ConceptDetailView only renders when concept is selected
@@ -435,6 +473,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 - **Subscription Pattern**: ConceptProgressService notifies subscribers only on changes
 
 ### Future Optimizations
+
 - Virtual scrolling for concept list (when >50 concepts)
 - Code splitting for Read/Quiz tabs (lazy load on tab switch)
 - Image lazy loading for concept icons
@@ -443,6 +482,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ## Conclusion
 
 The Learn module now provides a comprehensive, dual-mode learning experience:
+
 - **Progressive path** for structured curriculum mastery
 - **Flash card drills** for quick memorization practice
 - **Always-accessible reference** via Codex panel

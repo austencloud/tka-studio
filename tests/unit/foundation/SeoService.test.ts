@@ -83,9 +83,13 @@ describe("SeoService", () => {
       const tags = service.generateMetaTags({});
 
       expect(tags.title).toBe("TKA Constructor - The Kinetic Alphabet");
-      expect(tags.description).toBe("Create visual movement sequences with The Kinetic Alphabet");
+      expect(tags.description).toBe(
+        "Create visual movement sequences with The Kinetic Alphabet"
+      );
       expect(tags["og:title"]).toBe("TKA Constructor - The Kinetic Alphabet");
-      expect(tags["og:description"]).toBe("Create visual movement sequences with The Kinetic Alphabet");
+      expect(tags["og:description"]).toBe(
+        "Create visual movement sequences with The Kinetic Alphabet"
+      );
       expect(tags["og:type"]).toBe("website");
       expect(tags["twitter:card"]).toBe("summary_large_image");
     });
@@ -184,11 +188,19 @@ describe("SeoService", () => {
     });
 
     it("should not detect regular browsers", () => {
-      expect(service.isBotRequest("Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/91.0")).toBe(false);
+      expect(
+        service.isBotRequest(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/91.0"
+        )
+      ).toBe(false);
     });
 
     it("should not detect mobile browsers", () => {
-      expect(service.isBotRequest("Mozilla/5.0 (iPhone; CPU iPhone OS 14_0) Safari/604.1")).toBe(false);
+      expect(
+        service.isBotRequest(
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 14_0) Safari/604.1"
+        )
+      ).toBe(false);
     });
 
     it("should be case insensitive", () => {

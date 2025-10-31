@@ -5,9 +5,7 @@
   Provides visual indication that sheets can be dragged/swiped to dismiss.
 -->
 <script lang="ts">
-  let {
-    class: className = ""
-  } = $props<{
+  let { class: className = "" } = $props<{
     class?: string;
   }>();
 </script>
@@ -32,7 +30,8 @@
 
   /* Pulse animation on first render to draw attention */
   @keyframes handlePulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
       transform: scaleX(1);
     }

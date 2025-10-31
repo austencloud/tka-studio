@@ -11,7 +11,17 @@ import type {
   IArrowSvgParser,
   ISvgColorTransformer,
 } from "$shared";
-import { createMotionData, GridLocation, MotionColor, MotionType, Orientation, RotationDirection, type ArrowPlacementData, type ArrowPosition, type MotionData } from "$shared";
+import {
+  createMotionData,
+  GridLocation,
+  MotionColor,
+  MotionType,
+  Orientation,
+  RotationDirection,
+  type ArrowPlacementData,
+  type ArrowPosition,
+  type MotionData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 

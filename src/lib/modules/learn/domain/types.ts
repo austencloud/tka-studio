@@ -5,16 +5,20 @@
 /**
  * Category groupings for concepts
  */
-export type ConceptCategory = 'foundation' | 'letters' | 'combinations' | 'advanced';
+export type ConceptCategory =
+  | "foundation"
+  | "letters"
+  | "combinations"
+  | "advanced";
 
 /**
  * Status of a concept in the user's learning journey
  */
 export type ConceptStatus =
-  | 'locked'       // Prerequisites not met
-  | 'available'    // Unlocked and ready to learn
-  | 'in-progress'  // User has started but not completed
-  | 'completed';   // User has mastered this concept
+  | "locked" // Prerequisites not met
+  | "available" // Unlocked and ready to learn
+  | "in-progress" // User has started but not completed
+  | "completed"; // User has mastered this concept
 
 /**
  * A learnable concept in the TKA curriculum
@@ -136,7 +140,7 @@ export interface LearningProgress {
 /**
  * View mode within a concept detail screen
  */
-export type ConceptDetailView = 'learn' | 'practice' | 'stats';
+export type ConceptDetailView = "learn" | "practice" | "stats";
 
 /**
  * Statistics for displaying user achievements
@@ -175,7 +179,11 @@ export interface ConceptPracticeQuestion {
   conceptId: string;
 
   /** Question type */
-  type: 'pictograph-to-letter' | 'letter-to-pictograph' | 'identification' | 'sequencing';
+  type:
+    | "pictograph-to-letter"
+    | "letter-to-pictograph"
+    | "identification"
+    | "sequencing";
 
   /** Question prompt */
   prompt: string;

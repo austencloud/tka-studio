@@ -19,7 +19,13 @@ export interface InstallInstructions {
 }
 
 export type Platform = "ios" | "android" | "desktop";
-export type Browser = "chrome" | "safari" | "edge" | "firefox" | "samsung" | "other";
+export type Browser =
+  | "chrome"
+  | "safari"
+  | "edge"
+  | "firefox"
+  | "samsung"
+  | "other";
 
 /**
  * Get installation instructions for a specific platform and browser combination
@@ -64,7 +70,7 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
     icon: "fab fa-apple",
     steps: [
       {
-        text: 'Tap the <strong>Share</strong> button at the bottom of Safari',
+        text: "Tap the <strong>Share</strong> button at the bottom of Safari",
         icon: "fas fa-share",
         image: null, // TODO: Add screenshot to /static/images/install-guides/ios-safari-step1.png
       },
@@ -96,12 +102,12 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
     icon: "fab fa-apple",
     steps: [
       {
-        text: 'Open this page in <strong>Safari</strong> (iOS only supports PWA installation in Safari)',
+        text: "Open this page in <strong>Safari</strong> (iOS only supports PWA installation in Safari)",
         icon: "fab fa-safari",
         image: null,
       },
       {
-        text: 'Tap the <strong>Share</strong> button at the bottom',
+        text: "Tap the <strong>Share</strong> button at the bottom",
         icon: "fas fa-share",
         image: null, // TODO: Add screenshot
       },
@@ -123,7 +129,7 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
     icon: "fab fa-android",
     steps: [
       {
-        text: 'Tap the <strong>menu (⋮)</strong> in the top-right corner',
+        text: "Tap the <strong>menu (⋮)</strong> in the top-right corner",
         icon: "fas fa-ellipsis-v",
         image: null, // TODO: Add screenshot to /static/images/install-guides/android-chrome-step1.png
       },
@@ -155,7 +161,7 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
     icon: "fab fa-android",
     steps: [
       {
-        text: 'Tap the <strong>menu (☰)</strong> at the bottom',
+        text: "Tap the <strong>menu (☰)</strong> at the bottom",
         icon: "fas fa-bars",
         image: null, // TODO: Add screenshot to /static/images/install-guides/android-samsung-step1.png
       },
@@ -187,7 +193,7 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
     icon: "fas fa-desktop",
     steps: [
       {
-        text: 'Look for the <strong>install icon (⊕)</strong> in the address bar',
+        text: "Look for the <strong>install icon (⊕)</strong> in the address bar",
         icon: "fas fa-plus-circle",
         image: null, // TODO: Add screenshot to /static/images/install-guides/desktop-chrome-step1.png
       },
@@ -197,7 +203,7 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
         image: null, // TODO: Add screenshot to /static/images/install-guides/desktop-chrome-step2.png
       },
       {
-        text: "Or open the menu (⋮) and select <strong>\"Install TKA\"</strong>",
+        text: 'Or open the menu (⋮) and select <strong>"Install TKA"</strong>',
         icon: "fas fa-ellipsis-v",
         image: null,
       },

@@ -6,13 +6,13 @@
  */
 
 import type {
-    AppSettings,
-    CompleteExploreState,
-    IPersistenceService,
-    PictographData,
-    SequenceData,
-    TabId,
-    UserProject,
+  AppSettings,
+  CompleteExploreState,
+  IPersistenceService,
+  PictographData,
+  SequenceData,
+  TabId,
+  UserProject,
 } from "$shared";
 import { injectable } from "inversify";
 

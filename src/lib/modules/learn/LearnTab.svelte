@@ -10,7 +10,12 @@ Navigation via bottom tabs (mobile-first UX pattern)
 Plus floating Codex button for quick letter reference
 -->
 <script lang="ts">
-  import { navigationState, resolve, TYPES, type IHapticFeedbackService } from "$shared";
+  import {
+    navigationState,
+    resolve,
+    TYPES,
+    type IHapticFeedbackService,
+  } from "$shared";
   import { onMount } from "svelte";
   import ConceptPathView from "./components/ConceptPathView.svelte";
   import ConceptDetailView from "./components/ConceptDetailView.svelte";
@@ -19,12 +24,14 @@ Plus floating Codex button for quick letter reference
   import ReadTab from "./read/components/ReadTab.svelte";
   import { persistentPDFState } from "./read/state";
 
-  type LearnMode = 'concepts' | 'drills' | 'read';
+  type LearnMode = "concepts" | "drills" | "read";
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   // Active mode synced with navigation state
-  let activeMode = $state<LearnMode>('concepts');
+  let activeMode = $state<LearnMode>("concepts");
 
   // Concept detail view state
   let selectedConceptId = $state<string | null>(null);
@@ -37,12 +44,12 @@ Plus floating Codex button for quick letter reference
     const navMode = navigationState.currentLearnMode;
 
     // Map legacy modes
-    if (navMode === 'codex' || navMode === 'concepts') {
-      activeMode = 'concepts';
-    } else if (navMode === 'quiz' || navMode === 'drills') {
-      activeMode = 'drills';
-    } else if (navMode === 'read') {
-      activeMode = 'read';
+    if (navMode === "codex" || navMode === "concepts") {
+      activeMode = "concepts";
+    } else if (navMode === "quiz" || navMode === "drills") {
+      activeMode = "drills";
+    } else if (navMode === "read") {
+      activeMode = "read";
     }
   });
 
@@ -57,8 +64,8 @@ Plus floating Codex button for quick letter reference
   onMount(async () => {
     // Set default mode if none persisted
     const navMode = navigationState.currentLearnMode;
-    if (!navMode || navMode === 'codex') {
-      navigationState.setLearnMode('concepts');
+    if (!navMode || navMode === "codex") {
+      navigationState.setLearnMode("concepts");
     }
 
     // Preload PDF in background for instant Read tab access
@@ -81,7 +88,7 @@ Plus floating Codex button for quick letter reference
 
   // Handle codex button click
   function handleCodexClick() {
-    hapticService?.trigger('selection');
+    hapticService?.trigger("selection");
     isCodexOpen = !isCodexOpen;
   }
 

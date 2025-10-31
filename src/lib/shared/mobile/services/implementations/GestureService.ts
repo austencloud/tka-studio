@@ -21,7 +21,6 @@ interface SwipeGestureState {
  */
 @injectable()
 export class GestureService implements IGestureService {
-
   createSwipeGestureHandler(config: SwipeGestureConfig): SwipeGestureHandler {
     const threshold = config.threshold ?? 100;
 
@@ -54,21 +53,21 @@ export class GestureService implements IGestureService {
       let shouldPreventDefault = false;
       let delta = 0;
 
-      if (config.direction === 'vertical') {
+      if (config.direction === "vertical") {
         delta = deltaY;
         // Check if swipe is in the allowed direction
-        if (config.dismissOrientation === 'down' && deltaY > 0) {
+        if (config.dismissOrientation === "down" && deltaY > 0) {
           shouldPreventDefault = true;
-        } else if (config.dismissOrientation === 'up' && deltaY < 0) {
+        } else if (config.dismissOrientation === "up" && deltaY < 0) {
           shouldPreventDefault = true;
           delta = Math.abs(deltaY);
         }
       } else {
         delta = deltaX;
         // Check if swipe is in the allowed direction
-        if (config.dismissOrientation === 'right' && deltaX > 0) {
+        if (config.dismissOrientation === "right" && deltaX > 0) {
           shouldPreventDefault = true;
-        } else if (config.dismissOrientation === 'left' && deltaX < 0) {
+        } else if (config.dismissOrientation === "left" && deltaX < 0) {
           shouldPreventDefault = true;
           delta = Math.abs(deltaX);
         }
@@ -89,18 +88,18 @@ export class GestureService implements IGestureService {
       let delta = 0;
       let shouldDismiss = false;
 
-      if (config.direction === 'vertical') {
+      if (config.direction === "vertical") {
         delta = deltaY;
-        if (config.dismissOrientation === 'down' && delta > threshold) {
+        if (config.dismissOrientation === "down" && delta > threshold) {
           shouldDismiss = true;
-        } else if (config.dismissOrientation === 'up' && delta < -threshold) {
+        } else if (config.dismissOrientation === "up" && delta < -threshold) {
           shouldDismiss = true;
         }
       } else {
         delta = deltaX;
-        if (config.dismissOrientation === 'right' && delta > threshold) {
+        if (config.dismissOrientation === "right" && delta > threshold) {
           shouldDismiss = true;
-        } else if (config.dismissOrientation === 'left' && delta < -threshold) {
+        } else if (config.dismissOrientation === "left" && delta < -threshold) {
           shouldDismiss = true;
         }
       }
@@ -133,7 +132,7 @@ export class GestureService implements IGestureService {
   ): void {
     if (!element) return;
 
-    if (direction === 'vertical') {
+    if (direction === "vertical") {
       element.style.transform = `translateY(${delta}px)`;
     } else {
       element.style.transform = `translateX(${delta}px)`;
@@ -147,13 +146,14 @@ export class GestureService implements IGestureService {
   ): void {
     if (!element) return;
 
-    const transform = direction === 'vertical' ? 'translateY(0)' : 'translateX(0)';
+    const transform =
+      direction === "vertical" ? "translateY(0)" : "translateX(0)";
     element.style.transform = transform;
     element.style.transition = `transform ${duration}ms cubic-bezier(0.34, 1.56, 0.64, 1)`;
 
     setTimeout(() => {
       if (element) {
-        element.style.transition = '';
+        element.style.transition = "";
       }
     }, duration);
   }
