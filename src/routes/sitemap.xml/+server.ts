@@ -17,10 +17,10 @@ const pages = [
     description: "About TKA Studio - Revolutionary Flow Arts Tool",
   },
   {
-    url: "constructor",
+    url: "build",
     priority: "0.9",
     changefreq: "weekly",
-    description: "Flow Arts Constructor - Sequence Builder",
+    description: "TKA Studio - Sequence Builder",
   },
   {
     url: "Explore",

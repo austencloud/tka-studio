@@ -31,7 +31,7 @@
 
     <ContactInfoCard
       title="Technical Support"
-      description="Need help with the Constructor or other tools?"
+      description="Need help with TKA Studio or other tools?"
       linkText="Get technical help"
       linkHref="mailto:tkaflowarts@gmail.com?subject=Technical Support"
     >

@@ -29,7 +29,7 @@ the actual fullscreen state rather than inferring from viewport size.
   // Fun, inviting messages that make users want to tap
   const messages = [
     "Tap to Build Movement ✨",
-    "Enter the Constructor 🎯",
+    "Enter the Studio 🎯",
     "Let's Create Sequences 🌟",
     "Tap to Choreograph ⚡",
     "Begin Your Sequence 🎨",

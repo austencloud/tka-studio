@@ -11,9 +11,9 @@
     );
   });
 
-  function handleConstructorClick() {
+  function handleBuildClick() {
     hapticService?.trigger("selection");
-    window.location.href = "/constructor";
+    window.location.href = "/build";
   }
 </script>
 
@@ -30,11 +30,11 @@
   <div class="container">
     <h2>Quick Access</h2>
     <div class="quick-grid">
-      <button onclick={handleConstructorClick} class="quick-link constructor">
+      <button onclick={handleBuildClick} class="quick-link build">
         <div class="quick-icon">🔧</div>
         <div class="quick-content">
           <h3>Start Creating</h3>
-          <p>Jump into the constructor</p>
+          <p>Jump into TKA Studio</p>
         </div>
       </button>
 
@@ -118,7 +118,7 @@
     transform: translateY(-2px);
   }
 
-  .quick-link.constructor:hover {
+  .quick-link.build:hover {
     border-color: rgba(102, 126, 234, 0.4);
     box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
   }

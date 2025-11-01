@@ -33,7 +33,7 @@
 
       <div class="system-card">
         <div class="card-icon">🔧</div>
-        <h3>Sequence Constructor</h3>
+        <h3>TKA Studio</h3>
         <p>Build and visualize movement sequences in your browser</p>
         <div class="card-example">Try it: Click "Start Creating" above</div>
       </div>

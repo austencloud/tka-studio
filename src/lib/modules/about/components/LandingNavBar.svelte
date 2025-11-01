@@ -44,9 +44,9 @@
     showSettingsModal = false;
   }
 
-  // Streamlined navigation links - Constructor as flagship, About for info
+  // Streamlined navigation links - Build as flagship, About for info
   const navLinks = [
-    { href: "/constructor", label: "Constructor", primary: true },
+    { href: "/build", label: "Build", primary: true },
     { href: "/about", label: "About", primary: false },
   ];
 </script>
@@ -174,7 +174,7 @@
     will-change: transform, background, box-shadow;
   }
 
-  /* Primary link (Constructor) - more prominent styling */
+  /* Primary link (Build) - more prominent styling */
   .nav-link.primary {
     background: linear-gradient(
       135deg,

@@ -38,11 +38,7 @@
       </p>
 
       <div class="cta-group">
-        <CallToAction
-          text="Enter The Constructor"
-          primary={true}
-          internal={true}
-        />
+        <CallToAction text="Start Creating" primary={true} internal={true} />
         <CallToAction
           text="Download Level 1 PDF Book"
           link={pdfBookLink}
@@ -128,10 +124,10 @@
 
         <div class="step">
           <div class="step-number">3</div>
-          <h3>Use the Constructor</h3>
+          <h3>Use TKA Studio</h3>
           <p>
-            The web-based constructor allows creation and visualization of
-            custom sequences.
+            The web-based tool allows creation and visualization of custom
+            sequences.
           </p>
         </div>
 

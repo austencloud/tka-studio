@@ -16,6 +16,17 @@
     onGoogleAuth: () => void;
     onFacebookAuth: () => void;
   }>();
+
+  // Debug wrapper functions
+  function handleGoogleClick() {
+    console.log("🖱️ [SocialAuthCompact] Google button clicked, calling onGoogleAuth");
+    onGoogleAuth();
+  }
+
+  function handleFacebookClick() {
+    console.log("🖱️ [SocialAuthCompact] Facebook button clicked, calling onFacebookAuth");
+    onFacebookAuth();
+  }
 </script>
 
 <div class="social-auth-compact">
@@ -25,7 +36,7 @@
   <div class="social-compact-buttons">
     <button
       class="social-compact-button social-compact-button--google"
-      onclick={onGoogleAuth}
+      onclick={handleGoogleClick}
       aria-label={mode === "signin"
         ? "Sign in with Google"
         : "Sign up with Google"}
@@ -35,7 +46,7 @@
     </button>
     <button
       class="social-compact-button social-compact-button--facebook"
-      onclick={onFacebookAuth}
+      onclick={handleFacebookClick}
       aria-label={mode === "signin"
         ? "Sign in with Facebook"
         : "Sign up with Facebook"}

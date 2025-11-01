@@ -45,10 +45,15 @@
     }
   });
 
+  // Track when sheet opens/closes
+  $effect(() => {
+    console.log("🎭 [AuthSheet] isOpen changed:", isOpen);
+  });
+
   // Auto-close when user becomes authenticated
   $effect(() => {
     if (authStore.isAuthenticated && isOpen) {
-      console.log("✅ User authenticated, auto-closing auth sheet");
+      console.log("✅ [AuthSheet] User authenticated, auto-closing auth sheet");
       // Small delay for smooth transition
       setTimeout(() => {
         onClose();

@@ -47,17 +47,16 @@
       description: "Digital tools for sequence creation and analysis",
       links: [
         {
-          title: "Desktop Constructor v0.1.2",
+          title: "Desktop App v0.1.2",
           description:
             "Full-featured desktop application for sequence creation",
           url: "https://github.com/austencloud/tka-sequence-constructor/releases/download/v0.1.2/TKA_Setup.exe",
           type: "download",
         },
         {
-          title: "Web Constructor",
-          description:
-            "Browser-based sequence constructor with advanced features",
-          url: "/constructor",
+          title: "TKA Studio (Web)",
+          description: "Browser-based sequence builder with advanced features",
+          url: "/build",
           type: "internal",
         },
         {
@@ -226,14 +225,14 @@
       <h2>Quick Access</h2>
       <div class="quick-grid">
         <a
-          href="/constructor"
-          class="quick-link constructor"
+          href="/build"
+          class="quick-link build"
           onclick={() => hapticService?.trigger("selection")}
         >
           <div class="quick-icon">🔧</div>
           <div class="quick-content">
             <h3>Start Creating</h3>
-            <p>Jump into the constructor</p>
+            <p>Jump into TKA Studio</p>
           </div>
         </a>
 
@@ -487,7 +486,7 @@
     transform: translateY(-2px);
   }
 
-  .quick-link.constructor:hover {
+  .quick-link.build:hover {
     border-color: rgba(102, 126, 234, 0.4);
     box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
   }

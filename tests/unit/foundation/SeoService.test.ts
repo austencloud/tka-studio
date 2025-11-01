@@ -82,11 +82,11 @@ describe("SeoService", () => {
     it("should generate default meta tags", () => {
       const tags = service.generateMetaTags({});
 
-      expect(tags.title).toBe("TKA Constructor - The Kinetic Alphabet");
+      expect(tags.title).toBe("TKA Studio - Flow Arts Choreography Tool");
       expect(tags.description).toBe(
         "Create visual movement sequences with The Kinetic Alphabet"
       );
-      expect(tags["og:title"]).toBe("TKA Constructor - The Kinetic Alphabet");
+      expect(tags["og:title"]).toBe("TKA Studio - Flow Arts Choreography Tool");
       expect(tags["og:description"]).toBe(
         "Create visual movement sequences with The Kinetic Alphabet"
       );

@@ -12,7 +12,7 @@ Sitemap: ${PRIMARY_DOMAIN}/sitemap.xml
 # Main application pages - high priority for indexing
 Allow: /
 Allow: /about
-Allow: /constructor
+Allow: /build
 Allow: /browse
 Allow: /learn
 Allow: /features
