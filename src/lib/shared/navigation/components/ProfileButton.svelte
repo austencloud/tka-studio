@@ -3,7 +3,7 @@
 
   Features:
   - Profile picture display or initial fallback
-  - Opens profile sheet (bottom sheet) via custom event
+  - Opens profile settings sheet directly via route-based navigation
   - Haptic feedback on interaction
   - 44px minimum touch target (WCAG AAA)
 -->
@@ -23,9 +23,10 @@
 
   function handleProfileClick() {
     hapticService?.trigger("selection");
-    // Dispatch custom event to toggle profile sheet
-    const event = new CustomEvent("profile-sheet-toggle");
-    window.dispatchEvent(event);
+    // Open profile settings sheet directly
+    import("../utils/sheet-router").then(({ openSheet }) => {
+      openSheet("profile-settings");
+    });
   }
 </script>
 

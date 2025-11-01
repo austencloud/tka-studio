@@ -9,7 +9,7 @@
   import type { IHapticFeedbackService } from "$shared";
   import { FontAwesomeIcon, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import type { ModeOption } from "../domain/types";
+  import type { Section } from "../domain/types";
 
   // Helper function to extract Font Awesome icon name from HTML string
   function extractIconName(htmlString: string): string | null {
@@ -19,16 +19,16 @@
   }
 
   let {
-    subModeTabs = [],
-    currentSubMode,
+    sectionTabs = [],
+    currentSection,
     navigationLayout,
-    onSubModeChange,
+    onSectionChange,
     forceIconOnly = false,
   } = $props<{
-    subModeTabs: ModeOption[];
-    currentSubMode: string;
+    sectionTabs: Section[];
+    currentSection: string;
     navigationLayout: "top" | "left";
-    onSubModeChange?: (subModeId: string) => void;
+    onSectionChange?: (sectionId: string) => void;
     forceIconOnly?: boolean;
   }>();
 
@@ -62,11 +62,11 @@
     containerClientWidth = containerElement.clientWidth;
   }
 
-  // Reactive effect: Update measurements when subModeTabs array changes
+  // Reactive effect: Update measurements when sectionTabs array changes
   // This ensures overflow detection reacts to dynamic tab additions/removals
   $effect(() => {
-    // Track the subModeTabs array length to trigger on changes
-    const tabCount = subModeTabs.length;
+    // Track the sectionTabs array length to trigger on changes
+    const tabCount = sectionTabs.length;
 
     // Schedule measurement update after DOM updates complete
     // This allows the new tabs to render before we measure
@@ -105,9 +105,9 @@
   });
 
   // Handle sub-mode selection
-  function handleSubModeSelect(subModeId: string) {
+  function handleSectionSelect(sectionId: string) {
     hapticService?.trigger("selection");
-    onSubModeChange?.(subModeId);
+    onSectionChange?.(sectionId);
   }
 </script>
 
@@ -117,32 +117,32 @@
   class:layout-left={navigationLayout === "left"}
   class:icon-only={shouldShowIconOnly && navigationLayout === "top"}
 >
-  {#each subModeTabs as subMode}
+  {#each sectionTabs as section}
     <button
       class="nav-tab sub-mode-tab"
-      class:active={currentSubMode === subMode.id}
-      class:disabled={subMode.disabled}
+      class:active={currentSection === section.id}
+      class:disabled={section.disabled}
       onclick={() =>
-        subMode.disabled ? null : handleSubModeSelect(subMode.id)}
-      disabled={subMode.disabled}
-      aria-pressed={currentSubMode === subMode.id}
-      aria-disabled={subMode.disabled}
-      title={subMode.disabled
-        ? `${subMode.label} (requires a sequence)`
-        : subMode.description || subMode.label}
-      style="--tab-color: {subMode.color ||
-        'var(--muted-foreground)'}; --tab-gradient: {subMode.gradient ||
-        subMode.color ||
+        section.disabled ? null : handleSectionSelect(section.id)}
+      disabled={section.disabled}
+      aria-pressed={currentSection === section.id}
+      aria-disabled={section.disabled}
+      title={section.disabled
+        ? `${section.label} (requires a sequence)`
+        : section.description || section.label}
+      style="--tab-color: {section.color ||
+        'var(--muted-foreground)'}; --tab-gradient: {section.gradient ||
+        section.color ||
         'var(--muted-foreground)'};"
     >
       <span class="tab-icon">
-        {#if extractIconName(subMode.icon)}
-          <FontAwesomeIcon icon={extractIconName(subMode.icon)!} size="1em" />
+        {#if extractIconName(section.icon)}
+          <FontAwesomeIcon icon={extractIconName(section.icon)!} size="1em" />
         {:else}
-          {@html subMode.icon}
+          {@html section.icon}
         {/if}
       </span>
-      <span class="tab-label">{subMode.label}</span>
+      <span class="tab-label">{section.label}</span>
     </button>
   {/each}
 </div>

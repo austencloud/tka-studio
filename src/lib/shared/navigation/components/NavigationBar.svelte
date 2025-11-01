@@ -1,19 +1,19 @@
 <!-- Enhanced Navigation Bar with Module-based Navigation -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import { ModuleMenuSection, SettingsButton, SubModeTabs } from ".";
+  import { ModuleMenuSection, SettingsButton } from ".";
   import type { IAnimationService } from "../../application/services/contracts";
   import type { IDeviceDetector } from "../../device/services/contracts/IDeviceDetector";
   import { resolve, TYPES } from "../../inversify";
-  import type { ModeOption, ModuleDefinition, ModuleId } from "../domain/types";
+  import type { ModuleDefinition, ModuleId, Section } from "../domain/types";
 
   let {
     // Module-based props
     currentModule,
     currentModuleName,
-    currentSubMode,
-    subModeTabs = [],
-    onSubModeChange,
+    currentSection,
+    sectionTabs = [],
+    onSectionChange,
     onModuleChange,
     modules = [],
     // Layout props
@@ -24,9 +24,9 @@
     // New module-based props
     currentModule: ModuleId;
     currentModuleName: string;
-    currentSubMode: string;
-    subModeTabs: ModeOption[];
-    onSubModeChange?: (subMode: string) => void;
+    currentSection: string;
+    sectionTabs: Section[];
+    onSectionChange?: (section: string) => void;
     onModuleChange?: (moduleId: ModuleId) => void;
     modules: ModuleDefinition[];
     // Layout props
@@ -89,9 +89,9 @@
     } else if (isNavOverflowing && !hasOverflow) {
       // Currently showing icons and no overflow detected
       // Temporarily remove icon-only class to measure if full labels would fit
-      const subModeTabs = navCenterElement.querySelector(".sub-mode-tabs");
-      if (subModeTabs) {
-        subModeTabs.classList.remove("icon-only");
+      const sectionTabs = navCenterElement.querySelector(".sub-mode-tabs");
+      if (sectionTabs) {
+        sectionTabs.classList.remove("icon-only");
 
         // Force layout recalculation and measure
         const fullLabelScrollWidth = navCenterElement.scrollWidth;
@@ -100,7 +100,7 @@
           fullLabelScrollWidth > fullLabelClientWidth;
 
         // Restore icon-only class immediately
-        subModeTabs.classList.add("icon-only");
+        sectionTabs.classList.add("icon-only");
 
         // Only switch to full labels if they would fit
         if (!wouldOverflowWithFullLabels) {
@@ -127,11 +127,11 @@
     navClientWidth = navCenterElement.clientWidth;
   }
 
-  // Reactive effect: Update measurements when subModeTabs array changes
+  // Reactive effect: Update measurements when sectionTabs array changes
   // This ensures overflow detection reacts to dynamic tab additions/removals
   $effect(() => {
-    // Track the subModeTabs array length to trigger on changes
-    const tabCount = subModeTabs.length;
+    // Track the sectionTabs array length to trigger on changes
+    const tabCount = sectionTabs.length;
 
     // Schedule measurement update after DOM updates complete
     // This allows the new tabs to render before we measure
@@ -242,11 +242,11 @@
     class:icon-only-mode={isNavOverflowing}
   >
     {#if currentModule !== "build"}
-      <SubModeTabs
-        {subModeTabs}
-        {currentSubMode}
+      <SectionTabs
+        {sectionTabs}
+        {currentSection}
         {navigationLayout}
-        {onSubModeChange}
+        {onSectionChange}
         forceIconOnly={isNavOverflowing}
       />
     {/if}

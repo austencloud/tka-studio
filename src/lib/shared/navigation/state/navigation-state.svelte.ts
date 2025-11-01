@@ -5,13 +5,13 @@
  * This provides a centralized way to track and update navigation state across the app.
  */
 
-import type { ModeOption, ModuleDefinition, ModuleId } from "../domain/types";
+import type { ModuleDefinition, ModuleId, Section } from "../domain/types";
 
-// Build modes configuration - mutable to allow dynamic tab accessibility updates
+// Build tabs configuration - mutable to allow dynamic tab accessibility updates
 // Note: Edit functionality is now handled via a slide-out panel, not a tab
 // Note: Animate is now a Play button in the button panel with inline animator
 // Note: Record removed (not implemented yet, users will use native camera apps)
-export const BUILD_MODES: ModeOption[] = [
+export const BUILD_TABS: Section[] = [
   {
     id: "construct",
     label: "Construct",
@@ -30,8 +30,8 @@ export const BUILD_MODES: ModeOption[] = [
   },
 ];
 
-// Learn modes configuration
-export const LEARN_MODES: ModeOption[] = [
+// Learn tabs configuration
+export const LEARN_TABS: Section[] = [
   {
     id: "concepts",
     label: "Concepts",
@@ -58,8 +58,8 @@ export const LEARN_MODES: ModeOption[] = [
   },
 ];
 
-// Explore modes configuration
-export const EXPLORE_MODES: ModeOption[] = [
+// Explore tabs configuration
+export const EXPLORE_TABS: Section[] = [
   {
     id: "explore",
     label: "Explore",
@@ -70,8 +70,8 @@ export const EXPLORE_MODES: ModeOption[] = [
   },
 ];
 
-// Library modes configuration
-export const LIBRARY_MODES: ModeOption[] = [
+// Library tabs configuration
+export const LIBRARY_TABS: Section[] = [
   {
     id: "sequences",
     label: "Sequences",
@@ -99,7 +99,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     icon: '<i class="fas fa-tools" style="color: #f59e0b;"></i>', // Amber - construction/creation
     description: "Create and edit sequences",
     isMain: true,
-    subModes: BUILD_MODES,
+    sections: BUILD_TABS,
   },
   {
     id: "explore",
@@ -107,7 +107,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     icon: '<i class="fas fa-compass" style="color: #a855f7;"></i>', // Purple - discovery/exploration
     description: "Explore and discover sequences",
     isMain: true,
-    subModes: EXPLORE_MODES,
+    sections: EXPLORE_TABS,
   },
   {
     id: "learn",
@@ -115,7 +115,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     icon: '<i class="fas fa-graduation-cap" style="color: #3b82f6;"></i>', // Blue - education/knowledge
     description: "Study and practice TKA",
     isMain: true,
-    subModes: LEARN_MODES,
+    sections: LEARN_TABS,
   },
   {
     id: "library",
@@ -123,7 +123,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     icon: '<i class="fas fa-book" style="color: #10b981;"></i>', // Green - personal collection/library
     description: "My sequences and saved content",
     isMain: true,
-    subModes: LIBRARY_MODES,
+    sections: LIBRARY_TABS,
   },
   {
     id: "write",
@@ -131,7 +131,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     icon: '<i class="fas fa-pen" style="color: #14b8a6;"></i>', // Teal - writing/communication
     description: "Write sequences as text",
     isMain: false,
-    subModes: [
+    sections: [
       {
         id: "write",
         label: "Write",
@@ -146,7 +146,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     icon: '<i class="fas fa-id-card" style="color: #ec4899;"></i>', // Pink - cards/printables
     description: "Generate word cards",
     isMain: false,
-    subModes: [
+    sections: [
       {
         id: "word_card",
         label: "Word Card",
@@ -158,219 +158,218 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
 ];
 
 /**
- * Creates navigation state for managing current modes
+ * Creates navigation state for managing modules and tabs
  */
 export function createNavigationState() {
-  // State - existing modes for backward compatibility
+  // Legacy state - for backward compatibility
   let currentBuildMode = $state<string>("construct");
   let currentLearnMode = $state<string>("concepts");
 
-  // New module-based state
+  // Module-based state
   let currentModule = $state<ModuleId>("build");
-  let currentSubMode = $state<string>("construct");
-  const MODULE_LAST_SUB_MODES_KEY = "tka-module-last-sub-modes";
-  let lastSubModeByModule = $state<Partial<Record<ModuleId, string>>>({});
+  let activeTab = $state<string>("construct"); // Active tab within the current module
+  const MODULE_LAST_TABS_KEY = "tka-module-last-tabs";
+  let lastTabByModule = $state<Partial<Record<ModuleId, string>>>({});
 
   // Load persisted state
   if (typeof localStorage !== "undefined") {
-    // Load existing mode persistence
+    // Load legacy mode persistence
     const savedBuildMode = localStorage.getItem("tka-current-build-mode");
-    if (savedBuildMode && BUILD_MODES.some((m) => m.id === savedBuildMode)) {
+    if (savedBuildMode && BUILD_TABS.some((t) => t.id === savedBuildMode)) {
       currentBuildMode = savedBuildMode;
     }
 
     const savedLearnMode = localStorage.getItem("tka-current-learn-mode");
-    if (savedLearnMode && LEARN_MODES.some((m) => m.id === savedLearnMode)) {
+    if (savedLearnMode && LEARN_TABS.some((t) => t.id === savedLearnMode)) {
       currentLearnMode = savedLearnMode;
     }
 
-    // Load new module-based persistence
+    // Load module persistence
     const savedModule = localStorage.getItem("tka-current-module");
     if (savedModule && MODULE_DEFINITIONS.some((m) => m.id === savedModule)) {
       currentModule = savedModule as ModuleId;
     }
 
-    const savedLastSubModes = localStorage.getItem(MODULE_LAST_SUB_MODES_KEY);
-    if (savedLastSubModes) {
+    // Load last active tab for each module
+    const savedLastTabs = localStorage.getItem(MODULE_LAST_TABS_KEY);
+    if (savedLastTabs) {
       try {
-        const parsed = JSON.parse(savedLastSubModes) as Record<string, string>;
+        const parsed = JSON.parse(savedLastTabs) as Record<string, string>;
         const filteredEntries = Object.entries(parsed).filter(
-          ([moduleId, subModeId]) => {
+          ([moduleId, tabId]) => {
             const moduleDefinition = MODULE_DEFINITIONS.find(
               (m) => m.id === moduleId
             );
             return (
-              moduleDefinition?.subModes?.some(
-                (mode) => mode.id === subModeId
+              moduleDefinition?.sections?.some(
+                (tab) => tab.id === tabId
               ) ?? false
             );
           }
         );
 
         if (filteredEntries.length > 0) {
-          lastSubModeByModule = filteredEntries.reduce<
+          lastTabByModule = filteredEntries.reduce<
             Partial<Record<ModuleId, string>>
-          >((acc, [moduleId, subModeId]) => {
-            acc[moduleId as ModuleId] = subModeId;
+          >((acc, [moduleId, tabId]) => {
+            acc[moduleId as ModuleId] = tabId;
             return acc;
           }, {});
         }
       } catch (error) {
         console.warn(
-          "NavigationState: failed to parse saved module sub-mode map:",
+          "NavigationState: failed to parse saved module tab map:",
           error
         );
       }
     }
 
-    const savedSubMode = localStorage.getItem("tka-current-sub-mode");
-    if (savedSubMode) {
-      // Will validate and set in the getter functions
-      currentSubMode = savedSubMode;
+    // Load current active tab
+    const savedActiveTab = localStorage.getItem("tka-active-tab");
+    if (savedActiveTab) {
+      activeTab = savedActiveTab;
     }
 
-    // Use local variables to avoid state reference warnings during initialization
-    // Create closure to capture state safely
-    const getRememberedSubMode = () => {
+    // Remember the last active tab for current module
+    const getRememberedTab = () => {
       const module = currentModule;
-      const lastSubModes = lastSubModeByModule;
-      return lastSubModes[module];
+      const lastTabs = lastTabByModule;
+      return lastTabs[module];
     };
-    const rememberedSubMode = getRememberedSubMode();
-    if (rememberedSubMode) {
+    const rememberedTab = getRememberedTab();
+    if (rememberedTab) {
       const moduleDefinition = MODULE_DEFINITIONS.find(
         (m) => m.id === currentModule
       );
       if (
-        moduleDefinition?.subModes?.some(
-          (mode) => mode.id === rememberedSubMode
+        moduleDefinition?.sections?.some(
+          (tab) => tab.id === rememberedTab
         )
       ) {
-        currentSubMode = rememberedSubMode;
+        activeTab = rememberedTab;
       }
     }
   }
 
-  // Actions
+  // Legacy action functions
   function setBuildMode(mode: string) {
-    if (BUILD_MODES.some((m) => m.id === mode)) {
+    if (BUILD_TABS.some((t) => t.id === mode)) {
       currentBuildMode = mode;
       if (typeof localStorage !== "undefined") {
         localStorage.setItem("tka-current-build-mode", mode);
       }
-      // Sync with new state - will be handled by the getter functions
     }
   }
 
   function setLearnMode(mode: string) {
-    if (LEARN_MODES.some((m) => m.id === mode)) {
+    if (LEARN_TABS.some((t) => t.id === mode)) {
       currentLearnMode = mode;
       if (typeof localStorage !== "undefined") {
         localStorage.setItem("tka-current-learn-mode", mode);
       }
       // Sync with new state when in Learn module
       if (currentModule === "learn") {
-        currentSubMode = mode;
+        activeTab = mode;
       }
     }
   }
 
-  function persistLastSubModes() {
+  function persistLastTabs() {
     if (typeof localStorage === "undefined") {
       return;
     }
 
     try {
       localStorage.setItem(
-        MODULE_LAST_SUB_MODES_KEY,
-        JSON.stringify(lastSubModeByModule)
+        MODULE_LAST_TABS_KEY,
+        JSON.stringify(lastTabByModule)
       );
     } catch (error) {
       console.warn(
-        "NavigationState: failed to persist module sub-mode map:",
+        "NavigationState: failed to persist module tab map:",
         error
       );
     }
   }
 
-  // New module-based functions
+  // Module-based functions
   function setCurrentModule(moduleId: ModuleId) {
     if (MODULE_DEFINITIONS.some((m) => m.id === moduleId)) {
       currentModule = moduleId;
 
-      // Set default sub-mode for the module
+      // Set default tab for the module
       const moduleDefinition = MODULE_DEFINITIONS.find(
         (m) => m.id === moduleId
       );
-      let nextSubMode = currentSubMode;
-      if (moduleDefinition && moduleDefinition.subModes.length > 0) {
-        const remembered = lastSubModeByModule[moduleId];
-        const fallbackSubMode = moduleDefinition.subModes[0].id;
-        const resolvedSubMode =
+      let nextTab = activeTab;
+      if (moduleDefinition && moduleDefinition.sections.length > 0) {
+        const remembered = lastTabByModule[moduleId];
+        const fallbackTab = moduleDefinition.sections[0].id;
+        const resolvedTab =
           remembered &&
-          moduleDefinition.subModes.some((mode) => mode.id === remembered)
+          moduleDefinition.sections.some((tab) => tab.id === remembered)
             ? remembered
-            : fallbackSubMode;
+            : fallbackTab;
 
-        nextSubMode = resolvedSubMode;
-        lastSubModeByModule = {
-          ...lastSubModeByModule,
-          [moduleId]: resolvedSubMode,
+        nextTab = resolvedTab;
+        lastTabByModule = {
+          ...lastTabByModule,
+          [moduleId]: resolvedTab,
         };
       } else {
-        const updatedMap = { ...lastSubModeByModule };
+        const updatedMap = { ...lastTabByModule };
         delete updatedMap[moduleId];
-        lastSubModeByModule = updatedMap;
+        lastTabByModule = updatedMap;
       }
 
-      currentSubMode = nextSubMode;
+      activeTab = nextTab;
 
-      // Persist both module and sub-mode
+      // Persist both module and active tab
       if (typeof localStorage !== "undefined") {
         localStorage.setItem("tka-current-module", moduleId);
-        if (nextSubMode) {
-          localStorage.setItem("tka-current-sub-mode", nextSubMode);
+        if (nextTab) {
+          localStorage.setItem("tka-active-tab", nextTab);
         }
       }
 
-      persistLastSubModes();
+      persistLastTabs();
 
-      // Sync with legacy state - use getters to avoid state reference warnings
-      const subMode = getCurrentSubMode();
+      // Sync with legacy state
+      const tab = getActiveTab();
       if (moduleId === "build") {
-        setBuildMode(subMode);
+        setBuildMode(tab);
       } else if (moduleId === "learn") {
-        setLearnMode(subMode);
+        setLearnMode(tab);
       }
     }
   }
 
-  function setCurrentSubMode(subModeId: string) {
+  function setActiveTab(tabId: string) {
     const moduleDefinition = MODULE_DEFINITIONS.find(
       (m) => m.id === currentModule
     );
     if (
       moduleDefinition &&
-      moduleDefinition.subModes.some((sm) => sm.id === subModeId)
+      moduleDefinition.sections.some((tab) => tab.id === tabId)
     ) {
-      currentSubMode = subModeId;
+      activeTab = tabId;
 
       if (typeof localStorage !== "undefined") {
-        localStorage.setItem("tka-current-sub-mode", subModeId);
+        localStorage.setItem("tka-active-tab", tabId);
       }
 
-      lastSubModeByModule = {
-        ...lastSubModeByModule,
-        [currentModule]: subModeId,
+      lastTabByModule = {
+        ...lastTabByModule,
+        [currentModule]: tabId,
       };
-      persistLastSubModes();
+      persistLastTabs();
 
-      // Sync with legacy state - use getters to avoid state reference warnings
+      // Sync with legacy state
       const module = getCurrentModule();
       if (module === "build") {
-        setBuildMode(subModeId);
+        setBuildMode(tabId);
       } else if (module === "learn") {
-        setLearnMode(subModeId);
+        setLearnMode(tabId);
       }
     }
   }
@@ -379,13 +378,13 @@ export function createNavigationState() {
     return currentModule;
   }
 
-  function getCurrentSubMode(): string {
-    return currentSubMode;
+  function getActiveTab(): string {
+    return activeTab;
   }
 
-  function getSubModesForModule(moduleId: ModuleId): ModeOption[] {
+  function getTabsForModule(moduleId: ModuleId): Section[] {
     const moduleDefinition = MODULE_DEFINITIONS.find((m) => m.id === moduleId);
-    return moduleDefinition ? moduleDefinition.subModes : [];
+    return moduleDefinition ? moduleDefinition.sections : [];
   }
 
   function getModuleDefinition(
@@ -395,15 +394,15 @@ export function createNavigationState() {
   }
 
   function updateTabAccessibility(tabId: string, disabled: boolean) {
-    // Find and update the tab in BUILD_MODES (mutate directly)
-    const tab = BUILD_MODES.find((m) => m.id === tabId);
+    // Find and update the tab in BUILD_TABS (mutate directly)
+    const tab = BUILD_TABS.find((t) => t.id === tabId);
     if (tab) {
       tab.disabled = disabled;
     }
   }
 
   return {
-    // Readonly state - existing for backward compatibility
+    // Legacy readonly state - for backward compatibility
     get currentBuildMode() {
       return currentBuildMode;
     },
@@ -411,44 +410,73 @@ export function createNavigationState() {
       return currentLearnMode;
     },
 
-    // New module-based readonly state
+    // Module-based readonly state
     get currentModule() {
       return currentModule;
     },
-    get currentSubMode() {
-      return currentSubMode;
+    get activeTab() {
+      return activeTab;
     },
 
-    // Mode configurations
-    get buildModes() {
-      return BUILD_MODES;
+    // Tab configurations
+    get buildTabs() {
+      return BUILD_TABS;
     },
-    get learnModes() {
-      return LEARN_MODES;
+    get learnTabs() {
+      return LEARN_TABS;
     },
-    get exploreModes() {
-      return EXPLORE_MODES;
+    get exploreTabs() {
+      return EXPLORE_TABS;
     },
-    // Legacy getter for backward compatibility
-    get ExploreModes() {
-      return EXPLORE_MODES;
+    get libraryTabs() {
+      return LIBRARY_TABS;
     },
     get moduleDefinitions() {
       return MODULE_DEFINITIONS;
     },
 
-    // Actions - existing for backward compatibility
+    // Legacy getters (deprecated)
+    /** @deprecated Use buildTabs instead */
+    get buildModes() {
+      return BUILD_TABS;
+    },
+    /** @deprecated Use learnTabs instead */
+    get learnModes() {
+      return LEARN_TABS;
+    },
+    /** @deprecated Use exploreTabs instead */
+    get exploreModes() {
+      return EXPLORE_TABS;
+    },
+    /** @deprecated Use exploreTabs instead */
+    get ExploreModes() {
+      return EXPLORE_TABS;
+    },
+    /** @deprecated Use activeTab instead */
+    get currentSection() {
+      return activeTab;
+    },
+
+    // Legacy actions - for backward compatibility
     setBuildMode,
     setLearnMode,
 
-    // New module-based actions
+    // Module-based actions
     setCurrentModule,
-    setCurrentSubMode,
+    setActiveTab,
     getCurrentModule,
-    getCurrentSubMode,
-    getSubModesForModule,
+    getActiveTab,
+    getTabsForModule,
     getModuleDefinition,
     updateTabAccessibility,
+
+    // Legacy action aliases (deprecated)
+    /** @deprecated Use setActiveTab instead */
+    setCurrentSection: setActiveTab,
+    /** @deprecated Use getActiveTab instead */
+    getCurrentSection: getActiveTab,
+    /** @deprecated Use getTabsForModule instead */
+    getSectionsForModule: getTabsForModule,
   };
 }
 

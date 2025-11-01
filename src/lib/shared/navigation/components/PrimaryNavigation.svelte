@@ -1,25 +1,30 @@
 <!-- Primary Navigation - Responsive Bottom/Side Navigation -->
 <!-- Automatically adapts between bottom (portrait) and side (landscape) layouts -->
 <script lang="ts">
+  import {
+    resolve,
+    TYPES,
+    type IDeviceDetector,
+    type IHapticFeedbackService,
+  } from "$shared";
+  import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onMount } from "svelte";
   import {
     getShowSettings,
     toggleSettingsDialog,
   } from "../../application/state/app-state.svelte";
-  import type { ModeOption } from "../domain/types";
-  import { resolve, TYPES, type IHapticFeedbackService, type IDeviceDetector } from "$shared";
-  import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
+  import type { Section } from "../domain/types";
 
   let {
-    subModeTabs = [],
-    currentSubMode,
-    onSubModeChange,
+    sections = [],
+    currentSection,
+    onSectionChange,
     onModuleSwitcherTap,
     onLayoutChange,
   } = $props<{
-    subModeTabs: ModeOption[];
-    currentSubMode: string;
-    onSubModeChange?: (subModeId: string) => void;
+    sections: Section[];
+    currentSection: string;
+    onSectionChange?: (sectionId: string) => void;
     onModuleSwitcherTap?: () => void;
     onLayoutChange?: (isLandscape: boolean) => void;
   }>();
@@ -47,10 +52,10 @@
     Menu: "Menu",
   };
 
-  function handleSubModeTap(subMode: ModeOption) {
-    if (!subMode.disabled) {
+  function handleSectionTap(section: Section) {
+    if (!section.disabled) {
       hapticService?.trigger("selection");
-      onSubModeChange?.(subMode.id);
+      onSectionChange?.(section.id);
     }
   }
 
@@ -93,7 +98,10 @@
         responsiveSettings = deviceDetector!.getResponsiveSettings();
       });
     } catch (error) {
-      console.warn("PrimaryNavigation: Failed to resolve DeviceDetector", error);
+      console.warn(
+        "PrimaryNavigation: Failed to resolve DeviceDetector",
+        error
+      );
     }
 
     // Feature detection for container queries
@@ -116,32 +124,32 @@
     class="nav-button module-switcher"
     onclick={handleModuleSwitcher}
     aria-label="Switch module"
-    style="--tab-color: rgba(255, 255, 255, 1); --tab-gradient: rgba(255, 255, 255, 1);"
+    style="--section-color: rgba(255, 255, 255, 1); --section-gradient: rgba(255, 255, 255, 1);"
   >
     <span class="nav-icon"><i class="fas fa-bars"></i></span>
     <span class="nav-label nav-label-full">Menu</span>
     <span class="nav-label nav-label-compact">{getCompactLabel("Menu")}</span>
   </button>
 
-  <!-- Current Module's Sub-Mode Tabs -->
-  <div class="sub-mode-tabs">
-    {#each subModeTabs as subMode}
+  <!-- Current Module's Sections -->
+  <div class="sections">
+    {#each sections as section}
       <button
         class="nav-button"
-        class:active={currentSubMode === subMode.id}
-        class:disabled={subMode.disabled}
-        onclick={() => handleSubModeTap(subMode)}
-        disabled={subMode.disabled}
-        aria-label={subMode.label}
-        style="--tab-color: {subMode.color ||
-          'var(--muted-foreground)'}; --tab-gradient: {subMode.gradient ||
-          subMode.color ||
+        class:active={currentSection === section.id}
+        class:disabled={section.disabled}
+        onclick={() => handleSectionTap(section)}
+        disabled={section.disabled}
+        aria-label={section.label}
+        style="--section-color: {section.color ||
+          'var(--muted-foreground)'}; --section-gradient: {section.gradient ||
+          section.color ||
           'var(--muted-foreground)'};"
       >
-        <span class="nav-icon">{@html subMode.icon}</span>
-        <span class="nav-label nav-label-full">{subMode.label}</span>
+        <span class="nav-icon">{@html section.icon}</span>
+        <span class="nav-label nav-label-full">{section.label}</span>
         <span class="nav-label nav-label-compact"
-          >{getCompactLabel(subMode.label)}</span
+          >{getCompactLabel(section.label)}</span
         >
       </button>
     {/each}
@@ -153,7 +161,7 @@
     class:active={getShowSettings()}
     onclick={handleSettingsTap}
     aria-label="Settings"
-    style="--tab-color: rgba(255, 255, 255, 1); --tab-gradient: rgba(255, 255, 255, 1);"
+    style="--section-color: rgba(255, 255, 255, 1); --section-gradient: rgba(255, 255, 255, 1);"
   >
     <span class="nav-icon"><i class="fas fa-cog"></i></span>
     <span class="nav-label nav-label-full">Settings</span>
@@ -217,10 +225,10 @@
   }
 
   /* ============================================================================
-     SUB-MODE TABS CONTAINER
+     SECTIONS CONTAINER
      ============================================================================ */
-  /* Bottom layout - horizontal tabs */
-  .layout-bottom .sub-mode-tabs {
+  /* Bottom layout - horizontal sections */
+  .layout-bottom .sections {
     display: flex;
     flex-direction: row;
     gap: 4px;
@@ -230,8 +238,8 @@
     min-width: 0; /* Allow flex shrinking */
   }
 
-  /* Side layout - vertical tabs */
-  .layout-side .sub-mode-tabs {
+  /* Side layout - vertical sections */
+  .layout-side .sections {
     display: flex;
     flex-direction: column;
     gap: 6px;
@@ -246,7 +254,7 @@
     -ms-overflow-style: none;
   }
 
-  .layout-side .sub-mode-tabs::-webkit-scrollbar {
+  .layout-side .sections::-webkit-scrollbar {
     display: none;
   }
 
@@ -328,7 +336,7 @@
 
   /* Style Font Awesome icons with gradient colors - matches top navigation */
   .nav-icon :global(i) {
-    background: var(--tab-gradient);
+    background: var(--section-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -338,7 +346,7 @@
   /* Fallback for browsers that don't support background-clip */
   @supports not (background-clip: text) {
     .nav-icon :global(i) {
-      color: var(--tab-color);
+      color: var(--section-color);
       background: none;
       -webkit-text-fill-color: initial;
     }
@@ -357,7 +365,7 @@
   /* Active button has full color and glow */
   .nav-button.active .nav-icon :global(i) {
     opacity: 1;
-    filter: drop-shadow(0 0 16px var(--tab-color)) brightness(1.1);
+    filter: drop-shadow(0 0 16px var(--section-color)) brightness(1.1);
   }
 
   /* Disabled buttons remain grayed out */

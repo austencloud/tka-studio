@@ -57,6 +57,7 @@
   let canUseNativeInstall = $state(false);
 
   function closeMenu() {
+    hapticService?.trigger("selection");
     showMenu = false;
   }
 

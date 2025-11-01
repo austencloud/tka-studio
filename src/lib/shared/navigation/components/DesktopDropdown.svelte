@@ -2,7 +2,7 @@
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import type { ModeOption } from "../domain/types";
+  import type { Section } from "../domain/types";
 
   let {
     modes = [],
@@ -11,7 +11,7 @@
     onClose,
     isOpen = false,
   } = $props<{
-    modes: ModeOption[];
+    modes: Section[];
     currentMode: string;
     onModeChange: (mode: string) => void;
     onClose: () => void;
@@ -53,7 +53,7 @@
   });
 
   // Handle mode selection
-  function selectMode(mode: ModeOption) {
+  function selectMode(mode: Section) {
     hapticService?.trigger("selection");
     onModeChange(mode.id);
     onClose();

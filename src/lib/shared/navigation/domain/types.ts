@@ -1,10 +1,14 @@
 /**
  * Navigation Domain Types
  *
- * Core types for the navigation system including dropdown functionality.
+ * Core types for the navigation system.
  */
 
-export interface ModeOption {
+/**
+ * Tab within a module
+ * Represents a navigation tab within a specific module (e.g., "Construct" tab in Build module)
+ */
+export interface Section {
   id: string;
   label: string;
   icon: string;
@@ -14,45 +18,24 @@ export interface ModeOption {
   disabled?: boolean; // For conditional tab accessibility
 }
 
-export interface TabWithModes {
-  id: string;
-  label: string;
-  icon: string;
-  isMain?: boolean;
-  modes?: ModeOption[];
-  currentMode?: string;
-}
 
-export interface DropdownState {
-  isOpen: boolean;
-  tabId: string | null;
-  showDiscoveryHint: boolean;
-}
-
-export interface OnboardingState {
-  hasSeenBuildModes: boolean;
-  hasSeenLearnModes: boolean;
-  showTooltips: boolean;
-}
-
-// New types for module-based navigation
+// Module-based navigation types
 export type ModuleId = "build" | "explore" | "learn" | "library" | "write" | "word_card";
 
+/**
+ * Module Definition
+ * Represents a top-level module with its sections
+ */
 export interface ModuleDefinition {
   id: ModuleId;
   label: string;
   icon: string;
   description?: string;
   isMain: boolean;
-  subModes: ModeOption[];
+  sections: Section[]; // Sections within this module
 }
 
 export interface ModuleSelectorState {
   isOpen: boolean;
   showDiscoveryHint: boolean;
-}
-
-export interface NavigationMode {
-  module: ModuleId;
-  subMode: string;
 }

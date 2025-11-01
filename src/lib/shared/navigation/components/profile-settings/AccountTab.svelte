@@ -55,10 +55,10 @@
         <PasswordSection {onChangePassword} {hapticService} />
       </div>
     {/if}
-
-    <!-- Danger Zone -->
-    <DangerZone {onDeleteAccount} {hapticService} />
   </div>
+
+  <!-- Account Deletion (outside of centered cards) -->
+  <DangerZone {onDeleteAccount} {hapticService} />
 </section>
 
 <style>
@@ -74,13 +74,14 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 24px;
+    padding: clamp(16px, 3vh, 32px) clamp(20px, 4vw, 48px); /* Fluid padding */
     min-height: 0;
     transition: padding 0.2s ease;
     display: flex;
     flex-direction: column;
     align-items: center; /* Center cards horizontally */
-    gap: 24px; /* Spacing between cards */
+    justify-content: center; /* Center vertically when there's space */
+    gap: clamp(18px, 3vh, 32px); /* Fluid spacing between cards */
   }
 
   .section.compact .form-content {
@@ -96,11 +97,11 @@
   /* Security Cards */
   .security-card {
     width: 100%;
-    max-width: 600px; /* Wider to accommodate longer emails */
+    max-width: min(900px, 85vw); /* Fluid responsive width */
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
-    padding: 24px;
+    border-radius: clamp(12px, 2vh, 18px);
+    padding: clamp(18px, 3vh, 28px);
     transition: all 0.2s ease;
   }
 
@@ -124,12 +125,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: clamp(10px, 1.5vh, 14px);
+    margin-bottom: clamp(10px, 1.5vh, 16px);
   }
 
   .card-header i {
-    font-size: 20px;
+    font-size: clamp(18px, 2.5vh, 22px);
     color: rgba(99, 102, 241, 0.8);
   }
 
@@ -142,7 +143,7 @@
   }
 
   .card-title {
-    font-size: 18px;
+    font-size: clamp(16px, 2.2vh, 20px);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
     margin: 0;
@@ -158,10 +159,10 @@
   }
 
   .card-description {
-    font-size: 14px;
+    font-size: clamp(13px, 1.8vh, 15px);
     color: rgba(255, 255, 255, 0.65);
     text-align: center;
-    margin: 0 0 20px 0;
+    margin: 0 0 clamp(16px, 2.5vh, 24px) 0;
     line-height: 1.5;
   }
 
@@ -181,16 +182,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 14px 24px;
-    min-height: 48px;
+    gap: clamp(8px, 1.2vh, 12px);
+    padding: clamp(12px, 1.8vh, 16px) clamp(20px, 3vw, 28px);
+    min-height: 48px; /* WCAG minimum */
     border-radius: 10px;
-    font-size: 15px;
+    font-size: clamp(14px, 1.9vh, 17px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
-    margin-top: 8px;
+    margin-top: clamp(6px, 1vh, 10px);
   }
 
   .section.compact .button {

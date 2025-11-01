@@ -9,17 +9,25 @@
   import { authStore } from "$shared/auth";
   import { resolve, TYPES, type IHapticFeedbackService, BottomSheet } from "$shared";
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
+  import { cubicOut } from "svelte/easing";
   import {
     uiState,
     viewportState,
     setupViewportTracking,
     syncWithAuthStore,
     resetPasswordForm,
+    resetEmailChangeForm,
     resetUIState,
-    passwordState
+    passwordState,
+    emailChangeState,
+    updateTabTransition,
+    personalInfoState,
+    originalPersonalInfoState
   } from "../state/profile-settings-state.svelte";
   import PersonalTab from "./profile-settings/PersonalTab.svelte";
   import AccountTab from "./profile-settings/AccountTab.svelte";
+  import SubscriptionTab from "./profile-settings/SubscriptionTab.svelte";
 
   // Props
   let { isOpen = false, onClose } = $props<{
@@ -30,9 +38,42 @@
   // Services
   let hapticService: IHapticFeedbackService | null = null;
 
+  // Transition state
+  let prefersReducedMotion = $state(false);
+  let touchStartX = $state(0);
+  let touchStartY = $state(0);
+  let isSwiping = $state(false);
+  let signingOut = $state(false);
+
+  onMount(() => {
+    // Check reduced motion preference
+    if (typeof window !== 'undefined') {
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      prefersReducedMotion = mediaQuery.matches;
+
+      // Listen for changes
+      const handler = (e: MediaQueryListEvent) => {
+        prefersReducedMotion = e.matches;
+      };
+      mediaQuery.addEventListener('change', handler);
+
+      // Cleanup
+      return () => mediaQuery.removeEventListener('change', handler);
+    }
+  });
+
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
     syncWithAuthStore();
+
+    // Read tab from URL on mount
+    if (isOpen) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get('tab') as 'personal' | 'security' | 'subscription' | null;
+      if (tabParam && ['personal', 'security', 'subscription'].includes(tabParam)) {
+        uiState.activeTab = tabParam;
+      }
+    }
   });
 
   // Sync with auth store
@@ -48,16 +89,83 @@
     return cleanup || undefined;
   });
 
+  // Sync active tab to URL
+  $effect(() => {
+    if (isOpen && typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', uiState.activeTab);
+      window.history.replaceState({}, '', url.toString());
+    }
+  });
+
   // ============================================================================
   // TAB NAVIGATION
   // ============================================================================
 
-  function handleTabKeydown(event: KeyboardEvent, tabName: 'personal' | 'security') {
+  // Swipe gesture support
+  function handleTouchStart(event: TouchEvent) {
+    touchStartX = event.touches[0].clientX;
+    touchStartY = event.touches[0].clientY;
+    isSwiping = false;
+  }
+
+  function handleTouchMove(event: TouchEvent) {
+    if (!touchStartX || !touchStartY) return;
+
+    const touchCurrentX = event.touches[0].clientX;
+    const touchCurrentY = event.touches[0].clientY;
+
+    const deltaX = touchCurrentX - touchStartX;
+    const deltaY = touchCurrentY - touchStartY;
+
+    // Determine if this is a horizontal swipe (not vertical scroll)
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 10) {
+      isSwiping = true;
+      // Optionally prevent scroll while swiping horizontally
+      event.preventDefault();
+    }
+  }
+
+  function handleTouchEnd(event: TouchEvent) {
+    if (!touchStartX || !isSwiping) {
+      touchStartX = 0;
+      touchStartY = 0;
+      isSwiping = false;
+      return;
+    }
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const deltaX = touchEndX - touchStartX;
+    const swipeThreshold = 50; // Minimum distance for a swipe
+
+    // Reset touch state
+    touchStartX = 0;
+    touchStartY = 0;
+    isSwiping = false;
+
+    // Determine swipe direction and navigate
+    if (Math.abs(deltaX) > swipeThreshold) {
+      const tabs: Array<'personal' | 'security' | 'subscription'> = ['personal', 'security', 'subscription'];
+      const currentIndex = tabs.indexOf(uiState.activeTab);
+
+      if (deltaX > 0 && currentIndex > 0) {
+        // Swipe right - go to previous tab
+        hapticService?.trigger("selection");
+        updateTabTransition(tabs[currentIndex - 1]);
+      } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
+        // Swipe left - go to next tab
+        hapticService?.trigger("selection");
+        updateTabTransition(tabs[currentIndex + 1]);
+      }
+    }
+  }
+
+  function handleTabKeydown(event: KeyboardEvent, tabName: 'personal' | 'security' | 'subscription') {
     if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       event.preventDefault();
       hapticService?.trigger("selection");
 
-      const tabs: Array<'personal' | 'security'> = ['personal', 'security'];
+      const tabs: Array<'personal' | 'security' | 'subscription'> = ['personal', 'security', 'subscription'];
       const currentIndex = tabs.indexOf(tabName);
       let newIndex: number;
 
@@ -67,7 +175,7 @@
         newIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
       }
 
-      uiState.activeTab = tabs[newIndex];
+      updateTabTransition(tabs[newIndex]);
 
       // Focus the newly activated tab
       const newTabButton = document.getElementById(`${tabs[newIndex]}-tab`);
@@ -86,12 +194,19 @@
     uiState.saving = true;
 
     try {
-      // TODO: Implement profile update via Firebase
-      console.log("Saving personal info");
-      hapticService?.trigger("success");
-      alert("Profile updated successfully!");
+      const result = await authStore.updateDisplayName(personalInfoState.displayName);
+
+      if (result.success) {
+        // Update original values to reflect saved state
+        originalPersonalInfoState.displayName = personalInfoState.displayName;
+
+        hapticService?.trigger("success");
+        console.log("✅ Profile updated successfully");
+      } else {
+        throw new Error(result.error || "Failed to update profile");
+      }
     } catch (error) {
-      console.error("Failed to update profile:", error);
+      console.error("❌ Failed to update profile:", error);
       hapticService?.trigger("error");
       alert("Failed to update profile. Please try again.");
     } finally {
@@ -114,6 +229,36 @@
       alert("Failed to upload photo. Please try again.");
     } finally {
       uiState.uploadingPhoto = false;
+    }
+  }
+
+  async function handleChangeEmail() {
+    if (uiState.changingEmail) return;
+
+    hapticService?.trigger("selection");
+    uiState.changingEmail = true;
+
+    try {
+      const result = await authStore.changeEmail(
+        emailChangeState.newEmail,
+        emailChangeState.password
+      );
+
+      hapticService?.trigger("success");
+      alert(result.message);
+
+      // Reset form and hide section
+      resetEmailChangeForm();
+      uiState.showEmailChangeSection = false;
+
+      // Sync with updated user data
+      syncWithAuthStore();
+    } catch (error: any) {
+      console.error("Failed to change email:", error);
+      hapticService?.trigger("error");
+      alert(error.message || "Failed to change email. Please try again.");
+    } finally {
+      uiState.changingEmail = false;
     }
   }
 
@@ -171,6 +316,37 @@
       alert("Failed to delete account. Please try again.");
     }
   }
+
+  async function handleSignOut() {
+    if (signingOut) return;
+
+    hapticService?.trigger("selection");
+    signingOut = true;
+
+    try {
+      await authStore.signOut();
+      console.log("✅ Successfully signed out");
+      onClose();
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    } finally {
+      signingOut = false;
+    }
+  }
+
+  function handleSignIn() {
+    hapticService?.trigger("selection");
+    // Close this sheet and navigate to auth
+    onClose();
+
+    // Small delay to allow sheet to close smoothly before opening new one
+    setTimeout(() => {
+      // Import dynamically to avoid circular deps
+      import("../utils/sheet-router").then(({ openSheet }) => {
+        openSheet("auth");
+      });
+    }, 200);
+  }
 </script>
 
 <BottomSheet
@@ -181,20 +357,26 @@
   backdropClass="profile-settings-sheet__backdrop"
 >
   <div class="container">
-    <!-- Header -->
-    <header class="header">
-      <h2 id="profile-settings-title">Account Settings</h2>
-      <button
-        class="close"
-        onclick={onClose}
-        aria-label="Close settings"
-      >
-        <i class="fas fa-times" aria-hidden="true"></i>
-      </button>
-    </header>
+    {#if authStore.isAuthenticated && authStore.user}
+      <!-- Logged in state -->
 
-    <!-- Tabs -->
-    <div class="tabs" role="tablist" aria-label="Account settings sections">
+      <!-- Header -->
+      <header class="header">
+        <h2 id="profile-settings-title">Account Settings</h2>
+        <button
+          class="close"
+          onclick={() => {
+            hapticService?.trigger("selection");
+            onClose();
+          }}
+          aria-label="Close settings"
+        >
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+      </header>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist" aria-label="Account settings sections">
       <button
         id="personal-tab"
         class="tab"
@@ -205,7 +387,7 @@
         tabindex={uiState.activeTab === 'personal' ? 0 : -1}
         onclick={() => {
           hapticService?.trigger("selection");
-          uiState.activeTab = 'personal';
+          updateTabTransition('personal');
         }}
         onkeydown={(e) => handleTabKeydown(e, 'personal')}
       >
@@ -222,47 +404,127 @@
         tabindex={uiState.activeTab === 'security' ? 0 : -1}
         onclick={() => {
           hapticService?.trigger("selection");
-          uiState.activeTab = 'security';
+          updateTabTransition('security');
         }}
         onkeydown={(e) => handleTabKeydown(e, 'security')}
       >
         <i class="fas fa-shield-alt" aria-hidden="true"></i>
         Security
       </button>
-    </div>
+      <button
+        id="subscription-tab"
+        class="tab"
+        class:active={uiState.activeTab === 'subscription'}
+        role="tab"
+        aria-selected={uiState.activeTab === 'subscription'}
+        aria-controls="subscription-panel"
+        tabindex={uiState.activeTab === 'subscription' ? 0 : -1}
+        onclick={() => {
+          hapticService?.trigger("selection");
+          updateTabTransition('subscription');
+        }}
+        onkeydown={(e) => handleTabKeydown(e, 'subscription')}
+      >
+          <i class="fas fa-star" aria-hidden="true"></i>
+        Subscription
+      </button>
+      </div>
 
-    <!-- Content -->
-    <div class="content" bind:this={viewportState.contentContainer}>
-      {#if uiState.activeTab === 'personal'}
+      <!-- Content -->
+      <div
+        class="content"
+        bind:this={viewportState.contentContainer}
+        ontouchstart={handleTouchStart}
+        ontouchmove={handleTouchMove}
+        ontouchend={handleTouchEnd}
+      >
+      {#key uiState.activeTab}
         <div
-          id="personal-panel"
-          role="tabpanel"
-          aria-labelledby="personal-tab"
-          tabindex="0"
+          class="tab-panel-wrapper"
+          in:fade={{ duration: prefersReducedMotion ? 150 : 200, easing: cubicOut }}
+          out:fade={{ duration: prefersReducedMotion ? 150 : 200, easing: cubicOut }}
         >
-          <PersonalTab
-            onSave={handleSavePersonalInfo}
-            onPhotoUpload={handlePhotoUpload}
-            {hapticService}
-          />
+          {#if uiState.activeTab === 'personal'}
+            <div
+              id="personal-panel"
+              role="tabpanel"
+              aria-labelledby="personal-tab"
+              tabindex="0"
+            >
+              <PersonalTab
+                onSave={handleSavePersonalInfo}
+                onPhotoUpload={handlePhotoUpload}
+                onChangeEmail={handleChangeEmail}
+                {hapticService}
+              />
+            </div>
+          {:else if uiState.activeTab === 'security'}
+            <div
+              id="security-panel"
+              role="tabpanel"
+              aria-labelledby="security-tab"
+              tabindex="0"
+            >
+              <AccountTab
+                onChangePassword={handleChangePassword}
+                onDeleteAccount={handleDeleteAccount}
+                {hapticService}
+              />
+            </div>
+          {:else if uiState.activeTab === 'subscription'}
+            <div
+              id="subscription-panel"
+              role="tabpanel"
+              aria-labelledby="subscription-tab"
+              tabindex="0"
+            >
+              <SubscriptionTab {hapticService} />
+            </div>
+          {/if}
         </div>
-      {/if}
+      {/key}
+      </div>
 
-      {#if uiState.activeTab === 'security'}
-        <div
-          id="security-panel"
-          role="tabpanel"
-          aria-labelledby="security-tab"
-          tabindex="0"
+      <!-- Footer with sign out -->
+      <footer class="footer">
+        <button
+          class="sign-out-button"
+          onclick={handleSignOut}
+          disabled={signingOut}
         >
-          <AccountTab
-            onChangePassword={handleChangePassword}
-            onDeleteAccount={handleDeleteAccount}
-            {hapticService}
-          />
+          <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+          {signingOut ? "Signing out..." : "Sign Out"}
+        </button>
+      </footer>
+
+    {:else}
+      <!-- Logged out state -->
+      <div class="logged-out">
+        <button
+          class="close close--corner"
+          onclick={() => {
+            hapticService?.trigger("selection");
+            onClose();
+          }}
+          aria-label="Close"
+        >
+          <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+
+        <div class="logged-out__icon">
+          <i class="fas fa-user-circle"></i>
         </div>
-      {/if}
-    </div>
+        <h2 id="profile-settings-title" class="logged-out__title">Not Signed In</h2>
+        <p class="logged-out__text">Sign in to access your account settings, manage your profile, and track your progress</p>
+        <button
+          class="sign-in-button"
+          onclick={handleSignIn}
+        >
+          <i class="fas fa-sign-in-alt"></i>
+          Sign In
+        </button>
+      </div>
+    {/if}
   </div>
 </BottomSheet>
 
@@ -272,13 +534,13 @@
     z-index: 1200; /* Higher than ProfileSheet (1100) */
   }
 
-  /* Container - 95vh for complex forms */
+  /* Container - 80vh for better proportions */
   .container {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 95vh;
-    max-height: 95vh;
+    height: 80vh;
+    max-height: 80vh;
     background: linear-gradient(
       135deg,
       rgba(20, 25, 35, 0.98) 0%,
@@ -375,13 +637,155 @@
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 0; /* Critical: allows flex child to shrink below content size */
+    position: relative; /* Enable absolute positioning context */
+  }
+
+  /* Tab panel wrapper - absolute positioning to prevent stacking during transitions */
+  .tab-panel-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 16px 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+  }
+
+  .sign-out-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+
+  .sign-out-button i {
+    font-size: 16px;
+  }
+
+  .sign-out-button:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.5);
+  }
+
+  .sign-out-button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .sign-out-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .sign-out-button:focus-visible {
+    outline: 3px solid rgba(239, 68, 68, 0.7);
+    outline-offset: 2px;
+  }
+
+  /* Logged Out State */
+  .logged-out {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 48px 32px;
+    gap: 20px;
+    position: relative;
+    min-height: 400px;
+  }
+
+  .close--corner {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+  }
+
+  .logged-out__icon {
+    font-size: 80px;
+    color: rgba(255, 255, 255, 0.3);
+  }
+
+  .logged-out__title {
+    font-size: 24px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin: 0;
+  }
+
+  .logged-out__text {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 0;
+    max-width: 300px;
+    line-height: 1.5;
+  }
+
+  .sign-in-button {
+    width: 100%;
+    max-width: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 24px;
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+  }
+
+  .sign-in-button i {
+    font-size: 16px;
+  }
+
+  .sign-in-button:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+  }
+
+  .sign-in-button:active {
+    transform: translateY(0);
+  }
+
+  .sign-in-button:focus-visible {
+    outline: 3px solid rgba(99, 102, 241, 0.7);
+    outline-offset: 2px;
   }
 
   /* Mobile Responsive */
   @media (max-width: 480px) {
     .container {
-      height: 98vh;
-      max-height: 98vh;
+      height: 90vh;
+      max-height: 90vh;
     }
 
     .header {
@@ -407,6 +811,32 @@
     .tab i {
       font-size: 14px;
     }
+
+    .footer {
+      padding: 12px 16px;
+    }
+
+    .sign-out-button {
+      padding: 12px 20px;
+      font-size: 15px;
+    }
+
+    .logged-out {
+      padding: 40px 24px;
+    }
+
+    .logged-out__icon {
+      font-size: 64px;
+    }
+
+    .logged-out__title {
+      font-size: 20px;
+    }
+
+    .sign-in-button {
+      padding: 12px 20px;
+      font-size: 15px;
+    }
   }
 
   /* Accessibility - Focus Indicators */
@@ -424,12 +854,18 @@
   /* Accessibility - Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
     .close,
-    .tab {
+    .tab,
+    .sign-out-button,
+    .sign-in-button {
       transition: none;
     }
 
     .close:hover,
-    .close:active {
+    .close:active,
+    .sign-out-button:hover,
+    .sign-out-button:active,
+    .sign-in-button:hover,
+    .sign-in-button:active {
       transform: none;
     }
   }

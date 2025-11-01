@@ -2,7 +2,7 @@
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import type { ModeOption } from "../domain/types";
+  import type { Section } from "../domain/types";
 
   let {
     modes = [],
@@ -12,7 +12,7 @@
     isOpen = false,
     contextLabel = "Mode",
   } = $props<{
-    modes: ModeOption[];
+    modes: Section[];
     currentMode: string;
     onModeChange: (mode: string) => void;
     onClose: () => void;
@@ -39,7 +39,7 @@
   }
 
   // Handle mode selection
-  function selectMode(mode: ModeOption) {
+  function selectMode(mode: Section) {
     // Trigger navigation haptic feedback for mode selection
     hapticService?.trigger("selection");
     onModeChange(mode.id);
@@ -120,7 +120,7 @@
 
       <!-- Cancel button -->
       <div class="modal-footer">
-        <button class="cancel-button" onclick={onClose}> Cancel </button>
+        <button class="cancel-button" onclick={handleClose}> Cancel </button>
       </div>
     </div>
   </div>

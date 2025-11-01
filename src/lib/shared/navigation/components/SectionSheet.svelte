@@ -1,38 +1,42 @@
 <!-- Slide-up Sheet for Sub-Mode Selection (Portrait Mobile) -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { IAnimationService } from "../../application/services/contracts";
+  import type { IAnimationService, IHapticFeedbackService } from "../../application/services/contracts";
   import { resolve, TYPES } from "../../inversify";
-  import type { ModeOption, ModuleDefinition } from "../domain/types";
+  import type { ModuleDefinition, Section } from "../domain/types";
 
   let {
     show = false,
     module,
-    currentSubMode,
-    onSubModeSelect,
+    currentSection,
+    onSectionSelect,
     onClose,
   } = $props<{
     show: boolean;
     module: ModuleDefinition | null;
-    currentSubMode: string;
-    onSubModeSelect?: (subModeId: string) => void;
+    currentSection: string;
+    onSectionSelect?: (sectionId: string) => void;
     onClose?: () => void;
   }>();
 
   let animationService: IAnimationService | null = null;
+  let hapticService: IHapticFeedbackService | null = null;
 
   onMount(() => {
     animationService = resolve<IAnimationService>(TYPES.IAnimationService);
+    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
   });
 
   // Handle backdrop click
   function handleBackdropClick() {
+    hapticService?.trigger("selection");
     onClose?.();
   }
 
   // Handle sub-mode selection
-  function handleSubModeClick(subMode: ModeOption) {
-    onSubModeSelect?.(subMode.id);
+  function handleSectionClick(section: Section) {
+    hapticService?.trigger("selection");
+    onSectionSelect?.(section.id);
     onClose?.();
   }
 
@@ -91,19 +95,19 @@
 
     <!-- Sub-mode buttons -->
     <div class="sub-mode-list">
-      {#each module.subModes as subMode}
+      {#each module.sections as section}
         <button
           class="sub-mode-button"
-          class:active={currentSubMode === subMode.id}
-          class:disabled={subMode.disabled}
-          onclick={() => handleSubModeClick(subMode)}
-          disabled={subMode.disabled}
+          class:active={currentSection === section.id}
+          class:disabled={section.disabled}
+          onclick={() => handleSectionClick(section)}
+          disabled={section.disabled}
         >
-          <span class="sub-mode-icon">{@html subMode.icon}</span>
+          <span class="sub-mode-icon">{@html section.icon}</span>
           <div class="sub-mode-info">
-            <span class="sub-mode-label">{subMode.label}</span>
-            {#if subMode.description}
-              <span class="sub-mode-description">{subMode.description}</span>
+            <span class="sub-mode-label">{section.label}</span>
+            {#if section.description}
+              <span class="sub-mode-description">{section.description}</span>
             {/if}
           </div>
         </button>

@@ -16,10 +16,21 @@ export const personalInfoState = $state({
   email: "",
 });
 
+// Track original values to detect changes
+export const originalPersonalInfoState = $state({
+  displayName: "",
+  email: "",
+});
+
 export const passwordState = $state({
   current: "",
   new: "",
   confirm: "",
+});
+
+export const emailChangeState = $state({
+  newEmail: "",
+  password: "", // For re-authentication
 });
 
 // ============================================================================
@@ -27,11 +38,15 @@ export const passwordState = $state({
 // ============================================================================
 
 export const uiState = $state({
-  activeTab: "personal" as "personal" | "security",
+  activeTab: "personal" as "personal" | "security" | "subscription",
+  previousTab: "personal" as "personal" | "security" | "subscription",
+  transitionDirection: 0 as -1 | 0 | 1, // -1 = left, 0 = none, 1 = right
   saving: false,
   uploadingPhoto: false,
   showPasswordSection: false,
   showDeleteConfirmation: false,
+  showEmailChangeSection: false,
+  changingEmail: false,
 });
 
 // ============================================================================
@@ -68,6 +83,24 @@ export function hasPasswordProvider() {
   );
 }
 
+// Check if user can change email (only password-only users)
+export function canChangeEmail() {
+  if (!authStore.user?.providerData) return false;
+  // Only allow email change if user ONLY has password authentication
+  // Users with OAuth providers should manage email through those providers
+  return (
+    authStore.user.providerData.length === 1 &&
+    authStore.user.providerData[0].providerId === "password"
+  );
+}
+
+// Check if there are unsaved changes to personal info
+export function hasPersonalInfoChanges() {
+  return (
+    personalInfoState.displayName !== originalPersonalInfoState.displayName
+  );
+}
+
 // ============================================================================
 // STATE SYNCHRONIZATION
 // ============================================================================
@@ -77,9 +110,24 @@ export function hasPasswordProvider() {
  */
 export function syncWithAuthStore() {
   if (authStore.user) {
-    personalInfoState.displayName = authStore.user.displayName || "";
-    personalInfoState.email = authStore.user.email || "";
+    const displayName = authStore.user.displayName || "";
+    const email = authStore.user.email || "";
+
+    personalInfoState.displayName = displayName;
+    personalInfoState.email = email;
+
+    // Also update original values to track changes
+    originalPersonalInfoState.displayName = displayName;
+    originalPersonalInfoState.email = email;
   }
+}
+
+/**
+ * Reset personal info form to original values
+ */
+export function resetPersonalInfoForm() {
+  personalInfoState.displayName = originalPersonalInfoState.displayName;
+  personalInfoState.email = originalPersonalInfoState.email;
 }
 
 /**
@@ -92,6 +140,14 @@ export function resetPasswordForm() {
 }
 
 /**
+ * Reset email change form state
+ */
+export function resetEmailChangeForm() {
+  emailChangeState.newEmail = "";
+  emailChangeState.password = "";
+}
+
+/**
  * Reset all UI state
  */
 export function resetUIState() {
@@ -99,6 +155,8 @@ export function resetUIState() {
   uiState.uploadingPhoto = false;
   uiState.showPasswordSection = false;
   uiState.showDeleteConfirmation = false;
+  uiState.showEmailChangeSection = false;
+  uiState.changingEmail = false;
 }
 
 /**
@@ -119,4 +177,29 @@ export function setupViewportTracking(): (() => void) | null {
   return () => {
     resizeObserver.disconnect();
   };
+}
+
+// ============================================================================
+// TAB TRANSITION HELPERS
+// ============================================================================
+
+const TAB_ORDER: Array<"personal" | "security" | "subscription"> = [
+  "personal",
+  "security",
+  "subscription",
+];
+
+/**
+ * Calculate and update transition direction when tab changes
+ */
+export function updateTabTransition(
+  newTab: "personal" | "security" | "subscription"
+) {
+  const oldIndex = TAB_ORDER.indexOf(uiState.activeTab);
+  const newIndex = TAB_ORDER.indexOf(newTab);
+
+  uiState.previousTab = uiState.activeTab;
+  uiState.transitionDirection =
+    newIndex > oldIndex ? 1 : newIndex < oldIndex ? -1 : 0;
+  uiState.activeTab = newTab;
 }

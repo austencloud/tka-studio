@@ -9,23 +9,36 @@
   import { authStore } from "$shared/auth";
   import {
     personalInfoState,
+    originalPersonalInfoState,
     uiState,
     isCompactMode,
     isVeryCompactMode,
+    canChangeEmail,
+    hasPersonalInfoChanges,
   } from "../../state/profile-settings-state.svelte";
   import ProfilePhotoUpload from "./ProfilePhotoUpload.svelte";
+  import EmailChangeSection from "./EmailChangeSection.svelte";
+  import { slide } from "svelte/transition";
 
-  let { onSave, onPhotoUpload, hapticService } = $props<{
+  let { onSave, onPhotoUpload, onChangeEmail, hapticService } = $props<{
     onSave: () => Promise<void>;
     onPhotoUpload: (file: File) => Promise<void>;
+    onChangeEmail: () => Promise<void>;
     hapticService: IHapticFeedbackService | null;
   }>();
 
   // Sync with auth store
   $effect(() => {
     if (authStore.user) {
-      personalInfoState.displayName = authStore.user.displayName || "";
-      personalInfoState.email = authStore.user.email || "";
+      const displayName = authStore.user.displayName || "";
+      const email = authStore.user.email || "";
+
+      personalInfoState.displayName = displayName;
+      personalInfoState.email = email;
+
+      // Update original values to track changes
+      originalPersonalInfoState.displayName = displayName;
+      originalPersonalInfoState.email = email;
     }
   });
 </script>
@@ -57,32 +70,63 @@
       />
     </div>
 
-    <!-- Email (read-only) -->
+    <!-- Email Section -->
     <div class="field">
       <label class="label" for="email">Email</label>
-      <input
-        id="email"
-        type="email"
-        class="input input--readonly"
-        value={personalInfoState.email}
-        readonly
-        aria-readonly="true"
-      />
+      {#if !uiState.showEmailChangeSection}
+        <div class="email-field-wrapper">
+          <input
+            id="email"
+            type="email"
+            class="input input--readonly"
+            value={personalInfoState.email}
+            readonly
+            aria-readonly="true"
+          />
+          {#if canChangeEmail()}
+            <button
+              class="button button--link"
+              onclick={() => {
+                hapticService?.trigger("selection");
+                uiState.showEmailChangeSection = true;
+              }}
+              type="button"
+            >
+              <i class="fas fa-edit" aria-hidden="true"></i>
+              Change Email
+            </button>
+          {:else}
+            <p class="hint">
+              Email is managed by your authentication provider
+            </p>
+          {/if}
+        </div>
+      {:else}
+        <EmailChangeSection
+          onChangeEmail={onChangeEmail}
+          onCancel={() => {
+            uiState.showEmailChangeSection = false;
+          }}
+          {hapticService}
+        />
+      {/if}
     </div>
   </div>
 
-  <!-- Sticky footer with save button -->
-  <div class="footer">
-    <button
-      class="button button--primary"
-      onclick={onSave}
-      disabled={uiState.saving}
-      aria-busy={uiState.saving}
-    >
-      <i class="fas fa-save" aria-hidden="true"></i>
-      {uiState.saving ? "Saving..." : "Save Changes"}
-    </button>
-  </div>
+  <!-- Sticky footer with save button - only shown when there are changes -->
+  {#if hasPersonalInfoChanges()}
+    <div class="footer" transition:slide={{ duration: 200 }}>
+      <button
+        class="button button--primary"
+        onclick={onSave}
+        disabled={uiState.saving}
+        aria-busy={uiState.saving}
+      >
+        <i class="fas fa-save" aria-hidden="true"></i>
+        {uiState.saving ? "Saving..." : "Save Changes"}
+      </button>
+    </div>
+  {/if}
 </section>
 
 <style>
@@ -106,12 +150,13 @@
     flex: 1;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 24px;
+    padding: clamp(16px, 3vh, 32px) clamp(20px, 4vw, 48px); /* Fluid padding */
     min-height: 0;
     transition: padding 0.2s ease;
     display: flex;
     flex-direction: column;
     align-items: center; /* Center form fields horizontally */
+    justify-content: center; /* Center vertically when there's space */
   }
 
   .section.compact .form-content {
@@ -149,9 +194,9 @@
 
   /* Form Fields */
   :global(.field) {
-    margin-bottom: 20px;
+    margin-bottom: clamp(16px, 3vh, 24px); /* Fluid vertical spacing */
     width: 100%;
-    max-width: 400px; /* Constrain width for centered layout */
+    max-width: min(800px, 80vw); /* Responsive width - adapts to viewport */
     text-align: center; /* Center labels and hints */
   }
 
@@ -165,10 +210,10 @@
 
   :global(.label) {
     display: block;
-    font-size: 14px;
+    font-size: clamp(13px, 1.8vh, 16px); /* Fluid font sizing */
     font-weight: 500;
     color: rgba(255, 255, 255, 0.8);
-    margin-bottom: 8px;
+    margin-bottom: clamp(6px, 1vh, 10px);
     transition: all 0.2s ease;
   }
 
@@ -184,12 +229,12 @@
 
   :global(.input) {
     width: 100%;
-    padding: 12px 16px;
+    padding: clamp(10px, 1.5vh, 14px) clamp(14px, 2vh, 18px);
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     color: rgba(255, 255, 255, 0.95);
-    font-size: 15px;
+    font-size: clamp(14px, 1.9vh, 17px); /* Fluid font size */
     transition: all 0.2s ease;
   }
 
@@ -221,6 +266,20 @@
     background: rgba(255, 255, 255, 0.02);
   }
 
+  .email-field-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(8px, 1.2vh, 12px);
+  }
+
+  .section.compact .email-field-wrapper {
+    gap: 8px;
+  }
+
+  .section.very-compact .email-field-wrapper {
+    gap: 6px;
+  }
+
   :global(.hint) {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.65); /* Improved contrast for WCAG AA */
@@ -244,16 +303,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 14px 24px;
-    min-height: 48px;
+    gap: clamp(8px, 1.2vh, 12px);
+    padding: clamp(12px, 1.8vh, 16px) clamp(20px, 3vw, 28px);
+    min-height: 48px; /* WCAG minimum maintained */
     border-radius: 10px;
-    font-size: 15px;
+    font-size: clamp(14px, 1.9vh, 17px);
     font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
     border: none;
-    margin-top: 8px;
+    margin-top: clamp(6px, 1vh, 10px);
   }
 
   .section.compact :global(.button) {
@@ -307,6 +366,38 @@
     opacity: 0.5;
     cursor: not-allowed;
     transform: none !important;
+  }
+
+  :global(.button--link) {
+    background: transparent;
+    color: rgba(99, 102, 241, 0.9);
+    box-shadow: none;
+    padding: clamp(8px, 1.2vh, 10px) 0;
+    min-height: auto;
+    justify-content: flex-start;
+    font-size: clamp(13px, 1.8vh, 15px);
+  }
+
+  .section.compact :global(.button--link) {
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  .section.very-compact :global(.button--link) {
+    padding: 6px 0;
+    font-size: 12px;
+  }
+
+  :global(.button--link:hover:not(:disabled)) {
+    background: transparent;
+    color: rgba(99, 102, 241, 1);
+    transform: none;
+    box-shadow: none;
+    text-decoration: underline;
+  }
+
+  :global(.button--link:active:not(:disabled)) {
+    transform: scale(0.98);
   }
 
   /* Mobile Responsive */

@@ -8,7 +8,7 @@
 /**
  * Available sheet types that can be opened via routes
  */
-export type SheetType = 'settings' | 'profile-settings' | null;
+export type SheetType = 'settings' | 'profile-settings' | 'auth' | 'terms' | 'privacy' | null;
 
 /**
  * Route state that can include sheets, spotlight, and other navigable content
@@ -29,7 +29,7 @@ function parseRouteState(): RouteState {
   const state: RouteState = {};
 
   const sheet = url.searchParams.get('sheet');
-  if (sheet && (sheet === 'settings' || sheet === 'profile-settings')) {
+  if (sheet && (sheet === 'settings' || sheet === 'profile-settings' || sheet === 'auth' || sheet === 'terms' || sheet === 'privacy')) {
     state.sheet = sheet as SheetType;
   }
 
