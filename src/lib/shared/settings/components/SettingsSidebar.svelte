@@ -62,8 +62,14 @@
       <!-- Dropdown selector pattern (6+ tabs) - Future implementation -->
       <div class="tab-dropdown">
         <button class="dropdown-trigger" aria-label="Select tab">
-          <span class="dropdown-icon">{@html tabs.find(t => t.id === activeTab)?.icon || ''}</span>
-          <span class="dropdown-label">{tabs.find(t => t.id === activeTab)?.label || ''}</span>
+          <span class="dropdown-icon"
+            >{@html tabs.find((t: (typeof tabs)[0]) => t.id === activeTab)
+              ?.icon || ""}</span
+          >
+          <span class="dropdown-label"
+            >{tabs.find((t: (typeof tabs)[0]) => t.id === activeTab)?.label ||
+              ""}</span
+          >
           <i class="fas fa-chevron-down dropdown-arrow"></i>
         </button>
         <!-- Dropdown menu will be implemented when needed -->
@@ -110,7 +116,11 @@
   .sidebar-item {
     display: flex;
     align-items: center;
-    gap: clamp(10px, 5cqi, 16px); /* Use container inline size instead of viewport */
+    gap: clamp(
+      10px,
+      5cqi,
+      16px
+    ); /* Use container inline size instead of viewport */
     padding: clamp(14px, 8cqi, 20px); /* Container-aware padding */
     background: transparent;
     border: 1.5px solid transparent;
@@ -119,7 +129,11 @@
     cursor: pointer;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
     text-align: left;
-    font-size: clamp(16px, 8cqi, 20px); /* INCREASED: Better readability, container-aware */
+    font-size: clamp(
+      16px,
+      8cqi,
+      20px
+    ); /* INCREASED: Better readability, container-aware */
     font-weight: 500;
     position: relative;
     overflow: hidden;

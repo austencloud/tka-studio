@@ -3,57 +3,21 @@
  * Use this when the app gets stuck on white screen
  */
 
+import { nuclearCacheClear, diagnoseCacheState } from "$shared/auth/utils/nuclearCacheClear";
+
 export async function clearAllCaches(): Promise<void> {
   if (typeof window === "undefined") return;
 
   console.log("🧹 Starting nuclear cache clear...");
 
   try {
-    // 1. Clear Service Worker caches
-    if ("caches" in window) {
-      const cacheNames = await caches.keys();
-      console.log(`Found ${cacheNames.length} caches to clear`);
-      await Promise.all(cacheNames.map((name) => caches.delete(name)));
-      console.log("✅ Service Worker caches cleared");
-    }
-
-    // 2. Unregister all service workers
-    if ("serviceWorker" in navigator) {
-      const registrations = await navigator.serviceWorker.getRegistrations();
-      console.log(`Found ${registrations.length} service workers to unregister`);
-      await Promise.all(registrations.map((reg) => reg.unregister()));
-      console.log("✅ Service workers unregistered");
-    }
-
-    // 3. Clear IndexedDB (Dexie databases)
-    if ("indexedDB" in window) {
-      try {
-        const databases = await indexedDB.databases();
-        console.log(`Found ${databases.length} IndexedDB databases`);
-        for (const db of databases) {
-          if (db.name) {
-            indexedDB.deleteDatabase(db.name);
-            console.log(`Deleted database: ${db.name}`);
-          }
-        }
-        console.log("✅ IndexedDB cleared");
-      } catch (e) {
-        console.warn("Could not enumerate IndexedDB databases:", e);
-      }
-    }
-
-    // 4. Clear localStorage
-    localStorage.clear();
-    console.log("✅ localStorage cleared");
-
-    // 5. Clear sessionStorage
-    sessionStorage.clear();
-    console.log("✅ sessionStorage cleared");
+    // Use the comprehensive nuclear cache clear
+    await nuclearCacheClear();
 
     console.log("🎉 All caches cleared! Reloading page...");
 
     // Wait a moment for operations to complete
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Force hard reload
     window.location.reload();
