@@ -24,6 +24,7 @@ import { SequenceValidationService } from "../../../modules/build/shared/service
 import { UndoService } from "../../../modules/build/shared/services/implementations/UndoService";
 // NEW: BuildTab Refactoring Services (2025-10-28)
 import { BeatOperationsService } from "../../../modules/build/shared/services/implementations/BeatOperationsService";
+import { KeyboardArrowAdjustmentService } from "../../../modules/build/shared/services/implementations/KeyboardArrowAdjustmentService";
 import { BuildTabInitializationService } from "../../../modules/build/shared/services/implementations/BuildTabInitializationService";
 import { NavigationSyncService } from "../../../modules/build/shared/services/implementations/NavigationSyncService";
 import { ResponsiveLayoutService } from "../../../modules/build/shared/services/implementations/ResponsiveLayoutService";
@@ -89,6 +90,7 @@ export const buildModule = new ContainerModule(
     options.bind(TYPES.IResponsiveLayoutService).to(ResponsiveLayoutService);
     options.bind(TYPES.INavigationSyncService).to(NavigationSyncService);
     options.bind(TYPES.IBeatOperationsService).to(BeatOperationsService);
+    options.bind(TYPES.IKeyboardArrowAdjustmentService).to(KeyboardArrowAdjustmentService);
     options.bind(TYPES.IUndoService).to(UndoService);
     options.bind(TYPES.IConstructTabCoordinator).to(ConstructCoordinator);
     options.bind(TYPES.ITurnControlService).to(TurnControlService);

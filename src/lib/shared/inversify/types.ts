@@ -62,6 +62,7 @@ export const TYPES = {
   IResponsiveLayoutService: Symbol.for("IResponsiveLayoutService"),
   INavigationSyncService: Symbol.for("INavigationSyncService"),
   IBeatOperationsService: Symbol.for("IBeatOperationsService"),
+  IKeyboardArrowAdjustmentService: Symbol.for("IKeyboardArrowAdjustmentService"),
   IUndoService: Symbol.for("IUndoService"),
   IQuizSessionService: Symbol.for("IQuizSessionService"),
   IQuizGradingService: Symbol.for("IQuizGradingService"),

@@ -1,5 +1,6 @@
 
 export * from "./IBeatOperationsService";
+export * from "./IKeyboardArrowAdjustmentService";
 export * from "./IBuildTabEventService";
 export * from "./IBuildTabInitializationService";
 export * from "./IBuildTabService";
