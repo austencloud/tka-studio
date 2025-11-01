@@ -35,7 +35,9 @@
 
   // Handlers
   function handleOrientationClick(orientation: string) {
+    console.log(`🟢 ExpandedOrientationPanel.handleOrientationClick:`, { color, orientation });
     hapticService?.trigger("selection");
+    console.log(`  Calling onOrientationChanged callback...`);
     onOrientationChanged(color, orientation);
   }
 

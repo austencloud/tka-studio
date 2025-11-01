@@ -34,15 +34,42 @@
     onError?: (error: string) => void;
   } = $props();
 
+  // Derive beat data reactively from sequence state instead of using snapshot
+  const selectedBeatData = $derived(() => {
+    const beatIndex = panelState.editPanelBeatIndex;
+    if (beatIndex === null) return null;
+
+    // Beat 0 = start position - read from selectedStartPosition
+    if (beatIndex === 0) {
+      const startPos = buildTabState.sequenceState.selectedStartPosition;
+      console.log('📍 EditCoordinator selectedBeatData (start position):', startPos);
+      return startPos;
+    }
+
+    // Regular beats (1, 2, 3...) - get from sequence
+    const sequence = buildTabState.sequenceState.currentSequence;
+    if (!sequence || !sequence.beats) return null;
+
+    const arrayIndex = beatIndex - 1;
+    const beatData = sequence.beats[arrayIndex] || null;
+    console.log(`📍 EditCoordinator selectedBeatData (beat ${beatIndex}):`, beatData);
+    return beatData;
+  });
+
   // Event handlers
   function handleOrientationChange(color: string, orientation: string) {
+    console.log(`🔵 EditCoordinator.handleOrientationChange called:`, { color, orientation });
+
     const beatIndex = panelState.editPanelBeatIndex;
+    console.log(`  beatIndex from panelState:`, beatIndex);
+
     if (beatIndex === null) {
       logger.warn("Cannot change orientation: no beat selected");
       return;
     }
 
     try {
+      console.log(`  Calling beatOperationsService.updateBeatOrientation...`);
       beatOperationsService.updateBeatOrientation(
         beatIndex,
         color,
@@ -116,7 +143,7 @@
 <EditSlidePanel
   isOpen={panelState.isEditPanelOpen}
   selectedBeatNumber={panelState.editPanelBeatIndex}
-  selectedBeatData={panelState.editPanelBeatData}
+  selectedBeatData={selectedBeatData()}
   selectedBeatsData={panelState.editPanelBeatsData}
   combinedPanelHeight={panelState.combinedPanelHeight}
   isSideBySideLayout={shouldUseSideBySideLayout}

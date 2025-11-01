@@ -14,6 +14,7 @@ Features:
   import type { IHapticFeedbackService } from "$shared";
   import { BottomSheet, Pictograph, resolve, TYPES } from "$shared";
   import { selectedArrowState } from "$build/shared/state/selected-arrow-state.svelte";
+  import type { IKeyboardArrowAdjustmentService } from "$build/shared/services/contracts/IKeyboardArrowAdjustmentService";
   import { onMount, onDestroy } from 'svelte';
 
   // Props
@@ -21,14 +22,17 @@ Features:
     isOpen = false,
     onClose,
     selectedBeatData,
+    onBeatDataUpdate,
   } = $props<{
     isOpen: boolean;
     onClose: () => void;
     selectedBeatData: BeatData | null;
+    onBeatDataUpdate?: (updatedBeatData: BeatData) => void;
   }>();
 
   // Services
   let hapticService: IHapticFeedbackService | null = null;
+  let keyboardAdjustmentService: IKeyboardArrowAdjustmentService | null = null;
 
   // State
   let currentIncrement = $state(5); // 5, 20, or 200
@@ -36,9 +40,13 @@ Features:
 
   // Keyboard handler
   function handleKeydown(event: KeyboardEvent) {
-    if (!isOpen) return;
+    if (!isOpen) {
+      console.log('[Keydown] Panel not open, ignoring');
+      return;
+    }
 
     const key = event.key.toLowerCase();
+    console.log('[Keydown] Key pressed:', key, 'Panel open:', isOpen);
 
     // Close on Escape
     if (key === 'escape') {
@@ -61,6 +69,7 @@ Features:
 
     // Handle WASD movement
     if (['w', 'a', 's', 'd'].includes(key)) {
+      console.log('[Keydown] WASD key detected:', key, 'increment:', currentIncrement);
       event.preventDefault();
       handleWASDMovement(key as 'w' | 'a' | 's' | 'd');
     }
@@ -72,27 +81,32 @@ Features:
       return;
     }
 
-    // Calculate adjustment vector
-    const adjustments = {
-      w: { x: 0, y: -currentIncrement },
-      a: { x: -currentIncrement, y: 0 },
-      s: { x: 0, y: currentIncrement },
-      d: { x: currentIncrement, y: 0 },
-    };
+    if (!selectedBeatData) {
+      console.warn('[WASD] No beat data available');
+      return;
+    }
 
-    const adjustment = adjustments[key];
+    if (!keyboardAdjustmentService) {
+      console.warn('[WASD] Keyboard adjustment service not initialized');
+      return;
+    }
+
+    // Calculate adjustment for display
+    const adjustment = keyboardAdjustmentService.calculateAdjustment(key, currentIncrement);
     lastAdjustment = adjustment;
 
-    // TODO: When Session A creates KeyboardArrowAdjustmentService, inject and use it:
-    // const keyboardService = resolve<IKeyboardArrowAdjustmentService>(TYPES.IKeyboardArrowAdjustmentService);
-    // await keyboardService.handleWASDMovement(key, shiftKey, ctrlKey);
-
-    console.log('[WASD STUB]', {
+    // Apply the adjustment using the service
+    const updatedBeatData = keyboardAdjustmentService.handleWASDMovement(
       key,
-      increment: currentIncrement,
-      adjustment,
-      selectedArrow: selectedArrowState.selectedArrow,
-    });
+      currentIncrement,
+      selectedArrowState.selectedArrow,
+      selectedBeatData
+    );
+
+    // Notify parent component of the update
+    if (onBeatDataUpdate) {
+      onBeatDataUpdate(updatedBeatData);
+    }
 
     // Haptic feedback
     hapticService?.trigger('impact');
@@ -106,7 +120,12 @@ Features:
 
   // Lifecycle
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    try {
+      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+      keyboardAdjustmentService = resolve<IKeyboardArrowAdjustmentService>(TYPES.IKeyboardArrowAdjustmentService);
+    } catch (error) {
+      console.error('[PictographAdjustment] Failed to initialize services:', error);
+    }
   });
 
   // Add/remove keyboard listener when panel opens/closes

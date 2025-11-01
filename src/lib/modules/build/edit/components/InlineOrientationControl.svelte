@@ -33,7 +33,9 @@
 
   // Handlers
   function handleOrientationClick(orientation: string) {
+    console.log(`🟢 InlineOrientationControl.handleOrientationClick:`, { color, orientation });
     hapticService?.trigger("selection");
+    console.log(`  Calling onOrientationChanged callback...`);
     onOrientationChanged(color, orientation);
   }
 
