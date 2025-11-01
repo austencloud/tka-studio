@@ -1,0 +1,502 @@
+<!--
+  DeveloperTab.svelte - Developer Tools & Cache Diagnostics
+
+  Provides tools for debugging auth issues and clearing caches
+-->
+<script lang="ts">
+  import {
+    diagnoseCacheState,
+    nuclearCacheClear,
+    type CacheDiagnostics,
+  } from "$shared/auth";
+  import { auth } from "$shared/auth";
+  import { onMount } from "svelte";
+
+  let diagnostics = $state<CacheDiagnostics | null>(null);
+  let loading = $state(false);
+  let clearing = $state(false);
+
+  async function runDiagnostics() {
+    loading = true;
+    try {
+      diagnostics = await diagnoseCacheState();
+    } catch (error) {
+      console.error("Failed to run diagnostics:", error);
+      alert("Failed to run diagnostics. Check console.");
+    } finally {
+      loading = false;
+    }
+  }
+
+  async function clearCache() {
+    if (!confirm(
+      "⚠️ NUCLEAR CACHE CLEAR ⚠️\n\n" +
+      "This will:\n" +
+      "• Delete ALL IndexedDB databases\n" +
+      "• Clear ALL localStorage\n" +
+      "• Clear ALL sessionStorage\n" +
+      "• Delete ALL cookies\n" +
+      "• Clear ALL service worker caches\n\n" +
+      "The page will reload after clearing.\n\n" +
+      "Continue?"
+    )) {
+      return;
+    }
+
+    clearing = true;
+    try {
+      await nuclearCacheClear();
+
+      // Wait a moment then reload
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to clear cache:", error);
+      alert("Failed to clear cache. Check console.");
+      clearing = false;
+    }
+  }
+
+  function copyDiagnostics() {
+    if (!diagnostics) return;
+
+    const text = `
+📦 CACHE DIAGNOSTICS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🔥 Firebase Config:
+  Project: ${auth.app.options.projectId}
+  Auth Domain: ${auth.app.options.authDomain}
+
+📦 IndexedDB Databases (${diagnostics.indexedDBDatabases.length}):
+${diagnostics.indexedDBDatabases.map((db) => `  • ${db}`).join("\n") || "  (none)"}
+
+🗄️ localStorage Keys (${diagnostics.localStorageKeys.length}):
+${diagnostics.localStorageKeys.slice(0, 20).map((key) => `  • ${key}`).join("\n")}
+${diagnostics.localStorageKeys.length > 20 ? `  ... and ${diagnostics.localStorageKeys.length - 20} more` : ""}
+
+📋 sessionStorage Keys (${diagnostics.sessionStorageKeys.length}):
+${diagnostics.sessionStorageKeys.map((key) => `  • ${key}`).join("\n") || "  (none)"}
+
+🍪 Cookies (${diagnostics.cookies.length}):
+${diagnostics.cookies.slice(0, 20).map((c) => `  • ${c}`).join("\n")}
+${diagnostics.cookies.length > 20 ? `  ... and ${diagnostics.cookies.length - 20} more` : ""}
+
+🚨 OLD PROJECT CHECK:
+${diagnostics.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor'))
+  ? '  ⚠️ OLD PROJECT DATABASE DETECTED! This WILL cause auth issues!'
+  : '  ✅ No old project databases found'}
+    `.trim();
+
+    navigator.clipboard.writeText(text);
+    alert("Diagnostics copied to clipboard!");
+  }
+
+  onMount(() => {
+    runDiagnostics();
+  });
+</script>
+
+<div class="developer-tab">
+  <div class="section">
+    <h3>🔧 Cache Diagnostics</h3>
+    <p class="description">
+      Check browser storage for Firebase data and old cached databases.
+    </p>
+
+    <div class="firebase-config">
+      <h4>Current Firebase Project</h4>
+      <div class="config-item">
+        <span class="label">Project ID:</span>
+        <code>{auth.app.options.projectId}</code>
+      </div>
+      <div class="config-item">
+        <span class="label">Auth Domain:</span>
+        <code>{auth.app.options.authDomain}</code>
+      </div>
+    </div>
+
+    {#if diagnostics}
+      <div class="diagnostics-summary">
+        <div class="summary-item">
+          <span class="label">IndexedDB Databases:</span>
+          <span class="value">{diagnostics.indexedDBDatabases.length}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">localStorage Keys:</span>
+          <span class="value">{diagnostics.localStorageKeys.length}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">sessionStorage Keys:</span>
+          <span class="value">{diagnostics.sessionStorageKeys.length}</span>
+        </div>
+        <div class="summary-item">
+          <span class="label">Cookies:</span>
+          <span class="value">{diagnostics.cookies.length}</span>
+        </div>
+      </div>
+
+      {#if diagnostics.indexedDBDatabases.some((db) => db.includes("the-kinetic-constructor"))}
+        <div class="alert alert-error">
+          <strong>🚨 OLD PROJECT DETECTED!</strong>
+          <p>
+            Old "the-kinetic-constructor" database found. This WILL cause
+            authentication failures.
+          </p>
+          <p>Click "Nuclear Cache Clear" below to fix this.</p>
+        </div>
+      {/if}
+
+      <details class="diagnostics-details">
+        <summary>View Detailed Storage</summary>
+
+        <div class="storage-section">
+          <h5>📦 IndexedDB Databases</h5>
+          {#if diagnostics.indexedDBDatabases.length > 0}
+            <ul>
+              {#each diagnostics.indexedDBDatabases as db}
+                <li class:old-project={db.includes("the-kinetic-constructor")}>
+                  {db}
+                  {#if db.includes("the-kinetic-constructor")}
+                    <span class="badge badge-error">OLD PROJECT</span>
+                  {/if}
+                </li>
+              {/each}
+            </ul>
+          {:else}
+            <p class="empty">No databases</p>
+          {/if}
+        </div>
+
+        <div class="storage-section">
+          <h5>🗄️ localStorage Keys</h5>
+          {#if diagnostics.localStorageKeys.length > 0}
+            <ul>
+              {#each diagnostics.localStorageKeys.slice(0, 50) as key}
+                <li>{key}</li>
+              {/each}
+              {#if diagnostics.localStorageKeys.length > 50}
+                <li class="more">
+                  ... and {diagnostics.localStorageKeys.length - 50} more
+                </li>
+              {/if}
+            </ul>
+          {:else}
+            <p class="empty">No keys</p>
+          {/if}
+        </div>
+      </details>
+    {/if}
+
+    <div class="actions">
+      <button
+        class="btn btn-secondary"
+        onclick={runDiagnostics}
+        disabled={loading}
+      >
+        {loading ? "Scanning..." : "🔍 Refresh Diagnostics"}
+      </button>
+
+      {#if diagnostics}
+        <button class="btn btn-secondary" onclick={copyDiagnostics}>
+          📋 Copy Diagnostics
+        </button>
+      {/if}
+
+      <button
+        class="btn btn-danger"
+        onclick={clearCache}
+        disabled={clearing}
+      >
+        {clearing ? "Clearing..." : "💣 Nuclear Cache Clear"}
+      </button>
+    </div>
+
+    <div class="help-text">
+      <p>
+        <strong>When to use Nuclear Cache Clear:</strong>
+      </p>
+      <ul>
+        <li>Authentication redirects fail after returning from Google/Facebook</li>
+        <li>Old project database detected (see alert above)</li>
+        <li>App stuck on "Setting up services..."</li>
+        <li>White screen or infinite loading</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<style>
+  .developer-tab {
+    padding: 20px;
+    max-width: 800px;
+  }
+
+  .section {
+    margin-bottom: 32px;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  h5 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .description {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 20px;
+  }
+
+  .firebase-config {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .config-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .config-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    min-width: 100px;
+  }
+
+  code {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-family: "Consolas", "Monaco", monospace;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .diagnostics-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .summary-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .summary-item .label {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .summary-item .value {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .alert {
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+
+  .alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    border: 2px solid rgba(239, 68, 68, 0.5);
+  }
+
+  .alert strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #ef4444;
+  }
+
+  .alert p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 4px;
+  }
+
+  .diagnostics-details {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .diagnostics-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    user-select: none;
+  }
+
+  .diagnostics-details summary:hover {
+    color: rgba(255, 255, 255, 1);
+  }
+
+  .storage-section {
+    margin-top: 16px;
+  }
+
+  .storage-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .storage-section li {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    margin-bottom: 4px;
+    font-family: "Consolas", "Monaco", monospace;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .storage-section li.old-project {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ef4444;
+  }
+
+  .storage-section li.more {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+
+  .badge-error {
+    background: #ef4444;
+    color: white;
+  }
+
+  .empty {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .btn-danger {
+    background: #ef4444;
+    color: white;
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    background: #dc2626;
+  }
+
+  .help-text {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .help-text strong {
+    color: #3b82f6;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .help-text ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .help-text li {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 4px;
+  }
+
+  @media (max-width: 600px) {
+    .developer-tab {
+      padding: 16px;
+    }
+
+    .actions {
+      flex-direction: column;
+    }
+
+    .btn {
+      width: 100%;
+    }
+  }
+</style>
