@@ -397,11 +397,11 @@
   /* Responsive Design - iPhone SE and small screens */
   @media (max-height: 700px) {
     .email-auth-form {
-      gap: 0.85rem;
+      gap: 0.65rem; /* Reduced from 0.85rem to save space */
     }
 
     .form-group {
-      gap: 0.4rem;
+      gap: 0.35rem; /* Reduced from 0.4rem */
     }
 
     label {

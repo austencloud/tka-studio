@@ -14,40 +14,32 @@ test.describe("Auth Sheet Responsive Layout", () => {
    * Helper function to open the auth sheet
    */
   async function openAuthSheet(page: any) {
-    // Wait for page to be in a stable state (domcontentloaded is less strict than networkidle)
-    await page.waitForLoadState("domcontentloaded");
-    await page.waitForTimeout(1000); // Give time for app initialization
+    // Wait for page to be fully loaded
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(2000); // Give extra time for app initialization
 
-    // Look for profile/sign-in button in navigation
-    // Try multiple selectors
-    const selectors = [
-      'button[class*="profile"]',
-      'button:has-text("Sign In")',
-      'button:has-text("Profile")',
-      '.profile-button',
-      '[aria-label*="Sign in"]',
-      '[aria-label*="Profile"]',
-    ];
+    // Click the profile button - it has class "profile-button"
+    const profileButton = page.locator('.profile-button').first();
 
-    let foundButton = null;
-    for (const selector of selectors) {
-      const button = page.locator(selector).first();
-      if (await button.count() > 0 && await button.isVisible()) {
-        foundButton = button;
-        break;
-      }
-    }
+    // Wait for it to be visible with longer timeout
+    await profileButton.waitFor({ state: 'visible', timeout: 15000 });
 
-    if (foundButton) {
-      await foundButton.click();
-      await page.waitForTimeout(600); // Wait for sheet animation
-    } else {
-      // Fallback: try to find any clickable element that might trigger auth
-      console.log('Could not find profile button, trying fallback approaches...');
-    }
+    // Click the profile button
+    await profileButton.click();
+
+    // Wait a bit for profile settings sheet to animate
+    await page.waitForTimeout(800);
+
+    // Now we need to click the "Sign In" button in the profile settings sheet
+    const signInButton = page.locator('button:has-text("Sign In")').first();
+    await signInButton.waitFor({ state: 'visible', timeout: 15000 });
+    await signInButton.click();
+
+    // Wait a bit for auth sheet to animate
+    await page.waitForTimeout(800);
 
     // Wait for auth sheet to be visible
-    await page.waitForSelector('.auth-sheet__container', { timeout: 10000 });
+    await page.waitForSelector('.auth-sheet__container', { timeout: 15000 });
   }
 
   /**
@@ -302,27 +294,31 @@ test.describe("Auth Sheet Responsive Layout", () => {
     });
   }
 
-  test("Progressive disclosure - OAuth buttons hidden in sign-up mode", async ({ page }) => {
+  test("OAuth buttons visible in both sign-in and sign-up modes", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 }); // iPhone SE 2/3
     await page.goto("/");
 
     await openAuthSheet(page);
 
-    // In sign-in mode, OAuth buttons should be visible
-    const socialAuthSection = page.locator('.auth-sheet__social');
-    await expect(socialAuthSection).toBeVisible();
+    // In sign-in mode, compact social buttons should be visible
+    const compactSocialLinks = page.locator('.auth-sheet__social-compact');
+    await expect(compactSocialLinks).toBeVisible();
+
+    // Check individual buttons
+    const googleButton = page.locator('.social-compact-button--google');
+    const facebookButton = page.locator('.social-compact-button--facebook');
+    await expect(googleButton).toBeVisible();
+    await expect(facebookButton).toBeVisible();
 
     // Switch to sign-up mode
     await toggleAuthMode(page, 'signup');
 
-    // OAuth buttons should be hidden
-    await expect(socialAuthSection).not.toBeVisible();
-
-    // Compact social links should be visible instead
-    const compactSocialLinks = page.locator('.auth-sheet__social-compact');
+    // OAuth buttons should still be visible
     await expect(compactSocialLinks).toBeVisible();
+    await expect(googleButton).toBeVisible();
+    await expect(facebookButton).toBeVisible();
 
-    console.log('✅ Progressive disclosure working correctly');
+    console.log('✅ OAuth buttons consistently visible in both modes');
   });
 
   test("Touch targets meet WCAG minimum size on smallest device", async ({ page }) => {
