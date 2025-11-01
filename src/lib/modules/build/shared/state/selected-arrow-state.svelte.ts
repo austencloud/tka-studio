@@ -15,31 +15,34 @@ interface SelectedArrow {
   pictographData: PictographData;
 }
 
-// Svelte 5 runes pattern: use $state directly with object methods
-const _selectedArrow = $state<{ value: SelectedArrow | null }>({ value: null });
+// CRITICAL FIX: Use plain JavaScript object instead of $state
+// This state doesn't need Svelte reactivity - it's just a simple container.
+// Using $state at module-level caused issues when DevTools was open during refresh
+// because module loading timing changes and $state can't be used outside components.
+let _selectedArrow: SelectedArrow | null = null;
 
 export const selectedArrowState = {
   get selectedArrow() {
-    return _selectedArrow.value;
+    return _selectedArrow;
   },
 
   selectArrow(motionData: MotionData, color: string, pictographData: PictographData) {
-    _selectedArrow.value = { motionData, color, pictographData };
+    _selectedArrow = { motionData, color, pictographData };
     console.log('[SelectedArrowState STUB] Arrow selected:', color, motionData.motionType);
   },
 
   clearSelection() {
-    _selectedArrow.value = null;
+    _selectedArrow = null;
     console.log('[SelectedArrowState STUB] Selection cleared');
   },
 
   isSelected(motionData: MotionData, color: string): boolean {
-    if (!_selectedArrow.value) return false;
+    if (!_selectedArrow) return false;
     return (
-      _selectedArrow.value.color === color &&
-      _selectedArrow.value.motionData.motionType === motionData.motionType &&
-      _selectedArrow.value.motionData.startLocation === motionData.startLocation &&
-      _selectedArrow.value.motionData.endLocation === motionData.endLocation
+      _selectedArrow.color === color &&
+      _selectedArrow.motionData.motionType === motionData.motionType &&
+      _selectedArrow.motionData.startLocation === motionData.startLocation &&
+      _selectedArrow.motionData.endLocation === motionData.endLocation
     );
   }
 };

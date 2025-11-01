@@ -43,7 +43,10 @@
       "Bash(npm run flows:*)",
       "Bash(npm run dev:clean:*)",
       "Bash(npx kill-port:*)",
-      "Bash(npx rimraf .svelte-kit)"
+      "Bash(npx rimraf .svelte-kit)",
+      "Bash(git log:*)",
+      "Bash(npx playwright test:*)",
+      "SlashCommand(/commit)"
     ],
     "deny": [],
     "ask": []

@@ -7,7 +7,6 @@
 
   import type { IExploreThumbnailService } from "../../display";
   import { SequenceDisplayPanel } from "../../display/components";
-  import SequenceAnimationModal from "../../display/components/SequenceAnimationModal.svelte";
   import FilterModal from "../../filtering/components/FilterModal.svelte";
   import SortControls from "../../filtering/components/SortControls.svelte";
   import { SimpleNavigationSidebar } from "../../navigation/components";
@@ -231,12 +230,7 @@
     onClose={galleryState.closeFilterModal}
   />
 
-  <!-- Animation Modal -->
-  <SequenceAnimationModal
-    sequence={galleryState.sequenceToAnimate}
-    isOpen={galleryState.isAnimationModalOpen}
-    onClose={galleryState.closeAnimationModal}
-  />
+  <!-- TODO: Replace with AnimationPanel + coordinator when ready -->
 </div>
 
 <style>

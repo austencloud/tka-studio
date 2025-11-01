@@ -49,16 +49,12 @@ describe("Special Placement Attribute Key Integration", () => {
     // Generate attribute key for blue arrow
     const blueAttrKey = attrKeyGenerator.getKeyFromArrow(
       {
-        id: "test",
-        arrowLocation: null,
         positionX: 0,
         positionY: 0,
         rotationAngle: 0,
         coordinates: { x: 0, y: 0 },
         svgCenter: { x: 0, y: 0 },
         svgMirrored: false,
-        isVisible: true,
-        isSelected: false,
       },
       pictographData,
       "blue"
@@ -67,16 +63,12 @@ describe("Special Placement Attribute Key Integration", () => {
     // Generate attribute key for red arrow
     const redAttrKey = attrKeyGenerator.getKeyFromArrow(
       {
-        id: "test",
-        arrowLocation: null,
         positionX: 0,
         positionY: 0,
         rotationAngle: 0,
         coordinates: { x: 0, y: 0 },
         svgCenter: { x: 0, y: 0 },
         svgMirrored: false,
-        isVisible: true,
-        isSelected: false,
       },
       pictographData,
       "red"

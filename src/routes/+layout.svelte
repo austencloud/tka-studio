@@ -1,4 +1,7 @@
 <script lang="ts">
+  // CRITICAL: Import error recovery FIRST before anything else
+  import "$lib/shared/utils/vite-hmr-recovery";
+
   import FullscreenPrompt from "$lib/shared/components/FullscreenPrompt.svelte";
   import type { Container } from "inversify";
   import type { Snippet } from "svelte";
@@ -20,15 +23,61 @@
     return container;
   });
 
+  // CRITICAL FIX: Vite HMR 404 Error Recovery
+  // When DevTools is open and page is refreshed, Vite sometimes returns 404 for dynamically imported modules
+  // This is a known Vite bug - we detect it and automatically reload to recover
+  let hasAttemptedRecovery = false;
+
+  if (typeof window !== 'undefined') {
+    // Listen for unhandled promise rejections (module loading failures)
+    window.addEventListener('unhandledrejection', (event) => {
+      const error = event.reason;
+
+      // Check if this is a Vite module loading error
+      if (error instanceof TypeError &&
+          error.message?.includes('Failed to fetch dynamically imported module') &&
+          !hasAttemptedRecovery) {
+
+        console.warn('🔄 [AUTO-RECOVERY] Detected Vite HMR module loading failure (common with DevTools open during refresh)');
+        console.warn('🔄 [AUTO-RECOVERY] Automatically reloading page to recover...');
+
+        hasAttemptedRecovery = true;
+
+        // Slight delay to ensure console messages are visible
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+
+        // Prevent the error from appearing in console as unhandled
+        event.preventDefault();
+      }
+    });
+  }
+
   // HMR support - re-initialize container when modules are hot-reloaded
   if (import.meta.hot) {
     import.meta.hot.accept(async () => {
       try {
+        // CRITICAL: Wait for next frame before resetting container
+        // This ensures Chrome DevTools mobile emulation dimensions are stable
+        await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+
         const { getContainer, resetContainer } = await import("$shared");
         resetContainer();
         container = await getContainer();
       } catch (error) {
         console.error("❌ HMR: Failed to re-initialize container:", error);
+
+        // Check if this is a module loading error that needs recovery
+        if (error instanceof TypeError &&
+            error.message?.includes('Failed to fetch dynamically imported module') &&
+            !hasAttemptedRecovery) {
+          console.warn('🔄 [AUTO-RECOVERY] Reloading due to HMR module failure...');
+          hasAttemptedRecovery = true;
+          setTimeout(() => window.location.reload(), 100);
+          return;
+        }
+
         containerError = "HMR container re-initialization failed";
       }
     });
@@ -52,6 +101,8 @@
   }
 
   onMount(() => {
+    console.log('[DEBUG-LAYOUT] 🏁 Layout onMount called');
+
     // Register cache clear shortcut (Ctrl+Shift+Delete)
     registerCacheClearShortcut();
 
@@ -64,17 +115,22 @@
     // Async initialization
     (async () => {
       try {
+        console.log('[DEBUG-LAYOUT] 📦 Importing getContainer and resetContainer...');
         // Dynamically import container only on client-side to avoid SSR issues
         const { getContainer, resetContainer } = await import("$shared");
 
         // HMR support - reset container if it's stale
         if (import.meta.hot) {
+          console.log('[DEBUG-LAYOUT] 🔄 HMR detected, resetting container...');
           resetContainer();
         }
 
+        console.log('[DEBUG-LAYOUT] 🚀 Calling getContainer()...');
         // Set up DI container - this automatically caches it
         container = await getContainer();
+        console.log('[DEBUG-LAYOUT] ✅ Container received! Container is:', container ? 'valid' : 'null');
 
+        console.log('[DEBUG-LAYOUT] 🎨 Initializing glyph cache...');
         // Initialize glyph cache for faster preview rendering
         const { TYPES } = await import("$shared/inversify/types");
         type IGlyphCacheService = { initialize: () => Promise<void> };
@@ -82,9 +138,10 @@
           TYPES.IGlyphCacheService
         );
         glyphCache.initialize().catch((error: unknown) => {
-          console.warn("⚠️ Glyph cache initialization failed:", error);
+          console.warn("⚠️ [DEBUG-LAYOUT] Glyph cache initialization failed:", error);
         });
 
+        console.log('[DEBUG-LAYOUT] 📐 Setting up viewport height tracking...');
         // Set up viewport height tracking
         updateViewportHeight(); // Initial calculation
 
@@ -102,8 +159,10 @@
 
         // Fallback to window resize for browsers that don't support visualViewport
         window.addEventListener("resize", updateViewportHeight);
+
+        console.log('[DEBUG-LAYOUT] 🎉 Layout initialization complete!');
       } catch (error) {
-        console.error("❌ Root layout: Failed to set up DI container:", error);
+        console.error("❌ [DEBUG-LAYOUT] Root layout: Failed to set up DI container:", error);
         containerError =
           error instanceof Error ? error.message : "Container setup failed";
       }

@@ -66,27 +66,32 @@
 
   // Resolve services when container is available
   $effect(() => {
+    console.log('[DEBUG-MAIN] 🔧 Service resolution $effect triggered');
     const container = getContainer?.();
+    console.log('[DEBUG-MAIN] Container from context:', container ? 'valid' : 'null', 'servicesResolved:', servicesResolved);
+
     if (container && !servicesResolved) {
       try {
         // Container is guaranteed to be ready since layout waited for it
         // But we need to ensure the cached container is set
         if (!isContainerReady()) {
           console.warn(
-            "Container available but not cached, ensuring initialization..."
+            "[DEBUG-MAIN] ⚠️ Container available but not cached, ensuring initialization..."
           );
           ensureContainerInitialized().then(() => {
             // Retry service resolution after container is cached
             if (!servicesResolved) {
               try {
+                console.log('[DEBUG-MAIN] 🔄 Retrying service resolution after container cache...');
                 initService = resolve(TYPES.IApplicationInitializer);
                 settingsService = resolve(TYPES.ISettingsService);
                 sequenceService = resolve(TYPES.ISequenceService);
                 deviceService = resolve(TYPES.IDeviceDetector);
                 servicesResolved = true;
+                console.log('[DEBUG-MAIN] ✅ Services resolved successfully (after cache)');
               } catch (error) {
                 console.error(
-                  "Failed to resolve services after caching:",
+                  "[DEBUG-MAIN] ❌ Failed to resolve services after caching:",
                   error
                 );
                 setInitializationError(`Service resolution failed: ${error}`);
@@ -96,6 +101,7 @@
           return;
         }
 
+        console.log('[DEBUG-MAIN] 🚀 Resolving services synchronously...');
         // Use sync resolution (container already initialized and cached)
         initService = resolve(TYPES.IApplicationInitializer);
         settingsService = resolve(TYPES.ISettingsService);
@@ -103,8 +109,9 @@
         deviceService = resolve(TYPES.IDeviceDetector);
 
         servicesResolved = true;
+        console.log('[DEBUG-MAIN] ✅ Services resolved successfully');
       } catch (error) {
-        console.error("Failed to resolve services:", error);
+        console.error("[DEBUG-MAIN] ❌ Failed to resolve services:", error);
         setInitializationError(`Service resolution failed: ${error}`);
       }
     }
@@ -112,6 +119,8 @@
 
   // Initialize application
   onMount(async () => {
+    console.log('[DEBUG-MAIN] 🏁 MainApplication onMount called');
+
     // Set up route-based sheet listening
     currentSheetType = getCurrentSheet();
 
@@ -131,45 +140,48 @@
     });
 
     try {
+      console.log('[DEBUG-MAIN] 📊 Initializing app state...');
       // Initialize the app state first
       setInitializationState(false, true, null, 0);
       setInitializationProgress(5);
 
-      console.log("[MainApp] 🔧 Starting initialization...");
-
+      console.log('[DEBUG-MAIN] 🔧 Ensuring container initialized...');
       // CRITICAL: Initialize container BEFORE resolving services
       await ensureContainerInitialized();
       setInitializationProgress(15);
-      console.log("[MainApp] ✅ Container initialized");
+      console.log('[DEBUG-MAIN] ✅ Container initialization confirmed');
 
+      console.log('[DEBUG-MAIN] 📊 Initializing app state...');
       await initializeAppState();
       setInitializationProgress(20);
-      console.log("[MainApp] ✅ App state initialized");
+      console.log('[DEBUG-MAIN] ✅ App state initialized');
 
       const container = getContainer?.();
+      console.log('[DEBUG-MAIN] 🔍 Checking container from context:', container ? 'valid' : 'null');
       if (!container) {
-        console.error("[MainApp] ❌ No DI container available");
+        console.error('[DEBUG-MAIN] ❌ No DI container available');
         setInitializationError("No DI container available");
         return;
       }
 
-      console.log("[MainApp] ⏳ Waiting for services to resolve...");
-
+      console.log('[DEBUG-MAIN] ⏳ Waiting for services to be resolved...');
       // Wait for services to be resolved with timeout
       let waitCount = 0;
       const MAX_WAIT = 500; // 5 seconds max (500 * 10ms)
       while (!servicesResolved && waitCount < MAX_WAIT) {
         await new Promise((resolve) => setTimeout(resolve, 10));
         waitCount++;
+        if (waitCount % 100 === 0) {
+          console.log(`[DEBUG-MAIN] Still waiting for services... (${waitCount * 10}ms)`);
+        }
       }
 
       if (!servicesResolved) {
-        console.error("[MainApp] ❌ Timeout waiting for services to resolve");
+        console.error('[DEBUG-MAIN] ❌ Service resolution timeout');
         setInitializationError("Service resolution timeout - services failed to initialize");
         return;
       }
-
-      console.log("[MainApp] ✅ Services resolved after", waitCount * 10, "ms");
+      console.log('[DEBUG-MAIN] ✅ Services resolved, proceeding...');
 
       // Double-check services are available
       if (
@@ -178,26 +190,36 @@
         !sequenceService ||
         !deviceService
       ) {
+        console.error('[DEBUG-MAIN] ❌ Services not properly resolved');
         setInitializationError("Services not properly resolved");
         return;
       }
+      console.log('[DEBUG-MAIN] ✅ All services validated');
 
       // Step 1: Restore tab state FIRST (before UI renders)
+      console.log('[DEBUG-MAIN] 💾 Restoring application state...');
       setInitializationProgress(30);
       await restoreApplicationState();
+      console.log('[DEBUG-MAIN] ✅ Application state restored');
 
       // Step 2: Initialize application services
+      console.log('[DEBUG-MAIN] 🚀 Initializing application services...');
       setInitializationProgress(50);
       await initService.initialize();
+      console.log('[DEBUG-MAIN] ✅ Application services initialized');
 
       // Step 3: Load settings
+      console.log('[DEBUG-MAIN] ⚙️ Loading settings...');
       setInitializationProgress(50);
       await settingsService.loadSettings();
       updateSettings(settingsService.currentSettings);
+      console.log('[DEBUG-MAIN] ✅ Settings loaded');
 
       // Step 3.5: Initialize theme service (after settings are loaded)
+      console.log('[DEBUG-MAIN] 🎨 Initializing theme service...');
       setInitializationProgress(60);
       ThemeService.initialize();
+      console.log('[DEBUG-MAIN] ✅ Theme service initialized');
 
       // Step 4: Initialize device detection
       setInitializationProgress(70);
@@ -207,10 +229,11 @@
       // TODO: Individual components should load their own data as needed
 
       // Step 6: Complete initialization
+      console.log('[DEBUG-MAIN] 🎉 Initialization complete!');
       setInitializationProgress(100);
       setInitializationState(true, false, null, 100);
     } catch (error) {
-      console.error("❌ Application initialization failed:", error);
+      console.error("[DEBUG-MAIN] ❌ Application initialization failed:", error);
       setInitializationError(
         error instanceof Error ? error.message : "Unknown initialization error"
       );

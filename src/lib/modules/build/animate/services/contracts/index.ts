@@ -9,8 +9,7 @@ export * from "./IAnimationLoopService";
 export * from "./IAnimationPlaybackController";
 export * from "./IAnimationStateManager";
 
-// Animator interfaces (motion parameter and control services)
-export * from "./animator-interfaces";
+// Animator service interfaces
 export * from "./IBeatCalculator";
 export * from "./IPropInterpolator";
 export * from "./ISequenceAnimationOrchestrator";
@@ -25,6 +24,7 @@ export * from "./IMotionCalculator";
 export * from "./ICanvasRenderer";
 export * from "./ISVGGenerator";
 export * from "./IGifExportService";
+export * from "./IGifExportOrchestrator";
 
 // ============================================================================
 // ARCHIVED CONTRACTS (moved to archive/animator-unused-services/)

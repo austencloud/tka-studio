@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
-import { GridLocation, GridMode, MotionType, type PictographData, type MotionData } from '$shared';
+import { GridLocation, GridMode, MotionType, Letter, type PictographData, type MotionData } from '$shared';
 import { DashLocationCalculator } from '$shared/pictograph/arrow/positioning/calculation/services/implementations/DashLocationCalculator';
 import { DirectionalTupleCalculator } from '$shared/pictograph/arrow/positioning/calculation/services/implementations/DirectionalTupleProcessor';
 import { ArrowQuadrantCalculator } from '$shared/pictograph/arrow/orchestration/services/implementations/ArrowQuadrantCalculator';
@@ -26,7 +26,7 @@ const dashMotions = [
       color: "blue",
       gridMode: GridMode.DIAMOND,
     } as MotionData,
-    letter: "Σ-"
+    letter: Letter.SIGMA_DASH
   },
   {
     name: "Beat 3: E→W Dash (CW, 1T)",
@@ -41,7 +41,7 @@ const dashMotions = [
       color: "blue",
       gridMode: GridMode.DIAMOND,
     } as MotionData,
-    letter: "Σ-"
+    letter: Letter.SIGMA_DASH
   },
   {
     name: "Beat 5: N→S Dash (CW, 1T)",
@@ -56,7 +56,7 @@ const dashMotions = [
       color: "blue",
       gridMode: GridMode.DIAMOND,
     } as MotionData,
-    letter: "Σ-"
+    letter: Letter.SIGMA_DASH
   },
   {
     name: "Beat 7: W→E Dash (CW, 1T)",
@@ -71,7 +71,7 @@ const dashMotions = [
       color: "blue",
       gridMode: GridMode.DIAMOND,
     } as MotionData,
-    letter: "Σ-"
+    letter: Letter.SIGMA_DASH
   }
 ];
 
@@ -159,7 +159,7 @@ describe('Dash Arrow Positioning Pipeline Trace', () => {
     analyzeTraces(traces);
   });
 
-  function tracePipeline(motion: MotionData, letter: string): PositioningTrace {
+  function tracePipeline(motion: MotionData, letter: Letter): PositioningTrace {
     const trace: PositioningTrace = {
       motionName: `${motion.startLocation}→${motion.endLocation} (${motion.rotationDirection}, ${motion.turns}T)`,
       step1_motionDetection: {
@@ -209,6 +209,7 @@ describe('Dash Arrow Positioning Pipeline Trace', () => {
     // STEP 4: Calculate arrow location
     try {
       const pictographData: PictographData = {
+        id: `test-pictograph-${letter}`,
         letter,
         motions: {
           blue: motion,

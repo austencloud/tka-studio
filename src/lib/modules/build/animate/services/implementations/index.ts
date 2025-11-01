@@ -23,4 +23,5 @@ export { MotionCalculator } from "./MotionCalculator";
 export { CanvasRenderer } from "./CanvasRenderer";
 export { SVGGenerator } from "./SVGGenerator";
 export { GifExportService } from "./GifExportService";
+export { GifExportOrchestrator } from "./GifExportOrchestrator";
 

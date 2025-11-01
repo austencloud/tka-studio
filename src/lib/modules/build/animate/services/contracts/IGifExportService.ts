@@ -47,6 +47,23 @@ export interface IGifExportService {
   ): Promise<Blob>;
 
   /**
+   * Create a manual GIF exporter for frame-by-frame control
+   * @param width Canvas width
+   * @param height Canvas height
+   * @param options Export options (excluding duration)
+   * @returns Promise resolving to exporter methods
+   */
+  createManualExporter(
+    width: number,
+    height: number,
+    options?: Omit<GifExportOptions, 'duration'>
+  ): Promise<{
+    addFrame: (canvas: HTMLCanvasElement, delay?: number) => void;
+    finish: () => Promise<Blob>;
+    cancel: () => void;
+  }>;
+
+  /**
    * Cancel an ongoing export
    */
   cancelExport(): void;

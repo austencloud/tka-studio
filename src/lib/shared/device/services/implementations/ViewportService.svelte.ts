@@ -26,27 +26,29 @@ export class ViewportService implements IViewportService {
       // Set up resize listener
       this.setupResizeListener();
 
-      // CRITICAL FIX: Double-check dimensions on next frame to handle Chrome DevTools mobile emulation
-      // In DevTools mobile mode, dimensions might not be correctly applied until after constructor runs
-      // This fixes the white screen issue when refreshing in mobile emulation mode
-      requestAnimationFrame(() => {
+      // CRITICAL FIX: Multi-stage dimension verification for Chrome DevTools mobile emulation
+      // DevTools emulation can take multiple frames to stabilize, especially during HMR
+      // Check dimensions at 0ms (immediate), 50ms, and 100ms to catch delayed updates
+      const checkDimensions = () => {
         const newWidth = window.innerWidth;
         const newHeight = window.innerHeight;
 
         // If dimensions changed, update and notify subscribers
         if (newWidth !== this._width || newHeight !== this._height) {
-          console.log('[ViewportService] Dimensions updated after frame:', {
-            before: { width: this._width, height: this._height },
-            after: { width: newWidth, height: newHeight }
-          });
-
           this._width = newWidth;
           this._height = newHeight;
 
           // Notify all callbacks about corrected dimensions
           this._callbacks.forEach((callback) => callback());
         }
-      });
+      };
+
+      // Check on next frame
+      requestAnimationFrame(checkDimensions);
+
+      // Also check after small delays to catch HMR-induced changes
+      setTimeout(checkDimensions, 50);
+      setTimeout(checkDimensions, 100);
     }
   }
 
