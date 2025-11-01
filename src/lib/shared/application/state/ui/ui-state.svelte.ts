@@ -2,32 +2,66 @@ import type { SequenceData, TabId } from "$shared";
 import type { IExploreThumbnailService } from "../../../../modules/explore/display";
 
 // Centralized UI state leveraging Svelte 5 runes.
+// Uses TabId (which includes both ModuleId and LegacyTabId) for backwards compatibility
 const uiState = $state({
-  activeTab: null as TabId | null,
+  activeModule: null as TabId | null,
   showSettings: false,
   isFullScreen: false,
   isTransitioning: false,
-  isWaitingForTabLoad: false,
+  isWaitingForModuleLoad: false,
   showSpotlight: false,
   spotlightSequence: null as SequenceData | null,
   spotlightThumbnailService: null as IExploreThumbnailService | null,
 });
 
+// ============================================================================
+// MODULE STATE (Primary API)
+// ============================================================================
+
+export function getActiveModule(): TabId | null {
+  return uiState.activeModule;
+}
+
+export function getActiveModuleOrDefault(): TabId {
+  return uiState.activeModule || "construct";
+}
+
+export function setActiveModule(module: TabId | null): void {
+  uiState.activeModule = module;
+}
+
+export function isModuleActive(module: string): boolean {
+  return uiState.activeModule === module;
+}
+
+// ============================================================================
+// LEGACY TAB API (for backwards compatibility)
+// @deprecated Use module functions instead
+// ============================================================================
+
+/** @deprecated Use getActiveModule() instead */
 export function getActiveTab(): TabId | null {
-  return uiState.activeTab;
+  return getActiveModule();
 }
 
+/** @deprecated Use getActiveModuleOrDefault() instead */
 export function getActiveTabOrDefault(): TabId {
-  return uiState.activeTab || "construct";
+  return getActiveModuleOrDefault();
 }
 
-export function setActiveTab(tab: TabId | null): void {
-  uiState.activeTab = tab;
+/** @deprecated Use setActiveModule() instead */
+export function setActiveTab(module: TabId | null): void {
+  setActiveModule(module);
 }
 
-export function isTabActive(tab: string): boolean {
-  return uiState.activeTab === tab;
+/** @deprecated Use isModuleActive() instead */
+export function isTabActive(module: string): boolean {
+  return isModuleActive(module);
 }
+
+// ============================================================================
+// SETTINGS STATE
+// ============================================================================
 
 export function getShowSettings(): boolean {
   return uiState.showSettings;
@@ -41,6 +75,22 @@ export function toggleShowSettings(): void {
   uiState.showSettings = !uiState.showSettings;
 }
 
+export function showSettingsDialog(): void {
+  setShowSettings(true);
+}
+
+export function hideSettingsDialog(): void {
+  setShowSettings(false);
+}
+
+export function toggleSettingsDialog(): void {
+  toggleShowSettings();
+}
+
+// ============================================================================
+// FULLSCREEN STATE
+// ============================================================================
+
 export function getIsFullScreen(): boolean {
   return uiState.isFullScreen;
 }
@@ -48,6 +98,10 @@ export function getIsFullScreen(): boolean {
 export function setFullScreen(fullScreen: boolean): void {
   uiState.isFullScreen = fullScreen;
 }
+
+// ============================================================================
+// TRANSITION STATE
+// ============================================================================
 
 export function getIsTransitioning(): boolean {
   return uiState.isTransitioning;
@@ -57,13 +111,31 @@ export function setIsTransitioning(isTransitioning: boolean): void {
   uiState.isTransitioning = isTransitioning;
 }
 
-export function getIsWaitingForTabLoad(): boolean {
-  return uiState.isWaitingForTabLoad;
+// ============================================================================
+// MODULE LOADING STATE
+// ============================================================================
+
+export function getIsWaitingForModuleLoad(): boolean {
+  return uiState.isWaitingForModuleLoad;
 }
 
-export function setIsWaitingForTabLoad(waiting: boolean): void {
-  uiState.isWaitingForTabLoad = waiting;
+export function setIsWaitingForModuleLoad(waiting: boolean): void {
+  uiState.isWaitingForModuleLoad = waiting;
 }
+
+/** @deprecated Use getIsWaitingForModuleLoad() instead */
+export function getIsWaitingForTabLoad(): boolean {
+  return getIsWaitingForModuleLoad();
+}
+
+/** @deprecated Use setIsWaitingForModuleLoad() instead */
+export function setIsWaitingForTabLoad(waiting: boolean): void {
+  setIsWaitingForModuleLoad(waiting);
+}
+
+// ============================================================================
+// SPOTLIGHT STATE
+// ============================================================================
 
 export function getShowSpotlight(): boolean {
   return uiState.showSpotlight;
@@ -92,24 +164,16 @@ export function closeSpotlightViewer(): void {
   uiState.spotlightThumbnailService = null;
 }
 
-export function showSettingsDialog(): void {
-  setShowSettings(true);
-}
-
-export function hideSettingsDialog(): void {
-  setShowSettings(false);
-}
-
-export function toggleSettingsDialog(): void {
-  toggleShowSettings();
-}
+// ============================================================================
+// RESET STATE
+// ============================================================================
 
 export function resetUIState(): void {
-  uiState.activeTab = "construct";
+  uiState.activeModule = "construct";
   uiState.showSettings = false;
   uiState.isFullScreen = false;
   uiState.isTransitioning = false;
-  uiState.isWaitingForTabLoad = false;
+  uiState.isWaitingForModuleLoad = false;
   uiState.showSpotlight = false;
   uiState.spotlightSequence = null;
   uiState.spotlightThumbnailService = null;

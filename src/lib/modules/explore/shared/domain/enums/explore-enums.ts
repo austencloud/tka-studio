@@ -14,7 +14,3 @@ export enum ExploreSortMethod {
   POPULARITY = "popularity",
 }
 
-export enum ExploreNavigationMode {
-  FILTER_SELECTION = "filter_selection",
-  SEQUENCE_BROWSER = "sequence_browser",
-}

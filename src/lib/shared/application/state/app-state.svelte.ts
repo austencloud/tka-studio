@@ -28,8 +28,17 @@ export {
 } from "./initialization-state.svelte";
 
 export {
+  // Primary module API
+  getActiveModule,
+  getActiveModuleOrDefault,
+  isModuleActive,
+  setActiveModule,
+  // Legacy tab API (deprecated)
   getActiveTab,
   getActiveTabOrDefault,
+  isTabActive,
+  setActiveTab,
+  // UI state
   getIsFullScreen,
   getIsTransitioning,
   getShowSettings,
@@ -47,7 +56,6 @@ export {
 export {
   getInitialTabFromCache,
   initializeTabPersistence,
-  isTabActive,
   switchTab,
 } from "./ui/tab-state";
 

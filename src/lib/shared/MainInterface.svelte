@@ -1,506 +1,84 @@
 <script lang="ts">
-  // Import app state management functions - BULLETPROOF RELATIVE IMPORTS
-  import {
-    getActiveTab,
-    getSettings,
-    getShowSettings,
-    getShowSpotlight,
-    getSpotlightSequence,
-    getSpotlightThumbnailService,
-    closeSpotlightViewer,
-    openSpotlightViewer,
-    isTabActive,
-    switchTab,
-  } from "./application/state/app-state.svelte";
-  import { getCurrentSpotlight, onRouteChange, closeSpotlight } from "./navigation/utils/sheet-router";
-  import type { RouteState } from "./navigation/utils/sheet-router";
-  // Import background types - BULLETPROOF RELATIVE IMPORTS
+  /**
+   * MainInterface
+   * Domain: Application Layout Shell
+   *
+   * Pure layout orchestration component.
+   * Delegates all business logic to specialized managers.
+   */
   import { onMount } from "svelte";
-  import type { IAnimationService } from "./application/services/contracts";
-  import type { IDeviceDetector } from "./device/services/contracts/IDeviceDetector";
-  import type { IMobileFullscreenService } from "./mobile/services/contracts/IMobileFullscreenService";
-  import { isContainerReady, resolve, TYPES } from "./inversify";
-  // Import transition utilities - BULLETPROOF RELATIVE IMPORTS
-  // Cross-module imports: Direct component imports (bulletproof default imports)
-  import AboutTab from "../modules/about/components/AboutTab.svelte";
-  import BuildTab from "../modules/build/shared/components/BuildTab.svelte";
+  import { getActiveTab } from "./application/state/app-state.svelte";
+  import { handleHMRInit } from "./hmr-helper";
+  import {
+    layoutState,
+    moduleHasPrimaryNav,
+    setCurrentWord,
+    setLearnHeader,
+    setPrimaryNavLandscape,
+    setTabAccessibility,
+    setTopBarHeight,
+  } from "./layout/layout-state.svelte";
+  import {
+    currentModule,
+    currentModuleName,
+    currentSection,
+    handleModuleChange,
+    handleSectionChange,
+    moduleDefinitions,
+    moduleSections,
+    navigationCoordinator,
+  } from "./navigation-coordinator/navigation-coordinator.svelte";
+  // Layout components
   import WordLabel from "../modules/build/workspace-panel/sequence-display/components/WordLabel.svelte";
-  import SpotlightViewer from "../modules/explore/spotlight/components/SpotlightViewer.svelte";
-  import LearnTab from "../modules/learn/LearnTab.svelte";
-  import LibraryTab from "../modules/library/LibraryTab.svelte";
-  import WordCardTab from "../modules/word-card/components/WordCardTab.svelte";
-  import WriteTab from "../modules/write/components/WriteTab.svelte";
-  // Shared components: Direct relative paths (bulletproof standard)
-  import { ExploreTab } from "../modules";
-  import FullscreenHint from "./mobile/components/FullscreenHint.svelte";
-  import MobileFullscreenPrompt from "./mobile/components/MobileFullscreenPrompt.svelte";
-  import EnhancedPWAInstallGuide from "./mobile/components/EnhancedPWAInstallGuide.svelte";
-  import SubtleInstallBanner from "./mobile/components/SubtleInstallBanner.svelte";
-  import UnifiedNavigationMenu from "./navigation/components/UnifiedNavigationMenu.svelte";
   import PrimaryNavigation from "./navigation/components/PrimaryNavigation.svelte";
   import TopBar from "./navigation/components/TopBar.svelte";
-  import ProfileSheet from "./navigation/components/ProfileSheet.svelte";
-  import {
-    MODULE_DEFINITIONS,
-    navigationState,
-  } from "./navigation/state/navigation-state.svelte";
-  import type { ModuleId } from "./navigation/domain/types";
-  import { handleHMRInit } from "./hmr-helper";
+  import UnifiedNavigationMenu from "./navigation/components/UnifiedNavigationMenu.svelte";
+  // Domain managers
+  import ModuleRenderer from "./modules/ModuleRenderer.svelte";
+  import PWAInstallationManager from "./pwa/PWAInstallationManager.svelte";
+  import SpotlightRouter from "./spotlight/SpotlightRouter.svelte";
 
-  // Reactive state for template using proper derived
-  let activeTab = $derived(getActiveTab());
-  let isTabLoading = $derived(activeTab === null);
-  let showSettings = $derived(getShowSettings());
-  let settings = $derived(getSettings());
-  let showSpotlight = $derived(getShowSpotlight());
-  let spotlightSequence = $derived(getSpotlightSequence());
-  let spotlightThumbnailService = $derived(getSpotlightThumbnailService());
+  // Reactive state
+  const activeModule = $derived(getActiveTab()); // Using legacy getActiveTab for now
+  const isModuleLoading = $derived(activeModule === null);
+  const isAboutActive = $derived(activeModule === "about");
 
-  // Mobile PWA install prompt state
-  let showMobileInstallPrompt = $state(false);
-  let showPWAInstallGuide = $state(false);
-
-  // Profile sheet state
-  let showProfileSheet = $state(false);
-
-  // Route-based spotlight state
-  let spotlightSequenceId = $state<string | null>(null);
-
-  const INSTALL_REPROMPT_DELAY_MS = 45000;
-  let deviceDetector: IDeviceDetector | null = null;
-  let fullscreenService: IMobileFullscreenService | null = null;
-  let installRePromptTimer: ReturnType<typeof setTimeout> | null = null;
-
-  const isOnMobile = () =>
-    !!deviceDetector &&
-    (deviceDetector.isMobile() || deviceDetector.isLandscapeMobile());
-  const shouldShowInstallOverlay = () =>
-    !!fullscreenService && isOnMobile() && !fullscreenService.isPWA();
-
-  function clearInstallRePromptTimer() {
-    if (installRePromptTimer !== null) {
-      clearTimeout(installRePromptTimer);
-      installRePromptTimer = null;
-    }
-  }
-
-  function scheduleInstallRePrompt() {
-    clearInstallRePromptTimer();
-
-    if (typeof window === "undefined" || !shouldShowInstallOverlay()) {
-      return;
-    }
-
-    installRePromptTimer = setTimeout(() => {
-      if (shouldShowInstallOverlay()) {
-        showMobileInstallPrompt = true;
-      }
-    }, INSTALL_REPROMPT_DELAY_MS);
-  }
+  // Sync state to coordinators
+  $effect(() => {
+    navigationCoordinator.canAccessEditAndExportPanels =
+      layoutState.canAccessEditAndExportPanels;
+  });
 
   onMount(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    // Initialize HMR handling to prevent white screen issues
+    if (typeof window === "undefined") return;
     handleHMRInit();
-
-    const cleanupFns: Array<() => void> = [];
-
-    try {
-      deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
-    } catch (error) {
-      console.warn("Failed to resolve device detector:", error);
-      deviceDetector = null;
-    }
-
-    try {
-      fullscreenService = resolve<IMobileFullscreenService>(
-        TYPES.IMobileFullscreenService
-      );
-    } catch (error) {
-      console.warn("Failed to resolve mobile fullscreen service:", error);
-      fullscreenService = null;
-    }
-
-    if (shouldShowInstallOverlay()) {
-      showMobileInstallPrompt = true;
-    } else {
-      showMobileInstallPrompt = false;
-    }
-
-    if (deviceDetector) {
-      const unsubscribeCapabilities = deviceDetector.onCapabilitiesChanged(
-        () => {
-          if (shouldShowInstallOverlay()) {
-            showMobileInstallPrompt = true;
-          } else {
-            showMobileInstallPrompt = false;
-            clearInstallRePromptTimer();
-          }
-        }
-      );
-      cleanupFns.push(() => unsubscribeCapabilities?.());
-    }
-
-    if (fullscreenService) {
-      const unsubscribeInstall = fullscreenService.onInstallPromptAvailable(
-        () => {
-          if (shouldShowInstallOverlay()) {
-            showMobileInstallPrompt = true;
-          }
-        }
-      );
-      cleanupFns.push(() => unsubscribeInstall?.());
-    }
-
-    if (typeof window !== "undefined" && fullscreenService) {
-      const handleAppInstalled = () => {
-        showMobileInstallPrompt = false;
-        clearInstallRePromptTimer();
-      };
-      window.addEventListener("appinstalled", handleAppInstalled);
-      cleanupFns.push(() =>
-        window.removeEventListener("appinstalled", handleAppInstalled)
-      );
-
-      const updatePromptFromDisplayMode = () => {
-        if (shouldShowInstallOverlay()) {
-          showMobileInstallPrompt = true;
-        } else {
-          showMobileInstallPrompt = false;
-          clearInstallRePromptTimer();
-        }
-      };
-
-      const queries = [
-        "(display-mode: standalone)",
-        "(display-mode: fullscreen)",
-        "(display-mode: minimal-ui)",
-      ];
-
-      queries.forEach((query) => {
-        const mediaQuery = window.matchMedia(query);
-        const handler = () => updatePromptFromDisplayMode();
-
-        if (mediaQuery.addEventListener) {
-          mediaQuery.addEventListener("change", handler);
-          cleanupFns.push(() =>
-            mediaQuery.removeEventListener("change", handler)
-          );
-        } else if (mediaQuery.addListener) {
-          mediaQuery.addListener(handler);
-          cleanupFns.push(() => mediaQuery.removeListener(handler));
-        }
-      });
-    }
-
-    cleanupFns.push(() => clearInstallRePromptTimer());
-
-    // Listen for custom event to open install guide
-    const handleOpenInstallGuide = () => {
-      showPWAInstallGuide = true;
-    };
-    window.addEventListener("pwa:open-install-guide", handleOpenInstallGuide);
-    cleanupFns.push(() =>
-      window.removeEventListener(
-        "pwa:open-install-guide",
-        handleOpenInstallGuide
-      )
-    );
-
-    // Listen for custom event to toggle profile sheet
-    const handleProfileSheetToggle = () => {
-      showProfileSheet = !showProfileSheet;
-    };
-    window.addEventListener("profile-sheet-toggle", handleProfileSheetToggle);
-    cleanupFns.push(() =>
-      window.removeEventListener(
-        "profile-sheet-toggle",
-        handleProfileSheetToggle
-      )
-    );
-
-    // Listen for route changes (spotlight, etc.)
-    const cleanupRouteListener = onRouteChange((state: RouteState) => {
-      spotlightSequenceId = state.spotlight || null;
-
-      // Sync with legacy spotlight state if needed
-      // This allows components using the old API to still work
-      if (state.spotlight && !getShowSpotlight()) {
-        // Route opened spotlight - need to fetch the sequence
-        // For now, we'll let the SpotlightViewer handle this
-      } else if (!state.spotlight && getShowSpotlight()) {
-        // Route closed spotlight
-        closeSpotlightViewer();
-      }
-    });
-    cleanupFns.push(cleanupRouteListener);
-
-    // Initialize spotlight from URL on mount
-    const initialSpotlight = getCurrentSpotlight();
-    if (initialSpotlight) {
-      spotlightSequenceId = initialSpotlight;
-    }
-
-    return () => {
-      cleanupFns.forEach((cleanup) => {
-        try {
-          cleanup();
-        } catch (error) {
-          console.warn(
-            "Failed to clean up mobile PWA prompt listeners:",
-            error
-          );
-        }
-      });
-    };
   });
-
-  $effect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    if (!fullscreenService) {
-      return;
-    }
-
-    if (showMobileInstallPrompt) {
-      clearInstallRePromptTimer();
-      return;
-    }
-
-    if (shouldShowInstallOverlay()) {
-      scheduleInstallRePrompt();
-    } else {
-      clearInstallRePromptTimer();
-    }
-  });
-
-  function handleMobileInstallDismiss() {
-    if (fullscreenService?.getRecommendedStrategy() === "not-supported") {
-      clearInstallRePromptTimer();
-      return;
-    }
-    scheduleInstallRePrompt();
-  }
-
-  // Tab accessibility state - updated by BuildTab via callback
-  let canAccessEditAndExportTabs = $state(false);
-
-  // Current word state - updated by BuildTab via callback
-  let currentBuildWord = $state("");
-
-  // Callback for BuildTab to notify us of tab accessibility changes
-  function handleTabAccessibilityChange(canAccess: boolean) {
-    canAccessEditAndExportTabs = canAccess;
-  }
-
-  // Callback for BuildTab to notify us of current word changes
-  function handleCurrentWordChange(word: string) {
-    currentBuildWord = word;
-  }
-
-  // Current learn header - updated by LearnTab via callback
-  let currentLearnHeader = $state("");
-
-  // TopBar height - measured dynamically by TopBar component
-  let topBarHeight = $state(56); // Default fallback
-
-  // Callback for LearnTab to notify us of header changes
-  function handleLearnHeaderChange(header: string) {
-    currentLearnHeader = header;
-  }
-
-  // Callback for TopBar to notify us of height changes
-  function handleTopBarHeightChange(height: number) {
-    topBarHeight = height;
-  }
-
-  // Navigation layout state - updated by PrimaryNavigation
-  let isPrimaryNavLandscape = $state(false);
-
-  // Callback for PrimaryNavigation to notify us of layout changes
-  function handlePrimaryNavLayoutChange(isLandscape: boolean) {
-    isPrimaryNavLandscape = isLandscape;
-  }
-
-  // Resolve animation service - only when container is ready
-  const animationService = $derived(() => {
-    if (!isContainerReady()) {
-      return null;
-    }
-    try {
-      return resolve(TYPES.IAnimationService) as IAnimationService;
-    } catch (error) {
-      console.warn("Failed to resolve animation service:", error);
-      return null;
-    }
-  });
-
-  // Simple transition functions - animations are always enabled
-  const tabOut = (node: Element) => {
-    const service = animationService();
-    if (!service) {
-      return { duration: 250 }; // Fallback transition
-    }
-    return service.createFadeTransition({
-      duration: 250,
-    });
-  };
-
-  const tabIn = (node: Element) => {
-    const service = animationService();
-    if (!service) {
-      return { duration: 300, delay: 250 }; // Fallback transition
-    }
-    return service.createFadeTransition({
-      duration: 300,
-      delay: 250, // Wait for out transition
-    });
-  };
-
-  // App tab configuration - using correct TabId values that match content switching logic
-  const allTabs = [
-    { id: "construct", label: "Build", icon: "🔧", isMain: true },
-    { id: "Explore", label: "Explore", icon: "🔍", isMain: true },
-    { id: "learn", label: "Learn", icon: "🧠", isMain: true },
-    { id: "library", label: "Library", icon: "📚", isMain: true },
-    // { id: "about", label: "About", icon: "ℹ️", isMain: true },
-    { id: "word_card", label: "Word Card", icon: "🎴", isMain: false },
-    { id: "write", label: "Write", icon: "✍️", isMain: false },
-    { id: "animator", label: "Animator", icon: "🎯", isMain: false },
-  ] as const;
-
-  // Show all tabs (developer mode is always enabled)
-  const appTabs = $derived(() => {
-    // Show main tabs first, then developer tabs
-    const mainTabs = allTabs.filter((tab) => tab.isMain);
-    const devTabs = allTabs.filter((tab) => !tab.isMain);
-    return [...mainTabs, ...devTabs];
-  });
-
-  // Developer mode is always enabled, no need for tab switching logic
-
-  function handleTabSelect(tabId: string) {
-    switchTab(
-      tabId as
-        | "construct"
-        | "browse"
-        | "library"
-        | "word_card"
-        | "write"
-        | "learn"
-        | "about"
-        | "animator"
-    );
-  }
-
-  function handleBackgroundChange(_background: string) {
-    // Background change handled
-  }
-
-  // New module-based navigation state
-  const currentModule = $derived(() => navigationState.currentModule);
-  const currentSubMode = $derived(() => navigationState.currentSubMode);
-  const currentModuleDefinition = $derived(() =>
-    navigationState.getModuleDefinition(currentModule())
-  );
-  const currentModuleName = $derived(
-    () => currentModuleDefinition()?.label || "Unknown"
-  );
-
-  // Make subModeTabs reactive to tab accessibility for build module
-  const subModeTabs = $derived(() => {
-    const baseTabs = currentModuleDefinition()?.subModes || [];
-    const module = currentModule();
-
-    // If we're in the build module, hide tabs that require a sequence
-    if (module === "build") {
-      // Filter out tabs that require a sequence when no sequence exists
-      if (!canAccessEditAndExportTabs) {
-        return baseTabs.filter((tab) => {
-          // Only show construct and generate tabs when no sequence exists
-          return tab.id === "construct" || tab.id === "generate";
-        });
-      }
-
-      // When sequence exists, show all tabs
-      return baseTabs;
-    }
-
-    return baseTabs;
-  });
-
-  // Module change handlers for new navigation
-  function handleModuleChange(moduleId: any) {
-    navigationState.setCurrentModule(moduleId);
-
-    // Map module to tab for existing tab switching logic
-    const moduleToTabMap: Record<string, string> = {
-      build: "construct",
-      explore: "explore",
-      learn: "learn",
-      library: "library",
-      write: "write",
-      word_card: "word_card",
-    };
-
-    const tabId = moduleToTabMap[moduleId];
-    if (tabId && activeTab !== tabId) {
-      switchTab(tabId as any);
-    }
-  }
-
-  function handleSubModeChange(subModeId: string) {
-    navigationState.setCurrentSubMode(subModeId);
-  }
-
-  // Legacy mode change handlers for backward compatibility
-  function handleBuildModeChange(mode: string) {
-    navigationState.setBuildMode(mode);
-    // If we're not on the construct tab, switch to it
-    if (activeTab !== "construct") {
-      switchTab("construct");
-    }
-  }
-
-  function handleLearnModeChange(mode: string) {
-    navigationState.setLearnMode(mode);
-    // If we're not on the learn tab, switch to it
-    if (activeTab !== "learn") {
-      switchTab("learn");
-    }
-  }
 </script>
 
 <div
   class="main-interface"
-  class:nav-landscape={isPrimaryNavLandscape}
-  style="--top-bar-height: {topBarHeight}px;"
+  class:nav-landscape={layoutState.isPrimaryNavLandscape}
+  class:about-active={isAboutActive}
+  style="--top-bar-height: {layoutState.topBarHeight}px;"
 >
-  <!-- Unified Navigation Menu - Single Floating Button -->
+  <!-- Unified Navigation Menu -->
   <UnifiedNavigationMenu
     currentModule={currentModule()}
     currentModuleName={currentModuleName()}
-    modules={MODULE_DEFINITIONS}
+    modules={moduleDefinitions}
     onModuleChange={handleModuleChange}
   />
 
-  <!-- Top Bar - Profile Picture & Module-Specific Content -->
+  <!-- Top Bar with Dynamic Content -->
   <TopBar
-    navigationLayout={isPrimaryNavLandscape ? "left" : "top"}
-    onHeightChange={handleTopBarHeightChange}
+    navigationLayout={layoutState.isPrimaryNavLandscape ? "left" : "top"}
+    onHeightChange={setTopBarHeight}
   >
     {#snippet content()}
-      <!-- Show WordLabel when in Build module and word exists -->
-      {#if currentModule() === "build" && currentBuildWord}
-        <WordLabel word={currentBuildWord} />
-      <!-- Show header when in Learn module -->
-      {:else if currentModule() === "learn" && currentLearnHeader}
-        <div class="learn-header">{currentLearnHeader}</div>
+      {#if currentModule() === "build" && layoutState.currentBuildWord}
+        <WordLabel word={layoutState.currentBuildWord} />
+      {:else if currentModule() === "learn" && layoutState.currentLearnHeader}
+        <div class="learn-header">{layoutState.currentLearnHeader}</div>
       {/if}
     {/snippet}
   </TopBar>
@@ -508,150 +86,52 @@
   <!-- Main Content Area -->
   <main
     class="content-area"
-    class:about-active={isTabActive("about")}
-    class:has-primary-nav={currentModule() === "build" ||
-      currentModule() === "learn" ||
-      currentModule() === "explore" ||
-      currentModule() === "library"}
-    class:nav-landscape={isPrimaryNavLandscape}
+    class:about-active={isAboutActive}
+    class:has-primary-nav={moduleHasPrimaryNav(currentModule())}
+    class:nav-landscape={layoutState.isPrimaryNavLandscape}
     class:has-top-bar={true}
   >
-    {#if isTabLoading}
-      <!-- Loading state while tab is being restored -->
-      <div class="tab-loading">
-        <div class="loading-spinner"></div>
-        <p>Loading...</p>
-      </div>
-    {:else}
-      <!-- App Content with reliable transitions -->
-      {#key activeTab}
-        <div
-          class="tab-content"
-          class:about-tab={isTabActive("about")}
-          in:tabIn
-          out:tabOut
-        >
-          {#if isTabActive("construct")}
-            <BuildTab
-              onTabAccessibilityChange={handleTabAccessibilityChange}
-              onCurrentWordChange={handleCurrentWordChange}
-            />
-          {:else if isTabActive("explore")}
-            <ExploreTab />
-          {:else if isTabActive("learn")}
-            <LearnTab onHeaderChange={handleLearnHeaderChange} />
-          {:else if isTabActive("library")}
-            <LibraryTab />
-          {:else if isTabActive("word_card")}
-            <WordCardTab />
-          {:else if isTabActive("write")}
-            <WriteTab />
-          {:else if isTabActive("about")}
-            <AboutTab />
-          {/if}
-        </div>
-      {/key}
-    {/if}
+    <ModuleRenderer
+      {activeModule}
+      {isModuleLoading}
+      onTabAccessibilityChange={setTabAccessibility}
+      onCurrentWordChange={setCurrentWord}
+      onLearnHeaderChange={setLearnHeader}
+    />
   </main>
 
-  <!-- Primary Navigation (Build, Learn, Explore, Library Modules) - Responsive Bottom/Side -->
-  {#if currentModule() === "build" || currentModule() === "learn" || currentModule() === "explore" || currentModule() === "library"}
+  <!-- Primary Navigation (conditionally rendered) -->
+  {#if moduleHasPrimaryNav(currentModule())}
     <PrimaryNavigation
-      subModeTabs={subModeTabs()}
-      currentSubMode={currentSubMode()}
-      onSubModeChange={(subModeId) => {
-        if (currentModule() === "learn") {
-          navigationState.setLearnMode(subModeId);
-        } else if (currentModule() === "build") {
-          // Use the NEW navigation system (currentSubMode) not the legacy setBuildMode
-          navigationState.setCurrentSubMode(subModeId);
-        } else if (currentModule() === "explore") {
-          // Explore uses the new navigation system
-          navigationState.setCurrentSubMode(subModeId);
-        } else if (currentModule() === "library") {
-          // Library uses the new navigation system
-          navigationState.setCurrentSubMode(subModeId);
-        }
-      }}
+      sections={moduleSections()}
+      currentSection={currentSection()}
+      onSectionChange={handleSectionChange}
       onModuleSwitcherTap={() => {
-        // Open unified menu for module switching
-        const event = new CustomEvent("unified-menu-toggle");
-        window.dispatchEvent(event);
+        window.dispatchEvent(new CustomEvent("unified-menu-toggle"));
       }}
-      onLayoutChange={handlePrimaryNavLayoutChange}
+      onLayoutChange={setPrimaryNavLandscape}
     />
   {/if}
 
-  <!-- Settings Dialog - REMOVED - now rendered in MainApplication.svelte to avoid duplicates -->
-
-  <MobileFullscreenPrompt
-    bind:showPrompt={showMobileInstallPrompt}
-    autoShow={false}
-    position="center"
-    nagMode={true}
-    on:dismiss={handleMobileInstallDismiss}
-  />
-
-  <!-- Subtle Fullscreen Hint -->
-  <FullscreenHint />
-
-  <!-- Tier 1: Subtle Install Banner (non-blocking) -->
-  <SubtleInstallBanner />
-
-  <!-- Enhanced PWA Install Guide (modal with device-specific instructions) -->
-  <EnhancedPWAInstallGuide bind:showGuide={showPWAInstallGuide} />
-
-  <!-- Spotlight Viewer - rendered at root level for proper z-index -->
-  <!-- Route-aware: Opens via ?spotlight={id} or legacy showSpotlight state -->
-  {#if (showSpotlight && spotlightSequence && spotlightThumbnailService) || spotlightSequenceId}
-    <SpotlightViewer
-      show={showSpotlight || !!spotlightSequenceId}
-      sequence={spotlightSequence}
-      sequenceId={spotlightSequenceId}
-      thumbnailService={spotlightThumbnailService}
-      onClose={() => {
-        closeSpotlightViewer();
-        if (spotlightSequenceId) {
-          closeSpotlight();
-        }
-      }}
-    />
-  {/if}
-
-  <!-- Profile Sheet - rendered at root level for proper positioning -->
-  <ProfileSheet
-    isOpen={showProfileSheet}
-    onClose={() => {
-      showProfileSheet = false;
-    }}
-  />
+  <!-- Domain Managers -->
+  <PWAInstallationManager />
+  <SpotlightRouter />
 </div>
 
 <style>
   .main-interface {
     display: flex;
     flex-direction: column;
-    /* Multi-layer fallback for reliable viewport height */
-    height: 100vh; /* Fallback 1: Static viewport height */
-    height: var(
-      --viewport-height,
-      100vh
-    ); /* Fallback 2: JS-calculated height */
-    height: 100dvh; /* Preferred: Dynamic viewport height (when it works) */
+    height: 100vh;
+    height: var(--viewport-height, 100vh);
+    height: 100dvh;
     width: 100%;
     overflow: hidden;
     position: relative;
     background: transparent;
   }
 
-  /* Debug: Show landscape state on main interface */
-  /* .main-interface.nav-landscape {
-    outline: 5px solid orange !important;
-    outline-offset: -5px;
-  } */
-
-  /* Allow main interface to overflow when About tab is active */
-  .main-interface:has(.content-area.about-active) {
+  .main-interface.about-active {
     overflow: visible !important;
     height: auto !important;
     min-height: 100vh !important;
@@ -668,117 +148,49 @@
     min-height: 0;
   }
 
-  /* Reserve space for top bar */
   .content-area.has-top-bar {
     padding-top: var(--top-bar-height, 56px);
   }
 
-  /* Reserve space for primary navigation when present */
   .content-area.has-primary-nav {
-    /* Default: Bottom padding for portrait mode (navigation at bottom) */
     padding-bottom: max(64px, env(safe-area-inset-bottom));
     padding-left: 0;
   }
 
-  /* Landscape mode: Reserve space on the left instead of bottom */
   .content-area.has-primary-nav.nav-landscape {
     padding-bottom: 0 !important;
     padding-left: 72px !important;
     padding-left: max(72px, env(safe-area-inset-left)) !important;
   }
 
-  /* Landscape mode with top bar: Account for both left nav and top bar */
   .content-area.has-top-bar.nav-landscape {
     padding-top: var(--top-bar-height, 56px);
   }
 
-  .tab-content {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Adjust tab-content for top bar */
-  .content-area.has-top-bar .tab-content {
-    top: var(--top-bar-height, 56px);
-    height: calc(100% - var(--top-bar-height, 56px));
-  }
-
-  /* Adjust tab-content for portrait mode - navigation at bottom */
-  .content-area.has-primary-nav .tab-content {
-    bottom: max(64px, env(safe-area-inset-bottom));
-    height: calc(100% - max(64px, env(safe-area-inset-bottom)));
-  }
-
-  /* Adjust tab-content when both top bar AND primary nav exist (portrait mode) */
-  .content-area.has-top-bar.has-primary-nav .tab-content {
-    top: var(--top-bar-height, 56px);
-    bottom: max(64px, env(safe-area-inset-bottom));
-    height: calc(
-      100% - var(--top-bar-height, 56px) - max(64px, env(safe-area-inset-bottom))
-    );
-  }
-
-  /* Adjust tab-content for landscape navigation - navigation on left */
-  .content-area.has-primary-nav.nav-landscape .tab-content {
-    left: 72px;
-    bottom: 0;
-    width: calc(100% - 72px);
-    height: 100%;
-  }
-
-  /* Adjust tab-content when both top bar AND primary nav exist (landscape mode) */
-  .content-area.has-top-bar.has-primary-nav.nav-landscape .tab-content {
-    top: var(--top-bar-height, 56px);
-    left: 72px;
-    bottom: 0;
-    width: calc(100% - 72px);
-    height: calc(100% - var(--top-bar-height, 56px));
-  }
-
-  /* Allow scrolling for About tab */
   .content-area.about-active {
     overflow: visible !important;
   }
 
-  .tab-content.about-tab {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    position: static !important;
-    height: auto !important;
-    min-height: 100% !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
+  .learn-header {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    text-align: center;
   }
 
-  /* Responsive design - removed empty ruleset */
-
-  /* Disable animations when user prefers reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .main-interface,
-    .tab-content {
+    .main-interface {
       transition: none !important;
       animation: none !important;
     }
   }
 
-  /* High contrast mode */
   @media (prefers-contrast: high) {
     .main-interface {
       border: 2px solid #667eea;
     }
   }
 
-  /* Print styles */
   @media print {
     .main-interface {
       height: auto;
@@ -789,55 +201,5 @@
       overflow: visible;
       height: auto;
     }
-
-    .tab-content {
-      position: relative;
-      overflow: visible;
-      height: auto;
-    }
-  }
-
-  /* Loading state styles */
-  .tab-loading {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    min-height: 200px;
-    color: var(--text-color, #333);
-  }
-
-  .loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--border-color, #e0e0e0);
-    border-top: 3px solid var(--primary-color, #007bff);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 16px;
-  }
-
-  @keyframes spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  .tab-loading p {
-    margin: 0;
-    font-size: 14px;
-    opacity: 0.7;
-  }
-
-  /* Learn header styling in TopBar */
-  .learn-header {
-    font-size: 18px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    text-align: center;
   }
 </style>

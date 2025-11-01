@@ -14,6 +14,7 @@ export class SvgImageService implements ISvgImageService {
 
   /**
    * Convert SVG string to HTMLImageElement
+   * IMPORTANT: Actually respects width/height by embedding them in the SVG
    */
   async convertSvgStringToImage(
     svgString: string,
@@ -41,8 +42,25 @@ export class SvgImageService implements ISvgImageService {
       };
 
       try {
-        // Create blob URL from SVG string
-        const blob = new Blob([svgString], { type: "image/svg+xml" });
+        // Embed width and height attributes in SVG to ensure correct rendering size
+        // This ensures the HTMLImageElement is created at the requested dimensions
+        let modifiedSvg = svgString;
+
+        // Add or update width/height attributes on the <svg> element
+        if (modifiedSvg.includes('<svg')) {
+          // Remove existing width/height if present
+          modifiedSvg = modifiedSvg.replace(/\s+width="[^"]*"/g, '');
+          modifiedSvg = modifiedSvg.replace(/\s+height="[^"]*"/g, '');
+
+          // Add new width/height right after <svg
+          modifiedSvg = modifiedSvg.replace(
+            /<svg/,
+            `<svg width="${width}" height="${height}"`
+          );
+        }
+
+        // Create blob URL from modified SVG string
+        const blob = new Blob([modifiedSvg], { type: "image/svg+xml" });
         blobUrl = URL.createObjectURL(blob);
         this.activeBlobUrls.add(blobUrl);
 

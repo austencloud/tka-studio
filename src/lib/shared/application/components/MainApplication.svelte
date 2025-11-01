@@ -7,7 +7,7 @@
     updateBodyBackground,
   } from "../../background";
   import type { IDeviceDetector } from "../../device";
-  import { ErrorScreen, LoadingScreen } from "../../foundation";
+  import { ErrorScreen } from "../../foundation";
   import {
     ensureContainerInitialized,
     isContainerReady,
@@ -24,7 +24,6 @@
   import type { IApplicationInitializer } from "../services";
   import {
     getInitializationError,
-    getInitializationProgress,
     getIsInitialized,
     getSettings,
     getShowSettings,
@@ -32,7 +31,6 @@
     initializeAppState,
     restoreApplicationState,
     setInitializationError,
-    setInitializationProgress,
     setInitializationState,
     showSettingsDialog,
     switchTab,
@@ -41,6 +39,9 @@
   import { getCurrentSheet, onSheetChange, closeSheet, openSheet } from "../../navigation/utils/sheet-router";
   import type { SheetType } from "../../navigation/utils/sheet-router";
   import ProfileSettingsSheet from "../../navigation/components/ProfileSettingsSheet.svelte";
+  import AuthSheet from "../../navigation/components/AuthSheet.svelte";
+  import TermsSheet from "../../navigation/components/TermsSheet.svelte";
+  import PrivacySheet from "../../navigation/components/PrivacySheet.svelte";
   // Import app state management - BULLETPROOF RELATIVE IMPORTS
 
   // Get DI container from context
@@ -56,13 +57,15 @@
   // App state
   let isInitialized = $derived(getIsInitialized());
   let initializationError = $derived(getInitializationError());
-  let initializationProgress = $derived(getInitializationProgress());
   let settings = $derived(getSettings());
 
   // Route-based sheet state
   let currentSheetType = $state<SheetType>(null);
   let showProfileSettings = $derived(() => currentSheetType === 'profile-settings');
   let showRouteBasedSettings = $derived(() => currentSheetType === 'settings');
+  let showAuthSheet = $derived(() => currentSheetType === 'auth');
+  let showTermsSheet = $derived(() => currentSheetType === 'terms');
+  let showPrivacySheet = $derived(() => currentSheetType === 'privacy');
 
   // Resolve services when container is available
   $effect(() => {
@@ -143,17 +146,14 @@
       console.log('[DEBUG-MAIN] 📊 Initializing app state...');
       // Initialize the app state first
       setInitializationState(false, true, null, 0);
-      setInitializationProgress(5);
 
       console.log('[DEBUG-MAIN] 🔧 Ensuring container initialized...');
       // CRITICAL: Initialize container BEFORE resolving services
       await ensureContainerInitialized();
-      setInitializationProgress(15);
       console.log('[DEBUG-MAIN] ✅ Container initialization confirmed');
 
       console.log('[DEBUG-MAIN] 📊 Initializing app state...');
       await initializeAppState();
-      setInitializationProgress(20);
       console.log('[DEBUG-MAIN] ✅ App state initialized');
 
       const container = getContainer?.();
@@ -198,40 +198,34 @@
 
       // Step 1: Restore tab state FIRST (before UI renders)
       console.log('[DEBUG-MAIN] 💾 Restoring application state...');
-      setInitializationProgress(30);
       await restoreApplicationState();
       console.log('[DEBUG-MAIN] ✅ Application state restored');
 
       // Step 2: Initialize application services
       console.log('[DEBUG-MAIN] 🚀 Initializing application services...');
-      setInitializationProgress(50);
       await initService.initialize();
       console.log('[DEBUG-MAIN] ✅ Application services initialized');
 
       // Step 3: Load settings
       console.log('[DEBUG-MAIN] ⚙️ Loading settings...');
-      setInitializationProgress(50);
       await settingsService.loadSettings();
       updateSettings(settingsService.currentSettings);
       console.log('[DEBUG-MAIN] ✅ Settings loaded');
 
       // Step 3.5: Initialize theme service (after settings are loaded)
       console.log('[DEBUG-MAIN] 🎨 Initializing theme service...');
-      setInitializationProgress(60);
       ThemeService.initialize();
       console.log('[DEBUG-MAIN] ✅ Theme service initialized');
 
       // Step 4: Initialize device detection
-      setInitializationProgress(70);
+      // (placeholder for future device detection init)
 
       // Step 5: Load initial data
-      setInitializationProgress(85);
       // TODO: Individual components should load their own data as needed
 
       // Step 6: Complete initialization
       console.log('[DEBUG-MAIN] 🎉 Initialization complete!');
-      setInitializationProgress(100);
-      setInitializationState(true, false, null, 100);
+      setInitializationState(true, false, null, 0);
     } catch (error) {
       console.error("[DEBUG-MAIN] ❌ Application initialization failed:", error);
       setInitializationError(
@@ -335,13 +329,8 @@
       error={initializationError}
       onRetry={() => window.location.reload()}
     />
-  {:else if !isInitialized}
-    <LoadingScreen
-      progress={initializationProgress}
-      message="Initializing Constructor..."
-    />
   {:else}
-    <!-- Main Interface -->
+    <!-- Main Interface - Always shown, progressive loading inside -->
     <MainInterface />
 
     <!-- Settings slide panel (route-aware) -->
@@ -350,6 +339,24 @@
     <!-- Profile Settings sheet (route-based, 95vh) -->
     <ProfileSettingsSheet
       isOpen={showProfileSettings()}
+      onClose={() => closeSheet()}
+    />
+
+    <!-- Auth sheet (route-based) -->
+    <AuthSheet
+      isOpen={showAuthSheet()}
+      onClose={() => closeSheet()}
+    />
+
+    <!-- Terms sheet (route-based) -->
+    <TermsSheet
+      isOpen={showTermsSheet()}
+      onClose={() => closeSheet()}
+    />
+
+    <!-- Privacy sheet (route-based) -->
+    <PrivacySheet
+      isOpen={showPrivacySheet()}
       onClose={() => closeSheet()}
     />
   {/if}

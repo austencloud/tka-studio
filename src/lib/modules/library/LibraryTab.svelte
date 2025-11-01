@@ -20,18 +20,18 @@
 
   // Sync with navigation state
   $effect(() => {
-    const subMode = navigationState.currentSubMode;
-    if (subMode === "sequences" || subMode === "acts") {
-      activeMode = subMode;
+    const section = navigationState.currentSection;
+    if (section === "sequences" || section === "acts") {
+      activeMode = section;
     }
   });
 
   // Initialize on mount
   onMount(() => {
     // Set default mode if none persisted
-    const subMode = navigationState.currentSubMode;
-    if (!subMode || (subMode !== "sequences" && subMode !== "acts")) {
-      navigationState.setCurrentSubMode("sequences");
+    const section = navigationState.currentSection;
+    if (!section || (section !== "sequences" && section !== "acts")) {
+      navigationState.setCurrentSection("sequences");
     }
   });
 

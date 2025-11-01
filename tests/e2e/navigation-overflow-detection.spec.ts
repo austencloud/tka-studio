@@ -32,8 +32,8 @@ test.describe("Navigation Overflow Detection", () => {
       console.log(`First label text: ${await firstLabel.textContent()}`);
 
       // Check if icon-only class is NOT applied
-      const subModeTabs = page.locator(".sub-mode-tabs");
-      const hasIconOnlyClass = await subModeTabs.evaluate((el) =>
+      const sectionTabs = page.locator(".sub-mode-tabs");
+      const hasIconOnlyClass = await sectionTabs.evaluate((el) =>
         el.classList.contains("icon-only")
       );
 
@@ -76,9 +76,9 @@ test.describe("Navigation Overflow Detection", () => {
 
     // Get initial state
     const getOverflowState = async () => {
-      const subModeTabs = page.locator(".sub-mode-tabs");
+      const sectionTabs = page.locator(".sub-mode-tabs");
 
-      const hasIconOnlyClass = await subModeTabs.evaluate((el) =>
+      const hasIconOnlyClass = await sectionTabs.evaluate((el) =>
         el.classList.contains("icon-only")
       );
 
@@ -215,8 +215,8 @@ test.describe("Navigation Overflow Detection", () => {
       // Wait for resize, ResizeObserver, requestAnimationFrame, and reactive updates
       await page.waitForTimeout(1000);
 
-      const subModeTabs = page.locator(".sub-mode-tabs");
-      const hasIconOnlyClass = await subModeTabs.evaluate((el) =>
+      const sectionTabs = page.locator(".sub-mode-tabs");
+      const hasIconOnlyClass = await sectionTabs.evaluate((el) =>
         el.classList.contains("icon-only")
       );
 
