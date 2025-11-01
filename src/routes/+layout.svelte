@@ -1,7 +1,4 @@
 <script lang="ts">
-  // CRITICAL: Import error recovery FIRST before anything else
-  import "$lib/shared/utils/vite-hmr-recovery";
-
   import FullscreenPrompt from "$lib/shared/components/FullscreenPrompt.svelte";
   import type { Container } from "inversify";
   import type { Snippet } from "svelte";
@@ -23,37 +20,6 @@
     return container;
   });
 
-  // CRITICAL FIX: Vite HMR 404 Error Recovery
-  // When DevTools is open and page is refreshed, Vite sometimes returns 404 for dynamically imported modules
-  // This is a known Vite bug - we detect it and automatically reload to recover
-  let hasAttemptedRecovery = false;
-
-  if (typeof window !== 'undefined') {
-    // Listen for unhandled promise rejections (module loading failures)
-    window.addEventListener('unhandledrejection', (event) => {
-      const error = event.reason;
-
-      // Check if this is a Vite module loading error
-      if (error instanceof TypeError &&
-          error.message?.includes('Failed to fetch dynamically imported module') &&
-          !hasAttemptedRecovery) {
-
-        console.warn('🔄 [AUTO-RECOVERY] Detected Vite HMR module loading failure (common with DevTools open during refresh)');
-        console.warn('🔄 [AUTO-RECOVERY] Automatically reloading page to recover...');
-
-        hasAttemptedRecovery = true;
-
-        // Slight delay to ensure console messages are visible
-        setTimeout(() => {
-          window.location.reload();
-        }, 100);
-
-        // Prevent the error from appearing in console as unhandled
-        event.preventDefault();
-      }
-    });
-  }
-
   // HMR support - re-initialize container when modules are hot-reloaded
   if (import.meta.hot) {
     import.meta.hot.accept(async () => {
@@ -67,17 +33,6 @@
         container = await getContainer();
       } catch (error) {
         console.error("❌ HMR: Failed to re-initialize container:", error);
-
-        // Check if this is a module loading error that needs recovery
-        if (error instanceof TypeError &&
-            error.message?.includes('Failed to fetch dynamically imported module') &&
-            !hasAttemptedRecovery) {
-          console.warn('🔄 [AUTO-RECOVERY] Reloading due to HMR module failure...');
-          hasAttemptedRecovery = true;
-          setTimeout(() => window.location.reload(), 100);
-          return;
-        }
-
         containerError = "HMR container re-initialization failed";
       }
     });
