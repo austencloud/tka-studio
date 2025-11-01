@@ -32,7 +32,7 @@ export function createBuildTabEffects(config: EffectConfig) {
   $effect(() => {
     if (!buildTabState) return;
 
-    const currentMode = navigationState.currentSubMode;
+    const currentMode = navigationState.currentSection;
     const buildTabCurrentMode = buildTabState.activeSubTab;
 
     if (
@@ -49,7 +49,7 @@ export function createBuildTabEffects(config: EffectConfig) {
         !buildTabState.canAccessEditTab
       ) {
         console.warn(`Cannot access ${currentMode} tab without sequence`);
-        navigationState.setCurrentSubMode("construct");
+        navigationState.setCurrentSection("construct");
         return;
       }
 
@@ -62,10 +62,10 @@ export function createBuildTabEffects(config: EffectConfig) {
     if (!buildTabState) return;
 
     const buildTabCurrentMode = buildTabState.activeSubTab;
-    const navCurrentMode = navigationState.currentSubMode;
+    const navCurrentMode = navigationState.currentSection;
 
     if (buildTabCurrentMode && buildTabCurrentMode !== navCurrentMode) {
-      navigationState.setCurrentSubMode(buildTabCurrentMode);
+      navigationState.setCurrentSection(buildTabCurrentMode);
     }
   });
 

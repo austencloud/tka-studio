@@ -10,14 +10,14 @@
 
 import { createComponentLogger } from "$shared";
 import { injectable } from "inversify";
-import type { BuildSubMode, INavigationSyncService } from "../contracts/INavigationSyncService";
+import type { BuildSection, INavigationSyncService } from "../contracts/INavigationSyncService";
 
 @injectable()
 export class NavigationSyncService implements INavigationSyncService {
   private logger = createComponentLogger('BuildTab:NavigationSync');
 
   syncNavigationToBuildTab(buildTabState: any, navigationState: any): void {
-    const currentMode = navigationState.currentSubMode;
+    const currentMode = navigationState.currentSection;
     const buildTabCurrentMode = buildTabState.activeSubTab;
 
     this.logger.log("Navigation → BuildTab sync:", {
@@ -27,6 +27,12 @@ export class NavigationSyncService implements INavigationSyncService {
       isNavigatingBack: buildTabState.isNavigatingBack,
       isUpdatingFromToggle: buildTabState.isUpdatingFromToggle,
     });
+
+    // Skip if navigation is to a non-build section (e.g., "explore", "library")
+    const validBuildSections = ["construct", "generate", "animate", "share", "record"];
+    if (!validBuildSections.includes(currentMode)) {
+      return;
+    }
 
     // Skip if:
     // 1. Already in sync
@@ -43,9 +49,9 @@ export class NavigationSyncService implements INavigationSyncService {
     }
 
     // Validate tab access (guard against invalid navigation)
-    if (!this.validateTabAccess(currentMode as BuildSubMode, buildTabState.canAccessEditTab)) {
+    if (!this.validateTabAccess(currentMode as BuildSection, buildTabState.canAccessEditTab)) {
       console.warn(`🚫 Cannot access ${currentMode} tab without a sequence. Redirecting to construct.`);
-      navigationState.setCurrentSubMode(this.getFallbackTab());
+      navigationState.setCurrentSection(this.getFallbackTab());
       return;
     }
 
@@ -61,14 +67,14 @@ export class NavigationSyncService implements INavigationSyncService {
     }
 
     const buildTabCurrentMode = buildTabState.activeSubTab;
-    const navCurrentMode = navigationState.currentSubMode;
+    const navCurrentMode = navigationState.currentSection;
 
     if (buildTabCurrentMode && buildTabCurrentMode !== navCurrentMode) {
-      navigationState.setCurrentSubMode(buildTabCurrentMode);
+      navigationState.setCurrentSection(buildTabCurrentMode);
     }
   }
 
-  validateTabAccess(mode: BuildSubMode, canAccessEditTab: boolean): boolean {
+  validateTabAccess(mode: BuildSection, canAccessEditTab: boolean): boolean {
     // Construct and generate are always accessible
     if (mode === "construct" || mode === "generate") {
       return true;
@@ -79,7 +85,7 @@ export class NavigationSyncService implements INavigationSyncService {
     return canAccessEditTab;
   }
 
-  getFallbackTab(): BuildSubMode {
+  getFallbackTab(): BuildSection {
     return "construct";
   }
 }

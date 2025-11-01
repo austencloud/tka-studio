@@ -106,7 +106,7 @@ Testing HMR persistence functionality
     // Guard: Don't run until buildTabState is initialized
     if (!buildTabState) return;
 
-    const currentMode = navigationState.currentSubMode;
+    const currentMode = navigationState.currentSection;
     const buildTabCurrentMode = buildTabState.activeSubTab;
 
     logger.log("Navigation → BuildTab sync effect:", {
@@ -125,7 +125,7 @@ Testing HMR persistence functionality
       // Note: Edit is no longer a tab - it's handled via slide-out panel
       if ((currentMode === "animate" || currentMode === "share" || currentMode === "record") && !buildTabState.canAccessEditTab) {
         console.warn(`🚫 Cannot access ${currentMode} tab without a sequence. Redirecting to construct.`);
-        navigationState.setCurrentSubMode("construct");
+        navigationState.setCurrentSection("construct");
         return;
       }
 
@@ -145,10 +145,10 @@ Testing HMR persistence functionality
     if (buildTabState.isUpdatingFromToggle) return;
 
     const buildTabCurrentMode = buildTabState.activeSubTab;
-    const navCurrentMode = navigationState.currentSubMode;
+    const navCurrentMode = navigationState.currentSection;
 
     if (buildTabCurrentMode && buildTabCurrentMode !== navCurrentMode) {
-      navigationState.setCurrentSubMode(buildTabCurrentMode);
+      navigationState.setCurrentSection(buildTabCurrentMode);
     }
   });
 

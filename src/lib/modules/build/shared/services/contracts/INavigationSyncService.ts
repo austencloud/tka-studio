@@ -9,7 +9,7 @@
  * Extracted from BuildTab.svelte monolith to follow DI architecture.
  */
 
-export type BuildSubMode = "construct" | "generate" | "animate" | "share" | "record";
+export type BuildSection = "construct" | "generate" | "animate" | "share" | "record";
 
 export interface INavigationSyncService {
   /**
@@ -32,10 +32,10 @@ export interface INavigationSyncService {
    * @param canAccessEditTab Whether edit/export tabs are accessible
    * @returns Whether navigation to the tab should be allowed
    */
-  validateTabAccess(mode: BuildSubMode, canAccessEditTab: boolean): boolean;
+  validateTabAccess(mode: BuildSection, canAccessEditTab: boolean): boolean;
 
   /**
    * Get the fallback tab when access is denied
    */
-  getFallbackTab(): BuildSubMode;
+  getFallbackTab(): BuildSection;
 }

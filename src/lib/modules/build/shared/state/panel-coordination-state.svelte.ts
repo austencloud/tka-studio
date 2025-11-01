@@ -177,9 +177,11 @@ export function createPanelCoordinationState(): PanelCoordinationState {
       buttonPanelHeight = height;
     },
 
-    // Combined Height (tool + button panels)
+    // Combined Height (navigation bar + tool + button panels)
+    // Navigation bar is 64px (min-height from PrimaryNavigation.svelte)
     get combinedPanelHeight() {
-      return toolPanelHeight + buttonPanelHeight;
+      const navigationBarHeight = 64;
+      return navigationBarHeight + toolPanelHeight + buttonPanelHeight;
     },
 
     // Practice Mode

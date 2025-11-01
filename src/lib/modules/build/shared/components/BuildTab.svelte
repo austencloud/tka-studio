@@ -51,7 +51,6 @@
     SequenceActionsCoordinator,
     ShareCoordinator
   } from "./coordinators";
-  import LoadingOverlay from './LoadingOverlay.svelte';
 
   const logger = createComponentLogger('BuildTab');
 
@@ -85,7 +84,6 @@
   let shouldUseSideBySideLayout = $state<boolean>(false);
 
   // UI state
-  let isLoading = $state(false);
   let error = $state<string | null>(null);
   let servicesInitialized = $state<boolean>(false);
 
@@ -210,8 +208,6 @@
       return;
     }
 
-    isLoading = true;
-
     try {
       // Resolve all services
       services = ServiceInitializer.resolveServices();
@@ -267,8 +263,6 @@
       const errorMessage = err instanceof Error ? err.message : "Failed to initialize BuildTab";
       error = errorMessage;
       console.error("BuildTab: Initialization error:", err);
-    } finally {
-      isLoading = false;
     }
   });
 
@@ -349,9 +343,7 @@
   }
 </script>
 
-{#if isLoading}
-  <LoadingOverlay message="Initializing Build Tab..." />
-{:else if error}
+{#if error}
   <ErrorBanner message={error} onDismiss={clearError} />
 {:else if buildTabState && constructTabState && services}
   <div class="build-tab" class:side-by-side={shouldUseSideBySideLayout}>

@@ -141,7 +141,7 @@ export function createBuildTabState(
     isUpdatingFromToggle = true;
     setactiveToolPanelInternal(panel, true);
     // Also sync to navigation state directly
-    navigationState.setCurrentSubMode(panel);
+    navigationState.setCurrentSection(panel);
     // Reset flag after a microtask to allow sync effects to see the updated state
     setTimeout(() => {
       isUpdatingFromToggle = false;

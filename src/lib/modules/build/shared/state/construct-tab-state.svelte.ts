@@ -280,7 +280,7 @@ export function createConstructTabState(
               console.log(`🎬 ConstructTabState: Navigating to ${targetTab} after clear`);
               buildTabState.setactiveToolPanel(targetTab);
               // CRITICAL: Also update navigation state to prevent guard from triggering
-              navigationState.setCurrentSubMode(targetTab);
+              navigationState.setCurrentSection(targetTab);
             }
           })
           .catch((error: unknown) => {
