@@ -46,7 +46,10 @@
       "Bash(npx rimraf .svelte-kit)",
       "Bash(git log:*)",
       "Bash(npx playwright test:*)",
-      "SlashCommand(/commit)"
+      "SlashCommand(/commit)",
+      "Bash(node:*)",
+      "Bash(for file in static/images/arrows/static/from_radial/*.svg)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

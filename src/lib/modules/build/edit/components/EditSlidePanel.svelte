@@ -13,7 +13,6 @@ Features:
   import type { IDeviceDetector, IHapticFeedbackService } from "$shared";
   import { BottomSheet, resolve, TYPES } from "$shared";
   import { onDestroy, onMount } from 'svelte';
-  import { createEditSlidePanelState } from '../state/edit-slide-panel-state.svelte';
   import BatchEditLayout from './BatchEditLayout.svelte';
   import EditPanelLayout from './EditPanelLayout.svelte';
   import EditSlidePanelHeader from './EditSlidePanelHeader.svelte';
@@ -57,7 +56,9 @@ Features:
   // STATE
   // ============================================================================
 
-  const panelState = createEditSlidePanelState();
+  // Adjustment panel state
+  let isAdjustmentPanelOpen = $state(false);
+  let adjustedBeatData = $state<BeatData | null>(null);
 
   // Component refs
   let editPanelLayoutRef: EditPanelLayout | null = $state(null);
@@ -113,25 +114,6 @@ Features:
     onClose();
   }
 
-  // Touch gesture handlers for swipe-to-dismiss
-  function handleTouchStart(event: TouchEvent) {
-    panelState.startGesture(event);
-  }
-
-  function handleTouchMove(event: TouchEvent) {
-    const direction = shouldUseBottomPlacement() ? 'vertical' : 'horizontal';
-    panelState.updateGesture(event, direction);
-  }
-
-  function handleTouchEnd() {
-    const direction = shouldUseBottomPlacement() ? 'vertical' : 'horizontal';
-    panelState.endGesture({
-      direction,
-      threshold: 100,
-      onDismiss: onClose,
-      onHaptic: (type) => hapticService?.trigger(type),
-    });
-  }
 
   // Handle remove beat click
   function handleRemoveBeat() {
@@ -144,13 +126,14 @@ Features:
   // Handle adjust arrows click
   function handleAdjustArrows() {
     hapticService?.trigger('selection');
-    panelState.openAdjustmentPanel(selectedBeatData);
+    adjustedBeatData = selectedBeatData;
+    isAdjustmentPanelOpen = true;
   }
 
   // Handle beat data updates from arrow adjustments
   function handleBeatDataUpdate(updatedBeatData: BeatData) {
     console.log('[EditSlidePanel] Beat data updated with manual adjustments:', updatedBeatData);
-    panelState.updateAdjustedBeatData(updatedBeatData);
+    adjustedBeatData = updatedBeatData;
   }
 
   // ============================================================================
@@ -195,13 +178,9 @@ Features:
   backdropClass="edit-panel-backdrop"
 >
   <div
-    bind:this={panelState.panelElement}
     class="edit-panel"
     class:mobile={shouldUseBottomPlacement()}
     style={panelHeightStyle()}
-    ontouchstart={handleTouchStart}
-    ontouchmove={handleTouchMove}
-    ontouchend={handleTouchEnd}
   >
     <EditSlidePanelHeader
       {isBatchMode}
@@ -236,9 +215,12 @@ Features:
 
 <!-- Pictograph Adjustment Editor Panel -->
 <PictographAdjustmentEditorPanel
-  isOpen={panelState.isAdjustmentPanelOpen}
-  onClose={() => panelState.closeAdjustmentPanel()}
-  selectedBeatData={panelState.adjustedBeatData || selectedBeatData}
+  isOpen={isAdjustmentPanelOpen}
+  onClose={() => {
+    isAdjustmentPanelOpen = false;
+    adjustedBeatData = null;
+  }}
+  selectedBeatData={adjustedBeatData || selectedBeatData}
   onBeatDataUpdate={handleBeatDataUpdate}
 />
 

@@ -95,7 +95,7 @@ function handleItemSelection() {
 **Components using `selection`:** (ALL interactive components)
 
 - **Buttons**: PlayButton, UndoButton, ShareButton, BackButton, SequenceActionsButton, ClearSequenceButton, SaveSequenceButton, RemoveBeatButton, FullscreenButton
-- **Navigation**: HamburgerMenuButton, ModuleList, SubModeTabs, BuildTabHeader
+- **Navigation**: HamburgerMenuButton, ModuleList,SectionTabs, BuildTabHeader
 - **Modals/Sheets**: Settings button, SettingsSheet, SharePanel, AnimationPanel
 - **Selections**: CAP cards, Start position picker, Option selections
 - **All other interactive elements**
