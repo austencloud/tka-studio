@@ -47,7 +47,7 @@ This directory contains platform-specific screenshots for the PWA installation g
 1. **Annotations:** Add arrows, highlights, or circles to key UI elements
 2. **Quality:** Use PNG format for clarity
 3. **Consistency:** Use the same device size for all screenshots in a category
-4. **Branding:** Ensure TKA is loaded in each screenshot
+4. **Branding:** Ensure TKA Studio is loaded in each screenshot
 5. **Compression:** Optimize images (aim for <200KB each)
 
 ### Annotation Tools

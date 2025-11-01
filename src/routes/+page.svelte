@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-  <title>TKA - The Kinetic Constructor</title>
+  <title>TKA Studio - Flow Arts Choreography Tool</title>
 </svelte:head>
 
 <MainApplication />

@@ -54,7 +54,7 @@
 <nav class="landing-navbar">
   <div class="logo-container">
     <h1 class="logo-text">TKA</h1>
-    <span class="logo-subtitle">The Kinetic Alphabet</span>
+    <span class="logo-subtitle">TKA Studio</span>
   </div>
 
   <div class="nav-links">

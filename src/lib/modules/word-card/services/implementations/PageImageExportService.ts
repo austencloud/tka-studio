@@ -6,20 +6,20 @@
  */
 
 import type {
-  ExportResult,
-  Html2CanvasFunction,
-  WindowWithHtml2Canvas,
+    ExportResult,
+    Html2CanvasFunction,
+    WindowWithHtml2Canvas,
 } from "$shared";
 import { injectable } from "inversify";
 
 import type {
-  ExportProgress,
-  SequenceExportOptions,
+    ExportProgress,
+    SequenceExportOptions,
 } from "../../../../shared/render";
 import type { Page } from "../../domain/models/PageLayout";
 import type {
-  BatchExportResult,
-  WordCardExportOptions,
+    BatchExportResult,
+    WordCardExportOptions,
 } from "../../domain/models/word-card-export";
 import type { IPageImageExportService } from "../contracts";
 
@@ -283,7 +283,7 @@ export class PageImageExportService implements IPageImageExportService {
       blueVisible: true,
 
       // User information
-      userName: "TKA User",
+      userName: "TKA Studio User",
       exportDate: new Date().toISOString().split("T")[0],
       notes: "Exported from TKA",
 

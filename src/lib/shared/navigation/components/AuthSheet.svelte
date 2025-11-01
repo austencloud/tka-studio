@@ -31,10 +31,18 @@
   let authMode = $state<"signin" | "signup">("signin");
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(
-      TYPES.IHapticFeedbackService
-    );
-    authService = resolve<IAuthService>(TYPES.IAuthService);
+    console.log("🎬 [AuthSheet] onMount - resolving services...");
+    try {
+      hapticService = resolve<IHapticFeedbackService>(
+        TYPES.IHapticFeedbackService
+      );
+      console.log("✅ [AuthSheet] hapticService resolved:", hapticService !== null);
+
+      authService = resolve<IAuthService>(TYPES.IAuthService);
+      console.log("✅ [AuthSheet] authService resolved:", authService !== null);
+    } catch (error) {
+      console.error("❌ [AuthSheet] Failed to resolve services:", error);
+    }
   });
 
   // Auto-close when user becomes authenticated
@@ -54,12 +62,25 @@
   }
 
   async function handleGoogleAuth() {
+    console.log("🖱️ [AuthSheet] Google button clicked");
+    console.log("🔍 [AuthSheet] authService available?", authService !== null);
+
     hapticService?.trigger("selection");
+
+    if (!authService) {
+      console.error("❌ [AuthSheet] authService is null! Cannot sign in.");
+      alert("Authentication service not ready. Please refresh the page.");
+      return;
+    }
+
     try {
-      await authService?.signInWithGoogle();
+      console.log("🔐 [AuthSheet] Calling authService.signInWithGoogle()...");
+      await authService.signInWithGoogle();
+      console.log("✅ [AuthSheet] signInWithGoogle() completed");
     } catch (error: any) {
-      console.error("❌ Google auth failed:", error);
+      console.error("❌ [AuthSheet] Google auth failed:", error);
       hapticService?.trigger("error");
+      alert(`Google sign-in failed: ${error.message}`);
     }
   }
 

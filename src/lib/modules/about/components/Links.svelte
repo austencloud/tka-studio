@@ -75,7 +75,7 @@
       links: [
         {
           title: "Contact Us",
-          description: "Get in touch with the TKA team",
+          description: "Get in touch with the creator",
           url: "/contact",
           type: "internal",
         },
@@ -155,10 +155,10 @@
 </script>
 
 <svelte:head>
-  <title>Links & Resources - The Kinetic Alphabet</title>
+  <title>Links & Resources - TKA Studio</title>
   <meta
     name="description"
-    content="Discover resources, tools, and community links for The Kinetic Alphabet and flow arts education."
+    content="Discover resources, tools, and community links for TKA Studio and flow arts education."
   />
 </svelte:head>
 

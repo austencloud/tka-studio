@@ -19,6 +19,7 @@ import {
   enableIndexedDbPersistence,
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
+import { getAnalytics, type Analytics, isSupported } from "firebase/analytics";
 import {
   PUBLIC_FIREBASE_API_KEY,
   PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -26,6 +27,7 @@ import {
   PUBLIC_FIREBASE_STORAGE_BUCKET,
   PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   PUBLIC_FIREBASE_APP_ID,
+  PUBLIC_FIREBASE_MEASUREMENT_ID,
 } from "$env/static/public";
 
 // Validate environment variables
@@ -49,6 +51,7 @@ const firebaseConfig = {
   storageBucket: PUBLIC_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
   appId: PUBLIC_FIREBASE_APP_ID,
+  measurementId: PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 /**
@@ -74,6 +77,29 @@ export const auth: Auth = getAuth(app);
  * Use this for all database operations (gamification, user data, etc.)
  */
 export const firestore: Firestore = getFirestore(app);
+
+/**
+ * Firebase Analytics instance
+ * Only initialized in browser environments where analytics is supported
+ */
+let analytics: Analytics | null = null;
+
+if (typeof window !== "undefined") {
+  isSupported()
+    .then((supported) => {
+      if (supported) {
+        analytics = getAnalytics(app);
+        console.log("✅ [Firebase] Analytics initialized");
+      } else {
+        console.warn("⚠️ [Firebase] Analytics not supported in this environment");
+      }
+    })
+    .catch((error) => {
+      console.error("❌ [Firebase] Failed to initialize analytics:", error);
+    });
+}
+
+export { analytics };
 
 /**
  * Configure Firebase Auth persistence

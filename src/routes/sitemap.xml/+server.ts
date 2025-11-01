@@ -8,13 +8,13 @@ const pages = [
     url: "",
     priority: "1.0",
     changefreq: "weekly",
-    description: "TKA - The Kinetic Constructor | Home",
+    description: "TKA Studio | Home",
   },
   {
     url: "about",
     priority: "0.9",
     changefreq: "monthly",
-    description: "About TKA - Revolutionary Flow Arts Tool",
+    description: "About TKA Studio - Revolutionary Flow Arts Tool",
   },
   {
     url: "constructor",
@@ -46,7 +46,7 @@ const pages = [
     url: "getting-started",
     priority: "0.7",
     changefreq: "monthly",
-    description: "Getting Started with TKA - Tutorial",
+    description: "Getting Started with TKA Studio - Tutorial",
   },
   {
     url: "word-card",

@@ -122,7 +122,7 @@ export class PDFService implements IPDFService {
 
       this.documentInfo = {
         title: (info?.Title as string) || "Level 1 Guide",
-        author: (info?.Author as string) || "TKA",
+        author: (info?.Author as string) || "TKA Studio",
         numPages: this.document.numPages,
       };
 
@@ -131,7 +131,7 @@ export class PDFService implements IPDFService {
         await this.cacheService.cacheMetadata(
           url,
           this.documentInfo.title || "Level 1 Guide",
-          this.documentInfo.author || "TKA",
+          this.documentInfo.author || "TKA Studio",
           this.documentInfo.numPages
         );
       }

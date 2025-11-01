@@ -25,7 +25,6 @@ export const SMALL_UNILATERAL_PROPS = [
   "triad", // ← TRIAD IS UNILATERAL!
   "ukulele",
   "triquetra",
-  "triquetra2",
 ] as const;
 
 /**

@@ -2,8 +2,12 @@
   PrivacySheet.svelte - Privacy Policy Bottom Sheet
 -->
 <script lang="ts">
-  import { BottomSheet } from "$shared";
-  import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
+  import {
+    BottomSheet,
+    resolve,
+    TYPES,
+    type IHapticFeedbackService,
+  } from "$shared";
   import { onMount } from "svelte";
 
   // Props
@@ -37,7 +41,9 @@
   <div class="privacy-sheet__container">
     <!-- Header -->
     <header class="privacy-sheet__header">
-      <h2 id="privacy-sheet-title" class="privacy-sheet__title">Privacy Policy</h2>
+      <h2 id="privacy-sheet-title" class="privacy-sheet__title">
+        Privacy Policy
+      </h2>
       <button
         class="privacy-sheet__close"
         onclick={handleClose}
@@ -49,18 +55,33 @@
 
     <!-- Content -->
     <div class="privacy-sheet__content">
-      <p class="last-updated">Last Updated: {new Date().toLocaleDateString()}</p>
+      <p class="last-updated">
+        Last Updated: {new Date().toLocaleDateString()}
+      </p>
 
       <section>
         <h3>1. Information We Collect</h3>
         <p>
-          When you use TKA, we collect information that you provide directly to us, including:
+          When you use TKA, we collect information that you provide directly to
+          us, including:
         </p>
         <ul>
-          <li><strong>Account Information:</strong> Name, email address, and profile information</li>
-          <li><strong>User Content:</strong> Sequences, animations, and other content you create</li>
-          <li><strong>Usage Data:</strong> Information about how you interact with the application</li>
-          <li><strong>Authentication Data:</strong> When you sign in via Facebook or Google, we receive basic profile information</li>
+          <li>
+            <strong>Account Information:</strong> Name, email address, and profile
+            information
+          </li>
+          <li>
+            <strong>User Content:</strong> Sequences, animations, and other content
+            you create
+          </li>
+          <li>
+            <strong>Usage Data:</strong> Information about how you interact with
+            the application
+          </li>
+          <li>
+            <strong>Authentication Data:</strong> When you sign in via Facebook or
+            Google, we receive basic profile information
+          </li>
         </ul>
       </section>
 
@@ -79,36 +100,53 @@
       <section>
         <h3>3. Information Sharing</h3>
         <p>
-          We do not sell your personal information. We may share your information only in the following circumstances:
+          We do not sell your personal information. We may share your
+          information only in the following circumstances:
         </p>
         <ul>
-          <li><strong>With Your Consent:</strong> When you choose to share content publicly</li>
-          <li><strong>Service Providers:</strong> With vendors who perform services on our behalf (e.g., Firebase for authentication and database)</li>
-          <li><strong>Legal Requirements:</strong> When required by law or to protect rights and safety</li>
+          <li>
+            <strong>With Your Consent:</strong> When you choose to share content
+            publicly
+          </li>
+          <li>
+            <strong>Service Providers:</strong> With vendors who perform services
+            on our behalf (e.g., Firebase for authentication and database)
+          </li>
+          <li>
+            <strong>Legal Requirements:</strong> When required by law or to protect
+            rights and safety
+          </li>
         </ul>
       </section>
 
       <section>
         <h3>4. Data Storage and Security</h3>
         <p>
-          Your data is stored securely using Firebase services, which employ industry-standard security measures.
-          We use HTTPS encryption for all data transmission and implement authentication measures to protect your account.
+          Your data is stored securely using Firebase services, which employ
+          industry-standard security measures. We use HTTPS encryption for all
+          data transmission and implement authentication measures to protect
+          your account.
         </p>
       </section>
 
       <section>
         <h3>5. Third-Party Services</h3>
-        <p>
-          TKA uses the following third-party services:
-        </p>
+        <p>TKA uses the following third-party services:</p>
         <ul>
-          <li><strong>Firebase Authentication:</strong> For secure user authentication</li>
+          <li>
+            <strong>Firebase Authentication:</strong> For secure user authentication
+          </li>
           <li><strong>Firebase Firestore:</strong> For data storage</li>
-          <li><strong>Facebook Login:</strong> Optional authentication method</li>
-          <li><strong>Google Sign-In:</strong> Optional authentication method</li>
+          <li>
+            <strong>Facebook Login:</strong> Optional authentication method
+          </li>
+          <li>
+            <strong>Google Sign-In:</strong> Optional authentication method
+          </li>
         </ul>
         <p>
-          These services have their own privacy policies governing their use of your information.
+          These services have their own privacy policies governing their use of
+          your information.
         </p>
       </section>
 
@@ -117,7 +155,9 @@
         <p>You have the right to:</p>
         <ul>
           <li>Access your personal information</li>
-          <li>Update or correct your information through your account settings</li>
+          <li>
+            Update or correct your information through your account settings
+          </li>
           <li>Delete your account and associated data</li>
           <li>Export your data (sequences and content you've created)</li>
           <li>Opt out of certain data collection practices</li>
@@ -126,48 +166,51 @@
 
       <section>
         <h3>7. Cookies and Local Storage</h3>
-        <p>
-          We use browser local storage and cookies to:
-        </p>
+        <p>We use browser local storage and cookies to:</p>
         <ul>
           <li>Keep you logged in</li>
           <li>Remember your preferences and settings</li>
           <li>Improve application performance</li>
         </ul>
         <p>
-          You can manage these through your browser settings, but some features may not work properly if disabled.
+          You can manage these through your browser settings, but some features
+          may not work properly if disabled.
         </p>
       </section>
 
       <section>
         <h3>8. Children's Privacy</h3>
         <p>
-          TKA is designed for general audiences. We do not knowingly collect personal information from children under 13.
-          If you believe we have collected information from a child under 13, please contact us immediately.
+          TKA Studio is designed for general audiences. We do not knowingly
+          collect personal information from children under 13. If you believe we
+          have collected information from a child under 13, please contact us
+          immediately.
         </p>
       </section>
 
       <section>
         <h3>9. Data Retention</h3>
         <p>
-          We retain your information for as long as your account is active or as needed to provide you services.
-          You may request deletion of your account at any time through your account settings.
+          We retain your information for as long as your account is active or as
+          needed to provide you services. You may request deletion of your
+          account at any time through your account settings.
         </p>
       </section>
 
       <section>
         <h3>10. Changes to This Policy</h3>
         <p>
-          We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new policy
-          within the application and updating the "Last Updated" date.
+          We may update this Privacy Policy from time to time. We will notify
+          you of any changes by posting the new policy within the application
+          and updating the "Last Updated" date.
         </p>
       </section>
 
       <section>
         <h3>11. Contact Us</h3>
         <p>
-          If you have questions about this Privacy Policy or our data practices, please contact us through
-          the application's support channels.
+          If you have questions about this Privacy Policy or our data practices,
+          please contact us through the application's support channels.
         </p>
       </section>
     </div>
@@ -322,7 +365,8 @@
       font-size: 16px;
     }
 
-    p, ul {
+    p,
+    ul {
       font-size: 14px;
     }
   }

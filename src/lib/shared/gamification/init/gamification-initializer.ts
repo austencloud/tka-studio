@@ -30,26 +30,36 @@ export async function initializeGamification(): Promise<void> {
       streakService.initialize(),
     ]);
 
-    // Record daily activity (for streak tracking)
-    const streakResult = await streakService.recordDailyActivity();
+    // Only record daily activity if user is logged in
+    const { auth } = await import("../../auth/firebase");
+    const user = auth.currentUser;
 
-    if (streakResult.streakIncremented) {
-      console.log(`🔥 Streak: ${streakResult.currentStreak} days!`);
+    if (user) {
+      console.log("👤 User logged in, tracking daily activity...");
 
-      // Award daily login XP
-      await achievementService.trackAction("daily_login");
+      // Record daily activity (for streak tracking)
+      const streakResult = await streakService.recordDailyActivity();
 
-      // Check for streak milestone achievements
-      if (
-        streakResult.currentStreak === 3 ||
-        streakResult.currentStreak === 7 ||
-        streakResult.currentStreak === 30 ||
-        streakResult.currentStreak === 100
-      ) {
-        await achievementService.trackAction("daily_login", {
-          currentStreak: streakResult.currentStreak,
-        });
+      if (streakResult.streakIncremented) {
+        console.log(`🔥 Streak: ${streakResult.currentStreak} days!`);
+
+        // Award daily login XP
+        await achievementService.trackAction("daily_login");
+
+        // Check for streak milestone achievements
+        if (
+          streakResult.currentStreak === 3 ||
+          streakResult.currentStreak === 7 ||
+          streakResult.currentStreak === 30 ||
+          streakResult.currentStreak === 100
+        ) {
+          await achievementService.trackAction("daily_login", {
+            currentStreak: streakResult.currentStreak,
+          });
+        }
       }
+    } else {
+      console.log("👤 No user logged in, skipping streak tracking");
     }
 
     console.log("✅ Gamification system initialized successfully");

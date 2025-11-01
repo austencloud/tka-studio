@@ -16,7 +16,7 @@ import {
 } from "../../../shared/domain/enums/pictograph-enums";
 import type { MotionData } from "../../../shared/domain/models/MotionData";
 import type { PictographData } from "../../../shared/domain/models/PictographData";
-import { getBetaOffsetSize } from "../../domain/enums/PropClassification";
+import { getBetaOffsetSize, isUnilateralProp } from "../../domain/enums/PropClassification";
 import { createPropPlacementFromPosition } from "../../domain/factories/createPropPlacementData";
 import type { PropPlacementData } from "../../domain/models/PropPlacementData";
 import type { IBetaDetectionService } from "../contracts/IBetaDetectionService";
@@ -132,9 +132,21 @@ export class PropPlacementService implements IPropPlacementService {
     const hybridOrientation =
       (redIsRadial && blueIsNonRadial) || (redIsNonRadial && blueIsRadial);
 
-
-    // Skip beta offset ONLY when hybrid (one radial, one non-radial)
+    // Skip beta offset when hybrid (one radial, one non-radial)
     if (hybridOrientation) {
+      return { x: 0, y: 0 };
+    }
+
+    // Skip beta offset for UNILATERAL props when both props have same orientation TYPE
+    // but DIFFERENT specific orientations (OUT/IN or CLOCK/COUNTER)
+    // Bilateral props always get the offset (unless hybrid)
+    const bothRadial = redIsRadial && blueIsRadial;
+    const bothNonRadial = redIsNonRadial && blueIsNonRadial;
+    const sameTypeButDifferentOrientation =
+      (bothRadial && redEndOri !== blueEndOri) ||
+      (bothNonRadial && redEndOri !== blueEndOri);
+
+    if (sameTypeButDifferentOrientation && isUnilateralProp(motionData.propType)) {
       return { x: 0, y: 0 };
     }
 

@@ -1,12 +1,12 @@
 /**
- * The Kinetic Alphabet - Complete Learning Path
+ * TKA Studio - Complete Learning Path for The Kinetic Alphabet
  *
  * This file defines the complete progression of concepts from the TKA Level 1 curriculum.
  * Concepts are organized into categories and unlock sequentially to guide learners
  * through a logical progression from foundation to advanced techniques.
  */
 
-import type { LearnConcept, ConceptCategory } from "./types";
+import type { ConceptCategory, LearnConcept } from "./types";
 
 /**
  * Complete TKA Learning Path - 28 Concepts

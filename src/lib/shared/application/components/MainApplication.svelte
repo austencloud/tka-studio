@@ -8,6 +8,7 @@
   } from "../../background";
   import type { IDeviceDetector } from "../../device";
   import { ErrorScreen } from "../../foundation";
+  import AchievementNotificationToast from "../../gamification/components/AchievementNotificationToast.svelte";
   import {
     ensureContainerInitialized,
     isContainerReady,
@@ -15,8 +16,6 @@
   } from "../../inversify";
   import { TYPES } from "../../inversify/types";
   import { ThemeService } from "../../theme";
-  import HMRTest from "../../dev/HMRTest.svelte";
-  import AchievementNotificationToast from "../../gamification/components/AchievementNotificationToast.svelte";
 
   import type { ISettingsService } from "$shared";
   import type { Container } from "inversify";
@@ -181,11 +180,16 @@
 
       // Initialize gamification system
       try {
-        const { initializeGamification } = await import("../../gamification/init/gamification-initializer");
+        const { initializeGamification } = await import(
+          "../../gamification/init/gamification-initializer"
+        );
         await initializeGamification();
         console.log("✅ Gamification initialized");
       } catch (gamError) {
-        console.error("⚠️ Gamification failed to initialize (non-blocking):", gamError);
+        console.error(
+          "⚠️ Gamification failed to initialize (non-blocking):",
+          gamError
+        );
       }
 
       setInitializationState(true, false, null, 0);
@@ -262,10 +266,10 @@
 </script>
 
 <svelte:head>
-  <title>TKA Constructor - The Kinetic Alphabet</title>
+  <title>TKA Studio - Flow Arts Choreography Tool</title>
   <meta
     name="description"
-    content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for staffs, fans, and other flow arts. Create, learn, and share movement sequences."
+    content="TKA Studio is a revolutionary flow arts choreography toolbox for staffs, fans, and other flow arts. Create, learn, and share movement sequences using The Kinetic Alphabet notation system."
   />
 </svelte:head>
 

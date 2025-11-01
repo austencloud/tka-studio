@@ -1,14 +1,18 @@
 {
-  "name": "The Kinetic Constructor",
-  "short_name": "KineticConst",
-  "description": "Web application for kinetic construction",
+  "name": "TKA Studio",
+  "short_name": "TKA Studio",
+  "description": "Create visual movement sequences for flow arts - digital sheet music for dancers",
   "theme_color": "#0b1d2a",
   "background_color": "#0b1d2a",
-  "display": "fullscreen",
-  "display_override": ["fullscreen", "standalone", "minimal-ui"],
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
   "orientation": "any",
   "scope": "/",
   "start_url": "/",
+  "id": "tka-kinetic-alphabet",
+  "categories": ["entertainment", "education", "productivity"],
+  "lang": "en-US",
+  "dir": "ltr",
   "icons": [
     {
       "src": "pwa/icon-72x72.png",

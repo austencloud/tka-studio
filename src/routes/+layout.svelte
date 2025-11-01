@@ -66,11 +66,11 @@
     // REMOVED: checkAndClearIfBroken() - it was causing infinite reload loops in mobile emulation
     // Use ?clear-cache URL parameter or Ctrl+Shift+Delete instead
 
-    // Initialize Firebase Auth listener
-    authStore.initialize();
-
     // Async initialization
     (async () => {
+      // Initialize Firebase Auth listener (handles redirect result)
+      await authStore.initialize();
+
       try {
         // Dynamically import container only on client-side to avoid SSR issues
         const { getContainer, resetContainer } = await import("$shared");

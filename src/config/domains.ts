@@ -47,7 +47,7 @@ export function getRedirectURL(currentURL: string): string {
  * Domain-specific meta tags
  */
 export const SEO_CONFIG = {
-  siteName: "TKA - The Kinetic Alphabet",
+  siteName: "TKA Studio",
   description:
     "Revolutionary browser-based tool for creating flow arts sequences",
   keywords: "flow arts, notation, vtg, tka",

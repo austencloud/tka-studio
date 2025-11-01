@@ -22,12 +22,12 @@ export const resources: Resource[] = [
   {
     name: "Vulcan Tech Gospel (VTG)",
     description:
-      "Foundational theory for poi tech, poi flowers, and transition theory developed by Noel Yee.",
+      "📚 HISTORICAL FOUNDATION - Poi theory developed by Noel Yee that TKA was built from. NOTE: TKA adapted VTG concepts for STATIC PROPS (staff, fans, etc.) - poi itself is NOT supported.",
     url: "https://noelyee.com/instruction/vulcan-tech-gospel/",
     category: "active-learning",
     level: "intermediate",
     value:
-      "Essential theoretical framework that forms the backbone of modern technical poi spinning.",
+      "The theoretical framework for poi spinning that inspired TKA's movement classification system.",
     status: "active",
     lastUpdated: "2023",
     hasLandingPage: true,
@@ -37,12 +37,12 @@ export const resources: Resource[] = [
   {
     name: "Charlie Cushing's 9 Square Theory",
     description:
-      "Advanced framework for connecting unit circles in technical poi, developed by former helicopter pilot Charlie Cushing.",
+      "📚 POI THEORY REFERENCE - Advanced framework for connecting unit circles in technical poi, developed by former helicopter pilot Charlie Cushing. NOTE: TKA is a STATIC PROP system and does NOT support poi.",
     url: "https://www.spinmorepoi.com/advanced/",
     category: "active-learning",
     level: "advanced",
     value:
-      "Revolutionary approach to understanding poi transitions and spatial relationships.",
+      "Advanced poi theory building on VTG concepts (related to TKA's theoretical foundations).",
     status: "active",
     lastUpdated: "2023",
     hasLandingPage: true,
@@ -282,11 +282,11 @@ export function getLevelDisplayName(level: string): string {
 export function getKeywordsForResource(resourceName: string): string {
   switch (resourceName) {
     case "vulcan-tech-gospel":
-      return "Vulcan Tech Gospel, VTG, poi theory, Noel Yee, poi flowers, transition theory, technical poi, flow arts theory";
+      return "Vulcan Tech Gospel, VTG, poi theory, Noel Yee, poi flowers, transition theory, technical poi, flow arts theory, EXTERNAL REFERENCE, NOT TKA";
     case "charlie-cushing-9-square-theory":
-      return "9 square theory, Charlie Cushing, poi theory, unit circles, technical poi, helicopter pilot, LanternSmith, advanced poi, spatial relationships";
+      return "9 square theory, Charlie Cushing, poi theory, unit circles, technical poi, helicopter pilot, LanternSmith, advanced poi, spatial relationships, EXTERNAL REFERENCE, NOT TKA";
     default:
-      return "flow arts, poi, theory, tutorial";
+      return "flow arts, theory, tutorial";
   }
 }
 

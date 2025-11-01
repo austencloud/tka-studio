@@ -38,10 +38,12 @@ TKA is a **systematic notation system for flow arts** (staff, hoop, clubc, etc.)
 
 ### Technical Terminology
 
-- **Props** - Physical objects being manipulated (staff, triad, etc.)
+- **Props** - Physical STATIC objects being manipulated (staff, triad, fan, buugeng, etc.)
+  - NOTE: TKA is a STATIC PROP system - dynamic/spinning props like poi are NOT supported
+  - HISTORICAL NOTE: TKA was built from VTG (Vulcan Tech Gospel) poi theory, adapting its concepts for static props
 - **Orientations** - Directional states and rotations
 - **CAP (Continuous Assembly Patterns)** - Advanced movement constraint system
-- **VTG (Vulcan Tech Gospel)** - Specific poi technique methodology
+- **VTG Glyphs** - Movement pattern indicators (Split Same/Opposite, Together Same/Opposite, Quarter Same/Opposite) adapted from poi theory
 
 **CRITICAL**: Understanding these domain concepts is essential for working on any TKA feature. The codebase contains complex algorithms for position calculations, arrow placements, and movement validations.
 

@@ -1,7 +1,7 @@
 <!-- Features Section -->
 <section class="features">
   <div class="container">
-    <h2>The Kinetic Alphabet Features</h2>
+    <h2>TKA Studio Features</h2>
     <div class="features-grid">
       <div class="feature-card">
         <div class="feature-icon">📚</div>
@@ -25,8 +25,8 @@
         <div class="feature-icon">🔧</div>
         <h3>Digital Tools</h3>
         <p>
-          The Kinetic Constructor enables visualization, creation, and sharing
-          of choreographic sequences.
+          TKA Studio enables visualization, creation, and sharing of
+          choreographic sequences.
         </p>
       </div>
 

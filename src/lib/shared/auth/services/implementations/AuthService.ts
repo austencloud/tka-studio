@@ -35,12 +35,22 @@ export class AuthService implements IAuthService {
       // Set persistence first
       await this.setPersistence();
 
+      // Remove any query parameters (like ?sheet=auth) before redirect
+      // This ensures Firebase can properly capture the redirect result
+      if (typeof window !== "undefined" && window.location.search) {
+        console.log("🔐 [google] Cleaning URL before redirect...", window.location.href);
+        window.history.replaceState({}, "", window.location.pathname);
+        console.log("🔐 [google] URL after cleaning:", window.location.href);
+        // Small delay to ensure history state is updated
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
       // Create Google provider
       const provider = new GoogleAuthProvider();
       provider.addScope("email");
       provider.addScope("profile");
 
-      console.log("🔐 [google] Redirecting to Google sign-in...");
+      console.log("🔐 [google] Redirecting to Google sign-in from:", window.location.href);
       await signInWithRedirect(auth, provider);
     } catch (error: any) {
       console.error("❌ [google] Sign-in error:", error);
@@ -54,6 +64,13 @@ export class AuthService implements IAuthService {
     try {
       // Set persistence first
       await this.setPersistence();
+
+      // Remove any query parameters (like ?sheet=auth) before redirect
+      // This ensures Firebase can properly capture the redirect result
+      if (typeof window !== "undefined" && window.location.search) {
+        console.log("🔐 [facebook] Cleaning URL before redirect...");
+        window.history.replaceState({}, "", window.location.pathname);
+      }
 
       // Create Facebook provider
       const provider = new FacebookAuthProvider();

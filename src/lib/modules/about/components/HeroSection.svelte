@@ -11,7 +11,7 @@
 <!-- Hero Section -->
 <section class="hero" class:visible={isVisible}>
   <div class="hero-content">
-    <h1 class="hero-title">About The Kinetic Alphabet</h1>
+    <h1 class="hero-title">About TKA Studio</h1>
     <p class="hero-subtitle">A movement notation system for flow arts</p>
   </div>
 </section>

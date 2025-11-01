@@ -1,14 +1,14 @@
 <!--
   Tab Persistence Example
-  
-  This shows you how to implement tab persistence in your actual TKA app.
+
+  This shows you how to implement tab persistence in your actual TKA Studio app.
   This is the FIRST thing you should implement - it's simple and immediately useful.
 -->
 
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { resolve, TYPES } from "$shared";
   import type { IPersistenceService, TabId } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
 
   // ============================================================================
   // SERVICE INJECTION

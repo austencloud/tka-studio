@@ -1,6 +1,6 @@
-# TKA Web Application
+# TKA Studio
 
-**The Kinetic Alphabet** - Browser-based movement notation software for creating visual "pictographs" showing dance and flow art sequences.
+**TKA Studio** - Browser-based movement notation software for creating visual "pictographs" showing dance and flow art sequences.
 
 ## Quick Start
 
@@ -14,11 +14,11 @@ npm run dev
 # Open browser to http://localhost:5173/
 ```
 
-## What is TKA?
+## What is TKA Studio?
 
-TKA (The Kinetic Alphabet) is digital "sheet music" for dancers and flow artists. It creates visual diagrams showing movement sequences with:
+TKA Studio is digital "sheet music" for dancers and flow artists, built on The Kinetic Alphabet notation system. It creates visual diagrams showing movement sequences with:
 
-- **Props** (fans, poi, staff, etc.)
+- **Props** (staff, triad, etc.) - Physical objects being manipulated
 - **Grid positions** (where props are located)
 - **Arrows** (direction of movement)
 - **Timing** (beat-by-beat sequences)

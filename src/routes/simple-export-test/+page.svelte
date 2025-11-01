@@ -125,7 +125,7 @@
   <div class="instructions">
     <h2>What this test does:</h2>
     <ol>
-      <li>Opens the main TKA app in a new window</li>
+      <li>Opens the main TKA Studio app in a new window</li>
       <li>Waits for it to load and create a sequence</li>
       <li>Grabs the SVG directly from the BeatGrid</li>
       <li>Converts it to a 950×950px canvas</li>

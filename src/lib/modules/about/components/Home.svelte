@@ -16,10 +16,10 @@
 </script>
 
 <svelte:head>
-  <title>The Kinetic Alphabet - Flow Arts Choreography Toolbox</title>
+  <title>TKA Studio - Flow Arts Choreography Toolbox</title>
   <meta
     name="description"
-    content="The Kinetic Alphabet is a revolutionary flow arts choreography toolbox for poi, staff, fans, and other flow arts. Learn, create, and share movement sequences."
+    content="TKA Studio is a revolutionary flow arts choreography toolbox for clubs, staff, fans, and other flow arts. Learn, create, and share movement sequences using The Kinetic Alphabet notation system."
   />
 </svelte:head>
 
@@ -27,14 +27,14 @@
   <!-- Hero Section with Flow Arts Background -->
   <section class="hero" class:visible={isVisible}>
     <div class="hero-content">
-      <h1 class="hero-title">The Kinetic Alphabet</h1>
+      <h1 class="hero-title">TKA Studio</h1>
       <p class="hero-subtitle">
         A Revolutionary Flow Arts Choreography Toolbox
       </p>
       <p class="hero-description">
         A systematic approach to flow arts that provides structured methods for
-        learning, creating, and sharing movement sequences. Supports poi, staff,
-        fans, and other flow arts.
+        learning, creating, and sharing movement sequences. Supports clubs,
+        staff, fans, and other flow arts.
       </p>
 
       <div class="cta-group">
@@ -62,7 +62,7 @@
   <!-- Features Section -->
   <section class="features">
     <div class="container">
-      <h2>The Kinetic Alphabet Features</h2>
+      <h2>TKA Studio Features</h2>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">📚</div>
@@ -86,8 +86,8 @@
           <div class="feature-icon">🔧</div>
           <h3>Digital Tools</h3>
           <p>
-            The Kinetic Constructor enables visualization, creation, and sharing
-            of choreographic sequences.
+            TKA Studio enables visualization, creation, and sharing of
+            choreographic sequences.
           </p>
         </div>
 

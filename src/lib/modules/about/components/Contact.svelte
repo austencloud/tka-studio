@@ -51,10 +51,10 @@
 </script>
 
 <svelte:head>
-  <title>Contact - The Kinetic Alphabet</title>
+  <title>Contact - TKA Studio</title>
   <meta
     name="description"
-    content="Get in touch with The Kinetic Alphabet team. We'd love to hear from you about collaborations, questions, or feedback."
+    content="Get in touch with the creator of TKA Studio. I'd love to hear from you about collaborations, questions, or feedback."
   />
 </svelte:head>
 

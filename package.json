@@ -1,9 +1,9 @@
 {
-  "name": "@tka/web-app",
+  "name": "@tka/studio",
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "TKA Web Application - Browser-based sequence editor",
+  "description": "TKA Studio - Browser-based sequence editor for flow arts",
   "scripts": {
     "dev": "npx kill-port 5173 && npx vite --host 0.0.0.0",
     "dev:clean": "rimraf node_modules/.vite .svelte-kit && npx svelte-kit sync && npm run dev",
@@ -33,6 +33,7 @@
     "validate:seo": "node tools/validate-seo.js",
     "test:seo-live": "node tools/test-seo-live.js",
     "optimize:images": "node tools/convert-to-webp.js",
+    "optimize:ios": "node tools/generate-ios-assets.js",
     "validate:metadata": "node tools/validate-metadata-accuracy.js",
     "migrate:metadata": "node tools/migrate-png-metadata-to-webp.js",
     "clean": "rm -rf build .svelte-kit node_modules/.vite",

@@ -1,6 +1,6 @@
 # Firebase Setup Guide
 
-This guide walks you through setting up a Firebase project for your TKA application.
+This guide walks you through setting up a Firebase project for your TKA Studio application.
 
 ## Step 1: Create a Firebase Project
 

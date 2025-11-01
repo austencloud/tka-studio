@@ -1,4 +1,22 @@
 <!-- VTG Content Component - Shared between modal and standalone page -->
+
+<!-- IMPORTANT CONTEXT -->
+<div
+  class="disclaimer-box"
+  style="background: #e3f2fd; border-left: 4px solid #2196f3; padding: 1rem; margin-bottom: 2rem;"
+>
+  <h3 style="margin-top: 0; color: #1565c0;">
+    📚 Historical Context: VTG as TKA's Foundation
+  </h3>
+  <p style="margin-bottom: 0; color: #1565c0;">
+    <strong>The Kinetic Alphabet was built from VTG poi theory.</strong> While TKA
+    is a STATIC PROP system (staff, fans, buugeng, etc.) and does NOT support poi
+    or other dynamic/spinning props, many of TKA's movement classification concepts
+    and terminology were adapted from VTG's foundational framework. This resource
+    provides historical context about the poi theory that inspired TKA's development.
+  </p>
+</div>
+
 <section id="overview" class="content-section">
   <h2>Overview</h2>
   <p>

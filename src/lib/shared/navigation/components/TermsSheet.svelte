@@ -2,8 +2,12 @@
   TermsSheet.svelte - Terms of Service Bottom Sheet
 -->
 <script lang="ts">
-  import { BottomSheet } from "$shared";
-  import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
+  import {
+    BottomSheet,
+    resolve,
+    TYPES,
+    type IHapticFeedbackService,
+  } from "$shared";
   import { onMount } from "svelte";
 
   // Props
@@ -37,7 +41,9 @@
   <div class="terms-sheet__container">
     <!-- Header -->
     <header class="terms-sheet__header">
-      <h2 id="terms-sheet-title" class="terms-sheet__title">Terms of Service</h2>
+      <h2 id="terms-sheet-title" class="terms-sheet__title">
+        Terms of Service
+      </h2>
       <button
         class="terms-sheet__close"
         onclick={handleClose}
@@ -49,37 +55,44 @@
 
     <!-- Content -->
     <div class="terms-sheet__content">
-      <p class="last-updated">Last Updated: {new Date().toLocaleDateString()}</p>
+      <p class="last-updated">
+        Last Updated: {new Date().toLocaleDateString()}
+      </p>
 
       <section>
         <h3>1. Acceptance of Terms</h3>
         <p>
-          By accessing and using The Kinetic Alphabet (TKA) application, you agree to be bound by these Terms of Service.
-          If you do not agree to these terms, please do not use the application.
+          By accessing and using The Kinetic Alphabet (TKA) application, you
+          agree to be bound by these Terms of Service. If you do not agree to
+          these terms, please do not use the application.
         </p>
       </section>
 
       <section>
         <h3>2. Description of Service</h3>
         <p>
-          TKA is an educational platform that provides tools for learning, creating, and sharing kinetic alphabet sequences.
-          The service includes sequence building tools, learning modules, and community features.
+          TKA Studio is an educational platform that provides tools for
+          learning, creating, and sharing kinetic alphabet sequences. The
+          service includes sequence building tools, learning modules, and
+          community features.
         </p>
       </section>
 
       <section>
         <h3>3. User Accounts</h3>
         <p>
-          You are responsible for maintaining the confidentiality of your account credentials.
-          You agree to accept responsibility for all activities that occur under your account.
+          You are responsible for maintaining the confidentiality of your
+          account credentials. You agree to accept responsibility for all
+          activities that occur under your account.
         </p>
       </section>
 
       <section>
         <h3>4. User Content</h3>
         <p>
-          You retain ownership of any sequences, content, or materials you create using TKA.
-          By sharing content publicly, you grant TKA a license to display and distribute that content within the application.
+          You retain ownership of any sequences, content, or materials you
+          create using TKA. By sharing content publicly, you grant TKA a license
+          to display and distribute that content within the application.
         </p>
       </section>
 
@@ -98,36 +111,45 @@
       <section>
         <h3>6. Intellectual Property</h3>
         <p>
-          The TKA application, including its design, features, and underlying technology, is owned by TKA and protected by intellectual property laws.
-          The Kinetic Alphabet system and methodology remain the intellectual property of their respective creators.
+          The TKA Studio application, including its design, features, and
+          underlying technology, is owned by TKA Studio and protected by
+          intellectual property laws. The Kinetic Alphabet system and
+          methodology remain the intellectual property of their respective
+          creators.
         </p>
       </section>
 
       <section>
         <h3>7. Disclaimers</h3>
         <p>
-          TKA is provided "as is" without warranties of any kind. We do not guarantee that the service will be uninterrupted, secure, or error-free.
+          TKA Studio is provided "as is" without warranties of any kind. We do
+          not guarantee that the service will be uninterrupted, secure, or
+          error-free.
         </p>
       </section>
 
       <section>
         <h3>8. Limitation of Liability</h3>
         <p>
-          TKA shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the service.
+          TKA shall not be liable for any indirect, incidental, special, or
+          consequential damages arising from your use of the service.
         </p>
       </section>
 
       <section>
         <h3>9. Changes to Terms</h3>
         <p>
-          We reserve the right to modify these terms at any time. Continued use of the service after changes constitutes acceptance of the modified terms.
+          We reserve the right to modify these terms at any time. Continued use
+          of the service after changes constitutes acceptance of the modified
+          terms.
         </p>
       </section>
 
       <section>
         <h3>10. Contact</h3>
         <p>
-          If you have questions about these Terms of Service, please contact us through the application's support channels.
+          If you have questions about these Terms of Service, please contact us
+          through the application's support channels.
         </p>
       </section>
     </div>
@@ -277,7 +299,8 @@
       font-size: 16px;
     }
 
-    p, ul {
+    p,
+    ul {
       font-size: 14px;
     }
   }

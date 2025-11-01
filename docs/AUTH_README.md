@@ -1,6 +1,6 @@
 # Firebase Authentication Setup - Complete Guide
 
-Welcome! This guide will help you add Facebook and Google authentication to your TKA application using Firebase.
+Welcome! This guide will help you add Facebook and Google authentication to your TKA Studio application using Firebase.
 
 ## What's Been Built
 

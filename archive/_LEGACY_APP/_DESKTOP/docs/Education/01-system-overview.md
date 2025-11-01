@@ -2,7 +2,7 @@
 
 ## 🎯 What is the Kinetic Alphabet?
 
-The Kinetic Alphabet is a **comprehensive notation system** for describing multi-dimensional movement patterns using props (staffs, poi, clubs, etc.). It provides a mathematical framework for encoding, analyzing, and communicating complex kinetic sequences.
+The Kinetic Alphabet is a **comprehensive notation system** for describing multi-dimensional movement patterns using props (staffs, clubs, clubs, etc.). It provides a mathematical framework for encoding, analyzing, and communicating complex kinetic sequences.
 
 ### Core Philosophy
 

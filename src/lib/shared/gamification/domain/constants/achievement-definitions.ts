@@ -1,7 +1,7 @@
 /**
  * Achievement Definitions
  *
- * All available achievements in the TKA app.
+ * All available achievements in TKA Studio.
  * These are the "templates" that users can unlock.
  */
 

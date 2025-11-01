@@ -13,6 +13,7 @@ import {
   sendEmailVerification,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  getRedirectResult,
   type User,
 } from "firebase/auth";
 import { auth } from "../firebase";
@@ -120,13 +121,49 @@ export const authStore = {
    * Initialize the auth listener
    * Call this once when your app starts
    */
-  initialize() {
+  async initialize() {
     if (cleanupAuthListener) {
       console.log("🔐 [authStore] Already initialized, skipping");
       return; // Already initialized
     }
 
     console.log("🔐 [authStore] Initializing auth state listener...");
+    console.log("🔐 [authStore] Current URL:", typeof window !== "undefined" ? window.location.href : "SSR");
+
+    // Handle redirect result from Google/Facebook sign-in
+    try {
+      console.log("🔐 [authStore] Checking for redirect result...");
+      console.log("🔐 [authStore] Auth state before getRedirectResult:", {
+        currentUser: auth.currentUser?.email || "none",
+        appName: auth.app.name,
+      });
+
+      const result = await getRedirectResult(auth);
+
+      if (result) {
+        console.log("✅ [authStore] Sign-in redirect successful:", {
+          uid: result.user.uid,
+          email: result.user.email,
+          displayName: result.user.displayName,
+          provider: result.providerId,
+          photoURL: result.user.photoURL,
+        });
+        console.log("🔐 [authStore] Full user object:", result.user);
+        console.log("🔐 [authStore] Credential:", result.providerId);
+      } else {
+        console.log("ℹ️ [authStore] No redirect result (normal page load)");
+        console.log("🔐 [authStore] URL at redirect check:", window.location.href);
+        console.log("🔐 [authStore] URL search params:", window.location.search);
+        console.log("🔐 [authStore] URL hash:", window.location.hash);
+      }
+    } catch (error: any) {
+      console.error("❌ [authStore] Redirect result error:", {
+        code: error.code,
+        message: error.message,
+        stack: error.stack,
+      });
+      // Don't block initialization on redirect errors
+    }
 
     cleanupAuthListener = onAuthStateChanged(
       auth,

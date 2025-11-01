@@ -1,6 +1,6 @@
 # Complete Implementation Guide
 
-This guide shows you how to use the authentication system throughout your TKA application.
+This guide shows you how to use the authentication system throughout your TKA Studio application.
 
 ## Table of Contents
 

@@ -1,21 +1,21 @@
 /**
  * Share Service Implementation
- * 
+ *
  * Simple, focused service for sharing/downloading sequences.
  * Uses the render module for image generation.
  */
 
-import { inject, injectable } from 'inversify';
-import { TYPES } from '$shared/inversify/types';
-import type { SequenceData } from '$shared';
 import type { ISequenceRenderService } from '$render';
+import type { SequenceData } from '$shared';
+import { TYPES } from '$shared/inversify/types';
+import { inject, injectable } from 'inversify';
 import type { ShareOptions } from '../../domain';
 import type { IShareService } from '../contracts';
 
 @injectable()
 export class ShareService implements IShareService {
   constructor(
-    @inject(TYPES.ISequenceRenderService) 
+    @inject(TYPES.ISequenceRenderService)
     private renderService: ISequenceRenderService
   ) {}
 
@@ -31,10 +31,10 @@ export class ShareService implements IShareService {
   async downloadImage(sequence: SequenceData, options: ShareOptions, filename?: string): Promise<void> {
     // Get image blob
     const blob = await this.getImageBlob(sequence, options);
-    
+
     // Generate filename if not provided
     const finalFilename = filename || this.generateFilename(sequence, options);
-    
+
     // Trigger download
     this.triggerDownload(blob, finalFilename);
   }
@@ -42,7 +42,7 @@ export class ShareService implements IShareService {
   async getImageBlob(sequence: SequenceData, options: ShareOptions): Promise<Blob> {
     // Convert ShareOptions to SequenceExportOptions for render service
     const renderOptions = this.convertToRenderOptions(options);
-    
+
     // Use render service to generate blob
     return await this.renderService.renderSequenceToBlob(sequence, renderOptions);
   }
@@ -51,10 +51,10 @@ export class ShareService implements IShareService {
     const sequenceName = sequence.word || sequence.name || 'sequence';
     const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
     const extension = options.format.toLowerCase();
-    
+
     // Clean filename
     const cleanName = sequenceName.replace(/[^a-zA-Z0-9-_]/g, '_');
-    
+
     return `${cleanName}_${date}.${extension}`;
   }
 
@@ -111,13 +111,13 @@ export class ShareService implements IShareService {
       blueVisible: true,
 
       // User information
-      userName: shareOptions.userName || 'TKA User',
+      userName: shareOptions.userName || 'TKA Studio User',
       exportDate: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
       }).replace(/\//g, '-'),
-      notes: shareOptions.notes || 'Created with The Kinetic Alphabet',
+      notes: shareOptions.notes || 'Created with TKA Studio',
 
       // Output format
       format: shareOptions.format,
@@ -149,13 +149,13 @@ export class ShareService implements IShareService {
       blueVisible: true,
 
       // User information
-      userName: shareOptions.userName || 'TKA User',
+      userName: shareOptions.userName || 'TKA Studio User',
       exportDate: new Date().toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'numeric',
         day: 'numeric',
       }).replace(/\//g, '-'),
-      notes: shareOptions.notes || 'Created with The Kinetic Alphabet',
+      notes: shareOptions.notes || 'Created with TKA Studio',
 
       // Output format - Maximum speed optimization
       format: 'JPEG' as const, // JPEG encodes much faster than PNG

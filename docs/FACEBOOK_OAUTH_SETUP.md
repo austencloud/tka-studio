@@ -1,6 +1,6 @@
 # Facebook OAuth Setup Guide
 
-This guide walks you through setting up Facebook Login for your TKA application using Firebase Authentication.
+This guide walks you through setting up Facebook Login for your TKA Studio application using Firebase Authentication.
 
 ## Prerequisites
 

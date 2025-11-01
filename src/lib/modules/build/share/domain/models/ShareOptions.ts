@@ -68,8 +68,8 @@ export const SHARE_PRESETS: Record<string, SharePreset> = {
       beatSize: 950, // Always 1:1 scale
       margin: 50,
       backgroundColor: "#ffffff",
-      userName: "TKA User",
-      notes: "Created with The Kinetic Alphabet"
+      userName: "TKA Studio User",
+      notes: "Created with TKA Studio"
     }
   },
 
@@ -87,7 +87,7 @@ export const SHARE_PRESETS: Record<string, SharePreset> = {
       beatSize: 950, // Always 1:1 scale
       margin: 30,
       backgroundColor: "#ffffff",
-      userName: "TKA User",
+      userName: "TKA Studio User",
       notes: ""
     }
   }
