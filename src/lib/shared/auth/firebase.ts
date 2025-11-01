@@ -14,6 +14,12 @@ import {
   setPersistence,
 } from "firebase/auth";
 import {
+  getFirestore,
+  type Firestore,
+  enableIndexedDbPersistence,
+  enableMultiTabIndexedDbPersistence,
+} from "firebase/firestore";
+import {
   PUBLIC_FIREBASE_API_KEY,
   PUBLIC_FIREBASE_AUTH_DOMAIN,
   PUBLIC_FIREBASE_PROJECT_ID,
@@ -64,6 +70,12 @@ if (!getApps().length) {
 export const auth: Auth = getAuth(app);
 
 /**
+ * Firestore instance
+ * Use this for all database operations (gamification, user data, etc.)
+ */
+export const firestore: Firestore = getFirestore(app);
+
+/**
  * Configure Firebase Auth persistence
  * Try IndexedDB first (most reliable), fallback to localStorage
  * This provides the best resilience against storage clearing during redirects
@@ -76,6 +88,27 @@ if (typeof window !== "undefined") {
     })
     .catch((error) => {
       console.error("❌ [Firebase] Failed to set any persistence:", error);
+    });
+
+  // Enable Firestore offline persistence
+  // Try multi-tab first (best for PWA), fallback to single-tab
+  enableMultiTabIndexedDbPersistence(firestore)
+    .then(() => {
+      console.log("✅ [Firestore] Multi-tab offline persistence enabled");
+    })
+    .catch((error) => {
+      if (error.code === "failed-precondition") {
+        // Multiple tabs open, fallback to single-tab
+        console.warn("⚠️ [Firestore] Multiple tabs detected, using single-tab persistence");
+        return enableIndexedDbPersistence(firestore);
+      } else if (error.code === "unimplemented") {
+        console.warn("⚠️ [Firestore] Offline persistence not supported in this browser");
+      } else {
+        console.error("❌ [Firestore] Failed to enable offline persistence:", error);
+      }
+    })
+    .catch((error) => {
+      console.error("❌ [Firestore] Failed to enable any persistence:", error);
     });
 }
 

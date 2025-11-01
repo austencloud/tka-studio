@@ -1,7 +1,7 @@
 <!-- AccessibilityTab.svelte - Modern User Experience Settings -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import type { IHapticFeedbackService } from "$shared";
+  import type { IHapticFeedbackService, IMobileFullscreenService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
@@ -17,16 +17,13 @@
 
   // Services
   let hapticService: IHapticFeedbackService;
-
-  onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(
-      TYPES.IHapticFeedbackService
-    );
-  });
+  let fullscreenService: IMobileFullscreenService | null = null;
 
   // Local state for immediate UI feedback
   let hapticEnabled = $state(currentSettings.hapticFeedback ?? true);
   let reducedMotion = $state(currentSettings.reducedMotion ?? false);
+  let isFullscreen = $state(false);
+  let isPWA = $state(false);
 
   // Check if device supports haptic feedback
   const isHapticSupported =
@@ -34,6 +31,42 @@
     ("vibrate" in navigator ||
       "mozVibrate" in navigator ||
       "webkitVibrate" in navigator);
+
+  // Check if fullscreen is supported
+  const isFullscreenSupported =
+    browser &&
+    !!(
+      document.fullscreenEnabled ||
+      (document as any).webkitFullscreenEnabled ||
+      (document as any).mozFullScreenEnabled ||
+      (document as any).msFullscreenEnabled
+    );
+
+  onMount(() => {
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
+
+    try {
+      fullscreenService = resolve<IMobileFullscreenService>(
+        TYPES.IMobileFullscreenService
+      );
+      isPWA = fullscreenService.isPWA();
+      isFullscreen = fullscreenService.isFullscreen();
+
+      // Listen for fullscreen changes
+      const unsubscribe = fullscreenService.onFullscreenChange((fullscreen) => {
+        isFullscreen = fullscreen;
+      });
+
+      return () => {
+        unsubscribe?.();
+      };
+    } catch (error) {
+      console.warn("Failed to resolve fullscreen service:", error);
+      fullscreenService = null;
+    }
+  });
 
   // Watch for external changes to settings
   $effect(() => {
@@ -78,6 +111,52 @@
 
     // Update parent settings
     onSettingUpdate({ key: "reducedMotion", value: enabled });
+  }
+
+  async function handleFullscreenToggle(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const shouldBeFullscreen = target.checked;
+
+    if (!fullscreenService) {
+      // Fallback to direct DOM API
+      try {
+        if (shouldBeFullscreen) {
+          const element = document.documentElement;
+          if (element.requestFullscreen) {
+            await element.requestFullscreen();
+          } else if ((element as any).webkitRequestFullscreen) {
+            await (element as any).webkitRequestFullscreen();
+          } else if ((element as any).mozRequestFullScreen) {
+            await (element as any).mozRequestFullScreen();
+          } else if ((element as any).msRequestFullscreen) {
+            await (element as any).msRequestFullscreen();
+          }
+        } else {
+          if (document.exitFullscreen) {
+            await document.exitFullscreen();
+          } else if ((document as any).webkitExitFullscreen) {
+            await (document as any).webkitExitFullscreen();
+          } else if ((document as any).mozCancelFullScreen) {
+            await (document as any).mozCancelFullScreen();
+          } else if ((document as any).msExitFullscreen) {
+            await (document as any).msExitFullscreen();
+          }
+        }
+      } catch (error) {
+        console.warn("Fullscreen toggle failed:", error);
+      }
+    } else {
+      // Use fullscreen service
+      try {
+        if (shouldBeFullscreen) {
+          await fullscreenService.requestFullscreen();
+        } else {
+          await fullscreenService.exitFullscreen();
+        }
+      } catch (error) {
+        console.warn("Fullscreen toggle failed:", error);
+      }
+    }
   }
 </script>
 
@@ -126,6 +205,43 @@
       />
       <span class="toggle-slider"></span>
     </label>
+  </div>
+
+  <!-- Fullscreen Mode Card -->
+  {#if !isPWA}
+    <div class="setting-card" class:disabled={!isFullscreenSupported}>
+      <div class="card-icon fullscreen-icon">
+        <i class="fas fa-expand"></i>
+      </div>
+      <div class="card-content">
+        <div class="card-header">
+          <h3>Fullscreen Mode</h3>
+          {#if !isFullscreenSupported}
+            <span class="badge">Not Available</span>
+          {/if}
+        </div>
+        <p class="card-description">Enter fullscreen mode for distraction-free experience</p>
+      </div>
+      <label class="toggle-switch">
+        <input
+          type="checkbox"
+          checked={isFullscreen && isFullscreenSupported}
+          disabled={!isFullscreenSupported}
+          onchange={handleFullscreenToggle}
+          aria-label="Toggle fullscreen mode"
+        />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+  {/if}
+
+  <!-- PWA Install Recommendation -->
+  <div class="info-banner pwa-recommendation">
+    <i class="fas fa-lightbulb"></i>
+    <span
+      ><strong>Tip:</strong> Install TKA as a Progressive Web App for a distraction-free,
+      fullscreen-like experience!</span
+    >
   </div>
 
   <!-- Info Note (only if haptic not supported) -->
@@ -209,6 +325,15 @@
     color: #4ade80;
   }
 
+  .fullscreen-icon {
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.2),
+      rgba(59, 130, 246, 0.1)
+    );
+    color: #60a5fa;
+  }
+
   .setting-card:hover .card-icon {
     transform: scale(1.1) rotate(-5deg);
   }
@@ -232,6 +357,13 @@
     color: rgba(255, 255, 255, 0.95);
     margin: 0;
     letter-spacing: -0.01em;
+  }
+
+  .card-description {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
   }
 
   /* Badge for unavailable features */
@@ -346,6 +478,19 @@
     font-size: 16px;
     color: #60a5fa;
     flex-shrink: 0;
+  }
+
+  .info-banner.pwa-recommendation {
+    background: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.15),
+      rgba(99, 102, 241, 0.1)
+    );
+    border-color: rgba(139, 92, 246, 0.3);
+  }
+
+  .info-banner.pwa-recommendation i {
+    color: #a78bfa;
   }
 
   /* Responsive adjustments */

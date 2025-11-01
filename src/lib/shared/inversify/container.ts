@@ -189,6 +189,7 @@ function initializeContainer() {
         wordCardModule,
         writeModule,
         dataModule,
+        gamificationModule,
       } = modules;
 
       await container.load(
@@ -203,7 +204,8 @@ function initializeContainer() {
         shareModule,
         learnModule,
         wordCardModule,
-        writeModule
+        writeModule,
+        gamificationModule
       );
       isInitialized = true;
     } catch (error) {

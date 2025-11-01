@@ -132,28 +132,11 @@ export class PropPlacementService implements IPropPlacementService {
     const hybridOrientation =
       (redIsRadial && blueIsNonRadial) || (redIsNonRadial && blueIsRadial);
 
-    console.log('[Beta Offset Debug]', {
-      letter: pictographData.letter,
-      redEndOri,
-      blueEndOri,
-      redPropType: redMotion.propType,
-      bluePropType: blueMotion.propType,
-      redLocation: redMotion.endLocation,
-      blueLocation: blueMotion.endLocation,
-      redIsRadial,
-      blueIsRadial,
-      redIsNonRadial,
-      blueIsNonRadial,
-      hybridOrientation,
-      willSkipOffset: hybridOrientation,
-    });
 
     // Skip beta offset ONLY when hybrid (one radial, one non-radial)
     if (hybridOrientation) {
-      console.log('[Beta Offset] SKIPPING - hybrid orientation detected');
       return { x: 0, y: 0 };
     }
-    console.log('[Beta Offset] APPLYING - same orientation type');
 
     // Calculate direction for this specific prop
     const directionCalculator = new BetaPropDirectionCalculator(

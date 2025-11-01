@@ -11,7 +11,6 @@ export { default as ModuleMobileModal } from "./ModuleMobileModal.svelte";
 export { default as ModuleMenuSection } from "./ModuleMenuSection.svelte";
 export { default as ModulePicker } from "./ModulePicker.svelte";
 export { default as ModuleSelector } from "./ModuleSelector.svelte";
-export { default as NavigationBar } from "./NavigationBar.svelte";
 export { default as SettingsButton } from "./SettingsButton.svelte";
 export { default as SectionSheet } from "./SectionSheet.svelte";
 export { default as SectionTabs } from "./SectionTabs.svelte";

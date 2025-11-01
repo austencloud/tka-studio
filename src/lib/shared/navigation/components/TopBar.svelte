@@ -13,6 +13,8 @@
   import { resolve, TYPES, type IDeviceDetector } from "$shared";
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import ProfileButton from "./ProfileButton.svelte";
+  import GamificationButton from "../../gamification/components/GamificationButton.svelte";
+  import AchievementsPanel from "../../gamification/components/AchievementsPanel.svelte";
 
   // Props
   let {
@@ -43,6 +45,9 @@
 
   // Reactive height state (actual measured height may differ from computed)
   let topBarHeight = $state(56); // Default fallback
+
+  // Gamification panel state
+  let showAchievementsPanel = $state(false);
 
   // Expose height via context for descendant components
   setContext("topBarHeight", {
@@ -111,6 +116,7 @@
 >
   <!-- Left: Module-specific left content (e.g., back button) -->
   <div class="top-bar__left">
+    <GamificationButton onclick={() => showAchievementsPanel = true} />
     {#if left}
       {@render left()}
     {/if}
@@ -128,6 +134,11 @@
     <ProfileButton />
   </div>
 </div>
+
+<AchievementsPanel
+  isOpen={showAchievementsPanel}
+  onClose={() => showAchievementsPanel = false}
+/>
 
 <style>
   /* ============================================================================

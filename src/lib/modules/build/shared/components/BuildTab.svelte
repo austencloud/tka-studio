@@ -19,7 +19,6 @@
     createComponentLogger,
     ensureContainerInitialized,
     ErrorBanner,
-    FloatingFullscreenButton,
     GridMode,
     navigationState,
     type PictographData
@@ -427,9 +426,6 @@
   <CAPCoordinator
     {panelState}
   />
-
-  <!-- Floating Fullscreen Button -->
-  <FloatingFullscreenButton />
 {/if}
 
 <style>

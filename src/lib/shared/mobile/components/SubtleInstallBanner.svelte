@@ -130,7 +130,7 @@
         <i class="fas fa-mobile-alt"></i>
       </span>
       <span class="banner-text"
-        >Add TKA to your home screen for quick access</span
+        >Install for a distraction-free, fullscreen-like experience!</span
       >
 
       <div class="banner-actions">

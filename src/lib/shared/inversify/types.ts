@@ -364,6 +364,12 @@ export const TYPES = {
   IApplicationStateService: Symbol.for("IApplicationStateService"),
   IMainTabState: Symbol.for("IMainTabState"),
   IPerformanceMetricsState: Symbol.for("IPerformanceMetricsState"),
+
+  // === GAMIFICATION SERVICES ===
+  IAchievementService: Symbol.for("IAchievementService"),
+  IDailyChallengeService: Symbol.for("IDailyChallengeService"),
+  INotificationService: Symbol.for("INotificationService"),
+  IStreakService: Symbol.for("IStreakService"),
 } as const;
 
 // Type helper for getting service types

@@ -9,6 +9,7 @@
   import type {
     IHapticFeedbackService,
     IMobileFullscreenService,
+    ISettingsService,
   } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
@@ -19,11 +20,13 @@
   let isFullscreenSupported = $state(false);
   let isPWA = $state(false);
   let isVisible = $state(true);
+  let fullscreenEnabled = $state(true);
   let hideTimeout: ReturnType<typeof setTimeout> | null = null;
 
   // Services
   let hapticService: IHapticFeedbackService | null = null;
   let fullscreenService: IMobileFullscreenService | null = null;
+  let settingsService: ISettingsService | null = null;
 
   onMount(() => {
     const cleanupFns: Array<() => void> = [];
@@ -43,6 +46,14 @@
     } catch (error) {
       console.warn("Failed to resolve mobile fullscreen service:", error);
       fullscreenService = null;
+    }
+
+    try {
+      settingsService = resolve<ISettingsService>(TYPES.ISettingsService);
+      fullscreenEnabled = settingsService.currentSettings.fullscreenEnabled ?? true;
+    } catch (error) {
+      console.warn("Failed to resolve settings service:", error);
+      settingsService = null;
     }
 
     if (fullscreenService) {
@@ -249,7 +260,7 @@
   }
 </script>
 
-{#if isFullscreenSupported && !isPWA}
+{#if isFullscreenSupported && !isPWA && fullscreenEnabled}
   {#if isVisible}
     <button
       class="floating-fullscreen-button"

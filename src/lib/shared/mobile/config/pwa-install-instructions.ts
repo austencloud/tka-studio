@@ -91,7 +91,7 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
       },
     ],
     benefits: [
-      "Opens in fullscreen without Safari UI",
+      "Distraction-free, fullscreen-like experience",
       "Faster loading with offline support",
       "Quick access from home screen",
     ],
@@ -118,9 +118,9 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
       },
     ],
     benefits: [
-      "Fullscreen app-like experience",
+      "Distraction-free, fullscreen-like experience",
       "Works offline",
-      "No browser UI distractions",
+      "Quick access from home screen",
     ],
   },
 
@@ -150,9 +150,9 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
       },
     ],
     benefits: [
-      "Native app-like experience",
-      "Automatic fullscreen",
-      "Works offline",
+      "Distraction-free, fullscreen-like experience",
+      "Automatic offline support",
+      "Native app performance",
     ],
   },
 
@@ -182,7 +182,7 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
       },
     ],
     benefits: [
-      "Fullscreen experience",
+      "Distraction-free, fullscreen-like experience",
       "Quick home screen access",
       "Offline support",
     ],
@@ -214,9 +214,9 @@ const INSTRUCTIONS_MAP: Record<string, InstallInstructions> = {
       },
     ],
     benefits: [
-      "Standalone window without browser chrome",
+      "Distraction-free, fullscreen-like experience",
       "Pin to taskbar or dock",
-      "Faster startup",
+      "Faster startup and offline support",
     ],
   },
 };

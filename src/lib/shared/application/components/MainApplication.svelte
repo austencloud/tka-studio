@@ -16,6 +16,7 @@
   import { TYPES } from "../../inversify/types";
   import { ThemeService } from "../../theme";
   import HMRTest from "../../dev/HMRTest.svelte";
+  import AchievementNotificationToast from "../../gamification/components/AchievementNotificationToast.svelte";
 
   import type { ISettingsService } from "$shared";
   import type { Container } from "inversify";
@@ -178,6 +179,15 @@
       updateSettings(settingsService.currentSettings);
       ThemeService.initialize();
 
+      // Initialize gamification system
+      try {
+        const { initializeGamification } = await import("../../gamification/init/gamification-initializer");
+        await initializeGamification();
+        console.log("✅ Gamification initialized");
+      } catch (gamError) {
+        console.error("⚠️ Gamification failed to initialize (non-blocking):", gamError);
+      }
+
       setInitializationState(true, false, null, 0);
     } catch (error) {
       console.error("Application initialization failed:", error);
@@ -299,10 +309,8 @@
     <!-- Privacy sheet (route-based) -->
     <PrivacySheet isOpen={showPrivacySheet()} onClose={() => closeSheet()} />
 
-    <!-- HMR Test Component (dev only) -->
-    {#if import.meta.env.DEV}
-      <HMRTest />
-    {/if}
+    <!-- Gamification Toast Notifications -->
+    <AchievementNotificationToast />
   {/if}
 </div>
 

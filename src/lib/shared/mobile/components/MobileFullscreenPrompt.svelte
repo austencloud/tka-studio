@@ -366,8 +366,8 @@
 
           {#if guidance.support === "native"}
             <p>
-              Install TKA to launch it fullscreen and keep the builder only a
-              tap away.
+              Install for a distraction-free, fullscreen-like experience and keep
+              the builder only a tap away.
             </p>
             <div class="prompt-actions">
               <button
