@@ -1,0 +1,142 @@
+[
+  {
+    "file": "src\\lib\\shared\\application\\state\\index.ts",
+    "unusedExports": 65,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\word-card\\domain\\index.ts",
+    "unusedExports": 45,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\word-card\\domain\\models\\index.ts",
+    "unusedExports": 45,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\about\\components\\index.ts",
+    "unusedExports": 23,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\build\\generate\\circular\\domain\\constants\\index.ts",
+    "unusedExports": 22,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\word-card\\state\\index.ts",
+    "unusedExports": 21,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\build\\shared\\state\\index.ts",
+    "unusedExports": 20,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\word-card\\domain\\types\\index.ts",
+    "unusedExports": 20,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\shared\\application\\services\\contracts\\index.ts",
+    "unusedExports": 19,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\shared\\pictograph\\prop\\domain\\index.ts",
+    "unusedExports": 18,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\shared\\render\\domain\\models\\index.ts",
+    "unusedExports": 18,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\word-card\\domain\\models\\WordCard.ts",
+    "unusedExports": 17,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\build\\generate\\circular\\domain\\index.ts",
+    "unusedExports": 17,
+    "lastModified": "2025-10-24 18:02:35 -0500",
+    "commitCount": 1,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\build\\generate\\shared\\services\\contracts\\index.ts",
+    "unusedExports": 20,
+    "lastModified": "2025-10-26 21:10:18 -0500",
+    "commitCount": 6,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\shared\\index.ts",
+    "unusedExports": 19,
+    "lastModified": "2025-10-31 02:22:16 -0500",
+    "commitCount": 8,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\build\\animate\\services\\contracts\\index.ts",
+    "unusedExports": 20,
+    "lastModified": "2025-10-31 19:20:48 -0500",
+    "commitCount": 4,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\shared\\foundation\\ui\\index.ts",
+    "unusedExports": 23,
+    "lastModified": "2025-11-01 01:12:23 -0500",
+    "commitCount": 7,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\modules\\build\\shared\\services\\contracts\\index.ts",
+    "unusedExports": 30,
+    "lastModified": "2025-11-01 01:13:06 -0500",
+    "commitCount": 5,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\shared\\navigation\\components\\index.ts",
+    "unusedExports": 19,
+    "lastModified": "2025-11-01 04:43:40 -0500",
+    "commitCount": 8,
+    "lastAuthor": "Austen Cloud"
+  },
+  {
+    "file": "src\\lib\\shared\\navigation\\state\\profile-settings-state.svelte.ts",
+    "unusedExports": 19,
+    "lastModified": "2025-11-01 18:10:37 -0500",
+    "commitCount": 5,
+    "lastAuthor": "Austen Cloud"
+  }
+]

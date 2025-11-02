@@ -1,0 +1,56 @@
+[
+  {
+    "file": "src/lib/modules/about/components/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/about/services/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/about/state/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/word-card/components/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/word-card/domain/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/word-card/state/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/write/components/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/write/services/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  },
+  {
+    "file": "src/lib/modules/library/index.ts",
+    "totalMatches": 0,
+    "matchDetails": [],
+    "verdict": "LIKELY DEAD"
+  }
+]
