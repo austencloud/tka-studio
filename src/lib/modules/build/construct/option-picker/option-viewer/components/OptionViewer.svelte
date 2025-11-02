@@ -12,6 +12,7 @@ Business logic moved to state management and utility services.
   import type { GridMode, IHapticFeedbackService, PictographData } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
+  import { fade } from "svelte/transition";
 
   import ConstructPickerHeader from "../../../shared/components/ConstructPickerHeader.svelte";
   import type { ILayoutDetectionService } from "../../services/contracts/ILayoutDetectionService";
@@ -24,6 +25,7 @@ Business logic moved to state management and utility services.
   } from "../services/contracts";
   import { createContainerDimensionTracker, createOptionPickerState } from "../state";
   import { LetterTypeTextPainter } from "../utils/letter-type-text-painter";
+  import FloatingFilterButton from "./FloatingFilterButton.svelte";
   import OptionFilterPanel from "./OptionFilterPanel.svelte";
   import OptionViewerGridLayout from "./OptionViewerGridLayout.svelte";
   import OptionViewerSwipeLayout from "./OptionViewerSwipeLayout.svelte";
@@ -395,6 +397,63 @@ Business logic moved to state management and utility services.
     }
   });
 
+  // Determine if we should use floating button based on grid constraint status
+  // Show floating button when BOTH conditions are true:
+  // 1. Pictographs are uncomfortably small (< 80px) - user needs help
+  // 2. Height is the constraining factor - removing header will actually help
+  // If pictographs are small due to width constraint, there's nothing we can do about it.
+  const shouldUseFloatingButton = $derived(() => {
+    if (!optionPickerState?.filteredOptions.length || containerDimensions.height === 0) {
+      return false;
+    }
+
+    const config = layoutConfig();
+    const pictographSize = config?.pictographSize ?? 144;
+    const columns = config?.optionsPerRow ?? 4;
+
+    // Threshold: pictographs smaller than this are uncomfortably small for clicking
+    const SMALL_PICTOGRAPH_THRESHOLD = 80;
+
+    // First check: Are pictographs too small?
+    const arePictographsTooSmall = pictographSize < SMALL_PICTOGRAPH_THRESHOLD;
+
+    // If pictographs are fine, no need to show floating button
+    if (!arePictographsTooSmall) {
+      return false;
+    }
+
+    // Second check: Is height the constraining factor?
+    // Only worth showing floating button if removing header will help
+    const deviceConfig = optionPickerSizingService?.getDeviceConfig(
+      containerDimensions.width < 1024 ? 'mobile' : 'desktop'
+    );
+
+    if (!deviceConfig) return false;
+
+    const maxPictographsPerSection = Math.max(
+      ...organizedPictographs().map(section => section.pictographs.length),
+      8
+    );
+    const rows = Math.ceil(maxPictographsPerSection / columns);
+
+    // Available space after padding
+    const availableWidth = containerDimensions.width - (deviceConfig.padding.horizontal * 2);
+    const availableHeight = containerDimensions.height - (deviceConfig.padding.vertical * 2);
+
+    // What size would the grid naturally want based on width?
+    const widthPerItem = (availableWidth - (deviceConfig.gap * (columns - 1))) / columns;
+
+    // What size is forced by height constraint?
+    const heightPerItem = (availableHeight - (deviceConfig.gap * (rows - 1))) / rows;
+
+    // Height is the limiting factor when heightPerItem < widthPerItem
+    const isHeightConstrained = heightPerItem < widthPerItem;
+
+    // Show floating button only when pictographs are small AND height-constrained
+    // (If they're small due to width constraint, floating button won't help)
+    return arePictographsTooSmall && isHeightConstrained;
+  });
+
   // Initialize services and setup container tracking
   onMount(() => {
     // Initialize services
@@ -452,18 +511,32 @@ Business logic moved to state management and utility services.
       <p>Initializing option picker...</p>
     </div>
   {:else}
-    <!-- Shared header with interactive title button -->
-    <ConstructPickerHeader
-      variant="options"
-      title="Options"
-      titleHtml={formattedSectionTitle}
-      {isContinuousOnly}
-      {isFilterPanelOpen}
-      {onOpenFilters}
-    />
+    <!-- Conditional header: show full header on larger screens, floating button on small screens -->
+    {#if !shouldUseFloatingButton()}
+      <div transition:fade={{ duration: 200 }}>
+        <ConstructPickerHeader
+          variant="options"
+          title="Options"
+          titleHtml={formattedSectionTitle}
+          {isContinuousOnly}
+          {isFilterPanelOpen}
+          {onOpenFilters}
+        />
+      </div>
+    {/if}
 
     <!-- Main content -->
     <div class="option-picker-content">
+      <!-- Floating filter button for small screens -->
+      {#if shouldUseFloatingButton()}
+        <div transition:fade={{ duration: 200 }}>
+          <FloatingFilterButton
+            {isFilterPanelOpen}
+            {isContinuousOnly}
+            {onOpenFilters}
+          />
+        </div>
+      {/if}
       <!-- State handling: loading, error, empty states -->
       {#if !containerDimensions.isReady}
         <div class="loading-state">

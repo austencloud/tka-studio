@@ -140,7 +140,7 @@ export class ReversalChecker implements IReversalChecker {
       }
 
       for (let i = sequence.length - 1; i >= 0; i--) {
-        const previousRotation = sequence[i].motions?.[color as "blue" | "red"]?.rotationDirection;
+        const previousRotation = sequence[i]!.motions?.[color as "blue" | "red"]?.rotationDirection;
 
         if (!previousRotation || previousRotation === "noRotation") {
           continue;

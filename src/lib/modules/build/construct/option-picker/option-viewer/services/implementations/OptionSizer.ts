@@ -51,7 +51,7 @@ export class OptionSizer implements IOptionSizer {
 
     // Simple device detection
     const deviceType = this.getDeviceType(containerWidth, isMobileDevice);
-    const deviceConfig = this.DEVICE_CONFIG[deviceType];
+    const deviceConfig = this.DEVICE_CONFIG[deviceType] ?? this.DEVICE_CONFIG.desktop!;
 
     // Simple size calculation
     const availableWidth = containerWidth - (deviceConfig.padding.horizontal * 2);

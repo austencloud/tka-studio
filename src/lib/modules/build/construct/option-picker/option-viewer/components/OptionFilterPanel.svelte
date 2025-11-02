@@ -6,6 +6,7 @@ Provides a dedicated UI for filtering option viewer content:
 - Future filter options (grid mode, difficulty, etc.)
 - Dropdown interaction sliding down from header
 - Auto-dismisses on selection
+- Container-aware sizing using modern runes-based approach
 -->
 
 <script lang="ts">
@@ -28,6 +29,42 @@ Provides a dedicated UI for filtering option viewer content:
   }>();
 
   const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+
+  // Container-aware sizing state
+  let panelElement: HTMLElement | null = $state(null);
+  let containerWidth = $state(0);
+  let containerHeight = $state(0);
+
+  // Track panel dimensions using ResizeObserver
+  $effect(() => {
+    if (!panelElement) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const parentElement = entry.target.parentElement;
+        if (parentElement) {
+          containerWidth = parentElement.clientWidth;
+          containerHeight = parentElement.clientHeight;
+        }
+      }
+    });
+
+    // Also observe parent container to track its dimensions
+    const parentElement = panelElement.parentElement;
+    if (parentElement) {
+      resizeObserver.observe(parentElement);
+      containerWidth = parentElement.clientWidth;
+      containerHeight = parentElement.clientHeight;
+    }
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  });
+
+  // Responsive sizing based on container dimensions
+  const isCompact = $derived(containerWidth < 350 || containerHeight < 400);
+  const isExtraCompact = $derived(containerWidth < 300 || containerHeight < 300);
 
   function handleClose() {
     onClose();
@@ -68,7 +105,10 @@ Provides a dedicated UI for filtering option viewer content:
 
   <!-- Dropdown Panel -->
   <div
+    bind:this={panelElement}
     class="filter-panel"
+    class:compact={isCompact}
+    class:extra-compact={isExtraCompact}
     transition:fly={{ y: -20, duration: 300, easing: cubicOut }}
     role="dialog"
     aria-labelledby="filter-panel-title"
@@ -148,7 +188,8 @@ Provides a dedicated UI for filtering option viewer content:
     top: 0;
     left: 0;
     right: 0;
-    max-height: 70vh;
+    /* Use container query units for responsive height */
+    max-height: min(400px, 70cqh);
     background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
     border-radius: 0 0 16px 16px;
     box-shadow:
@@ -160,6 +201,18 @@ Provides a dedicated UI for filtering option viewer content:
     z-index: 1000;
   }
 
+  /* Compact mode for smaller containers */
+  .filter-panel.compact {
+    max-height: min(350px, 60cqh);
+    border-radius: 0 0 12px 12px;
+  }
+
+  /* Extra compact mode for very small containers */
+  .filter-panel.extra-compact {
+    max-height: min(280px, 50cqh);
+    border-radius: 0 0 8px 8px;
+  }
+
   .filter-panel-header {
     display: flex;
     align-items: center;
@@ -167,6 +220,14 @@ Provides a dedicated UI for filtering option viewer content:
     padding: 20px 24px 16px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(255, 255, 255, 0.03);
+  }
+
+  .filter-panel.compact .filter-panel-header {
+    padding: 16px 20px 12px;
+  }
+
+  .filter-panel.extra-compact .filter-panel-header {
+    padding: 12px 16px 10px;
   }
 
   .filter-panel-title {
@@ -179,9 +240,27 @@ Provides a dedicated UI for filtering option viewer content:
     margin: 0;
   }
 
+  .filter-panel.compact .filter-panel-title {
+    font-size: 1.1rem;
+    gap: 10px;
+  }
+
+  .filter-panel.extra-compact .filter-panel-title {
+    font-size: 1rem;
+    gap: 8px;
+  }
+
   .filter-panel-title i {
     font-size: 1.1rem;
     color: rgba(147, 197, 253, 0.9);
+  }
+
+  .filter-panel.compact .filter-panel-title i {
+    font-size: 1rem;
+  }
+
+  .filter-panel.extra-compact .filter-panel-title i {
+    font-size: 0.9rem;
   }
 
   .close-button {
@@ -197,6 +276,17 @@ Provides a dedicated UI for filtering option viewer content:
     cursor: pointer;
     color: rgba(255, 255, 255, 0.7);
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .filter-panel.compact .close-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .filter-panel.extra-compact .close-button {
+    width: 36px;
+    height: 36px;
+    font-size: 0.9rem;
   }
 
   .close-button:hover {
@@ -218,10 +308,28 @@ Provides a dedicated UI for filtering option viewer content:
     gap: 20px;
   }
 
+  .filter-panel.compact .filter-panel-content {
+    padding: 16px 20px 20px;
+    gap: 16px;
+  }
+
+  .filter-panel.extra-compact .filter-panel-content {
+    padding: 12px 16px 16px;
+    gap: 12px;
+  }
+
   .filter-section {
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  .filter-panel.compact .filter-section {
+    gap: 10px;
+  }
+
+  .filter-panel.extra-compact .filter-section {
+    gap: 8px;
   }
 
   .section-title {
@@ -233,10 +341,27 @@ Provides a dedicated UI for filtering option viewer content:
     margin: 0;
   }
 
+  .filter-panel.compact .section-title {
+    font-size: 0.8rem;
+  }
+
+  .filter-panel.extra-compact .section-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.3px;
+  }
+
   .toggle-group {
     display: flex;
     flex-direction: column;
     gap: 12px;
+  }
+
+  .filter-panel.compact .toggle-group {
+    gap: 10px;
+  }
+
+  .filter-panel.extra-compact .toggle-group {
+    gap: 8px;
   }
 
   .toggle-option {
@@ -250,6 +375,19 @@ Provides a dedicated UI for filtering option viewer content:
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-align: left;
+  }
+
+  .filter-panel.compact .toggle-option {
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 14px;
+  }
+
+  .filter-panel.extra-compact .toggle-option {
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border-width: 1.5px;
   }
 
   .toggle-option:hover {
@@ -283,6 +421,20 @@ Provides a dedicated UI for filtering option viewer content:
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  .filter-panel.compact .toggle-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+    font-size: 1.15rem;
+  }
+
+  .filter-panel.extra-compact .toggle-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    font-size: 1.05rem;
+  }
+
   .toggle-option.active .toggle-icon {
     background: rgba(59, 130, 246, 0.25);
     color: rgba(147, 197, 253, 1);
@@ -301,9 +453,25 @@ Provides a dedicated UI for filtering option viewer content:
     color: rgba(255, 255, 255, 0.95);
   }
 
+  .filter-panel.compact .label-text {
+    font-size: 0.95rem;
+  }
+
+  .filter-panel.extra-compact .label-text {
+    font-size: 0.9rem;
+  }
+
   .label-description {
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.6);
+  }
+
+  .filter-panel.compact .label-description {
+    font-size: 0.8rem;
+  }
+
+  .filter-panel.extra-compact .label-description {
+    font-size: 0.75rem;
   }
 </style>
 
