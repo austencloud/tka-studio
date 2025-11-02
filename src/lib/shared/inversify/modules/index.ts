@@ -1,4 +1,5 @@
 // Re-export all container modules
+export { adminModule } from "./admin.module";
 export { animatorModule } from "./animator.module";
 export { buildModule } from "./build.module";
 export { coreModule } from "./core.module";

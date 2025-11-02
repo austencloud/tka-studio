@@ -24,10 +24,14 @@
     currentSection,
     handleModuleChange,
     handleSectionChange,
-    moduleDefinitions,
+    getModuleDefinitions,
     moduleSections,
     navigationCoordinator,
   } from "./navigation-coordinator/navigation-coordinator.svelte";
+
+  // Get module definitions reactively
+  const moduleDefinitions = $derived(getModuleDefinitions());
+
   // Layout components
   import WordLabel from "../modules/build/workspace-panel/sequence-display/components/WordLabel.svelte";
   import PrimaryNavigation from "./navigation/components/PrimaryNavigation.svelte";

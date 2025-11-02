@@ -13,6 +13,7 @@
   import type { IAnimationService } from "../application/services/contracts";
   import { isContainerReady, resolve, TYPES } from "../inversify";
   import AboutTab from "../../modules/about/components/AboutTab.svelte";
+  import AdminDashboard from "../../modules/admin/components/AdminDashboard.svelte";
   import BuildTab from "../../modules/build/shared/components/BuildTab.svelte";
   import LearnTab from "../../modules/learn/LearnTab.svelte";
   import LibraryTab from "../../modules/library/LibraryTab.svelte";
@@ -87,7 +88,7 @@
       in:moduleIn
       out:moduleOut
     >
-      {#if isModuleActive("construct")}
+      {#if isModuleActive("build")}
         <BuildTab
           {onTabAccessibilityChange}
           {onCurrentWordChange}
@@ -102,6 +103,8 @@
         <WordCardTab />
       {:else if isModuleActive("write")}
         <WriteTab />
+      {:else if isModuleActive("admin")}
+        <AdminDashboard />
       {:else if isModuleActive("about")}
         <AboutTab />
       {/if}

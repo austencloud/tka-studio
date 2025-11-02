@@ -13,7 +13,8 @@ import {
   MODULE_DEFINITIONS,
   navigationState,
 } from "../navigation/state/navigation-state.svelte";
-import { setActiveModule } from "../application/state/app-state.svelte";
+import { switchModule } from "../application/state/ui/module-state";
+import { authStore } from "../auth";
 
 // Reactive state object using Svelte 5 $state rune
 export const navigationCoordinator = $state({
@@ -62,10 +63,10 @@ export function moduleSections() {
 }
 
 // Module change handler
-export function handleModuleChange(moduleId: ModuleId) {
+export async function handleModuleChange(moduleId: ModuleId) {
   navigationState.setCurrentModule(moduleId);
-  // Sync with legacy ui-state so ModuleRenderer knows to switch modules
-  setActiveModule(moduleId);
+  // Switch module with proper persistence (saves to localStorage + Firestore)
+  await switchModule(moduleId);
 }
 
 // Section change handler
@@ -80,4 +81,17 @@ export function handleSectionChange(sectionId: string) {
   }
 }
 
-export const moduleDefinitions = MODULE_DEFINITIONS;
+// Export as a getter function that reads authStore.isAdmin reactively
+// This ensures the module list updates when admin status changes
+export function getModuleDefinitions() {
+  // Read authStore.isAdmin directly in the getter so it's reactive
+  const isAdmin = authStore.isAdmin;
+
+  return MODULE_DEFINITIONS.filter(module => {
+    // Admin module only visible to admin users
+    if (module.id === "admin") {
+      return isAdmin;
+    }
+    return true;
+  });
+}

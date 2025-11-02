@@ -92,7 +92,7 @@ export const buildModule = new ContainerModule(
     options.bind(TYPES.IBeatOperationsService).to(BeatOperationsService);
     options.bind(TYPES.IKeyboardArrowAdjustmentService).to(KeyboardArrowAdjustmentService);
     options.bind(TYPES.IUndoService).to(UndoService);
-    options.bind(TYPES.IConstructTabCoordinator).to(ConstructCoordinator);
+    options.bind(TYPES.IBuildConstructTabCoordinator).to(ConstructCoordinator);
     options.bind(TYPES.ITurnControlService).to(TurnControlService);
 
     // === OPTION PICKER SERVICES ===

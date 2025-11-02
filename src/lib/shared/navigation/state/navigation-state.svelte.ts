@@ -125,33 +125,19 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     isMain: true,
     sections: LIBRARY_TABS,
   },
+  // Removed: write and word_card modules (not currently in use)
   {
-    id: "write",
-    label: "Write",
-    icon: '<i class="fas fa-pen" style="color: #14b8a6;"></i>', // Teal - writing/communication
-    description: "Write sequences as text",
-    isMain: false,
+    id: "admin",
+    label: "Admin",
+    icon: '<i class="fas fa-crown" style="color: #ffd700;"></i>', // Gold - admin/privileged
+    description: "System management & configuration",
+    isMain: false, // Only visible to admins
     sections: [
       {
-        id: "write",
-        label: "Write",
-        icon: '<i class="fas fa-pen" style="color: #14b8a6;"></i>',
-        description: "Write sequences as text",
-      },
-    ],
-  },
-  {
-    id: "word_card",
-    label: "Word Card",
-    icon: '<i class="fas fa-id-card" style="color: #ec4899;"></i>', // Pink - cards/printables
-    description: "Generate word cards",
-    isMain: false,
-    sections: [
-      {
-        id: "word_card",
-        label: "Word Card",
-        icon: '<i class="fas fa-id-card" style="color: #ec4899;"></i>',
-        description: "Generate word cards",
+        id: "admin",
+        label: "Admin",
+        icon: '<i class="fas fa-crown" style="color: #ffd700;"></i>',
+        description: "System management & configuration",
       },
     ],
   },

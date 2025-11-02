@@ -177,6 +177,7 @@ function initializeContainer() {
       }
 
       const {
+        adminModule,
         coreModule,
         animatorModule,
         exploreModule,
@@ -205,7 +206,8 @@ function initializeContainer() {
         learnModule,
         wordCardModule,
         writeModule,
-        gamificationModule
+        gamificationModule,
+        adminModule
       );
       isInitialized = true;
     } catch (error) {

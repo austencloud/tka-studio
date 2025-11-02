@@ -9,10 +9,11 @@ import type {
 import { BackgroundType } from "../../domain/enums/background-enums";
 
 import { AuroraBackgroundSystem } from "../../../aurora/services/AuroraBackgroundSystem";
-import { DeepOceanBackgroundSystem } from "../../../deep-ocean/services/DeepOceanBackgroundSystem";
-import { NightSkyBackgroundSystem } from "../../../night-sky/services/NightSkyBackgroundSystem";
+import { DeepOceanBackgroundOrchestrator } from "../../../deep-ocean/services/DeepOceanBackgroundOrchestrator";
+import { NightSkyBackgroundSystem } from "../../../night-sky";
 import { SimpleBackgroundSystem } from "../../../simple/services/SimpleBackgroundSystem";
 import { SnowfallBackgroundSystem } from "../../../snowfall/services/SnowfallBackgroundSystem";
+import { resolve, TYPES } from "$shared";
 
 // BackgroundFactoryParams doesn't exist in domain - define locally
 interface BackgroundFactoryParams {
@@ -81,7 +82,14 @@ export class BackgroundFactory {
         backgroundSystem = await NightSkyBackgroundSystem.create();
         break;
       case BackgroundType.DEEP_OCEAN:
-        backgroundSystem = new DeepOceanBackgroundSystem();
+        // Use the refactored orchestrator
+        backgroundSystem = new DeepOceanBackgroundOrchestrator(
+          resolve(TYPES.IBubblePhysics),
+          resolve(TYPES.IMarineLifeAnimator),
+          resolve(TYPES.IParticleSystem),
+          resolve(TYPES.IOceanRenderer),
+          resolve(TYPES.ILightRayCalculator)
+        );
         break;
       case BackgroundType.SOLID_COLOR:
         backgroundSystem = new SimpleBackgroundSystem({

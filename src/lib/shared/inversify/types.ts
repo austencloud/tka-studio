@@ -141,7 +141,7 @@ export const TYPES = {
   IFilterPersistenceService: Symbol.for("IFilterPersistenceService"),
   // === WORKBENCH SERVICES ===
   IWorkbenchService: Symbol.for("IWorkbenchService"),
-  IConstructTabCoordinator: Symbol.for("IConstructTabCoordinator"),
+  IBuildConstructTabCoordinator: Symbol.for("IBuildConstructTabCoordinator"),
   IStartPositionService: Symbol.for("IStartPositionService"), // UNIFIED SERVICE
 
   // === EXPORT SERVICES ===
@@ -296,6 +296,16 @@ export const TYPES = {
   IBackgroundConfigurationService: Symbol.for(
     "IBackgroundConfigurationService"
   ),
+  
+  // === DEEP OCEAN BACKGROUND SERVICES ===
+  IBackgroundSystem: Symbol.for("IBackgroundSystem"),
+  IBubblePhysics: Symbol.for("IBubblePhysics"),
+  IMarineLifeAnimator: Symbol.for("IMarineLifeAnimator"),
+  IParticleSystem: Symbol.for("IParticleSystem"),
+  IFishSpriteManager: Symbol.for("IFishSpriteManager"),
+  IOceanRenderer: Symbol.for("IOceanRenderer"),
+  ILightRayCalculator: Symbol.for("ILightRayCalculator"),
+  
   INightSkyCalculationService: Symbol.for("INightSkyCalculationService"),
   IBrowseStatePersister: Symbol.for("IBrowseStatePersister"),
   IArrowPlacementService: Symbol.for("IArrowPlacementService"),
@@ -370,6 +380,9 @@ export const TYPES = {
   IDailyChallengeService: Symbol.for("IDailyChallengeService"),
   INotificationService: Symbol.for("INotificationService"),
   IStreakService: Symbol.for("IStreakService"),
+
+  // === ADMIN SERVICES ===
+  IAdminChallengeService: Symbol.for("IAdminChallengeService"),
 } as const;
 
 // Type helper for getting service types
@@ -407,4 +420,13 @@ export const BackgroundTypes = {
   IBackgroundPreloader: TYPES.IBackgroundPreloader,
   IBackgroundConfigurationService: TYPES.IBackgroundConfigurationService,
   INightSkyCalculationService: TYPES.INightSkyCalculationService,
+
+  // Deep Ocean Background Services
+  IBackgroundSystem: TYPES.IBackgroundSystem,
+  IBubblePhysics: TYPES.IBubblePhysics,
+  IMarineLifeAnimator: TYPES.IMarineLifeAnimator,
+  IParticleSystem: TYPES.IParticleSystem,
+  IFishSpriteManager: TYPES.IFishSpriteManager,
+  IOceanRenderer: TYPES.IOceanRenderer,
+  ILightRayCalculator: TYPES.ILightRayCalculator,
 } as const;

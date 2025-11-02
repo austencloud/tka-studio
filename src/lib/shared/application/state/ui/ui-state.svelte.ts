@@ -23,7 +23,7 @@ export function getActiveModule(): TabId | null {
 }
 
 export function getActiveModuleOrDefault(): TabId {
-  return uiState.activeModule || "construct";
+  return uiState.activeModule || "build";
 }
 
 export function setActiveModule(module: TabId | null): void {
@@ -169,7 +169,7 @@ export function closeSpotlightViewer(): void {
 // ============================================================================
 
 export function resetUIState(): void {
-  uiState.activeModule = "construct";
+  uiState.activeModule = "build";
   uiState.showSettings = false;
   uiState.isFullScreen = false;
   uiState.isTransitioning = false;

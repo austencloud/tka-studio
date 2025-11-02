@@ -1,5 +1,6 @@
 import { browser } from "$app/environment";
 import type { ModuleId } from "$shared";
+import { authStore } from "../../../auth";
 import { getPersistenceService } from "../services.svelte";
 import {
   getActiveModule,
@@ -10,6 +11,78 @@ import {
 
 const LOCAL_STORAGE_KEY = "tka-active-module-cache";
 const TRANSITION_RESET_DELAY = 300;
+
+/**
+ * Check if a module is accessible to the current user
+ */
+function isModuleAccessible(moduleId: ModuleId): boolean {
+  // Admin module requires admin permissions
+  if (moduleId === "admin") {
+    const isAdmin = authStore.isAdmin;
+    console.log(`🔒 [module-state] Checking admin access: authStore.isAdmin =`, isAdmin);
+    return isAdmin;
+  }
+  // All other modules are accessible to everyone
+  return true;
+}
+
+/**
+ * Re-validate current module after auth state changes
+ * Called when auth initializes to restore admin module if needed
+ */
+export async function revalidateCurrentModule(): Promise<void> {
+  const currentModule = getActiveModule();
+  console.log(`🔄 [module-state] Revalidating current module:`, currentModule);
+  console.log(`🔄 [module-state] authStore.isAdmin:`, authStore.isAdmin);
+
+  // Try to restore admin module if user is now admin
+  if (authStore.isAdmin && currentModule !== "admin") {
+    try {
+      // Check localStorage FIRST (most recent user intent, survives even if Firestore was overwritten)
+      const cached = browser ? localStorage.getItem(LOCAL_STORAGE_KEY) : null;
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (parsed.moduleId === "admin") {
+            console.log(`✅ [module-state] User is admin, restoring admin module from localStorage`);
+            setActiveModule("admin");
+            // Sync Firestore to match localStorage
+            const persistence = getPersistenceService();
+            await persistence.saveActiveTab("admin");
+            return;
+          }
+        } catch (e) {
+          // Ignore parse errors
+        }
+      }
+
+      // If localStorage doesn't have admin, check Firestore as fallback
+      const persistence = getPersistenceService();
+      console.log(`🔍 [module-state] Fetching saved module from Firestore...`);
+      const savedFromFirestore = await persistence.getActiveTab();
+
+      console.log(`🔍 [module-state] Saved module from Firestore:`, savedFromFirestore);
+
+      // If Firestore has "admin", restore it
+      if (savedFromFirestore === "admin") {
+        console.log(`✅ [module-state] User is admin, restoring admin module from Firestore`);
+        setActiveModule("admin");
+        // Update localStorage to match
+        if (browser) {
+          localStorage.setItem(
+            LOCAL_STORAGE_KEY,
+            JSON.stringify({ moduleId: "admin" })
+          );
+        }
+        return;
+      }
+
+      console.log(`ℹ️ [module-state] No admin module found in cache, staying on ${currentModule}`);
+    } catch (error) {
+      console.warn(`⚠️ [module-state] Failed to revalidate module:`, error);
+    }
+  }
+}
 
 export function getInitialModuleFromCache(): ModuleId {
   if (!browser) {
@@ -65,15 +138,42 @@ export async function initializeModulePersistence(): Promise<void> {
     await persistence.initialize();
 
     const savedModule = await persistence.getActiveTab();
+    console.log(`🔍 [module-state] Initializing module persistence, savedModule:`, savedModule);
+    console.log(`🔍 [module-state] authStore.isAdmin:`, authStore.isAdmin);
+
     if (savedModule) {
-      setActiveModule(savedModule);
-      if (browser) {
-        localStorage.setItem(
-          LOCAL_STORAGE_KEY,
-          JSON.stringify({ moduleId: savedModule })
-        );
+      // Cast to ModuleId since we're checking if it's a valid module
+      const moduleId = savedModule as ModuleId;
+      const hasAccess = isModuleAccessible(moduleId);
+      console.log(`🔍 [module-state] Checking access for "${moduleId}":`, hasAccess);
+
+      if (hasAccess) {
+        // Valid saved module that user has access to
+        console.log(`✅ [module-state] User has access to "${moduleId}", restoring module`);
+        setActiveModule(moduleId);
+        if (browser) {
+          localStorage.setItem(
+            LOCAL_STORAGE_KEY,
+            JSON.stringify({ moduleId })
+          );
+        }
+      } else {
+        // User doesn't have access to it (e.g., admin module without admin permissions)
+        console.log(`⚠️ [module-state] User does not have access to saved module "${savedModule}", falling back to default`);
+
+        const defaultModule = getActiveModuleOrDefault();
+        setActiveModule(defaultModule);
+        await persistence.saveActiveTab(defaultModule);
+        if (browser) {
+          localStorage.setItem(
+            LOCAL_STORAGE_KEY,
+            JSON.stringify({ moduleId: defaultModule })
+          );
+        }
       }
     } else {
+      // No saved module
+      console.log(`ℹ️ [module-state] No saved module found, using default`);
       const defaultModule = getActiveModuleOrDefault();
       setActiveModule(defaultModule);
       await persistence.saveActiveTab(defaultModule);
