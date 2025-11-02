@@ -66,16 +66,16 @@ describe("ReversalDetectionService", () => {
       const beat = createBeat(1, "cw", "ccw");
       const result = service.processReversals(createSeq([beat]));
 
-      expect(result.beats[0].blueReversal).toBe(false);
-      expect(result.beats[0].redReversal).toBe(false);
+      expect(result.beats[0]!.blueReversal).toBe(false);
+      expect(result.beats[0]!.redReversal).toBe(false);
     });
 
     it("should detect NO reversal when same direction", () => {
       const beats = [createBeat(1, "cw", "cw"), createBeat(2, "cw", "cw")];
       const result = service.processReversals(createSeq(beats));
 
-      expect(result.beats[1].blueReversal).toBe(false);
-      expect(result.beats[1].redReversal).toBe(false);
+      expect(result.beats[1]!.blueReversal).toBe(false);
+      expect(result.beats[1]!.redReversal).toBe(false);
     });
 
     it("should detect reversal when direction changes", () => {
@@ -85,8 +85,8 @@ describe("ReversalDetectionService", () => {
       ];
       const result = service.processReversals(createSeq(beats));
 
-      expect(result.beats[1].blueReversal).toBe(true); // cw → ccw
-      expect(result.beats[1].redReversal).toBe(true); // ccw → cw
+      expect(result.beats[1]!.blueReversal).toBe(true); // cw → ccw
+      expect(result.beats[1]!.redReversal).toBe(true); // ccw → cw
     });
 
     it("should skip blank beats when detecting reversals", () => {
@@ -98,8 +98,8 @@ describe("ReversalDetectionService", () => {
       const result = service.processReversals(createSeq(beats));
 
       // Beat 3 should reverse based on beat 1 (blank ignored)
-      expect(result.beats[2].blueReversal).toBe(true);
-      expect(result.beats[2].redReversal).toBe(true);
+      expect(result.beats[2]!.blueReversal).toBe(true);
+      expect(result.beats[2]!.redReversal).toBe(true);
     });
 
     it("should handle mixed reversals (only one color)", () => {
@@ -109,8 +109,8 @@ describe("ReversalDetectionService", () => {
       ];
       const result = service.processReversals(createSeq(beats));
 
-      expect(result.beats[1].blueReversal).toBe(false); // Blue stays cw
-      expect(result.beats[1].redReversal).toBe(true); // Red reverses
+      expect(result.beats[1]!.blueReversal).toBe(false); // Blue stays cw
+      expect(result.beats[1]!.redReversal).toBe(true); // Red reverses
     });
 
     it("should handle multiple reversals in sequence", () => {
@@ -121,8 +121,8 @@ describe("ReversalDetectionService", () => {
       ];
       const result = service.processReversals(createSeq(beats));
 
-      expect(result.beats[1].blueReversal).toBe(true);
-      expect(result.beats[2].blueReversal).toBe(true);
+      expect(result.beats[1]!.blueReversal).toBe(true);
+      expect(result.beats[2]!.blueReversal).toBe(true);
     });
 
     it("should ignore noRotation direction", () => {
@@ -132,8 +132,8 @@ describe("ReversalDetectionService", () => {
       ];
       const result = service.processReversals(createSeq(beats));
 
-      expect(result.beats[1].blueReversal).toBe(false);
-      expect(result.beats[1].redReversal).toBe(false);
+      expect(result.beats[1]!.blueReversal).toBe(false);
+      expect(result.beats[1]!.redReversal).toBe(false);
     });
   });
 

@@ -56,7 +56,6 @@ describe("DataTransformer", () => {
             color: MotionColor.BLUE,
             propType: PropType.STAFF,
           }),
-          red: undefined,
         },
         blueReversal: false,
         redReversal: false,
@@ -123,10 +122,7 @@ describe("DataTransformer", () => {
         beatNumber: 3,
         duration: 1.0,
         letter: Letter.C,
-        motions: {
-          blue: undefined,
-          red: undefined,
-        },
+        motions: {},
         blueReversal: false,
         redReversal: false,
         isBlank: true,
@@ -159,7 +155,6 @@ describe("DataTransformer", () => {
             color: MotionColor.BLUE,
             propType: PropType.STAFF,
           }),
-          red: undefined,
         },
         blueReversal: false,
         redReversal: false,
@@ -193,7 +188,6 @@ describe("DataTransformer", () => {
         letter: Letter.D,
         motions: {
           blue: blueMotion,
-          red: undefined,
         },
         blueReversal: false,
         redReversal: false,
@@ -217,7 +211,7 @@ describe("DataTransformer", () => {
         beatNumber: 42,
         duration: 1.0,
         letter: Letter.E,
-        motions: { blue: undefined, red: undefined },
+        motions: {},
         blueReversal: false,
         redReversal: false,
         isBlank: false,
@@ -254,7 +248,7 @@ describe("DataTransformer", () => {
       expect(result.gridMode).toBe(GridMode.DIAMOND);
       expect(result.gridPointData.allLayer2PointsNormal.NORTH).toBeDefined();
       expect(
-        result.gridPointData.allLayer2PointsNormal.NORTH.coordinates
+        result.gridPointData.allLayer2PointsNormal.NORTH!.coordinates
       ).toEqual({
         x: 475,
         y: 100,

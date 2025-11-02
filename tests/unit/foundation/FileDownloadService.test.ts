@@ -187,9 +187,9 @@ describe("FileDownloadService", () => {
 
       expect(results).toHaveLength(3);
       expect(results.every((r) => r.success)).toBe(true);
-      expect(results[0].filename).toBe("file1.txt");
-      expect(results[1].filename).toBe("file2.txt");
-      expect(results[2].filename).toBe("file3.txt");
+      expect(results[0]!.filename).toBe("file1.txt");
+      expect(results[1]!.filename).toBe("file2.txt");
+      expect(results[2]!.filename).toBe("file3.txt");
     });
 
     it("should apply delay between downloads", async () => {
@@ -280,9 +280,9 @@ describe("FileDownloadService", () => {
       const results = await service.downloadBlobBatch(blobs, { delay: 0 });
 
       expect(results).toHaveLength(3);
-      expect(results[0].success).toBe(true);
-      expect(results[1].success).toBe(false);
-      expect(results[2].success).toBe(true);
+      expect(results[0]!.success).toBe(true);
+      expect(results[1]!.success).toBe(false);
+      expect(results[2]!.success).toBe(true);
     });
 
     it("should handle zero delay", async () => {

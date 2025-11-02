@@ -1504,7 +1504,7 @@ describe("Sequence Preview Rendering Performance", () => {
           if (i === 0) {
             const sizeKB = (dataUrl.length * 0.75) / 1024; // Base64 to bytes
             console.log(
-              `   beatScale=${scale}: ${times[0].toFixed(2)}ms, Size: ${sizeKB.toFixed(2)}KB`
+              `   beatScale=${scale}: ${times[0]!.toFixed(2)}ms, Size: ${sizeKB.toFixed(2)}KB`
             );
           }
         }
@@ -1571,7 +1571,7 @@ describe("Sequence Preview Rendering Performance", () => {
           if (i === 0) {
             const sizeKB = (dataUrl.length * 0.75) / 1024;
             console.log(
-              `   ${format}: ${times[0].toFixed(2)}ms, Size: ${sizeKB.toFixed(2)}KB`
+              `   ${format}: ${times[0]!.toFixed(2)}ms, Size: ${sizeKB.toFixed(2)}KB`
             );
           }
         }

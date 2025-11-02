@@ -35,9 +35,9 @@ describe("BeatNumberingService - Pure Utility", () => {
 
       const result = service.renumberBeats(beats);
 
-      expect(result[0].beatNumber).toBe(1);
-      expect(result[1].beatNumber).toBe(2);
-      expect(result[2].beatNumber).toBe(3);
+      expect(result[0]!.beatNumber).toBe(1);
+      expect(result[1]!.beatNumber).toBe(2);
+      expect(result[2]!.beatNumber).toBe(3);
     });
 
     it("should handle empty array", () => {
@@ -50,7 +50,7 @@ describe("BeatNumberingService - Pure Utility", () => {
       const result = service.renumberBeats(beats);
 
       expect(result).toHaveLength(1);
-      expect(result[0].beatNumber).toBe(1);
+      expect(result[0]!.beatNumber).toBe(1);
     });
 
     it("should preserve other beat properties", () => {
@@ -62,9 +62,9 @@ describe("BeatNumberingService - Pure Utility", () => {
 
       const [result] = service.renumberBeats([beat]);
 
-      expect(result.duration).toBe(2.5);
-      expect(result.blueReversal).toBe(true);
-      expect(result.id).toBe(beat.id); // Same beat, just renumbered
+      expect(result!.duration).toBe(2.5);
+      expect(result!.blueReversal).toBe(true);
+      expect(result!.id).toBe(beat.id); // Same beat, just renumbered
     });
   });
 
