@@ -1,4 +1,4 @@
-export interface AuroraBlob {
+export interface LensFlare {
   x: number;
   y: number;
   size: number;

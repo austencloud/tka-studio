@@ -5,7 +5,7 @@ import type {
   QualityLevel,
 } from "../../shared/domain/types/background-types";
 import type { IBackgroundSystem } from "../../shared/services/contracts/IBackgroundSystem";
-import type { AuroraBlob, Sparkle } from "../domain";
+import type { LensFlare, Sparkle } from "../domain";
 
 export class AuroraBackgroundSystem implements IBackgroundSystem {
   private quality: QualityLevel = "medium";
@@ -22,7 +22,7 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
   private wavePhase = 0;
 
   // Animated elements
-  private blobs: AuroraBlob[] = [];
+  private lensFlares: LensFlare[] = [];
   private sparkles: Sparkle[] = [];
 
   private isInitialized = false;
@@ -31,9 +31,9 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     this.quality = quality;
     this.isInitialized = true;
 
-    // Initialize blobs based on quality
-    const numBlobs = this.getNumBlobs();
-    this.blobs = this.createBlobs(numBlobs);
+    // Initialize lens flares based on quality
+    const numLensFlares = this.getNumLensFlares();
+    this.lensFlares = this.createLensFlares(numLensFlares);
 
     // Initialize sparkles based on quality
     const numSparkles = this.getNumSparkles();
@@ -53,8 +53,8 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     this.colorShift = (this.colorShift + 0.2 * frameMultiplier) % 360; // Much slower color cycling
     this.wavePhase += 0.01 * frameMultiplier;
 
-    // Update blobs
-    this.updateBlobs(frameMultiplier);
+    // Update lens flares
+    this.updateLensFlares(frameMultiplier);
 
     // Update sparkles
     this.updateSparkles(frameMultiplier);
@@ -66,8 +66,8 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     // Draw wavy gradient background
     this.drawWavyGradient(ctx, dimensions);
 
-    // Draw blobs
-    this.drawBlobs(ctx, dimensions);
+    // Draw lens flares
+    this.drawLensFlares(ctx, dimensions);
 
     // Draw sparkles
     this.drawSparkles(ctx, dimensions);
@@ -77,12 +77,12 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     this.quality = quality;
     if (this.isInitialized) {
       // Reinitialize with new quality
-      const numBlobs = this.getNumBlobs();
+      const numLensFlares = this.getNumLensFlares();
       const numSparkles = this.getNumSparkles();
 
       // Adjust existing arrays
-      while (this.blobs.length > numBlobs) this.blobs.pop();
-      while (this.blobs.length < numBlobs) this.blobs.push(this.createBlob());
+      while (this.lensFlares.length > numLensFlares) this.lensFlares.pop();
+      while (this.lensFlares.length < numLensFlares) this.lensFlares.push(this.createLensFlare());
 
       while (this.sparkles.length > numSparkles) this.sparkles.pop();
       while (this.sparkles.length < numSparkles)
@@ -99,7 +99,7 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
   }
 
   public cleanup(): void {
-    this.blobs = [];
+    this.lensFlares = [];
     this.sparkles = [];
     this.isInitialized = false;
   }
@@ -108,11 +108,11 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     return {
       fps: 60, // Estimated
       warnings: [],
-      particleCount: this.blobs.length + this.sparkles.length,
+      particleCount: this.lensFlares.length + this.sparkles.length,
     };
   }
 
-  private getNumBlobs(): number {
+  private getNumLensFlares(): number {
     switch (this.quality) {
       case "high":
         return 5;
@@ -144,16 +144,16 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     }
   }
 
-  private createBlobs(count: number): AuroraBlob[] {
-    const blobs: AuroraBlob[] = [];
+  private createLensFlares(count: number): LensFlare[] {
+    const lensFlares: LensFlare[] = [];
     for (let i = 0; i < count; i++) {
-      blobs.push(this.createBlob());
+      lensFlares.push(this.createLensFlare());
     }
-    return blobs;
+    return lensFlares;
   }
 
-  private createBlob(): AuroraBlob {
-    // In thumbnail mode, make blobs much larger and more opaque
+  private createLensFlare(): LensFlare {
+    // In thumbnail mode, make lens flares much larger and more opaque
     const baseSize = this.thumbnailMode ? 150 : 50;
     const sizeRange = this.thumbnailMode ? 200 : 100;
     const baseOpacity = this.thumbnailMode ? 0.4 : 0.1;
@@ -189,18 +189,18 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     };
   }
 
-  private updateBlobs(frameMultiplier: number = 1.0): void {
-    for (const blob of this.blobs) {
-      blob.x += blob.dx * frameMultiplier;
-      blob.y += blob.dy * frameMultiplier;
-      blob.size += blob.dsize * frameMultiplier;
-      blob.opacity += blob.dopacity * frameMultiplier;
+  private updateLensFlares(frameMultiplier: number = 1.0): void {
+    for (const lensFlare of this.lensFlares) {
+      lensFlare.x += lensFlare.dx * frameMultiplier;
+      lensFlare.y += lensFlare.dy * frameMultiplier;
+      lensFlare.size += lensFlare.dsize * frameMultiplier;
+      lensFlare.opacity += lensFlare.dopacity * frameMultiplier;
 
       // Keep within bounds and reverse direction if necessary
-      if (blob.x < 0 || blob.x > 1) blob.dx *= -1;
-      if (blob.y < 0 || blob.y > 1) blob.dy *= -1;
-      if (blob.size < 50 || blob.size > 250) blob.dsize *= -1;
-      if (blob.opacity < 0.1 || blob.opacity > 0.5) blob.dopacity *= -1;
+      if (lensFlare.x < 0 || lensFlare.x > 1) lensFlare.dx *= -1;
+      if (lensFlare.y < 0 || lensFlare.y > 1) lensFlare.dy *= -1;
+      if (lensFlare.size < 50 || lensFlare.size > 250) lensFlare.dsize *= -1;
+      if (lensFlare.opacity < 0.1 || lensFlare.opacity > 0.5) lensFlare.dopacity *= -1;
     }
   }
 
@@ -254,31 +254,31 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     ctx.fillRect(0, 0, dimensions.width, dimensions.height);
   }
 
-  private drawBlobs(
+  private drawLensFlares(
     ctx: CanvasRenderingContext2D,
     dimensions: Dimensions
   ): void {
-    for (let i = 0; i < this.blobs.length; i++) {
-      const blob = this.blobs[i];
-      if (!blob) continue;
+    for (let i = 0; i < this.lensFlares.length; i++) {
+      const lensFlare = this.lensFlares[i];
+      if (!lensFlare) continue;
 
-      const x = blob.x * dimensions.width;
-      const y = blob.y * dimensions.height;
+      const x = lensFlare.x * dimensions.width;
+      const y = lensFlare.y * dimensions.height;
 
       ctx.save();
 
-      // Create colorful radial gradients for blobs
+      // Create colorful radial gradients for lens flares
       const hue = (this.colorShift + i * 60) % 360;
       const color = this.hsvToRgb(hue / 360, 0.8, 1);
 
-      const gradient = ctx.createRadialGradient(x, y, 0, x, y, blob.size);
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, lensFlare.size);
       gradient.addColorStop(
         0,
-        `rgba(${color.r}, ${color.g}, ${color.b}, ${blob.opacity})`
+        `rgba(${color.r}, ${color.g}, ${color.b}, ${lensFlare.opacity})`
       );
       gradient.addColorStop(
         0.5,
-        `rgba(${color.r}, ${color.g}, ${color.b}, ${blob.opacity * 0.5})`
+        `rgba(${color.r}, ${color.g}, ${color.b}, ${lensFlare.opacity * 0.5})`
       );
       gradient.addColorStop(
         1,
@@ -289,7 +289,7 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
       ctx.filter = "blur(20px)"; // Soft glow effect
 
       ctx.beginPath();
-      ctx.ellipse(x, y, blob.size, blob.size, 0, 0, 2 * Math.PI);
+      ctx.ellipse(x, y, lensFlare.size, lensFlare.size, 0, 0, 2 * Math.PI);
       ctx.fill();
 
       ctx.restore();
