@@ -17,6 +17,7 @@ import {
   RotationDirection,
 } from "$shared";
 import { inject, injectable } from "inversify";
+import { TYPES } from "$lib/shared/inversify/types";
 import type { HandPath, HandPathSegment } from "../../domain";
 import type { IHandPathDirectionDetector } from "../contracts/IHandPathDirectionDetector";
 import type { IPathToMotionConverter } from "../contracts/IPathToMotionConverter";
@@ -24,7 +25,7 @@ import type { IPathToMotionConverter } from "../contracts/IPathToMotionConverter
 @injectable()
 export class PathToMotionConverter implements IPathToMotionConverter {
   constructor(
-    @inject("IHandPathDirectionDetector")
+    @inject(TYPES.IHandPathDirectionDetector)
     private handPathDirectionDetector: IHandPathDirectionDetector
   ) {}
 

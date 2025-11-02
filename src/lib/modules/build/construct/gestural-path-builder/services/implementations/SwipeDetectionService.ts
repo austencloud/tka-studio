@@ -7,6 +7,7 @@
 
 import type { GridLocation, GridMode } from "$shared";
 import { inject, injectable } from "inversify";
+import { TYPES } from "$lib/shared/inversify/types";
 import type { GridPositionPoint, SwipeGesture } from "../../domain";
 import type { IHandPathDirectionDetector } from "../contracts/IHandPathDirectionDetector";
 import type { ISwipeDetectionService } from "../contracts/ISwipeDetectionService";
@@ -14,7 +15,7 @@ import type { ISwipeDetectionService } from "../contracts/ISwipeDetectionService
 @injectable()
 export class SwipeDetectionService implements ISwipeDetectionService {
   constructor(
-    @inject("IHandPathDirectionDetector")
+    @inject(TYPES.IHandPathDirectionDetector)
     private handPathDirectionDetector: IHandPathDirectionDetector
   ) {}
 

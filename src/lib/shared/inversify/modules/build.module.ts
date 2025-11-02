@@ -121,9 +121,9 @@ export const buildModule = new ContainerModule(
       .inSingletonScope();
 
     // === GESTURAL PATH BUILDER SERVICES === (January 2025)
-    options.bind("IHandPathDirectionDetector").to(HandPathDirectionDetector);
-    options.bind("ISwipeDetectionService").to(SwipeDetectionService);
-    options.bind("IPathToMotionConverter").to(PathToMotionConverter);
+    options.bind(TYPES.IHandPathDirectionDetector).to(HandPathDirectionDetector);
+    options.bind(TYPES.ISwipeDetectionService).to(SwipeDetectionService);
+    options.bind(TYPES.IPathToMotionConverter).to(PathToMotionConverter);
 
     // === GENERATION SERVICES === (restored active services 2025-10-25)
     options.bind(TYPES.IBeatConverterService).to(BeatConverterService);

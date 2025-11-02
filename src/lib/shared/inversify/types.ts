@@ -386,6 +386,7 @@ export const TYPES = {
 
   // === GESTURAL PATH BUILDER SERVICES ===
   IHandPathDirectionDetector: Symbol.for("IHandPathDirectionDetector"),
+  ISwipeDetectionService: Symbol.for("ISwipeDetectionService"),
   IPathToMotionConverter: Symbol.for("IPathToMotionConverter"),
 } as const;
 
