@@ -98,7 +98,7 @@
     if (!sequenceState) return;
 
     // Check if we're in Animate tab
-    const isAnimateTabActive = buildTabState?.activeSubTab === "animate";
+    const isAnimateTabActive = buildTabState?.activeSection === "animate";
 
     if (isAnimateTabActive && animationStateRef) {
       // In Animate tab: Jump to this beat in the animation (needs array index)

@@ -20,7 +20,7 @@ export interface IBuildTabTransitionService {
   /**
    * Get transition functions for Svelte transitions
    */
-  getSubTabTransitions(): {
+  getSectionTransitions(): {
     in: (node: Element) => { duration: number; css: (t: number) => string };
     out: (node: Element) => { duration: number; css: (t: number) => string };
   };

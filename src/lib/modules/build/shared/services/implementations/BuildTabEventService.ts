@@ -9,12 +9,12 @@
 import { createBeatData, resolve, type BeatData, type IOrientationCalculationService, type PictographData, type SequenceData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { injectable } from "inversify";
-import type { IBuildTabEventService, IConstructSubTabCoordinationService } from "../contracts";
+import type { IBuildTabEventService, IBuildConstructSectionCoordinator } from "../contracts";
 
 
 @injectable()
 export class BuildTabEventService implements IBuildTabEventService {
-  private constructCoordinator: IConstructSubTabCoordinationService | null = null;
+  private constructCoordinator: IBuildConstructSectionCoordinator | null = null;
   private orientationCalculationService: IOrientationCalculationService | null = null;
   private initialized = false;
 
@@ -38,7 +38,7 @@ export class BuildTabEventService implements IBuildTabEventService {
     }
 
     try {
-      this.constructCoordinator = resolve<IConstructSubTabCoordinationService>(TYPES.IConstructTabCoordinator);
+      this.constructCoordinator = resolve<IBuildConstructSectionCoordinator>(TYPES.IBuildConstructTabCoordinator);
       this.orientationCalculationService = resolve<IOrientationCalculationService>(TYPES.IOrientationCalculationService);
       this.initialized = true;
     } catch (error) {

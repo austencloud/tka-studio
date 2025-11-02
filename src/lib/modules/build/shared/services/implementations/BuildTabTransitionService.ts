@@ -38,7 +38,7 @@ export class BuildTabTransitionService implements IBuildTabTransitionService {
   /**
    * Get transition functions for Svelte transitions
    */
-  getSubTabTransitions() {
+  getSectionTransitions() {
     return {
       in: (_node: Element) => ({
         duration: 250,

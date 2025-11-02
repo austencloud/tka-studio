@@ -33,7 +33,7 @@ export function createBuildTabEffects(config: EffectConfig) {
     if (!buildTabState) return;
 
     const currentMode = navigationState.currentSection;
-    const buildTabCurrentMode = buildTabState.activeSubTab;
+    const buildTabCurrentMode = buildTabState.activeSection;
 
     if (
       currentMode !== buildTabCurrentMode &&
@@ -61,7 +61,7 @@ export function createBuildTabEffects(config: EffectConfig) {
   $effect(() => {
     if (!buildTabState) return;
 
-    const buildTabCurrentMode = buildTabState.activeSubTab;
+    const buildTabCurrentMode = buildTabState.activeSection;
     const navCurrentMode = navigationState.currentSection;
 
     if (buildTabCurrentMode && buildTabCurrentMode !== navCurrentMode) {

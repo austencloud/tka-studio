@@ -105,12 +105,12 @@ export function createSequenceState(services: SequenceStateServices) {
     }
   }
 
-  async function saveCurrentState(activeBuildSubTab: ActiveBuildTab): Promise<void> {
+  async function saveCurrentState(activeBuildSection: ActiveBuildTab): Promise<void> {
     await persistenceCoordinator.saveState({
       currentSequence: coreState.currentSequence,
       selectedStartPosition: selectionState.selectedStartPosition,
       hasStartPosition: selectionState.hasStartPosition,
-      activeBuildSubTab,
+      activeBuildSection,
     });
   }
 

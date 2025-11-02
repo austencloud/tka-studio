@@ -22,7 +22,7 @@ export interface ISequencePersistenceService {
     currentSequence: SequenceData | null;
     selectedStartPosition: PictographData | null;
     hasStartPosition: boolean;
-    activeBuildSubTab: ActiveBuildTab;
+    activeBuildSection: ActiveBuildTab;
   }): Promise<void>;
 
   /**
@@ -33,7 +33,7 @@ export interface ISequencePersistenceService {
     currentSequence: SequenceData | null;
     selectedStartPosition: PictographData | null;
     hasStartPosition: boolean;
-    activeBuildSubTab: ActiveBuildTab;
+    activeBuildSection: ActiveBuildTab;
   } | null>;
 
   /**

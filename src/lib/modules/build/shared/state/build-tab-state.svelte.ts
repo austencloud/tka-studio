@@ -56,8 +56,8 @@ export function createBuildTabState(
 
   let isLoading = $state(false);
   let error = $state<string | null>(null);
-  let isTransitioningSubTab = $state(false);
-  let activeSubTab = $state<ActiveBuildTab | null>(null); // Start with null to prevent flicker during restoration
+  let isTransitioningSection = $state(false);
+  let activeSection = $state<ActiveBuildTab | null>(null); // Start with null to prevent flicker during restoration
   let isPersistenceInitialized = $state(false); // Track if persistence has been loaded
   let isNavigatingBack = $state(false); // Track if currently in back navigation to prevent sync loops
 
@@ -108,7 +108,7 @@ export function createBuildTabState(
 
   const hasError = $derived(error !== null);
   const hasSequence = $derived(sequenceState.currentSequence !== null);
-  const isSubTabLoading = $derived(activeSubTab === null); // Loading state detection like main navigation
+  const isSectionLoading = $derived(activeSection === null); // Loading state detection like main navigation
   const canGoBack = $derived(navigationHistory.length > 0);
   const hasOptionHistory = $derived(optionSelectionHistory.length > 0);
 
@@ -124,8 +124,8 @@ export function createBuildTabState(
     isLoading = loading;
   }
 
-  function setTransitioningSubTab(transitioning: boolean) {
-    isTransitioningSubTab = transitioning;
+  function setTransitioningSection(transitioning: boolean) {
+    isTransitioningSection = transitioning;
   }
 
   function setError(errorMessage: string | null) {
@@ -154,17 +154,17 @@ export function createBuildTabState(
    * @param addToHistory - Whether to add this navigation to history
    */
   function setactiveToolPanelInternal(panel: ActiveBuildTab, addToHistory: boolean = true) {
-    console.log("🔄 buildTabState.setactiveToolPanelInternal called with:", { panel, currentActiveSubTab: activeSubTab });
+    console.log("🔄 buildTabState.setactiveToolPanelInternal called with:", { panel, currentActiveSection: activeSection });
 
     // Track the last content tab (generate or construct) BEFORE navigating away from it
-    if ((activeSubTab === 'generate' || activeSubTab === 'construct') && activeSubTab !== panel) {
-      lastContentTab = activeSubTab;
+    if ((activeSection === 'generate' || activeSection === 'construct') && activeSection !== panel) {
+      lastContentTab = activeSection;
     }
 
     // Add to navigation history if it's different from current AND we should track history
-    if (addToHistory && activeSubTab !== panel && activeSubTab !== null) {
+    if (addToHistory && activeSection !== panel && activeSection !== null) {
       navigationHistory.push({
-        panel: activeSubTab,
+        panel: activeSection,
         timestamp: Date.now(),
       });
 
@@ -174,8 +174,8 @@ export function createBuildTabState(
       }
     }
 
-    activeSubTab = panel;
-    console.log("✅ buildTabState.activeSubTab updated to:", activeSubTab);
+    activeSection = panel;
+    console.log("✅ buildTabState.activeSection updated to:", activeSection);
     // Save the active tab to persistence
     saveCurrentState();
   }
@@ -271,7 +271,7 @@ export function createBuildTabState(
     // This prevents blocking the main thread during beat addition
     const currentSequenceRef = sequenceState.currentSequence;
     const selectedBeatNumberRef = sequenceState.selectedBeatNumber;
-    const activeSubTabRef = activeSubTab;
+    const activeSectionRef = activeSection;
     const timestampRef = Date.now();
 
     // Defer the expensive deep copy operation to a microtask
@@ -287,7 +287,7 @@ export function createBuildTabState(
       const beforeState = {
         sequence: sequenceCopy,
         selectedBeatNumber: selectedBeatNumberRef,
-        activeSubTab: activeSubTabRef,
+        activeSection: activeSectionRef,
         shouldShowStartPositionPicker: type === 'SELECT_START_POSITION' ? true : undefined,
         timestamp: timestampRef
       };
@@ -366,8 +366,8 @@ export function createBuildTabState(
           }
 
           // Restore the active tab
-          if (lastEntry.beforeState.activeSubTab !== null) {
-            setactiveToolPanelInternal(lastEntry.beforeState.activeSubTab, false);
+          if (lastEntry.beforeState.activeSection !== null) {
+            setactiveToolPanelInternal(lastEntry.beforeState.activeSection, false);
           }
         }, fadeAnimationDuration);
 
@@ -386,8 +386,8 @@ export function createBuildTabState(
     }
 
     // Restore the active tab (important for clear sequence undo)
-    if (lastEntry.beforeState.activeSubTab !== null) {
-      setactiveToolPanelInternal(lastEntry.beforeState.activeSubTab, false);  // Don't add to navigation history
+    if (lastEntry.beforeState.activeSection !== null) {
+      setactiveToolPanelInternal(lastEntry.beforeState.activeSection, false);  // Don't add to navigation history
     }
 
     return true;
@@ -426,15 +426,15 @@ export function createBuildTabState(
       // Load saved build tab state using the sequence persistence service
       if (sequencePersistenceService) {
         const savedState = await sequencePersistenceService.loadCurrentState();
-        if (savedState?.activeBuildSubTab) {
-          activeSubTab = savedState.activeBuildSubTab;
+        if (savedState?.activeBuildSection) {
+          activeSection = savedState.activeBuildSection;
         } else {
           // Set default tab when no saved state is found
-          activeSubTab = "construct";
+          activeSection = "construct";
         }
       } else {
         // Set default tab when no persistence service is available
-        activeSubTab = "construct";
+        activeSection = "construct";
       }
 
       // Rebuild option history from persisted sequence
@@ -454,8 +454,8 @@ export function createBuildTabState(
     if (!isPersistenceInitialized) return;
 
     try {
-      if (activeSubTab) {
-        await sequenceState.saveCurrentState(activeSubTab);
+      if (activeSection) {
+        await sequenceState.saveCurrentState(activeSection);
       }
     } catch (error) {
       console.error("❌ BuildTabState: Failed to save current state:", error);
@@ -475,7 +475,7 @@ export function createBuildTabState(
       return error;
     },
     get isTransitioning() {
-      return isTransitioningSubTab;
+      return isTransitioningSection;
     },
     get hasError() {
       return hasError;
@@ -483,8 +483,8 @@ export function createBuildTabState(
     get hasSequence() {
       return hasSequence;
     },
-    get activeSubTab() {
-      return activeSubTab;
+    get activeSection() {
+      return activeSection;
     },
     get lastContentTab() {
       return lastContentTab;
@@ -492,8 +492,8 @@ export function createBuildTabState(
     get isPersistenceInitialized() {
       return isPersistenceInitialized;
     },
-    get isSubTabLoading() {
-      return isSubTabLoading;
+    get isSectionLoading() {
+      return isSectionLoading;
     },
     get canGoBack() {
       return canGoBack;
@@ -539,7 +539,7 @@ export function createBuildTabState(
 
     // State mutations
     setLoading,
-    setTransitioning: setTransitioningSubTab,
+    setTransitioning: setTransitioningSection,
     setError,
     clearError,
     setactiveToolPanel,

@@ -51,7 +51,7 @@
   // ============================================================================
 
   // Derived from props
-  let activeToolPanel = $derived(buildTabState.activeSubTab);
+  let activeToolPanel = $derived(buildTabState.activeSection);
 
   // Derived: Toggle never shows in ToolPanel header (always in ButtonPanel instead)
   let shouldShowToggleInHeader = $derived(() => {
@@ -132,9 +132,9 @@
 
   const isSequenceStateInitialized = $derived(buildTabState.sequenceState.isInitialized);
   const isBuildTabPersistenceInitialized = $derived(buildTabState.isPersistenceInitialized);
-  const isSubTabLoading = $derived(buildTabState.isSubTabLoading);
+  const isSectionLoading = $derived(buildTabState.isSectionLoading);
   const isPersistenceFullyInitialized = $derived(
-    isSequenceStateInitialized && isBuildTabPersistenceInitialized && !isSubTabLoading
+    isSequenceStateInitialized && isBuildTabPersistenceInitialized && !isSectionLoading
   );
 
   const currentSequenceData = $derived.by(() => {
@@ -146,7 +146,7 @@
 
   const shouldShowStartPositionPicker = $derived.by(() => {
     if (!isPersistenceFullyInitialized) return null;
-    if (buildTabState.activeSubTab !== "construct") return null;
+    if (buildTabState.activeSection !== "construct") return null;
     if (!constructTabState.isInitialized) return null;
 
     const constructTabPickerState = constructTabState.shouldShowStartPositionPicker();

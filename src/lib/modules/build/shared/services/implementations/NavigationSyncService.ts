@@ -18,7 +18,7 @@ export class NavigationSyncService implements INavigationSyncService {
 
   syncNavigationToBuildTab(buildTabState: any, navigationState: any): void {
     const currentMode = navigationState.currentSection;
-    const buildTabCurrentMode = buildTabState.activeSubTab;
+    const buildTabCurrentMode = buildTabState.activeSection;
 
     this.logger.log("Navigation → BuildTab sync:", {
       currentMode,
@@ -57,7 +57,7 @@ export class NavigationSyncService implements INavigationSyncService {
 
     this.logger.log("Updating buildTab state from navigation:", currentMode);
     buildTabState.setactiveToolPanel(currentMode);
-    this.logger.success("BuildTab state updated to:", buildTabState.activeSubTab);
+    this.logger.success("BuildTab state updated to:", buildTabState.activeSection);
   }
 
   syncBuildTabToNavigation(buildTabState: any, navigationState: any): void {
@@ -66,7 +66,7 @@ export class NavigationSyncService implements INavigationSyncService {
       return;
     }
 
-    const buildTabCurrentMode = buildTabState.activeSubTab;
+    const buildTabCurrentMode = buildTabState.activeSection;
     const navCurrentMode = navigationState.currentSection;
 
     if (buildTabCurrentMode && buildTabCurrentMode !== navCurrentMode) {

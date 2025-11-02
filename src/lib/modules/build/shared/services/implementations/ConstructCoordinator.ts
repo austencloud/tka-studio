@@ -15,7 +15,7 @@ import type { IStartPositionService } from "../../../construct/start-position-pi
 import type { IWorkbenchService } from "../../../workspace-panel/shared/services/contracts";
 import type { BeatData } from "../../domain/models/BeatData";
 import type { ISequenceService } from "../contracts";
-import type { IConstructSubTabCoordinationService as IConstructCoordinator } from "../contracts/IConstructCoordinator";
+import type { IBuildConstructSectionCoordinator as IConstructCoordinator } from "../contracts/IConstructCoordinator";
 
 // Note: This service will need to be updated to use the new DI pattern
 // For now, we'll comment out the direct import to avoid build errors

@@ -1,10 +1,10 @@
 import type { BeatData, SequenceData } from "$shared";
 
 /**
- * Coordination service for Construct sub-tabs
+ * Coordination service for the Construct section within the Build module
  * Restored minimal contract based on usages in BuildTabEventService.
  */
-export interface IConstructSubTabCoordinationService {
+export interface IBuildConstructSectionCoordinator {
   setupComponentCoordination(components: Record<string, unknown>): void;
   handleSequenceModified(sequence: SequenceData): Promise<void>;
   handleStartPositionSet(startPosition: BeatData): Promise<void>;

@@ -264,7 +264,7 @@ export function createConstructTabState(
       clearError();
 
       // Capture the target tab before clearing
-      const shouldNavigate = buildTabState && buildTabState.activeSubTab === 'animate';
+      const shouldNavigate = buildTabState && buildTabState.activeSection === 'animate';
       const targetTab = shouldNavigate ? buildTabState.lastContentTab : null;
 
       if (shouldNavigate && targetTab) {

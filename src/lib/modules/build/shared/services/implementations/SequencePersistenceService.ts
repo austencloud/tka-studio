@@ -30,7 +30,7 @@ export class SequencePersistenceService implements ISequencePersistenceService {
     currentSequence: SequenceData | null;
     selectedStartPosition: PictographData | null;
     hasStartPosition: boolean;
-    activeBuildSubTab: ActiveBuildTab;
+    activeBuildSection: ActiveBuildTab;
   }): Promise<void> {
     try {
       await this.persistenceService.saveCurrentSequenceState(state);
@@ -44,17 +44,17 @@ export class SequencePersistenceService implements ISequencePersistenceService {
     currentSequence: SequenceData | null;
     selectedStartPosition: PictographData | null;
     hasStartPosition: boolean;
-    activeBuildSubTab: ActiveBuildTab;
+    activeBuildSection: ActiveBuildTab;
   } | null> {
     try {
       const state = await this.persistenceService.loadCurrentSequenceState();
       if (state) {
-        // Ensure backward compatibility - add default activeBuildSubTab if missing
+        // Ensure backward compatibility - add default activeBuildSection if missing
         return {
           currentSequence: state.currentSequence,
           selectedStartPosition: state.selectedStartPosition,
           hasStartPosition: state.hasStartPosition,
-          activeBuildSubTab: (state as any).activeBuildSubTab || "construct"
+          activeBuildSection: (state as any).activeBuildSection || "construct"
         };
       }
       return state;

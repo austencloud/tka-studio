@@ -20,7 +20,7 @@ export interface PersistenceState {
   currentSequence: SequenceData | null;
   selectedStartPosition: PictographData | null;
   hasStartPosition: boolean;
-  activeBuildSubTab: ActiveBuildTab;
+  activeBuildSection: ActiveBuildTab;
 }
 
 export interface SequencePersistenceStateData {
@@ -62,8 +62,8 @@ export function createSequencePersistenceCoordinator(
         }
 
         // Cache the active tab for future saves
-        if (savedState?.activeBuildSubTab) {
-          cachedActiveTab = savedState.activeBuildSubTab;
+        if (savedState?.activeBuildSection) {
+          cachedActiveTab = savedState.activeBuildSection;
         }
 
         state.isInitialized = true;
@@ -80,7 +80,7 @@ export function createSequencePersistenceCoordinator(
 
       try {
         // Update cached active tab
-        cachedActiveTab = persistenceState.activeBuildSubTab;
+        cachedActiveTab = persistenceState.activeBuildSection;
         await persistenceService.saveCurrentState(persistenceState);
       } catch (error) {
         console.error("❌ PersistenceCoordinator: Failed to save state:", error);
@@ -101,7 +101,7 @@ export function createSequencePersistenceCoordinator(
           currentSequence,
           selectedStartPosition,
           hasStartPosition,
-          activeBuildSubTab: cachedActiveTab,
+          activeBuildSection: cachedActiveTab,
         });
       } catch (error) {
         console.error("❌ PersistenceCoordinator: Failed to save sequence:", error);

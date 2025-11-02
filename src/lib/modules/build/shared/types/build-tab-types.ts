@@ -27,7 +27,7 @@ export interface IBuildTabState {
   readonly sequenceState: SequenceState;
 
   // Navigation state
-  readonly activeSubTab: ActiveBuildTab | null;
+  readonly activeSection: ActiveBuildTab | null;
   readonly canGoBack: boolean;
   readonly isNavigatingBack: boolean;
 
@@ -37,7 +37,7 @@ export interface IBuildTabState {
 
   // Persistence state
   readonly isPersistenceInitialized: boolean;
-  readonly isSubTabLoading: boolean;
+  readonly isSectionLoading: boolean;
 
   // Tab accessibility
   readonly canAccessEditTab: boolean;
