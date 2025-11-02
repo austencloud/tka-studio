@@ -1,34 +1,82 @@
 {
   "extends": "./.svelte-kit/tsconfig.json",
   "compilerOptions": {
-    "allowJs": true,
-    "checkJs": false,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
+    // ============================================================================
+    // STRICT TYPE CHECKING (2025 Best Practice: Always enable strict mode)
+    // ============================================================================
     "strict": true,
+    "noUncheckedIndexedAccess": true, // 2025: Prevent undefined access errors
+    "noImplicitOverride": true, // 2025: Explicit override declarations
+    "exactOptionalPropertyTypes": true, // 2025: Stricter optional properties
+
+    // ============================================================================
+    // MODULE RESOLUTION (Optimized for bundler workflow)
+    // ============================================================================
+    "moduleResolution": "Bundler", // 2025: Bundler mode for Vite/SvelteKit
+    "module": "ESNext",
     "target": "ES2022",
-    "moduleResolution": "bundler",
-    "incremental": true,
-    "tsBuildInfoFile": ".tsbuildinfo",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true, // Performance: direct .ts/.tsx imports
+
+    // ============================================================================
+    // INTEROP & COMPATIBILITY
+    // ============================================================================
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true, // 2025: Required for Vite HMR
+    "verbatimModuleSyntax": false, // 2025: Better for SvelteKit
+
+    // ============================================================================
+    // EMIT CONFIGURATION (No emit for bundler-based projects)
+    // ============================================================================
     "noEmit": true,
     "sourceMap": true,
     "inlineSourceMap": false,
     "inlineSources": false,
+
+    // ============================================================================
+    // PERFORMANCE OPTIMIZATIONS
+    // ============================================================================
+    "incremental": true,
+    "tsBuildInfoFile": ".tsbuildinfo",
+    "skipLibCheck": true, // Faster builds, skip type checking in node_modules
+
+    // ============================================================================
+    // JAVASCRIPT SUPPORT
+    // ============================================================================
+    "allowJs": true,
+    "checkJs": false,
+
+    // ============================================================================
+    // DECORATOR SUPPORT (For InversifyJS)
+    // ============================================================================
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "types": ["reflect-metadata"]
+
+    // ============================================================================
+    // TYPE DEFINITIONS
+    // ============================================================================
+    "types": ["reflect-metadata", "vite/client"],
+
+    // ============================================================================
+    // ADDITIONAL SAFETY (2025 Best Practices)
+    // ============================================================================
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true, // 2026: All code paths must return
+    "allowUnreachableCode": false, // 2026: Prevent dead code
+    "allowUnusedLabels": false, // 2026: No unused labels
+    "noUnusedLocals": false, // Set to true for production
+    "noUnusedParameters": false, // Set to true for production
+    "noPropertyAccessFromIndexSignature": false // More lenient for dynamic access
   },
   "include": [
     "global.d.ts",
     "src/**/*.ts",
     "src/**/*.svelte",
-    "tests/**/*.ts",
-    "src/lib/modules/explore/domain/models/Explore-sorting-models.ts",
-    "src/lib/shared/application/state/app-state-factory.svelte.ts",
-    "src/lib/shared/application/state/app-state-factory.svelte.ts"
+    "tests/**/*.ts"
+    // Removed duplicate entries
   ],
   "exclude": [
     "node_modules",
@@ -37,8 +85,8 @@
     ".svelte-kit",
     ".vercel_build_output",
     ".vercel",
-    "archive/**/*",
-    "legacy_web_app/**/*",
+    "archive",
+    "legacy_web_app",
     "**/*.js"
   ]
 }

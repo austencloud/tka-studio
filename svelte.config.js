@@ -3,46 +3,37 @@ import { vitePreprocess } from "@sveltejs/vite-plugin-svelte";
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-  // Consult https://svelte.dev/docs/kit/integrations
-  // for more information about preprocessors
-  preprocess: vitePreprocess({
-    script: true,
-    style: true,
-    sourceMap: process.env.NODE_ENV !== "production", // Only enable source maps in development
-    typescript: {
-      tsconfigFile: "./tsconfig.json",
-      compilerOptions: {
-        module: "esnext",
-        sourceMap: process.env.NODE_ENV !== "production", // Only enable TypeScript source maps in development
-        inlineSourceMap: false,
-        inlineSources: false,
-      },
-    },
-  }),
+  // ============================================================================
+  // PREPROCESSING (Vite handles TypeScript, styles, etc.)
+  // ============================================================================
+  // 2025: Enable script preprocessing for TypeScript features that emit code
+  // (enums, decorators, class visibility modifiers, etc.)
+  preprocess: vitePreprocess({ script: true }),
 
   kit: {
-    // adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-    // If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-    // See https://svelte.dev/docs/kit/adapters for more information about adapters.
-    adapter: adapter(),
+    // ============================================================================
+    // ADAPTER (Netlify deployment - 2025 best practice: explicit adapter)
+    // ============================================================================
+    adapter: adapter({
+      // 2025: Use Node-based functions (edge: false is default, more compatible)
+      edge: false,
+      // 2025: Single function bundle is simpler and often faster for cold starts
+      split: false,
+    }),
 
-    // Clean domain-bounded aliases - relative imports within domains, barrels for cross-domain
+    // ============================================================================
+    // PATH ALIASES (Clean domain-bounded architecture)
+    // ============================================================================
     alias: {
-      // ============================================================================
-      // CORE ALIASES
-      // ============================================================================
+      // Core aliases
       $lib: "./src/lib",
       "$lib/*": "./src/lib/*",
 
-      // ============================================================================
-      // SHARED RESOURCES (Cross-domain access)
-      // ============================================================================
+      // Shared resources (cross-domain access)
       $shared: "./src/lib/shared",
       "$shared/*": "./src/lib/shared/*",
 
-      // ============================================================================
-      // MODULE ALIASES (For cross-domain barrel imports)
-      // ============================================================================
+      // Module aliases (for cross-domain barrel imports)
       $build: "./src/lib/modules/build",
       "$build/*": "./src/lib/modules/build/*",
 
@@ -64,14 +55,27 @@ const config = {
       $render: "./src/lib/shared/render",
       "$render/*": "./src/lib/shared/render/*",
     },
+
+    // ============================================================================
+    // 2025: SECURITY & PERFORMANCE
+    // ============================================================================
+    csrf: {
+      checkOrigin: true, // 2025: CSRF protection enabled
+    },
+
+    // 2025: Preload critical modules for better performance
+    prerender: {
+      // Configure if you want static prerendering
+      crawl: true,
+    },
   },
 
   // ============================================================================
-  // SVELTE 5 HMR CONFIGURATION
-  // Enabled for better DX - only critical state files trigger full reload
+  // SVELTE 5 COMPILER OPTIONS
   // ============================================================================
   compilerOptions: {
-    hmr: true,
+    // Svelte 5 runes mode is enabled by default
+    // 2025: Runes provide better reactivity and performance
   },
 };
 

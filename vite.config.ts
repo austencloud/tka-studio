@@ -2,46 +2,17 @@ import { sveltekit } from "@sveltejs/kit/vite";
 import fs from "fs";
 import type { IncomingMessage, ServerResponse } from "http";
 import path from "path";
-import type { ViteDevServer, HmrContext } from "vite";
+import type { ViteDevServer } from "vite";
 import { defineConfig } from "vite";
 
-const isDev = process.env.NODE_ENV !== "production";
+// ============================================================================
+// CUSTOM PLUGINS
+// ============================================================================
 
-// Custom plugin to force reload ONLY for critical state files
-// Allow HMR for regular Svelte components to improve DX
-const forceReloadPlugin = () => ({
-  name: "force-reload-state",
-  handleHotUpdate({ file, server }: HmrContext) {
-    const fileName = file.split("\\").pop() || file.split("/").pop() || "";
-
-    // Force full reload for critical state management files
-    // and background canvas (to prevent layout issues)
-    // Also force reload for grid calculations since constants aren't tracked by Svelte reactivity
-    if (
-      file.includes("app-state") ||
-      file.includes("navigation-state") ||
-      file.includes("ui-state") ||
-      file.includes("BackgroundCanvas") ||
-      file.includes("grid-calculations")
-    ) {
-      console.log(`[🔄 Full Reload - Critical File] ${fileName}`);
-      server.ws.send({
-        type: "full-reload",
-        path: "*",
-      });
-      return [];
-    }
-
-    // Log HMR updates for debugging
-    if (isDev) {
-      console.log(`[⚡ HMR] ${fileName}`);
-    }
-
-    // Allow HMR for all other files (including regular .svelte files)
-  },
-});
-
-// Custom plugin to serve PNG files from desktop directory
+/**
+ * Serves PNG files from desktop directory
+ * 2025: Added error handling and proper caching
+ */
 const dictionaryPlugin = () => ({
   name: "dictionary-files",
   configureServer(server: ViteDevServer) {
@@ -53,21 +24,22 @@ const dictionaryPlugin = () => ({
         next: (err?: unknown) => void
       ) => {
         if (req.url && req.url.endsWith(".png")) {
-          // Decode URL-encoded characters
-          const decodedUrl = decodeURIComponent(req.url);
-          // Remove leading slash and construct file path
-          const relativePath = decodedUrl.substring(1); // Remove leading /
-          const filePath = path.resolve(
-            "../desktop/data/dictionary",
-            relativePath
-          );
+          try {
+            const decodedUrl = decodeURIComponent(req.url);
+            const relativePath = decodedUrl.substring(1);
+            const filePath = path.resolve(
+              "../desktop/data/dictionary",
+              relativePath
+            );
 
-          // Check if file exists
-          if (fs.existsSync(filePath)) {
-            // Serve the file
-            res.setHeader("Content-Type", "image/png");
-            fs.createReadStream(filePath).pipe(res);
-            return;
+            if (fs.existsSync(filePath)) {
+              res.setHeader("Content-Type", "image/png");
+              res.setHeader("Cache-Control", "public, max-age=31536000"); // 2025: Better caching
+              fs.createReadStream(filePath).pipe(res);
+              return;
+            }
+          } catch (error) {
+            console.error("Dictionary file error:", error);
           }
         }
         next();
@@ -76,47 +48,69 @@ const dictionaryPlugin = () => ({
   },
 });
 
+// ============================================================================
+// VITE 6.0 CONFIGURATION (2025 - Optimized for SvelteKit 2)
+// ============================================================================
+
 export default defineConfig({
-  plugins: [forceReloadPlugin(), sveltekit(), dictionaryPlugin()],
+  plugins: [sveltekit(), dictionaryPlugin()],
 
   resolve: {
     alias: {
-      // Main project aliases are handled by SvelteKit
+      // Aliases handled by SvelteKit
     },
   },
 
+  // ============================================================================
+  // BUILD (Production optimization)
+  // ============================================================================
   build: {
-    sourcemap: true, // Enable source maps to debug the SA variable issue
-    minify: false, // Temporarily disable minification to debug the SA variable issue
+    sourcemap: true,
+    target: "esnext",
+    minify: "esbuild", // 2025: Fast default minification
+    cssMinify: "esbuild", // 2025: Works with Svelte 5
+
     rollupOptions: {
       output: {
-        // Prevent circular dependency issues
-        manualChunks: undefined,
+        // Strategic chunking for your actual dependencies
+        manualChunks: (id) => {
+          if (id.includes("node_modules")) {
+            if (id.includes("fabric")) return "vendor-fabric";
+            if (id.includes("pdfjs-dist")) return "vendor-pdf";
+            if (id.includes("firebase")) return "vendor-firebase";
+            if (id.includes("dexie")) return "vendor-dexie";
+            return "vendor";
+          }
+        },
+        // 2025: Better cache busting
+        chunkFileNames: "chunks/[name]-[hash].js",
+        assetFileNames: "assets/[name]-[hash][extname]",
       },
     },
+
+    chunkSizeWarningLimit: 1000, // Warn for 1MB+ chunks
   },
 
+  // ============================================================================
+  // SSR
+  // ============================================================================
   ssr: {
     noExternal: ["svelte"],
     external: ["pdfjs-dist", "page-flip"],
   },
 
-  esbuild: {
-    sourcemap: true,
-    keepNames: true,
-    target: "es2020", // Use a more conservative target
-  },
-
-  // Enable caching for faster subsequent builds
-  cacheDir: "node_modules/.vite",
-
+  // ============================================================================
+  // CSS
+  // ============================================================================
   css: {
-    devSourcemap: isDev,
+    devSourcemap: true,
   },
 
+  // ============================================================================
+  // DEPENDENCY PRE-BUNDLING (Vite 6.0)
+  // ============================================================================
   optimizeDeps: {
     include: [
-      "@sveltejs/kit",
       "page-flip",
       "inversify",
       "reflect-metadata",
@@ -126,46 +120,51 @@ export default defineConfig({
       "fabric",
       "file-saver",
     ],
-    // FIXED: Removed @sveltejs/kit/src/runtime/client/entry.js from exclude
-    // Excluding it caused white screen on refresh due to path with spaces
     exclude: ["pdfjs-dist"],
-    // Only force re-optimization when dependencies change, not on every start
-    force: false,
   },
 
+  // ============================================================================
+  // DEV SERVER (Vite 6.0 enhancements)
+  // ============================================================================
   server: {
     host: "0.0.0.0",
     port: 5173,
     strictPort: true,
-    open: false,
+
     fs: {
       allow: [".", "../animator", "../desktop"],
-      strict: false,
+      strict: true, // 2025: Security best practice
     },
+
     hmr: {
-      overlay: true, // Show errors as overlay
+      overlay: true,
     },
-    cors: true,
+
     watch: {
-      // Use polling on Windows for reliable file watching (especially with spaces in paths)
-      usePolling: true,
-      // Ignore node_modules and other large directories
       ignored: [
         "**/node_modules/**",
         "**/.git/**",
         "**/dist/**",
-        "**/.svelte-kit/**",
         "**/build/**",
+        "**/.svelte-kit/**",
       ],
-      // Polling intervals for Windows
-      interval: 100,
-      binaryInterval: 300,
     },
-    // Force page reload on certain events instead of HMR
-    middlewareMode: false,
+
+    // 2025: Preload critical files on dev start
+    warmup: {
+      clientFiles: [
+        "./src/lib/shared/**/*.ts",
+        "./src/lib/modules/**/*.svelte",
+      ],
+    },
   },
 
-  define: {
-    __VITE_IS_MODERN__: true,
+  // ============================================================================
+  // PREVIEW (Testing production builds)
+  // ============================================================================
+  preview: {
+    port: 4173,
+    strictPort: true,
+    host: "0.0.0.0",
   },
 });
