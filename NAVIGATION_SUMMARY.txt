@@ -1,0 +1,96 @@
+NAVIGATION COMPONENTS USAGE SUMMARY
+================================================================================
+
+ACTIVE CORE NAVIGATION COMPONENTS (In Use)
+================================================================================
+1. TopBar.svelte
+   - Location: src/lib/shared/navigation/components/TopBar.svelte
+   - Used by: MainInterface.svelte, QuizWorkspaceView.svelte
+   - Purpose: Global top navigation bar
+   - Features: Profile button, gamification, module-specific content
+
+2. PrimaryNavigation.svelte
+   - Location: src/lib/shared/navigation/components/PrimaryNavigation.svelte
+   - Used by: MainInterface.svelte (conditional)
+   - Purpose: Adaptive bottom/side navigation
+   - Features: Bottom bar (portrait) / Side bar (landscape)
+
+3. UnifiedNavigationMenu.svelte
+   - Location: src/lib/shared/navigation/components/UnifiedNavigationMenu.svelte
+   - Used by: MainInterface.svelte
+   - Purpose: Slide-up panel for module switching
+   - Features: Bottom sheet, swipe gestures, PWA install
+
+4. ModuleList.svelte
+   - Location: src/lib/shared/navigation/components/ModuleList.svelte
+   - Used by: UnifiedNavigationMenu.svelte
+   - Purpose: Display available modules for selection
+
+5. ProfileButton.svelte
+   - Location: src/lib/shared/navigation/components/ProfileButton.svelte
+   - Used by: TopBar.svelte
+   - Purpose: Profile/account button in top bar
+
+6. Supporting Components:
+   - InstallPromptButton.svelte (PWA install in menu)
+   - ProfileSettingsSheet.svelte (profile modal)
+   - AuthSheet.svelte (auth modal)
+   - TermsSheet.svelte (legal modal)
+   - PrivacySheet.svelte (legal modal)
+   - GamificationButton.svelte (achievements in top bar)
+   - AchievementsPanel.svelte (achievements panel)
+
+DEAD CODE COMPONENTS (Not Used Anywhere)
+================================================================================
+1. ModuleSelector.svelte - Replaced by ModuleList + UnifiedNavigationMenu
+2. ModuleMenuSection.svelte - Never imported
+3. HamburgerMenuButton.svelte - Only used by ModuleMenuSection (dead)
+4. ModuleDropdown.svelte - Desktop dropdown, only used by ModuleSelector (dead)
+5. ModuleMobileModal.svelte - Mobile modal, only used by ModuleSelector (dead)
+6. DesktopDropdown.svelte - Never imported
+7. ModulePicker.svelte - Never imported
+8. ProfileDropdown.svelte - Replaced by sheet-based approach
+9. SectionSheet.svelte - Never imported
+10. SectionTabs.svelte - Replaced by PrimaryNavigation
+11. SettingsButton.svelte - Integrated into PrimaryNavigation
+12. MobileModal.svelte - Never imported
+
+NAVIGATION FLOW
+================================================================================
+MainInterface.svelte
+  +-- TopBar.svelte (always)
+  |   +-- GamificationButton + AchievementsPanel
+  |   +-- ProfileButton (opens profile settings)
+  |
+  +-- UnifiedNavigationMenu.svelte (always, modal)
+  |   +-- ModuleList (select modules)
+  |   +-- InstallPromptButton (PWA install)
+  |
+  +-- PrimaryNavigation.svelte (if module has primary nav)
+      +-- Module Switcher (opens UnifiedNavigationMenu)
+      +-- Section Buttons (module-specific)
+      +-- Settings Button
+
+MODULES WITH PRIMARY NAVIGATION
+================================================================================
+- build
+- learn
+- explore
+- library
+- admin
+(Module 'about' does NOT have primary navigation)
+
+STATE MANAGEMENT FILES
+================================================================================
+- Layout State: src/lib/shared/layout/layout-state.svelte.ts
+- Navigation State: src/lib/shared/navigation/state/navigation-state.svelte.ts
+- Sheet Router: src/lib/shared/navigation/utils/sheet-router.ts
+
+KEY INSIGHTS
+================================================================================
+1. Clean consolidated architecture (TopBar + PrimaryNav + UnifiedMenu)
+2. Adaptive design (bottom bar in portrait, side bar in landscape)
+3. 12 dead code components from previous refactoring
+4. Sheet-based modals for auxiliary navigation
+5. Container query support with media query fallback
+6. Full accessibility features (touch targets, haptics, keyboard)

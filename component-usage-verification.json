@@ -1,0 +1,629 @@
+[
+  {
+    "module": "About",
+    "path": "src/lib/modules/about/components",
+    "components": [
+      {
+        "component": "AboutTab",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/index.ts:6:export { default as AboutTab } from \"./AboutTab.svelte\";\r",
+              "src/lib/shared/modules/ModuleRenderer.svelte:15:  import AboutTab from \"../../modules/about/components/AboutTab.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/shared/modules/ModuleRenderer.svelte:106:        <AboutTab />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "AboutTheSystem",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:2:  import AboutTheSystem from \"./AboutTheSystem.svelte\";\r",
+              "src/lib/modules/about/components/index.ts:9:export { default as AboutTheSystem } from \"./AboutTheSystem.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:23:      <AboutTheSystem />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "CallToAction",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/index.ts:10:export { default as CallToAction } from \"./CallToAction.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/Home.svelte:41:        <CallToAction text=\"Start Creating\" primary={true} internal={true} />\r",
+              "src/lib/modules/about/components/Home.svelte:42:        <CallToAction\r",
+              "src/lib/modules/about/components/Home.svelte:48:        <CallToAction"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 4
+      },
+      {
+        "component": "Contact",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/index.ts:11:export { default as Contact } from \"./Contact.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:36:      <ContactSection />\r",
+              "src/lib/modules/about/components/Contact.svelte:63:  <ContactHero />\r",
+              "src/lib/modules/about/components/Contact.svelte:70:        <ContactInfo />\r",
+              "src/lib/modules/about/components/Contact.svelte:74:          <ContactForm\r",
+              "src/lib/modules/about/components/ContactSection.svelte:21:        <ContactForm\r",
+              "src/lib/modules/about/components/contact/info/ContactInfo.svelte:10:    <ContactInfoCard\r",
+              "src/lib/modules/about/components/contact/info/ContactInfo.svelte:21:    <ContactInfoCard\r",
+              "src/lib/modules/about/components/contact/info/ContactInfo.svelte:32:    <ContactInfoCard\r",
+              "src/lib/modules/about/components/contact/info/ContactInfo.svelte:43:    <ContactInfoCard"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 10
+      },
+      {
+        "component": "ContactSection",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:3:  import ContactSection from \"./ContactSection.svelte\";\r",
+              "src/lib/modules/about/components/index.ts:12:export { default as ContactSection } from \"./ContactSection.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:36:      <ContactSection />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "Features",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/index.ts:13:export { default as Features } from \"./Features.svelte\";"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 1
+      },
+      {
+        "component": "GettingStarted",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:4:  import GettingStarted from \"./GettingStarted.svelte\";\r",
+              "src/lib/modules/about/components/index.ts:14:export { default as GettingStarted } from \"./GettingStarted.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:26:      <GettingStarted />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "HeroSection",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:5:  import HeroSection from \"./HeroSection.svelte\";\r",
+              "src/lib/modules/about/components/index.ts:15:export { default as HeroSection } from \"./HeroSection.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:14:    <HeroSection />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "Home",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/index.ts:16:export { default as Home } from \"./Home.svelte\";"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 1
+      },
+      {
+        "component": "LandingNavBar",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/index.ts:17:export { default as LandingNavBar } from \"./LandingNavBar.svelte\";"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 1
+      },
+      {
+        "component": "Links",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/ContactSection.svelte:5:  import SocialLinks from \"./contact/social/SocialLinks.svelte\";\r",
+              "src/lib/modules/about/components/contact/social/SocialLinks.svelte:1:<!-- SocialLinks.svelte - Social media links section -->\r",
+              "src/lib/modules/about/components/index.ts:18:export { default as Links } from \"./Links.svelte\";"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "ProjectOverview",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/index.ts:19:export { default as ProjectOverview } from \"./ProjectOverview.svelte\";"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 1
+      },
+      {
+        "component": "QuickAccess",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:6:  import QuickAccess from \"./QuickAccess.svelte\";\r",
+              "src/lib/modules/about/components/index.ts:20:export { default as QuickAccess } from \"./QuickAccess.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:20:      <QuickAccess />\r",
+              "src/lib/modules/explore/navigation/components/FilterSelectionPanel.svelte:31:          <QuickAccessSection onQuickAccess={handleQuickAccess} />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 4
+      },
+      {
+        "component": "ResourcesHistorian",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:7:  import ResourcesHistorian from \"./ResourcesHistorian.svelte\";\r",
+              "src/lib/modules/about/components/index.ts:21:export { default as ResourcesHistorian } from \"./ResourcesHistorian.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/AboutTab.svelte:29:      <ResourcesHistorian />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "SettingsModal",
+        "file": "src/lib/modules/about/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/about/components/LandingNavBar.svelte:10:  import SettingsModal from \"./SettingsModal.svelte\";\r",
+              "src/lib/modules/about/components/index.ts:22:export { default as SettingsModal } from \"./SettingsModal.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/about/components/LandingNavBar.svelte:94:  <SettingsModal"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      }
+    ],
+    "summary": {
+      "total": 15,
+      "used": 15,
+      "unused": 0
+    }
+  },
+  {
+    "module": "Word Card",
+    "path": "src/lib/modules/word-card/components",
+    "components": [
+      {
+        "component": "Navigation",
+        "file": "src/lib/modules/word-card/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "archive/_LEGACY_APP/_WEB/src/lib/components/SettingsDialog/SettingsContent.svelte:3:\timport TabsNavigation from './TabsNavigation.svelte';\r",
+              "archive/_LEGACY_APP/_WEB/src/lib/components/SettingsDialog/SettingsContent.svelte:470:\t/* NOTE: Assumes TabsNavigation.svelte is updated to use <i> tags */\r",
+              "src/lib/modules/about/components/resource-guide/ResourceModal.svelte:11:  import ResourceModalNavigation from \"./ResourceModalNavigation.svelte\";\r",
+              "src/lib/modules/build/shared/state/panel-coordination-state.svelte.ts:181:    // Navigation bar is 64px (min-height from PrimaryNavigation.svelte)\r",
+              "src/lib/modules/word-card/components/WordCardTab.svelte:7:  import WordCardNavigation from \"./Navigation.svelte\";\r",
+              "src/lib/modules/word-card/components/index.ts:1:export { default as Navigation } from \"./Navigation.svelte\";\r",
+              "src/lib/shared/MainInterface.svelte:33:  import PrimaryNavigation from \"./navigation/components/PrimaryNavigation.svelte\";\r",
+              "src/lib/shared/navigation/components/index.ts:5:export { default as PrimaryNavigation } from \"./PrimaryNavigation.svelte\";"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 8
+      },
+      {
+        "component": "PageDisplay",
+        "file": "src/lib/modules/word-card/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/word-card/components/WordCardTab.svelte:8:  import PageDisplay from \"./PageDisplay.svelte\";\r",
+              "src/lib/modules/word-card/components/index.ts:2:export { default as PageDisplay } from \"./PageDisplay.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/word-card/components/WordCardTab.svelte:144:      <PageDisplay"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "WordCard",
+        "file": "src/lib/modules/word-card/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/word-card/components/PageDisplay.svelte:5:  import WordCard from \"./WordCard.svelte\";\r",
+              "src/lib/modules/word-card/components/index.ts:3:export { default as WordCard } from \"./WordCard.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/word-card/components/PageDisplay.svelte:186:                <WordCard {sequence} />\r",
+              "src/lib/modules/word-card/components/WordCardTab.svelte:134:      <WordCardNavigation\r",
+              "src/lib/shared/modules/ModuleRenderer.svelte:102:        <WordCardTab />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 5
+      },
+      {
+        "component": "WordCardTab",
+        "file": "src/lib/modules/word-card/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/word-card/components/index.ts:4:export { default as WordCardTab } from \"./WordCardTab.svelte\";\r",
+              "src/lib/shared/modules/ModuleRenderer.svelte:19:  import WordCardTab from \"../../modules/word-card/components/WordCardTab.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/shared/modules/ModuleRenderer.svelte:102:        <WordCardTab />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      }
+    ],
+    "summary": {
+      "total": 4,
+      "used": 4,
+      "unused": 0
+    }
+  },
+  {
+    "module": "Write",
+    "path": "src/lib/modules/write/components",
+    "components": [
+      {
+        "component": "WriteTab",
+        "file": "src/lib/modules/write/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/write/components/index.ts:6:export { default as WriteTab } from \"./WriteTab.svelte\";\r",
+              "src/lib/shared/modules/ModuleRenderer.svelte:20:  import WriteTab from \"../../modules/write/components/WriteTab.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/shared/modules/ModuleRenderer.svelte:104:        <WriteTab />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "ActBrowser",
+        "file": "src/lib/modules/write/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:6:  import ActBrowser from \"./ActBrowser.svelte\";\r",
+              "src/lib/modules/write/components/index.ts:9:export { default as ActBrowser } from \"./ActBrowser.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:230:      <ActBrowser"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "ActHeader",
+        "file": "src/lib/modules/write/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/write/components/ActSheet.svelte:4:  import ActHeader from \"./ActHeader.svelte\";\r",
+              "src/lib/modules/write/components/index.ts:10:export { default as ActHeader } from \"./ActHeader.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/write/components/ActSheet.svelte:48:      <ActHeader"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "ActSheet",
+        "file": "src/lib/modules/write/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:7:  import ActSheet from \"./ActSheet.svelte\";\r",
+              "src/lib/modules/write/components/index.ts:11:export { default as ActSheet } from \"./ActSheet.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:252:        <ActSheet"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "ActThumbnail",
+        "file": "src/lib/modules/write/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/write/components/ActBrowser.svelte:7:  import ActThumbnail from \"./ActThumbnail.svelte\";\r",
+              "src/lib/modules/write/components/index.ts:12:export { default as ActThumbnail } from \"./ActThumbnail.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/write/components/ActBrowser.svelte:86:          <ActThumbnail actInfo={act} onActSelected={handleActSelected} />\r",
+              "src/lib/modules/write/components/WriteTab.svelte:22:  let availableActs = $state<ActThumbnailInfo[]>([]);"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 4
+      },
+      {
+        "component": "MusicPlayer",
+        "file": "src/lib/modules/write/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:8:  import MusicPlayer from \"./MusicPlayer.svelte\";\r",
+              "src/lib/modules/write/components/index.ts:13:export { default as MusicPlayer } from \"./MusicPlayer.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:25:  let musicPlayerState = $state<MusicPlayerState>(\r",
+              "src/lib/modules/write/components/WriteTab.svelte:264:        <MusicPlayer"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 4
+      },
+      {
+        "component": "WriteSequenceGrid",
+        "file": "src/lib/modules/write/components",
+        "usages": [],
+        "isUsed": false,
+        "totalMatches": 0
+      },
+      {
+        "component": "WriteSequenceThumbnail",
+        "file": "src/lib/modules/write/components",
+        "usages": [],
+        "isUsed": false,
+        "totalMatches": 0
+      },
+      {
+        "component": "WriteToolbar",
+        "file": "src/lib/modules/write/components",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:9:  import WriteToolbar from \"./WriteToolbar.svelte\";\r",
+              "src/lib/modules/write/components/index.ts:16:export { default as WriteToolbar } from \"./WriteToolbar.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/write/components/WriteTab.svelte:217:    <WriteToolbar"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      }
+    ],
+    "summary": {
+      "total": 9,
+      "used": 7,
+      "unused": 2
+    }
+  },
+  {
+    "module": "Library",
+    "path": "src/lib/modules/library",
+    "components": [
+      {
+        "component": "LibraryTab",
+        "file": "src/lib/modules/library",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/library/index.ts:5:export { default as LibraryTab } from \"./LibraryTab.svelte\";\r",
+              "src/lib/shared/modules/ModuleRenderer.svelte:18:  import LibraryTab from \"../../modules/library/LibraryTab.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/shared/modules/ModuleRenderer.svelte:100:        <LibraryTab />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 3
+      },
+      {
+        "component": "SequencesView",
+        "file": "src/lib/modules/library",
+        "usages": [
+          {
+            "type": "svelte-import",
+            "matches": [
+              "src/lib/modules/library/LibraryTab.svelte:14:  import SequencesView from \"./components/SequencesView.svelte\";\r",
+              "src/lib/modules/library/components/SequencesView.svelte:2:  SequencesView.svelte - Sequences Library View\r",
+              "src/lib/modules/library/index.ts:6:export { default as SequencesView } from \"./components/SequencesView.svelte\";"
+            ]
+          },
+          {
+            "type": "template-usage",
+            "matches": [
+              "src/lib/modules/library/LibraryTab.svelte:49:      <SequencesView />"
+            ]
+          }
+        ],
+        "isUsed": true,
+        "totalMatches": 4
+      }
+    ],
+    "summary": {
+      "total": 2,
+      "used": 2,
+      "unused": 0
+    }
+  }
+]
