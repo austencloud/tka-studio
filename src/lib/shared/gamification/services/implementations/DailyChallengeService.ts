@@ -194,7 +194,7 @@ export class DailyChallengeService implements IDailyChallengeService {
   // CHALLENGE GENERATION
   // ============================================================================
 
-  async getTodayChallenge(): Promise<DailyChallenge> {
+  async getTodayChallenge(): Promise<DailyChallenge | null> {
     const today = new Date().toISOString().split("T")[0];
     const challengeId = `challenge_${today}`;
 
@@ -204,82 +204,30 @@ export class DailyChallengeService implements IDailyChallengeService {
       return localChallenge;
     }
 
-    // Check Firestore
-    const challengesPath = getDailyChallengesPath();
-    const challengeDocRef = doc(firestore, `${challengesPath}/${challengeId}`);
-    const challengeDoc = await getDoc(challengeDocRef);
+    // Read from Firestore (admin pre-created challenges only)
+    try {
+      const challengesPath = getDailyChallengesPath();
+      const challengeDocRef = doc(firestore, `${challengesPath}/${challengeId}`);
+      const challengeDoc = await getDoc(challengeDocRef);
 
-    if (challengeDoc.exists()) {
-      const firestoreChallenge = challengeDoc.data() as DailyChallenge;
+      if (challengeDoc.exists()) {
+        const firestoreChallenge = challengeDoc.data() as DailyChallenge;
 
-      // Cache locally
-      await db.dailyChallenges.put(firestoreChallenge);
+        // Cache locally
+        await db.dailyChallenges.put(firestoreChallenge);
 
-      return firestoreChallenge;
+        return firestoreChallenge;
+      } else {
+        console.warn("⚠️ No daily challenge found for today. Admin needs to create it.");
+        return null;
+      }
+    } catch (error) {
+      console.error("❌ Failed to read challenge from Firestore:", error);
+      return null;
     }
-
-    // Generate new challenge for today
-    return await this.generateChallengeForDate(new Date());
   }
 
-  async generateChallengeForDate(date: Date): Promise<DailyChallenge> {
-    const dateStr = date.toISOString().split("T")[0];
-    const challengeId = `challenge_${dateStr}`;
 
-    // Use date as seed for deterministic random selection
-    const seed = this.hashDateToSeed(dateStr);
-    const template =
-      CHALLENGE_TEMPLATES[seed % CHALLENGE_TEMPLATES.length];
-
-    // Create end-of-day expiration
-    const expiresAt = new Date(dateStr);
-    expiresAt.setHours(23, 59, 59, 999);
-
-    const challenge: DailyChallenge = {
-      id: challengeId,
-      date: dateStr,
-      type: template.type,
-      difficulty: template.difficulty,
-      title: template.title,
-      description: template.description,
-      xpReward: template.xpReward,
-      requirement: {
-        type: template.type,
-        target: template.target,
-        metadata: template.metadata,
-      },
-      expiresAt,
-    };
-
-    // Save to Firestore
-    const challengesPath = getDailyChallengesPath();
-    const challengeDocRef = doc(firestore, `${challengesPath}/${challengeId}`);
-
-    await setDoc(challengeDocRef, {
-      ...challenge,
-      expiresAt: Timestamp.fromDate(expiresAt),
-    });
-
-    // Cache locally
-    await db.dailyChallenges.put(challenge);
-
-    console.log(`✅ Generated daily challenge: ${challenge.title}`);
-
-    return challenge;
-  }
-
-  /**
-   * Generate a deterministic seed from date string
-   */
-  private hashDateToSeed(dateStr: string): number {
-    let hash = 0;
-    for (let i = 0; i < dateStr.length; i++) {
-      const char = dateStr.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash = hash & hash; // Convert to 32-bit integer
-    }
-    return Math.abs(hash);
-  }
 
   // ============================================================================
   // CHALLENGE PROGRESS
@@ -291,6 +239,8 @@ export class DailyChallengeService implements IDailyChallengeService {
 
     const today = new Date().toISOString().split("T")[0];
     const challenge = await this.getTodayChallenge();
+
+    if (!challenge) return null;
 
     const progressPath = getUserChallengeProgressPath(user.uid);
     const progressDocRef = doc(firestore, `${progressPath}/${challenge.id}`);
@@ -334,6 +284,10 @@ export class DailyChallengeService implements IDailyChallengeService {
     }
 
     const challenge = await this.getTodayChallenge();
+    if (!challenge) {
+      throw new Error("No daily challenge available");
+    }
+
     const currentProgress = await this.getChallengeProgress();
 
     if (!currentProgress) {
@@ -406,6 +360,10 @@ export class DailyChallengeService implements IDailyChallengeService {
     challenge: DailyChallenge;
   }> {
     const challenge = await this.getTodayChallenge();
+
+    if (!challenge) {
+      throw new Error("No daily challenge available");
+    }
 
     await this.updateChallengeProgress(
       challenge.requirement.target,

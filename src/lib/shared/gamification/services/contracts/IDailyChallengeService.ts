@@ -18,9 +18,9 @@ export interface IDailyChallengeService {
 
   /**
    * Get today's daily challenge
-   * Generates a new one if none exists
+   * Returns null if admin hasn't created one yet
    */
-  getTodayChallenge(): Promise<DailyChallenge>;
+  getTodayChallenge(): Promise<DailyChallenge | null>;
 
   /**
    * Get user's progress on today's challenge
@@ -57,12 +57,6 @@ export interface IDailyChallengeService {
       progress: UserChallengeProgress | null;
     }>
   >;
-
-  /**
-   * Generate a new daily challenge for a specific date
-   * Used internally and for debugging
-   */
-  generateChallengeForDate(date: Date): Promise<DailyChallenge>;
 
   /**
    * Check if user has completed today's challenge

@@ -96,94 +96,43 @@
     <div class="error-state">
       <span class="icon">⚠️</span>
     </div>
-  {:else if levelProgress}
-    <div class="button-content">
-      <!-- Level Badge -->
-      <div class="level-badge">
-        <span class="level-number">{levelProgress.currentLevel}</span>
-      </div>
-
-      <!-- XP Progress Ring -->
-      <div class="progress-ring">
-        <svg class="ring-svg" width="48" height="48" viewBox="0 0 48 48">
-          <!-- Background ring -->
-          <circle
-            cx="24"
-            cy="24"
-            r="20"
-            fill="none"
-            stroke="rgba(255, 255, 255, 0.1)"
-            stroke-width="3"
-          />
-          <!-- Progress ring -->
-          <circle
-            cx="24"
-            cy="24"
-            r="20"
-            fill="none"
-            stroke="url(#xp-gradient)"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-dasharray="{(levelProgress.progress / 100) * 125.6} 125.6"
-            transform="rotate(-90 24 24)"
-            class="progress-circle"
-          />
-          <!-- Gradient definition -->
-          <defs>
-            <linearGradient id="xp-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        <!-- Center icon -->
-        <div class="center-icon">
-          <span class="trophy-icon"><i class="fas fa-trophy"></i></span>
-        </div>
-      </div>
-
-      <!-- XP Info (optional, for non-mobile) -->
-      <div class="xp-info">
-        <div class="xp-text">Level {levelProgress.currentLevel}</div>
-        <div class="xp-subtext">{levelProgress.progress}%</div>
-      </div>
-    </div>
   {:else}
-    <!-- Fallback: Show trophy icon when logged in but XP hasn't loaded yet -->
-    <div class="button-content">
-      <div class="center-icon">
-        <span class="trophy-icon"><i class="fas fa-trophy"></i></span>
-      </div>
-    </div>
+    <!-- Simple trophy icon - minimal design -->
+    <i class="fas fa-trophy icon-minimal"></i>
+    <!-- Optional: Small level badge for levels > 1 -->
+    {#if levelProgress && levelProgress.currentLevel > 1}
+      <span class="level-badge-minimal">{levelProgress.currentLevel}</span>
+    {/if}
   {/if}
 </button>
 {/if}
 
 <style>
   .gamification-button {
+    /* Match ProfileButton sizing - WCAG AAA minimum touch target */
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-xs) var(--spacing-sm);
-    border-radius: var(--radius-lg);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-    min-width: 56px;
-    height: 56px;
+    padding: 0;
   }
 
   .gamification-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    background: rgba(255, 255, 255, 0.15);
+    transform: scale(1.05);
   }
 
   .gamification-button:active {
-    transform: translateY(0);
+    transform: scale(0.95);
   }
 
   /* Loading State */
@@ -192,14 +141,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
+    width: 100%;
+    height: 100%;
   }
 
   .spinner {
-    width: 24px;
-    height: 24px;
-    border: 3px solid rgba(255, 255, 255, 0.2);
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-top-color: rgba(255, 255, 255, 0.8);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
@@ -211,127 +160,56 @@
     }
   }
 
-  /* Button Content */
-  .button-content {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xs);
-    position: relative;
+  /* Minimal icon styling */
+  .icon-minimal {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
   }
 
-  /* Level Badge */
-  .level-badge {
+  /* Small level badge - subtle notification style */
+  .level-badge-minimal {
     position: absolute;
-    top: -4px;
-    left: -4px;
+    top: -2px;
+    right: -2px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 2;
-  }
-
-  .level-number {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     color: white;
-  }
-
-  /* Progress Ring */
-  .progress-ring {
-    position: relative;
-    width: 48px;
-    height: 48px;
-  }
-
-  .ring-svg {
-    transform: scale(1);
-    filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
-  }
-
-  .progress-circle {
-    transition: stroke-dasharray 0.5s ease;
-  }
-
-  .center-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 20px;
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%,
-    100% {
-      transform: translate(-50%, -50%) translateY(0);
-    }
-    50% {
-      transform: translate(-50%, -50%) translateY(-3px);
-    }
-  }
-
-  .trophy-icon {
-    filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.5));
-  }
-
-  /* XP Info */
-  .xp-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding-left: var(--spacing-xs);
-  }
-
-  .xp-text {
-    font-size: 14px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    line-height: 1;
-  }
-
-  .xp-subtext {
-    font-size: 11px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.6);
-    line-height: 1;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .xp-info {
-      display: none;
-    }
-
-    .gamification-button {
-      min-width: 56px;
-      padding: var(--spacing-xs);
-    }
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2;
   }
 
   /* Accessibility */
   .gamification-button:focus-visible {
-    outline: 2px solid #667eea;
+    outline: 2px solid rgba(99, 102, 241, 0.7);
     outline-offset: 2px;
   }
 
   /* Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
     .gamification-button,
-    .progress-circle,
-    .spinner,
-    .center-icon {
+    .spinner {
       animation: none;
       transition: none;
     }
 
-    .gamification-button:hover {
+    .gamification-button:hover,
+    .gamification-button:active {
       transform: none;
+    }
+  }
+
+  /* High Contrast */
+  @media (prefers-contrast: high) {
+    .gamification-button {
+      background: rgba(255, 255, 255, 0.2);
+      border: 2px solid white;
     }
   }
 </style>

@@ -2,7 +2,7 @@
   /**
    * Achievements Panel Component
    *
-   * Full-screen modal displaying:
+   * Slide-up sheet displaying:
    * - User stats (level, XP, achievements)
    * - Daily challenge
    * - Achievement list by category
@@ -11,7 +11,9 @@
 
   import { onMount } from "svelte";
   import { resolve, TYPES } from "../../inversify";
+  import { authStore } from "../../auth";
   import { getLevelProgress } from "../domain/constants/xp-constants";
+  import BottomSheet from "../../foundation/ui/BottomSheet.svelte";
   import type {
     Achievement,
     DailyChallenge,
@@ -45,6 +47,7 @@
   let currentStreak = $state(0);
   let selectedCategory = $state<Achievement["category"]>("creator");
   let isLoading = $state(true);
+  let hasLoadedData = $state(false);
 
   // Derived
   let levelProgress = $derived.by(() => {
@@ -63,7 +66,7 @@
     );
   });
 
-  // Initialize
+  // Initialize services on mount
   onMount(async () => {
     try {
       achievementService = await resolve<IAchievementService>(
@@ -73,19 +76,29 @@
         TYPES.IDailyChallengeService
       );
       streakService = await resolve<IStreakService>(TYPES.IStreakService);
-
-      await loadData();
-      isLoading = false;
     } catch (err) {
-      console.error("Failed to initialize AchievementsPanel:", err);
+      console.error("Failed to initialize AchievementsPanel services:", err);
       isLoading = false;
+    }
+  });
+
+  // Load data when panel opens and user is authenticated
+  $effect(() => {
+    if (isOpen && authStore.isAuthenticated && !hasLoadedData) {
+      loadData();
     }
   });
 
   async function loadData() {
     if (!achievementService || !challengeService || !streakService) return;
+    if (!authStore.isAuthenticated) {
+      console.warn("⚠️ Cannot load gamification data: User not authenticated");
+      isLoading = false;
+      return;
+    }
 
     try {
+      isLoading = true;
       [stats, achievements, dailyChallenge, challengeProgress] =
         await Promise.all([
           achievementService.getStats(),
@@ -96,8 +109,11 @@
 
       const streakData = await streakService.getCurrentStreak();
       currentStreak = streakData.currentStreak;
+      hasLoadedData = true;
     } catch (err) {
       console.error("Failed to load gamification data:", err);
+    } finally {
+      isLoading = false;
     }
   }
 
@@ -128,21 +144,14 @@
   };
 </script>
 
-{#if isOpen}
-  <!-- svelte-ignore a11y_no_static_element_interactions -->
-  <!-- svelte-ignore a11y_click_events_have_key_events -->
-  <div
-    class="achievements-overlay"
-    onclick={handleClose}
-    role="button"
-    tabindex="-1"
-  >
-    <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <!-- svelte-ignore a11y_click_events_have_key_events -->
-    <div
-      class="achievements-panel glass-surface"
-      onclick={(e) => e.stopPropagation()}
-    >
+<BottomSheet
+  {isOpen}
+  onclose={handleClose}
+  ariaLabel="Achievements & Challenges"
+  class="achievements-sheet"
+>
+  {#snippet children()}
+    <div class="achievements-panel">
       <!-- Header -->
       <div class="panel-header">
         <h2 class="panel-title">
@@ -294,54 +303,24 @@
         </div>
       {/if}
     </div>
-  </div>
-{/if}
+  {/snippet}
+</BottomSheet>
 
 <style>
-  /* Overlay */
-  .achievements-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: var(--spacing-lg);
-    animation: fadeIn 0.2s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+  /* BottomSheet wrapper styling */
+  :global(.achievements-sheet) {
+    max-height: 95vh;
+    height: 95vh;
   }
 
   /* Panel */
   .achievements-panel {
-    width: 100%;
-    max-width: 900px;
-    max-height: 90vh;
-    border-radius: var(--radius-xl);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    animation: slideUp 0.3s ease;
-  }
-
-  @keyframes slideUp {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
+    height: 100%;
+    background: rgba(15, 15, 25, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
   }
 
   /* Header */
@@ -672,16 +651,6 @@
 
   /* Responsive */
   @media (max-width: 768px) {
-    .achievements-overlay {
-      padding: 0;
-    }
-
-    .achievements-panel {
-      max-width: 100%;
-      max-height: 100vh;
-      border-radius: 0;
-    }
-
     .stats-section {
       grid-template-columns: repeat(2, 1fr);
     }
@@ -693,8 +662,6 @@
 
   /* Reduced Motion */
   @media (prefers-reduced-motion: reduce) {
-    .achievements-overlay,
-    .achievements-panel,
     .spinner-large {
       animation: none;
     }
