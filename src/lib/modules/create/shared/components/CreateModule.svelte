@@ -25,6 +25,8 @@
     type PictographData,
   } from "$shared";
   import { onMount, setContext } from "svelte";
+  import { fade } from "svelte/transition";
+  import { cubicOut } from "svelte/easing";
   import ToolPanel from "../../tool-panel/core/ToolPanel.svelte";
   import WorkspacePanel from "../../workspace-panel/core/WorkspacePanel.svelte";
   import ButtonPanel from "../../workspace-panel/shared/components/ButtonPanel.svelte";
@@ -52,6 +54,7 @@
     SequenceActionsCoordinator,
     ShareCoordinator,
   } from "./coordinators";
+  import HandPathSettingsView from "./HandPathSettingsView.svelte";
 
   const logger = createComponentLogger("CreateModule");
 
@@ -145,14 +148,34 @@
     }
   });
 
-  // Effect: Notify parent of current word changes
+  // Effect: Notify parent of current word changes (or contextual message for hand path)
   $effect(() => {
     if (!CreateModuleState) return;
 
-    const currentWord = CreateModuleState.sequenceState?.sequenceWord() ?? "";
+    let displayText = "";
+
+    // In gestural (hand path) mode, show contextual message instead of word
+    if (navigationState.activeTab === "gestural" && CreateModuleState.handPathCoordinator) {
+      const coordinator = CreateModuleState.handPathCoordinator;
+
+      if (!coordinator.isStarted) {
+        displayText = "Configure Your Settings";
+      } else if (coordinator.pathState.isSessionComplete) {
+        displayText = "Sequence Complete!";
+      } else if (coordinator.pathState.currentHand === "blue") {
+        displayText = "Drawing Blue Hand Path";
+      } else if (coordinator.pathState.currentHand === "red") {
+        displayText = "Drawing Red Hand Path";
+      } else {
+        displayText = "Draw Hand Path";
+      }
+    } else {
+      // Default: Show current word
+      displayText = CreateModuleState.sequenceState?.sequenceWord() ?? "";
+    }
 
     if (onCurrentWordChange) {
-      onCurrentWordChange(currentWord);
+      onCurrentWordChange(displayText);
     }
   });
 
@@ -391,61 +414,78 @@
     class:side-by-side={shouldUseSideBySideLayout}
     class:editing-mode={panelState.isEditPanelOpen}
   >
-    <!-- Workspace Panel -->
-    <div class="workspace-container">
-      <WorkspacePanel
-        sequenceState={CreateModuleState.sequenceState}
-        createModuleState={CreateModuleState}
-        practiceBeatIndex={panelState.practiceBeatIndex}
-        {animatingBeatNumber}
-        isMobilePortrait={services.layoutService.isMobilePortrait()}
-        onPlayAnimation={handlePlayAnimation}
-        animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
-      />
-
-      <div bind:this={buttonPanelElement}>
-        <ButtonPanel
-          {CreateModuleState}
-          showPlayButton={canShowActionButtons()}
+    <!-- Hand Path Settings View (Pre-Start State) -->
+    {#if navigationState.activeTab === "gestural" && !CreateModuleState?.handPathCoordinator?.isStarted}
+      <HandPathSettingsView handPathCoordinator={CreateModuleState.handPathCoordinator} />
+    {:else}
+      <!-- Standard Workspace/Tool Panel Layout -->
+      <div
+        class="layout-wrapper"
+        in:fade={{ duration: 500, delay: 250, easing: cubicOut }}
+      >
+        <!-- Workspace Panel -->
+        <div
+          class="workspace-container"
+          class:hidden-workspace={navigationState.activeTab === "gestural" && !CreateModuleState?.handPathCoordinator?.isStarted}
+        >
+        <WorkspacePanel
+          sequenceState={CreateModuleState.sequenceState}
+          createModuleState={CreateModuleState}
+          practiceBeatIndex={panelState.practiceBeatIndex}
+          {animatingBeatNumber}
+          isMobilePortrait={services.layoutService.isMobilePortrait()}
           onPlayAnimation={handlePlayAnimation}
-          isAnimating={panelState.isAnimationPanelOpen}
-          canClearSequence={canClearSequence()}
-          onClearSequence={handleClearSequence}
-          onRemoveBeat={handleRemoveBeat}
-          showShareButton={canShowActionButtons()}
-          onShare={handleOpenSharePanel}
-          isShareOpen={panelState.isSharePanelOpen}
-          showSequenceActions={canShowActionButtons()}
-          onSequenceActionsClick={handleOpenSequenceActions}
+          animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
+        />
+
+        <!-- Hide ButtonPanel when in gestural (hand path) mode -->
+        {#if navigationState.activeTab !== "gestural"}
+          <div bind:this={buttonPanelElement}>
+            <ButtonPanel
+              {CreateModuleState}
+              showPlayButton={canShowActionButtons()}
+              onPlayAnimation={handlePlayAnimation}
+              isAnimating={panelState.isAnimationPanelOpen}
+              canClearSequence={canClearSequence()}
+              onClearSequence={handleClearSequence}
+              onRemoveBeat={handleRemoveBeat}
+              showShareButton={canShowActionButtons()}
+              onShare={handleOpenSharePanel}
+              isShareOpen={panelState.isSharePanelOpen}
+              showSequenceActions={canShowActionButtons()}
+              onSequenceActionsClick={handleOpenSequenceActions}
+            />
+          </div>
+        {/if}
+
+        <!-- Animation Coordinator -->
+        <AnimationCoordinator
+          {CreateModuleState}
+          {panelState}
+          bind:animatingBeatNumber
         />
       </div>
 
-      <!-- Animation Coordinator -->
-      <AnimationCoordinator
-        {CreateModuleState}
-        {panelState}
-        bind:animatingBeatNumber
-      />
-    </div>
-
-    <!-- Tool Panel -->
-    <div class="tool-panel-container" bind:this={toolPanelElement}>
-      <ToolPanel
-        bind:this={toolPanelRef}
-        createModuleState={CreateModuleState}
-        {constructTabState}
-        onOptionSelected={handleOptionSelected}
-        isSideBySideLayout={() => shouldUseSideBySideLayout}
-        onPracticeBeatIndexChange={(index) => {
-          panelState.setPracticeBeatIndex(index);
-        }}
-        onOpenFilters={handleOpenFilterPanel}
-        onCloseFilters={() => {
-          panelState.closeFilterPanel();
-        }}
-        isFilterPanelOpen={panelState.isFilterPanelOpen}
-      />
-    </div>
+        <!-- Tool Panel -->
+        <div class="tool-panel-container" bind:this={toolPanelElement}>
+          <ToolPanel
+            bind:this={toolPanelRef}
+            createModuleState={CreateModuleState}
+            {constructTabState}
+            onOptionSelected={handleOptionSelected}
+            isSideBySideLayout={() => shouldUseSideBySideLayout}
+            onPracticeBeatIndexChange={(index) => {
+              panelState.setPracticeBeatIndex(index);
+            }}
+            onOpenFilters={handleOpenFilterPanel}
+            onCloseFilters={() => {
+              panelState.closeFilterPanel();
+            }}
+            isFilterPanelOpen={panelState.isFilterPanelOpen}
+          />
+        </div>
+      </div>
+    {/if}
   </div>
 
   <!-- Creation Method Selector Sheet (always rendered, controlled by isOpen) -->
@@ -503,6 +543,18 @@
     flex-direction: row;
   }
 
+  .layout-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .create-tab.side-by-side .layout-wrapper {
+    flex-direction: row;
+  }
+
   .workspace-container,
   .tool-panel-container {
     display: flex;
@@ -513,6 +565,19 @@
   .workspace-container {
     flex: 5;
     min-height: 0;
+  }
+
+  /* Hide workspace container when in gestural mode and not started */
+  .workspace-container.hidden-workspace {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-20px);
+  }
+
+  /* Smooth transition for workspace reveal */
+  .workspace-container {
+    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .tool-panel-container {

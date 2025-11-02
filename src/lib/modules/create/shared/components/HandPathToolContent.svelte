@@ -5,9 +5,10 @@ Tool panel content for configuring and controlling hand path drawing.
 Contains sequence settings, hand indicator, and action buttons.
 -->
 <script lang="ts">
+  import { slide, fade } from "svelte/transition";
+  import { cubicOut } from "svelte/easing";
   import type { HandPathCoordinator } from "../state/hand-path-coordinator.svelte";
-  import SequenceLengthPicker from "../../construct/gestural-path-builder/components/SequenceLengthPicker.svelte";
-  import PathControlPanel from "../../construct/gestural-path-builder/components/PathControlPanel.svelte";
+  import PathControlPanel from "../../construct/handpath-builder/components/PathControlPanel.svelte";
 
   // Props
   let {
@@ -18,56 +19,48 @@ Contains sequence settings, hand indicator, and action buttons.
 </script>
 
 <div class="hand-path-tool-content">
-  <!-- Settings Section -->
-  <div class="settings-section">
-    <div class="section-header">
-      <h3>
-        <i class="fas fa-cog"></i>
-        Settings
-      </h3>
-      {#if handPathCoordinator.isStarted}
-        <button
-          class="icon-btn"
-          onclick={() => handPathCoordinator.handleRestart()}
-          title="Reset settings"
-        >
-          <i class="fas fa-redo"></i>
-        </button>
-      {/if}
-    </div>
-
-    <SequenceLengthPicker
-      bind:sequenceLength={handPathCoordinator.sequenceLength}
-      bind:gridMode={handPathCoordinator.gridMode}
-    />
-  </div>
-
   {#if !handPathCoordinator.isStarted}
     <!-- Start Drawing Button -->
-    <button
-      class="start-drawing-btn"
-      onclick={() => handPathCoordinator.startDrawing()}
+    <div
+      in:slide={{ duration: 300, easing: cubicOut, axis: 'y' }}
+      out:slide={{ duration: 250, easing: cubicOut, axis: 'y' }}
     >
-      <i class="fas fa-play"></i>
-      Start Drawing
-    </button>
+      <button
+        class="start-drawing-btn"
+        onclick={() => handPathCoordinator.startDrawing()}
+      >
+        <i class="fas fa-play"></i>
+        Start Drawing
+      </button>
+    </div>
   {:else}
     <!-- Path Control Panel -->
-    <PathControlPanel
-      pathState={handPathCoordinator.pathState}
-      onComplete={() => handPathCoordinator.handleHandComplete()}
-      onReset={() => handPathCoordinator.handleRestart()}
-    />
+    <div
+      in:slide={{ duration: 400, delay: 200, easing: cubicOut, axis: 'y' }}
+      out:slide={{ duration: 250, easing: cubicOut, axis: 'y' }}
+    >
+      <PathControlPanel
+        pathState={handPathCoordinator.pathState}
+        onComplete={() => handPathCoordinator.handleHandComplete()}
+        onReset={() => handPathCoordinator.handleRestart()}
+        onBackToSettings={() => handPathCoordinator.handleBackToSettings()}
+      />
+    </div>
 
     <!-- Finish Actions -->
     {#if handPathCoordinator.pathState.isSessionComplete}
-      <div class="finish-actions">
+      <div
+        class="finish-actions"
+        in:slide={{ duration: 400, delay: 300, easing: cubicOut, axis: 'y' }}
+        out:fade={{ duration: 200 }}
+      >
         <button
           class="action-btn primary"
-          onclick={() => handPathCoordinator.handleFinish((motions) => {
-            console.log("Hand path sequence completed:", motions);
-            // TODO: Convert motions to sequence beats
-          })}
+          onclick={() =>
+            handPathCoordinator.handleFinish((motions) => {
+              console.log("Hand path sequence completed:", motions);
+              // TODO: Convert motions to sequence beats
+            })}
         >
           <i class="fas fa-check"></i>
           Finish & Import
@@ -92,61 +85,9 @@ Contains sequence settings, hand indicator, and action buttons.
     padding: clamp(0.75rem, 2vh, 1.25rem);
     height: 100%;
     overflow-y: auto;
-  }
-
-  .settings-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    flex-shrink: 0;
-  }
-
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .section-header h3 {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
-    font-weight: 600;
-    color: white;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .section-header h3 i {
-    color: #10b981;
-    font-size: 0.9em;
-  }
-
-  .icon-btn {
-    width: 36px;
-    height: 36px;
-    padding: 0;
-    background: rgba(168, 85, 247, 0.15);
-    border: 2px solid rgba(168, 85, 247, 0.3);
-    border-radius: 50%;
-    color: #c084fc;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  .icon-btn:hover {
-    background: rgba(168, 85, 247, 0.25);
-    border-color: #a855f7;
-    color: #e9d5ff;
-    transform: scale(1.05);
-  }
-
-  .icon-btn:active {
-    transform: scale(0.95);
+    /* Enable container queries for intrinsic sizing */
+    container-type: inline-size;
+    container-name: hand-path-tool;
   }
 
   .start-drawing-btn {
@@ -155,14 +96,15 @@ Contains sequence settings, hand indicator, and action buttons.
     border: none;
     border-radius: 14px;
     color: white;
-    font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+    /* Container-aware font sizing */
+    font-size: clamp(0.95rem, 4.5cqi, 1.1rem);
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: clamp(0.375rem, 2cqi, 0.625rem);
     min-height: 48px;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
     flex-shrink: 0;
@@ -193,13 +135,14 @@ Contains sequence settings, hand indicator, and action buttons.
     padding: clamp(0.75rem, 1.5vh, 1rem);
     border-radius: 14px;
     font-weight: 600;
-    font-size: clamp(0.875rem, 2vw, 1rem);
+    /* Container-aware font sizing */
+    font-size: clamp(0.875rem, 4cqi, 1rem);
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
+    gap: clamp(0.375rem, 1.5cqi, 0.625rem);
     min-height: 48px;
   }
 

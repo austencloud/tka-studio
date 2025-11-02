@@ -22,7 +22,7 @@ A **touch-first, gesture-based interface** for building sequences by drawing han
 ## 📁 File Structure
 
 ```
-src/lib/modules/build/construct/gestural-path-builder/
+src/lib/modules/build/construct/handpath-builder/
 ├── domain/
 │   ├── path-models.ts          # Domain models & types
 │   └── index.ts
@@ -38,10 +38,10 @@ src/lib/modules/build/construct/gestural-path-builder/
 │       ├── PathToMotionConverter.ts        # Converts paths → MotionData
 │       └── index.ts
 ├── state/
-│   ├── gestural-path-state.svelte.ts     # Svelte 5 reactive state
+│   ├── handpath-state.svelte.ts     # Svelte 5 reactive state
 │   └── index.ts
 ├── components/
-│   ├── GesturalPathBuilder.svelte         # Main orchestrator
+│   ├── HandpathBuilder.svelte         # Main orchestrator
 │   ├── SequenceLengthPicker.svelte        # Setup wizard
 │   ├── TouchableGrid.svelte               # Interactive grid
 │   ├── PathControlPanel.svelte            # Controls & feedback
@@ -54,22 +54,26 @@ src/lib/modules/build/construct/gestural-path-builder/
 ## 🏗️ Architecture Principles
 
 ### 1. **Svelte 5 Runes State Management**
+
 - ✅ `$state` for reactive values
 - ✅ `$derived` for computed values
 - ✅ Fine-grained reactivity
 - ✅ Immutable state updates
 
 ### 2. **Dependency Injection**
+
 - ✅ All services registered in `build.module.ts`
 - ✅ Interfaces + implementations pattern
 - ✅ Testable, mockable services
 
 ### 3. **Domain-Driven Design**
+
 - ✅ Pure TypeScript domain models
 - ✅ Business logic in services, not components
 - ✅ Clear separation of concerns
 
 ### 4. **Accessibility First**
+
 - ✅ ARIA labels and roles
 - ✅ Keyboard navigation support
 - ✅ Screen reader friendly
@@ -99,23 +103,27 @@ MotionData[] (ready for sequence)
 
 ## 🎨 Components
 
-### **GesturalPathBuilder.svelte** (Main Orchestrator)
+### **HandpathBuilder.svelte** (Main Orchestrator)
+
 - Wizard flow: Setup → Drawing → Complete
 - Manages services & state lifecycle
 - Emits `onSequenceComplete` with blue/red hand motions
 
 ### **SequenceLengthPicker.svelte** (Setup)
+
 - Select sequence length (8, 16, 24, 32, or custom)
 - Choose grid mode (Diamond/Box)
 - Choose starting location
 
 ### **TouchableGrid.svelte** (Drawing Canvas)
+
 - SVG-based interactive grid
 - Pointer event tracking
 - Visual feedback (current position, drawn path)
 - Real-time gesture recognition
 
 ### **PathControlPanel.svelte** (Controls)
+
 - Hand indicator (Blue/Red)
 - Progress bar
 - Rotation selector (CW/CCW/None)
@@ -127,20 +135,26 @@ MotionData[] (ready for sequence)
 ## 🧩 Services
 
 ### **HandPathDirectionDetector**
+
 Determines rotational direction of hand movement:
+
 - `getHandPathDirection()` - Returns CW/CCW/null
 - `getHandMotionType()` - Returns SHIFT/DASH/STATIC
 - `isDash()`, `isStatic()`, `isShift()` - Type checking
 
 ### **SwipeDetectionService**
+
 Converts raw pointer events to semantic swipes:
+
 - `findClosestGridPosition()` - Snap to grid
 - `hasMovedSignificantly()` - Movement threshold
 - `calculateVelocity()` - Swipe speed
 - `buildSwipeGesture()` - Complete gesture data
 
 ### **PathToMotionConverter**
+
 Converts hand paths to MotionData:
+
 - `convertSegmentToMotion()` - Single segment
 - `convertHandPathToMotions()` - Complete hand path
 - `determineMotionType()` - **Critical PRO/ANTI logic**
@@ -152,6 +166,7 @@ Converts hand paths to MotionData:
 ### **GesturalPathState** (Svelte 5 Runes)
 
 **Core State:**
+
 - `config` - Session configuration
 - `currentHand` - Blue or Red
 - `blueHandPath` / `redHandPath` - Completed paths
@@ -160,12 +175,14 @@ Converts hand paths to MotionData:
 - `completedSegments` - Drawn segments
 
 **Derived State:**
+
 - `isCurrentHandComplete` - All beats drawn?
 - `isSessionComplete` - Both hands done?
 - `progressPercentage` - % complete
 - `canAdvance` - Can move to next beat?
 
 **Actions:**
+
 - `initializeSession()` - Start new session
 - `recordSegment()` - Add hand path segment
 - `completeCurrentHand()` - Finish blue/red
@@ -208,7 +225,7 @@ Converts hand paths to MotionData:
 {#if shouldShowStartPositionPicker}
   <StartPositionPicker ... />
 {:else if shouldShowGesturalBuilder}
-  <GesturalPathBuilder
+  <HandpathBuilder
     onSequenceComplete={handleGesturalSequenceComplete}
     onCancel={() => { /* return to option viewer */ }}
   />
@@ -220,8 +237,9 @@ Converts hand paths to MotionData:
 ### Add Mode Toggle
 
 In `ConstructPickerHeader.svelte` or similar:
+
 ```html
-<button onclick={toggleToGesturalMode}>
+<button onclick="{toggleToGesturalMode}">
   <i class="fas fa-hand-pointer"></i>
   Draw Path
 </button>
@@ -241,18 +259,21 @@ In `ConstructPickerHeader.svelte` or similar:
 ## 🎯 Future Enhancements
 
 ### V1.1 - Advanced Features
+
 - [ ] Continuous drag mode (not just discrete swipes)
 - [ ] Undo individual beats (not just cascading)
 - [ ] Hand animation preview
 - [ ] Export hand path as JSON
 
 ### V1.2 - Polish
+
 - [ ] Haptic feedback on mobile
 - [ ] Sound effects for swipes
 - [ ] Path smoothing/interpolation
 - [ ] Multi-touch gestures
 
 ### V2.0 - Advanced
+
 - [ ] Auto-detect rotation from gesture speed
 - [ ] AI-suggested rotations
 - [ ] Import hand paths from video
@@ -263,18 +284,21 @@ In `ConstructPickerHeader.svelte` or similar:
 ## 📝 Key Design Decisions
 
 ### Why Discrete Mode First?
+
 - Clearer intent (one swipe = one beat)
 - Easier static motion handling
 - Simpler state management
 - Better for learning
 
 ### Why Separate Rotation Selection?
+
 - Hand path ≠ prop rotation
 - User may want float (no rotation)
 - Clearer mental model
 - Can experiment with different rotations
 
 ### Why Svelte 5 Runes?
+
 - Native reactivity (no stores)
 - Better performance
 - Type-safe
