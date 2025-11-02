@@ -6,8 +6,14 @@
  */
 
 import { GridLocation, GridMode, PropType, resolve, TYPES } from "$shared";
-import type { IHandPathDirectionDetector, IPathToMotionConverter } from "../../construct/gestural-path-builder/services/contracts";
-import { createGesturalPathState, type GesturalPathState } from "../../construct/gestural-path-builder/state";
+import type {
+  IHandPathDirectionDetector,
+  IPathToMotionConverter,
+} from "../../construct/handpath-builder/services/contracts";
+import {
+  createGesturalPathState,
+  type GesturalPathState,
+} from "../../construct/handpath-builder/state";
 
 export function createHandPathCoordinator() {
   // Services
@@ -23,16 +29,23 @@ export function createHandPathCoordinator() {
   // Initialize services
   function initializeServices() {
     if (!handPathDirectionDetector) {
-      handPathDirectionDetector = resolve<IHandPathDirectionDetector>(TYPES.IHandPathDirectionDetector);
+      handPathDirectionDetector = resolve<IHandPathDirectionDetector>(
+        TYPES.IHandPathDirectionDetector
+      );
     }
     if (!pathToMotionConverter) {
-      pathToMotionConverter = resolve<IPathToMotionConverter>(TYPES.IPathToMotionConverter);
+      pathToMotionConverter = resolve<IPathToMotionConverter>(
+        TYPES.IPathToMotionConverter
+      );
     }
   }
 
   // Start or restart drawing
   function startDrawing(): void {
-    const startLocation = gridMode === GridMode.DIAMOND ? GridLocation.NORTH : GridLocation.NORTHEAST;
+    const startLocation =
+      gridMode === GridMode.DIAMOND
+        ? GridLocation.NORTH
+        : GridLocation.NORTHEAST;
     pathState.initializeSession(sequenceLength, gridMode, startLocation);
     isStarted = true;
   }
@@ -70,14 +83,21 @@ export function createHandPathCoordinator() {
     pathState.completeCurrentHand();
   }
 
-  // Handle restart - reset and go back to settings
+  // Handle restart - reset current drawing session
   function handleRestart(): void {
+    pathState.reset();
+  }
+
+  // Handle back to settings - reset and return to pre-flight view
+  function handleBackToSettings(): void {
     pathState.reset();
     isStarted = false;
   }
 
   // Handle finish
-  function handleFinish(onSequenceComplete?: (motions: { blue: any[]; red: any[] }) => void): void {
+  function handleFinish(
+    onSequenceComplete?: (motions: { blue: any[]; red: any[] }) => void
+  ): void {
     if (!pathToMotionConverter || !pathState.selectedRotationDirection) {
       alert("Please select a rotation direction before finishing.");
       return;
@@ -101,8 +121,8 @@ export function createHandPathCoordinator() {
 
     onSequenceComplete?.({ blue: blueMotions, red: redMotions });
 
-    // Reset state after completion
-    handleRestart();
+    // Reset state and return to settings after completion
+    handleBackToSettings();
   }
 
   // Handle back to blue
@@ -112,12 +132,24 @@ export function createHandPathCoordinator() {
 
   return {
     // State (read-only getters)
-    get pathState() { return pathState; },
-    get sequenceLength() { return sequenceLength; },
-    set sequenceLength(value: number) { sequenceLength = value; },
-    get gridMode() { return gridMode; },
-    set gridMode(value: GridMode) { gridMode = value; },
-    get isStarted() { return isStarted; },
+    get pathState() {
+      return pathState;
+    },
+    get sequenceLength() {
+      return sequenceLength;
+    },
+    set sequenceLength(value: number) {
+      sequenceLength = value;
+    },
+    get gridMode() {
+      return gridMode;
+    },
+    set gridMode(value: GridMode) {
+      gridMode = value;
+    },
+    get isStarted() {
+      return isStarted;
+    },
 
     // Actions
     initializeServices,
@@ -127,6 +159,7 @@ export function createHandPathCoordinator() {
     handleAdvanceReleased,
     handleHandComplete,
     handleRestart,
+    handleBackToSettings,
     handleFinish,
     handleBackToBlue,
   };
