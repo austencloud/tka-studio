@@ -83,6 +83,11 @@
         <WordLabel word={layoutState.currentBuildWord} />
       {:else if currentModule() === "learn" && layoutState.currentLearnHeader}
         <div class="learn-header">{layoutState.currentLearnHeader}</div>
+      {:else if currentModule() === "admin"}
+        <div class="admin-header">
+          <i class="fas fa-crown"></i>
+          Admin Dashboard
+        </div>
       {/if}
     {/snippet}
   </TopBar>
@@ -180,6 +185,21 @@
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
     text-align: center;
+  }
+
+  .admin-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    text-align: center;
+  }
+
+  .admin-header i {
+    color: #ffd700;
+    font-size: 18px;
   }
 
   @media (prefers-reduced-motion: reduce) {

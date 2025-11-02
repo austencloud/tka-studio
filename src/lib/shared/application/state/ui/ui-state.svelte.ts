@@ -1,10 +1,31 @@
 import type { SequenceData, TabId } from "$shared";
 import type { IExploreThumbnailService } from "../../../../modules/explore/display";
+import { browser } from "$app/environment";
+
+// Get initial module from localStorage (synchronous, fast)
+function getInitialModuleSync(): TabId | null {
+  if (!browser) return null;
+
+  try {
+    const cached = localStorage.getItem("tka-active-module-cache");
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      if (parsed?.moduleId) {
+        console.log(`📦 [ui-state] Initial module from localStorage:`, parsed.moduleId);
+        return parsed.moduleId as TabId;
+      }
+    }
+  } catch (e) {
+    // Ignore errors
+  }
+
+  return null;
+}
 
 // Centralized UI state leveraging Svelte 5 runes.
 // Uses TabId (which includes both ModuleId and LegacyTabId) for backwards compatibility
 const uiState = $state({
-  activeModule: null as TabId | null,
+  activeModule: getInitialModuleSync(), // Load from localStorage immediately
   showSettings: false,
   isFullScreen: false,
   isTransitioning: false,

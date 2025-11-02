@@ -94,13 +94,18 @@ export function getInitialModuleFromCache(): ModuleId {
     if (savedModuleData) {
       const parsed = JSON.parse(savedModuleData);
       if (parsed && typeof parsed.moduleId === "string") {
-        return parsed.moduleId as ModuleId;
+        const moduleId = parsed.moduleId as ModuleId;
+        console.log(`📦 [module-state] Initial module from localStorage:`, moduleId);
+        // Return the cached module even if it's admin
+        // If user doesn't have access, initializeModulePersistence will handle it
+        return moduleId;
       }
     }
   } catch (error) {
     console.warn("⚠️ Failed to pre-load saved module from cache:", error);
   }
 
+  console.log(`📦 [module-state] No cached module found, using default: build`);
   return "build";
 }
 
@@ -158,18 +163,15 @@ export async function initializeModulePersistence(): Promise<void> {
           );
         }
       } else {
-        // User doesn't have access to it (e.g., admin module without admin permissions)
-        console.log(`⚠️ [module-state] User does not have access to saved module "${savedModule}", falling back to default`);
+        // User doesn't have access YET (auth might still be loading)
+        // DON'T overwrite the cache - just use default temporarily
+        // The cache will be restored by revalidateCurrentModule() when auth loads
+        console.log(`⚠️ [module-state] User does not have access to saved module "${savedModule}" yet (auth may still be loading)`);
+        console.log(`ℹ️ [module-state] Using default module temporarily, preserving cache for revalidation`);
 
         const defaultModule = getActiveModuleOrDefault();
         setActiveModule(defaultModule);
-        await persistence.saveActiveTab(defaultModule);
-        if (browser) {
-          localStorage.setItem(
-            LOCAL_STORAGE_KEY,
-            JSON.stringify({ moduleId: defaultModule })
-          );
-        }
+        // DON'T save to persistence or localStorage - preserve the cached admin preference
       }
     } else {
       // No saved module

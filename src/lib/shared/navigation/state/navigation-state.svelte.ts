@@ -91,6 +91,34 @@ export const LIBRARY_TABS: Section[] = [
   },
 ];
 
+// Admin tabs configuration
+export const ADMIN_TABS: Section[] = [
+  {
+    id: "challenges",
+    label: "Challenges",
+    icon: '<i class="fas fa-calendar-day"></i>',
+    description: "Manage daily challenges",
+    color: "#ffd700",
+    gradient: "linear-gradient(135deg, #fbbf24 0%, #ffd700 100%)",
+  },
+  {
+    id: "analytics",
+    label: "Analytics",
+    icon: '<i class="fas fa-chart-line"></i>',
+    description: "View app usage and metrics",
+    color: "#3b82f6",
+    gradient: "linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)",
+  },
+  {
+    id: "users",
+    label: "Users",
+    icon: '<i class="fas fa-users"></i>',
+    description: "Manage users and permissions",
+    color: "#10b981",
+    gradient: "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+  },
+];
+
 // Module definitions for the new navigation system
 export const MODULE_DEFINITIONS: ModuleDefinition[] = [
   {
@@ -132,14 +160,7 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     icon: '<i class="fas fa-crown" style="color: #ffd700;"></i>', // Gold - admin/privileged
     description: "System management & configuration",
     isMain: false, // Only visible to admins
-    sections: [
-      {
-        id: "admin",
-        label: "Admin",
-        icon: '<i class="fas fa-crown" style="color: #ffd700;"></i>',
-        description: "System management & configuration",
-      },
-    ],
+    sections: ADMIN_TABS,
   },
 ];
 
@@ -416,6 +437,9 @@ export function createNavigationState() {
     },
     get libraryTabs() {
       return LIBRARY_TABS;
+    },
+    get adminTabs() {
+      return ADMIN_TABS;
     },
     get moduleDefinitions() {
       return MODULE_DEFINITIONS;
