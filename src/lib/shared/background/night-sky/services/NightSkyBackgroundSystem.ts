@@ -44,7 +44,6 @@ export class NightSkyBackgroundSystem implements IBackgroundSystem {
   // core state -------------------------------------------------------------
   private quality: QualityLevel = "medium";
   private isInitialized: boolean = false;
-  private thumbnailMode: boolean = false;
 
   // Services (initialized via factory method)
   private renderingService!: IBackgroundRenderingService;
@@ -175,20 +174,12 @@ export class NightSkyBackgroundSystem implements IBackgroundSystem {
 
   /* DRAW */
   public draw(ctx: CanvasRenderingContext2D, dim: Dimensions) {
-    // Use lighter gradient in thumbnail mode for better visibility
-    const gradientStops = this.thumbnailMode
-      ? [
-          { position: 0, color: "#1a1a3e" },
-          { position: 0.3, color: "#2a2a4e" },
-          { position: 0.7, color: "#26314e" },
-          { position: 1, color: "#1f4670" },
-        ]
-      : this.cfg.background?.gradientStops || [
-          { position: 0, color: "#0c0c1e" },
-          { position: 0.3, color: "#1a1a2e" },
-          { position: 0.7, color: "#16213e" },
-          { position: 1, color: "#0f3460" },
-        ];
+    const gradientStops = this.cfg.background?.gradientStops || [
+      { position: 0, color: "#0c0c1e" },
+      { position: 0.3, color: "#1a1a2e" },
+      { position: 0.7, color: "#16213e" },
+      { position: 1, color: "#0f3460" },
+    ];
     this.renderingService.drawGradient(ctx, dim, gradientStops);
 
     // Only draw other elements if properly initialized
@@ -196,42 +187,20 @@ export class NightSkyBackgroundSystem implements IBackgroundSystem {
       // Draw nebula first (background layer)
       this.nebulaSystem.draw(ctx, this.a11y);
 
-      // Draw stars with enhanced visibility in thumbnail mode
-      ctx.save();
-      if (this.thumbnailMode) {
-        // Make stars much more visible with strong glow
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = "rgba(255, 255, 255, 0.95)";
-        ctx.filter = "brightness(1.5)";
-      }
+      // Draw stars
       this.parallaxStarSystem.draw(ctx, this.a11y);
-      ctx.restore();
 
       // Draw constellations
       this.constellationSystem.draw(ctx, this.a11y);
 
-      // Draw moon with enhanced size in thumbnail mode
-      ctx.save();
-      if (this.thumbnailMode) {
-        // Scale moon 6x and position near top-right
-        const moonScale = 6;
-        const moonX = dim.width * 0.85; // Top right area
-        const moonY = dim.height * 0.2;
-        ctx.translate(moonX, moonY);
-        ctx.scale(moonScale, moonScale);
-        ctx.translate(-moonX, -moonY);
-      }
+      // Draw moon
       this.moonSystem.draw(ctx, this.a11y);
-      ctx.restore();
 
       if (this.Q.enableShootingStars)
         this.shootingStarSystem.draw(this.shootingStarState, ctx);
 
-      // Skip spaceship and comet in thumbnail mode for clarity
-      if (!this.thumbnailMode) {
-        this.spaceshipSystem.draw(ctx, this.a11y);
-        this.cometSystem.draw(ctx, this.a11y);
-      }
+      this.spaceshipSystem.draw(ctx, this.a11y);
+      this.cometSystem.draw(ctx, this.a11y);
     }
   }
 
@@ -283,11 +252,6 @@ export class NightSkyBackgroundSystem implements IBackgroundSystem {
   public setAccessibility(s: AccessibilitySettings) {
     this.a11y = s;
     // Accessibility settings are passed to systems during update/draw calls
-  }
-
-  public setThumbnailMode(enabled: boolean) {
-    this.thumbnailMode = enabled;
-    // Thumbnail mode settings are applied during initialization and drawing
   }
 
   /**

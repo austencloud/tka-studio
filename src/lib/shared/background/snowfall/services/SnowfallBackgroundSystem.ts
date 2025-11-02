@@ -26,7 +26,6 @@ export class SnowfallBackgroundSystem implements IBackgroundSystem {
 
   private quality: QualityLevel = "medium";
   private isInitialized: boolean = false;
-  private thumbnailMode: boolean = false;
 
   constructor() {
     // Inject services
@@ -44,21 +43,6 @@ export class SnowfallBackgroundSystem implements IBackgroundSystem {
   public initialize(dimensions: Dimensions, quality: QualityLevel): void {
     this.quality = quality;
     this.snowflakes = this.snowflakeSystem.initialize(dimensions, quality);
-
-    // In thumbnail mode, increase snowflake density by 5x for better visibility
-    if (this.thumbnailMode) {
-      const set1 = this.snowflakeSystem.initialize(dimensions, quality);
-      const set2 = this.snowflakeSystem.initialize(dimensions, quality);
-      const set3 = this.snowflakeSystem.initialize(dimensions, quality);
-      const set4 = this.snowflakeSystem.initialize(dimensions, quality);
-      this.snowflakes = [...this.snowflakes, ...set1, ...set2, ...set3, ...set4];
-
-      // Make snowflakes larger and brighter in thumbnail mode
-      this.snowflakes.forEach((snowflake) => {
-        snowflake.size *= 2.0; // Doubled from 1.5x
-        snowflake.opacity = Math.min(snowflake.opacity * 1.3, 1.0); // Brighter
-      });
-    }
 
     this.shootingStarState = this.shootingStarSystem.initialState;
     this.isInitialized = true;
@@ -105,21 +89,11 @@ export class SnowfallBackgroundSystem implements IBackgroundSystem {
     const { config, qualitySettings } =
       this.configurationService.getOptimizedConfig(this.quality);
 
-    // Use lighter gradient in thumbnail mode for better visibility
-    if (this.thumbnailMode) {
-      const lightGradientStops = [
-        { position: 0, color: "#2a3a5e" },
-        { position: 0.5, color: "#1f2d4e" },
-        { position: 1, color: "#1a4570" },
-      ];
-      this.renderingService.drawGradient(ctx, dimensions, lightGradientStops);
-    } else {
-      this.renderingService.drawGradient(
-        ctx,
-        dimensions,
-        config.core.background.gradientStops
-      );
-    }
+    this.renderingService.drawGradient(
+      ctx,
+      dimensions,
+      config.core.background.gradientStops
+    );
 
     if (this.isInitialized) {
       this.snowflakeSystem.draw(this.snowflakes, ctx, dimensions);
@@ -141,10 +115,6 @@ export class SnowfallBackgroundSystem implements IBackgroundSystem {
     highContrast: boolean;
   }): void {
     // Accessibility settings would be used for motion reduction, etc.
-  }
-
-  public setThumbnailMode(enabled: boolean): void {
-    this.thumbnailMode = enabled;
   }
 
   public handleResize(
