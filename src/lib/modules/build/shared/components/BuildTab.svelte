@@ -27,6 +27,7 @@
   import ToolPanel from '../../tool-panel/core/ToolPanel.svelte';
   import WorkspacePanel from '../../workspace-panel/core/WorkspacePanel.svelte';
   import ButtonPanel from '../../workspace-panel/shared/components/ButtonPanel.svelte';
+  import PathBuilderTabContent from './PathBuilderTabContent.svelte';
   import type { BuildTabServices } from "../services/ServiceInitializer";
   import { ServiceInitializer } from "../services/ServiceInitializer";
   import { getBuildTabEventService } from "../services/implementations/BuildTabEventService";
@@ -121,6 +122,11 @@
   // Derived: Show play/actions/share when at least one motion beat exists
   const canShowActionButtons = $derived(() => {
     return currentBeatCount() >= 1;
+  });
+
+  // Derived: Check if we're in path builder mode (should show full-screen path builder)
+  const isPathBuilderMode = $derived(() => {
+    return navigationState.activeTab === "gestural";
   });
 
   // Effect: Notify parent of tab accessibility changes
@@ -340,63 +346,80 @@
   function handleOpenSequenceActions() {
     showSequenceActionsSheet = true;
   }
+
+  function handlePathBuilderSequenceComplete(motions: { blue: any[]; red: any[] }) {
+    console.log("Path builder sequence completed in BuildTab:", motions);
+    // TODO: Convert motions to sequence beats and add to sequence
+    // For now, navigate back to construct tab
+    navigationState.setActiveTab("construct");
+  }
 </script>
 
 {#if error}
   <ErrorBanner message={error} onDismiss={clearError} />
 {:else if buildTabState && constructTabState && services}
-  <div class="build-tab" class:side-by-side={shouldUseSideBySideLayout} class:editing-mode={panelState.isEditPanelOpen}>
-    <!-- Workspace Panel -->
-    <div class="workspace-container">
-      <WorkspacePanel
-        sequenceState={buildTabState.sequenceState}
-        {buildTabState}
-        practiceBeatIndex={panelState.practiceBeatIndex}
-        {animatingBeatNumber}
-        isMobilePortrait={services.layoutService.isMobilePortrait()}
-        onPlayAnimation={handlePlayAnimation}
-        animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
-      />
-
-      <div bind:this={buttonPanelElement}>
-        <ButtonPanel
+  <div class="build-tab" class:side-by-side={shouldUseSideBySideLayout} class:editing-mode={panelState.isEditPanelOpen} class:path-builder-mode={isPathBuilderMode()}>
+    {#if isPathBuilderMode()}
+      <!-- Path Builder Mode: Full-screen path builder -->
+      <div class="path-builder-container">
+        <PathBuilderTabContent
+          onPathBuilderSequenceComplete={handlePathBuilderSequenceComplete}
+        />
+      </div>
+    {:else}
+      <!-- Normal Mode: Workspace + Tool Panel -->
+      <!-- Workspace Panel -->
+      <div class="workspace-container">
+        <WorkspacePanel
+          sequenceState={buildTabState.sequenceState}
           {buildTabState}
-          showPlayButton={canShowActionButtons()}
+          practiceBeatIndex={panelState.practiceBeatIndex}
+          {animatingBeatNumber}
+          isMobilePortrait={services.layoutService.isMobilePortrait()}
           onPlayAnimation={handlePlayAnimation}
-          isAnimating={panelState.isAnimationPanelOpen}
-          canClearSequence={canClearSequence()}
-          onClearSequence={handleClearSequence}
-          onRemoveBeat={handleRemoveBeat}
-          showShareButton={canShowActionButtons()}
-          onShare={handleOpenSharePanel}
-          isShareOpen={panelState.isSharePanelOpen}
-          showSequenceActions={canShowActionButtons()}
-          onSequenceActionsClick={handleOpenSequenceActions}
+          animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
+        />
+
+        <div bind:this={buttonPanelElement}>
+          <ButtonPanel
+            {buildTabState}
+            showPlayButton={canShowActionButtons()}
+            onPlayAnimation={handlePlayAnimation}
+            isAnimating={panelState.isAnimationPanelOpen}
+            canClearSequence={canClearSequence()}
+            onClearSequence={handleClearSequence}
+            onRemoveBeat={handleRemoveBeat}
+            showShareButton={canShowActionButtons()}
+            onShare={handleOpenSharePanel}
+            isShareOpen={panelState.isSharePanelOpen}
+            showSequenceActions={canShowActionButtons()}
+            onSequenceActionsClick={handleOpenSequenceActions}
+          />
+        </div>
+
+        <!-- Animation Coordinator -->
+        <AnimationCoordinator
+          {buildTabState}
+          {panelState}
+          bind:animatingBeatNumber
         />
       </div>
 
-      <!-- Animation Coordinator -->
-      <AnimationCoordinator
-        {buildTabState}
-        {panelState}
-        bind:animatingBeatNumber
-      />
-    </div>
-
-    <!-- Tool Panel -->
-    <div class="tool-panel-container" bind:this={toolPanelElement}>
-      <ToolPanel
-        bind:this={toolPanelRef}
-        {buildTabState}
-        {constructTabState}
-        onOptionSelected={handleOptionSelected}
-        isSideBySideLayout={() => shouldUseSideBySideLayout}
-        onPracticeBeatIndexChange={(index) => { panelState.setPracticeBeatIndex(index); }}
-        onOpenFilters={handleOpenFilterPanel}
-        onCloseFilters={() => { panelState.closeFilterPanel(); }}
-        isFilterPanelOpen={panelState.isFilterPanelOpen}
-      />
-    </div>
+      <!-- Tool Panel -->
+      <div class="tool-panel-container" bind:this={toolPanelElement}>
+        <ToolPanel
+          bind:this={toolPanelRef}
+          {buildTabState}
+          {constructTabState}
+          onOptionSelected={handleOptionSelected}
+          isSideBySideLayout={() => shouldUseSideBySideLayout}
+          onPracticeBeatIndexChange={(index) => { panelState.setPracticeBeatIndex(index); }}
+          onOpenFilters={handleOpenFilterPanel}
+          onCloseFilters={() => { panelState.closeFilterPanel(); }}
+          isFilterPanelOpen={panelState.isFilterPanelOpen}
+        />
+      </div>
+    {/if}
   </div>
 
   <!-- Edit Coordinator -->
@@ -471,5 +494,19 @@
 
   .build-tab.side-by-side .tool-panel-container {
     flex: 4;
+  }
+
+  /* Path Builder mode: full-screen container */
+  .build-tab.path-builder-mode {
+    flex-direction: column;
+  }
+
+  .path-builder-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
   }
 </style>

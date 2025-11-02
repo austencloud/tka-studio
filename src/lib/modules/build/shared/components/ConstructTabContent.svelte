@@ -61,7 +61,7 @@
               onNavigateToDefault={onStartPositionNavigateToDefault}
               {isSideBySideLayout}
             />
-          <!-- Option Grid (default) -->
+          <!-- Option Grid -->
           {:else}
             <OptionViewer
               {onOptionSelected}

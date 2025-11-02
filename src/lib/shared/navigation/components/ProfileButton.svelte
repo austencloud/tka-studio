@@ -45,7 +45,9 @@
       />
     {:else if authStore.isAuthenticated && authStore.user}
       <div class="profile-initial">
-        {(authStore.user.displayName || authStore.user.email || "?").charAt(0).toUpperCase()}
+        {(authStore.user.displayName || authStore.user.email || "?")
+          .charAt(0)
+          .toUpperCase()}
       </div>
     {:else}
       <i class="fas fa-user-circle"></i>

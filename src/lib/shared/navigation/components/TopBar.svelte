@@ -14,7 +14,7 @@
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import ProfileButton from "./ProfileButton.svelte";
   import GamificationButton from "../../gamification/components/GamificationButton.svelte";
-  import AchievementsPanel from "../../gamification/components/AchievementsPanel.svelte";
+  import AchievementsBrowser from "../../gamification/components/AchievementsBrowser.svelte";
 
   // Props
   let {
@@ -135,7 +135,7 @@
   </div>
 </div>
 
-<AchievementsPanel
+<AchievementsBrowser
   isOpen={showAchievementsPanel}
   onClose={() => showAchievementsPanel = false}
 />

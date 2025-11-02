@@ -40,18 +40,8 @@ export function createBuildTabEffects(config: EffectConfig) {
       buildTabState.isPersistenceInitialized &&
       !buildTabState.isNavigatingBack
     ) {
-      // Guard: Prevent navigation to tabs without a valid sequence
-      if (
-        (currentMode === "edit" ||
-          currentMode === "animate" ||
-          currentMode === "share" ||
-          currentMode === "record") &&
-        !buildTabState.canAccessEditTab
-      ) {
-        console.warn(`Cannot access ${currentMode} tab without sequence`);
-        navigationState.setCurrentSection("construct");
-        return;
-      }
+      // Note: No need to guard navigation anymore - only construct and generate exist
+      // and both are always accessible. Animate and share are separate panels now.
 
       buildTabState.setactiveToolPanel(currentMode as any);
     }

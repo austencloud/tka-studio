@@ -21,6 +21,14 @@ export const BUILD_TABS: Section[] = [
     gradient: "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
   },
   {
+    id: "gestural",
+    label: "Gestural",
+    icon: '<i class="fas fa-hand-pointer"></i>',
+    description: "Draw hand paths on touchscreen",
+    color: "#10b981",
+    gradient: "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+  },
+  {
     id: "generate",
     label: "Generate",
     icon: '<i class="fas fa-bolt"></i>',
@@ -70,26 +78,36 @@ export const EXPLORE_TABS: Section[] = [
   },
 ];
 
-// Library tabs configuration
-export const LIBRARY_TABS: Section[] = [
+// Collection tabs configuration (formerly Library)
+export const COLLECTION_TABS: Section[] = [
   {
-    id: "sequences",
-    label: "Sequences",
-    icon: '<i class="fas fa-layer-group"></i>',
-    description: "My sequences and saved content",
+    id: "gallery",
+    label: "Gallery",
+    icon: '<i class="fas fa-images"></i>',
+    description: "My saved sequences",
     color: "#10b981",
     gradient: "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
   },
   {
-    id: "acts",
-    label: "Acts",
-    icon: '<i class="fas fa-film"></i>',
-    description: "My acts (coming soon)",
-    color: "#f59e0b",
-    gradient: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
-    disabled: true,
+    id: "achievements",
+    label: "Achievements",
+    icon: '<i class="fas fa-trophy"></i>',
+    description: "Progress, stats, and unlocked achievements",
+    color: "#ffd700",
+    gradient: "linear-gradient(135deg, #fbbf24 0%, #ffd700 100%)",
+  },
+  {
+    id: "challenges",
+    label: "Challenges",
+    icon: '<i class="fas fa-bullseye"></i>',
+    description: "Daily challenges and active quests",
+    color: "#667eea",
+    gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
   },
 ];
+
+// Legacy export for backwards compatibility during migration
+export const LIBRARY_TABS = COLLECTION_TABS;
 
 // Admin tabs configuration
 export const ADMIN_TABS: Section[] = [
@@ -146,12 +164,12 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     sections: LEARN_TABS,
   },
   {
-    id: "library",
-    label: "Library",
-    icon: '<i class="fas fa-book" style="color: #10b981;"></i>', // Green - personal collection/library
-    description: "My sequences and saved content",
+    id: "collection",
+    label: "Collection",
+    icon: '<i class="fas fa-box-archive" style="color: #10b981;"></i>', // Green - collection/archive
+    description: "My gallery, achievements, and challenges",
     isMain: true,
-    sections: LIBRARY_TABS,
+    sections: COLLECTION_TABS,
   },
   // Removed: write and word_card modules (not currently in use)
   {

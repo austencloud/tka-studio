@@ -16,7 +16,8 @@
   import AdminDashboard from "../../modules/admin/components/AdminDashboard.svelte";
   import BuildTab from "../../modules/build/shared/components/BuildTab.svelte";
   import LearnTab from "../../modules/learn/LearnTab.svelte";
-  import LibraryTab from "../../modules/library/LibraryTab.svelte";
+  import CollectionTab from "../../modules/collection/CollectionTab.svelte";
+  import LibraryTab from "../../modules/library/LibraryTab.svelte"; // Legacy support
   import WordCardTab from "../../modules/word-card/components/WordCardTab.svelte";
   import WriteTab from "../../modules/write/components/WriteTab.svelte";
   import { ExploreTab } from "../../modules";
@@ -97,6 +98,8 @@
         <ExploreTab />
       {:else if isModuleActive("learn")}
         <LearnTab onHeaderChange={onLearnHeaderChange} />
+      {:else if isModuleActive("collection")}
+        <CollectionTab />
       {:else if isModuleActive("library")}
         <LibraryTab />
       {:else if isModuleActive("word_card")}

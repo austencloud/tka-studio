@@ -4,7 +4,8 @@
  * Manages bidirectional synchronization between global navigation and BuildTab's tool panel tabs.
  * Prevents infinite loops through guard flags and validates tab accessibility based on sequence state.
  *
- * Domain: Build Module - Tool Panel Navigation (Construct/Generate/Animate/Share/Record)
+ * Domain: Build Module - Tool Panel Navigation (Construct/Generate)
+ * Note: Animate and Share are now separate panels, not BuildSections.
  * Extracted from BuildTab.svelte monolith.
  */
 
@@ -29,7 +30,7 @@ export class NavigationSyncService implements INavigationSyncService {
     });
 
     // Skip if navigation is to a non-build section (e.g., "explore", "library")
-    const validBuildSections = ["construct", "generate", "animate", "share", "record"];
+    const validBuildSections = ["construct", "gestural", "generate"];
     if (!validBuildSections.includes(currentMode)) {
       return;
     }
@@ -75,14 +76,8 @@ export class NavigationSyncService implements INavigationSyncService {
   }
 
   validateTabAccess(mode: BuildSection, canAccessEditTab: boolean): boolean {
-    // Construct and generate are always accessible
-    if (mode === "construct" || mode === "generate") {
-      return true;
-    }
-
-    // Animate, share, record require a valid sequence
-    // (canAccessEditTab indicates a sequence exists)
-    return canAccessEditTab;
+    // Construct, gestural, and generate are always accessible
+    return true;
   }
 
   getFallbackTab(): BuildSection {

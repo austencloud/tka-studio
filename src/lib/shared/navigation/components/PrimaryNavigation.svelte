@@ -299,6 +299,9 @@
     border-radius: 50%; /* Circular like top bar buttons */
   }
 
+  /* Remove unused selector - keeping this comment for reference */
+  /* .module-switcher.active - removed as it was unused */
+
   /* Side layout - icon-only buttons */
   .layout-side .nav-button {
     padding: 8px;

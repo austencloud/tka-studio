@@ -2,14 +2,17 @@
  * Build Tab Navigation Sync Service Contract
  *
  * Handles bidirectional synchronization between global navigation state and BuildTab state.
- * Manages tab switching within BuildTab's tool panel (Construct, Generate, Animate, etc.)
+ * Manages tab switching within BuildTab's tool panel (Construct, Gestural, and Generate).
  * Includes tab accessibility validation and navigation guard logic for construction workflow.
+ *
+ * Note: "animate" and "share" are now separate panels (not BuildSections).
+ * "record" has not been reintegrated yet.
  *
  * Domain: Build Module - Navigation within Sequence Construction Interface
  * Extracted from BuildTab.svelte monolith to follow DI architecture.
  */
 
-export type BuildSection = "construct" | "generate" | "animate" | "share" | "record";
+export type BuildSection = "construct" | "gestural" | "generate";
 
 export interface INavigationSyncService {
   /**
