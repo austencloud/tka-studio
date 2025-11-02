@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Sprite Loading Test</title>
+    <style>
+        body {
+            background: #0d2d47;
+            color: white;
+            font-family: monospace;
+            padding: 20px;
+        }
+        .sprite-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .sprite-card {
+            border: 2px solid #4a8fa3;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .sprite-card img {
+            display: block;
+            image-rendering: pixelated;
+        }
+        pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fish Sprite Loading Test</h1>
+    <div id="log"></div>
+    <div class="sprite-container" id="sprites"></div>
+
+    <script>
+        const log = (msg) => {
+            console.log(msg);
+            const logEl = document.getElementById('log');
+            logEl.innerHTML += `<pre>${msg}</pre>`;
+        };
+
+        const fishSprites = [
+            { name: "Blue", path: "/assets/background/fish/kenney/fish_blue.png" },
+            { name: "Orange", path: "/assets/background/fish/kenney/fish_orange.png" },
+            { name: "Green", path: "/assets/background/fish/kenney/fish_green.png" },
+            { name: "Grey Long", path: "/assets/background/fish/kenney/fish_grey_long_a.png" },
+        ];
+
+        const fishSpriteCache = new Map();
+
+        log(`🐟 Starting to load ${fishSprites.length} fish sprites...`);
+
+        const loadPromises = fishSprites.map((sprite) => {
+            log(`📥 Loading: ${sprite.name} from ${sprite.path}`);
+
+            return new Promise((resolve, reject) => {
+                const image = new Image();
+
+                image.onload = () => {
+                    log(`✅ Loaded: ${sprite.name} (${image.naturalWidth}x${image.naturalHeight})`);
+
+                    const entry = fishSpriteCache.get(sprite.path);
+                    if (entry) {
+                        entry.ready = true;
+                        log(`✅ Cache entry marked ready: ${sprite.name}`);
+                    }
+
+                    // Display the sprite
+                    const container = document.getElementById('sprites');
+                    const card = document.createElement('div');
+                    card.className = 'sprite-card';
+                    card.innerHTML = `
+                        <h3>${sprite.name}</h3>
+                        <img src="${sprite.path}" alt="${sprite.name}" style="width: 128px; height: auto;">
+                        <p>Size: ${image.naturalWidth}x${image.naturalHeight}</p>
+                        <p>Ready: ${entry?.ready}</p>
+                    `;
+                    container.appendChild(card);
+
+                    resolve();
+                };
+
+                image.onerror = (error) => {
+                    log(`❌ Failed to load: ${sprite.name} - ${error}`);
+                    reject(error);
+                };
+
+                // Create cache entry BEFORE setting src
+                fishSpriteCache.set(sprite.path, {
+                    sprite,
+                    image,
+                    ready: false,
+                });
+                log(`💾 Cache entry created: ${sprite.name}`);
+
+                image.src = sprite.path;
+            });
+        });
+
+        Promise.all(loadPromises).then(() => {
+            log('\n✅ ALL SPRITES LOADED SUCCESSFULLY\n');
+            log('📊 Cache state:');
+            for (const [path, entry] of fishSpriteCache.entries()) {
+                log(`  ${entry.sprite.name}: ready=${entry.ready}, complete=${entry.image.complete}, naturalWidth=${entry.image.naturalWidth}`);
+            }
+
+            // Test getRandomSpriteEntry
+            log('\n🎲 Testing getRandomSpriteEntry():');
+            const randomSprite = fishSprites[Math.floor(Math.random() * fishSprites.length)];
+            const entry = fishSpriteCache.get(randomSprite.path);
+            log(`  Selected: ${randomSprite.name}`);
+            log(`  Has entry: ${!!entry}`);
+            log(`  Entry ready: ${entry?.ready}`);
+            log(`  Image complete: ${entry?.image?.complete}`);
+            log(`  Image naturalWidth: ${entry?.image?.naturalWidth}`);
+
+            // Test getAnyLoadedSpriteEntry
+            log('\n🔍 Testing getAnyLoadedSpriteEntry():');
+            let foundEntry = null;
+            for (const e of fishSpriteCache.values()) {
+                if (e.image && e.image.complete && e.ready) {
+                    foundEntry = e;
+                    break;
+                }
+            }
+            log(`  Found entry: ${!!foundEntry}`);
+            if (foundEntry) {
+                log(`  Sprite name: ${foundEntry.sprite.name}`);
+                log(`  Ready: ${foundEntry.ready}`);
+                log(`  Complete: ${foundEntry.image.complete}`);
+                log(`  NaturalWidth: ${foundEntry.image.naturalWidth}`);
+            }
+        }).catch((error) => {
+            log(`\n❌ ERROR LOADING SPRITES: ${error}`);
+        });
+    </script>
+</body>
+</html>
