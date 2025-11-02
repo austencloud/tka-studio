@@ -13,17 +13,44 @@ Displays current state, beat progress, rotation selector, and action buttons.
     onRotationSelected,
     onComplete,
     onReset,
+    onBackToSettings,
   }: {
     pathState: GesturalPathState;
     onRotationSelected?: (direction: RotationDirection) => void;
     onComplete?: () => void;
     onReset?: () => void;
+    onBackToSettings?: () => void;
   } = $props();
+
+  // Reset confirmation state
+  let resetConfirmationActive = $state(false);
+  let resetConfirmationTimeout: number | null = $state(null);
 
   // Handle rotation selection
   function selectRotation(direction: RotationDirection): void {
     pathState.setRotationDirection(direction);
     onRotationSelected?.(direction);
+  }
+
+  // Handle reset with inline confirmation
+  function handleResetClick(): void {
+    if (resetConfirmationActive) {
+      // Second click - actually reset
+      onReset?.();
+      resetConfirmationActive = false;
+      if (resetConfirmationTimeout) {
+        clearTimeout(resetConfirmationTimeout);
+        resetConfirmationTimeout = null;
+      }
+    } else {
+      // First click - show confirmation
+      resetConfirmationActive = true;
+      // Auto-cancel after 3 seconds
+      resetConfirmationTimeout = window.setTimeout(() => {
+        resetConfirmationActive = false;
+        resetConfirmationTimeout = null;
+      }, 3000);
+    }
   }
 
   // Get hand motion type display text
@@ -42,20 +69,11 @@ Displays current state, beat progress, rotation selector, and action buttons.
 </script>
 
 <div class="control-panel">
-  <!-- Hand indicator -->
-  <div class="hand-indicator">
-    <div
-      class="hand-badge"
-      class:blue={pathState.currentHand === "blue"}
-      class:red={pathState.currentHand === "red"}
-    >
-      {pathState.currentHand === "blue" ? "Blue Hand" : "Red Hand"}
-    </div>
-  </div>
 
   <!-- Progress bar -->
   <div class="progress-section">
     <div class="progress-label">
+
       Beat {pathState.currentBeatNumber} of {pathState.config?.sequenceLength || 0}
     </div>
     <div class="progress-bar">
@@ -127,9 +145,22 @@ Displays current state, beat progress, rotation selector, and action buttons.
         {pathState.currentHand === "blue" ? "Draw Red Hand" : "Finish"}
       </button>
     {/if}
-    <button class="action-btn secondary" onclick={onReset}>
-      <i class="fas fa-redo"></i>
-      Reset
+    <button
+      class="action-btn secondary"
+      class:confirmation={resetConfirmationActive}
+      onclick={handleResetClick}
+    >
+      {#if resetConfirmationActive}
+        <i class="fas fa-exclamation-triangle"></i>
+        Confirm Reset?
+      {:else}
+        <i class="fas fa-redo"></i>
+        Reset
+      {/if}
+    </button>
+    <button class="action-btn tertiary" onclick={onBackToSettings}>
+      <i class="fas fa-cog"></i>
+      Settings
     </button>
   </div>
 </div>
@@ -140,39 +171,8 @@ Displays current state, beat progress, rotation selector, and action buttons.
     flex-direction: column;
     gap: 0.75rem;
     padding: 0.75rem;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
     width: 100%;
     box-sizing: border-box;
-  }
-
-  .hand-indicator {
-    display: flex;
-    justify-content: center;
-  }
-
-  .hand-badge {
-    padding: 0.5rem 0.875rem;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    min-height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .hand-badge.blue {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
-    color: white;
-  }
-
-  .hand-badge.red {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
-    color: white;
   }
 
   .progress-section {
@@ -185,7 +185,12 @@ Displays current state, beat progress, rotation selector, and action buttons.
     font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.8);
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
+
 
   .progress-bar {
     height: 8px;
@@ -384,17 +389,107 @@ Displays current state, beat progress, rotation selector, and action buttons.
     transform: translateY(0);
   }
 
+  .action-btn.secondary.confirmation {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border-color: #fbbf24;
+    color: white;
+    animation: pulse 0.6s ease-in-out;
+  }
+
+  .action-btn.secondary.confirmation:hover {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border-color: #f87171;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  }
+
+  .action-btn.tertiary {
+    background: rgba(59, 130, 246, 0.12);
+    border: 2px solid rgba(59, 130, 246, 0.3);
+    color: rgba(96, 165, 250, 0.95);
+  }
+
+  .action-btn.tertiary:hover {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+    color: #60a5fa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  .action-btn.tertiary:active {
+    transform: translateY(0);
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  /* Compact mode for small mobile screens (iPhone SE, etc.) */
+  @media (max-width: 400px) and (max-height: 700px) {
+    .control-panel {
+      padding: 0.4375rem;
+      gap: 0.375rem;
+    }
+
+    .progress-section {
+      gap: 0.1875rem;
+    }
+
+    .progress-label {
+      font-size: 0.6875rem;
+      gap: 0.25rem;
+    }
+
+ 
+
+    .progress-bar {
+      height: 5px;
+    }
+
+    .rotation-section {
+      gap: 0.3125rem;
+    }
+
+    .section-label {
+      font-size: 0.65625rem;
+    }
+
+    .rotation-buttons {
+      gap: 0.3125rem;
+    }
+
+    .rotation-btn {
+      padding: 0.25rem;
+      min-height: 44px;  /* Maintain accessibility */
+      gap: 0.125rem;
+      font-size: 0.65625rem;
+    }
+
+    .rotation-btn i {
+      font-size: 0.875rem;
+    }
+
+    .action-buttons {
+      gap: 0.3125rem;
+    }
+
+    .action-btn {
+      padding: 0.375rem 0.5rem;
+      min-height: 44px;  /* Maintain accessibility */
+      font-size: 0.8125rem;
+    }
+  }
+
   /* Ultra-compact mode for landscape mobile */
   @media (max-height: 500px) and (orientation: landscape) {
     .control-panel {
       padding: 0.5rem;
       gap: 0.5rem;
-    }
-
-    .hand-badge {
-      padding: 0.375rem 0.75rem;
-      font-size: 0.85rem;
-      min-height: 32px;
     }
 
     .rotation-btn {

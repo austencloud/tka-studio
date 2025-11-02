@@ -37,6 +37,7 @@ import {
   OptionTransitionCoordinator,
   PositionAnalyzer,
   ReversalChecker,
+  SectionTitleFormatter,
 } from "../../../modules/create/construct/option-picker/option-viewer/services/implementations";
 import { FilterPersistenceService } from "../../../modules/create/construct/option-picker/services/FilterPersistenceService";
 import { LayoutDetectionService } from "../../../modules/create/construct/option-picker/services/implementations/LayoutDetectionService";
@@ -83,21 +84,25 @@ import {
   HandPathDirectionDetector,
   PathToMotionConverter,
   SwipeDetectionService,
-} from "../../../modules/create/construct/gestural-path-builder/services/implementations";
+} from "../../../modules/create/construct/handpath-builder/services/implementations";
 import { TYPES } from "../types";
 
 export const buildModule = new ContainerModule(
   async (options: ContainerModuleLoadOptions) => {
     // === Create Module ServiceS ===
     options.bind(TYPES.ICreateModuleService).to(CreateModuleService);
-    options.bind(TYPES.ICreateModuleLayoutService).to(CreateModuleLayoutService);
+    options
+      .bind(TYPES.ICreateModuleLayoutService)
+      .to(CreateModuleLayoutService);
     options
       .bind(TYPES.ICreateModuleInitializationService)
       .to(CreateModuleInitializationService);
     options.bind(TYPES.IResponsiveLayoutService).to(ResponsiveLayoutService);
     options.bind(TYPES.INavigationSyncService).to(NavigationSyncService);
     options.bind(TYPES.IBeatOperationsService).to(BeatOperationsService);
-    options.bind(TYPES.IKeyboardArrowAdjustmentService).to(KeyboardArrowAdjustmentService);
+    options
+      .bind(TYPES.IKeyboardArrowAdjustmentService)
+      .to(KeyboardArrowAdjustmentService);
     options.bind(TYPES.IUndoService).to(UndoService);
     options.bind(TYPES.IBuildConstructTabCoordinator).to(ConstructCoordinator);
     options.bind(TYPES.ITurnControlService).to(TurnControlService);
@@ -114,7 +119,10 @@ export const buildModule = new ContainerModule(
     options.bind(TYPES.IOptionOrganizerService).to(OptionOrganizer);
     options.bind(TYPES.IOptionLoader).to(OptionLoader);
     options.bind(TYPES.ILayoutDetectionService).to(LayoutDetectionService);
-    options.bind(TYPES.IOptionTransitionCoordinator).to(OptionTransitionCoordinator);
+    options
+      .bind(TYPES.IOptionTransitionCoordinator)
+      .to(OptionTransitionCoordinator);
+    options.bind(TYPES.ISectionTitleFormatter).to(SectionTitleFormatter);
 
     // === START POSITION SERVICES ===
     options
@@ -123,7 +131,9 @@ export const buildModule = new ContainerModule(
       .inSingletonScope();
 
     // === GESTURAL PATH BUILDER SERVICES === (January 2025)
-    options.bind(TYPES.IHandPathDirectionDetector).to(HandPathDirectionDetector);
+    options
+      .bind(TYPES.IHandPathDirectionDetector)
+      .to(HandPathDirectionDetector);
     options.bind(TYPES.ISwipeDetectionService).to(SwipeDetectionService);
     options.bind(TYPES.IPathToMotionConverter).to(PathToMotionConverter);
 

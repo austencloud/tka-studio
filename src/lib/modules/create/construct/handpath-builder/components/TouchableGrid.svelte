@@ -374,6 +374,7 @@ Provides visual feedback for current position and drawn path.
   .touchable-grid {
     width: 100%;
     max-width: min(100%, 400px);
+    max-height: 100%;
     aspect-ratio: 1;
     touch-action: none;
     user-select: none;

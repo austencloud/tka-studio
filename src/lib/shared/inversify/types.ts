@@ -89,6 +89,7 @@ export const TYPES = {
   IOptionLoader: Symbol.for("IOptionLoader"),
   ILayoutDetectionService: Symbol.for("ILayoutDetectionService"),
   IOptionTransitionCoordinator: Symbol.for("IOptionTransitionCoordinator"),
+  ISectionTitleFormatter: Symbol.for("ISectionTitleFormatter"),
 
   // === START POSITION PICKER SERVICES ===
   // Simplified - only the core service needed

@@ -1,14 +1,24 @@
 <!--
-GesturalPathBuilder.svelte - Main orchestrator for gestural path building
+HandpathBuilder.svelte - Main orchestrator for gestural path building
 
 Coordinates state, services, and UI components for touch-based sequence construction.
 Provides setup wizard, drawing interface, and conversion to MotionData.
 -->
 <script lang="ts">
-  import { GridLocation, GridMode, HandMotionType, PropType, resolve, TYPES } from "$shared";
+  import {
+    GridLocation,
+    GridMode,
+    HandMotionType,
+    PropType,
+    resolve,
+    TYPES,
+  } from "$shared";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import type { IHandPathDirectionDetector, IPathToMotionConverter } from "../services/contracts";
+  import type {
+    IHandPathDirectionDetector,
+    IPathToMotionConverter,
+  } from "../services/contracts";
   import { createGesturalPathState, type GesturalPathState } from "../state";
   import PathControlPanel from "./PathControlPanel.svelte";
   import SequenceLengthPicker from "./SequenceLengthPicker.svelte";
@@ -24,7 +34,9 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
   } = $props();
 
   // Services
-  let handPathDirectionDetector = $state<IHandPathDirectionDetector | null>(null);
+  let handPathDirectionDetector = $state<IHandPathDirectionDetector | null>(
+    null
+  );
   let pathToMotionConverter = $state<IPathToMotionConverter | null>(null);
 
   // State
@@ -46,14 +58,21 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
 
   // Initialize services
   onMount(() => {
-    handPathDirectionDetector = resolve<IHandPathDirectionDetector>(TYPES.IHandPathDirectionDetector);
-    pathToMotionConverter = resolve<IPathToMotionConverter>(TYPES.IPathToMotionConverter);
+    handPathDirectionDetector = resolve<IHandPathDirectionDetector>(
+      TYPES.IHandPathDirectionDetector
+    );
+    pathToMotionConverter = resolve<IPathToMotionConverter>(
+      TYPES.IPathToMotionConverter
+    );
   });
 
   // Start or restart drawing
   function startDrawing(): void {
     // Default starting location based on grid mode
-    const startLocation = gridMode === GridMode.DIAMOND ? GridLocation.NORTH : GridLocation.NORTHEAST;
+    const startLocation =
+      gridMode === GridMode.DIAMOND
+        ? GridLocation.NORTH
+        : GridLocation.NORTHEAST;
     pathState.initializeSession(sequenceLength, gridMode, startLocation);
     isStarted = true;
   }
@@ -124,7 +143,7 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
   }
 </script>
 
-<div class="gestural-path-builder" data-testid="gestural-path-builder">
+<div class="handpath-builder" data-testid="handpath-builder">
   {#if !isStarted}
     <!-- Initial setup view -->
     <div class="setup-container" in:fade={{ duration: 200 }}>
@@ -152,7 +171,11 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
       <div class="drawing-header">
         <div class="header-row">
           <h2 class="title">{contextualHeader()}</h2>
-          <button class="restart-btn" onclick={handleRestart} title="Change settings">
+          <button
+            class="restart-btn"
+            onclick={handleRestart}
+            title="Change settings"
+          >
             <i class="fas fa-cog"></i>
           </button>
         </div>
@@ -183,7 +206,10 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
             <i class="fas fa-check"></i>
             Finish & Import
           </button>
-          <button class="action-btn secondary" onclick={() => pathState.backToBlueHand()}>
+          <button
+            class="action-btn secondary"
+            onclick={() => pathState.backToBlueHand()}
+          >
             <i class="fas fa-redo"></i>
             Redraw Blue Hand
           </button>
@@ -194,7 +220,7 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
 </div>
 
 <style>
-  .gestural-path-builder {
+  .handpath-builder {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -250,7 +276,11 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
     width: 44px;
     height: 44px;
     padding: 0;
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(147, 51, 234, 0.15));
+    background: linear-gradient(
+      135deg,
+      rgba(168, 85, 247, 0.15),
+      rgba(147, 51, 234, 0.15)
+    );
     border: 2px solid rgba(168, 85, 247, 0.3);
     border-radius: 50%;
     color: #c084fc;
@@ -263,7 +293,11 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
   }
 
   .restart-btn:hover {
-    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(147, 51, 234, 0.25));
+    background: linear-gradient(
+      135deg,
+      rgba(168, 85, 247, 0.25),
+      rgba(147, 51, 234, 0.25)
+    );
     border-color: #a855f7;
     color: #e9d5ff;
     transform: scale(1.05);
@@ -426,7 +460,7 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
 
   /* Small screens: Compact spacing */
   @media (max-width: 375px) {
-    .gestural-path-builder {
+    .handpath-builder {
       padding: 0.75rem;
     }
 
