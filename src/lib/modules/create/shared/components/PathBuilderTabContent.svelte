@@ -5,12 +5,13 @@
   Handles sequence completion and integration with the build system.
 -->
 <script lang="ts">
-  import { GesturalPathBuilder } from "../../construct";
+  import { HandpathBuilder } from "../../construct";
 
-  let {
-    onPathBuilderSequenceComplete,
-  } = $props<{
-    onPathBuilderSequenceComplete?: (motions: { blue: any[]; red: any[] }) => void;
+  let { onPathBuilderSequenceComplete } = $props<{
+    onPathBuilderSequenceComplete?: (motions: {
+      blue: any[];
+      red: any[];
+    }) => void;
   }>();
 
   function handleSequenceComplete(motions: { blue: any[]; red: any[] }): void {
@@ -24,15 +25,18 @@
   }
 </script>
 
-<div class="path-builder-tab-content" data-testid="path-builder-tab-content">
-  <GesturalPathBuilder
+<div
+  class="handpath-builder-tab-content"
+  data-testid="handpath-builder-tab-content"
+>
+  <HandpathBuilder
     onSequenceComplete={handleSequenceComplete}
     onCancel={handleCancel}
   />
 </div>
 
 <style>
-  .path-builder-tab-content {
+  .handpath-builder-tab-content {
     flex: 1;
     display: flex;
     flex-direction: column;

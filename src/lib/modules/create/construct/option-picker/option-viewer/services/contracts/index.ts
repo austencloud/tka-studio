@@ -13,3 +13,4 @@ export * from "./IOptionSorter";
 export * from "./IOptionTransitionCoordinator";
 export * from "./IPositionAnalyzer";
 export * from "./IReversalChecker";
+export * from "./ISectionTitleFormatter";

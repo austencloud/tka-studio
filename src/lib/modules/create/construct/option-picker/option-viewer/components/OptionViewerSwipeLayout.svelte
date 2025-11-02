@@ -14,6 +14,7 @@ Features:
 <script lang="ts">
   import type { PictographData } from "$shared";
   import { HorizontalSwipeContainer } from "$shared";
+  import type { OrganizedSection } from "../domain";
   import OptionPicker456Group from "./OptionViewer456Group.svelte";
   import OptionViewerSection from "./OptionViewerSection.svelte";
 
@@ -27,11 +28,7 @@ Features:
     isTransitioning = false,
     isFadingOut = false,
   } = $props<{
-    organizedPictographs?: {
-      title: string;
-      pictographs: PictographData[];
-      type: 'individual' | 'grouped';
-    }[];
+    organizedPictographs?: OrganizedSection[];
     onPictographSelected?: (pictograph: PictographData) => void;
     onSectionChange?: (sectionIndex: number) => void;
     layoutConfig?: {

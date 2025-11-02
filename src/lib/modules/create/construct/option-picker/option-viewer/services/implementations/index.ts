@@ -6,3 +6,4 @@ export * from "./OptionSorter";
 export * from "./OptionTransitionCoordinator";
 export * from "./PositionAnalyzer";
 export * from "./ReversalChecker";
+export * from "./SectionTitleFormatter";

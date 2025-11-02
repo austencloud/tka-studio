@@ -124,6 +124,9 @@
     justify-content: center;
     align-items: center;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    /* Enable container queries for intrinsic sizing */
+    container-type: inline-size;
+    container-name: create-header;
   }
 
   .header-content {
@@ -170,7 +173,8 @@
     background: transparent;
     border: none;
     color: rgba(255, 255, 255, 0.6);
-    font-size: 13px;
+    /* Container-aware font sizing - scales from 11px to 14px based on container width */
+    font-size: clamp(11px, 3cqi, 14px);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -181,7 +185,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: clamp(3px, 1cqi, 6px);
   }
 
   .create-tab-header.vertical .segment-button {
@@ -212,13 +216,22 @@
     outline: none;
   }
 
-  /* Mobile responsive */
-  @media (max-width: 768px) {
+  /* Container query: Fine-tune sizing at different container widths */
+  @container create-header (min-width: 400px) {
     .segment-button {
-      font-size: 12px;
-      min-height: 28px;
+      font-size: clamp(12px, 3.2cqi, 15px);
+      gap: clamp(4px, 1.2cqi, 7px);
     }
+  }
 
+  @container create-header (min-width: 600px) {
+    .segment-button {
+      font-size: clamp(13px, 3.5cqi, 16px);
+    }
+  }
+
+  /* Mobile responsive - retained for vertical layout which doesn't use container queries */
+  @media (max-width: 768px) {
     .create-tab-header.vertical .segment-button {
       padding: 10px 6px;
       min-height: 40px;

@@ -191,61 +191,63 @@
 </script>
 
 {#if sequenceState}
-<div class="workspace-panel" data-testid="workspace-panel">
-  {#if navigationState.activeTab === "gestural" && createModuleState?.handPathCoordinator}
-    <!-- Hand Path Builder Workspace -->
-    <div class="hand-path-workspace-container">
-      <HandPathWorkspace
-        pathState={createModuleState.handPathCoordinator.pathState}
-        isStarted={createModuleState.handPathCoordinator.isStarted}
-        onSegmentComplete={createModuleState.handPathCoordinator.handleSegmentComplete}
-        onAdvancePressed={createModuleState.handPathCoordinator.handleAdvancePressed}
-        onAdvanceReleased={createModuleState.handPathCoordinator.handleAdvanceReleased}
-      />
+  {#if navigationState.activeTab === "gestural" && createModuleState?.handPathCoordinator?.isStarted}
+    <!-- Hand Path Builder Workspace - only visible when started -->
+    <div class="workspace-panel" data-testid="workspace-panel">
+      <div class="hand-path-workspace-container">
+        <HandPathWorkspace
+          pathState={createModuleState.handPathCoordinator.pathState}
+          isStarted={createModuleState.handPathCoordinator.isStarted}
+          onSegmentComplete={createModuleState.handPathCoordinator.handleSegmentComplete}
+          onAdvancePressed={createModuleState.handPathCoordinator.handleAdvancePressed}
+          onAdvanceReleased={createModuleState.handPathCoordinator.handleAdvanceReleased}
+        />
+      </div>
     </div>
-  {:else}
-    <!-- Standard Sequence Display -->
-    <div class="sequence-display-container">
-      <SequenceDisplay
-        {sequenceState}
-        currentWord={currentWord()}
-        onBeatSelected={isMultiSelectMode ? handleMultiSelectToggle : handleBeatSelected}
-        onStartPositionSelected={handleStartPositionSelected}
-        onBeatDelete={handleBeatDelete}
-        selectedBeatNumber={localSelectedBeatNumber}
-        practiceBeatNumber={practiceBeatIndex}
-        {isSideBySideLayout}
-        {isMultiSelectMode}
-        selectedBeatNumbers={sequenceState?.selectedBeatNumbers ?? new Set<number>()}
-        onBeatLongPress={handleBeatLongPress}
-        onStartLongPress={() => handleBeatLongPress(0)}
-      />
-    </div>
+  {:else if navigationState.activeTab !== "gestural"}
+    <!-- Standard Sequence Display (not in gestural mode) -->
+    <div class="workspace-panel" data-testid="workspace-panel">
+      <div class="sequence-display-container">
+        <SequenceDisplay
+          {sequenceState}
+          currentWord={currentWord()}
+          onBeatSelected={isMultiSelectMode ? handleMultiSelectToggle : handleBeatSelected}
+          onStartPositionSelected={handleStartPositionSelected}
+          onBeatDelete={handleBeatDelete}
+          selectedBeatNumber={localSelectedBeatNumber}
+          practiceBeatNumber={practiceBeatIndex}
+          {isSideBySideLayout}
+          {isMultiSelectMode}
+          selectedBeatNumbers={sequenceState?.selectedBeatNumbers ?? new Set<number>()}
+          onBeatLongPress={handleBeatLongPress}
+          onStartLongPress={() => handleBeatLongPress(0)}
+        />
+      </div>
 
-    <!-- Selection Toolbar (appears in multi-select mode) -->
-    {#if isMultiSelectMode}
-    <div class="selection-toolbar-container">
-      <SelectionToolbar
-        {selectionCount}
-        {totalBeats}
-        onEdit={handleBatchEdit}
-        onCancel={handleExitMultiSelect}
+      <!-- Selection Toolbar (appears in multi-select mode) -->
+      {#if isMultiSelectMode}
+        <div class="selection-toolbar-container">
+          <SelectionToolbar
+            {selectionCount}
+            {totalBeats}
+            onEdit={handleBatchEdit}
+            onCancel={handleExitMultiSelect}
+          />
+        </div>
+      {/if}
+
+      <!-- Toast for validation errors -->
+      <Toast
+        message={toastMessage ?? ""}
+        onDismiss={() => toastMessage = null}
       />
+
+      <!-- Multi-select mode overlay -->
+      {#if isMultiSelectMode}
+        <MultiSelectOverlay onCancel={handleExitMultiSelect} />
+      {/if}
     </div>
   {/if}
-
-    <!-- Toast for validation errors -->
-    <Toast
-      message={toastMessage ?? ""}
-      onDismiss={() => toastMessage = null}
-    />
-
-    <!-- Multi-select mode overlay -->
-    {#if isMultiSelectMode}
-      <MultiSelectOverlay onCancel={handleExitMultiSelect} />
-    {/if}
-  {/if}
-</div>
 {:else}
 <div class="workspace-panel loading" data-testid="workspace-panel">
   <div class="loading-message">Initializing workspace...</div>

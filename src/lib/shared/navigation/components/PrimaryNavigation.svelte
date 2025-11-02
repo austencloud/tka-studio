@@ -362,7 +362,8 @@
   }
 
   .nav-icon {
-    font-size: 20px;
+    /* Container-aware icon sizing */
+    font-size: clamp(18px, 4cqi, 22px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -418,7 +419,8 @@
      LABEL SYSTEM
      ============================================================================ */
   .nav-label {
-    font-size: 10px;
+    /* Container-aware label sizing */
+    font-size: clamp(9px, 2cqi, 11px);
     font-weight: 500;
     text-align: center;
     white-space: nowrap;
@@ -473,7 +475,8 @@
     }
 
     .layout-bottom .nav-label {
-      font-size: 9px;
+      /* Slightly smaller in compact mode */
+      font-size: clamp(8px, 1.8cqi, 10px);
     }
   }
 
@@ -485,7 +488,8 @@
     }
 
     .layout-bottom .nav-icon {
-      font-size: 22px;
+      /* Larger icons when labels are hidden */
+      font-size: clamp(20px, 5cqi, 24px);
     }
   }
 

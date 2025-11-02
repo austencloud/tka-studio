@@ -23,8 +23,22 @@
   let showCopiedMessage = $state(false);
   let copiedTimeout: number | null = $state(null);
 
-  // Derived simplified word
-  const displayWord = $derived(simplifyAndTruncate(word, 8));
+  // Check if this is a contextual message (not a word)
+  const isContextualMessage = $derived(() => {
+    const contextualPhrases = [
+      "Configure Your Settings",
+      "Drawing Blue Hand Path",
+      "Drawing Red Hand Path",
+      "Sequence Complete!",
+      "Draw Hand Path"
+    ];
+    return contextualPhrases.some(phrase => word.includes(phrase));
+  });
+
+  // Derived simplified word (only truncate actual words, not contextual messages)
+  const displayWord = $derived(
+    isContextualMessage() ? word : simplifyAndTruncate(word, 8)
+  );
 
   // Check if sequence is circular-capable
   const isCircularCapable = $derived(() => {
@@ -41,6 +55,9 @@
   const shouldShowWordLabel = $derived(() => {
     if (!word) return false;
 
+    // Always show contextual messages
+    if (isContextualMessage()) return true;
+
     // Don't show if it's a default sequence name without actual letters
     // Check if word starts with default sequence name patterns
     const defaultNamePrefixes = ["No sequence", "Sequence", "New Sequence"];
@@ -55,7 +72,8 @@
    * Copy word to clipboard and show feedback
    */
   async function copyToClipboard() {
-    if (!word) return;
+    // Don't copy contextual messages
+    if (!word || isContextualMessage()) return;
 
     try {
       await navigator.clipboard.writeText(word);
@@ -86,10 +104,11 @@
   >
     <button
       class="word-label"
-      class:has-word={!!word}
+      class:has-word={!!word && !isContextualMessage()}
+      class:contextual-message={isContextualMessage()}
       onclick={copyToClipboard}
-      title="Click to copy '{word}' to clipboard"
-      aria-label="Current word: {word}. Click to copy."
+      title={isContextualMessage() ? word : "Click to copy '{word}' to clipboard"}
+      aria-label={isContextualMessage() ? word : "Current word: {word}. Click to copy."}
     >
       {displayWord}
     </button>
@@ -111,6 +130,9 @@
     width: 100%;
     z-index: 10;
     pointer-events: none;
+    /* Enable container queries for intrinsic sizing */
+    container-type: inline-size;
+    container-name: word-label;
   }
 
   .word-label {
@@ -147,6 +169,37 @@
   .word-label.has-word {
     /* Slightly smaller to ensure 8 letter units fit comfortably on one line */
     font-size: clamp(1.5rem, 3.5vw, 2.75rem);
+  }
+
+  /* Contextual messages (hand path status, etc.) - Container-aware sizing */
+  .word-label.contextual-message {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 600;
+    /* Intrinsic sizing based on container width - scales from 1rem at 300px to 2.5rem at 800px+ */
+    font-size: clamp(1rem, 5cqi, 2.5rem);
+    max-width: 100%;
+    padding: 0.5rem 1rem;
+    white-space: nowrap;
+    color: var(--text-color, #2c3e50);
+  }
+
+  /* Fine-tune sizing at different container widths */
+  @container word-label (min-width: 600px) {
+    .word-label.contextual-message {
+      font-size: clamp(1.25rem, 5.5cqi, 2.5rem);
+    }
+  }
+
+  @container word-label (min-width: 800px) {
+    .word-label.contextual-message {
+      font-size: clamp(1.5rem, 6cqi, 3rem);
+    }
+  }
+
+  .word-label.contextual-message:hover {
+    background: transparent;
+    transform: none;
+    cursor: default;
   }
 
   .copied-message {
