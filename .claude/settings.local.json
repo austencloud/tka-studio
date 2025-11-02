@@ -105,7 +105,9 @@
       "Bash(do sed -i \"s/expect(sequence\\.beats\\[/expect(sequence.beats[/g; s/\\]\\)\\.toBeDefined/]!).toBeDefined/g; s/expect(complementaryBeat)\\./expect(complementaryBeat!)./ g; s/expect(mirroredBeat)\\./expect(mirroredBeat!)./g; s/expect(swappedBeat)\\./expect(swappedBeat!)./g\" \"$file\")",
       "Bash(timeout 10 bash:*)",
       "Bash(timeout 30 npx tsc:*)",
-      "Bash(timeout 2 bash:*)"
+      "Bash(timeout 2 bash:*)",
+      "Bash(move:*)",
+      "Bash(copy \"F:\\_THE KINETIC ALPHABET\\_TKA-STUDIO\\tests\\settings-mobile-layout.spec.ts\" \"F:\\_THE KINETIC ALPHABET\\_TKA-STUDIO\\tests\\e2e\\settings-mobile-layout.spec.ts\")"
     ],
     "deny": [],
     "ask": []
