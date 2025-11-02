@@ -22,6 +22,7 @@ without the complex BackgroundContext system.
     backgroundColor,
     gradientColors,
     gradientDirection,
+    thumbnailMode = false,
     onReady,
     onPerformanceReport,
   } = $props<{
@@ -30,6 +31,7 @@ without the complex BackgroundContext system.
     backgroundColor?: string;
     gradientColors?: string[];
     gradientDirection?: number;
+    thumbnailMode?: boolean;
     onReady?: () => void;
     onPerformanceReport?: (metrics: PerformanceMetrics) => void;
   }>();
@@ -65,6 +67,7 @@ without the complex BackgroundContext system.
       type: backgroundType,
       quality: quality,
       initialQuality: quality,
+      thumbnailMode,
       backgroundColor,
       gradientColors,
       gradientDirection,

@@ -32,6 +32,7 @@ export class DeepOceanBackgroundOrchestrator implements IBackgroundSystem {
     visibleParticleSize: 1,
   };
   private animationTime = 0;
+  private thumbnailMode: boolean = false;
 
   constructor(
     @inject(TYPES.IBubblePhysics)
@@ -186,6 +187,22 @@ export class DeepOceanBackgroundOrchestrator implements IBackgroundSystem {
 
   setAccessibilitySettings(settings: AccessibilitySettings): void {
     this.accessibility = settings;
+  }
+
+  setThumbnailMode(enabled: boolean): void {
+    this.thumbnailMode = enabled;
+    // Update gradient for thumbnail mode
+    if (enabled) {
+      this.state.currentGradient = {
+        top: "#1d4d77", // Lighter ocean blue
+        bottom: "#194a5b", // Lighter ocean depth
+      };
+    } else {
+      this.state.currentGradient = {
+        top: "#0d2d47", // Rich ocean blue
+        bottom: "#091a2b", // Darker ocean depth
+      };
+    }
   }
 
   getMetrics(): PerformanceMetrics {

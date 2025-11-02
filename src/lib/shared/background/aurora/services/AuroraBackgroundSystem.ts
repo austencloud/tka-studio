@@ -14,6 +14,7 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     highContrast: false,
     visibleParticleSize: 2,
   };
+  private thumbnailMode: boolean = false;
 
   // Animation state
   private gradientShift = 0;
@@ -93,6 +94,10 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     this.accessibility = settings;
   }
 
+  public setThumbnailMode(enabled: boolean): void {
+    this.thumbnailMode = enabled;
+  }
+
   public cleanup(): void {
     this.blobs = [];
     this.sparkles = [];
@@ -148,11 +153,17 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
   }
 
   private createBlob(): AuroraBlob {
+    // In thumbnail mode, make blobs much larger and more opaque
+    const baseSize = this.thumbnailMode ? 150 : 50;
+    const sizeRange = this.thumbnailMode ? 200 : 100;
+    const baseOpacity = this.thumbnailMode ? 0.4 : 0.1;
+    const opacityRange = this.thumbnailMode ? 0.3 : 0.3;
+
     return {
       x: Math.random(),
       y: Math.random(),
-      size: 50 + Math.random() * 100,
-      opacity: 0.1 + Math.random() * 0.3,
+      size: baseSize + Math.random() * sizeRange,
+      opacity: baseOpacity + Math.random() * opacityRange,
       dx: (Math.random() - 0.5) * 0.002,
       dy: (Math.random() - 0.5) * 0.002,
       dsize: (Math.random() - 0.5) * 0.5,
@@ -247,16 +258,38 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
     ctx: CanvasRenderingContext2D,
     dimensions: Dimensions
   ): void {
-    for (const blob of this.blobs) {
+    for (let i = 0; i < this.blobs.length; i++) {
+      const blob = this.blobs[i];
+      if (!blob) continue;
+
       const x = blob.x * dimensions.width;
       const y = blob.y * dimensions.height;
 
       ctx.save();
-      ctx.globalAlpha = blob.opacity;
-      ctx.fillStyle = `rgba(255, 255, 255, ${blob.opacity})`;
+
+      // Create colorful radial gradients for blobs
+      const hue = (this.colorShift + i * 60) % 360;
+      const color = this.hsvToRgb(hue / 360, 0.8, 1);
+
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, blob.size);
+      gradient.addColorStop(
+        0,
+        `rgba(${color.r}, ${color.g}, ${color.b}, ${blob.opacity})`
+      );
+      gradient.addColorStop(
+        0.5,
+        `rgba(${color.r}, ${color.g}, ${color.b}, ${blob.opacity * 0.5})`
+      );
+      gradient.addColorStop(
+        1,
+        `rgba(${color.r}, ${color.g}, ${color.b}, 0)`
+      );
+
+      ctx.fillStyle = gradient;
+      ctx.filter = "blur(20px)"; // Soft glow effect
 
       ctx.beginPath();
-      ctx.ellipse(x, y, blob.size / 2, blob.size / 2, 0, 0, 2 * Math.PI);
+      ctx.ellipse(x, y, blob.size, blob.size, 0, 0, 2 * Math.PI);
       ctx.fill();
 
       ctx.restore();

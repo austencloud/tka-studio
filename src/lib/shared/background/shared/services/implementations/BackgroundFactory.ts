@@ -22,6 +22,7 @@ interface BackgroundFactoryParams {
   initialQuality: QualityLevel;
   accessibility?: Record<string, unknown>;
   settings?: Record<string, unknown>;
+  thumbnailMode?: boolean;
   // Simple background settings
   backgroundColor?: string;
   gradientColors?: string[];
@@ -114,6 +115,11 @@ export class BackgroundFactory {
     // Apply accessibility settings if the background system supports them
     if (backgroundSystem.setAccessibility) {
       backgroundSystem.setAccessibility(accessibility);
+    }
+
+    // Apply thumbnail mode if specified and supported
+    if (options.thumbnailMode && "setThumbnailMode" in backgroundSystem) {
+      (backgroundSystem as any).setThumbnailMode(true);
     }
 
     // Set initial quality
