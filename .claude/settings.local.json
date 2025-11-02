@@ -102,7 +102,10 @@
       "Bash(git commit -m \"$(cat <<''EOF''\nchore: Modernize build configuration and tooling\n\n- Update tsconfig.json to 2025 best practices with stricter type checking\n- Enable bundler module resolution for Vite/SvelteKit optimization\n- Add new npm scripts for improved DX (dev:turbo, dev:fresh, test:ui)\n- Update engine requirements to Node 22+ and npm 10+\n- Add lightningcss dependency for improved CSS performance\n- Refactor Vite config with better error handling and caching\n- Remove custom HMR force-reload plugin for standard behavior\n- Update Vitest config with enhanced type checking\n- Improve ESLint configuration\n- Add prettier-plugin-tailwindcss\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
       "Bash(git commit:*)",
       "Bash(cut:*)",
-      "Bash(do sed -i \"s/expect(sequence\\.beats\\[/expect(sequence.beats[/g; s/\\]\\)\\.toBeDefined/]!).toBeDefined/g; s/expect(complementaryBeat)\\./expect(complementaryBeat!)./ g; s/expect(mirroredBeat)\\./expect(mirroredBeat!)./g; s/expect(swappedBeat)\\./expect(swappedBeat!)./g\" \"$file\")"
+      "Bash(do sed -i \"s/expect(sequence\\.beats\\[/expect(sequence.beats[/g; s/\\]\\)\\.toBeDefined/]!).toBeDefined/g; s/expect(complementaryBeat)\\./expect(complementaryBeat!)./ g; s/expect(mirroredBeat)\\./expect(mirroredBeat!)./g; s/expect(swappedBeat)\\./expect(swappedBeat!)./g\" \"$file\")",
+      "Bash(timeout 10 bash:*)",
+      "Bash(timeout 30 npx tsc:*)",
+      "Bash(timeout 2 bash:*)"
     ],
     "deny": [],
     "ask": []
