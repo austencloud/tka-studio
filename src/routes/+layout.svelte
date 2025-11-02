@@ -5,7 +5,6 @@
   import { onMount, setContext } from "svelte";
   import { authStore } from "$shared/auth";
   import { registerCacheClearShortcut } from "$lib/shared/utils/cache-buster";
-  import { setupHMRHelpers } from "$lib/shared/dev/hmr-helper";
   import "../app.css";
 
   let { children } = $props<{
@@ -20,24 +19,6 @@
   setContext("di-container", () => {
     return container;
   });
-
-  // HMR support - re-initialize container when modules are hot-reloaded
-  if (import.meta.hot) {
-    import.meta.hot.accept(async () => {
-      try {
-        // CRITICAL: Wait for next frame before resetting container
-        // This ensures Chrome DevTools mobile emulation dimensions are stable
-        await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
-
-        const { getContainer, resetContainer } = await import("$shared");
-        resetContainer();
-        container = await getContainer();
-      } catch (error) {
-        console.error("❌ HMR: Failed to re-initialize container:", error);
-        containerError = "HMR container re-initialization failed";
-      }
-    });
-  }
 
   // Reactive viewport height tracking using Svelte 5 runes
   let viewportHeight = $state(0);
@@ -60,12 +41,6 @@
     // Register cache clear shortcut (Ctrl+Shift+Delete)
     registerCacheClearShortcut();
 
-    // Setup HMR development helpers (Ctrl+Shift+R for hard reload)
-    setupHMRHelpers();
-
-    // REMOVED: checkAndClearIfBroken() - it was causing infinite reload loops in mobile emulation
-    // Use ?clear-cache URL parameter or Ctrl+Shift+Delete instead
-
     // Async initialization
     (async () => {
       // Initialize Firebase Auth listener (handles redirect result)
@@ -73,12 +48,7 @@
 
       try {
         // Dynamically import container only on client-side to avoid SSR issues
-        const { getContainer, resetContainer } = await import("$shared");
-
-        // HMR support - reset container if it's stale
-        if (import.meta.hot) {
-          resetContainer();
-        }
+        const { getContainer } = await import("$shared");
 
         // Set up DI container - this automatically caches it
         container = await getContainer();

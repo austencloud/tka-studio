@@ -46,7 +46,7 @@ export class HMRDebugger {
       globalContainerExists: this.checkGlobalContainer(),
       hmrActive: this.checkHMRActive(),
       backupCount: this.getBackupCount(),
-      lastError: error,
+      ...(error !== undefined && { lastError: error }),
     };
 
     this.logs.push(info);

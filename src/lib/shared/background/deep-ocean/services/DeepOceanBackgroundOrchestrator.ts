@@ -1,10 +1,10 @@
 import { inject, injectable } from "inversify";
-import type { 
-  AccessibilitySettings, 
-  Dimensions, 
-  IBackgroundSystem, 
-  PerformanceMetrics, 
-  QualityLevel 
+import type {
+  AccessibilitySettings,
+  Dimensions,
+  IBackgroundSystem,
+  PerformanceMetrics,
+  QualityLevel,
 } from "../../shared";
 import { TYPES } from "$shared/inversify/types";
 import type { DeepOceanState } from "../domain/models/DeepOceanModels";
@@ -13,12 +13,12 @@ import type {
   IMarineLifeAnimator,
   IParticleSystem,
   IOceanRenderer,
-  ILightRayCalculator
+  ILightRayCalculator,
 } from "./contracts";
 
 /**
  * Deep Ocean Background Orchestrator
- * 
+ *
  * Thin coordinator that delegates to focused services.
  * Replaces the 792-line monolithic DeepOceanBackgroundSystem.
  */
@@ -62,25 +62,41 @@ export class DeepOceanBackgroundOrchestrator implements IBackgroundSystem {
     };
   }
 
-  async initialize(dimensions: Dimensions, quality: QualityLevel): Promise<void> {
+  async initialize(
+    dimensions: Dimensions,
+    quality: QualityLevel
+  ): Promise<void> {
     this.quality = quality;
     this.animationTime = 0;
 
     // Delegate initialization to focused services
     const bubbleCount = this.bubblePhysics.getBubbleCount(quality);
-    this.state.bubbles = this.bubblePhysics.initializeBubbles(dimensions, bubbleCount);
+    this.state.bubbles = this.bubblePhysics.initializeBubbles(
+      dimensions,
+      bubbleCount
+    );
 
     // MarineLifeAnimator handles sprite preloading internally
     const marineLifeCount = this.marineLifeAnimator.getMarineLifeCount(quality);
     const fishCount = Math.ceil(marineLifeCount * 0.7); // 70% fish
     const jellyfishCount = Math.floor(marineLifeCount * 0.3); // 30% jellyfish
-    this.state.marineLife = await this.marineLifeAnimator.initializeMarineLife(dimensions, fishCount, jellyfishCount);
+    this.state.marineLife = await this.marineLifeAnimator.initializeMarineLife(
+      dimensions,
+      fishCount,
+      jellyfishCount
+    );
 
     const particleCount = this.particleSystem.getParticleCount(quality);
-    this.state.particles = this.particleSystem.initializeParticles(dimensions, particleCount);
+    this.state.particles = this.particleSystem.initializeParticles(
+      dimensions,
+      particleCount
+    );
 
     const lightRayCount = this.lightRayCalculator.getLightRayCount(quality);
-    this.state.lightRays = this.lightRayCalculator.initializeLightRays(dimensions, lightRayCount);
+    this.state.lightRays = this.lightRayCalculator.initializeLightRays(
+      dimensions,
+      lightRayCount
+    );
 
     // Pre-populate for smooth initial animation
     this.prePopulateElements(dimensions);
@@ -107,7 +123,9 @@ export class DeepOceanBackgroundOrchestrator implements IBackgroundSystem {
 
   update(dimensions: Dimensions, frameMultiplier: number = 1.0): void {
     // Apply accessibility-aware timing
-    const accessibilityMultiplier = this.accessibility.reducedMotion ? 0.3 : 1.0;
+    const accessibilityMultiplier = this.accessibility.reducedMotion
+      ? 0.3
+      : 1.0;
     const effectiveFrameMultiplier = frameMultiplier * accessibilityMultiplier;
 
     // Accumulate delta time for consistent animation speed across all refresh rates
@@ -141,14 +159,22 @@ export class DeepOceanBackgroundOrchestrator implements IBackgroundSystem {
     );
 
     // Process any pending marine life spawns
-    const newMarineLife = this.marineLifeAnimator.processPendingSpawns(dimensions, this.animationTime);
+    const newMarineLife = this.marineLifeAnimator.processPendingSpawns(
+      dimensions,
+      this.animationTime
+    );
     this.state.marineLife.push(...newMarineLife);
   }
 
   draw(ctx: CanvasRenderingContext2D, dimensions: Dimensions): void {
     // Delegate all rendering to the focused renderer
     this.oceanRenderer.drawOceanGradient(ctx, dimensions);
-    this.oceanRenderer.drawLightRays(ctx, dimensions, this.state.lightRays, this.quality);
+    this.oceanRenderer.drawLightRays(
+      ctx,
+      dimensions,
+      this.state.lightRays,
+      this.quality
+    );
     this.oceanRenderer.drawParticles(ctx, this.state.particles);
     this.oceanRenderer.drawBubbles(ctx, this.state.bubbles);
     this.oceanRenderer.drawMarineLife(ctx, this.state.marineLife);
@@ -166,7 +192,10 @@ export class DeepOceanBackgroundOrchestrator implements IBackgroundSystem {
     return {
       fps: 60, // TODO: Calculate actual FPS
       warnings: [],
-      particleCount: this.state.bubbles.length + this.state.marineLife.length + this.state.particles.length,
+      particleCount:
+        this.state.bubbles.length +
+        this.state.marineLife.length +
+        this.state.particles.length,
       renderTime: 0, // TODO: Measure if needed
       memoryUsage: 0, // TODO: Calculate if needed
     };

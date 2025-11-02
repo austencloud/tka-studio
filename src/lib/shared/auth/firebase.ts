@@ -71,7 +71,7 @@ let app: FirebaseApp;
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
 } else {
-  app = getApps()[0];
+  app = getApps()[0]!; // Safe because we check length above
 }
 
 /**
