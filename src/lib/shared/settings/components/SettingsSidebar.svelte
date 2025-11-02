@@ -47,6 +47,7 @@
 
       return () => resizeObserver.disconnect();
     }
+    return undefined;
   });
 
   function handleTabClick(tabId: string) {

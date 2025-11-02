@@ -78,6 +78,7 @@
   $effect(() => {
     // Notify parent of current layout state when it changes
     onLayoutChange?.(isLandscape);
+    return undefined;
   });
 
   onMount(() => {
@@ -94,9 +95,10 @@
       responsiveSettings = deviceDetector.getResponsiveSettings();
 
       // Return cleanup function from onCapabilitiesChanged
-      return deviceDetector.onCapabilitiesChanged(() => {
+      const cleanup = deviceDetector.onCapabilitiesChanged(() => {
         responsiveSettings = deviceDetector!.getResponsiveSettings();
       });
+      return cleanup || undefined;
     } catch (error) {
       console.warn(
         "PrimaryNavigation: Failed to resolve DeviceDetector",
@@ -110,6 +112,8 @@
         "Container queries not supported - falling back to media queries"
       );
     }
+
+    return undefined;
   });
 </script>
 

@@ -65,6 +65,7 @@
     } catch (error) {
       console.warn("Failed to resolve fullscreen service:", error);
       fullscreenService = null;
+      return undefined;
     }
   });
 

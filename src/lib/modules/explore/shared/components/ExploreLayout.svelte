@@ -44,6 +44,8 @@ Provides responsive layout:
     } catch (error) {
       console.warn("ExploreLayout: Failed to resolve DeviceDetector", error);
     }
+
+    return undefined;
   });
 </script>
 

@@ -83,8 +83,8 @@
         .filter((a) => a.userProgress?.isCompleted)
         .sort(
           (a, b) =>
-            (b.userProgress?.completedAt?.getTime() || 0) -
-            (a.userProgress?.completedAt?.getTime() || 0)
+            (b.userProgress?.unlockedAt?.getTime() || 0) -
+            (a.userProgress?.unlockedAt?.getTime() || 0)
         )
         .slice(0, 3);
     } catch (err) {

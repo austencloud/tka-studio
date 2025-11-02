@@ -384,6 +384,8 @@
 
     for (let i = 0; i < configs.length; i++) {
       const config = configs[i];
+      if (!config) continue;
+
       currentTest = config.name;
       progress = ((i + 1) / configs.length) * 100;
 

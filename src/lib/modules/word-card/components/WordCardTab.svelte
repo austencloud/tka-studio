@@ -108,7 +108,7 @@
       const pageCount = pages().length;
       const sequenceCount = filteredSequences().length;
 
-      if (pageCount === 1 && pages()[0].isEmpty) {
+      if (pageCount === 1 && pages()[0]?.isEmpty) {
         progressMessage = `No ${selectedLength === 0 ? "" : `${selectedLength}-beat `}sequences found`;
       } else {
         progressMessage = `${pageCount} page${pageCount === 1 ? "" : "s"} • ${sequenceCount} sequence${sequenceCount === 1 ? "" : "s"}`;

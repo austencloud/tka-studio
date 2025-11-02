@@ -68,10 +68,12 @@
       // Return cleanup function from onCapabilitiesChanged
       return deviceDetector.onCapabilitiesChanged(() => {
         responsiveSettings = deviceDetector!.getResponsiveSettings();
-      });
+      }) || undefined;
     } catch (error) {
       console.warn("TopBar: Failed to resolve DeviceDetector", error);
     }
+
+    return undefined;
   });
 
   // Measure actual height and track changes

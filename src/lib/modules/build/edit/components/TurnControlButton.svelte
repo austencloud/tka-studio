@@ -56,14 +56,14 @@
 
   // Handle swipe gestures for quick turn adjustments
   function handleTouchStart(event: TouchEvent) {
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
+    touchStartX = event.touches[0]?.clientX || 0;
+    touchStartY = event.touches[0]?.clientY || 0;
     isSwiping = false;
   }
 
   function handleTouchMove(event: TouchEvent) {
-    const touchCurrentX = event.touches[0].clientX;
-    const touchCurrentY = event.touches[0].clientY;
+    const touchCurrentX = event.touches[0]?.clientX || 0;
+    const touchCurrentY = event.touches[0]?.clientY || 0;
     const deltaX = touchCurrentX - touchStartX;
     const deltaY = touchCurrentY - touchStartY;
 
@@ -79,7 +79,7 @@
       return; // Normal click/tap - let onclick handler deal with it
     }
 
-    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndX = event.changedTouches[0]?.clientX || 0;
     const deltaX = touchEndX - touchStartX;
 
     // Swipe threshold

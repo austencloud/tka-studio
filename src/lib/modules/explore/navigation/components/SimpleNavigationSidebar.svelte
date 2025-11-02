@@ -78,7 +78,7 @@ Matches the desktop Python app navigation pattern exactly.
     if (sortMethod === ExploreSortMethod.ALPHABETICAL) {
       // Remove any emoji prefixes and extract the letter
       const match = cleanText.match(/([A-Z])/);
-      return match ? match[1] : cleanText;
+      return match ? (match[1] || cleanText) : cleanText;
     }
 
     // For other sort methods, remove emoji prefixes but keep the main text

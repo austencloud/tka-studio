@@ -190,8 +190,8 @@ for sequence animation playback.
 
       // Parse SVG dimensions from viewBox
       const viewBoxMatch = svgText.match(/viewBox\s*=\s*"[\d.-]+\s+[\d.-]+\s+([\d.-]+)\s+([\d.-]+)"/i);
-      const width = viewBoxMatch ? parseFloat(viewBoxMatch[1]) : 100;
-      const height = viewBoxMatch ? parseFloat(viewBoxMatch[2]) : 100;
+      const width = viewBoxMatch ? parseFloat(viewBoxMatch[1] || '100') : 100;
+      const height = viewBoxMatch ? parseFloat(viewBoxMatch[2] || '100') : 100;
 
       // Store the viewBox dimensions
       letterDimensions = { width, height };

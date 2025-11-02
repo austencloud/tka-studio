@@ -126,6 +126,8 @@ Features:
     } catch (error) {
       console.error('[PictographAdjustment] Failed to initialize services:', error);
     }
+
+    return undefined;
   });
 
   // Add/remove keyboard listener when panel opens/closes
@@ -136,6 +138,7 @@ Features:
         window.removeEventListener('keydown', handleKeydown);
       };
     }
+    return undefined;
   });
 
   // Clear selection when panel closes

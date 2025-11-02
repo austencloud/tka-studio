@@ -96,10 +96,12 @@
       <!-- Modal Body -->
       <div class="modal-body">
         <!-- Customization Options -->
-        <ShareOptionsPanel
-          options={shareState?.options}
-          onOptionsChange={(newOptions) => shareState?.updateOptions(newOptions)}
-        />
+        {#if shareState?.options}
+          <ShareOptionsPanel
+            options={shareState.options}
+            onOptionsChange={(newOptions) => shareState?.updateOptions(newOptions)}
+          />
+        {/if}
 
         <!-- User Info Fields (if enabled) -->
         {#if shareState?.options.addUserInfo}

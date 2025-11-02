@@ -95,6 +95,7 @@
         };
       }
     }
+    return undefined;
   });
 
   // Use scroll lock utility
@@ -119,10 +120,12 @@
   >
     <!-- Modal Container -->
     <div class="modal-container" bind:this={modalContent}>
-      <ResourceModalCloseButton
-        onClose={handleClose}
-        bind:buttonRef={closeButton}
-      />
+      {#if closeButton !== undefined}
+        <ResourceModalCloseButton
+          onClose={handleClose}
+          bind:buttonRef={closeButton}
+        />
+      {/if}
 
       {#if loading}
         <!-- Loading State -->

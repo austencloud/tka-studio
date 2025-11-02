@@ -116,8 +116,6 @@
     buildTabState.setOnUndoingOptionCallback((isUndoing: boolean) => {
       isUndoingOption = isUndoing;
     });
-
-    return undefined;
   });
 
   function updateNavigationLayout() {

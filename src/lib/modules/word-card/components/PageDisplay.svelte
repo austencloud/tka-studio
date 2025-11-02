@@ -101,6 +101,7 @@
         }
       };
     }
+    return undefined;
   });
 
   // Update when column count changes

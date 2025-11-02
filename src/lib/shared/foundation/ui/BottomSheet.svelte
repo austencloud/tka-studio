@@ -178,12 +178,12 @@
     const active = document.activeElement as HTMLElement | null;
 
     if (event.shiftKey) {
-      if (active === first || !sheetElement.contains(active)) {
+      if (first && (active === first || !sheetElement.contains(active))) {
         event.preventDefault();
-        last.focus({ preventScroll: true });
+        last?.focus({ preventScroll: true });
       }
     } else {
-      if (active === last) {
+      if (first && active === last) {
         event.preventDefault();
         first.focus({ preventScroll: true });
       }

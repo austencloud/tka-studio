@@ -83,7 +83,7 @@ Provides quick access to common device dimensions for responsive testing.
       if (!acc[device.category]) {
         acc[device.category] = [];
       }
-      acc[device.category].push(device);
+      acc[device.category]?.push(device);
       return acc;
     },
     {} as Record<string, typeof devicePresets>

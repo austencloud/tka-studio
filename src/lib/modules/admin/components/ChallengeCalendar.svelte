@@ -28,12 +28,12 @@
   }
   
   function isToday(dateStr: string): boolean {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0] || '';
     return dateStr === today;
   }
-  
+
   function isPast(dateStr: string): boolean {
-    const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0] || '';
     return dateStr < today;
   }
 

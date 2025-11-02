@@ -101,6 +101,8 @@
       console.error("Failed to resolve animation services:", error);
       animationPanelState.setError("Failed to initialize animation services");
     }
+
+    return undefined;
   });
 
   // Load and auto-start animation when panel becomes visible
@@ -118,6 +120,7 @@
 
       return () => clearTimeout(loadTimeout);
     }
+    return undefined;
   });
 
   async function loadAndStartAnimation(sequence: any) {

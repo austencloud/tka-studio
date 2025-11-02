@@ -65,6 +65,7 @@
       // Cleanup
       return () => mediaQuery.removeEventListener("change", handler);
     }
+    return undefined;
   });
 
   onMount(() => {
@@ -114,16 +115,16 @@
 
   // Swipe gesture support
   function handleTouchStart(event: TouchEvent) {
-    touchStartX = event.touches[0].clientX;
-    touchStartY = event.touches[0].clientY;
+    touchStartX = event.touches[0]?.clientX || 0;
+    touchStartY = event.touches[0]?.clientY || 0;
     isSwiping = false;
   }
 
   function handleTouchMove(event: TouchEvent) {
     if (!touchStartX || !touchStartY) return;
 
-    const touchCurrentX = event.touches[0].clientX;
-    const touchCurrentY = event.touches[0].clientY;
+    const touchCurrentX = event.touches[0]?.clientX || 0;
+    const touchCurrentY = event.touches[0]?.clientY || 0;
 
     const deltaX = touchCurrentX - touchStartX;
     const deltaY = touchCurrentY - touchStartY;
@@ -144,7 +145,7 @@
       return;
     }
 
-    const touchEndX = event.changedTouches[0].clientX;
+    const touchEndX = event.changedTouches[0]?.clientX || 0;
     const deltaX = touchEndX - touchStartX;
     const swipeThreshold = 50; // Minimum distance for a swipe
 
@@ -162,15 +163,17 @@
         "developer",
       ];
       const currentIndex = tabs.indexOf(uiState.activeTab);
+      const prevTab = tabs[currentIndex - 1];
+      const nextTab = tabs[currentIndex + 1];
 
-      if (deltaX > 0 && currentIndex > 0) {
+      if (deltaX > 0 && currentIndex > 0 && prevTab) {
         // Swipe right - go to previous tab
         hapticService?.trigger("selection");
-        updateTabTransition(tabs[currentIndex - 1]);
-      } else if (deltaX < 0 && currentIndex < tabs.length - 1) {
+        updateTabTransition(prevTab);
+      } else if (deltaX < 0 && currentIndex < tabs.length - 1 && nextTab) {
         // Swipe left - go to next tab
         hapticService?.trigger("selection");
-        updateTabTransition(tabs[currentIndex + 1]);
+        updateTabTransition(nextTab);
       }
     }
   }
@@ -198,11 +201,14 @@
         newIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1;
       }
 
-      updateTabTransition(tabs[newIndex]);
+      const newTab = tabs[newIndex];
+      if (newTab) {
+        updateTabTransition(newTab);
 
-      // Focus the newly activated tab
-      const newTabButton = document.getElementById(`${tabs[newIndex]}-tab`);
-      newTabButton?.focus();
+        // Focus the newly activated tab
+        const newTabButton = document.getElementById(`${newTab}-tab`);
+        newTabButton?.focus();
+      }
     }
   }
 

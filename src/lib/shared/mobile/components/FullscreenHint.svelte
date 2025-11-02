@@ -178,12 +178,10 @@ Features:
         showHint = true;
 
         // Auto-hide after duration
-        const hideTimer = setTimeout(() => {
+        setTimeout(() => {
           showHint = false;
           hasShownHint = true;
         }, duration);
-
-        return () => clearTimeout(hideTimer);
       }
     }, 2000);
 

@@ -46,6 +46,8 @@
     } catch (error) {
       console.warn("SharePanel: Failed to resolve DeviceDetector", error);
     }
+
+    return undefined;
   });
 
   // HMR-safe service resolution
@@ -151,10 +153,12 @@
 
     <!-- Right: Options & Share Button -->
     <div class="options-column">
-      <ShareOptionsPanel
-        options={shareState?.options}
-        onOptionsChange={(newOptions) => shareState?.updateOptions(newOptions)}
-      />
+      {#if shareState?.options}
+        <ShareOptionsPanel
+          options={shareState.options}
+          onOptionsChange={(newOptions) => shareState?.updateOptions(newOptions)}
+        />
+      {/if}
 
       <DownloadSection
         {currentSequence}

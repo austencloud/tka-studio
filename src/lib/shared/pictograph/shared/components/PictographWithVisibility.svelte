@@ -54,6 +54,8 @@ matching the legacy desktop app's behavior.
         visibilityManager.unregisterObserver(handleVisibilityChange);
       };
     }
+
+    return undefined;
   });
 
   // Derived state - get effective pictograph data with visibility applied

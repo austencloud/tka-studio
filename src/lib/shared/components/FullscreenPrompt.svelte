@@ -52,7 +52,7 @@ the actual fullscreen state rather than inferring from viewport size.
       );
 
       // Pick a random message
-      message = messages[Math.floor(Math.random() * messages.length)];
+      message = messages[Math.floor(Math.random() * messages.length)] || '';
 
       // Initial check
       checkShouldPrompt();
@@ -72,6 +72,7 @@ the actual fullscreen state rather than inferring from viewport size.
       };
     } catch (error) {
       console.error("Failed to initialize FullscreenPrompt:", error);
+      return undefined;
     }
   });
 

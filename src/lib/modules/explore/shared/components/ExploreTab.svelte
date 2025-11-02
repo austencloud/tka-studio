@@ -215,7 +215,7 @@
         currentSortMethod={galleryState.currentSortMethod}
         availableSections={galleryState.availableNavigationSections}
         onSectionClick={galleryState.scrollToSection}
-        isHorizontal={isPortraitMobile}
+        isHorizontal={isPortraitMobile || false}
       />
     {/snippet}
 

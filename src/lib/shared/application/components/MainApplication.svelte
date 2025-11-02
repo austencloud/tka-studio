@@ -285,9 +285,9 @@
     <BackgroundCanvas
       backgroundType={settings.backgroundType || BackgroundType.NIGHT_SKY}
       quality={settings.backgroundQuality || "medium"}
-      backgroundColor={settings.backgroundColor}
-      gradientColors={settings.gradientColors}
-      gradientDirection={settings.gradientDirection}
+      backgroundColor={settings.backgroundColor || '#000000'}
+      {...(settings.gradientColors ? { gradientColors: settings.gradientColors } : {})}
+      {...(settings.gradientDirection !== undefined ? { gradientDirection: settings.gradientDirection } : {})}
     />
   {/if}
 

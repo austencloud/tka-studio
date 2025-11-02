@@ -80,13 +80,17 @@
       responsiveSettings = deviceDetector.getResponsiveSettings();
 
       // Return cleanup function from onCapabilitiesChanged
-      return deviceDetector.onCapabilitiesChanged(() => {
+      const cleanup = deviceDetector.onCapabilitiesChanged(() => {
         responsiveSettings = deviceDetector!.getResponsiveSettings();
       });
+      return cleanup || undefined;
     } catch (error) {
       console.warn("UnifiedNavigationMenu: Failed to resolve DeviceDetector", error);
+      return undefined;
     }
+  });
 
+  onMount(() => {
     // Initialize gesture handler
     gestureHandler = gestureService.createSwipeGestureHandler({
       direction: "vertical",
@@ -133,6 +137,8 @@
     } catch (error) {
       console.warn("Failed to check PWA install status:", error);
     }
+
+    return undefined;
   });
 
   // Reactively measure content height when panel is shown
@@ -192,6 +198,7 @@
       document.addEventListener("keydown", handleKeydown);
       return () => document.removeEventListener("keydown", handleKeydown);
     }
+    return undefined;
   });
 
   // Listen for custom event from bottom navigation

@@ -107,11 +107,13 @@
       responsiveSettings = deviceDetector.getResponsiveSettings();
 
       // Return cleanup function from onCapabilitiesChanged
-      return deviceDetector.onCapabilitiesChanged(() => {
+      const cleanup = deviceDetector.onCapabilitiesChanged(() => {
         responsiveSettings = deviceDetector!.getResponsiveSettings();
       });
+      return cleanup || undefined;
     } catch (error) {
       console.warn("SocialAuthButton: Failed to resolve DeviceDetector", error);
+      return undefined;
     }
   });
 
