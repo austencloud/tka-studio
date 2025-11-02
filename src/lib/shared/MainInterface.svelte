@@ -79,7 +79,7 @@
     onHeightChange={setTopBarHeight}
   >
     {#snippet content()}
-      {#if currentModule() === "build" && layoutState.currentBuildWord}
+      {#if (currentModule() === "create" || currentModule() === "build") && layoutState.currentBuildWord}
         <WordLabel word={layoutState.currentBuildWord} />
       {:else if currentModule() === "learn" && layoutState.currentLearnHeader}
         <div class="learn-header">{layoutState.currentLearnHeader}</div>

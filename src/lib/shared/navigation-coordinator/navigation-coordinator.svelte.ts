@@ -46,8 +46,8 @@ export function moduleSections() {
   const baseSections = currentModuleDefinition()?.sections || [];
   const module = currentModule();
 
-  // Build module section filtering
-  if (module === "build") {
+  // Create module section filtering (legacy "build" also supported)
+  if (module === "create" || module === "build") {
     if (!navigationCoordinator.canAccessEditAndExportPanels) {
       return baseSections.filter((section: { id: string }) => {
         // Show construct, gestural, and generate sections when no sequence exists

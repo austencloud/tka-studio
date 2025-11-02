@@ -7,7 +7,7 @@
 
 import type { ModuleDefinition, ModuleId, Section } from "../domain/types";
 
-// Build tabs configuration - mutable to allow dynamic tab accessibility updates
+// Create tabs configuration - mutable to allow dynamic tab accessibility updates
 // Note: Edit functionality is now handled via a slide-out panel, not a tab
 // Note: Animate is now a Play button in the button panel with inline animator
 // Note: Record removed (not implemented yet, users will use native camera apps)
@@ -140,10 +140,10 @@ export const ADMIN_TABS: Section[] = [
 // Module definitions for the new navigation system
 export const MODULE_DEFINITIONS: ModuleDefinition[] = [
   {
-    id: "build",
-    label: "Build",
+    id: "create",
+    label: "Create",
     icon: '<i class="fas fa-tools" style="color: #f59e0b;"></i>', // Amber - construction/creation
-    description: "Create and edit sequences",
+    description: "Construct and generate sequences",
     isMain: true,
     sections: BUILD_TABS,
   },
@@ -191,7 +191,7 @@ export function createNavigationState() {
   let currentLearnMode = $state<string>("concepts");
 
   // Module-based state
-  let currentModule = $state<ModuleId>("build");
+  let currentModule = $state<ModuleId>("create");
   let activeTab = $state<string>("construct"); // Active tab within the current module
   const MODULE_LAST_TABS_KEY = "tka-module-last-tabs";
   let lastTabByModule = $state<Partial<Record<ModuleId, string>>>({});
@@ -209,10 +209,14 @@ export function createNavigationState() {
       currentLearnMode = savedLearnMode;
     }
 
-    // Load module persistence
+    // Load module persistence with migration for "build" → "create"
     const savedModule = localStorage.getItem("tka-current-module");
-    if (savedModule && MODULE_DEFINITIONS.some((m) => m.id === savedModule)) {
-      currentModule = savedModule as ModuleId;
+    if (savedModule) {
+      // Migrate legacy "build" module ID to "create"
+      const migratedModule = savedModule === "build" ? "create" : savedModule;
+      if (MODULE_DEFINITIONS.some((m) => m.id === migratedModule)) {
+        currentModule = migratedModule as ModuleId;
+      }
     }
 
     // Load last active tab for each module
@@ -361,7 +365,7 @@ export function createNavigationState() {
 
       // Sync with legacy state
       const tab = getActiveTab();
-      if (moduleId === "build") {
+      if (moduleId === "create" || moduleId === "build") {
         setBuildMode(tab);
       } else if (moduleId === "learn") {
         setLearnMode(tab);
@@ -391,7 +395,7 @@ export function createNavigationState() {
 
       // Sync with legacy state
       const module = getCurrentModule();
-      if (module === "build") {
+      if (module === "create" || module === "build") {
         setBuildMode(tabId);
       } else if (module === "learn") {
         setLearnMode(tabId);

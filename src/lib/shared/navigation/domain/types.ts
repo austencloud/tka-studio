@@ -20,7 +20,8 @@ export interface Section {
 
 
 // Module-based navigation types
-export type ModuleId = "build" | "explore" | "learn" | "collection" | "library" | "write" | "word_card" | "admin";
+export type ModuleId = "create" | "build" | "explore" | "learn" | "collection" | "library" | "write" | "word_card" | "admin";
+// Note: "build" is kept for backward compatibility, but "create" is the canonical name
 
 /**
  * Module Definition
