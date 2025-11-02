@@ -41,7 +41,9 @@
     "dev:turbo": "npx vite --host 0.0.0.0 --force",
     "type-check": "tsc --noEmit",
     "size": "npx vite-bundle-visualizer",
-    "update:deps": "npx npm-check-updates -i"
+    "update:deps": "npx npm-check-updates -i",
+    "analyze:dead-code": "npx ts-prune --project tsconfig.json > ts-prune-full-report.txt && node analyze-dead-code.js && node verify-usage.js",
+    "analyze:dead-code:quick": "npx ts-prune --project tsconfig.json | grep -v '(used in module)' | grep 'src\\\\lib\\\\modules' | wc -l"
   },
   "devDependencies": {
     "@playwright/test": "^1.54.2",

@@ -301,11 +301,11 @@
 	}
 
 	// Handle clicks on specific category tabs (Type1, Type2, etc.)
-	function handleSubTabSelect(event: CustomEvent<string>) {
-		const newSubTab = event.detail;
-		selectedTab.set(newSubTab);
+	function handleSectionSelect(event: CustomEvent<string>) {
+		const newSection = event.detail;
+		selectedTab.set(newSection);
 		// Save this tab selection preference for the current sort method
-		actions.setLastSelectedTabForSort(get(uiState).sortMethod, newSubTab);
+		actions.setLastSelectedTabForSort(get(uiState).sortMethod, newSection);
 	}
 
 	// Update window dimensions on resize
@@ -410,7 +410,7 @@
 		categoryKeys={actualCategoryKeys}
 		{showTabs}
 		on:viewChange={handleViewChange}
-		on:tabSelect={handleSubTabSelect}
+		on:tabSelect={handleSectionSelect}
 	/>
 
 	<div class="options-container" use:resize={handleContainerResize}>

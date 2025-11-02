@@ -67,7 +67,13 @@
       "Bash(firebase --version:*)",
       "Bash(firebase deploy:*)",
       "Bash(git restore:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(npx --version)",
+      "Bash(npx ts-prune:*)",
+      "Bash(ts-prune-full-report.txt)",
+      "Bash(src/lib/shared/background/deep-ocean/services/DeepOceanBackgroundSystem.ts)",
+      "Bash(npx playwright install chromium)",
+      "Bash(npx playwright:*)"
     ],
     "deny": [],
     "ask": []

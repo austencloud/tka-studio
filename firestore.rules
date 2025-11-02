@@ -23,6 +23,12 @@ service cloud.firestore {
         && request.resource.data.userId == request.auth.uid;
     }
 
+    // Check if user is an admin
+    function isAdmin() {
+      return isAuthenticated()
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
     // ============================================================================
     // GAMIFICATION COLLECTIONS (Root Level)
     // ============================================================================
@@ -58,10 +64,10 @@ service cloud.firestore {
       allow update, delete: if false; // Events are immutable
     }
 
-    // Daily Challenges - global data, read-only for users
+    // Daily Challenges - global data, read-only for users (admin can write)
     match /dailyChallenges/{challengeId} {
       allow read: if isAuthenticated();
-      allow write: if false; // Server-side only (or admin)
+      allow write: if isAdmin(); // Only admin can create/update/delete challenges
     }
 
     // User Challenge Progress - users can read/write their own progress

@@ -33,5 +33,38 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
   }
 
-  return resolve(event);
+  // Resolve the request with security headers
+  const response = await resolve(event);
+
+  // Set security headers for OAuth authentication flows
+  // These headers allow OAuth popups (Google, Facebook, etc.) to properly communicate
+  // with the parent window during authentication while maintaining security
+  response.headers.set(
+    "Cross-Origin-Opener-Policy",
+    "same-origin-allow-popups"
+  );
+
+  // COEP header - allows cross-origin resources needed for OAuth
+  response.headers.set(
+    "Cross-Origin-Embedder-Policy",
+    "unsafe-none"
+  );
+
+  // Additional security headers for production-ready app
+  response.headers.set(
+    "X-Frame-Options",
+    "SAMEORIGIN"
+  );
+
+  response.headers.set(
+    "X-Content-Type-Options",
+    "nosniff"
+  );
+
+  response.headers.set(
+    "Referrer-Policy",
+    "strict-origin-when-cross-origin"
+  );
+
+  return response;
 };

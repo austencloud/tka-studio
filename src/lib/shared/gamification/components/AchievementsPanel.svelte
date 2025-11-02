@@ -146,7 +146,7 @@
 
 <BottomSheet
   {isOpen}
-  onclose={handleClose}
+  on:close={handleClose}
   ariaLabel="Achievements & Challenges"
   class="achievements-sheet"
 >
