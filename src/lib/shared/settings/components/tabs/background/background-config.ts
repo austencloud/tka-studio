@@ -15,7 +15,7 @@ export const backgroundsConfig: BackgroundMetadata[] = [
   {
     type: BackgroundType.AURORA,
     name: "Aurora",
-    description: "Colorful flowing aurora with animated blobs",
+    description: "Colorful flowing aurora with lens flare",
     icon: '<i class="fas fa-star"></i>',
   },
   {

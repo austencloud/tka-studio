@@ -454,7 +454,7 @@
 
   /* ===== AURORA BACKGROUND ===== */
   .background-preview[data-background="aurora"] {
-    background: linear-gradient(180deg, #0a1628 0%, #1a1a3e 100%);
+    background: linear-gradient(180deg, #0a0a0f 0%, #1a1a20 100%);
   }
 
   .background-preview[data-background="aurora"]::before {
@@ -465,11 +465,12 @@
     width: 200%;
     height: 200%;
     background:
-      radial-gradient(ellipse 40% 30% at 30% 40%, rgba(138, 43, 226, 0.5) 0%, transparent 50%),
-      radial-gradient(ellipse 35% 25% at 70% 60%, rgba(0, 255, 127, 0.45) 0%, transparent 50%),
-      radial-gradient(ellipse 45% 35% at 50% 50%, rgba(64, 224, 208, 0.4) 0%, transparent 50%);
+      radial-gradient(ellipse 40% 30% at 30% 40%, rgba(220, 120, 255, 0.95) 0%, transparent 50%),
+      radial-gradient(ellipse 35% 25% at 70% 60%, rgba(0, 255, 150, 0.9) 0%, transparent 50%),
+      radial-gradient(ellipse 45% 35% at 50% 50%, rgba(80, 240, 255, 0.85) 0%, transparent 50%),
+      radial-gradient(ellipse 30% 25% at 85% 45%, rgba(255, 130, 200, 0.9) 0%, transparent 50%);
     animation: aurora-flow 15s ease-in-out infinite;
-    filter: blur(clamp(20px, 6cqi, 35px));
+    filter: blur(clamp(18px, 5.5cqi, 32px)) brightness(1.2);
   }
 
   .background-preview[data-background="aurora"]::after {
@@ -480,11 +481,12 @@
     width: 200%;
     height: 200%;
     background:
-      radial-gradient(ellipse 38% 28% at 60% 30%, rgba(255, 20, 147, 0.4) 0%, transparent 50%),
-      radial-gradient(ellipse 42% 32% at 40% 70%, rgba(30, 144, 255, 0.45) 0%, transparent 50%),
-      radial-gradient(ellipse 35% 25% at 80% 50%, rgba(147, 51, 234, 0.35) 0%, transparent 50%);
+      radial-gradient(ellipse 38% 28% at 60% 30%, rgba(255, 100, 200, 0.85) 0%, transparent 50%),
+      radial-gradient(ellipse 42% 32% at 40% 70%, rgba(150, 220, 255, 0.9) 0%, transparent 50%),
+      radial-gradient(ellipse 35% 25% at 80% 50%, rgba(255, 150, 255, 0.8) 0%, transparent 50%),
+      radial-gradient(ellipse 32% 28% at 20% 65%, rgba(255, 230, 100, 0.85) 0%, transparent 50%);
     animation: aurora-flow 20s ease-in-out infinite reverse;
-    filter: blur(clamp(25px, 7cqi, 45px));
+    filter: blur(clamp(22px, 6.5cqi, 40px)) brightness(1.15);
   }
 
   @keyframes aurora-flow {
