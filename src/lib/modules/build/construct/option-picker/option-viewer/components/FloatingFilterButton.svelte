@@ -16,10 +16,18 @@ that triggers the filter panel dropdown.
     isFilterPanelOpen = false,
     isContinuousOnly = false,
     onOpenFilters,
+    containerWidth = 0,
+    pictographSize = 0,
+    columns = 4,
+    gridGap = 2,
   } = $props<{
     isFilterPanelOpen?: boolean;
     isContinuousOnly?: boolean;
     onOpenFilters?: () => void;
+    containerWidth?: number;
+    pictographSize?: number;
+    columns?: number;
+    gridGap?: number;
   }>();
 
   let hapticService: IHapticFeedbackService | undefined = undefined;
@@ -28,6 +36,55 @@ that triggers the filter panel dropdown.
   if (container.isBound(TYPES.IHapticFeedbackService)) {
     hapticService = container.get<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
   }
+
+  /**
+   * Calculate safe padding for floating button that won't overlap the grid.
+   *
+   * Logic:
+   * 1. Calculate actual grid width based on pictograph size and columns
+   * 2. Measure leftover space that naturally occurs when grid is smaller than container
+   * 3. Check if button + safety margin + desired padding fits in leftover space
+   * 4. Only apply padding if there's sufficient room
+   *
+   * This ensures the button never overlaps pictographs while providing
+   * visual breathing room when space permits.
+   */
+  const buttonPadding = $derived(() => {
+    // Button size varies by screen width
+    const buttonSize = containerWidth <= 375 ? 40 : 44;
+
+    // Safety margin to ensure button doesn't touch grid content
+    const safetyMargin = 4;
+
+    // Calculate actual grid width
+    // gridWidth = (pictographSize × columns) + (gap × (columns - 1))
+    const actualGridWidth = (pictographSize * columns) + (gridGap * (columns - 1));
+
+    // Calculate leftover space on each side
+    const totalLeftoverSpace = containerWidth - actualGridWidth;
+    const leftoverSpacePerSide = totalLeftoverSpace / 2;
+
+    // Calculate maximum safe padding within leftover space
+    // Formula: available space = leftoverSpace - buttonSize - safetyMargin
+    const maxSafePadding = Math.max(0, leftoverSpacePerSide - buttonSize - safetyMargin);
+
+    // Desired padding based on container width (aesthetic preference)
+    let desiredPadding: number;
+    if (containerWidth <= 375) {
+      desiredPadding = 0; // Flush on tiny screens
+    } else if (containerWidth <= 600) {
+      desiredPadding = 8; // Small breathing room
+    } else if (containerWidth <= 1024) {
+      desiredPadding = 10; // Moderate spacing
+    } else {
+      desiredPadding = 12; // Comfortable desktop spacing
+    }
+
+    // Use the smaller of desired padding or maximum safe padding
+    const actualPadding = Math.min(desiredPadding, maxSafePadding);
+
+    return actualPadding;
+  });
 
   function handleFilterClick() {
     hapticService?.trigger("selection");
@@ -44,6 +101,7 @@ that triggers the filter panel dropdown.
   aria-label="Open filter options"
   aria-expanded={isFilterPanelOpen}
   type="button"
+  style="--button-padding: {buttonPadding()}px;"
 >
   <i class="fas fa-filter"></i>
   {#if isContinuousOnly}
@@ -52,12 +110,12 @@ that triggers the filter panel dropdown.
 </button>
 
 <style>
-  /* Updated: Flush positioning to match navigation arrows */
+  /* Updated: Smart padding that adapts to container size */
   .floating-filter-button {
-    /* Positioning - tucked flush to the left like navigation arrows */
+    /* Positioning - with intelligent padding that respects grid layout */
     position: absolute;
-    top: 0;
-    left: 0;
+    top: var(--button-padding, 0);
+    left: var(--button-padding, 0);
     z-index: 100;
 
     /* Size - optimized for touch targets */
@@ -65,10 +123,8 @@ that triggers the filter panel dropdown.
     height: 44px;
     min-width: 44px;
     min-height: 44px;
-    /* TEST: Red border should appear instantly */
-    border: 2px solid red;
 
-    /* Layout */
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -148,11 +204,10 @@ that triggers the filter panel dropdown.
     }
   }
 
-  /* Extra small screens (iPhone SE) */
+  /* Extra small screens (iPhone SE) - maximize space with flush positioning */
   @media (max-width: 375px) {
     .floating-filter-button {
-      top: 0;
-      left: 0;
+      /* Note: padding already set to 0 via buttonPadding logic */
       width: 40px;
       height: 40px;
       min-width: 40px;

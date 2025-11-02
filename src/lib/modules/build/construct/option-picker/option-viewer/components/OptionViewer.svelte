@@ -538,6 +538,10 @@ Business logic moved to state management and utility services.
             {isFilterPanelOpen}
             {isContinuousOnly}
             {onOpenFilters}
+            containerWidth={containerDimensions.width}
+            pictographSize={layoutConfig()?.pictographSize ?? 0}
+            columns={layoutConfig()?.optionsPerRow ?? 4}
+            gridGap={parseInt(layoutConfig()?.gridGap?.replace('px', '') ?? '2')}
           />
         </div>
       {/if}
