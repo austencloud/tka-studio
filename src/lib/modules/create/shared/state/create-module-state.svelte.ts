@@ -58,7 +58,7 @@ export function createCreateModuleState(
   let isLoading = $state(false);
   let error = $state<string | null>(null);
   let isTransitioningSection = $state(false);
-  let activeSection = $state<BuildModeId | null>(null); // Start with null to prevent flicker during restoration
+  let activeSection = $state<BuildModeId>("construct"); // Start with "construct" as default (will be overridden by persistence if available)
   let isPersistenceInitialized = $state(false); // Track if persistence has been loaded
   let isNavigatingBack = $state(false); // Track if currently in back navigation to prevent sync loops
 
@@ -118,7 +118,7 @@ export function createCreateModuleState(
 
   const hasError = $derived(error !== null);
   const hasSequence = $derived(sequenceState.currentSequence !== null);
-  const isSectionLoading = $derived(activeSection === null); // Loading state detection like main navigation
+  const isSectionLoading = $derived(!isPersistenceInitialized); // Loading state detection based on persistence initialization
   const canGoBack = $derived(navigationHistory.length > 0);
   const hasOptionHistory = $derived(optionSelectionHistory.length > 0);
 
@@ -192,7 +192,7 @@ export function createCreateModuleState(
     }
 
     // Add to navigation history if it's different from current AND we should track history
-    if (addToHistory && activeSection !== panel && activeSection !== null) {
+    if (addToHistory && activeSection !== panel) {
       navigationHistory.push({
         panel: activeSection,
         timestamp: Date.now(),
