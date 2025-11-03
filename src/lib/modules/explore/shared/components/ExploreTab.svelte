@@ -4,15 +4,20 @@
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onMount } from "svelte";
   import { openSpotlightViewer } from "../../../../shared/application/state/app-state.svelte";
+  import { navigationState } from "../../../../shared/navigation/state/navigation-state.svelte";
 
   import type { IExploreThumbnailService } from "../../display";
   import { SequenceDisplayPanel } from "../../display/components";
   import FilterModal from "../../filtering/components/FilterModal.svelte";
-  import SortControls from "../../filtering/components/SortControls.svelte";
+  import CompactFilterPanel from "../../filtering/components/CompactFilterPanel.svelte";
   import { SimpleNavigationSidebar } from "../../navigation/components";
+  import UsersExplorePanel from "../../users/components/UsersExplorePanel.svelte";
+  import CollectionsExplorePanel from "../../collections/components/CollectionsExplorePanel.svelte";
   import { createExploreState } from "../state/explore-state-factory.svelte";
   import ExploreDeleteDialog from "./ExploreDeleteDialog.svelte";
   import ExploreLayout from "./ExploreLayout.svelte";
+
+  type ExploreTabType = "sequences" | "users" | "collections";
 
   // ============================================================================
   // STATE MANAGEMENT (Shared Coordination)
@@ -27,6 +32,7 @@
   let selectedSequence = $state<SequenceData | null>(null);
   let deleteConfirmationData = $state<any>(null);
   let error = $state<string | null>(null);
+  let activeTab = $state<ExploreTabType>("sequences");
   // Remove isInitialized blocking state - show UI immediately with skeletons
 
   // Services
@@ -40,6 +46,21 @@
     responsiveSettings?.isMobile &&
       responsiveSettings?.orientation === "portrait"
   );
+
+  // ✅ SYNC WITH BOTTOM NAVIGATION STATE
+  // This effect syncs the local tab state with the global navigation state
+  $effect(() => {
+    const navTab = navigationState.activeTab;
+
+    // Map navigation state to local explore tab
+    if (navTab === "sequences" || navTab === "explore") {
+      activeTab = "sequences";
+    } else if (navTab === "users") {
+      activeTab = "users";
+    } else if (navTab === "collections") {
+      activeTab = "collections";
+    }
+  });
 
   // ============================================================================
   // EVENT HANDLERS (Coordination)
@@ -199,53 +220,69 @@
 {/if}
 
 <!-- Main layout - shows immediately with skeletons while data loads -->
-<div class="gallery-content">
-  <ExploreLayout>
-    {#snippet sortControls()}
-      <SortControls
-        currentSort={galleryState.currentSortMethod}
-        sortDirection={galleryState.sortDirection}
-        onSortChange={galleryState.handleSortChange}
-        onFilterClick={galleryState.openFilterModal}
+<div class="explore-content">
+  <!-- Tab Content - Bottom navigation controls the active tab -->
+  <div class="tab-content">
+    {#if activeTab === "sequences"}
+      <ExploreLayout>
+        {#snippet sortControls()}
+          <CompactFilterPanel
+            currentFilter={galleryState.currentFilter}
+            onFilterChange={galleryState.handleFilterChange}
+            onOpenAdvanced={galleryState.openFilterModal}
+          />
+        {/snippet}
+
+        {#snippet navigationSidebar()}
+          <SimpleNavigationSidebar
+            currentSortMethod={galleryState.currentSortMethod}
+            availableSections={galleryState.availableNavigationSections}
+            onSectionClick={galleryState.scrollToSection}
+            isHorizontal={isPortraitMobile || false}
+          />
+        {/snippet}
+
+        {#snippet centerPanel()}
+          <SequenceDisplayPanel
+            sequences={galleryState.displayedSequences}
+            sections={galleryState.sequenceSections}
+            isLoading={galleryState.isLoading}
+            {error}
+            showSections={galleryState.showSections}
+            onAction={handleSequenceAction}
+          />
+        {/snippet}
+      </ExploreLayout>
+
+      <!-- Filter Modal -->
+      <FilterModal
+        isOpen={galleryState.isFilterModalOpen}
+        currentFilter={galleryState.currentFilter}
+        availableSequenceLengths={galleryState.availableSequenceLengths}
+        onFilterChange={galleryState.handleFilterChange}
+        onClose={galleryState.closeFilterModal}
       />
-    {/snippet}
-
-    {#snippet navigationSidebar()}
-      <SimpleNavigationSidebar
-        currentSortMethod={galleryState.currentSortMethod}
-        availableSections={galleryState.availableNavigationSections}
-        onSectionClick={galleryState.scrollToSection}
-        isHorizontal={isPortraitMobile || false}
-      />
-    {/snippet}
-
-    {#snippet centerPanel()}
-      <SequenceDisplayPanel
-        sequences={galleryState.displayedSequences}
-        sections={galleryState.sequenceSections}
-        isLoading={galleryState.isLoading}
-        {error}
-        showSections={galleryState.showSections}
-        onAction={handleSequenceAction}
-      />
-    {/snippet}
-  </ExploreLayout>
-
-  <!-- Filter Modal -->
-  <FilterModal
-    isOpen={galleryState.isFilterModalOpen}
-    currentFilter={galleryState.currentFilter}
-    availableSequenceLengths={galleryState.availableSequenceLengths}
-    onFilterChange={galleryState.handleFilterChange}
-    onClose={galleryState.closeFilterModal}
-  />
-
-  <!-- TODO: Replace with AnimationPanel + coordinator when ready -->
+    {:else if activeTab === "users"}
+      <UsersExplorePanel />
+    {:else if activeTab === "collections"}
+      <CollectionsExplorePanel />
+    {/if}
+  </div>
 </div>
 
 <style>
-  .gallery-content {
+  .explore-content {
+    display: flex;
+    flex-direction: column;
     height: 100%;
-    /* Removed opacity animation - show immediately for zero-delay experience */
+    overflow: hidden;
+  }
+
+  .tab-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
   }
 </style>

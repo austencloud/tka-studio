@@ -141,6 +141,7 @@ export const TYPES = {
   ISequenceIndexService: Symbol.for("ISequenceIndexService"),
   IExplorePanelManager: Symbol.for("IExplorePanelManager"),
   IFilterPersistenceService: Symbol.for("IFilterPersistenceService"),
+  IUserExploreService: Symbol.for("IUserExploreService"),
   // === WORKBENCH SERVICES ===
   IWorkbenchService: Symbol.for("IWorkbenchService"),
   IBuildConstructTabCoordinator: Symbol.for("IBuildConstructTabCoordinator"),

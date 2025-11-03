@@ -77,12 +77,28 @@ export const LEARN_TABS: Section[] = [
 // Explore tabs configuration
 export const EXPLORE_TABS: Section[] = [
   {
-    id: "explore",
-    label: "Explore",
-    icon: '<i class="fas fa-compass"></i>',
-    description: "Explore and discover sequences",
+    id: "sequences",
+    label: "Sequences",
+    icon: '<i class="fas fa-layer-group"></i>',
+    description: "Browse and discover sequences",
     color: "#a855f7",
     gradient: "linear-gradient(135deg, #c084fc 0%, #a855f7 100%)",
+  },
+  {
+    id: "users",
+    label: "Users",
+    icon: '<i class="fas fa-users"></i>',
+    description: "Discover creators and contributors",
+    color: "#06b6d4",
+    gradient: "linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%)",
+  },
+  {
+    id: "collections",
+    label: "Collections",
+    icon: '<i class="fas fa-folder"></i>',
+    description: "Browse curated playlists",
+    color: "#f59e0b",
+    gradient: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
   },
 ];
 
@@ -235,9 +251,8 @@ export function createNavigationState() {
               (m) => m.id === moduleId
             );
             return (
-              moduleDefinition?.sections?.some(
-                (tab) => tab.id === tabId
-              ) ?? false
+              moduleDefinition?.sections?.some((tab) => tab.id === tabId) ??
+              false
             );
           }
         );
@@ -275,11 +290,7 @@ export function createNavigationState() {
       const moduleDefinition = MODULE_DEFINITIONS.find(
         (m) => m.id === currentModule
       );
-      if (
-        moduleDefinition?.sections?.some(
-          (tab) => tab.id === rememberedTab
-        )
-      ) {
+      if (moduleDefinition?.sections?.some((tab) => tab.id === rememberedTab)) {
         activeTab = rememberedTab;
       }
     }
@@ -319,10 +330,7 @@ export function createNavigationState() {
         JSON.stringify(lastTabByModule)
       );
     } catch (error) {
-      console.warn(
-        "NavigationState: failed to persist module tab map:",
-        error
-      );
+      console.warn("NavigationState: failed to persist module tab map:", error);
     }
   }
 

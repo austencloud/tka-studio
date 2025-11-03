@@ -109,8 +109,8 @@
   /* Container queries for responsive columns based on available width */
   @container (max-width: 480px) {
     .sequences-grid.grid-view {
-      grid-template-columns: repeat(1, 1fr); /* 1 column for mobile phones */
-      gap: var(--spacing-sm);
+      grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile phones */
+      gap: 8px;
     }
   }
 

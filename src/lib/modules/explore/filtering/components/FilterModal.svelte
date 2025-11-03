@@ -276,12 +276,27 @@ Follows Svelte 5 runes + microservices architecture.
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 12px;
-    padding: 24px;
-    max-width: 800px;
-    max-height: 80vh;
+    padding: 20px;
+    max-width: 600px;
+    width: calc(100% - 32px);
+    max-height: 85vh;
     overflow-y: auto;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
     border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Mobile optimization */
+  @media (max-width: 480px) {
+    .modal-content {
+      padding: 16px;
+      max-height: 90vh;
+      border-radius: 12px 12px 0 0;
+      margin-top: auto;
+    }
+
+    .modal-backdrop {
+      align-items: flex-end;
+    }
   }
 
   .modal-header {
