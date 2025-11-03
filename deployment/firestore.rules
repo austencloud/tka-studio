@@ -103,23 +103,75 @@ service cloud.firestore {
     }
 
     // ============================================================================
-    // USER DATA COLLECTIONS (if you have them)
+    // USER DATA COLLECTIONS
     // ============================================================================
 
-    // User profiles (if needed)
+    // User profiles - PUBLIC browsing allowed for everyone (even unauthenticated)
+    // Users can only edit their own profile data
     match /users/{userId} {
-      allow read: if isAuthenticated();
-      allow write: if isOwner(userId);
+      // ANYONE can read public profile data (no authentication required)
+      allow read: if true;
+
+      // Users can only update their own profile
+      allow create, update: if isOwner(userId);
+
+      // Users can delete their own profile (with caution)
+      allow delete: if isOwner(userId);
+    }
+
+    // ============================================================================
+    // COLLECTIONS - User Collections for sequences, beats, etc.
+    // ============================================================================
+
+    // User Collections - PUBLIC browsing allowed for everyone
+    match /users/{userId}/collections/{collectionId} {
+      // ANYONE can read public collections (no authentication required)
+      allow read: if true;
+
+      // Only the owner can create/update/delete their collections
+      allow create, update, delete: if isOwner(userId);
+    }
+
+    // Sequences within collections
+    match /users/{userId}/collections/{collectionId}/sequences/{sequenceId} {
+      // ANYONE can read public sequences (no authentication required)
+      allow read: if true;
+
+      // Only the owner can create/update/delete their sequences
+      allow create, update, delete: if isOwner(userId);
+    }
+
+    // User-created sequences (if stored at root level)
+    match /sequences/{sequenceId} {
+      // ANYONE can read public sequences (no authentication required)
+      allow read: if true;
+
+      // Only the creator can modify their sequences
+      allow create: if isAuthenticated() && hasValidUserId();
+      allow update, delete: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
+    }
+
+    // User collections metadata (if stored at root level)
+    match /collections/{collectionId} {
+      // ANYONE can read public collections (no authentication required)
+      allow read: if true;
+
+      // Only the creator can modify their collections
+      allow create: if isAuthenticated() && hasValidUserId();
+      allow update, delete: if isAuthenticated()
+        && resource.data.userId == request.auth.uid;
     }
 
     // ============================================================================
     // DEVELOPMENT OVERRIDE (TEMPORARY)
-    // This allows all authenticated users full access during development
+    // This allows PUBLIC READ access and authenticated WRITE access during development
     // REMOVE IN PRODUCTION!
     // ============================================================================
 
     match /{document=**} {
-      allow read, write: if isAuthenticated();
+      allow read: if true;  // Public read access
+      allow write: if isAuthenticated();  // Only authenticated users can write
     }
   }
 }
