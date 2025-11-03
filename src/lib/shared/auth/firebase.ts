@@ -20,30 +20,10 @@ import {
   enableMultiTabIndexedDbPersistence,
 } from "firebase/firestore";
 import { getAnalytics, type Analytics, isSupported } from "firebase/analytics";
-import {
-  PUBLIC_FIREBASE_API_KEY,
-  PUBLIC_FIREBASE_AUTH_DOMAIN,
-  PUBLIC_FIREBASE_PROJECT_ID,
-  PUBLIC_FIREBASE_STORAGE_BUCKET,
-  PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  PUBLIC_FIREBASE_APP_ID,
-  PUBLIC_FIREBASE_MEASUREMENT_ID,
-} from "$env/static/public";
-
-// Validate environment variables
-if (
-  !PUBLIC_FIREBASE_API_KEY ||
-  !PUBLIC_FIREBASE_AUTH_DOMAIN ||
-  !PUBLIC_FIREBASE_PROJECT_ID
-) {
-  console.warn(
-    "Missing Firebase environment variables. Authentication features will be disabled."
-  );
-}
 
 /**
  * Firebase configuration object
- * TEMPORARY: Hardcoded to bypass Vite env loading issue
+ * Uses hardcoded values for reliable deployment across environments
  */
 const firebaseConfig = {
   apiKey: "AIzaSyDKUM9pf0e_KgFjW1OBKChvrU75SnR12v4",
