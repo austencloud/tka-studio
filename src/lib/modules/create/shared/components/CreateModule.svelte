@@ -316,6 +316,13 @@
         });
       });
 
+      // Set up clear sequence callback (to ensure UI state is properly updated)
+      CreateModuleState.setClearSequenceCompletelyCallback(async () => {
+        if (constructTabState?.clearSequenceCompletely) {
+          await constructTabState.clearSequenceCompletely();
+        }
+      });
+
       // Load start positions
       await services.startPositionService.getDefaultStartPositions(
         GridMode.DIAMOND

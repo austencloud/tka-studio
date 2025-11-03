@@ -45,6 +45,7 @@
     flex-direction: column;
     container-type: size;
     container-name: background-selector;
+    overflow: visible;
   }
 
   .background-grid {
@@ -53,7 +54,7 @@
     height: 100%;
     align-content: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: visible;
 
     /*
       Intelligent responsive grid for 4 background cards

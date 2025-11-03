@@ -85,11 +85,6 @@ Now with click interaction and selection visual feedback
 {#if showArrow}
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <g
-    transform="
-      translate({arrowPosition.x}, {arrowPosition.y})
-      rotate({arrowPosition.rotation})
-      {shouldMirror ? 'scale(-1, 1)' : ''}
-    "
     class="arrow-svg {motionData.color}-arrow-svg"
     class:mirrored={shouldMirror}
     class:clickable={isClickable}
@@ -100,6 +95,11 @@ Now with click interaction and selection visual feedback
     aria-label={isClickable
       ? `${color} arrow - ${motionData.motion} ${motionData.turns}`
       : undefined}
+    style="
+      transform: translate({arrowPosition.x}px, {arrowPosition.y}px)
+                 rotate({arrowPosition.rotation}deg)
+                 {shouldMirror ? 'scale(-1, 1)' : ''};
+    "
   >
     <!-- Position group at calculated coordinates, let SVG handle its own centering -->
     <g transform="translate({-arrowAssets.center.x}, {-arrowAssets.center.y})">
@@ -125,7 +125,9 @@ Now with click interaction and selection visual feedback
 <style>
   .arrow-svg {
     pointer-events: none;
-    transition: all 0.2s ease;
+    /* Smooth transition for position and rotation changes */
+    /* IMPORTANT: transform must be a CSS property (not SVG attribute) for transitions to work */
+    transition: transform 0.2s ease, filter 0.2s ease;
   }
 
   .arrow-svg.clickable {

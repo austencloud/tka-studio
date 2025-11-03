@@ -187,7 +187,20 @@
   }
 
   .background-thumbnail:hover .thumbnail-icon {
-    transform: scale(1.15) translateY(-2px);
+    transform: scale(1.08) translateY(-1px);
+  }
+
+  /* Reduce icon animation in smaller containers */
+  @container (max-width: 200px) {
+    .background-thumbnail:hover .thumbnail-icon {
+      transform: scale(1.05) translateY(-1px);
+    }
+  }
+
+  @container (max-width: 120px) {
+    .background-thumbnail:hover .thumbnail-icon {
+      transform: scale(1.03);
+    }
   }
 
   .thumbnail-info {

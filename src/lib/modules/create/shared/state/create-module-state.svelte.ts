@@ -97,6 +97,9 @@ export function createCreateModuleState(
   // Callback for confirming switch to Guided mode (returns promise resolving to boolean)
   let confirmGuidedSwitchCallback: (() => Promise<boolean>) | null = null;
 
+  // Callback for clearing sequence completely (set by construct tab state)
+  let clearSequenceCompletelyCallback: (() => Promise<void>) | null = null;
+
   // Shared sub-states
   const sequenceState = createSequenceState({
     sequenceService,
@@ -154,7 +157,13 @@ export function createCreateModuleState(
           return;
         }
         // User confirmed - clear sequence before switching
-        sequenceState.clearSequenceCompletely();
+        // Use the construct tab state's clearSequenceCompletely to ensure UI state is updated
+        if (clearSequenceCompletelyCallback) {
+          await clearSequenceCompletelyCallback();
+        } else {
+          // Fallback to direct sequence state clear if callback not available
+          sequenceState.clearSequenceCompletely();
+        }
       }
     }
 
@@ -442,6 +451,13 @@ export function createCreateModuleState(
     confirmGuidedSwitchCallback = callback;
   }
 
+  /**
+   * Set callback for clearing sequence completely (called by CreateModule)
+   */
+  function setClearSequenceCompletelyCallback(callback: () => Promise<void>) {
+    clearSequenceCompletelyCallback = callback;
+  }
+
   // ============================================================================
   // PERSISTENCE FUNCTIONS
   // ============================================================================
@@ -593,6 +609,7 @@ export function createCreateModuleState(
     setShowStartPositionPickerCallback,
     setOnUndoingOptionCallback,
     setConfirmGuidedSwitchCallback,
+    setClearSequenceCompletelyCallback,
 
     // Persistence functions
     initializeWithPersistence,

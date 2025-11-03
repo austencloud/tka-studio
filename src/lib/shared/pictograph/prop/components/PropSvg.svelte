@@ -1,5 +1,6 @@
 <!--
 Simple Prop Component - Just renders a prop with provided data
+Now with smooth transitions when position or orientation changes!
 -->
 <script lang="ts">
   import type { MotionData } from "$shared";
@@ -20,13 +21,13 @@ Simple Prop Component - Just renders a prop with provided data
 
 {#if showProp}
   <g
-    transform="
-      translate({propPosition.x}, {propPosition.y})
-      rotate({propPosition.rotation})
-      translate({-propAssets.center.x}, {-propAssets.center.y})
-    "
     class="prop-svg {motionData.color}-prop-svg"
     data-prop-type={motionData?.propType}
+    style="
+      transform: translate({propPosition.x}px, {propPosition.y}px)
+                 rotate({propPosition.rotation}deg)
+                 translate({-propAssets.center.x}px, {-propAssets.center.y}px);
+    "
   >
     {@html propAssets.imageSrc}
   </g>
@@ -35,5 +36,8 @@ Simple Prop Component - Just renders a prop with provided data
 <style>
   .prop-svg {
     pointer-events: none;
+    /* Smooth transition for position and rotation changes - matches arrow behavior */
+    /* IMPORTANT: transform must be a CSS property (not SVG attribute) for transitions to work */
+    transition: transform 0.2s ease;
   }
 </style>
