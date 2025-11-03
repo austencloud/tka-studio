@@ -19,6 +19,7 @@
     topPadding?: number; // Dynamic padding for content that extends above viewport (e.g., type labels)
     preservePosition?: boolean; // Preserve scroll position across reInit (default: false)
     storageKey?: string; // SessionStorage key for position persistence (required if preservePosition is true)
+    emblaApiRef?: EmblaCarouselType | undefined; // Bindable ref to the embla API for programmatic control
   }
 
   let {
@@ -37,6 +38,7 @@
     topPadding = 0,
     preservePosition = false,
     storageKey = undefined,
+    emblaApiRef = $bindable(undefined),
   }: Props = $props();
 
   // Embla state
@@ -81,6 +83,7 @@
   // Embla initialization
   function onEmblaInit(event: CustomEvent<EmblaCarouselType>) {
     emblaApi = event.detail;
+    emblaApiRef = emblaApi; // Expose to parent via bindable prop
 
     // Set up event listeners
     emblaApi.on("select", onSelect);

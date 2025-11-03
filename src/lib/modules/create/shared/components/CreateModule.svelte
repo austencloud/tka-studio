@@ -104,7 +104,13 @@
 
   // Guided mode confirmation dialog state
   let showGuidedConfirm = $state(false);
-  let guidedConfirmResolve: ((confirmed: boolean) => void) | null = $state(null);
+  let guidedConfirmResolve: ((confirmed: boolean) => void) | null =
+    $state(null);
+
+  // Exit Guided mode confirmation dialog state
+  let showExitGuidedConfirm = $state(false);
+  let exitGuidedConfirmResolve: ((confirmed: boolean) => void) | null =
+    $state(null);
 
   // Cleanup functions for effects
   let effectCleanups: (() => void)[] = [];
@@ -154,7 +160,10 @@
     let displayText = "";
 
     // In gestural (hand path) mode, show contextual message instead of word
-    if (navigationState.activeTab === "gestural" && CreateModuleState.handPathCoordinator) {
+    if (
+      navigationState.activeTab === "gestural" &&
+      CreateModuleState.handPathCoordinator
+    ) {
       const coordinator = CreateModuleState.handPathCoordinator;
 
       if (!coordinator.isStarted) {
@@ -280,6 +289,9 @@
         navigationState
       );
 
+      // Set the constructTabState reference in CreateModuleState
+      CreateModuleState.setConstructTabState(constructTabState);
+
       // Initialize services
       await ServiceInitializer.initializeServices(services);
 
@@ -313,6 +325,14 @@
         return new Promise<boolean>((resolve) => {
           showGuidedConfirm = true;
           guidedConfirmResolve = resolve;
+        });
+      });
+
+      // Set up exit guided mode confirmation callback
+      CreateModuleState.setConfirmExitGuidedCallback(async () => {
+        return new Promise<boolean>((resolve) => {
+          showExitGuidedConfirm = true;
+          exitGuidedConfirmResolve = resolve;
         });
       });
 
@@ -438,6 +458,23 @@
       guidedConfirmResolve = null;
     }
   }
+
+  // Exit Guided mode confirmation handlers
+  function handleConfirmExitGuided() {
+    showExitGuidedConfirm = false;
+    if (exitGuidedConfirmResolve) {
+      exitGuidedConfirmResolve(true);
+      exitGuidedConfirmResolve = null;
+    }
+  }
+
+  function handleCancelExitGuided() {
+    showExitGuidedConfirm = false;
+    if (exitGuidedConfirmResolve) {
+      exitGuidedConfirmResolve(false);
+      exitGuidedConfirmResolve = null;
+    }
+  }
 </script>
 
 {#if error}
@@ -450,7 +487,9 @@
   >
     <!-- Hand Path Settings View (Pre-Start State) -->
     {#if navigationState.activeTab === "gestural" && !CreateModuleState?.handPathCoordinator?.isStarted}
-      <HandPathSettingsView handPathCoordinator={CreateModuleState.handPathCoordinator} />
+      <HandPathSettingsView
+        handPathCoordinator={CreateModuleState.handPathCoordinator}
+      />
     {:else}
       <!-- Standard Workspace/Tool Panel Layout -->
       <div
@@ -460,45 +499,46 @@
         <!-- Workspace Panel -->
         <div
           class="workspace-container"
-          class:hidden-workspace={navigationState.activeTab === "gestural" && !CreateModuleState?.handPathCoordinator?.isStarted}
+          class:hidden-workspace={navigationState.activeTab === "gestural" &&
+            !CreateModuleState?.handPathCoordinator?.isStarted}
         >
-        <WorkspacePanel
-          sequenceState={CreateModuleState.sequenceState}
-          createModuleState={CreateModuleState}
-          practiceBeatIndex={panelState.practiceBeatIndex}
-          {animatingBeatNumber}
-          isMobilePortrait={services.layoutService.isMobilePortrait()}
-          onPlayAnimation={handlePlayAnimation}
-          animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
-        />
+          <WorkspacePanel
+            sequenceState={CreateModuleState.sequenceState}
+            createModuleState={CreateModuleState}
+            practiceBeatIndex={panelState.practiceBeatIndex}
+            {animatingBeatNumber}
+            isMobilePortrait={services.layoutService.isMobilePortrait()}
+            onPlayAnimation={handlePlayAnimation}
+            animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
+          />
 
-        <!-- Hide ButtonPanel when in gestural (hand path) mode -->
-        {#if navigationState.activeTab !== "gestural"}
-          <div bind:this={buttonPanelElement}>
-            <ButtonPanel
-              {CreateModuleState}
-              showPlayButton={canShowActionButtons()}
-              onPlayAnimation={handlePlayAnimation}
-              isAnimating={panelState.isAnimationPanelOpen}
-              canClearSequence={canClearSequence()}
-              onClearSequence={handleClearSequence}
-              onRemoveBeat={handleRemoveBeat}
-              showShareButton={canShowActionButtons()}
-              onShare={handleOpenSharePanel}
-              isShareOpen={panelState.isSharePanelOpen}
-              showSequenceActions={canShowActionButtons()}
-              onSequenceActionsClick={handleOpenSequenceActions}
-            />
-          </div>
-        {/if}
+          <!-- Hide ButtonPanel when in gestural (hand path) mode -->
+          {#if navigationState.activeTab !== "gestural"}
+            <div bind:this={buttonPanelElement}>
+              <ButtonPanel
+                {CreateModuleState}
+                showPlayButton={canShowActionButtons()}
+                onPlayAnimation={handlePlayAnimation}
+                isAnimating={panelState.isAnimationPanelOpen}
+                canClearSequence={canClearSequence()}
+                onClearSequence={handleClearSequence}
+                onRemoveBeat={handleRemoveBeat}
+                showShareButton={canShowActionButtons()}
+                onShare={handleOpenSharePanel}
+                isShareOpen={panelState.isSharePanelOpen}
+                showSequenceActions={canShowActionButtons()}
+                onSequenceActionsClick={handleOpenSequenceActions}
+              />
+            </div>
+          {/if}
 
-        <!-- Animation Coordinator -->
-        <AnimationCoordinator
-          {CreateModuleState}
-          {panelState}
-          bind:animatingBeatNumber
-        />
-      </div>
+          <!-- Animation Coordinator -->
+          <AnimationCoordinator
+            {CreateModuleState}
+            {panelState}
+            bind:animatingBeatNumber
+          />
+        </div>
 
         <!-- Tool Panel -->
         <div class="tool-panel-container" bind:this={toolPanelElement}>
@@ -554,12 +594,24 @@
   <ConfirmDialog
     isOpen={showGuidedConfirm}
     title="Switch to Guided Mode?"
-    message="Switching to Guided Mode will clear your current sequence. This cannot be undone. Are you sure you want to continue?"
+    message="Switching to Guided Mode will clear your current sequence. You can undo this action if needed."
     confirmText="Clear and Continue"
     cancelText="Cancel"
     variant="warning"
     onConfirm={handleConfirmGuidedSwitch}
     onCancel={handleCancelGuidedSwitch}
+  />
+
+  <!-- Exit Guided Mode Confirmation Dialog -->
+  <ConfirmDialog
+    isOpen={showExitGuidedConfirm}
+    title="Exit Guided Mode?"
+    message="Your Guided Builder progress will be lost. You can undo this action if needed."
+    confirmText="Exit"
+    cancelText="Cancel"
+    variant="warning"
+    onConfirm={handleConfirmExitGuided}
+    onCancel={handleCancelExitGuided}
   />
 {/if}
 
@@ -616,8 +668,9 @@
 
   /* Smooth transition for workspace reveal */
   .workspace-container {
-    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
-                transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .tool-panel-container {

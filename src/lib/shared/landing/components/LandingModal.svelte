@@ -19,6 +19,8 @@
   import { browser } from "$app/environment";
   import PrimaryNavigation from "../../navigation/components/PrimaryNavigation.svelte";
   import type { Section } from "../../navigation/domain/types";
+  import { HorizontalSwipeContainer } from "$shared";
+  import type EmblaCarouselType from "embla-carousel";
 
   // Whether to show the close button (only show if manually opened)
   const showCloseButton = $derived(!landingUIState.isAutoOpened);
@@ -59,8 +61,22 @@
     },
   ];
 
+  // Carousel state
+  let currentPanelIndex = $state(0);
+  let emblaApi: EmblaCarouselType | undefined = $state(undefined);
+
+  // Handle tab change from PrimaryNavigation - scroll carousel to panel
   function handleTabChange(tabId: string) {
-    activeTab = tabId as LandingTab;
+    const index = landingSections.findIndex(s => s.id === tabId);
+    if (index !== -1 && emblaApi) {
+      emblaApi.scrollTo(index);
+    }
+  }
+
+  // Handle panel change from carousel - update activeTab
+  function handlePanelChange(panelIndex: number) {
+    currentPanelIndex = panelIndex;
+    activeTab = landingSections[panelIndex].id as LandingTab;
   }
 
   // Handle escape key (only allow if not auto-opened)
@@ -157,113 +173,134 @@
         <p class="hero-subtitle">{LANDING_TEXT.hero.subtitle}</p>
       </section>
 
-      <!-- Tab Content -->
+      <!-- Tab Content with Swipe Carousel -->
       <div class="tab-content">
-        {#if activeTab === "resources"}
-          <div class="tab-panel" role="tabpanel">
-            <h2 class="panel-title">{LANDING_TEXT.resources.subtitle}</h2>
-            <div class="resources-grid">
-              {#each RESOURCES as resource}
-                <a
-                  href={resource.url}
-                  target={resource.type === "internal" ? "_self" : "_blank"}
-                  rel={resource.type !== "internal" ? "noopener noreferrer" : ""}
-                  class="resource-card"
-                  onclick={() => handleLinkClick(resource.url, resource.type)}
-                >
-                  <div class="resource-icon">
-                    {#if resource.icon.startsWith('/')}
-                      <img src={resource.icon} alt={resource.title} />
-                    {:else}
-                      <i class={resource.icon}></i>
-                    {/if}
-                  </div>
-                  <div class="resource-content">
-                    <h3>{resource.title}</h3>
-                    <p>{resource.description}</p>
-                  </div>
-                  <i class="fas fa-arrow-right resource-arrow"></i>
-                </a>
-              {/each}
+        <HorizontalSwipeContainer
+          panels={landingSections}
+          initialPanelIndex={0}
+          onPanelChange={handlePanelChange}
+          showArrows={false}
+          showIndicators={false}
+          height="100%"
+          width="100%"
+          bind:emblaApiRef={emblaApi}
+        >
+          <!-- Resources Panel -->
+          <div class="carousel-panel">
+            <div class="tab-panel" role="tabpanel">
+              <h2 class="panel-title">{LANDING_TEXT.resources.subtitle}</h2>
+              <div class="resources-grid">
+                {#each RESOURCES as resource}
+                  <a
+                    href={resource.url}
+                    target={resource.type === "internal" ? "_self" : "_blank"}
+                    rel={resource.type !== "internal" ? "noopener noreferrer" : ""}
+                    class="resource-card"
+                    onclick={() => handleLinkClick(resource.url, resource.type)}
+                  >
+                    <div class="resource-icon">
+                      {#if resource.icon.startsWith('/')}
+                        <img src={resource.icon} alt={resource.title} />
+                      {:else}
+                        <i class={resource.icon}></i>
+                      {/if}
+                    </div>
+                    <div class="resource-content">
+                      <h3>{resource.title}</h3>
+                      <p>{resource.description}</p>
+                    </div>
+                    <i class="fas fa-arrow-right resource-arrow"></i>
+                  </a>
+                {/each}
+              </div>
             </div>
           </div>
-        {:else if activeTab === "community"}
-          <div class="tab-panel" role="tabpanel">
-            <h2 class="panel-title">{LANDING_TEXT.community.subtitle}</h2>
-            <div class="social-grid">
-              {#each SOCIAL_LINKS as social}
+
+          <!-- Community Panel -->
+          <div class="carousel-panel">
+            <div class="tab-panel" role="tabpanel">
+              <h2 class="panel-title">{LANDING_TEXT.community.subtitle}</h2>
+              <div class="social-grid">
+                {#each SOCIAL_LINKS as social}
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social-button"
+                    style="--brand-color: {social.color}"
+                    title={social.name}
+                  >
+                    <i class={social.icon}></i>
+                    <span>{social.name}</span>
+                  </a>
+                {/each}
+              </div>
+              <div class="contact-section">
+                <h3 class="contact-title">
+                  <i class="fas fa-envelope"></i>
+                  {LANDING_TEXT.contact.title}
+                </h3>
+                <a href="mailto:{CONTACT_EMAIL}" class="contact-email">
+                  {CONTACT_EMAIL}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Support Panel -->
+          <div class="carousel-panel">
+            <div class="tab-panel" role="tabpanel">
+              <h2 class="panel-title">{LANDING_TEXT.support.subtitle}</h2>
+              <p class="support-message">{LANDING_TEXT.support.message}</p>
+              <div class="support-grid">
+                {#each SUPPORT_OPTIONS as option}
+                  <a
+                    href={option.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="support-button"
+                    style="--brand-color: {option.color}"
+                  >
+                    <i class={option.icon}></i>
+                    <span>Donate via {option.name}</span>
+                  </a>
+                {/each}
+              </div>
+            </div>
+          </div>
+
+          <!-- Dev Panel -->
+          <div class="carousel-panel">
+            <div class="tab-panel" role="tabpanel">
+              <h2 class="panel-title">{LANDING_TEXT.dev.subtitle}</h2>
+              <p class="support-message">{LANDING_TEXT.dev.message}</p>
+              <div class="dev-links">
                 <a
-                  href={social.url}
+                  href="https://github.com/austencloud/tka-sequence-constructor"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="social-button"
-                  style="--brand-color: {social.color}"
-                  title={social.name}
+                  class="dev-card"
                 >
-                  <i class={social.icon}></i>
-                  <span>{social.name}</span>
+                  <i class="fab fa-github"></i>
+                  <div>
+                    <h3>View on GitHub</h3>
+                    <p>Explore the source code and contribute</p>
+                  </div>
                 </a>
-              {/each}
-            </div>
-            <div class="contact-section">
-              <h3 class="contact-title">
-                <i class="fas fa-envelope"></i>
-                {LANDING_TEXT.contact.title}
-              </h3>
-              <a href="mailto:{CONTACT_EMAIL}" class="contact-email">
-                {CONTACT_EMAIL}
-              </a>
-            </div>
-          </div>
-        {:else if activeTab === "support"}
-          <div class="tab-panel" role="tabpanel">
-            <h2 class="panel-title">{LANDING_TEXT.support.subtitle}</h2>
-            <p class="support-message">{LANDING_TEXT.support.message}</p>
-            <div class="support-grid">
-              {#each SUPPORT_OPTIONS as option}
                 <a
-                  href={option.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="support-button"
-                  style="--brand-color: {option.color}"
+                  href="mailto:tkaflowarts@gmail.com?subject=Development Collaboration"
+                  class="dev-card"
                 >
-                  <i class={option.icon}></i>
-                  <span>Donate via {option.name}</span>
+                  <i class="fas fa-envelope"></i>
+                  <div>
+                    <h3>Contact for Dev Work</h3>
+                    <p>Want to collaborate or contribute? Get in touch</p>
+                  </div>
                 </a>
-              {/each}
+              </div>
             </div>
           </div>
-        {:else if activeTab === "dev"}
-          <div class="tab-panel" role="tabpanel">
-            <h2 class="panel-title">{LANDING_TEXT.dev.subtitle}</h2>
-            <p class="support-message">{LANDING_TEXT.dev.message}</p>
-            <div class="dev-links">
-              <a
-                href="https://github.com/austencloud/tka-sequence-constructor"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="dev-card"
-              >
-                <i class="fab fa-github"></i>
-                <div>
-                  <h3>View on GitHub</h3>
-                  <p>Explore the source code and contribute</p>
-                </div>
-              </a>
-              <a
-                href="mailto:tkaflowarts@gmail.com?subject=Development Collaboration"
-                class="dev-card"
-              >
-                <i class="fas fa-envelope"></i>
-                <div>
-                  <h3>Contact for Dev Work</h3>
-                  <p>Want to collaborate or contribute? Get in touch</p>
-                </div>
-              </a>
-            </div>
-          </div>
-        {/if}
+        </HorizontalSwipeContainer>
       </div>
 
       <!-- CTA Button (Always Visible) -->
@@ -597,6 +634,14 @@
     display: flex;
     flex-direction: column;
     overflow: hidden;
+  }
+
+  /* Carousel panel wrapper - ensures all panels are same size */
+  .tab-content :global(.carousel-panel) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .tab-panel {

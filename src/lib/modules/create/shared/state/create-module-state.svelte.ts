@@ -14,11 +14,17 @@
 import type { BuildModeId, BeatData, SequenceData } from "$shared";
 import { resolve, TYPES } from "$shared";
 import { navigationState } from "$shared/navigation/state/navigation-state.svelte";
-import type { ISequencePersistenceService, ISequenceService } from "../services/contracts";
+import type {
+  ISequencePersistenceService,
+  ISequenceService,
+} from "../services/contracts";
 import type { ISequenceStatisticsService } from "../services/contracts/ISequenceStatisticsService";
 import type { ISequenceTransformationService } from "../services/contracts/ISequenceTransformationService";
 import type { ISequenceValidationService } from "../services/contracts/ISequenceValidationService";
-import type { IUndoService, UndoMetadata } from "../services/contracts/IUndoService";
+import type {
+  IUndoService,
+  UndoMetadata,
+} from "../services/contracts/IUndoService";
 import { UndoOperationType } from "../services/contracts/IUndoService";
 import { createSequenceState } from "./SequenceStateOrchestrator.svelte";
 import { createHandPathCoordinator } from "./hand-path-coordinator.svelte";
@@ -63,7 +69,7 @@ export function createCreateModuleState(
   let isNavigatingBack = $state(false); // Track if currently in back navigation to prevent sync loops
 
   // Track the last content tab (Generate or Construct) before going to Animate
-  let lastContentTab = $state<'generate' | 'construct'>('construct'); // Default to construct
+  let lastContentTab = $state<"generate" | "construct">("construct"); // Default to construct
 
   // Navigation history tracking
   let navigationHistory = $state<NavigationHistoryEntry[]>([]);
@@ -97,16 +103,28 @@ export function createCreateModuleState(
   // Callback for confirming switch to Guided mode (returns promise resolving to boolean)
   let confirmGuidedSwitchCallback: (() => Promise<boolean>) | null = null;
 
+  // Callback for confirming exit from Guided mode (returns promise resolving to boolean)
+  let confirmExitGuidedCallback: (() => Promise<boolean>) | null = null;
+
   // Callback for clearing sequence completely (set by construct tab state)
   let clearSequenceCompletelyCallback: (() => Promise<void>) | null = null;
+
+  // Reference to construct tab state (set after initialization)
+  let constructTabState: any = null;
 
   // Shared sub-states
   const sequenceState = createSequenceState({
     sequenceService,
     sequencePersistenceService: sequencePersistenceService!,
-    sequenceStatisticsService: resolve(TYPES.ISequenceStatisticsService) as ISequenceStatisticsService,
-    sequenceTransformationService: resolve(TYPES.ISequenceTransformationService) as ISequenceTransformationService,
-    sequenceValidationService: resolve(TYPES.ISequenceValidationService) as ISequenceValidationService,
+    sequenceStatisticsService: resolve(
+      TYPES.ISequenceStatisticsService
+    ) as ISequenceStatisticsService,
+    sequenceTransformationService: resolve(
+      TYPES.ISequenceTransformationService
+    ) as ISequenceTransformationService,
+    sequenceValidationService: resolve(
+      TYPES.ISequenceValidationService
+    ) as ISequenceValidationService,
   });
 
   // Hand Path Coordinator for gestural path building
@@ -147,8 +165,12 @@ export function createCreateModuleState(
   }
 
   async function setactiveToolPanel(panel: BuildModeId) {
-    // Check if switching to Guided mode with existing sequence
-    if (panel === 'guided' && sequenceState.currentSequence && sequenceState.currentSequence.beats.length > 0) {
+    // Check if switching TO Guided mode with existing sequence
+    if (
+      panel === "guided" &&
+      sequenceState.currentSequence &&
+      sequenceState.currentSequence.beats.length > 0
+    ) {
       // Ask for confirmation via callback
       if (confirmGuidedSwitchCallback) {
         const confirmed = await confirmGuidedSwitchCallback();
@@ -163,6 +185,27 @@ export function createCreateModuleState(
         } else {
           // Fallback to direct sequence state clear if callback not available
           sequenceState.clearSequenceCompletely();
+        }
+      }
+    }
+
+    // Check if switching FROM Guided mode with work in progress
+    if (activeSection === "guided" && panel !== "guided") {
+      // Check if sequential builder has progress
+      const sequentialState = constructTabState?.sequentialState;
+      if (sequentialState) {
+        const hasProgress =
+          sequentialState.blueSequence.length > 0 ||
+          sequentialState.redSequence.length > 0;
+
+        if (hasProgress && confirmExitGuidedCallback) {
+          const confirmed = await confirmExitGuidedCallback();
+          if (!confirmed) {
+            // User cancelled - don't switch
+            return;
+          }
+          // User confirmed - reset sequential builder state
+          sequentialState.reset();
         }
       }
     }
@@ -183,11 +226,20 @@ export function createCreateModuleState(
    * @param panel - The panel to activate
    * @param addToHistory - Whether to add this navigation to history
    */
-  function setactiveToolPanelInternal(panel: BuildModeId, addToHistory: boolean = true) {
-    console.log("🔄 createModuleState.setactiveToolPanelInternal called with:", { panel, currentActiveSection: activeSection });
+  function setactiveToolPanelInternal(
+    panel: BuildModeId,
+    addToHistory: boolean = true
+  ) {
+    console.log(
+      "🔄 createModuleState.setactiveToolPanelInternal called with:",
+      { panel, currentActiveSection: activeSection }
+    );
 
     // Track the last content tab (generate or construct) BEFORE navigating away from it
-    if ((activeSection === 'generate' || activeSection === 'construct') && activeSection !== panel) {
+    if (
+      (activeSection === "generate" || activeSection === "construct") &&
+      activeSection !== panel
+    ) {
       lastContentTab = activeSection;
     }
 
@@ -205,7 +257,10 @@ export function createCreateModuleState(
     }
 
     activeSection = panel;
-    console.log("✅ createModuleState.activeSection updated to:", activeSection);
+    console.log(
+      "✅ createModuleState.activeSection updated to:",
+      activeSection
+    );
     // Save the active tab to persistence
     saveCurrentState();
   }
@@ -282,20 +337,28 @@ export function createCreateModuleState(
    * OPTIMIZED: Defers expensive deep copy to microtask to avoid blocking UI
    */
   function pushUndoSnapshot(
-    type: 'REMOVE_BEATS' | 'CLEAR_SEQUENCE' | 'ADD_BEAT' | 'SELECT_START_POSITION',
+    type:
+      | "REMOVE_BEATS"
+      | "CLEAR_SEQUENCE"
+      | "ADD_BEAT"
+      | "SELECT_START_POSITION",
     metadata?: UndoMetadata
   ) {
     // For start position selection, allow null sequence
     // For other operations, require a sequence
-    if (!sequenceState.currentSequence && type !== 'SELECT_START_POSITION') {
+    if (!sequenceState.currentSequence && type !== "SELECT_START_POSITION") {
       return;
     }
 
     // Map old type strings to new UndoOperationType enum
-    const operationType = type === 'SELECT_START_POSITION' ? UndoOperationType.SELECT_START_POSITION :
-                          type === 'ADD_BEAT' ? UndoOperationType.ADD_BEAT :
-                          type === 'REMOVE_BEATS' ? UndoOperationType.REMOVE_BEATS :
-                          UndoOperationType.CLEAR_SEQUENCE;
+    const operationType =
+      type === "SELECT_START_POSITION"
+        ? UndoOperationType.SELECT_START_POSITION
+        : type === "ADD_BEAT"
+          ? UndoOperationType.ADD_BEAT
+          : type === "REMOVE_BEATS"
+            ? UndoOperationType.REMOVE_BEATS
+            : UndoOperationType.CLEAR_SEQUENCE;
 
     // 🚀 PERFORMANCE OPTIMIZATION: Capture references immediately, defer deep copy
     // This prevents blocking the main thread during beat addition
@@ -308,18 +371,21 @@ export function createCreateModuleState(
     // This allows the UI to update immediately while we snapshot in the background
     queueMicrotask(() => {
       // Create a deep copy of the sequence to preserve state (if it exists)
-      const sequenceCopy: SequenceData | null = currentSequenceRef ? {
-        ...currentSequenceRef,
-        beats: [...currentSequenceRef.beats.map(beat => ({ ...beat }))]
-      } : null;
+      const sequenceCopy: SequenceData | null = currentSequenceRef
+        ? {
+            ...currentSequenceRef,
+            beats: [...currentSequenceRef.beats.map((beat) => ({ ...beat }))],
+          }
+        : null;
 
       // Create state snapshot
       const beforeState = {
         sequence: sequenceCopy,
         selectedBeatNumber: selectedBeatNumberRef,
         activeSection: activeSectionRef,
-        shouldShowStartPositionPicker: type === 'SELECT_START_POSITION' ? true : false,
-        timestamp: timestampRef
+        shouldShowStartPositionPicker:
+          type === "SELECT_START_POSITION" ? true : false,
+        timestamp: timestampRef,
       };
 
       // Push to undo service
@@ -397,7 +463,10 @@ export function createCreateModuleState(
 
           // Restore the active tab
           if (lastEntry.beforeState.activeSection !== null) {
-            setactiveToolPanelInternal(lastEntry.beforeState.activeSection, false);
+            setactiveToolPanelInternal(
+              lastEntry.beforeState.activeSection,
+              false
+            );
           }
         }, fadeAnimationDuration);
 
@@ -417,7 +486,7 @@ export function createCreateModuleState(
 
     // Restore the active tab (important for clear sequence undo)
     if (lastEntry.beforeState.activeSection !== null) {
-      setactiveToolPanelInternal(lastEntry.beforeState.activeSection, false);  // Don't add to navigation history
+      setactiveToolPanelInternal(lastEntry.beforeState.activeSection, false); // Don't add to navigation history
     }
 
     return true;
@@ -452,10 +521,24 @@ export function createCreateModuleState(
   }
 
   /**
+   * Set callback for confirming exit from Guided mode (called by CreateModule)
+   */
+  function setConfirmExitGuidedCallback(callback: () => Promise<boolean>) {
+    confirmExitGuidedCallback = callback;
+  }
+
+  /**
    * Set callback for clearing sequence completely (called by CreateModule)
    */
   function setClearSequenceCompletelyCallback(callback: () => Promise<void>) {
     clearSequenceCompletelyCallback = callback;
+  }
+
+  /**
+   * Set reference to construct tab state (called by CreateModule after initialization)
+   */
+  function setConstructTabState(state: any) {
+    constructTabState = state;
   }
 
   // ============================================================================
@@ -492,7 +575,10 @@ export function createCreateModuleState(
 
       isPersistenceInitialized = true;
     } catch (error) {
-      console.error("❌ CreateModuleState: Failed to initialize persistence:", error);
+      console.error(
+        "❌ CreateModuleState: Failed to initialize persistence:",
+        error
+      );
       isPersistenceInitialized = true; // Still mark as initialized to prevent blocking
     }
   }
@@ -505,7 +591,10 @@ export function createCreateModuleState(
         await sequenceState.saveCurrentState(activeSection);
       }
     } catch (error) {
-      console.error("❌ CreateModuleState: Failed to save current state:", error);
+      console.error(
+        "❌ CreateModuleState: Failed to save current state:",
+        error
+      );
     }
   }
 
@@ -609,7 +698,9 @@ export function createCreateModuleState(
     setShowStartPositionPickerCallback,
     setOnUndoingOptionCallback,
     setConfirmGuidedSwitchCallback,
+    setConfirmExitGuidedCallback,
     setClearSequenceCompletelyCallback,
+    setConstructTabState,
 
     // Persistence functions
     initializeWithPersistence,

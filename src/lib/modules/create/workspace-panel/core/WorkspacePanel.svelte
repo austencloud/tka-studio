@@ -13,7 +13,8 @@
   import Toast from "../components/Toast.svelte";
   import SequenceDisplay from "../sequence-display/components/SequenceDisplay.svelte";
   import HandPathWorkspace from "../hand-path/HandPathWorkspace.svelte";
-  import { navigationState } from "$shared";
+  import CreationMethodScreen from "../components/CreationMethodScreen.svelte";
+  import { navigationState, type BuildModeId } from "$shared";
 
   // Services
   let beatOperationsService: IBeatOperationsService | null = null;
@@ -39,7 +40,7 @@
     toolPanelHeight = 0,
 
     // Play animation handler
-    onPlayAnimation
+    onPlayAnimation,
   }: {
     sequenceState?: any; // TODO: Type this properly
     createModuleState?: any; // TODO: Type this properly
@@ -74,12 +75,8 @@
   });
 
   // Multi-select state - use the actual mode from selection state
-  const isMultiSelectMode = $derived(
-    sequenceState?.isMultiSelectMode ?? false
-  );
-  const selectionCount = $derived(
-    sequenceState?.selectionCount ?? 0
-  );
+  const isMultiSelectMode = $derived(sequenceState?.isMultiSelectMode ?? false);
+  const selectionCount = $derived(sequenceState?.selectionCount ?? 0);
   const totalBeats = $derived(
     sequenceState?.currentSequence?.beats?.length ?? 0
   );
@@ -94,6 +91,20 @@
   const currentWord = $derived(() => {
     return sequenceState?.sequenceWord() ?? "";
   });
+
+  // Check if workspace is empty (no beats and no start position)
+  const isWorkspaceEmpty = $derived(() => {
+    if (!sequenceState) return true;
+    const beatCount = sequenceState.beatCount();
+    const hasStartPosition = sequenceState.selectedStartPosition !== null;
+    return beatCount === 0 && !hasStartPosition;
+  });
+
+  // Handle creation method selection
+  function handleMethodSelected(method: BuildModeId) {
+    // Switch to the selected tab
+    navigationState.setActiveTab(method);
+  }
 
   // Handle beat selection (receives beatNumber: 1, 2, 3...)
   function handleBeatSelected(beatNumber: number) {
@@ -125,7 +136,10 @@
     if (!sequenceState) return;
 
     // Only proceed if there's actually a start position selected
-    if (!sequenceState.hasStartPosition || !sequenceState.selectedStartPosition) {
+    if (
+      !sequenceState.hasStartPosition ||
+      !sequenceState.selectedStartPosition
+    ) {
       return;
     }
 
@@ -155,7 +169,7 @@
     if (!result.success) {
       // Show toast error
       toastMessage = result.error ?? null;
-      setTimeout(() => toastMessage = null, 3000);
+      setTimeout(() => (toastMessage = null), 3000);
     }
   }
 
@@ -180,13 +194,15 @@
     } catch (err) {
       console.error("Failed to remove beat", err);
       toastMessage = "Failed to remove beat";
-      setTimeout(() => toastMessage = null, 3000);
+      setTimeout(() => (toastMessage = null), 3000);
     }
   }
 
   // Initialize services on mount
   onMount(() => {
-    beatOperationsService = resolve<IBeatOperationsService>(TYPES.IBeatOperationsService);
+    beatOperationsService = resolve<IBeatOperationsService>(
+      TYPES.IBeatOperationsService
+    );
   });
 </script>
 
@@ -198,60 +214,72 @@
         <HandPathWorkspace
           pathState={createModuleState.handPathCoordinator.pathState}
           isStarted={createModuleState.handPathCoordinator.isStarted}
-          onSegmentComplete={createModuleState.handPathCoordinator.handleSegmentComplete}
-          onAdvancePressed={createModuleState.handPathCoordinator.handleAdvancePressed}
-          onAdvanceReleased={createModuleState.handPathCoordinator.handleAdvanceReleased}
+          onSegmentComplete={createModuleState.handPathCoordinator
+            .handleSegmentComplete}
+          onAdvancePressed={createModuleState.handPathCoordinator
+            .handleAdvancePressed}
+          onAdvanceReleased={createModuleState.handPathCoordinator
+            .handleAdvanceReleased}
         />
       </div>
     </div>
   {:else if navigationState.activeTab !== "gestural"}
     <!-- Standard Sequence Display (not in gestural mode) -->
     <div class="workspace-panel" data-testid="workspace-panel">
-      <div class="sequence-display-container">
-        <SequenceDisplay
-          {sequenceState}
-          currentWord={currentWord()}
-          onBeatSelected={isMultiSelectMode ? handleMultiSelectToggle : handleBeatSelected}
-          onStartPositionSelected={handleStartPositionSelected}
-          onBeatDelete={handleBeatDelete}
-          selectedBeatNumber={localSelectedBeatNumber}
-          practiceBeatNumber={practiceBeatIndex}
-          {isSideBySideLayout}
-          {isMultiSelectMode}
-          selectedBeatNumbers={sequenceState?.selectedBeatNumbers ?? new Set<number>()}
-          onBeatLongPress={handleBeatLongPress}
-          onStartLongPress={() => handleBeatLongPress(0)}
-        />
-      </div>
-
-      <!-- Selection Toolbar (appears in multi-select mode) -->
-      {#if isMultiSelectMode}
-        <div class="selection-toolbar-container">
-          <SelectionToolbar
-            {selectionCount}
-            {totalBeats}
-            onEdit={handleBatchEdit}
-            onCancel={handleExitMultiSelect}
+      {#if isWorkspaceEmpty()}
+        <!-- Creation Method Screen (shown when workspace is empty) -->
+        <CreationMethodScreen onMethodSelected={handleMethodSelected} />
+      {:else}
+        <!-- Sequence Display (shown when workspace has content) -->
+        <div class="sequence-display-container">
+          <SequenceDisplay
+            {sequenceState}
+            currentWord={currentWord()}
+            onBeatSelected={isMultiSelectMode
+              ? handleMultiSelectToggle
+              : handleBeatSelected}
+            onStartPositionSelected={handleStartPositionSelected}
+            onBeatDelete={handleBeatDelete}
+            selectedBeatNumber={localSelectedBeatNumber}
+            practiceBeatNumber={practiceBeatIndex}
+            {isSideBySideLayout}
+            {isMultiSelectMode}
+            selectedBeatNumbers={sequenceState?.selectedBeatNumbers ??
+              new Set<number>()}
+            onBeatLongPress={handleBeatLongPress}
+            onStartLongPress={() => handleBeatLongPress(0)}
           />
         </div>
-      {/if}
 
-      <!-- Toast for validation errors -->
-      <Toast
-        message={toastMessage ?? ""}
-        onDismiss={() => toastMessage = null}
-      />
+        <!-- Selection Toolbar (appears in multi-select mode) -->
+        {#if isMultiSelectMode}
+          <div class="selection-toolbar-container">
+            <SelectionToolbar
+              {selectionCount}
+              {totalBeats}
+              onEdit={handleBatchEdit}
+              onCancel={handleExitMultiSelect}
+            />
+          </div>
+        {/if}
 
-      <!-- Multi-select mode overlay -->
-      {#if isMultiSelectMode}
-        <MultiSelectOverlay onCancel={handleExitMultiSelect} />
+        <!-- Toast for validation errors -->
+        <Toast
+          message={toastMessage ?? ""}
+          onDismiss={() => (toastMessage = null)}
+        />
+
+        <!-- Multi-select mode overlay -->
+        {#if isMultiSelectMode}
+          <MultiSelectOverlay onCancel={handleExitMultiSelect} />
+        {/if}
       {/if}
     </div>
   {/if}
 {:else}
-<div class="workspace-panel loading" data-testid="workspace-panel">
-  <div class="loading-message">Initializing workspace...</div>
-</div>
+  <div class="workspace-panel loading" data-testid="workspace-panel">
+    <div class="loading-message">Initializing workspace...</div>
+  </div>
 {/if}
 
 <style>
