@@ -124,7 +124,11 @@
       "Bash(npm run optimize:svgs:props:*)",
       "Bash(npm run optimize:svgs:arrows:*)",
       "Bash(npm run optimize:svgs:letters:*)",
-      "Bash(timeout 30 npm run build:*)"
+      "Bash(timeout 30 npm run build:*)",
+      "Bash(timeout 45 npm run dev)",
+      "Bash(firebase deploy:*)",
+      "Bash(firebase firestore:rules:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
