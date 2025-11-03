@@ -8,7 +8,10 @@
   import { onMount } from "svelte";
   import { GoogleIcon, FacebookIcon } from "./icons";
   import { GoogleIdentityService } from "$shared/auth";
-  import { PUBLIC_GOOGLE_OAUTH_CLIENT_ID } from "$env/static/public";
+  import { env } from "$env/dynamic/public";
+
+  // Get Google OAuth Client ID from environment (runtime)
+  const PUBLIC_GOOGLE_OAUTH_CLIENT_ID = env.PUBLIC_GOOGLE_OAUTH_CLIENT_ID;
 
   // Props
   let {
@@ -28,6 +31,11 @@
     try {
       console.log("🔐 [SocialAuthCompact] Initializing Google Identity Services...");
       console.log("🔐 [SocialAuthCompact] Client ID:", PUBLIC_GOOGLE_OAUTH_CLIENT_ID);
+
+      if (!PUBLIC_GOOGLE_OAUTH_CLIENT_ID) {
+        console.warn("⚠️ [SocialAuthCompact] Google OAuth Client ID not configured");
+        return;
+      }
 
       googleIdentityService = new GoogleIdentityService(PUBLIC_GOOGLE_OAUTH_CLIENT_ID);
       await googleIdentityService.initialize();
