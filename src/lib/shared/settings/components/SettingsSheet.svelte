@@ -210,28 +210,40 @@
     z-index: 1100;
   }
 
-  /* Container */
+  /* Container - Glass morphism design with high translucency */
   .settings-sheet__container {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 90vh;
     max-height: none;
+    /* Highly translucent glass morphism background */
     background: linear-gradient(
       135deg,
-      rgba(20, 25, 35, 0.98) 0%,
-      rgba(15, 20, 30, 0.95) 100%
+      rgba(15, 20, 30, 0.45) 0%,
+      rgba(10, 15, 25, 0.35) 100%
     );
+    backdrop-filter: blur(32px) saturate(200%);
+    -webkit-backdrop-filter: blur(32px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: none; /* Bottom sheet doesn't need bottom border */
+    box-shadow:
+      0 -8px 32px rgba(0, 0, 0, 0.5),
+      0 -2px 8px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
     overflow: hidden;
   }
 
-  /* Header */
+  /* Header - Enhanced for glass morphism */
   .settings-sheet__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 20px 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     flex-shrink: 0;
   }
 
@@ -283,7 +295,10 @@
   .settings-sheet__sidebar {
     flex-shrink: 0;
     width: 200px;
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     overflow-y: auto;
   }
 
@@ -291,7 +306,7 @@
     flex: 1;
     overflow-y: auto;
     padding: 24px;
-    background: rgba(255, 255, 255, 0.01);
+    background: rgba(0, 0, 0, 0.05);
     /* Smooth fade-slide animation when content changes */
     animation: contentFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
@@ -315,8 +330,10 @@
     justify-content: space-between; /* Changed from flex-end to space-between */
     gap: 12px;
     padding: 16px 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     flex-shrink: 0;
   }
 
@@ -475,10 +492,12 @@
     }
   }
 
-  /* High contrast */
+  /* High contrast - Disable glass morphism for clarity */
   @media (prefers-contrast: high) {
     .settings-sheet__container {
       background: rgba(0, 0, 0, 0.98);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       border: 2px solid white;
     }
 
@@ -486,6 +505,9 @@
     .settings-sheet__sidebar,
     .settings-sheet__footer {
       border-color: white;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: rgba(0, 0, 0, 0.5);
     }
   }
 </style>

@@ -24,6 +24,7 @@
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
   import ConstructTabContent from "../../shared/components/ConstructTabContent.svelte";
   import HandPathToolContent from "../../shared/components/HandPathToolContent.svelte";
+  import { GuidedConstructTab } from "../../construct/sequential-builder";
   import type {
     IAnimationStateRef,
     IToolPanelProps,
@@ -246,7 +247,17 @@
           in:fade={fadeInParams}
           out:fade={fadeOutParams}
         >
-          {#if activeToolPanel === "construct"}
+          {#if activeToolPanel === "guided"}
+            <!-- Guided Construct Tab - Sequential builder (one hand at a time) -->
+            <GuidedConstructTab
+              onSequenceUpdate={(sequence) => {
+                createModuleState.sequenceState.replaceSequence(sequence);
+              }}
+              onSequenceComplete={(sequence) => {
+                createModuleState.sequenceState.replaceSequence(sequence);
+              }}
+            />
+          {:else if activeToolPanel === "construct"}
             {#if isPickerStateLoading}
               <!-- Loading state while determining which picker to show -->
               <div class="picker-loading">
@@ -281,16 +292,6 @@
                 handPathCoordinator={createModuleState.handPathCoordinator}
               />
             {/if}
-          {:else if activeToolPanel === "one-handed"}
-            <!-- One-Handed Builder: Coming Soon -->
-            <div class="coming-soon-panel">
-              <div class="coming-soon-icon">
-                <i class="fas fa-hand-paper"></i>
-              </div>
-              <h3>One-Handed Builder</h3>
-              <p>Select red motions, then blue motions separately</p>
-              <p class="coming-soon-label">Coming Soon</p>
-            </div>
           {/if}
         </div>
       {/key}

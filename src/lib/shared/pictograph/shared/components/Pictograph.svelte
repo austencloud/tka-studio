@@ -22,10 +22,12 @@
     pictographData = null,
     disableContentTransitions = false,
     arrowsClickable = false,
+    visibleHand = null,
   } = $props<{
     pictographData?: (BeatData | PictographData) | null;
     disableContentTransitions?: boolean;
     arrowsClickable?: boolean; // Enable arrow selection for adjustment
+    visibleHand?: 'blue' | 'red' | null; // Show only one hand's prop/arrow (for Guided Construct mode)
   }>();
 
   // Extract beat context from pictographData (if it's BeatData)
@@ -166,6 +168,17 @@
   // Standard pictograph viewBox
   const viewBox = "0 0 950 950";
 
+  // Filter motions based on visibleHand prop (for Guided Construct mode)
+  const filteredMotionsToRender = $derived(() => {
+    if (!visibleHand) {
+      // Show both hands (default behavior)
+      return pictographState.motionsToRender;
+    }
+
+    // Show only the specified hand's motion
+    return pictographState.motionsToRender.filter(({ color }) => color === visibleHand);
+  });
+
   // =============================================================================
   // EVENT HANDLERS
   // =============================================================================
@@ -250,7 +263,7 @@
         <!-- No transitions - render content directly -->
         <g class="pictograph-elements">
           <!-- Props (rendered first so arrows appear on top) -->
-          {#each pictographState.motionsToRender as { color, motionData } (color)}
+          {#each filteredMotionsToRender() as { color, motionData } (color)}
             {#if pictographState.effectivePictographData && pictographState.propAssets[color] && pictographState.propPositions[color]}
               <PropSvg
                 {motionData}
@@ -262,7 +275,7 @@
           {/each}
 
           <!-- Arrows (rendered after props) -->
-          {#each pictographState.motionsToRender as { color, motionData } (color)}
+          {#each filteredMotionsToRender() as { color, motionData } (color)}
             {#if pictographState.effectivePictographData && pictographState.arrowAssets[color] && pictographState.arrowPositions[color]}
               <ArrowSvg
                 {motionData}
@@ -309,7 +322,7 @@
             out:pictographFadeOut
           >
             <!-- Props (rendered first so arrows appear on top) -->
-            {#each pictographState.motionsToRender as { color, motionData } (color)}
+            {#each filteredMotionsToRender() as { color, motionData } (color)}
               {#if pictographState.effectivePictographData && pictographState.propAssets[color] && pictographState.propPositions[color]}
                 <PropSvg
                   {motionData}
@@ -321,7 +334,7 @@
             {/each}
 
             <!-- Arrows (rendered after props) -->
-            {#each pictographState.motionsToRender as { color, motionData } (color)}
+            {#each filteredMotionsToRender() as { color, motionData } (color)}
               {#if pictographState.effectivePictographData && pictographState.arrowAssets[color] && pictographState.arrowPositions[color]}
                 <ArrowSvg
                   {motionData}

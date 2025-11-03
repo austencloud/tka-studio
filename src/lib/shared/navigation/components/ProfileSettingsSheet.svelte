@@ -32,7 +32,7 @@
   import AccountTab from "./profile-settings/AccountTab.svelte";
   import PersonalTab from "./profile-settings/PersonalTab.svelte";
   import SubscriptionTab from "./profile-settings/SubscriptionTab.svelte";
-  import DeveloperTab from "./profile-settings/DeveloperTab.svelte";
+  import AchievementsTab from "./profile-settings/AchievementsTab.svelte";
 
   // Props
   let { isOpen = false, onClose } = $props<{
@@ -80,7 +80,7 @@
       const tabParam = urlParams.get("tab");
       if (
         tabParam &&
-        ["personal", "security", "subscription", "developer"].includes(tabParam)
+        ["personal", "security", "subscription", "achievements"].includes(tabParam)
       ) {
         uiState.activeTab = tabParam as import("../state/profile-settings-state.svelte").SettingsTab;
       }
@@ -160,7 +160,7 @@
         "personal",
         "security",
         "subscription",
-        "developer",
+        "achievements",
       ];
       const currentIndex = tabs.indexOf(uiState.activeTab);
       const prevTab = tabs[currentIndex - 1];
@@ -190,7 +190,7 @@
         "personal",
         "security",
         "subscription",
-        "developer",
+        "achievements",
       ];
       const currentIndex = tabs.indexOf(tabName);
       let newIndex: number;
@@ -384,7 +384,7 @@
   {isOpen}
   labelledBy="profile-settings-title"
   on:close={onClose}
-  class="profile-settings-sheet"
+  class="profile-settings-sheet profile-settings-sheet--full-height"
   backdropClass="profile-settings-sheet__backdrop"
 >
   <div class="container">
@@ -460,21 +460,21 @@
           Subscription
         </button>
         <button
-          id="developer-tab"
+          id="achievements-tab"
           class="tab"
-          class:active={uiState.activeTab === "developer"}
+          class:active={uiState.activeTab === "achievements"}
           role="tab"
-          aria-selected={uiState.activeTab === "developer"}
-          aria-controls="developer-panel"
-          tabindex={uiState.activeTab === "developer" ? 0 : -1}
+          aria-selected={uiState.activeTab === "achievements"}
+          aria-controls="achievements-panel"
+          tabindex={uiState.activeTab === "achievements" ? 0 : -1}
           onclick={() => {
             hapticService?.trigger("selection");
-            updateTabTransition("developer");
+            updateTabTransition("achievements");
           }}
-          onkeydown={(e) => handleTabKeydown(e, "developer")}
+          onkeydown={(e) => handleTabKeydown(e, "achievements")}
         >
-          <i class="fas fa-wrench" aria-hidden="true"></i>
-          Developer
+          <i class="fas fa-trophy" aria-hidden="true"></i>
+          Achievements
         </button>
       </div>
 
@@ -509,6 +509,8 @@
                   onSave={handleSavePersonalInfo}
                   onPhotoUpload={handlePhotoUpload}
                   onChangeEmail={handleChangeEmail}
+                  onSignOut={handleSignOut}
+                  {signingOut}
                   {hapticService}
                 />
               </div>
@@ -534,31 +536,19 @@
               >
                 <SubscriptionTab {hapticService} />
               </div>
-            {:else if uiState.activeTab === "developer"}
+            {:else if uiState.activeTab === "achievements"}
               <div
-                id="developer-panel"
+                id="achievements-panel"
                 role="tabpanel"
-                aria-labelledby="developer-tab"
+                aria-labelledby="achievements-tab"
                 tabindex="0"
               >
-                <DeveloperTab />
+                <AchievementsTab />
               </div>
             {/if}
           </div>
         {/key}
       </div>
-
-      <!-- Footer with sign out -->
-      <footer class="footer">
-        <button
-          class="sign-out-button"
-          onclick={handleSignOut}
-          disabled={signingOut}
-        >
-          <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
-          {signingOut ? "Signing out..." : "Sign Out"}
-        </button>
-      </footer>
     {:else}
       <!-- Logged out state -->
       <div class="logged-out">
@@ -598,13 +588,19 @@
     z-index: 1200; /* Higher than ProfileSheet (1100) */
   }
 
-  /* Container - 80vh for better proportions */
+  /* Full height panel */
+  :global(.profile-settings-sheet--full-height) {
+    height: 100vh !important;
+    max-height: 100vh !important;
+  }
+
+  /* Container - Natural sizing for better scrolling */
   .container {
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 80vh;
-    max-height: 80vh;
+    height: 100%;
+    max-height: 100%;
     background: linear-gradient(
       135deg,
       rgba(20, 25, 35, 0.98) 0%,
@@ -670,13 +666,13 @@
     display: flex;
     align-items: center;
     gap: clamp(3px, 1cqi, 8px);
-    padding: clamp(8px, 2cqi, 16px) clamp(4px, 2cqi, 24px);
-    min-height: 48px; /* WCAG minimum touch target */
+    padding: clamp(12px, 2cqi, 18px) clamp(6px, 2cqi, 24px);
+    min-height: 60px; /* Increased touch target for better accessibility */
     background: transparent;
     border: none;
     border-bottom: 3px solid transparent;
     color: rgba(255, 255, 255, 0.7);
-    font-size: clamp(10px, 2.5cqi, 15px);
+    font-size: clamp(11px, 2.5cqi, 16px);
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -710,13 +706,14 @@
 
     .tab {
       flex-direction: column;
-      padding: 8px 2px;
-      gap: 2px;
-      font-size: 9px;
+      padding: 10px 2px;
+      gap: 3px;
+      font-size: 10px;
+      min-height: 60px; /* Maintain larger touch target */
     }
 
     .tab i {
-      font-size: 14px;
+      font-size: 16px;
     }
   }
 
@@ -740,56 +737,6 @@
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
-  }
-
-  /* Footer */
-  .footer {
-    padding: 16px 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.2);
-    flex-shrink: 0;
-  }
-
-  .sign-out-button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 14px 24px;
-    min-height: 48px;
-    border-radius: 12px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: 2px solid rgba(239, 68, 68, 0.3);
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-  }
-
-  .sign-out-button i {
-    font-size: 16px;
-  }
-
-  .sign-out-button:hover:not(:disabled) {
-    background: rgba(239, 68, 68, 0.15);
-    border-color: rgba(239, 68, 68, 0.5);
-  }
-
-  .sign-out-button:active:not(:disabled) {
-    transform: scale(0.98);
-  }
-
-  .sign-out-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none !important;
-  }
-
-  .sign-out-button:focus-visible {
-    outline: 3px solid rgba(239, 68, 68, 0.7);
-    outline-offset: 2px;
   }
 
   /* Logged Out State */
@@ -872,11 +819,6 @@
 
   /* Mobile Responsive */
   @media (max-width: 480px) {
-    .container {
-      height: 90vh;
-      max-height: 90vh;
-    }
-
     .header {
       padding: 16px;
     }
@@ -893,16 +835,7 @@
 
     .tab {
       /* Let container queries handle responsive sizing */
-      min-height: 48px; /* Maintain WCAG touch target size on mobile */
-    }
-
-    .footer {
-      padding: 12px 16px;
-    }
-
-    .sign-out-button {
-      padding: 12px 20px;
-      font-size: 15px;
+      min-height: 60px; /* Maintain larger touch target size on mobile */
     }
 
     .logged-out {
@@ -939,15 +872,12 @@
   @media (prefers-reduced-motion: reduce) {
     .close,
     .tab,
-    .sign-out-button,
     .sign-in-button {
       transition: none;
     }
 
     .close:hover,
     .close:active,
-    .sign-out-button:hover,
-    .sign-out-button:active,
     .sign-in-button:hover,
     .sign-in-button:active {
       transform: none;

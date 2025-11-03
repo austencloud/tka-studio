@@ -1,8 +1,13 @@
 /**
- * Prop SVG Loader Service
+ * Prop SVG Loader Service - OPTIMIZED (2025 Best Practices)
  *
- * Fast, direct SVG loading for props - mirrors arrow loading approach.
- * Bypasses SvgPreloadService for maximum performance.
+ * Fast, direct SVG loading for props with aggressive caching.
+ *
+ * Key optimizations:
+ * - Multi-level caching (raw SVG + transformed SVG by color)
+ * - Request deduplication (prevents duplicate concurrent fetches)
+ * - Cached metadata parsing (viewBox, center)
+ * - Performance monitoring (cache hit/miss tracking)
  */
 
 import type { MotionData } from "../../../shared/domain/models/MotionData";
@@ -14,8 +19,18 @@ import { MotionColor } from "../../../shared/domain/enums/pictograph-enums";
 
 @injectable()
 export class PropSvgLoader implements IPropSvgLoader {
+  // 🚀 OPTIMIZATION: Multi-level caching
+  private rawSvgCache = new Map<string, string>(); // path -> raw SVG text
+  private transformedSvgCache = new Map<string, PropRenderData>(); // path:color -> transformed data
+  private loadingPromises = new Map<string, Promise<string>>(); // path -> loading promise (deduplication)
+  private metadataCache = new Map<string, { viewBox: { width: number; height: number }; center: { x: number; y: number } }>();
+
+  // Performance monitoring
+  private cacheHits = 0;
+  private cacheMisses = 0;
   /**
-   * Load prop SVG data with color transformation - fast direct approach
+   * Load prop SVG data with color transformation
+   * 🚀 OPTIMIZED: Checks transformed cache first, then raw cache, then fetches
    */
   async loadPropSvg(
     propData: PropPlacementData,
@@ -26,12 +41,29 @@ export class PropSvgLoader implements IPropSvgLoader {
       const propType = motionData.propType || "staff";
       const color = motionData.color || MotionColor.BLUE;
 
-      // Direct fetch - no service layers
+      // Create cache key including color for transformed prop cache
       const path = `/images/props/${propType}.svg`;
-      const originalSvgText = await this.fetchSvgContent(path);
+      const transformedCacheKey = `${path}:${color}`;
 
-      // Parse SVG for viewBox and center
-      const { viewBox, center } = this.parsePropSvg(originalSvgText);
+      // 🚀 OPTIMIZATION: Check transformed cache first (fastest path)
+      if (this.transformedSvgCache.has(transformedCacheKey)) {
+        this.cacheHits++;
+        const cached = this.transformedSvgCache.get(transformedCacheKey)!;
+        // Return with updated position/rotation (these are per-instance)
+        return {
+          ...cached,
+          position: { x: propData.positionX, y: propData.positionY },
+          rotation: propData.rotationAngle,
+        };
+      }
+
+      this.cacheMisses++;
+
+      // Fetch raw SVG (uses raw cache + deduplication)
+      const originalSvgText = await this.fetchSvgContentCached(path);
+
+      // Parse SVG for viewBox and center (uses metadata cache)
+      const { viewBox, center } = this.parsePropSvgCached(originalSvgText, path);
 
       // Apply color transformation
       const coloredSvgText = this.applyColorToSvg(originalSvgText, color);
@@ -39,7 +71,7 @@ export class PropSvgLoader implements IPropSvgLoader {
       // Extract SVG content
       const svgContent = this.extractSvgContent(coloredSvgText);
 
-      return {
+      const result: PropRenderData = {
         position: { x: propData.positionX, y: propData.positionY },
         rotation: propData.rotationAngle,
         svgData: {
@@ -50,6 +82,11 @@ export class PropSvgLoader implements IPropSvgLoader {
         loaded: true,
         error: null,
       };
+
+      // 🚀 OPTIMIZATION: Cache transformed result
+      this.transformedSvgCache.set(transformedCacheKey, result);
+
+      return result;
     } catch (error) {
       console.error("❌ PropSvgLoader: Error loading prop SVG:", error);
       return {
@@ -63,6 +100,41 @@ export class PropSvgLoader implements IPropSvgLoader {
   }
 
   /**
+   * 🚀 NEW: Fetch SVG content with caching and deduplication
+   */
+  private async fetchSvgContentCached(path: string): Promise<string> {
+    // Check raw SVG cache
+    if (this.rawSvgCache.has(path)) {
+      return this.rawSvgCache.get(path)!;
+    }
+
+    // Check if already loading (prevents duplicate concurrent requests)
+    if (this.loadingPromises.has(path)) {
+      return this.loadingPromises.get(path)!;
+    }
+
+    // Create loading promise
+    const loadingPromise = this.fetchSvgContent(path);
+    this.loadingPromises.set(path, loadingPromise);
+
+    try {
+      const svgText = await loadingPromise;
+
+      // Cache the raw SVG
+      this.rawSvgCache.set(path, svgText);
+
+      // Clean up loading promise
+      this.loadingPromises.delete(path);
+
+      return svgText;
+    } catch (error) {
+      // Clean up on error
+      this.loadingPromises.delete(path);
+      throw error;
+    }
+  }
+
+  /**
    * Fetch SVG content from a given path - direct fetch
    */
   async fetchSvgContent(path: string): Promise<string> {
@@ -71,6 +143,27 @@ export class PropSvgLoader implements IPropSvgLoader {
       throw new Error(`Failed to fetch SVG: ${response.status}`);
     }
     return await response.text();
+  }
+
+  /**
+   * 🚀 NEW: Parse prop SVG with caching
+   */
+  private parsePropSvgCached(
+    svgText: string,
+    cacheKey: string
+  ): {
+    viewBox: { width: number; height: number };
+    center: { x: number; y: number };
+  } {
+    // Check metadata cache
+    if (this.metadataCache.has(cacheKey)) {
+      return this.metadataCache.get(cacheKey)!;
+    }
+
+    // Parse and cache
+    const result = this.parsePropSvg(svgText);
+    this.metadataCache.set(cacheKey, result);
+    return result;
   }
 
   /**
@@ -161,5 +254,34 @@ export class PropSvgLoader implements IPropSvgLoader {
     }
 
     return svgElement.innerHTML;
+  }
+
+  /**
+   * 🚀 NEW: Clear caches (useful for testing or memory management)
+   */
+  clearCache(): void {
+    this.rawSvgCache.clear();
+    this.transformedSvgCache.clear();
+    this.loadingPromises.clear();
+    this.metadataCache.clear();
+    this.cacheHits = 0;
+    this.cacheMisses = 0;
+  }
+
+  /**
+   * 🚀 NEW: Get cache statistics for performance monitoring
+   */
+  getCacheStats() {
+    return {
+      rawCacheSize: this.rawSvgCache.size,
+      transformedCacheSize: this.transformedSvgCache.size,
+      metadataCacheSize: this.metadataCache.size,
+      cacheHits: this.cacheHits,
+      cacheMisses: this.cacheMisses,
+      hitRate:
+        this.cacheHits + this.cacheMisses > 0
+          ? ((this.cacheHits / (this.cacheHits + this.cacheMisses)) * 100).toFixed(2) + "%"
+          : "0%",
+    };
   }
 }

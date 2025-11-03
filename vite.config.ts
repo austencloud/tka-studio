@@ -48,6 +48,36 @@ const dictionaryPlugin = () => ({
   },
 });
 
+/**
+ * 🚀 2025 OPTIMIZATION: Aggressive caching for static SVG assets
+ * Adds cache headers to SVG files for browser-level performance optimization
+ */
+const svgCachePlugin = () => ({
+  name: "svg-cache-headers",
+  configureServer(server: ViteDevServer) {
+    server.middlewares.use(
+      (
+        req: IncomingMessage,
+        res: ServerResponse,
+        next: (err?: unknown) => void
+      ) => {
+        // Apply aggressive caching to all SVG files in /images/ directory
+        if (req.url && req.url.startsWith("/images/") && req.url.endsWith(".svg")) {
+          // Intercept the response to add cache headers
+          const originalWriteHead = res.writeHead;
+          res.writeHead = function (...args: any[]) {
+            // Set aggressive caching for static SVG assets (1 year)
+            res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+            res.setHeader("Vary", "Accept-Encoding");
+            return originalWriteHead.apply(res, args);
+          };
+        }
+        next();
+      }
+    );
+  },
+});
+
 // ============================================================================
 // VITE 6.0 CONFIGURATION (2025 - Optimized for SvelteKit 2)
 // ============================================================================
@@ -62,6 +92,7 @@ export default defineConfig({
       },
     }),
     dictionaryPlugin(),
+    svgCachePlugin(), // 🚀 2025: Aggressive SVG caching
   ],
 
   resolve: {

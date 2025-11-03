@@ -98,7 +98,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
 <div class="start-pos-picker" data-testid="start-position-picker">
   <ConstructPickerHeader
     variant="start"
-    title="Choose your start position!"
     currentGridMode={pickerState.currentGridMode}
     isAdvanced={showAdvancedPicker}
     onToggleAdvanced={handleToggleView}

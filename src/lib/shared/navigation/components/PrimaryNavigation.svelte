@@ -21,12 +21,16 @@
     onSectionChange,
     onModuleSwitcherTap,
     onLayoutChange,
+    showModuleSwitcher = true,
+    showSettings = true,
   } = $props<{
     sections: Section[];
     currentSection: string;
     onSectionChange?: (sectionId: string) => void;
     onModuleSwitcherTap?: () => void;
     onLayoutChange?: (isLandscape: boolean) => void;
+    showModuleSwitcher?: boolean;
+    showSettings?: boolean;
   }>();
 
   // Services
@@ -122,16 +126,18 @@
   bind:this={navElement}
 >
   <!-- Module Switcher Button (Left) -->
-  <button
-    class="nav-button module-switcher"
-    onclick={handleModuleSwitcher}
-    aria-label="Switch module"
-    style="--section-color: rgba(255, 255, 255, 1); --section-gradient: rgba(255, 255, 255, 1);"
-  >
-    <span class="nav-icon"><i class="fas fa-bars"></i></span>
-    <span class="nav-label nav-label-full">Menu</span>
-    <span class="nav-label nav-label-compact">{getCompactLabel("Menu")}</span>
-  </button>
+  {#if showModuleSwitcher}
+    <button
+      class="nav-button module-switcher"
+      onclick={handleModuleSwitcher}
+      aria-label="Switch module"
+      style="--section-color: rgba(255, 255, 255, 1); --section-gradient: rgba(255, 255, 255, 1);"
+    >
+      <span class="nav-icon"><i class="fas fa-bars"></i></span>
+      <span class="nav-label nav-label-full">Menu</span>
+      <span class="nav-label nav-label-compact">{getCompactLabel("Menu")}</span>
+    </button>
+  {/if}
 
   <!-- Current Module's Sections -->
   <div class="sections">
@@ -158,19 +164,21 @@
   </div>
 
   <!-- Settings Button (Right) -->
-  <button
-    class="nav-button settings-button"
-    class:active={getShowSettings()}
-    onclick={handleSettingsTap}
-    aria-label="Settings"
-    style="--section-color: rgba(255, 255, 255, 1); --section-gradient: rgba(255, 255, 255, 1);"
-  >
-    <span class="nav-icon"><i class="fas fa-cog"></i></span>
-    <span class="nav-label nav-label-full">Settings</span>
-    <span class="nav-label nav-label-compact"
-      >{getCompactLabel("Settings")}</span
+  {#if showSettings}
+    <button
+      class="nav-button settings-button"
+      class:active={getShowSettings()}
+      onclick={handleSettingsTap}
+      aria-label="Settings"
+      style="--section-color: rgba(255, 255, 255, 1); --section-gradient: rgba(255, 255, 255, 1);"
     >
-  </button>
+      <span class="nav-icon"><i class="fas fa-cog"></i></span>
+      <span class="nav-label nav-label-full">Settings</span>
+      <span class="nav-label nav-label-compact"
+        >{getCompactLabel("Settings")}</span
+      >
+    </button>
+  {/if}
 </nav>
 
 <style>

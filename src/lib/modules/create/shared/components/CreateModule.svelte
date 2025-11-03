@@ -27,10 +27,10 @@
   import { onMount, setContext } from "svelte";
   import { fade } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
+  import ConfirmDialog from "$shared/foundation/ui/ConfirmDialog.svelte";
   import ToolPanel from "../../tool-panel/core/ToolPanel.svelte";
   import WorkspacePanel from "../../workspace-panel/core/WorkspacePanel.svelte";
   import ButtonPanel from "../../workspace-panel/shared/components/ButtonPanel.svelte";
-  import CreationMethodSelector from "./CreationMethodSelector.svelte";
   import type { CreateModuleServices } from "../services/ServiceInitializer";
   import { ServiceInitializer } from "../services/ServiceInitializer";
   import { getCreateModuleEventService } from "../services/implementations/CreateModuleEventService";
@@ -102,6 +102,10 @@
   // Sequence actions sheet state
   let showSequenceActionsSheet = $state(false);
 
+  // Guided mode confirmation dialog state
+  let showGuidedConfirm = $state(false);
+  let guidedConfirmResolve: ((confirmed: boolean) => void) | null = $state(null);
+
   // Cleanup functions for effects
   let effectCleanups: (() => void)[] = [];
 
@@ -129,11 +133,6 @@
   // Derived: Show play/actions/share when at least one motion beat exists
   const canShowActionButtons = $derived(() => {
     return currentBeatCount() >= 1;
-  });
-
-  // Derived: Check if creation method selector should be shown
-  const shouldShowCreationSelector = $derived(() => {
-    return CreateModuleState?.shouldShowCreationSelector ?? false;
   });
 
   // Effect: Notify parent of tab accessibility changes
@@ -168,6 +167,18 @@
         displayText = "Drawing Red Hand Path";
       } else {
         displayText = "Draw Hand Path";
+      }
+    } else if (navigationState.activeTab === "construct") {
+      // Show contextual instruction based on sequence state
+      if (constructTabState?.shouldShowStartPositionPicker()) {
+        // On start position picker: Show instruction
+        displayText = "Choose your start position!";
+      } else if (currentBeatCount() === 0) {
+        // Has start position but no beats yet
+        displayText = "Select your first beat!";
+      } else {
+        // Has beats: Show the actual sequence word
+        displayText = CreateModuleState.sequenceState?.sequenceWord() ?? "";
       }
     } else {
       // Default: Show current word
@@ -297,6 +308,14 @@
         CreateModuleState!.pushUndoSnapshot(type, metadata)
       );
 
+      // Set up guided mode confirmation callback
+      CreateModuleState.setConfirmGuidedSwitchCallback(async () => {
+        return new Promise<boolean>((resolve) => {
+          showGuidedConfirm = true;
+          guidedConfirmResolve = resolve;
+        });
+      });
+
       // Load start positions
       await services.startPositionService.getDefaultStartPositions(
         GridMode.DIAMOND
@@ -396,13 +415,21 @@
     showSequenceActionsSheet = true;
   }
 
-  function handleCreationMethodSelected(
-    method: BuildModeId,
-    remember: boolean
-  ) {
-    if (!CreateModuleState) return;
-    logger.log("Creation method selected:", { method, remember });
-    CreateModuleState.selectCreationMethod(method, remember);
+  // Guided mode confirmation handlers
+  function handleConfirmGuidedSwitch() {
+    showGuidedConfirm = false;
+    if (guidedConfirmResolve) {
+      guidedConfirmResolve(true);
+      guidedConfirmResolve = null;
+    }
+  }
+
+  function handleCancelGuidedSwitch() {
+    showGuidedConfirm = false;
+    if (guidedConfirmResolve) {
+      guidedConfirmResolve(false);
+      guidedConfirmResolve = null;
+    }
   }
 </script>
 
@@ -488,12 +515,6 @@
     {/if}
   </div>
 
-  <!-- Creation Method Selector Sheet (always rendered, controlled by isOpen) -->
-  <CreationMethodSelector
-    isOpen={shouldShowCreationSelector()}
-    onMethodSelected={handleCreationMethodSelected}
-  />
-
   <!-- Edit Coordinator -->
   <EditCoordinator
     {CreateModuleState}
@@ -521,6 +542,18 @@
 
   <!-- CAP Coordinator -->
   <CAPCoordinator {panelState} />
+
+  <!-- Guided Mode Confirmation Dialog -->
+  <ConfirmDialog
+    isOpen={showGuidedConfirm}
+    title="Switch to Guided Mode?"
+    message="Switching to Guided Mode will clear your current sequence. This cannot be undone. Are you sure you want to continue?"
+    confirmText="Clear and Continue"
+    cancelText="Cancel"
+    variant="warning"
+    onConfirm={handleConfirmGuidedSwitch}
+    onCancel={handleCancelGuidedSwitch}
+  />
 {/if}
 
 <style>

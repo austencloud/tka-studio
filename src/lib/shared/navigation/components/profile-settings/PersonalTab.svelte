@@ -20,10 +20,12 @@
   import EmailChangeSection from "./EmailChangeSection.svelte";
   import { slide } from "svelte/transition";
 
-  let { onSave, onPhotoUpload, onChangeEmail, hapticService } = $props<{
+  let { onSave, onPhotoUpload, onChangeEmail, onSignOut, signingOut, hapticService } = $props<{
     onSave: () => Promise<void>;
     onPhotoUpload: (file: File) => Promise<void>;
     onChangeEmail: () => Promise<void>;
+    onSignOut: () => Promise<void>;
+    signingOut: boolean;
     hapticService: IHapticFeedbackService | null;
   }>();
 
@@ -110,6 +112,19 @@
           {hapticService}
         />
       {/if}
+    </div>
+
+    <!-- Sign Out Section -->
+    <div class="sign-out-section">
+      <button
+        class="sign-out-button"
+        onclick={onSignOut}
+        disabled={signingOut}
+        aria-busy={signingOut}
+      >
+        <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
+        {signingOut ? "Signing out..." : "Sign Out"}
+      </button>
     </div>
   </div>
 
@@ -280,6 +295,93 @@
     gap: 6px;
   }
 
+  /* Sign Out Section */
+  .sign-out-section {
+    width: 100%;
+    max-width: min(800px, 80vw);
+    margin-top: clamp(20px, 3vh, 32px);
+    padding-top: clamp(20px, 3vh, 32px);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .section.compact .sign-out-section {
+    margin-top: 20px;
+    padding-top: 20px;
+  }
+
+  .section.very-compact .sign-out-section {
+    margin-top: 16px;
+    padding-top: 16px;
+  }
+
+  .sign-out-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(8px, 1.2vh, 12px);
+    padding: clamp(12px, 1.8vh, 16px) clamp(20px, 3vw, 28px);
+    min-height: 48px;
+    border-radius: 10px;
+    font-size: clamp(14px, 1.9vh, 17px);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.1);
+    color: rgba(239, 68, 68, 0.95);
+  }
+
+  .section.compact .sign-out-button {
+    padding: 11px 20px;
+    min-height: 44px;
+    font-size: 14px;
+    gap: 8px;
+    border-radius: 8px;
+  }
+
+  .section.very-compact .sign-out-button {
+    padding: 11px 18px;
+    min-height: 44px;
+    font-size: 13px;
+    gap: 6px;
+    border-radius: 8px;
+  }
+
+  .sign-out-button i {
+    font-size: 16px;
+  }
+
+  .section.compact .sign-out-button i {
+    font-size: 14px;
+  }
+
+  .section.very-compact .sign-out-button i {
+    font-size: 13px;
+  }
+
+  .sign-out-button:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+
+  .sign-out-button:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  .sign-out-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .sign-out-button:focus-visible {
+    outline: 3px solid rgba(239, 68, 68, 0.7);
+    outline-offset: 2px;
+  }
+
   :global(.hint) {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.65); /* Improved contrast for WCAG AA */
@@ -441,6 +543,10 @@
     }
 
     :global(.button:focus-visible) {
+      outline: 3px solid white;
+    }
+
+    .sign-out-button:focus-visible {
       outline: 3px solid white;
     }
   }

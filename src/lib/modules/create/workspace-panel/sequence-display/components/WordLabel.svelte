@@ -30,7 +30,10 @@
       "Drawing Blue Hand Path",
       "Drawing Red Hand Path",
       "Sequence Complete!",
-      "Draw Hand Path"
+      "Draw Hand Path",
+      "Choose your start position!",
+      "Select your first beat!",
+      "Choose your 1st pictograph!"
     ];
     return contextualPhrases.some(phrase => word.includes(phrase));
   });

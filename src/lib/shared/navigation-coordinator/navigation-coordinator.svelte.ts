@@ -50,8 +50,8 @@ export function moduleSections() {
   if (module === "create") {
     if (!navigationCoordinator.canAccessEditAndExportPanels) {
       return baseSections.filter((section: { id: string }) => {
-        // Show construct, gestural, and generate sections when no sequence exists
-        return section.id === "construct" || section.id === "gestural" || section.id === "generate";
+        // Show guided, construct, gestural, and generate sections when no sequence exists
+        return section.id === "guided" || section.id === "construct" || section.id === "gestural" || section.id === "generate";
       });
     }
 

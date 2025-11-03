@@ -37,7 +37,7 @@ export const emailChangeState = $state({
 // UI STATE
 // ============================================================================
 
-export type SettingsTab = "personal" | "security" | "subscription" | "developer";
+export type SettingsTab = "personal" | "security" | "subscription" | "achievements";
 
 export const uiState = $state({
   activeTab: "personal" as SettingsTab,
@@ -189,7 +189,7 @@ const TAB_ORDER: SettingsTab[] = [
   "personal",
   "security",
   "subscription",
-  "developer",
+  "achievements",
 ];
 
 /**

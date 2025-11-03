@@ -30,7 +30,7 @@ export class NavigationSyncService implements INavigationSyncService {
     });
 
     // Skip if navigation is to a non-Create tab (e.g., "explore", "library")
-    const validCreateTabs = ["construct", "gestural", "generate"];
+    const validCreateTabs = ["guided", "construct", "gestural", "generate"];
     if (!validCreateTabs.includes(currentMode)) {
       return;
     }

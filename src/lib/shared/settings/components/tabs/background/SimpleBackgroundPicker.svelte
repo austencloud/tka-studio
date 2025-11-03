@@ -44,12 +44,12 @@
   }
 
   const presetBackgrounds: PresetBackground[] = [
-    // Gradients
+    // Gradients - All optimized for white text accessibility and glass morphism
     {
       id: "twilight",
       name: "Twilight",
       type: "gradient",
-      colors: ["#667eea", "#764ba2"],
+      colors: ["#5b21b6", "#6b21a8"], // Deeper purple for better contrast
       direction: 135,
       icon: '<i class="fas fa-cloud-moon"></i>',
     },
@@ -57,7 +57,7 @@
       id: "ocean",
       name: "Ocean",
       type: "gradient",
-      colors: ["#4facfe", "#00f2fe"],
+      colors: ["#0c4a6e", "#164e63"], // Darker blue-teal for readability
       direction: 135,
       icon: '<i class="fas fa-water"></i>',
     },
@@ -65,7 +65,7 @@
       id: "sunset",
       name: "Sunset",
       type: "gradient",
-      colors: ["#f5576c", "#f093fb"],
+      colors: ["#9f1239", "#be123c"], // Rich rose/red, darkened for accessibility
       direction: 135,
       icon: '<i class="fas fa-sun"></i>',
     },
@@ -73,27 +73,27 @@
       id: "forest",
       name: "Forest",
       type: "gradient",
-      colors: ["#11998e", "#38ef7d"],
+      colors: ["#064e3b", "#065f46"], // Deep emerald for excellent contrast
       direction: 135,
       icon: '<i class="fas fa-tree"></i>',
     },
     {
-      id: "rose",
-      name: "Rose",
+      id: "royal",
+      name: "Royal",
       type: "gradient",
-      colors: ["#eb3349", "#f45c43"],
+      colors: ["#1e3a8a", "#312e81"], // Deep blue-indigo blend
       direction: 135,
-      icon: '<i class="fas fa-heart"></i>',
+      icon: '<i class="fas fa-crown"></i>',
     },
     {
       id: "midnight",
       name: "Midnight",
       type: "gradient",
-      colors: ["#2c3e50", "#3498db"],
+      colors: ["#0f172a", "#1e293b"], // Dark slate for perfect readability
       direction: 135,
       icon: '<i class="fas fa-moon"></i>',
     },
-    // Solid colors
+    // Solid colors - Perfect for glass morphism
     {
       id: "pure-black",
       name: "Pure Black",
@@ -102,10 +102,10 @@
       icon: '<i class="fas fa-circle"></i>',
     },
     {
-      id: "dark-slate",
-      name: "Dark Slate",
+      id: "charcoal",
+      name: "Charcoal",
       type: "solid",
-      color: "#1a1a2e",
+      color: "#18181b", // Rich charcoal gray
       icon: '<i class="fas fa-square"></i>',
     },
   ];
@@ -320,10 +320,24 @@
   }
 
   .card-icon {
-    font-size: 8cqi;
+    /* Use clamp for intelligent sizing: min 24px, preferred 12cqi, max 56px */
+    font-size: clamp(24px, 12cqi, 56px);
     color: white;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
     filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+  }
+
+  /* Responsive icon sizing based on container dimensions */
+  @container (min-width: 150px) and (min-height: 100px) {
+    .card-icon {
+      font-size: clamp(28px, 14cqi, 64px);
+    }
+  }
+
+  @container (min-width: 200px) and (min-height: 120px) {
+    .card-icon {
+      font-size: clamp(32px, 16cqi, 72px);
+    }
   }
 
   .card-info {
@@ -334,13 +348,28 @@
   }
 
   .card-name {
-    font-size: 4cqi;
+    /* Use clamp for intelligent sizing: min 11px, preferred 5cqi, max 20px */
+    font-size: clamp(11px, 5cqi, 20px);
     font-weight: 700;
     color: white;
     margin: 0;
     text-align: center;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
     letter-spacing: 0.5px;
+    line-height: 1.2;
+  }
+
+  /* Responsive text sizing based on container dimensions */
+  @container (min-width: 150px) and (min-height: 100px) {
+    .card-name {
+      font-size: clamp(12px, 6cqi, 22px);
+    }
+  }
+
+  @container (min-width: 200px) and (min-height: 120px) {
+    .card-name {
+      font-size: clamp(14px, 7cqi, 24px);
+    }
   }
 
   .selection-indicator {
@@ -352,8 +381,24 @@
   }
 
   .selection-indicator svg {
-    width: 7cqi;
-    height: 7cqi;
+    /* Use clamp for intelligent sizing: min 20px, preferred 9cqi, max 32px */
+    width: clamp(20px, 9cqi, 32px);
+    height: clamp(20px, 9cqi, 32px);
+  }
+
+  /* Responsive selection indicator sizing */
+  @container (min-width: 150px) and (min-height: 100px) {
+    .selection-indicator svg {
+      width: clamp(22px, 10cqi, 36px);
+      height: clamp(22px, 10cqi, 36px);
+    }
+  }
+
+  @container (min-width: 200px) and (min-height: 120px) {
+    .selection-indicator svg {
+      width: clamp(24px, 11cqi, 40px);
+      height: clamp(24px, 11cqi, 40px);
+    }
   }
 
   /* Accessibility: Reduced motion support */

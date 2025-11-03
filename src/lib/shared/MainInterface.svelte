@@ -41,6 +41,9 @@
   import ModuleRenderer from "./modules/ModuleRenderer.svelte";
   import PWAInstallationManager from "./pwa/PWAInstallationManager.svelte";
   import SpotlightRouter from "./spotlight/SpotlightRouter.svelte";
+  import LandingModal from "./landing/components/LandingModal.svelte";
+  import StudioEntryAnimation from "./landing/components/StudioEntryAnimation.svelte";
+  import { isFirstVisit, openLanding, landingUIState } from "./landing/state/landing-state.svelte";
 
   // Reactive state
   const activeModule = $derived(getActiveTab()); // Using legacy getActiveTab for now
@@ -56,6 +59,14 @@
   onMount(() => {
     if (typeof window === "undefined") return;
     handleHMRInit();
+
+    // Auto-open landing page for first-time visitors
+    if (isFirstVisit()) {
+      // Small delay to let the app initialize
+      setTimeout(() => {
+        openLanding(true); // true = auto-opened
+      }, 300);
+    }
   });
 </script>
 
@@ -125,6 +136,12 @@
   <!-- Domain Managers -->
   <PWAInstallationManager />
   <SpotlightRouter />
+  <LandingModal />
+
+  <!-- Studio Entry Animation (first-time only) -->
+  {#if landingUIState.isEnteringStudio}
+    <StudioEntryAnimation />
+  {/if}
 </div>
 
 <style>

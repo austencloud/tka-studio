@@ -70,6 +70,7 @@
   let dragStartY = $state(0);
   let currentDragY = $state(0);
   let dragTranslateY = $state(0);
+  let scrollableElement = $state<HTMLElement | null>(null); // Track the scrollable element for this gesture
   const DISMISS_THRESHOLD = 100; // pixels to drag down before dismissing
   const VERTICAL_DRAG_THRESHOLD = 10; // pixels to move before committing to vertical drag
 
@@ -206,8 +207,8 @@
     }
   }
 
-  // Helper to check if target is in a scrollable area
-  function isInScrollableArea(target: HTMLElement): boolean {
+  // Helper to find the scrollable ancestor element
+  function findScrollableAncestor(target: HTMLElement): HTMLElement | null {
     let element: HTMLElement | null = target;
     while (element && element !== sheetElement) {
       const styles = window.getComputedStyle(element);
@@ -215,11 +216,24 @@
 
       if ((overflowY === 'auto' || overflowY === 'scroll') && element.scrollHeight > element.clientHeight) {
         // This is a scrollable area with actual scrollable content
-        return true;
+        return element;
       }
 
       element = element.parentElement;
     }
+    return null;
+  }
+
+  // Helper to check if we should allow dismiss gesture from a scrollable area
+  function shouldAllowDismissFromScroll(scrollableElement: HTMLElement | null, deltaY: number): boolean {
+    if (!scrollableElement) return true; // Not in a scrollable area, allow dismiss
+
+    // If scrolled to the top and swiping down, allow dismiss
+    if (scrollableElement.scrollTop === 0 && deltaY > 0) {
+      return true;
+    }
+
+    // Otherwise, let the scroll area handle the gesture
     return false;
   }
 
@@ -241,11 +255,8 @@
       return;
     }
 
-    // Check if the pointer is within a scrollable area - if so, skip pointer capture
-    if (isInScrollableArea(target)) {
-      // Don't start drag tracking in scrollable areas - let scroll work
-      return;
-    }
+    // Find if we're in a scrollable area and store the reference
+    scrollableElement = findScrollableAncestor(target);
 
     // Start tracking potential drag from anywhere on the sheet
     isDragging = true;
@@ -253,10 +264,8 @@
     dragStartY = event.clientY;
     currentDragY = event.clientY;
 
-    // Capture pointer to continue receiving events even if pointer moves outside element
-    if (sheetElement) {
-      sheetElement.setPointerCapture(event.pointerId);
-    }
+    // DON'T capture pointer yet - let scrolling work normally
+    // We'll capture only if we determine this is a dismiss gesture
   }
 
   function handlePointerMove(event: PointerEvent) {
@@ -268,11 +277,31 @@
     // If we haven't committed to a gesture type yet, decide now
     if (!isDismissGesture && Math.abs(deltaY) > VERTICAL_DRAG_THRESHOLD) {
       if (deltaY > 0) {
-        // Dragging down - this is a dismiss gesture
-        isDismissGesture = true;
+        // Dragging down - check if we should allow dismiss from scroll area
+        if (shouldAllowDismissFromScroll(scrollableElement, deltaY)) {
+          // Either not in a scroll area, or at the top and swiping down
+          // NOW we capture the pointer since this is a dismiss gesture
+          isDismissGesture = true;
+          if (sheetElement) {
+            sheetElement.setPointerCapture(event.pointerId);
+          }
+        } else {
+          // In a scroll area that should handle the gesture
+          // Reset drag state and let the scroll happen
+          isDragging = false;
+          dragStartY = 0;
+          currentDragY = 0;
+          scrollableElement = null;
+          return;
+        }
+      } else {
+        // Dragging up - not a dismiss gesture, allow scrolling
+        isDragging = false;
+        dragStartY = 0;
+        currentDragY = 0;
+        scrollableElement = null;
+        return;
       }
-      // Note: If dragging up (deltaY < 0), we just do nothing
-      // No scrolling in this sheet, so upward drags are ignored
     }
 
     // If this is a dismiss gesture, update the translation
@@ -282,13 +311,17 @@
   }
 
   function handlePointerUp(event: PointerEvent) {
-    if (!isDragging) return;
+    if (!isDragging && !isDismissGesture) return;
 
     const deltaY = currentDragY - dragStartY;
 
-    // Release pointer capture
-    if (sheetElement) {
-      sheetElement.releasePointerCapture(event.pointerId);
+    // Release pointer capture only if we captured it
+    if (isDismissGesture && sheetElement) {
+      try {
+        sheetElement.releasePointerCapture(event.pointerId);
+      } catch (e) {
+        // Ignore errors if pointer wasn't captured
+      }
     }
 
     // If this was a dismiss gesture and dragged far enough, dismiss
@@ -302,19 +335,26 @@
     dragStartY = 0;
     currentDragY = 0;
     dragTranslateY = 0;
+    scrollableElement = null;
   }
 
   function handlePointerCancel(event: PointerEvent) {
-    // Reset on cancel (e.g., if another gesture takes over)
+    // Release pointer capture only if we captured it
+    if (isDismissGesture && sheetElement) {
+      try {
+        sheetElement.releasePointerCapture(event.pointerId);
+      } catch (e) {
+        // Ignore errors if pointer wasn't captured
+      }
+    }
+
+    // Reset on cancel (e.g., if another gesture takes over like browser scroll)
     isDragging = false;
     isDismissGesture = false;
     dragStartY = 0;
     currentDragY = 0;
     dragTranslateY = 0;
-
-    if (sheetElement) {
-      sheetElement.releasePointerCapture(event.pointerId);
-    }
+    scrollableElement = null;
   }
 
 
@@ -369,16 +409,9 @@
         return;
       }
 
-      // Check if touch is in a scrollable area
-      if (isInScrollableArea(target)) {
-        // Don't prevent default in scrollable areas - let scroll work
-        return;
-      }
-
-      if (placement === "bottom") {
-        // Prevent browser's default pan/scroll gesture handling
-        e.preventDefault();
-      }
+      // We no longer skip scrollable areas here - the gesture logic handles it
+      // This allows us to detect when we're at the top of a scroll area
+      // Don't prevent default - let browser handle scrolling normally
     };
 
     // Add touchmove listener with passive: false so we can preventDefault
@@ -390,14 +423,7 @@
         return;
       }
 
-      // Check if we're in a scrollable area
-      const target = e.target as HTMLElement;
-      if (isInScrollableArea(target)) {
-        // Allow scrolling in scrollable areas
-        return;
-      }
-
-      // Also prevent default if we're actively dragging to dismiss
+      // Prevent default if we're actively dragging to dismiss
       if (isDragging && isDismissGesture) {
         e.preventDefault();
       }

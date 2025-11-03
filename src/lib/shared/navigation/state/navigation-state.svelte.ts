@@ -13,20 +13,20 @@ import type { ModuleDefinition, ModuleId, Section } from "../domain/types";
 // Note: Record removed (not implemented yet, users will use native camera apps)
 export const CREATE_TABS: Section[] = [
   {
-    id: "construct",
-    label: "Construct",
-    icon: '<i class="fas fa-hammer"></i>',
-    description: "Create sequences step by step",
-    color: "#3b82f6",
-    gradient: "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+    id: "guided",
+    label: "Guided",
+    icon: '<i class="fas fa-route"></i>',
+    description: "Build sequences one hand at a time (6 simple choices)",
+    color: "#6366f1",
+    gradient: "linear-gradient(135deg, #818cf8 0%, #6366f1 100%)",
   },
   {
-    id: "one-handed",
-    label: "One-Hand",
-    icon: '<i class="fas fa-hand-paper"></i>',
-    description: "Select red motions, then blue motions",
-    color: "#a855f7",
-    gradient: "linear-gradient(135deg, #c084fc 0%, #a855f7 100%)",
+    id: "construct",
+    label: "Standard",
+    icon: '<i class="fas fa-hammer"></i>',
+    description: "Create sequences step by step (all options)",
+    color: "#3b82f6",
+    gradient: "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
   },
   {
     id: "gestural",

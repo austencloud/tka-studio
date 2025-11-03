@@ -34,6 +34,7 @@ export type TabId =
  * Note: Record and Share have been removed
  */
 export type BuildModeId =
+  | "guided"
   | "construct"
   | "one-handed"
   | "gestural"
