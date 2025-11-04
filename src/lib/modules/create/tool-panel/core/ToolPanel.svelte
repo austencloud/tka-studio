@@ -18,7 +18,7 @@
 -->
 <script lang="ts">
   import type { IDeviceDetector, IHapticFeedbackService } from "$shared";
-  import { resolve, TYPES } from "$shared";
+  import { resolve, TYPES, createBeatData } from "$shared";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
@@ -250,11 +250,33 @@
           {#if activeToolPanel === "guided"}
             <!-- Guided Construct Tab - Sequential builder (one hand at a time) -->
             <GuidedConstructTab
-              onSequenceUpdate={(sequence) => {
-                createModuleState.sequenceState.replaceSequence(sequence);
+              onSequenceUpdate={(pictographs) => {
+                // Preview mode - update current sequence beats
+                const currentSeq =
+                  createModuleState.sequenceState.currentSequence;
+                if (currentSeq) {
+                  const beats = pictographs.map((p, i) =>
+                    createBeatData({ ...p, beatNumber: i + 1, duration: 1000 })
+                  );
+                  createModuleState.sequenceState.updateSequence({
+                    ...currentSeq,
+                    beats,
+                  });
+                }
               }}
-              onSequenceComplete={(sequence) => {
-                createModuleState.sequenceState.replaceSequence(sequence);
+              onSequenceComplete={(pictographs) => {
+                // Complete - update current sequence beats
+                const currentSeq =
+                  createModuleState.sequenceState.currentSequence;
+                if (currentSeq) {
+                  const beats = pictographs.map((p, i) =>
+                    createBeatData({ ...p, beatNumber: i + 1, duration: 1000 })
+                  );
+                  createModuleState.sequenceState.updateSequence({
+                    ...currentSeq,
+                    beats,
+                  });
+                }
               }}
             />
           {:else if activeToolPanel === "construct"}
@@ -287,11 +309,15 @@
             <GeneratePanel sequenceState={createModuleState.sequenceState} />
           {:else if activeToolPanel === "gestural"}
             <!-- Hand Path Builder Controls -->
-            {#if createModuleState.handPathCoordinator}
+            <!-- TODO: Re-enable when handPathCoordinator is added to ICreateModuleState -->
+            <!-- {#if createModuleState.handPathCoordinator}
               <HandPathToolContent
                 handPathCoordinator={createModuleState.handPathCoordinator}
               />
-            {/if}
+            {/if} -->
+            <div class="coming-soon-panel">
+              <p>Hand Path Builder coming soon...</p>
+            </div>
           {/if}
         </div>
       {/key}
@@ -400,35 +426,9 @@
     color: rgba(255, 255, 255, 0.8);
   }
 
-  .coming-soon-icon {
-    font-size: 4rem;
-    color: #a855f7;
-    margin-bottom: 1.5rem;
-    filter: drop-shadow(0 4px 12px rgba(168, 85, 247, 0.4));
-  }
-
-  .coming-soon-panel h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-    color: #ffffff;
-  }
-
   .coming-soon-panel p {
     font-size: 1rem;
     color: rgba(255, 255, 255, 0.6);
     margin-bottom: 0.5rem;
-  }
-
-  .coming-soon-label {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background: rgba(255, 165, 0, 0.2);
-    color: #ffa500;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    font-weight: 600;
-    border: 1px solid rgba(255, 165, 0, 0.3);
   }
 </style>

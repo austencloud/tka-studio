@@ -18,5 +18,6 @@ export * from "./domain";
 // State
 export * from "./state";
 
-// Utils
-export * from "./utils";
+// Utils - but exclude Dimensions type to avoid conflict with background module
+export type { Position, TurnPositions } from "./utils/turn-position-calculator";
+export { calculateTurnPositions } from "./utils/turn-position-calculator";

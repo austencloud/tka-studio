@@ -14,7 +14,7 @@ Features:
   import { selectedArrowState } from "$create/shared/state/selected-arrow-state.svelte";
   import type { BeatData } from "$create/workspace-panel";
   import type { IHapticFeedbackService } from "$shared";
-  import { BottomSheet, Pictograph, resolve, TYPES } from "$shared";
+  import { Drawer, Pictograph, resolve, TYPES } from "$shared";
   import { onMount } from 'svelte';
 
   // Props
@@ -152,7 +152,7 @@ Features:
   const selectedArrow = $derived(selectedArrowState.selectedArrow);
 </script>
 
-<BottomSheet
+<Drawer
   isOpen={isOpen}
   labelledBy="adjustment-panel-title"
   on:close={handleClose}
@@ -277,7 +277,7 @@ Features:
       </div>
     </div>
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   :global(.bottom-sheet.adjustment-editor-container) {

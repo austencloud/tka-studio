@@ -199,8 +199,16 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
       // Keep within bounds and reverse direction if necessary
       if (lensFlare.x < 0 || lensFlare.x > 1) lensFlare.dx *= -1;
       if (lensFlare.y < 0 || lensFlare.y > 1) lensFlare.dy *= -1;
-      if (lensFlare.size < 50 || lensFlare.size > 250) lensFlare.dsize *= -1;
-      if (lensFlare.opacity < 0.1 || lensFlare.opacity > 0.5) lensFlare.dopacity *= -1;
+      if (lensFlare.size < 50 || lensFlare.size > 250) {
+        lensFlare.dsize *= -1;
+        // Clamp size to prevent negative values
+        lensFlare.size = Math.max(50, Math.min(250, lensFlare.size));
+      }
+      if (lensFlare.opacity < 0.1 || lensFlare.opacity > 0.5) {
+        lensFlare.dopacity *= -1;
+        // Clamp opacity to prevent out of range values
+        lensFlare.opacity = Math.max(0.1, Math.min(0.5, lensFlare.opacity));
+      }
     }
   }
 
@@ -265,13 +273,16 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
       const x = lensFlare.x * dimensions.width;
       const y = lensFlare.y * dimensions.height;
 
+      // Ensure size is always positive to prevent createRadialGradient errors
+      const size = Math.max(0, lensFlare.size);
+
       ctx.save();
 
       // Create colorful radial gradients for lens flares
       const hue = (this.colorShift + i * 60) % 360;
       const color = this.hsvToRgb(hue / 360, 0.8, 1);
 
-      const gradient = ctx.createRadialGradient(x, y, 0, x, y, lensFlare.size);
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, size);
       gradient.addColorStop(
         0,
         `rgba(${color.r}, ${color.g}, ${color.b}, ${lensFlare.opacity})`
@@ -289,7 +300,7 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
       ctx.filter = "blur(20px)"; // Soft glow effect
 
       ctx.beginPath();
-      ctx.ellipse(x, y, lensFlare.size, lensFlare.size, 0, 0, 2 * Math.PI);
+      ctx.ellipse(x, y, size, size, 0, 0, 2 * Math.PI);
       ctx.fill();
 
       ctx.restore();

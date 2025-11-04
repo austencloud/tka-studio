@@ -7,7 +7,9 @@
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020,
@@ -21,41 +23,53 @@
   "rules": {
     "@typescript-eslint/no-unused-vars": [
       "warn",
-      { "varsIgnorePattern": ".*", "argsIgnorePattern": ".*" }
+      {
+        "varsIgnorePattern": ".*",
+        "argsIgnorePattern": ".*"
+      }
     ],
-
     // 2026 TypeScript Strictness Wins - High Value, Low Cost
     "@typescript-eslint/consistent-type-imports": "error",
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
     "@typescript-eslint/prefer-optional-chain": "warn",
     "@typescript-eslint/no-unnecessary-condition": "warn",
-
     // Enforce architectural boundaries with path aliases
     "no-restricted-imports": [
       "error",
       {
         "patterns": [
           {
-            "group": ["$services", "$services/*"],
+            "group": [
+              "$services",
+              "$services/*"
+            ],
             "message": "Use relative imports instead of $services alias to avoid circular dependencies"
           },
           {
-            "group": ["$domain", "$domain/*"],
+            "group": [
+              "$domain",
+              "$domain/*"
+            ],
             "message": "Use $shared/domain or relative imports instead of $domain alias"
           },
           {
-            "group": ["$implementations", "$implementations/*"],
+            "group": [
+              "$implementations",
+              "$implementations/*"
+            ],
             "message": "Use relative imports within modules instead of $implementations alias"
           },
           {
-            "group": ["$state", "$state/*"],
+            "group": [
+              "$state",
+              "$state/*"
+            ],
             "message": "Use module-specific state imports instead of global $state alias"
           }
         ]
       }
     ]
   },
-
   "ignorePatterns": [
     "build/",
     ".svelte-kit/",
@@ -65,10 +79,12 @@
     "**/*.generated.*",
     "**/*.svelte"
   ],
-
   "overrides": [
     {
-      "files": ["tests/**/*.ts", "tests/**/*.js"],
+      "files": [
+        "tests/**/*.ts",
+        "tests/**/*.js"
+      ],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off"
       }

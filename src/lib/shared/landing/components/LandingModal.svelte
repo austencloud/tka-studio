@@ -17,10 +17,10 @@
     CONTACT_EMAIL,
   } from "../landing-content";
   import { browser } from "$app/environment";
-  import PrimaryNavigation from "../../navigation/components/PrimaryNavigation.svelte";
   import type { Section } from "../../navigation/domain/types";
   import { HorizontalSwipeContainer } from "$shared";
   import type EmblaCarouselType from "embla-carousel";
+  import { smartContact, DEV_CONTACT_OPTIONS } from "../utils/smart-contact";
 
   // Whether to show the close button (only show if manually opened)
   const showCloseButton = $derived(!landingUIState.isAutoOpened);
@@ -81,7 +81,11 @@
 
   // Handle escape key (only allow if not auto-opened)
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === "Escape" && landingUIState.isOpen && !landingUIState.isAutoOpened) {
+    if (
+      e.key === "Escape" &&
+      landingUIState.isOpen &&
+      !landingUIState.isAutoOpened
+    ) {
       closeLanding(false);
     }
   }
@@ -112,6 +116,25 @@
   function handleLinkClick(url: string, type: string) {
     if (browser && (type === "download" || type === "external")) {
       window.open(url, "_blank", "noopener,noreferrer");
+    }
+  }
+
+  // Handle smart contact for development work
+  let isContactLoading = $state(false);
+
+  async function handleDevContact() {
+    if (browser && !isContactLoading) {
+      isContactLoading = true;
+      try {
+        await smartContact(DEV_CONTACT_OPTIONS);
+      } catch (error) {
+        console.error("Failed to initiate contact:", error);
+      } finally {
+        // Reset loading state after a short delay to give user feedback
+        setTimeout(() => {
+          isContactLoading = false;
+        }, 1000);
+      }
     }
   }
 
@@ -172,6 +195,24 @@
         </h1>
         <p class="hero-subtitle">{LANDING_TEXT.hero.subtitle}</p>
       </section>
+
+      <!-- Tab Navigation (Below Hero) -->
+      <div class="landing-tabs" role="tablist">
+        {#each landingSections as section}
+          <button
+            class="landing-tab"
+            class:active={activeTab === section.id}
+            onclick={() => handleTabChange(section.id)}
+            role="tab"
+            aria-selected={activeTab === section.id}
+            aria-controls={`panel-${section.id}`}
+            style="--tab-color: {section.color}; --tab-gradient: {section.gradient};"
+          >
+            <span class="tab-icon">{@html section.icon}</span>
+            <span class="tab-label">{section.label}</span>
+          </button>
+        {/each}
+      </div>
 
       <!-- Tab Content with Swipe Carousel -->
       <div class="tab-content">
@@ -310,17 +351,6 @@
           {LANDING_TEXT.hero.cta}
         </button>
       </div>
-
-      <!-- Bottom Navigation using PrimaryNavigation component -->
-      <div class="landing-navigation">
-        <PrimaryNavigation
-          sections={landingSections}
-          currentSection={activeTab}
-          onSectionChange={handleTabChange}
-          showModuleSwitcher={false}
-          showSettings={false}
-        />
-      </div>
     </div>
   </div>
 {/if}
@@ -346,7 +376,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(20, 20, 30, 0.98) 0%, rgba(30, 30, 40, 0.98) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(20, 20, 30, 0.98) 0%,
+      rgba(30, 30, 40, 0.98) 100%
+    );
     z-index: 10001;
     overflow: hidden; /* No scrolling */
     display: flex;
@@ -401,9 +435,9 @@
     height: 100dvh; /* Dynamic viewport height for mobile */
     max-width: min(1200px, 100vw);
     margin: 0 auto;
-    padding: clamp(1rem, 3vh, 2rem) clamp(1rem, 3vw, 2rem);
-    /* Account for bottom navigation bar */
-    padding-bottom: max(72px, calc(clamp(1rem, 3vh, 2rem) + 64px + env(safe-area-inset-bottom)));
+    padding: 0 clamp(1rem, 3vw, 2rem) clamp(1rem, 3vh, 2rem);
+    /* Account for top navigation bar */
+    padding-top: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -465,17 +499,13 @@
   /* Create cross shape with two lines */
   .sparkle::before,
   .sparkle::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
     width: 100%;
     height: 2px;
-    background: linear-gradient(90deg,
-      transparent,
-      currentColor,
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, currentColor, transparent);
     transform: translate(-50%, -50%);
   }
 
@@ -491,7 +521,7 @@
   .sparkle-1 {
     top: 0;
     left: 15%;
-    color: #FFD700;
+    color: #ffd700;
     animation-delay: 0s;
     width: 12px;
     height: 12px;
@@ -500,7 +530,7 @@
   .sparkle-2 {
     top: 10%;
     right: 20%;
-    color: #FFED4E;
+    color: #ffed4e;
     animation-delay: 0.8s;
     width: 8px;
     height: 8px;
@@ -509,7 +539,7 @@
   .sparkle-3 {
     top: 15%;
     left: 50%;
-    color: #FFC700;
+    color: #ffc700;
     animation-delay: 1.5s;
     width: 10px;
     height: 10px;
@@ -518,7 +548,7 @@
   .sparkle-4 {
     bottom: 10%;
     left: 25%;
-    color: #FFBF00;
+    color: #ffbf00;
     animation-delay: 0.5s;
     width: 9px;
     height: 9px;
@@ -527,7 +557,7 @@
   .sparkle-5 {
     bottom: 5%;
     right: 30%;
-    color: #FFE55C;
+    color: #ffe55c;
     animation-delay: 2s;
     width: 11px;
     height: 11px;
@@ -536,14 +566,15 @@
   .sparkle-6 {
     top: 50%;
     right: 10%;
-    color: #FFA500;
+    color: #ffa500;
     animation-delay: 1.2s;
     width: 7px;
     height: 7px;
   }
 
   @keyframes twinkle {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
       transform: scale(0) rotate(0deg);
       filter: brightness(1);
@@ -648,7 +679,6 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
     padding: clamp(0.75rem, 2vh, 1.5rem);
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -658,10 +688,10 @@
   }
 
   .panel-title {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-size: 1rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: clamp(0.75rem, 2vh, 1.5rem);
+    margin-bottom: 0.75rem;
     text-align: center;
   }
 
@@ -754,13 +784,23 @@
   }
 
   /* ============================================================================
-     SOCIAL GRID (Expanded for better space utilization)
+     SOCIAL GRID (Optimized for iPhone SE 375x667)
+     Available height calculation for Community tab:
+     - Viewport: 667px
+     - Header (title + subtitle + tabs): ~145px
+     - CTA Button at bottom: ~90px
+     - Available for tab-panel: ~432px
+     - Panel padding: ~24px (12px top/bottom)
+     - Panel title: ~35px
+     - Contact section: ~70px
+     - Available for social grid: ~303px
+     - 3 buttons in 2x2 grid: need ~70px per button = 210px total
      ============================================================================ */
   .social-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: clamp(1rem, 2.5vw, 1.5rem);
-    margin-bottom: clamp(1.5rem, 3vh, 2rem);
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .social-button {
@@ -768,12 +808,12 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(0.625rem, 1.5vh, 0.875rem);
-    padding: clamp(1.25rem, 3vh, 1.75rem) clamp(1rem, 2vw, 1.5rem);
-    min-height: 96px; /* Larger touch target for better UX */
+    gap: 0.375rem;
+    padding: 0.625rem 0.5rem;
+    min-height: 70px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
+    border-radius: 0.75rem;
     text-decoration: none;
     color: white;
     transition: all 0.2s ease;
@@ -787,13 +827,13 @@
   }
 
   .social-button i {
-    font-size: clamp(2.25rem, 6vw, 3rem);
+    font-size: 1.5rem;
     color: var(--brand-color);
     filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
   }
 
   .social-button span {
-    font-size: clamp(0.9375rem, 2.25vw, 1.125rem);
+    font-size: 0.8125rem;
     font-weight: 600;
   }
 
@@ -835,7 +875,11 @@
     padding: clamp(1.25rem, 3vh, 1.75rem) clamp(2rem, 4vw, 2.5rem);
     min-height: 68px; /* Larger, more prominent touch target */
     width: 100%; /* Fill container width */
-    background: linear-gradient(135deg, var(--brand-color) 0%, color-mix(in srgb, var(--brand-color) 80%, black) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--brand-color) 0%,
+      color-mix(in srgb, var(--brand-color) 80%, black) 100%
+    );
     border: 2px solid color-mix(in srgb, var(--brand-color) 60%, white);
     border-radius: 1rem;
     text-decoration: none;
@@ -853,7 +897,7 @@
 
   /* Animated shine effect */
   .support-button::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: -100%;
@@ -937,6 +981,9 @@
     text-decoration: none;
     color: inherit;
     transition: all 0.2s ease;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
   }
 
   .dev-card:hover {
@@ -944,6 +991,25 @@
     border-color: rgba(34, 197, 94, 0.5);
     transform: translateY(-2px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .dev-card:focus-visible {
+    outline: 2px solid rgba(34, 197, 94, 0.7);
+    outline-offset: 2px;
+  }
+
+  .dev-card:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none !important;
+  }
+
+  .dev-card.loading {
+    pointer-events: none;
+  }
+
+  .dev-card.loading i {
+    color: rgba(34, 197, 94, 0.7);
   }
 
   .dev-card i {
@@ -975,8 +1041,8 @@
      CONTACT SECTION
      ============================================================================ */
   .contact-section {
-    margin-top: auto;
-    padding-top: clamp(1rem, 2vh, 1.5rem);
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     text-align: center;
   }
@@ -985,24 +1051,24 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    font-size: clamp(0.9375rem, 2vw, 1.125rem);
+    gap: 0.375rem;
+    font-size: 0.875rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.375rem;
   }
 
   .contact-title i {
-    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-size: 0.875rem;
     color: rgba(102, 126, 234, 0.9);
   }
 
   .contact-email {
     display: inline-block;
-    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-size: 0.8125rem;
     color: rgba(102, 126, 234, 0.9);
     text-decoration: none;
-    padding: clamp(0.625rem, 1.5vh, 0.875rem) clamp(1rem, 2vw, 1.5rem);
+    padding: 0.5rem 0.875rem;
     background: rgba(102, 126, 234, 0.1);
     border: 1px solid rgba(102, 126, 234, 0.3);
     border-radius: 0.5rem;
@@ -1016,32 +1082,79 @@
   }
 
   /* ============================================================================
-     LANDING NAVIGATION OVERRIDES
+     LANDING TAB NAVIGATION (Top Position)
      ============================================================================ */
-  /* With only 3 tabs, always show labels for better UX */
-  .landing-navigation :global(.primary-navigation.layout-bottom .nav-label-full) {
-    display: block;
+  .landing-tabs {
+    flex-shrink: 0;
+    width: 100%;
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
   }
 
-  .landing-navigation :global(.primary-navigation.layout-bottom .nav-button) {
-    max-width: 120px;
-    gap: 4px;
-  }
-
-  /* Increase button size for better touch targets */
-  .landing-navigation :global(.primary-navigation.layout-bottom .nav-button) {
-    min-width: 80px;
-    padding: 8px 12px;
-  }
-
-  /* Ensure icons and labels are properly sized */
-  .landing-navigation :global(.primary-navigation.layout-bottom .nav-icon) {
-    font-size: 22px;
-  }
-
-  .landing-navigation :global(.primary-navigation.layout-bottom .nav-label) {
-    font-size: 11px;
+  .landing-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 12px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.875rem;
     font-weight: 600;
+    min-height: 72px;
+  }
+
+  .landing-tab:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .landing-tab.active {
+    color: var(--tab-color);
+    border-bottom-color: var(--tab-color);
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .landing-tab:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: -2px;
+  }
+
+  .tab-icon {
+    font-size: 24px;
+    display: block;
+    line-height: 1;
+  }
+
+  .tab-label {
+    font-size: 11px;
+    display: block;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .landing-tab {
+      padding: 10px 8px;
+      min-height: 64px;
+      gap: 4px;
+    }
+
+    .tab-icon {
+      font-size: 20px;
+    }
+
+    .tab-label {
+      font-size: 10px;
+    }
   }
 
   /* ============================================================================

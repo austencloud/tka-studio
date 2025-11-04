@@ -255,6 +255,94 @@ h6 {
   --header-text-current: var(--header-text-nightSky);
 
   /* ========================================
+     ADAPTIVE CONTRAST - Panel/Card/Overlay Styles
+     Enhanced visibility for light backgrounds (Aurora)
+     ======================================== */
+
+  /* Panel Background Colors (for explore panels, settings, etc.) */
+  --panel-bg-nightSky: rgba(255, 255, 255, 0.05);
+  --panel-bg-aurora: rgba(20, 10, 40, 0.85); /* Dark purple overlay for light aurora bg */
+  --panel-bg-snowfall: rgba(255, 255, 255, 0.05);
+  --panel-bg-deepOcean: rgba(255, 255, 255, 0.05);
+
+  --panel-border-nightSky: rgba(255, 255, 255, 0.1);
+  --panel-border-aurora: rgba(168, 85, 247, 0.3); /* Purple-tinted border */
+  --panel-border-snowfall: rgba(255, 255, 255, 0.1);
+  --panel-border-deepOcean: rgba(255, 255, 255, 0.1);
+
+  --panel-hover-nightSky: rgba(255, 255, 255, 0.08);
+  --panel-hover-aurora: rgba(30, 15, 60, 0.9); /* Darker on hover */
+  --panel-hover-snowfall: rgba(255, 255, 255, 0.08);
+  --panel-hover-deepOcean: rgba(255, 255, 255, 0.08);
+
+  /* Card Background Colors (for collection cards, sequence cards, etc.) */
+  --card-bg-nightSky: rgba(255, 255, 255, 0.05);
+  --card-bg-aurora: rgba(25, 15, 45, 0.88); /* Deeper dark purple */
+  --card-bg-snowfall: rgba(255, 255, 255, 0.05);
+  --card-bg-deepOcean: rgba(255, 255, 255, 0.05);
+
+  --card-border-nightSky: rgba(255, 255, 255, 0.1);
+  --card-border-aurora: rgba(168, 85, 247, 0.35);
+  --card-border-snowfall: rgba(255, 255, 255, 0.1);
+  --card-border-deepOcean: rgba(255, 255, 255, 0.1);
+
+  --card-hover-nightSky: rgba(255, 255, 255, 0.08);
+  --card-hover-aurora: rgba(35, 20, 65, 0.92);
+  --card-hover-snowfall: rgba(255, 255, 255, 0.08);
+  --card-hover-deepOcean: rgba(255, 255, 255, 0.08);
+
+  /* Text Colors - Enhanced contrast for Aurora */
+  --text-primary-nightSky: #ffffff;
+  --text-primary-aurora: #ffffff; /* Keep white text on dark overlays */
+  --text-primary-snowfall: #ffffff;
+  --text-primary-deepOcean: #ffffff;
+
+  --text-secondary-nightSky: rgba(255, 255, 255, 0.7);
+  --text-secondary-aurora: rgba(255, 255, 255, 0.85); /* Slightly brighter for readability */
+  --text-secondary-snowfall: rgba(255, 255, 255, 0.7);
+  --text-secondary-deepOcean: rgba(255, 255, 255, 0.7);
+
+  /* Input/Search Field Styles */
+  --input-bg-nightSky: rgba(255, 255, 255, 0.05);
+  --input-bg-aurora: rgba(30, 20, 50, 0.75);
+  --input-bg-snowfall: rgba(255, 255, 255, 0.05);
+  --input-bg-deepOcean: rgba(255, 255, 255, 0.05);
+
+  --input-border-nightSky: rgba(255, 255, 255, 0.1);
+  --input-border-aurora: rgba(168, 85, 247, 0.4);
+  --input-border-snowfall: rgba(255, 255, 255, 0.1);
+  --input-border-deepOcean: rgba(255, 255, 255, 0.1);
+
+  --input-focus-nightSky: rgba(255, 255, 255, 0.08);
+  --input-focus-aurora: rgba(40, 25, 70, 0.85);
+  --input-focus-snowfall: rgba(255, 255, 255, 0.08);
+  --input-focus-deepOcean: rgba(255, 255, 255, 0.08);
+
+  /* Active Button/Filter Styles */
+  --button-active-nightSky: rgba(255, 255, 255, 0.15);
+  --button-active-aurora: rgba(88, 28, 135, 0.75); /* Rich purple for active state */
+  --button-active-snowfall: rgba(255, 255, 255, 0.15);
+  --button-active-deepOcean: rgba(255, 255, 255, 0.15);
+
+  /* Current active theme variables (defaults to nightSky) */
+  --panel-bg-current: var(--panel-bg-nightSky);
+  --panel-border-current: var(--panel-border-nightSky);
+  --panel-hover-current: var(--panel-hover-nightSky);
+
+  --card-bg-current: var(--card-bg-nightSky);
+  --card-border-current: var(--card-border-nightSky);
+  --card-hover-current: var(--card-hover-nightSky);
+
+  --text-primary-current: var(--text-primary-nightSky);
+  --text-secondary-current: var(--text-secondary-nightSky);
+
+  --input-bg-current: var(--input-bg-nightSky);
+  --input-border-current: var(--input-border-nightSky);
+  --input-focus-current: var(--input-focus-nightSky);
+
+  --button-active-current: var(--button-active-nightSky);
+
+  /* ========================================
      SHEET SYSTEM - Design Tokens
      Unified styling for BottomSheet components
      ======================================== */

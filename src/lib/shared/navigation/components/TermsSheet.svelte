@@ -3,7 +3,7 @@
 -->
 <script lang="ts">
   import {
-    BottomSheet,
+    Drawer,
     resolve,
     TYPES,
     type IHapticFeedbackService,
@@ -31,7 +31,7 @@
   }
 </script>
 
-<BottomSheet
+<Drawer
   {isOpen}
   labelledBy="terms-sheet-title"
   on:close={onClose}
@@ -154,7 +154,7 @@
       </section>
     </div>
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   /* ============================================================================

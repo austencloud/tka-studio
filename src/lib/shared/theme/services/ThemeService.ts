@@ -53,6 +53,18 @@ export class ThemeService {
       "header-bg",
       "header-border",
       "header-text",
+      "panel-bg",
+      "panel-border",
+      "panel-hover",
+      "card-bg",
+      "card-border",
+      "card-hover",
+      "text-primary",
+      "text-secondary",
+      "input-bg",
+      "input-border",
+      "input-focus",
+      "button-active",
     ];
 
     // Update each variable to use the current theme

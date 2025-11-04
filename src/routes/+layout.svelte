@@ -20,15 +20,11 @@
     return container;
   });
 
-  // Reactive viewport height tracking using Svelte 5 runes
-  let viewportHeight = $state(0);
-
   // Update viewport height on window resize and visualViewport changes
   function updateViewportHeight() {
     if (typeof window !== "undefined") {
       // Use visualViewport for accurate height that accounts for browser chrome
       const height = window.visualViewport?.height ?? window.innerHeight;
-      viewportHeight = height;
       // Update CSS custom property for use throughout the app
       document.documentElement.style.setProperty(
         "--viewport-height",
@@ -38,54 +34,53 @@
   }
 
   onMount(() => {
+    // ⚡ CRITICAL: Set up viewport height IMMEDIATELY for fast render
+    updateViewportHeight();
+
+    // Listen to visualViewport resize (more reliable than window resize for mobile)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", updateViewportHeight);
+      window.visualViewport.addEventListener("scroll", updateViewportHeight);
+    }
+
+    // Fallback to window resize for browsers that don't support visualViewport
+    window.addEventListener("resize", updateViewportHeight);
+
     // Register cache clear shortcut (Ctrl+Shift+Delete)
     registerCacheClearShortcut();
 
-    // Async initialization
-    (async () => {
+    // ⚡ PERFORMANCE: Initialize services in background without blocking render
+    // This allows Vite HMR WebSocket to connect immediately
+    Promise.all([
       // Initialize Firebase Auth listener (handles redirect result)
-      await authStore.initialize();
+      authStore.initialize(),
 
-      try {
-        // Dynamically import container only on client-side to avoid SSR issues
-        const { getContainer } = await import("$shared");
+      // Dynamically import and initialize container
+      (async () => {
+        try {
+          const { getContainer } = await import("$shared");
+          container = await getContainer();
 
-        // Set up DI container - this automatically caches it
-        container = await getContainer();
-
-        // Initialize glyph cache for faster preview rendering
-        const { TYPES } = await import("$shared/inversify/types");
-        type IGlyphCacheService = { initialize: () => Promise<void> };
-        const glyphCache = container.get<IGlyphCacheService>(
-          TYPES.IGlyphCacheService
-        );
-        glyphCache.initialize().catch((error: unknown) => {
-          console.warn("⚠️ Glyph cache initialization failed:", error);
-        });
-
-        // Set up viewport height tracking
-        updateViewportHeight(); // Initial calculation
-
-        // Listen to visualViewport resize (more reliable than window resize for mobile)
-        if (window.visualViewport) {
-          window.visualViewport.addEventListener(
-            "resize",
-            updateViewportHeight
+          // Initialize glyph cache for faster preview rendering
+          const { TYPES } = await import("$shared/inversify/types");
+          type IGlyphCacheService = { initialize: () => Promise<void> };
+          const glyphCache = container.get<IGlyphCacheService>(
+            TYPES.IGlyphCacheService
           );
-          window.visualViewport.addEventListener(
-            "scroll",
-            updateViewportHeight
-          );
+          await glyphCache.initialize();
+        } catch (error) {
+          console.error("❌ Root layout: Failed to set up DI container:", error);
+          containerError =
+            error instanceof Error ? error.message : "Container setup failed";
         }
-
-        // Fallback to window resize for browsers that don't support visualViewport
-        window.addEventListener("resize", updateViewportHeight);
-      } catch (error) {
-        console.error("❌ Root layout: Failed to set up DI container:", error);
-        containerError =
-          error instanceof Error ? error.message : "Container setup failed";
-      }
-    })();
+      })(),
+    ])
+      .then(() => {
+        console.log("✅ Services initialized");
+      })
+      .catch((error) => {
+        console.error("❌ Service initialization failed:", error);
+      });
 
     // Return synchronous cleanup function
     return () => {

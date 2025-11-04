@@ -14,7 +14,7 @@
   import AnimatorCanvas from "$create/animate/components/AnimatorCanvas.svelte";
   import AnimationControls from "$create/animate/components/AnimationControls.svelte";
   import GifExportDialog from "$create/animate/components/GifExportDialog.svelte";
-  import { BottomSheet, SheetDragHandle, GridMode, type Letter } from "$shared";
+  import { Drawer, SheetDragHandle, GridMode, type Letter } from "$shared";
   import type { GifExportProgress } from "$create/animate/services/contracts";
   import type { PropState } from "$create/animate/domain/types/PropState";
 
@@ -70,7 +70,7 @@
   });
 </script>
 
-<BottomSheet
+<Drawer
   isOpen={show}
   on:close={onClose}
   labelledBy="animation-panel-title"
@@ -116,7 +116,7 @@
       />
     {/if}
   </div>
-</BottomSheet>
+</Drawer>
 
 <GifExportDialog
   show={showExportDialog}

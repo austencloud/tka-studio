@@ -77,13 +77,13 @@ export const RESOURCES: Resource[] = [
 export const SUPPORT_OPTIONS: SupportOption[] = [
   {
     name: "PayPal",
-    url: "https://paypal.me/yourpaypalurl", // TODO: Replace with real PayPal URL
+    url: "https://paypal.me/austencloud",
     icon: "fab fa-paypal",
     color: "#00457C",
   },
   {
     name: "Zelle",
-    url: "mailto:tkaflowarts@gmail.com?subject=Zelle%20Donation", // Opens email to request Zelle info
+    url: "mailto:austencloud@gmail.com?subject=Zelle%20Donation", // Opens email to request Zelle info
     icon: "fas fa-money-bill-wave",
     color: "#6D1ED4",
   },

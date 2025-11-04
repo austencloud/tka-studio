@@ -1,6 +1,6 @@
 <!-- Slide-up Sheet for Sequence Actions -->
 <script lang="ts">
-  import { BottomSheet, SheetDragHandle } from "$shared";
+  import { Drawer, SheetDragHandle } from "$shared";
 
   let {
     show = false,
@@ -105,7 +105,7 @@
   }
 </script>
 
-<BottomSheet
+<Drawer
   isOpen={show}
   on:close={handleSheetClose}
   labelledBy="sequence-actions-title"
@@ -161,7 +161,7 @@
       {/if}
     </div>
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   /* Use unified sheet system variables - transparent backdrop to allow workspace interaction */

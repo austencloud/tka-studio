@@ -36,7 +36,7 @@
   import WordLabel from "../modules/create/workspace-panel/sequence-display/components/WordLabel.svelte";
   import PrimaryNavigation from "./navigation/components/PrimaryNavigation.svelte";
   import TopBar from "./navigation/components/TopBar.svelte";
-  import UnifiedNavigationMenu from "./navigation/components/UnifiedNavigationMenu.svelte";
+  import ModuleSwitcher from "./navigation/components/ModuleSwitcher.svelte";
   // Domain managers
   import ModuleRenderer from "./modules/ModuleRenderer.svelte";
   import PWAInstallationManager from "./pwa/PWAInstallationManager.svelte";
@@ -76,8 +76,8 @@
   class:about-active={isAboutActive}
   style="--top-bar-height: {layoutState.topBarHeight}px;"
 >
-  <!-- Unified Navigation Menu -->
-  <UnifiedNavigationMenu
+  <!-- Module Switcher -->
+  <ModuleSwitcher
     currentModule={currentModule()}
     currentModuleName={currentModuleName()}
     modules={moduleDefinitions}
@@ -127,7 +127,7 @@
       currentSection={currentSection()}
       onSectionChange={handleSectionChange}
       onModuleSwitcherTap={() => {
-        window.dispatchEvent(new CustomEvent("unified-menu-toggle"));
+        window.dispatchEvent(new CustomEvent("module-switcher-toggle"));
       }}
       onLayoutChange={setPrimaryNavLandscape}
     />

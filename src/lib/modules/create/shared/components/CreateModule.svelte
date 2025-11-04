@@ -18,7 +18,6 @@
   import {
     createComponentLogger,
     ensureContainerInitialized,
-    ErrorBanner,
     GridMode,
     navigationState,
     type BuildModeId,
@@ -28,6 +27,7 @@
   import { fade } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
   import ConfirmDialog from "$shared/foundation/ui/ConfirmDialog.svelte";
+  import ErrorBanner from "./ErrorBanner.svelte";
   import ToolPanel from "../../tool-panel/core/ToolPanel.svelte";
   import WorkspacePanel from "../../workspace-panel/core/WorkspacePanel.svelte";
   import ButtonPanel from "../../workspace-panel/shared/components/ButtonPanel.svelte";

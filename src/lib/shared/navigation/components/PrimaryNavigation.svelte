@@ -355,7 +355,6 @@
     transform: scale(1.05);
   }
 
-  .module-switcher.active,
   .settings-button.active {
     background: rgba(255, 255, 255, 0.1);
   }

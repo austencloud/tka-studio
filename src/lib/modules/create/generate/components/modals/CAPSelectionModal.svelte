@@ -1,10 +1,10 @@
 <!--
 CAPSelectionModal.svelte - Bottom sheet for selecting CAP components
-Refactored to use BottomSheet component for consistent behavior
+Refactored to use Drawer component for consistent behavior
 -->
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
-  import { resolve, TYPES, BottomSheet, SheetDragHandle } from "$shared";
+  import { resolve, TYPES, Drawer, SheetDragHandle } from "$shared";
   import { onMount } from "svelte";
   import { CAPComponent, generateExplanationText } from "$create/generate/shared/domain/constants/cap-components";
   import CAPComponentGrid from "./CAPComponentGrid.svelte";
@@ -100,7 +100,7 @@ Refactored to use BottomSheet component for consistent behavior
   }
 </script>
 
-<BottomSheet
+<Drawer
   {isOpen}
   on:close={handleClose}
   labelledBy="cap-title"
@@ -148,7 +148,7 @@ Refactored to use BottomSheet component for consistent behavior
       </button>
     {/if}
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   /* Custom styling for CAP selection bottom sheet */

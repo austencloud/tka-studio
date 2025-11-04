@@ -98,19 +98,21 @@ With grid mode toggle to switch between Diamond and Box mode
         ? [GridLocation.NORTH, GridLocation.EAST, GridLocation.SOUTH, GridLocation.WEST][index]
         : [GridLocation.NORTHEAST, GridLocation.SOUTHEAST, GridLocation.SOUTHWEST, GridLocation.NORTHWEST][index]}
 
-      <button
-        class="position-button"
-        onclick={() => handlePositionSelect(pictograph, location)}
-        aria-label={`Select starting position ${location}`}
-      >
-        <div class="pictograph-wrapper">
-          <Pictograph
-            pictographData={pictograph}
-            visibleHand={handColor}
-          />
-        </div>
-        <span class="position-label">{location.toUpperCase()}</span>
-      </button>
+      {#if location}
+        <button
+          class="position-button"
+          onclick={() => handlePositionSelect(pictograph, location)}
+          aria-label={`Select starting position ${location}`}
+        >
+          <div class="pictograph-wrapper">
+            <Pictograph
+              pictographData={pictograph}
+              visibleHand={handColor}
+            />
+          </div>
+          <span class="position-label">{location.toUpperCase()}</span>
+        </button>
+      {/if}
     {/each}
   </div>
 </div>

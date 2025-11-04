@@ -16,7 +16,7 @@
   import { resolve, TYPES } from "../../inversify";
   import { authStore } from "../../auth";
   import { getLevelProgress } from "../domain/constants/xp-constants";
-  import BottomSheet from "../../foundation/ui/BottomSheet.svelte";
+  import Drawer from "../../foundation/ui/Drawer.svelte";
   import type {
     Achievement,
     DailyChallenge,
@@ -175,7 +175,7 @@
   };
 </script>
 
-<BottomSheet
+<Drawer
   {isOpen}
   on:close={handleClose}
   ariaLabel="Achievements & Challenges"
@@ -351,10 +351,10 @@
       {/if}
     </div>
   {/snippet}
-</BottomSheet>
+</Drawer>
 
 <style>
-  /* BottomSheet wrapper styling */
+  /* Drawer wrapper styling */
   :global(.achievements-sheet) {
     max-height: 95vh;
     height: 95vh;

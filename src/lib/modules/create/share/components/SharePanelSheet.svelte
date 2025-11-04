@@ -4,7 +4,7 @@
   Bottom sheet wrapper around SharePanel with matching layout to AnimationPanel.
 -->
 <script lang="ts">
-  import { BottomSheet, SheetDragHandle } from "$shared";
+  import { Drawer, SheetDragHandle } from "$shared";
   import type { SequenceData } from "$shared";
   import type { ShareState } from "../state";
   import SharePanel from "./SharePanel.svelte";
@@ -28,7 +28,7 @@
   }
 </script>
 
-<BottomSheet
+<Drawer
   isOpen={show}
   labelledBy="share-panel-title"
   on:close={handleClose}
@@ -56,7 +56,7 @@
       <SharePanel currentSequence={sequence} {shareState} onClose={handleClose} />
     </div>
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   /* Use unified sheet system variables */

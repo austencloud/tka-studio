@@ -2,6 +2,7 @@
   import type { BeatData, IHapticFeedbackService } from "$shared";
   import { Pictograph, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
+  import { BeatAnimation, type BeatAnimationVariant } from "$shared/animation";
 
   let {
     beat,
@@ -31,7 +32,9 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   const isStartPosition = $derived(() => {
@@ -57,29 +60,45 @@
     };
   });
 
+  // ============================================================================
+  // UNIFIED ANIMATION SYSTEM - CSS Custom Properties Integration
+  // ============================================================================
 
-
-  let hasAnimated = $state(false);
-  let currentAnimationName = $state("gentleBloom");
+  let currentAnimationName = $state<BeatAnimationVariant>("gentleBloom");
   let previousBeatId = beat.id;
+  let hasAnimated = $state(false);
+
+  // Create animation controller - use $state so it persists and Spring can animate
+  let animation = $state(new BeatAnimation(currentAnimationName));
+
+  // Recreate animation when variant changes
+  $effect(() => {
+    animation = new BeatAnimation(currentAnimationName);
+  });
 
   // Track when new pictograph data arrives for fade-in animation
   let enableTransitionsForNewData = $state(false);
   let previousPictographData = beat.isBlank ? null : beat;
 
-  // Reset hasAnimated ONLY when the beat data itself changes (different beat loaded)
-  // This prevents re-animating all beats when only one beat should animate
+  // Trigger animation when beat changes
   $effect(() => {
     if (beat.id !== previousBeatId) {
       hasAnimated = false;
       previousBeatId = beat.id;
+
+      // Trigger animation if needed
+      if (shouldAnimate && !beat.isBlank) {
+        animation.trigger();
+      }
     }
   });
 
   // Enable transitions when new pictograph data arrives (for option selection animation)
   $effect(() => {
     const currentPictographData = beat.isBlank ? null : beat;
-    const dataChanged = JSON.stringify(currentPictographData) !== JSON.stringify(previousPictographData);
+    const dataChanged =
+      JSON.stringify(currentPictographData) !==
+      JSON.stringify(previousPictographData);
 
     if (dataChanged && !beat.isBlank) {
       // New pictograph data - enable transitions for fade-in
@@ -94,6 +113,16 @@
     previousPictographData = currentPictographData;
   });
 
+  // Get interpolated animation values - wrap in function for reactive access
+  const animValues = $derived(() => animation.getValues());
+
+  // Mark as animated once opacity reaches 1
+  $effect(() => {
+    if (animValues().opacity >= 0.99 && shouldAnimate && !hasAnimated) {
+      hasAnimated = true;
+    }
+  });
+
   const shouldAnimateIn = $derived(() => {
     return shouldAnimate && !hasAnimated && !beat.isBlank;
   });
@@ -101,23 +130,17 @@
   // Beats should be invisible ONLY if they're waiting to animate
   const isVisible = $derived(() => {
     // If it should animate but hasn't yet, hide it (will become visible via animation)
-    // This applies to ALL beats, including start position during generation
     if (shouldAnimate && !hasAnimated) return false;
 
     // Special case: Start position tile (index -1) should be visible even when blank
-    // This shows the "Start" placeholder before a start position is selected
     if (index === -1) return true;
 
     // If it's a blank beat in the main grid, never show it
     if (beat.isBlank) return false;
 
-    // Otherwise, show it (either it has animated, or it doesn't need to animate)
+    // Otherwise, show it
     return true;
   });
-
-  function handleAnimationEnd() {
-    hasAnimated = true;
-  }
 
   // Listen for animation changes from the AnimationSelector
   onMount(() => {
@@ -126,10 +149,16 @@
       console.log(`🎨 BeatCell: Animation changed to ${currentAnimationName}`);
     };
 
-    window.addEventListener('animation-change', handleAnimationChange as EventListener);
+    window.addEventListener(
+      "animation-change",
+      handleAnimationChange as EventListener
+    );
 
     return () => {
-      window.removeEventListener('animation-change', handleAnimationChange as EventListener);
+      window.removeEventListener(
+        "animation-change",
+        handleAnimationChange as EventListener
+      );
     };
   });
 
@@ -197,21 +226,20 @@
 <div
   class="beat-cell"
   class:invisible={!isVisible()}
-  class:animate={shouldAnimateIn()}
+  class:animating={shouldAnimateIn()}
   class:selected={isSelected}
   class:practice-beat={isPracticeBeat}
   class:multi-select-mode={isMultiSelectMode}
-  class:anim-gentleBloom={currentAnimationName === "gentleBloom"}
-  class:anim-softCascade={currentAnimationName === "softCascade"}
-  class:anim-springPop={currentAnimationName === "springPop"}
-  class:anim-microFade={currentAnimationName === "microFade"}
-  class:anim-glassBlur={currentAnimationName === "glassBlur"}
+  style:--anim-opacity={animValues().opacity}
+  style:--anim-scale={animValues().scale}
+  style:--anim-x="{animValues().x}px"
+  style:--anim-y="{animValues().y}px"
+  style:--anim-blur="{animValues().blur}px"
   onclick={handleClick}
   onkeypress={handleKeyPress}
   onpointerdown={handlePointerDown}
   onpointerup={handlePointerUp}
   onpointercancel={handlePointerCancel}
-  onanimationend={handleAnimationEnd}
   role="button"
   tabindex="0"
   aria-label={ariaLabel()}
@@ -245,34 +273,13 @@
   .beat-cell.invisible {
     opacity: 0;
     pointer-events: none;
-    /* Start smaller when invisible - animation will scale up from here */
-    transform: scale(0.3);
   }
 
-  /* Default animation (Spring Pop) */
-  .beat-cell.animate {
-    animation: springPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
-
-  /* Animation overrides based on selected animation */
-  .beat-cell.animate.anim-gentleBloom {
-    animation: gentleBloom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-  }
-
-  .beat-cell.animate.anim-softCascade {
-    animation: softCascade 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-
-  .beat-cell.animate.anim-springPop {
-    animation: springPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
-  }
-
-  .beat-cell.animate.anim-microFade {
-    animation: microFade 0.25s cubic-bezier(0.4, 0, 0.2, 1) both;
-  }
-
-  .beat-cell.animate.anim-glassBlur {
-    animation: glassBlur 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  /* Animation driven by CSS custom properties from svelte/motion */
+  .beat-cell.animating {
+    opacity: var(--anim-opacity);
+    transform: translate(var(--anim-x), var(--anim-y)) scale(var(--anim-scale));
+    filter: blur(var(--anim-blur));
   }
 
   .beat-cell:hover {
@@ -336,7 +343,8 @@
   }
 
   @keyframes practicePulse {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
       transform: scale(1.1);
     }
@@ -346,79 +354,6 @@
     }
   }
 
-  /* FAVORITE: Gentle Bloom - soft float-up with blur */
-  @keyframes gentleBloom {
-    0% {
-      transform: scale(0.7) translateY(10px);
-      opacity: 0;
-      filter: blur(2px);
-    }
-    60% {
-      opacity: 0.8;
-      filter: blur(0px);
-    }
-    100% {
-      transform: scale(1) translateY(0);
-      opacity: 1;
-      filter: blur(0px);
-    }
-  }
-
-  /* OPTION 2: Soft Cascade - smooth slide from left with fade */
-  @keyframes softCascade {
-    0% {
-      transform: translateX(-20px) scale(0.9);
-      opacity: 0;
-    }
-    50% {
-      opacity: 0.6;
-    }
-    100% {
-      transform: translateX(0) scale(1);
-      opacity: 1;
-    }
-  }
-
-  /* OPTION 3: Spring Pop - elastic bounce (TRENDY 2025!) */
-  @keyframes springPop {
-    0% {
-      transform: scale(0.3);
-      opacity: 0;
-    }
-    50% {
-      opacity: 1;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  /* OPTION 4: Micro Fade - minimal, fast, modern */
-  @keyframes microFade {
-    0% {
-      transform: scale(0.95);
-      opacity: 0;
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  /* OPTION 5: Glass Blur - glassmorphism trend */
-  @keyframes glassBlur {
-    0% {
-      transform: scale(0.8);
-      opacity: 0;
-      filter: blur(8px);
-      backdrop-filter: blur(0px);
-    }
-    100% {
-      transform: scale(1);
-      opacity: 1;
-      filter: blur(0px);
-      backdrop-filter: blur(4px);
-    }
-  }
+  /* All beat animations now driven by svelte/motion Spring physics!
+     See src/lib/shared/animation/presets.ts for animation configs */
 </style>

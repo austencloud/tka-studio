@@ -4,6 +4,7 @@
 
 // Main about tab component
 export { default as AboutTab } from "./AboutTab.svelte";
+export { default as SwipeableLanding } from "./SwipeableLanding.svelte";
 
 // About section components
 export { default as AboutTheSystem } from "./AboutTheSystem.svelte";

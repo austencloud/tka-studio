@@ -3,7 +3,6 @@
   import type { AppSettings, IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import SettingCard from "../SettingCard.svelte";
 
   let { settings, onUpdate } = $props<{
     settings: AppSettings;

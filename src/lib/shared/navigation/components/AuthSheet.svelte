@@ -5,7 +5,7 @@
   Supports: Facebook, Google, Email/Password
 -->
 <script lang="ts">
-  import { BottomSheet } from "$shared";
+  import { Drawer } from "$shared";
   import {
     SocialAuthCompact,
     AuthHeader,
@@ -77,7 +77,7 @@
   }
 </script>
 
-<BottomSheet
+<Drawer
   {isOpen}
   labelledBy="auth-sheet-title"
   on:close={onClose}
@@ -114,7 +114,7 @@
     <!-- Footer -->
     <AuthFooter />
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   /* ============================================================================

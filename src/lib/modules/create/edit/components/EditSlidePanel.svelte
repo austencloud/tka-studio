@@ -13,7 +13,7 @@ HMR Test: Nested component change test
 <script lang="ts">
   import type { BeatData } from "$create/workspace-panel";
   import type { IDeviceDetector, IHapticFeedbackService } from "$shared";
-  import { BottomSheet, resolve, TYPES } from "$shared";
+  import { Drawer, resolve, TYPES } from "$shared";
   import { onDestroy, onMount } from 'svelte';
   import BatchEditLayout from './BatchEditLayout.svelte';
   import EditPanelLayout from './EditPanelLayout.svelte';
@@ -167,7 +167,7 @@ HMR Test: Nested component change test
   });
 </script>
 
-<BottomSheet
+<Drawer
   isOpen={isOpen}
   labelledBy="edit-panel-title"
   on:close={handleClose}
@@ -213,7 +213,7 @@ HMR Test: Nested component change test
       {/if}
     </div>
   </div>
-</BottomSheet>
+</Drawer>
 
 <!-- Pictograph Adjustment Editor Panel -->
 <PictographAdjustmentEditorPanel

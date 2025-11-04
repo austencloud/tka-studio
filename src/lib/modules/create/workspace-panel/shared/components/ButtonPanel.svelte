@@ -11,9 +11,9 @@
   - Just composition and prop passing
 -->
 <script lang="ts">
-  import type { ICreateModuleState } from '$create/shared/types/create-module-types';
-  import { fade } from 'svelte/transition';
-  import { springScaleTransition } from '$lib/shared/utils/transitions.js';
+  import type { ICreateModuleState } from "$create/shared/types/create-module-types";
+  import { fade } from "svelte/transition";
+  import { PresenceAnimation } from "$shared/animation";
   import {
     BackButton,
     ClearSequencePanelButton,
@@ -21,8 +21,8 @@
     RemoveBeatButton,
     SequenceActionsButton,
     ShareButton,
-    UndoButton
-  } from './buttons/index.js';
+    UndoButton,
+  } from "./buttons/index.js";
 
   // Props interface
   const {
@@ -57,9 +57,8 @@
     onPlayAnimation,
     isAnimating = false,
 
-
     // Panel visibility
-    visible = true
+    visible = true,
   }: {
     // Back button props
     canGoBack?: boolean;
@@ -98,10 +97,12 @@
 
   // Determine if Remove Beat button should be shown
   const shouldShowRemoveBeat = $derived(() => {
-    return canRemoveBeat &&
-           selectedBeatData &&
-           selectedBeatData.beatNumber >= 1 &&
-           selectedBeatIndex !== null;
+    return (
+      canRemoveBeat &&
+      selectedBeatData &&
+      selectedBeatData.beatNumber >= 1 &&
+      selectedBeatIndex !== null
+    );
   });
 
   // Count visible buttons for layout purposes
@@ -139,6 +140,33 @@
     // Note: Clear button moved to right zone
     return count;
   });
+
+  /**
+   * Spring scale transition using unified animation system
+   * Replaces old springScaleTransition with physics-based PresenceAnimation
+   */
+  function presenceTransition(
+    node: Element,
+    { duration = 550, delay = 0 }: { duration?: number; delay?: number } = {}
+  ) {
+    const animation = new PresenceAnimation('snappy');
+
+    // Trigger enter animation
+    animation.enter();
+
+    return {
+      duration,
+      delay,
+      css: (t: number) => {
+        // Interpolate between start (0.95 scale) and end (1.0 scale)
+        const scale = 0.95 + (1 - 0.95) * t;
+        return `
+          transform: scale(${scale});
+          opacity: ${t};
+        `;
+      },
+    };
+  }
 </script>
 
 {#if visible}
@@ -147,14 +175,11 @@
     <div class="left-zone">
       <!-- Undo Button (when CreateModuleState is available) or Back Button -->
       {#if CreateModuleState}
-        <div transition:springScaleTransition>
-          <UndoButton
-            {CreateModuleState}
-            showHistoryDropdown={true}
-          />
+        <div transition:presenceTransition>
+          <UndoButton {CreateModuleState} showHistoryDropdown={true} />
         </div>
       {:else if canGoBack && onBack}
-        <div transition:springScaleTransition>
+        <div transition:presenceTransition>
           <BackButton onclick={onBack} />
         </div>
       {/if}
@@ -169,22 +194,20 @@
           out:fade={{ duration: 150 }}
           in:fade={{ duration: 150, delay: 150 }}
         >
+          <!-- Sequence Actions Button -->
+          {#if showSequenceActions && onSequenceActionsClick}
+            <div>
+              <SequenceActionsButton onclick={onSequenceActionsClick} />
+            </div>
+          {/if}
 
+          <!-- Play Button -->
+          {#if showPlayButton && onPlayAnimation}
+            <div>
+              <PlayButton onclick={onPlayAnimation} {isAnimating} />
+            </div>
+          {/if}
 
-        <!-- Sequence Actions Button -->
-        {#if showSequenceActions && onSequenceActionsClick}
-        <div>
-          <SequenceActionsButton onclick={onSequenceActionsClick} />
-        </div>
-        {/if}
-
-        <!-- Play Button -->
-        {#if showPlayButton && onPlayAnimation}
-          <div>
-            <PlayButton onclick={onPlayAnimation} {isAnimating} />
-          </div>
-        {/if}
-        
           <!-- Share Button -->
           {#if showShareButton && onShare}
             <div>
@@ -198,7 +221,7 @@
     <!-- RIGHT ZONE: Clear Sequence button (rightmost) -->
     <div class="right-zone">
       {#if canClearSequence && onClearSequence}
-        <div transition:springScaleTransition>
+        <div transition:presenceTransition>
           <ClearSequencePanelButton onclick={onClearSequence} />
         </div>
       {/if}

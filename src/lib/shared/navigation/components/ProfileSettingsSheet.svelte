@@ -7,7 +7,7 @@
 -->
 <script lang="ts">
   import {
-    BottomSheet,
+    Drawer,
     resolve,
     TYPES,
     type IHapticFeedbackService,
@@ -380,7 +380,7 @@
   }
 </script>
 
-<BottomSheet
+<Drawer
   {isOpen}
   labelledBy="profile-settings-title"
   on:close={onClose}
@@ -580,7 +580,7 @@
       </div>
     {/if}
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   /* Backdrop */

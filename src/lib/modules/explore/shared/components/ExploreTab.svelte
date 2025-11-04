@@ -1,10 +1,11 @@
 <script lang="ts">
   import type { IDeviceDetector, SequenceData } from "$shared";
-  import { ErrorBanner, resolve, TYPES } from "$shared";
+  import { resolve, TYPES } from "$shared";
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onMount } from "svelte";
   import { openSpotlightViewer } from "../../../../shared/application/state/app-state.svelte";
   import { navigationState } from "../../../../shared/navigation/state/navigation-state.svelte";
+  import ErrorBanner from "../../../create/shared/components/ErrorBanner.svelte";
 
   import type { IExploreThumbnailService } from "../../display";
   import { SequenceDisplayPanel } from "../../display/components";

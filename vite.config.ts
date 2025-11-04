@@ -159,6 +159,8 @@ export default defineConfig({
       "dexie",
       "fabric",
       "file-saver",
+      "vaul-svelte",
+      "bits-ui",
     ],
     exclude: ["pdfjs-dist"],
   },
@@ -179,6 +181,7 @@ export default defineConfig({
     hmr: {
       overlay: true,
       clientPort: 5173, // Explicit client port
+      timeout: 30000, // 30s timeout instead of default 5s
     },
 
     watch: {

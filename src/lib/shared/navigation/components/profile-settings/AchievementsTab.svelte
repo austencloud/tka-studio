@@ -15,7 +15,9 @@
   import { auth } from "$shared/auth";
   import { getLevelProgress } from "$shared/gamification/domain/constants/xp-constants";
 
-  type AchievementWithProgress = Achievement & { userProgress: UserAchievement | null };
+  type AchievementWithProgress = Achievement & {
+    userProgress: UserAchievement | null;
+  };
 
   // Services
   let achievementService: IAchievementService | null = $state(null);
@@ -35,33 +37,41 @@
     return getLevelProgress(userXP.totalXP);
   });
 
-  onMount(async () => {
-    try {
-      achievementService = await resolve<IAchievementService>(
-        TYPES.IAchievementService
-      );
+  onMount(() => {
+    const initAsync = async (): Promise<(() => void) | undefined> => {
+      try {
+        achievementService = await resolve<IAchievementService>(
+          TYPES.IAchievementService
+        );
 
-      // Listen for auth state
-      const unsubscribe = auth.onAuthStateChanged(async (user) => {
-        isLoggedIn = !!user;
-        if (user) {
-          await loadData();
-        } else {
-          userXP = null;
-          achievements = [];
-          unlockedAchievements = [];
-          lockedAchievements = [];
-        }
-      });
+        // Listen for auth state
+        const unsubscribe = auth.onAuthStateChanged(async (user) => {
+          isLoggedIn = !!user;
+          if (user) {
+            await loadData();
+          } else {
+            userXP = null;
+            achievements = [];
+            unlockedAchievements = [];
+            lockedAchievements = [];
+          }
+        });
 
-      return () => {
-        unsubscribe();
-      };
-    } catch (err) {
-      console.error("Failed to initialize AchievementsTab:", err);
-      error = "Failed to load achievements";
-      loading = false;
-    }
+        return () => {
+          unsubscribe();
+        };
+      } catch (err) {
+        console.error("Failed to initialize AchievementsTab:", err);
+        error = "Failed to load achievements";
+        loading = false;
+        return undefined;
+      }
+    };
+
+    const cleanup = initAsync();
+    return () => {
+      cleanup.then((fn) => fn?.());
+    };
   });
 
   async function loadData() {
@@ -90,8 +100,12 @@
 
       // Sort unlocked by date (newest first)
       unlockedAchievements.sort((a, b) => {
-        const dateA = a.userProgress?.unlockedAt ? new Date(a.userProgress.unlockedAt).getTime() : 0;
-        const dateB = b.userProgress?.unlockedAt ? new Date(b.userProgress.unlockedAt).getTime() : 0;
+        const dateA = a.userProgress?.unlockedAt
+          ? new Date(a.userProgress.unlockedAt).getTime()
+          : 0;
+        const dateB = b.userProgress?.unlockedAt
+          ? new Date(b.userProgress.unlockedAt).getTime()
+          : 0;
         return dateB - dateA;
       });
 
@@ -106,7 +120,8 @@
   }
 
   function formatDate(dateInput: Date | string): string {
-    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    const date =
+      typeof dateInput === "string" ? new Date(dateInput) : dateInput;
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
@@ -247,7 +262,6 @@
     text-align: center;
   }
 
-  .loading-state i,
   .error-state i,
   .empty-state i {
     font-size: 48px;

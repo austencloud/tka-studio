@@ -175,6 +175,7 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
             class="restart-btn"
             onclick={handleRestart}
             title="Change settings"
+            aria-label="Change settings and restart drawing"
           >
             <i class="fas fa-cog"></i>
           </button>
