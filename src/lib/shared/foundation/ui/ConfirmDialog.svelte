@@ -1,18 +1,26 @@
 <!--
-  ConfirmDialog.svelte
+  ConfirmDialog.svelte - MIGRATED TO BITS UI
 
   A classy confirmation dialog with glassmorphism styling.
-  Used for important actions that need user confirmation.
+  Now built on Bits UI Dialog for better accessibility and maintainability.
+
+  BENEFITS:
+  - WCAG AAA compliant accessibility out of the box
+  - Better focus management and keyboard navigation
+  - Portal rendering (no z-index issues)
+  - Automatic ARIA attributes
+  - Better screen reader support
 -->
 <script lang="ts">
+  import { Dialog as DialogPrimitive } from "bits-ui";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { quintOut } from "svelte/easing";
   import { fade, scale } from "svelte/transition";
 
-  const {
-    isOpen,
+  let {
+    isOpen = $bindable(false),
     title,
     message,
     confirmText = "Continue",
@@ -21,7 +29,7 @@
     onCancel,
     variant = "warning",
   } = $props<{
-    isOpen: boolean;
+    isOpen?: boolean;
     title: string;
     message: string;
     confirmText?: string;
@@ -40,16 +48,6 @@
     );
   });
 
-  // Handle backdrop click
-  function handleBackdropClick(event: MouseEvent) {
-    if (event.target === event.currentTarget) {
-      // Trigger navigation haptic feedback for cancel via backdrop
-      hapticService?.trigger("selection");
-
-      onCancel();
-    }
-  }
-
   // Handle confirm button
   function handleConfirm() {
     // Trigger appropriate haptic feedback based on variant
@@ -60,6 +58,7 @@
     }
 
     onConfirm();
+    isOpen = false;
   }
 
   // Handle cancel button
@@ -68,36 +67,30 @@
     hapticService?.trigger("selection");
 
     onCancel();
+    isOpen = false;
   }
 
-  // Handle keyboard events
-  function handleKeydown(event: KeyboardEvent) {
-    if (event.key === "Escape") {
-      onCancel();
-    } else if (event.key === "Enter") {
-      onConfirm();
+  // Handle open change from Bits UI
+  function handleOpenChange(open: boolean) {
+    if (!open && isOpen) {
+      // User closed via escape or backdrop
+      handleCancel();
     }
+    isOpen = open;
   }
 </script>
 
-{#if isOpen}
-  <div
-    class="dialog-backdrop"
-    onclick={handleBackdropClick}
-    onkeydown={handleKeydown}
-    role="presentation"
-    transition:fade={{ duration: 200 }}
-  >
-    <div
-      class="dialog-container"
-      class:warning={variant === "warning"}
-      class:danger={variant === "danger"}
-      class:info={variant === "info"}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="dialog-title"
-      aria-describedby="dialog-message"
-      transition:scale={{ duration: 200, easing: quintOut, start: 0.95 }}
+<DialogPrimitive.Root open={isOpen} onOpenChange={handleOpenChange}>
+  <DialogPrimitive.Portal>
+    <DialogPrimitive.Overlay
+      transition={fade}
+      transitionConfig={{ duration: 200 }}
+      class="dialog-backdrop"
+    />
+    <DialogPrimitive.Content
+      transition={scale}
+      transitionConfig={{ duration: 200, easing: quintOut, start: 0.95 }}
+      class="dialog-container {variant}"
     >
       <!-- Icon -->
       <div class="dialog-icon">
@@ -112,8 +105,10 @@
 
       <!-- Content -->
       <div class="dialog-content">
-        <h2 id="dialog-title" class="dialog-title">{title}</h2>
-        <p id="dialog-message" class="dialog-message">{message}</p>
+        <DialogPrimitive.Title class="dialog-title">{title}</DialogPrimitive.Title>
+        <DialogPrimitive.Description class="dialog-message">
+          {message}
+        </DialogPrimitive.Description>
       </div>
 
       <!-- Actions -->
@@ -125,12 +120,12 @@
           {confirmText}
         </button>
       </div>
-    </div>
-  </div>
-{/if}
+    </DialogPrimitive.Content>
+  </DialogPrimitive.Portal>
+</DialogPrimitive.Root>
 
 <style>
-  .dialog-backdrop {
+  :global(.dialog-backdrop) {
     position: fixed;
     top: 0;
     left: 0;
@@ -146,7 +141,11 @@
     padding: 20px;
   }
 
-  .dialog-container {
+  :global(.dialog-container) {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: rgba(30, 30, 35, 0.95);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 16px;
@@ -156,17 +155,18 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    z-index: 1001;
   }
 
-  .dialog-container.warning {
+  :global(.dialog-container.warning) {
     border-color: rgba(255, 193, 7, 0.3);
   }
 
-  .dialog-container.danger {
+  :global(.dialog-container.danger) {
     border-color: rgba(244, 67, 54, 0.3);
   }
 
-  .dialog-container.info {
+  :global(.dialog-container.info) {
     border-color: rgba(33, 150, 243, 0.3);
   }
 
@@ -187,7 +187,7 @@
     margin-bottom: 28px;
   }
 
-  .dialog-title {
+  :global(.dialog-title) {
     margin: 0 0 12px 0;
     font-size: 24px;
     font-weight: 600;
@@ -196,7 +196,7 @@
     font-style: italic;
   }
 
-  .dialog-message {
+  :global(.dialog-message) {
     margin: 0;
     font-size: 16px;
     line-height: 1.6;
@@ -245,36 +245,36 @@
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
   }
 
-  .warning .confirm-button {
+  :global(.dialog-container.warning) .confirm-button {
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   }
 
-  .warning .confirm-button:hover {
+  :global(.dialog-container.warning) .confirm-button:hover {
     background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
   }
 
-  .danger .confirm-button {
+  :global(.dialog-container.danger) .confirm-button {
     background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   }
 
-  .danger .confirm-button:hover {
+  :global(.dialog-container.danger) .confirm-button:hover {
     background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
   }
 
   /* Mobile responsive */
   @media (max-width: 768px) {
-    .dialog-container {
+    :global(.dialog-container) {
       padding: 24px;
       max-width: 90%;
     }
 
-    .dialog-title {
+    :global(.dialog-title) {
       font-size: 20px;
     }
 
-    .dialog-message {
+    :global(.dialog-message) {
       font-size: 14px;
     }
 

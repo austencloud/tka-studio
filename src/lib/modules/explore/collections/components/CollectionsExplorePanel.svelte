@@ -269,17 +269,17 @@ Displays user-created collections/playlists of sequences.
   .search-input {
     width: 100%;
     padding: 10px 12px 10px 40px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--input-bg-current);
+    border: var(--input-border-current);
     border-radius: 8px;
-    color: white;
+    color: var(--text-primary-current);
     font-size: 14px;
     transition: all 0.2s ease;
   }
 
   .search-input:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--input-focus-current);
     border-color: rgba(255, 255, 255, 0.2);
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
   }
@@ -299,10 +299,10 @@ Displays user-created collections/playlists of sequences.
     align-items: center;
     gap: 6px;
     padding: 10px 14px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--panel-bg-current);
+    border: var(--panel-border-current);
     border-radius: 8px;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary-current);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -310,15 +310,15 @@ Displays user-created collections/playlists of sequences.
   }
 
   .filter-button:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--panel-hover-current);
     border-color: rgba(255, 255, 255, 0.2);
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-primary-current);
   }
 
   .filter-button.active {
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--button-active-current);
     border-color: rgba(255, 255, 255, 0.3);
-    color: white;
+    color: var(--text-primary-current);
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
   }
 
@@ -352,8 +352,8 @@ Displays user-created collections/playlists of sequences.
   .collection-card {
     display: flex;
     flex-direction: column;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-bg-current);
+    border: var(--card-border-current);
     border-radius: 12px;
     overflow: hidden;
     transition: all 0.2s ease;
@@ -361,7 +361,7 @@ Displays user-created collections/playlists of sequences.
   }
 
   .collection-card:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover-current);
     border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);

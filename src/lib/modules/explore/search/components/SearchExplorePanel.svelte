@@ -138,7 +138,6 @@ Allows natural language queries to find sequences, users, and collections.
       placeholder="Try 'beginner sequences' or 'sequences with alpha start'..."
       bind:value={searchQuery}
       onkeydown={handleKeydown}
-      autofocus
     />
     <button
       class="search-button"
@@ -168,8 +167,7 @@ Allows natural language queries to find sequences, users, and collections.
         class:active={searchFilter === "sequences"}
         onclick={() => (searchFilter = "sequences")}
       >
-        Sequences
-        ({searchResults.filter((r) => r.type === "sequence").length})
+        Sequences ({searchResults.filter((r) => r.type === "sequence").length})
       </button>
       <button
         class="filter-tab"
@@ -183,8 +181,8 @@ Allows natural language queries to find sequences, users, and collections.
         class:active={searchFilter === "collections"}
         onclick={() => (searchFilter = "collections")}
       >
-        Collections
-        ({searchResults.filter((r) => r.type === "collection").length})
+        Collections ({searchResults.filter((r) => r.type === "collection")
+          .length})
       </button>
     </div>
   {/if}
@@ -230,23 +228,24 @@ Allows natural language queries to find sequences, users, and collections.
       <div class="empty-state">
         <i class="fas fa-search"></i>
         <h3>No results found</h3>
-        <p>Try adjusting your search query or browse suggested searches above</p>
+        <p>
+          Try adjusting your search query or browse suggested searches above
+        </p>
       </div>
     {:else}
       <!-- Search results -->
       <div class="results-list">
         {#each filteredResults() as result (result.id)}
-          <button
-            class="result-item"
-            onclick={() => handleResultClick(result)}
-          >
+          <button class="result-item" onclick={() => handleResultClick(result)}>
             <div class="result-icon">
               <i class="fas {getResultIcon(result.type)}"></i>
             </div>
             <div class="result-content">
               <div class="result-header">
                 <h4 class="result-title">{result.title}</h4>
-                <span class="result-type">{getResultTypeLabel(result.type)}</span>
+                <span class="result-type"
+                  >{getResultTypeLabel(result.type)}</span
+                >
               </div>
               <p class="result-description">{result.description}</p>
               <div class="result-relevance">
@@ -322,17 +321,17 @@ Allows natural language queries to find sequences, users, and collections.
   .search-input {
     flex: 1;
     padding: 14px 16px 14px 48px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    background: var(--input-bg-current);
+    border: 2px solid var(--input-border-current);
     border-radius: 12px;
-    color: white;
+    color: var(--text-primary-current);
     font-size: 15px;
     transition: all 0.2s ease;
   }
 
   .search-input:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.12);
+    background: var(--input-focus-current);
     border-color: rgba(0, 123, 255, 0.5);
     box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.1);
   }
@@ -378,10 +377,10 @@ Allows natural language queries to find sequences, users, and collections.
 
   .filter-tab {
     padding: 8px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--panel-bg-current);
+    border: var(--panel-border-current);
     border-radius: 20px;
-    color: rgba(255, 255, 255, 0.7);
+    color: var(--text-secondary-current);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -390,8 +389,8 @@ Allows natural language queries to find sequences, users, and collections.
   }
 
   .filter-tab:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.9);
+    background: var(--panel-hover-current);
+    color: var(--text-primary-current);
   }
 
   .filter-tab.active {
@@ -432,10 +431,10 @@ Allows natural language queries to find sequences, users, and collections.
     align-items: center;
     gap: 8px;
     padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-bg-current);
+    border: var(--card-border-current);
     border-radius: 10px;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--text-secondary-current);
     font-size: 14px;
     text-align: left;
     cursor: pointer;
@@ -443,7 +442,7 @@ Allows natural language queries to find sequences, users, and collections.
   }
 
   .suggestion-chip:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover-current);
     border-color: rgba(255, 255, 255, 0.2);
     transform: translateY(-2px);
   }
@@ -526,8 +525,8 @@ Allows natural language queries to find sequences, users, and collections.
     align-items: center;
     gap: 16px;
     padding: 16px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--card-bg-current);
+    border: var(--card-border-current);
     border-radius: 12px;
     text-align: left;
     cursor: pointer;
@@ -535,7 +534,7 @@ Allows natural language queries to find sequences, users, and collections.
   }
 
   .result-item:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--card-hover-current);
     border-color: rgba(255, 255, 255, 0.2);
     transform: translateX(4px);
   }

@@ -42,8 +42,8 @@
   // Initialize activeTab from localStorage or default to "PropType"
   let activeTab = $state(loadActiveTab(VALID_TAB_IDS, "PropType"));
 
-  // Track if settings have been modified
-  let hasUnsavedChanges = $state(false);
+  // Track if a save is in progress (for visual feedback)
+  let isSaving = $state(false);
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
@@ -84,48 +84,28 @@
     saveActiveTab(tabId);
   }
 
-  // Adapter for modern prop-based updates
-  function handlePropUpdate(event: { key: string; value: unknown }) {
+  // Adapter for modern prop-based updates with instant save
+  async function handlePropUpdate(event: { key: string; value: unknown }) {
     console.log("🔧 SettingsSheet handlePropUpdate called:", event);
     settings[event.key as keyof typeof settings] = event.value as never;
-    hasUnsavedChanges = true;
-  }
 
-  // Handle apply/save
-  async function handleApply() {
-    hapticService?.trigger("success");
-    console.log("✅ Apply button clicked");
-
+    // Instant save - apply changes immediately
+    isSaving = true;
     const settingsToApply = $state.snapshot(settings);
-    console.log(
-      "✅ Settings snapshot to be applied:",
-      JSON.stringify(settingsToApply, null, 2)
-    );
+    console.log("💾 Auto-saving settings:", JSON.stringify(settingsToApply, null, 2));
 
     await updateSettings(settingsToApply);
-    hasUnsavedChanges = false;
-    hideSettingsDialog();
 
-    // Close via route if route-based
-    import("../../navigation/utils/sheet-router").then(({ closeSheet }) => {
-      closeSheet();
-    });
+    // Brief delay for visual feedback
+    setTimeout(() => {
+      isSaving = false;
+    }, 300);
   }
 
-  // Handle close/cancel with unsaved changes warning
+  // Handle close (no unsaved changes warning needed with instant save)
   function handleClose() {
-    if (hasUnsavedChanges) {
-      const confirmClose = confirm(
-        "You have unsaved changes. Are you sure you want to close without saving?"
-      );
-      if (!confirmClose) {
-        return;
-      }
-    }
-
     hapticService?.trigger("selection");
-    console.log("❌ Settings cancelled");
-    hasUnsavedChanges = false;
+    console.log("✅ Settings closed (all changes auto-saved)");
     hideSettingsDialog();
 
     // Close via route if route-based
@@ -183,24 +163,28 @@
       </main>
     </div>
 
-    <!-- Footer with action buttons -->
+    <!-- Footer with close button and auto-save indicator -->
     <footer class="settings-sheet__footer">
+      <div class="save-status">
+        {#if isSaving}
+          <span class="save-indicator saving">
+            <i class="fas fa-sync fa-spin"></i>
+            Saving...
+          </span>
+        {:else}
+          <span class="save-indicator saved">
+            <i class="fas fa-check"></i>
+            All changes saved
+          </span>
+        {/if}
+      </div>
       <button
-        class="settings-sheet__button settings-sheet__button--cancel"
+        class="settings-sheet__button settings-sheet__button--close"
         onclick={handleClose}
-        aria-label="Cancel changes"
+        aria-label="Close settings"
       >
         <i class="fas fa-times"></i>
-        Cancel
-      </button>
-      <button
-        class="settings-sheet__button settings-sheet__button--apply"
-        onclick={handleApply}
-        disabled={!hasUnsavedChanges}
-        aria-label="Apply changes"
-      >
-        <i class="fas fa-check"></i>
-        Apply Changes
+        Close
       </button>
     </footer>
   </div>
@@ -353,12 +337,12 @@
     }
   }
 
-  /* Footer - 2025 Standard: Cancel left, Apply right */
+  /* Footer - 2025 Standard: Auto-save indicator + Close button */
   .settings-sheet__footer {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Changed from flex-end to space-between */
-    gap: 12px;
+    justify-content: space-between;
+    gap: 16px;
     padding: 16px 24px;
     border-top: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(0, 0, 0, 0.15);
@@ -367,62 +351,63 @@
     flex-shrink: 0;
   }
 
+  /* Save status indicator */
+  .save-status {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .save-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+
+  .save-indicator.saving {
+    color: rgba(147, 197, 253, 0.9); /* Light blue */
+  }
+
+  .save-indicator.saved {
+    color: rgba(134, 239, 172, 0.9); /* Light green */
+  }
+
+  .save-indicator i {
+    font-size: 14px;
+  }
+
   .settings-sheet__button {
     display: flex;
     align-items: center;
     gap: 8px;
     padding: 12px 24px;
-    border-radius: 10px; /* Slightly increased for modern feel */
+    border-radius: 10px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth easing */
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     min-height: 44px; /* Touch target */
   }
 
-  /* Cancel button - secondary action */
-  .settings-sheet__button--cancel {
+  /* Close button - primary action in instant-save pattern */
+  .settings-sheet__button--close {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.9);
     border: 1.5px solid rgba(255, 255, 255, 0.15);
   }
 
-  .settings-sheet__button--cancel:hover {
+  .settings-sheet__button--close:hover {
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(255, 255, 255, 0.25);
-    transform: scale(1.02); /* Subtle scale up */
-  }
-
-  .settings-sheet__button--cancel:active {
-    transform: scale(0.98); /* Press feedback */
-  }
-
-  /* Apply button - primary action with indigo theme */
-  .settings-sheet__button--apply {
-    background: linear-gradient(135deg, #6366f1, #4f46e5); /* Indigo gradient */
-    color: white;
-    box-shadow:
-      0 2px 8px rgba(99, 102, 241, 0.3),
-      0 0 12px rgba(99, 102, 241, 0.2); /* Subtle glow */
-  }
-
-  .settings-sheet__button--apply:hover:not(:disabled) {
-    background: linear-gradient(135deg, #4f46e5, #4338ca);
-    box-shadow:
-      0 4px 12px rgba(99, 102, 241, 0.4),
-      0 0 20px rgba(99, 102, 241, 0.3); /* Enhanced glow */
     transform: scale(1.02);
   }
 
-  .settings-sheet__button--apply:active:not(:disabled) {
-    transform: scale(0.98); /* Press feedback */
-  }
-
-  .settings-sheet__button--apply:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    box-shadow: none;
+  .settings-sheet__button--close:active {
+    transform: scale(0.98);
   }
 
   .settings-sheet__button:focus-visible {
@@ -513,13 +498,14 @@
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
     .settings-sheet__close,
-    .settings-sheet__button {
+    .settings-sheet__button,
+    .save-indicator {
       transition: none;
     }
 
     .settings-sheet__close:hover,
     .settings-sheet__close:active,
-    .settings-sheet__button--apply:hover {
+    .settings-sheet__button--close:hover {
       transform: none;
     }
   }
