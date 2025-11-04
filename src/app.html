@@ -31,9 +31,10 @@
     <link rel="apple-touch-startup-image" href="%sveltekit.assets%/pwa/splash-750x1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
     <link rel="apple-touch-startup-image" href="%sveltekit.assets%/pwa/splash-640x1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)" />
 
-    <!-- CACHE MANAGEMENT - Clear stale cache on startup -->
+    <!-- CACHE MANAGEMENT - Clear stale cache on startup (non-blocking) -->
     <script>
-      (function () {
+      // ⚡ PERFORMANCE: Run cache cleanup asynchronously to not block page load
+      setTimeout(function () {
         try {
           // Always clear cache-related items on startup to prevent quota issues
           const keysToRemove = [];
@@ -65,7 +66,7 @@
         } catch (error) {
           console.warn("Failed to check/clear cache on startup:", error);
         }
-      })();
+      }, 0);
 
       // Development Storage Cleanup Utilities
       if (
