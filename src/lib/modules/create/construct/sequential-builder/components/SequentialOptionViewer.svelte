@@ -60,7 +60,7 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
 
   // Get descriptive label for each option type
   function getOptionLabel(option: PictographData, index: number): string {
-    const motion = option.motions[visibleHand];
+    const motion = option.motions[visibleHand as keyof typeof option.motions];
     if (!motion) return `Option ${index + 1}`;
 
     const motionType = motion.motionType;
