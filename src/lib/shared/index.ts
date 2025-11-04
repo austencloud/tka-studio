@@ -6,6 +6,7 @@
  */
 
 // === SHARED INFRASTRUCTURE ===
+export * from "./animation";
 export * from "./application";
 export * from "./background";
 // Export device module explicitly to avoid any re-export ambiguities
