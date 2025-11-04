@@ -140,7 +140,14 @@
       "Bash(\"src/lib/modules/create/generate/components/modals/CAPSelectionModal.svelte\" )",
       "Bash(\"src/lib/shared/gamification/components/AchievementsBrowser.svelte\")",
       "Bash(timeout 60 npm run check:*)",
-      "Bash(timeout 120 npm run build:*)"
+      "Bash(timeout 120 npm run build:*)",
+      "Bash(timeout /t 15 /nobreak)",
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(npm run test:*)",
+      "Bash(timeout 10 curl:*)",
+      "Bash(del \"src\\UNIFIED_NAVIGATION_MENU_ANALYSIS.md\" \"src\\UNIFIED_NAVIGATION_QUICK_REFERENCE.md\")",
+      "Bash(timeout 60 bash -c:*)"
     ],
     "deny": [],
     "ask": []
