@@ -30,9 +30,11 @@ Integrates with workspace for real-time updates
   const {
     onSequenceUpdate,
     onSequenceComplete,
+    onHeaderTextChange,
   } = $props<{
     onSequenceUpdate?: (sequence: PictographData[]) => void;
     onSequenceComplete?: (sequence: PictographData[]) => void;
+    onHeaderTextChange?: (text: string) => void;
   }>();
 
   // Services
@@ -52,6 +54,14 @@ Integrates with workspace for real-time updates
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  });
+
+  // Notify parent of header text changes
+  $effect(() => {
+    const text = headerText();
+    if (onHeaderTextChange) {
+      onHeaderTextChange(text);
+    }
   });
 
   // Header text based on phase

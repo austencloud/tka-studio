@@ -82,7 +82,6 @@ With grid mode toggle to switch between Diamond and Box mode
   <!-- Header with title and grid mode toggle -->
   <div class="picker-header">
     <div class="header-spacer"></div>
-    <h2 class="picker-title">Choose Starting Position</h2>
     <div class="grid-toggle-container">
       <GridModeToggle
         currentGridMode={currentGridMode}
@@ -135,17 +134,6 @@ With grid mode toggle to switch between Diamond and Box mode
     padding: 0.5rem;
   }
 
-  .header-spacer {
-    /* Empty spacer for symmetry */
-  }
-
-  .picker-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    text-align: center;
-    margin: 0;
-  }
 
   .grid-toggle-container {
     display: flex;
@@ -244,9 +232,7 @@ With grid mode toggle to switch between Diamond and Box mode
       gap: 1rem;
     }
 
-    .picker-title {
-      font-size: 1.1rem;
-    }
+
 
     .position-grid {
       gap: 1rem;

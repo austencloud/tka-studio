@@ -115,6 +115,9 @@ export function createCreateModuleState(
   // Reference to construct tab state (set after initialization)
   let constructTabState: any = null;
 
+  // Guided mode header text (updated by SequentialBuilder)
+  let guidedModeHeaderText = $state<string>("");
+
   // Shared sub-states
   const sequenceState = createSequenceState({
     sequenceService,
@@ -561,6 +564,13 @@ export function createCreateModuleState(
     constructTabState = state;
   }
 
+  /**
+   * Set guided mode header text (called by ToolPanel when SequentialBuilder emits text changes)
+   */
+  function setGuidedModeHeaderText(text: string) {
+    guidedModeHeaderText = text;
+  }
+
   // ============================================================================
   // PERSISTENCE FUNCTIONS
   // ============================================================================
@@ -722,6 +732,12 @@ export function createCreateModuleState(
     setConfirmExitGuidedCallback,
     setClearSequenceCompletelyCallback,
     setConstructTabState,
+    setGuidedModeHeaderText,
+
+    // Getters for reactive state
+    get guidedModeHeaderText() {
+      return guidedModeHeaderText;
+    },
 
     // Persistence functions
     initializeWithPersistence,

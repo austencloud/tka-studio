@@ -278,6 +278,10 @@
                   });
                 }
               }}
+              onHeaderTextChange={(text) => {
+                // Update the guided mode header text in CreateModuleState
+                createModuleState.setGuidedModeHeaderText(text);
+              }}
             />
           {:else if activeToolPanel === "construct"}
             {#if isPickerStateLoading}

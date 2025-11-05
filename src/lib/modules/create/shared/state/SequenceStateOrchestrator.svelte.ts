@@ -246,6 +246,9 @@ export function createSequenceState(services: SequenceStateServices) {
       console.log("🎬 Starting clear sequence fade-out");
       animationState.startClearing();
 
+      // Reduced delay to match the beat-grid CSS transition (300ms)
+      // This allows the clearing animation and layout transition to happen simultaneously
+      // The CSS transition on .beat-grid.clearing is 300ms, so we wait for it to complete
       await new Promise((resolve) => setTimeout(resolve, 300));
 
       coreState.setCurrentSequence(null);

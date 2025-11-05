@@ -68,10 +68,11 @@
   }
 
   // Get currently selected arrow info
+  // Note: OrientationControlPanel doesn't expose getSelectedArrow() method
+  // as it uses different child components (SimplifiedOrientationControl, InlineOrientationControl, etc.)
+  // that don't track selection state in the same way
   export function getSelectedArrow(): string | null {
-    if (activePanel === "orientation" && orientationControlPanel) {
-      return orientationControlPanel.getSelectedArrow();
-    }
+
     return null;
   }
 
@@ -101,13 +102,13 @@
   });
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
 <div class="main-adjustment-panel" data-testid="main-adjustment-panel">
-
-
   <div class="panel-content">
     {#if activePanel === "orientation"}
       <OrientationControlPanel
@@ -163,8 +164,6 @@
     height: 100%;
     color: var(--muted-foreground);
   }
-
-
 
   .no-controls p {
     margin: 0;

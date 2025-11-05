@@ -28,7 +28,7 @@ Research-backed design for 344px portrait (Z Fold):
   let hapticService: IHapticFeedbackService;
 
   // Constants - orientation cycle order
-  const orientations = ["in", "out", "clock", "counter"];
+  const orientations = ["in", "counter", "out", "clock"];
 
   // Derived values - Fixed: removed arrow functions to get actual values
   const displayLabel = $derived(color === "blue" ? "Left" : "Right");

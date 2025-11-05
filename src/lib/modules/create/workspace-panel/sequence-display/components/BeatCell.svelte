@@ -2,6 +2,7 @@
   import type { BeatData, IHapticFeedbackService } from "$shared";
   import { Pictograph, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
+  import EmptyStartPositionPlaceholder from "./EmptyStartPositionPlaceholder.svelte";
 
   let {
     beat,
@@ -31,7 +32,9 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   const isStartPosition = $derived(() => {
@@ -57,8 +60,6 @@
     };
   });
 
-
-
   let hasAnimated = $state(false);
   let currentAnimationName = $state("gentleBloom");
   let previousBeatId = beat.id;
@@ -79,7 +80,9 @@
   // Enable transitions when new pictograph data arrives (for option selection animation)
   $effect(() => {
     const currentPictographData = beat.isBlank ? null : beat;
-    const dataChanged = JSON.stringify(currentPictographData) !== JSON.stringify(previousPictographData);
+    const dataChanged =
+      JSON.stringify(currentPictographData) !==
+      JSON.stringify(previousPictographData);
 
     if (dataChanged && !beat.isBlank) {
       // New pictograph data - enable transitions for fade-in
@@ -126,10 +129,16 @@
       console.log(`🎨 BeatCell: Animation changed to ${currentAnimationName}`);
     };
 
-    window.addEventListener('animation-change', handleAnimationChange as EventListener);
+    window.addEventListener(
+      "animation-change",
+      handleAnimationChange as EventListener
+    );
 
     return () => {
-      window.removeEventListener('animation-change', handleAnimationChange as EventListener);
+      window.removeEventListener(
+        "animation-change",
+        handleAnimationChange as EventListener
+      );
     };
   });
 
@@ -216,10 +225,16 @@
   tabindex="0"
   aria-label={ariaLabel()}
 >
-  <Pictograph
-    pictographData={beatDataWithSelection()}
-    disableContentTransitions={!enableTransitionsForNewData}
-  />
+  {#if index === -1 && beat.isBlank}
+    <!-- Empty start position placeholder -->
+    <EmptyStartPositionPlaceholder />
+  {:else}
+    <!-- Normal pictograph -->
+    <Pictograph
+      pictographData={beatDataWithSelection()}
+      disableContentTransitions={!enableTransitionsForNewData}
+    />
+  {/if}
 </div>
 
 <style>
@@ -336,7 +351,8 @@
   }
 
   @keyframes practicePulse {
-    0%, 100% {
+    0%,
+    100% {
       box-shadow: 0 0 20px rgba(251, 191, 36, 0.6);
       transform: scale(1.1);
     }

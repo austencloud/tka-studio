@@ -11,9 +11,11 @@ Handles real-time workspace updates and sequence completion.
   const {
     onSequenceUpdate,
     onSequenceComplete,
+    onHeaderTextChange,
   } = $props<{
     onSequenceUpdate?: (sequence: PictographData[]) => void;
     onSequenceComplete?: (sequence: PictographData[]) => void;
+    onHeaderTextChange?: (text: string) => void;
   }>();
 
   // Handle sequence updates (during building)
@@ -31,6 +33,7 @@ Handles real-time workspace updates and sequence completion.
   <SequentialBuilder
     onSequenceUpdate={handleSequenceUpdate}
     onSequenceComplete={handleSequenceComplete}
+    onHeaderTextChange={onHeaderTextChange}
   />
 </div>
 

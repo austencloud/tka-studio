@@ -241,8 +241,12 @@
     let displayText = "";
 
     // When creation method selector is visible, show selection prompt
-    if (isWorkspaceEmpty()) {
+    if (isWorkspaceEmpty() && !hasSelectedCreationMethod) {
       displayText = "Choose Creation Mode";
+    }
+    // In guided mode, show the header text from Sequential Builder
+    else if (CreateModuleState.activeSection === "guided") {
+      displayText = CreateModuleState.guidedModeHeaderText || "Guided Builder";
     }
     // In gestural (hand path) mode, show contextual message instead of word
     else if (
@@ -501,17 +505,39 @@
         description: "Clear sequence",
       });
 
-      if (constructTabState?.clearSequenceCompletely) {
-        await constructTabState.clearSequenceCompletely();
-      } else if (CreateModuleState.sequenceState?.clearSequenceCompletely) {
-        await CreateModuleState.sequenceState.clearSequenceCompletely();
-      } else if (CreateModuleState.sequenceState?.clearSequence) {
-        CreateModuleState.sequenceState.clearSequence();
+      // Start the clearing animation (beats fade out in 300ms)
+      if (CreateModuleState.sequenceState) {
+        CreateModuleState.sequenceState.animationState.startClearing();
       }
-      panelState.closeSharePanel();
 
-      // Reset creation method selection to show selector again
+      // Immediately trigger layout transition alongside beat fade-out
+      // This creates a cohesive parallel animation
       hasSelectedCreationMethod = false;
+
+      // Small delay to let layout transition start rendering
+      await new Promise(resolve => setTimeout(resolve, 50));
+
+      // Clear UI state (start position picker, etc.) without re-triggering animation
+      if (constructTabState) {
+        constructTabState.setShowStartPositionPicker(true);
+        constructTabState.setSelectedStartPosition(null);
+        constructTabState.startPositionStateService.clearSelectedPosition();
+        constructTabState.clearError();
+      }
+
+      // Wait for beat clearing animation to complete (300ms total from start)
+      await new Promise(resolve => setTimeout(resolve, 250));
+
+      // Clear sequence data
+      if (CreateModuleState.sequenceState) {
+        CreateModuleState.sequenceState.setCurrentSequence(null);
+        CreateModuleState.sequenceState.clearSelection();
+        CreateModuleState.sequenceState.clearError();
+        await CreateModuleState.sequenceState.clearPersistedState();
+        CreateModuleState.sequenceState.animationState.endClearing();
+      }
+
+      panelState.closeSharePanel();
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to clear sequence";
@@ -611,7 +637,7 @@
               <!-- Layout 1: Inviting text when selector is visible -->
               <div
                 class="welcome-screen"
-                in:fade={{ duration: 400 }}
+                in:fade={{ duration: 400, delay: 200 }}
                 out:fade={{ duration: 200 }}
               >
                 <!-- Centered welcome content with undo button above -->
@@ -664,6 +690,7 @@
               <div
                 class="workspace-panel-wrapper"
                 in:fade={{ duration: 400, delay: 200 }}
+                out:fade={{ duration: 300 }}
               >
                 <WorkspacePanel
                   sequenceState={CreateModuleState.sequenceState}
@@ -685,6 +712,7 @@
               class="button-panel-wrapper"
               bind:this={buttonPanelElement}
               in:fade={{ duration: 400, delay: 200 }}
+              out:fade={{ duration: 300 }}
             >
               <ButtonPanel
                 {CreateModuleState}
