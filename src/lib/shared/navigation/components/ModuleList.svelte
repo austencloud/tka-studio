@@ -22,6 +22,17 @@
 
   let hapticService: IHapticFeedbackService;
 
+  // Track drag state to prevent clicks during swipe gestures
+  let dragState = $state<{
+    isDragging: boolean;
+    startY: number;
+    startTime: number;
+  }>({
+    isDragging: false,
+    startY: 0,
+    startTime: 0,
+  });
+
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
@@ -36,7 +47,37 @@
     modules.filter((m: ModuleDefinition) => !m.isMain)
   );
 
-  function handleModuleClick(moduleId: ModuleId) {
+  function handlePointerDown(event: PointerEvent) {
+    dragState.isDragging = false;
+    dragState.startY = event.clientY;
+    dragState.startTime = Date.now();
+  }
+
+  function handlePointerMove(event: PointerEvent) {
+    const deltaY = Math.abs(event.clientY - dragState.startY);
+    // If moved more than 10px vertically, consider it a drag
+    if (deltaY > 10) {
+      dragState.isDragging = true;
+    }
+  }
+
+  function handleModuleClick(moduleId: ModuleId, event: PointerEvent) {
+    // If user was dragging, don't trigger the click
+    if (dragState.isDragging) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
+    // If the pointer was down for more than 300ms and moved, likely a drag
+    const duration = Date.now() - dragState.startTime;
+    const deltaY = Math.abs(event.clientY - dragState.startY);
+    if (duration > 300 && deltaY > 5) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     hapticService?.trigger("selection");
     onModuleSelect?.(moduleId);
   }
@@ -50,7 +91,9 @@
       <button
         class="module-item"
         class:active={currentModule === module.id}
-        onclick={() => handleModuleClick(module.id)}
+        onpointerdown={handlePointerDown}
+        onpointermove={handlePointerMove}
+        onclick={(e) => handleModuleClick(module.id, e)}
       >
         <span class="item-icon">{@html module.icon}</span>
         <div class="item-info">
@@ -78,7 +121,9 @@
         <button
           class="module-item"
           class:active={currentModule === module.id}
-          onclick={() => handleModuleClick(module.id)}
+          onpointerdown={handlePointerDown}
+          onpointermove={handlePointerMove}
+          onclick={(e) => handleModuleClick(module.id, e)}
         >
           <span class="item-icon">{@html module.icon}</span>
           <div class="item-info">
