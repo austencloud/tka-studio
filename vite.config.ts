@@ -49,11 +49,12 @@ const dictionaryPlugin = () => ({
 });
 
 /**
- * 🚀 2025 OPTIMIZATION: Aggressive caching for static SVG assets
- * Adds cache headers to SVG files for browser-level performance optimization
+ * 🚀 2025 OPTIMIZATION: Smart caching for development
+ * - No cache for CSS/JS (prevents hard refresh issues)
+ * - Aggressive caching only for static SVG assets
  */
-const svgCachePlugin = () => ({
-  name: "svg-cache-headers",
+const devCachePlugin = () => ({
+  name: "dev-cache-headers",
   configureServer(server: ViteDevServer) {
     server.middlewares.use(
       (
@@ -61,12 +62,22 @@ const svgCachePlugin = () => ({
         res: ServerResponse,
         next: (err?: unknown) => void
       ) => {
-        // Apply aggressive caching to all SVG files in /images/ directory
-        if (req.url && req.url.startsWith("/images/") && req.url.endsWith(".svg")) {
-          // Intercept the response to add cache headers
+        const url = req.url || "";
+
+        // Disable caching for CSS, JS, and HMR to prevent hard refresh issues
+        if (url.includes(".css") || url.includes(".js") || url.includes("@vite") || url.includes("@fs")) {
           const originalWriteHead = res.writeHead;
           res.writeHead = function (...args: any[]) {
-            // Set aggressive caching for static SVG assets (1 year)
+            res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
+            res.setHeader("Pragma", "no-cache");
+            res.setHeader("Expires", "0");
+            return originalWriteHead.apply(res, args);
+          };
+        }
+        // Apply aggressive caching only to static SVG files in /images/
+        else if (url.startsWith("/images/") && url.endsWith(".svg")) {
+          const originalWriteHead = res.writeHead;
+          res.writeHead = function (...args: any[]) {
             res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
             res.setHeader("Vary", "Accept-Encoding");
             return originalWriteHead.apply(res, args);
@@ -92,7 +103,7 @@ export default defineConfig({
       },
     }),
     dictionaryPlugin(),
-    svgCachePlugin(), // 🚀 2025: Aggressive SVG caching
+    devCachePlugin(), // 🚀 2025: Smart caching (no-cache for CSS/JS, cache for SVGs)
   ],
 
   resolve: {
