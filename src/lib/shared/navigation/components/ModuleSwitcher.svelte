@@ -171,17 +171,25 @@
      DRAWER STYLING
      ============================================================================ */
   :global(.module-switcher-drawer) {
-    --sheet-max-height: min(90vh, 90dvh);
+    --sheet-max-height: calc(100vh - 1px) !important;
+    max-height: calc(100vh - 1px) !important;
+    height: calc(100vh - 1px) !important;
     --sheet-width: 100%;
     --sheet-bg: rgba(26, 26, 46, 0.95);
     --sheet-filter: blur(24px);
     --sheet-border: 1px solid rgba(255, 255, 255, 0.15);
     --sheet-radius-large: 24px;
+    box-sizing: border-box !important;
   }
 
   :global(.module-switcher-backdrop) {
     --sheet-backdrop-bg: rgba(0, 0, 0, 0.6);
     --sheet-backdrop-filter: blur(8px);
+  }
+
+  /* Sheet content - ensure proper z-index */
+  :global(.drawer-content.module-switcher-drawer) {
+    z-index: 1100 !important;
   }
 
   /* CRITICAL: Disable overflow on drawer-inner to allow swipe-to-dismiss */
