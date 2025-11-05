@@ -147,7 +147,8 @@
       "Bash(npm run test:*)",
       "Bash(timeout 10 curl:*)",
       "Bash(del \"src\\UNIFIED_NAVIGATION_MENU_ANALYSIS.md\" \"src\\UNIFIED_NAVIGATION_QUICK_REFERENCE.md\")",
-      "Bash(timeout 60 bash -c:*)"
+      "Bash(timeout 60 bash -c:*)",
+      "Bash(del \"c:\\_TKA-STUDIO\\src\\lib\\modules\\create\\workspace-panel\\components\\CreationMethodSelectorSheet.svelte\")"
     ],
     "deny": [],
     "ask": []
