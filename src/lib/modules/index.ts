@@ -15,7 +15,8 @@ export * from "./about";
 export * from "./create";
 export * from "./explore";
 export * from "./learn";
-export * from "./collection";
+export * from "./collect";
+export * from "./collection"; // Legacy - kept for backwards compatibility
 export * from "./library"; // Legacy - kept for backwards compatibility
 export * from "./word-card";
 export * from "./write";

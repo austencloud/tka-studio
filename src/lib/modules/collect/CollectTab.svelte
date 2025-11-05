@@ -1,5 +1,5 @@
 <!--
-  CollectionTab.svelte - Personal Collection Interface
+  CollectTab.svelte - Personal Collect Interface
 
   Sections:
   - Gallery: User-created and saved sequences
@@ -15,15 +15,19 @@
   import AchievementsSection from "./components/AchievementsSection.svelte";
   import ChallengesSection from "./components/ChallengesSection.svelte";
 
-  type CollectionMode = "gallery" | "achievements" | "challenges";
+  type CollectMode = "gallery" | "achievements" | "challenges";
 
   // Active mode synced with navigation state
-  let activeMode = $state<CollectionMode>("gallery");
+  let activeMode = $state<CollectMode>("gallery");
 
   // Sync with navigation state
   $effect(() => {
     const section = navigationState.currentSection;
-    if (section === "gallery" || section === "achievements" || section === "challenges") {
+    if (
+      section === "gallery" ||
+      section === "achievements" ||
+      section === "challenges"
+    ) {
       activeMode = section;
     }
   });
@@ -32,18 +36,23 @@
   onMount(() => {
     // Set default mode if none persisted
     const section = navigationState.currentSection;
-    if (!section || (section !== "gallery" && section !== "achievements" && section !== "challenges")) {
+    if (
+      !section ||
+      (section !== "gallery" &&
+        section !== "achievements" &&
+        section !== "challenges")
+    ) {
       navigationState.setCurrentSection("gallery");
     }
   });
 
   // Check if mode is active
-  function isModeActive(mode: CollectionMode): boolean {
+  function isModeActive(mode: CollectMode): boolean {
     return activeMode === mode;
   }
 </script>
 
-<div class="collection-tab">
+<div class="collect-tab">
   <!-- Content area (all modes) -->
   <div class="content-container">
     <!-- Gallery Mode -->
@@ -64,7 +73,7 @@
 </div>
 
 <style>
-  .collection-tab {
+  .collect-tab {
     position: relative;
     display: flex;
     flex-direction: column;

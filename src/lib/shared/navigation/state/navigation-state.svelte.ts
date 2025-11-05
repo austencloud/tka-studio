@@ -95,8 +95,8 @@ export const EXPLORE_TABS: Section[] = [
   },
 ];
 
-// Collection tabs configuration (formerly Library)
-export const COLLECTION_TABS: Section[] = [
+// Collect tabs configuration (formerly Library/Collection)
+export const COLLECT_TABS: Section[] = [
   {
     id: "gallery",
     label: "Gallery",
@@ -125,7 +125,8 @@ export const COLLECTION_TABS: Section[] = [
 
 // Legacy exports for backwards compatibility during migration
 export const BUILD_TABS = CREATE_TABS; // Legacy name
-export const LIBRARY_TABS = COLLECTION_TABS;
+export const LIBRARY_TABS = COLLECT_TABS; // Legacy name
+export const COLLECTION_TABS = COLLECT_TABS; // Legacy name
 
 // Admin tabs configuration
 export const ADMIN_TABS: Section[] = [
@@ -182,12 +183,12 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     sections: LEARN_TABS,
   },
   {
-    id: "collection",
-    label: "Collection",
-    icon: '<i class="fas fa-box-archive" style="color: #10b981;"></i>', // Green - collection/archive
+    id: "collect",
+    label: "Collect",
+    icon: '<i class="fas fa-box-archive" style="color: #10b981;"></i>', // Green - collect/archive
     description: "My gallery, achievements, and challenges",
     isMain: true,
-    sections: COLLECTION_TABS,
+    sections: COLLECT_TABS,
   },
   // Removed: write and word_card modules (not currently in use)
   {

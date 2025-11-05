@@ -1,13 +1,14 @@
 /**
- * Collection Module Exports
+ * Collection Module - Legacy Export
  *
- * Personal collection module containing:
- * - Gallery: Saved sequences
- * - Achievements: Progress and stats
- * - Challenges: Daily challenges and quests
+ * This module has been renamed to "collect" to follow the verb naming pattern.
+ * This file exists for backwards compatibility during migration.
+ *
+ * @deprecated Use "collect" module instead
  */
 
-export { default as CollectionTab } from "./CollectionTab.svelte";
-export { default as GallerySection } from "./components/GallerySection.svelte";
-export { default as AchievementsSection } from "./components/AchievementsSection.svelte";
-export { default as ChallengesSection } from "./components/ChallengesSection.svelte";
+// Re-export everything from the new collect module
+export * from "../collect";
+
+// Legacy named exports
+export { CollectTab as CollectionTab } from "../collect";
