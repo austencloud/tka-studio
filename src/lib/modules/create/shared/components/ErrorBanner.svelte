@@ -2,23 +2,32 @@
 	ErrorBanner.svelte
 
 	A reusable error banner component extracted from ConstructTab.
-	Displays error messages with a dismiss button.
+	Displays error messages with dismiss and optional retry actions.
 -->
 <script lang="ts">
-  // Props
-  const { message, onDismiss }: {
+  const { message, onDismiss, onRetry }: {
     message: string;
     onDismiss?: () => void;
+    onRetry?: () => void;
   } = $props();
 
   function handleDismiss() {
     onDismiss?.();
   }
+
+  function handleRetry() {
+    onRetry?.();
+  }
 </script>
 
 <div class="error-banner" data-testid="error-banner">
   <p>❌ {message}</p>
-  <button type="button" onclick={handleDismiss}>Dismiss</button>
+  <div class="actions">
+    {#if onRetry}
+      <button type="button" class="retry" onclick={handleRetry}>Retry</button>
+    {/if}
+    <button type="button" onclick={handleDismiss}>Dismiss</button>
+  </div>
 </div>
 
 <style>
@@ -38,6 +47,11 @@
     font-size: var(--font-size-sm);
   }
 
+  .actions {
+    display: flex;
+    gap: var(--spacing-xs);
+  }
+
   .error-banner button {
     padding: var(--spacing-xs) var(--spacing-sm);
     background: var(--destructive);
@@ -50,5 +64,11 @@
 
   .error-banner button:hover {
     opacity: 0.9;
+  }
+
+  .retry {
+    background: transparent;
+    color: var(--destructive);
+    border: 1px solid currentColor;
   }
 </style>
