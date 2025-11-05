@@ -81,6 +81,16 @@
   });
 
   function handlePanelPointerDown(event: PointerEvent) {
+    // Don't start drag if clicking on interactive elements (buttons)
+    const target = event.target as HTMLElement;
+    if (
+      target.closest("button") ||
+      target.closest("input") ||
+      target.closest("a")
+    ) {
+      return;
+    }
+
     // Start tracking drag from anywhere on the panel
     dragState.isDragging = true;
     dragState.startY = event.clientY;
@@ -98,10 +108,10 @@
     if (deltaY > 0) {
       // Find the drawer-content element (parent of drawer-inner)
       const panel = event.currentTarget as HTMLElement;
-      const drawerContent = panel.closest('.drawer-content') as HTMLElement;
+      const drawerContent = panel.closest(".drawer-content") as HTMLElement;
       if (drawerContent) {
         drawerContent.style.transform = `translateY(${deltaY}px)`;
-        drawerContent.style.transition = 'none';
+        drawerContent.style.transition = "none";
       }
     }
   }
@@ -111,20 +121,22 @@
 
     const deltaY = dragState.currentY - dragState.startY;
     const panel = event.currentTarget as HTMLElement;
-    const drawerContent = panel.closest('.drawer-content') as HTMLElement;
+    const drawerContent = panel.closest(".drawer-content") as HTMLElement;
 
     // If dragged down more than 150px, close the panel
     if (deltaY > 150) {
       onClose();
     } else if (drawerContent) {
       // Snap back to original position
-      drawerContent.style.transform = '';
-      drawerContent.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+      drawerContent.style.transform = "";
+      drawerContent.style.transition =
+        "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
     }
 
     dragState.isDragging = false;
     (event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
-  }</script>
+  }
+</script>
 
 <Drawer
   isOpen={show}
@@ -168,11 +180,7 @@
         />
       </div>
 
-      <AnimationControls
-        {speed}
-        onSpeedChange={onSpeedChange}
-        onExport={onOpenExport}
-      />
+      <AnimationControls {speed} {onSpeedChange} onExport={onOpenExport} />
     {/if}
   </div>
 </Drawer>
@@ -230,7 +238,6 @@
     /* Background is now on drawer-content, so make this transparent */
     background: transparent;
   }
-
 
   .close-button {
     position: absolute;

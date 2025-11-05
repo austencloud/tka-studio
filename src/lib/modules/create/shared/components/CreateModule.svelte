@@ -20,7 +20,10 @@
     ensureContainerInitialized,
     GridMode,
     navigationState,
+    resolve,
+    TYPES,
     type BuildModeId,
+    type IDeviceDetector,
     type PictographData,
   } from "$shared";
   import { onMount, setContext } from "svelte";
@@ -56,6 +59,7 @@
   } from "./coordinators";
   import HandPathSettingsView from "./HandPathSettingsView.svelte";
   import CreationMethodSelector from "../../workspace-panel/components/CreationMethodSelector.svelte";
+  import { calculateGridLayout } from "../../workspace-panel/sequence-display/utils/grid-calculations";
 
   const logger = createComponentLogger("CreateModule");
 
@@ -74,6 +78,7 @@
 
   // Services
   let services: CreateModuleServices | null = $state(null);
+  let deviceDetector: IDeviceDetector | null = $state(null);
 
   // State
   let CreateModuleState: CreateModuleState | null = $state(null);
@@ -99,6 +104,11 @@
   let toolPanelElement: HTMLElement | null = $state(null);
   let toolPanelRef: IToolPanelMethods | null = $state(null);
   let buttonPanelElement: HTMLElement | null = $state(null);
+  let workspaceContainerElement: HTMLElement | null = $state(null);
+
+  // Workspace container dimensions for grid layout calculation
+  let workspaceWidth = $state(0);
+  let workspaceHeight = $state(0);
 
   // Sequence actions sheet state
   let showSequenceActionsSheet = $state(false);
@@ -153,6 +163,49 @@
 
   // Track if user has selected a creation method (starts false, becomes true on selection)
   let hasSelectedCreationMethod = $state(false);
+
+  // Derived: Calculate grid rows based on actual beat count and layout
+  const gridRows = $derived(() => {
+    if (!CreateModuleState?.sequenceState?.currentSequence) return 0;
+
+    const beatCount =
+      CreateModuleState.sequenceState.currentSequence.beats?.length || 0;
+    if (beatCount === 0) return 0;
+
+    // Calculate grid layout using the same logic as BeatGrid
+    const gridLayout = calculateGridLayout(
+      beatCount,
+      workspaceWidth,
+      workspaceHeight,
+      services?.deviceDetector || null,
+      { isSideBySideLayout: shouldUseSideBySideLayout }
+    );
+
+    return gridLayout.rows;
+  });
+
+  // Derived: Dynamic flex ratios based on grid rows
+  const flexRatios = $derived(() => {
+    const rows = gridRows();
+
+    // When creation method selector is visible, use collapsed state
+    if (navigationState.isCreationMethodSelectorVisible) {
+      return { workspace: 2, tool: 4 };
+    }
+
+    // Dynamic ratios based on row count
+    if (rows === 0) {
+      return { workspace: 2, tool: 4 }; // Empty state
+    } else if (rows === 1) {
+      return { workspace: 3, tool: 5 }; // 1 row: more tool space
+    } else if (rows === 2) {
+      return { workspace: 4, tool: 5 }; // 2 rows: balanced
+    } else if (rows === 3) {
+      return { workspace: 4.5, tool: 4.5 }; // 3 rows: equal
+    } else {
+      return { workspace: 5, tool: 4 }; // 4+ rows: more workspace space
+    }
+  });
 
   // Derived: Check if workspace is empty (no beats and no start position)
   const isWorkspaceEmpty = $derived(() => {

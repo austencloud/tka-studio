@@ -28,7 +28,7 @@
     if (combinedPanelHeight > 0) {
       return `height: ${combinedPanelHeight}px;`;
     }
-    return 'height: 70vh;';
+    return "height: 70vh;";
   });
 
   // Action type definition
@@ -284,30 +284,27 @@
   }
 
   /* Actions grid - responsive with container queries */
+  /* Mobile-first approach: start with single column, progressively enhance */
   .actions-grid {
     display: grid;
     gap: 12px;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    /* Default: single column for small screens */
+    grid-template-columns: 1fr;
+    /* Ensure grid items fill available space */
+    width: 100%;
   }
 
-  /* Container query for larger spaces - horizontal layout */
-  @container (min-width: 500px) {
-    .actions-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  /* Container query for medium spaces */
-  @container (min-width: 350px) and (max-width: 499px) {
+  /* Container query for medium spaces - 2 columns */
+  @container (min-width: 350px) {
     .actions-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
 
-  /* Container query for small spaces */
-  @container (max-width: 349px) {
+  /* Container query for larger spaces - 4 columns horizontal layout */
+  @container (min-width: 500px) {
     .actions-grid {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(4, 1fr);
     }
   }
 
@@ -328,6 +325,10 @@
     position: relative;
     overflow: hidden;
 
+    /* Fill grid cell width intelligently */
+    width: 100%;
+    box-sizing: border-box;
+
     /* Smooth spring animation like BeatCell */
     transition: all var(--sheet-transition-spring);
 
@@ -339,7 +340,7 @@
 
   /* Gradient overlay that appears on hover */
   .action-button::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
