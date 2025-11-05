@@ -112,19 +112,25 @@
 </script>
 
 {#if landingUIState.isOpen}
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
     class="landing-backdrop"
-    on:click={handleBackdropClick}
+    role="button"
+    tabindex="-1"
+    onclick={handleBackdropClick}
     transition:fade={{ duration: 350, easing: cubicOut }}
   ></div>
 
+  <!-- svelte-ignore a11y_no_static_element_interactions -->
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
     class="landing-modal"
     role="dialog"
     aria-modal="true"
     aria-labelledby="landing-title"
     tabindex="-1"
-    on:click={handleModalClick}
+    onclick={handleModalClick}
     transition:scale={{ duration: 400, easing: cubicOut, start: 0.95 }}
   >
     {#if showCloseButton}
@@ -133,7 +139,7 @@
         type="button"
         aria-label="Close landing page"
         title="Close (Esc)"
-        on:click={() => closeLanding(false)}
+        onclick={() => closeLanding(false)}
       >
         <i class="fas fa-times"></i>
       </button>

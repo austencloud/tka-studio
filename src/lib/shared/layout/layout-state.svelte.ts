@@ -54,7 +54,8 @@ export function moduleHasPrimaryNav(moduleId: string): boolean {
     moduleId === "create" ||
     moduleId === "learn" ||
     moduleId === "explore" ||
-    moduleId === "collection" ||
+    moduleId === "collect" ||
+    moduleId === "collection" || // Legacy support
     moduleId === "library" ||
     moduleId === "admin"
   );
