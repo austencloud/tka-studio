@@ -8,23 +8,26 @@
    * Domain: Create module - Sequence Transformation Coordination
    */
 
-  import { createComponentLogger } from "$shared";
+  import { createComponentLogger, resolve, TYPES } from "$shared";
   import SequenceActionsSheet from "../../../workspace-panel/shared/components/SequenceActionsSheet.svelte";
-  import type { PanelCoordinationState } from "../../state/panel-coordination-state.svelte";
-  import type { createCreateModuleState as CreateModuleStateType } from "../../state/create-module-state.svelte";
+  import { getCreateModuleContext } from "../../context";
+  import type { ISequenceTransformationService } from "../../services/contracts/ISequenceTransformationService";
 
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
+  const logger = createComponentLogger("SequenceActionsCoordinator");
 
-  const logger = createComponentLogger('SequenceActionsCoordinator');
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState, panelState } = ctx;
 
-  // Props
+  // Resolve service
+  const transformationService = resolve<ISequenceTransformationService>(
+    TYPES.ISequenceTransformationService
+  );
+
+  // Props (only bindable props remain)
   let {
-    CreateModuleState,
-    panelState,
-    show = $bindable()
+    show = $bindable(),
   }: {
-    CreateModuleState: CreateModuleState;
-    panelState: PanelCoordinationState;
     show: boolean;
   } = $props();
 
@@ -34,18 +37,42 @@
   }
 
   function handleMirror() {
-    // TODO: Implement mirror transformation
-    logger.log("Mirror action triggered");
+    const currentSequence = CreateModuleState.sequenceState.currentSequence;
+    if (!currentSequence) {
+      logger.warn("No sequence to mirror");
+      return;
+    }
+
+    logger.log("Mirroring sequence vertically");
+    const mirroredSequence = transformationService.mirrorSequence(currentSequence);
+    CreateModuleState.sequenceState.setCurrentSequence(mirroredSequence);
+    logger.log("✅ Sequence mirrored successfully");
   }
 
   function handleRotate() {
-    // TODO: Implement rotation transformation
-    logger.log("Rotate action triggered");
+    const currentSequence = CreateModuleState.sequenceState.currentSequence;
+    if (!currentSequence) {
+      logger.warn("No sequence to rotate");
+      return;
+    }
+
+    logger.log("Rotating sequence 90° clockwise");
+    const rotatedSequence = transformationService.rotateSequence(currentSequence, 90);
+    CreateModuleState.sequenceState.setCurrentSequence(rotatedSequence);
+    logger.log("✅ Sequence rotated successfully");
   }
 
   function handleColorSwap() {
-    // TODO: Implement color swap transformation
-    logger.log("Color swap action triggered");
+    const currentSequence = CreateModuleState.sequenceState.currentSequence;
+    if (!currentSequence) {
+      logger.warn("No sequence to color swap");
+      return;
+    }
+
+    logger.log("Swapping sequence colors (blue ↔ red)");
+    const swappedSequence = transformationService.swapColors(currentSequence);
+    CreateModuleState.sequenceState.setCurrentSequence(swappedSequence);
+    logger.log("✅ Sequence colors swapped successfully");
   }
 
   function handleCopyJSON() {

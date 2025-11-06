@@ -103,7 +103,7 @@ Research-backed design for 344px portrait (Z Fold):
       aria-label={`Previous ${displayLabel} orientation`}
       type="button"
     >
-      <i class="fas fa-chevron-left"></i>
+      <i class="fas fa-rotate-left"></i>
     </button>
 
     <!-- Orientation display -->
@@ -118,7 +118,7 @@ Research-backed design for 344px portrait (Z Fold):
       aria-label={`Next ${displayLabel} orientation`}
       type="button"
     >
-      <i class="fas fa-chevron-right"></i>
+      <i class="fas fa-rotate-right"></i>
     </button>
   </div>
 
@@ -236,13 +236,14 @@ Research-backed design for 344px portrait (Z Fold):
     font-size: 14px; /* Reduced from 16px to fit better */
     font-weight: 700;
     color: #1a1a2e;
-    min-width: 60px; /* Reduced from 80px */
+    --orientation-slot-width: clamp(72px, 11ch, 96px); /* Future-proof spacing (covers COUNTER + localization) */
+    width: var(--orientation-slot-width);
+    min-width: var(--orientation-slot-width);
     text-align: center;
     text-transform: uppercase;
     letter-spacing: 0.2px; /* Reduced from 0.3px */
     white-space: nowrap;
-    /* Allow shrinking if needed */
-    flex-shrink: 1;
+    flex: 0 0 var(--orientation-slot-width);
   }
 
   /* Motion type badge - right column, centered */
@@ -275,7 +276,7 @@ Research-backed design for 344px portrait (Z Fold):
 
     .orientation-display {
       font-size: 16px;
-      min-width: 50px; /* Match turn control for perfect alignment */
+      --orientation-slot-width: clamp(60px, 10ch, 84px); /* Tighten slot for ultra narrow containers without crushing text */
     }
 
     .motion-badge {

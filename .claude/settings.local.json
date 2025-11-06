@@ -148,7 +148,15 @@
       "Bash(timeout 10 curl:*)",
       "Bash(del \"src\\UNIFIED_NAVIGATION_MENU_ANALYSIS.md\" \"src\\UNIFIED_NAVIGATION_QUICK_REFERENCE.md\")",
       "Bash(timeout 60 bash -c:*)",
-      "Bash(del \"c:\\_TKA-STUDIO\\src\\lib\\modules\\create\\workspace-panel\\components\\CreationMethodSelectorSheet.svelte\")"
+      "Bash(del \"c:\\_TKA-STUDIO\\src\\lib\\modules\\create\\workspace-panel\\components\\CreationMethodSelectorSheet.svelte\")",
+      "Bash(python main.py:*)",
+      "Bash(python modern/main.py:*)",
+      "Bash(set PYTHONPATH=F:_THE KINETIC ALPHABET_TKA-STUDIOarchive_LEGACY_APP_DESKTOP)",
+      "Bash(F:_THE KINETIC ALPHABET_TKA-STUDIOarchive_LEGACY_APP_DESKTOPmodernsrc)",
+      "Bash(PYTHONPATH=\"F:\\_THE KINETIC ALPHABET\\_TKA-STUDIO\\archive\\_LEGACY_APP\\_DESKTOP\":\"F:\\_THE KINETIC ALPHABET\\_TKA-STUDIO\\archive\\_LEGACY_APP\\_DESKTOP\\modern\\src\" python:*)",
+      "Bash(python legacy/main.py:*)",
+      "Bash(PYTHONIOENCODING=utf-8 python:*)",
+      "Bash(timeout 45 npx svelte-check:*)"
     ],
     "deny": [],
     "ask": []

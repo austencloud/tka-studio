@@ -183,6 +183,13 @@
     pointer-events: auto !important;
   }
 
+  /* Sequence Actions sheet backdrop - completely transparent to show beats behind */
+  :global(.drawer-overlay.actions-sheet-backdrop) {
+    background: transparent !important;
+    backdrop-filter: none !important;
+    pointer-events: auto !important;
+  }
+
   /* Drawer content container */
   :global(.drawer-content) {
     position: fixed;

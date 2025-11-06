@@ -11,16 +11,15 @@
   import { resolve, TYPES } from "$shared";
   import type { ICAPTypeService } from "$shared";
   import CAPSelectionModal from "../../../generate/components/modals/CAPSelectionModal.svelte";
-  import type { PanelCoordinationState } from "../../state/panel-coordination-state.svelte";
+  import { getCreateModuleContext } from "../../context";
 
-  // Props
-  let {
-    panelState,
-  }: {
-    panelState: PanelCoordinationState;
-  } = $props();
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { panelState } = ctx;
 
-  let capTypeService: ICAPTypeService = resolve<ICAPTypeService>(TYPES.ICAPTypeService);
+  let capTypeService: ICAPTypeService = resolve<ICAPTypeService>(
+    TYPES.ICAPTypeService
+  );
 
   // Local pending state - tracks changes before applying
   let pendingComponents = $state<Set<any> | null>(null);
@@ -40,10 +39,12 @@
       if (!isImplemented) {
         // Show "Coming Soon" message
         const componentNames = Array.from(pendingComponents)
-          .map(c => c.charAt(0) + c.slice(1).toLowerCase())
-          .join(' + ');
+          .map((c) => c.charAt(0) + c.slice(1).toLowerCase())
+          .join(" + ");
 
-        alert(`${componentNames} combination is coming soon! This combination hasn't been implemented yet, but we're working on it.`);
+        alert(
+          `${componentNames} combination is coming soon! This combination hasn't been implemented yet, but we're working on it.`
+        );
         return; // Don't close the panel, let user select a different combination
       }
 
@@ -65,7 +66,9 @@
   function handleToggleComponent(component: any) {
     // Initialize pending if not set
     if (!pendingComponents) {
-      pendingComponents = new Set(panelState.capSelectedComponents || new Set());
+      pendingComponents = new Set(
+        panelState.capSelectedComponents || new Set()
+      );
     }
 
     // Toggle the component

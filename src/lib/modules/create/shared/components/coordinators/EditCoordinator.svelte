@@ -10,29 +10,17 @@
 
   import { createComponentLogger } from "$shared";
   import { EditSlidePanel } from "../../../edit/components";
-  import type { IBeatOperationsService } from "../../services/contracts";
-  import type { createCreateModuleState as CreateModuleStateType } from "../../state/create-module-state.svelte";
-  import type { PanelCoordinationState } from "../../state/panel-coordination-state.svelte";
   import type { BatchEditChanges } from "../../types/create-module-types";
-
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
+  import { getCreateModuleContext } from "../../context";
 
   const logger = createComponentLogger("EditCoordinator");
 
-  // Props
-  let {
-    CreateModuleState,
-    panelState,
-    beatOperationsService,
-    shouldUseSideBySideLayout,
-    onError,
-  }: {
-    CreateModuleState: CreateModuleState;
-    panelState: PanelCoordinationState;
-    beatOperationsService: IBeatOperationsService;
-    shouldUseSideBySideLayout: boolean;
-    onError?: (error: string) => void;
-  } = $props();
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState, panelState, services, layout, handlers } = ctx;
+  const beatOperationsService = services.beatOperationsService;
+  const shouldUseSideBySideLayout = $derived(layout.shouldUseSideBySideLayout);
+  const onError = handlers.onError;
 
   // Derive beat data reactively from sequence state instead of using snapshot
   const selectedBeatData = $derived(() => {

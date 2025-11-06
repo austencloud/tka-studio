@@ -1,52 +1,120 @@
 <script lang="ts">
   /**
-   * Create Module Component - REFACTORED
+   * ============================================================================
+   * CreateModule - Composition Root for Create Module
+   * ============================================================================
    *
-   * Master container for the Create module interface.
-   * Orchestrates Workspace, Tool Panel, and various modal panels.
+   * This is the COMPOSITION ROOT for the Create module. It orchestrates:
+   * - Dependency injection and service initialization
+   * - Context provision for child components
+   * - Reactive effect coordination
+   * - Event handling delegation
+   * - Layout management
    *
-   * REFACTORING:
-   * - Extracted service initialization to ServiceInitializer
-   * - Extracted panel logic to coordinator components
-   * - Consolidated reactive effects into manager modules
-   * - Reduced from 19 functions to 6 core handlers
-   * - Reduced from 8+ effects to 5 managed effects
+   * ARCHITECTURAL PATTERN: Composition Root
+   * ========================================
+   * This component intentionally has more responsibilities than typical
+   * presentational components because it serves as the application shell
+   * for the Create module. This is appropriate and follows clean architecture
+   * principles for composition roots.
    *
-   * Domain: Create module - Tab Container
+   * RESPONSIBILITIES:
+   * =================
+   * 1. SERVICE ORCHESTRATION
+   *    - Resolve all required services via DI container
+   *    - Initialize state objects (CreateModuleState, constructTabState)
+   *    - Set up service lifecycle (initialization, cleanup)
+   *
+   * 2. CONTEXT PROVISION
+   *    - Provide CreateModuleContext to all child components
+   *    - Expose reactive state, services, and layout info via context
+   *    - Legacy support: panelState via Svelte context
+   *
+   * 3. EFFECT COORDINATION
+   *    - Delegate all reactive effects to CreateModuleEffectCoordinator
+   *    - Manage effect lifecycle (setup, cleanup)
+   *    - Coordinate cross-cutting concerns (layout, navigation, PWA, etc.)
+   *
+   * 4. EVENT HANDLING
+   *    - Delegate all business logic to handler services
+   *    - Manage component-level state (error, animation, UI flags)
+   *    - Wire up parent callbacks (onTabAccessibilityChange, onCurrentWordChange)
+   *
+   * 5. LAYOUT MANAGEMENT
+   *    - Track side-by-side vs stacked layout state
+   *    - Coordinate with ResponsiveLayoutService
+   *    - Provide layout context to child components
+   *
+   * 6. SESSION STATE MANAGEMENT
+   *    - Track creation method selection via CreationMethodPersistenceService
+   *    - Sync with workspace empty state for welcome screen visibility
+   *
+   * CHILD COMPONENTS:
+   * =================
+   * - CreationWelcomeScreen: Initial welcome/prompt screen
+   * - CreationWorkspaceArea: Main pictograph workspace
+   * - CreationToolPanelSlot: Tool panel (construct/generate/practice tabs)
+   * - ButtonPanel: Action buttons (play, share, clear, etc.)
+   * - Coordinators: Modal/panel coordinators (Edit, Share, Animation, etc.)
+   *
+   * SERVICES USED:
+   * ==============
+   * - ICreateModuleInitializationService: One-time initialization
+   * - ICreateModuleHandlers: Event handling delegation
+   * - ICreationMethodPersistenceService: Session storage for creation method
+   * - ICreateModuleEffectCoordinator: Reactive effect orchestration
+   * - IResponsiveLayoutService: Layout detection and management
+   * - Plus all services in CreateModuleServices interface
+   *
+   * REFACTORING HISTORY:
+   * ====================
+   * - Extracted service initialization to InitializationService
+   * - Extracted event handlers to CreateModuleHandlers
+   * - Extracted effects to manager modules + EffectCoordinator
+   * - Extracted session storage to CreationMethodPersistenceService
+   * - Reduced from ~650 lines to ~480 lines
+   * - Reduced from 19 functions to 6 event handlers
+   * - Reduced from 8+ inline effects to 1 coordinated effect
+   *
+   * WHY THIS COMPONENT IS LONGER:
+   * ==============================
+   * This component is intentionally 400-500 lines because:
+   * 1. It's a composition root (application shell)
+   * 2. It needs to orchestrate DI, context, and lifecycle
+   * 3. All business logic is extracted to services
+   * 4. All UI logic is extracted to child components
+   * 5. Further extraction would scatter initialization flow
+   *
+   * DO NOT try to make this component smaller by:
+   * - Splitting initialization into multiple components
+   * - Moving DI resolution to child components
+   * - Scattering context setup across multiple files
+   *
+   * Domain: Create module - Composition Root
    */
 
   import {
     createComponentLogger,
     ensureContainerInitialized,
-    GridMode,
     navigationState,
     resolve,
     TYPES,
     type BuildModeId,
-    type IDeviceDetector,
     type PictographData,
   } from "$shared";
   import { onMount, setContext } from "svelte";
   import { fade } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
   import ErrorBanner from "./ErrorBanner.svelte";
-  import ToolPanel from "../../tool-panel/core/ToolPanel.svelte";
-  import WorkspacePanel from "../../workspace-panel/core/WorkspacePanel.svelte";
   import ButtonPanel from "../../workspace-panel/shared/components/ButtonPanel.svelte";
   import type { CreateModuleServices } from "../services/ServiceInitializer";
   import type { ICreateModuleInitializationService } from "../services/contracts/ICreateModuleInitializationService";
-  import { createCreateModuleState, createConstructTabState } from "../state";
+  import type { ICreateModuleHandlers } from "../services/contracts/ICreateModuleHandlers";
+  import type { ICreationMethodPersistenceService } from "../services/contracts/ICreationMethodPersistenceService";
+  import type { ICreateModuleEffectCoordinator } from "../services/contracts/ICreateModuleEffectCoordinator";
   import type { createCreateModuleState as CreateModuleStateType } from "../state/create-module-state.svelte";
   import type { createConstructTabState as ConstructTabStateType } from "../state/construct-tab-state.svelte";
-  import {
-    createAutoEditPanelEffect,
-    createCurrentWordDisplayEffect,
-    createLayoutEffects,
-    createNavigationSyncEffects,
-    createPanelHeightTracker,
-    createPWAEngagementEffect,
-    createSingleBeatEditEffect,
-  } from "../state/managers";
+  import { setCreateModuleContext } from "../context";
   import { createPanelCoordinationState } from "../state/panel-coordination-state.svelte";
   import type { IToolPanelMethods } from "../types/create-module-types";
   import {
@@ -58,19 +126,22 @@
     ShareCoordinator,
   } from "./coordinators";
   import HandPathSettingsView from "./HandPathSettingsView.svelte";
-  import { calculateGridLayout } from "../../workspace-panel/sequence-display/utils/grid-calculations";
   import CreationWelcomeScreen from "./CreationWelcomeScreen.svelte";
   import CreationWorkspaceArea from "./CreationWorkspaceArea.svelte";
   import CreationToolPanelSlot from "./CreationToolPanelSlot.svelte";
-  import { executeClearSequenceWorkflow } from "../utils/clearSequenceWorkflow";
 
   const logger = createComponentLogger("CreateModule");
 
-  // Type aliases for state objects
+  // ============================================================================
+  // TYPE DEFINITIONS
+  // ============================================================================
+
   type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
   type ConstructTabState = ReturnType<typeof ConstructTabStateType>;
 
-  // Props
+  // ============================================================================
+  // PROPS (Parent Callbacks)
+  // ============================================================================
   let {
     onTabAccessibilityChange,
     onCurrentWordChange,
@@ -79,114 +150,142 @@
     onCurrentWordChange?: (word: string) => void;
   } = $props();
 
-  // Services
-  let services: CreateModuleServices | null = $state(null);
-  let deviceDetector: IDeviceDetector | null = $state(null);
+  // ============================================================================
+  // DEPENDENCY INJECTION - Services resolved in onMount
+  // ============================================================================
 
-  // State
+  let services: CreateModuleServices | null = $state(null);
+  let handlers: ICreateModuleHandlers | null = $state(null);
+  let creationMethodPersistence: ICreationMethodPersistenceService | null =
+    $state(null);
+  let effectCoordinator: ICreateModuleEffectCoordinator | null = $state(null);
+
+  // ============================================================================
+  // STATE OBJECTS - Initialized via CreateModuleInitializationService
+  // ============================================================================
+
   let CreateModuleState: CreateModuleState | null = $state(null);
   let constructTabState: ConstructTabState | null = $state(null);
 
-  // Panel coordination state
+  // ============================================================================
+  // PANEL COORDINATION STATE - Manages panel open/close state
+  // ============================================================================
+
   let panelState = createPanelCoordinationState();
 
-  // Make panelState available to all descendants via context
+  // Make panelState available to all descendants via context (legacy support)
   setContext("panelState", panelState);
 
-  // Animation state
+  // ============================================================================
+  // CONTEXT PROVISION - CreateModuleContext with reactive getters
+  // ============================================================================
+  // This must be at top level during component initialization.
+  // Provides reactive access to state, services, and layout for all descendants.
+
+  setCreateModuleContext({
+    get CreateModuleState() {
+      if (!CreateModuleState) {
+        throw new Error("CreateModuleState not yet initialized");
+      }
+      return CreateModuleState;
+    },
+    get constructTabState() {
+      if (!constructTabState) {
+        throw new Error("constructTabState not yet initialized");
+      }
+      return constructTabState;
+    },
+    panelState,
+    get services() {
+      if (!services) {
+        throw new Error("Services not yet initialized");
+      }
+      return services;
+    },
+    layout: {
+      get shouldUseSideBySideLayout() {
+        return shouldUseSideBySideLayout;
+      },
+      isMobilePortrait: () => {
+        if (!services) {
+          throw new Error("Services not yet initialized");
+        }
+        return services.layoutService.isMobilePortrait();
+      },
+    },
+    handlers: {
+      onError: (err: string) => {
+        error = err;
+      },
+    },
+  });
+
+  // ============================================================================
+  // COMPONENT STATE
+  // ============================================================================
+
+  // Animation state - tracks currently animating beat
   let animatingBeatNumber = $state<number | null>(null);
 
-  // Layout state
+  // Layout state - managed by ResponsiveLayoutService
   let shouldUseSideBySideLayout = $state<boolean>(false);
 
   // UI state
   let error = $state<string | null>(null);
   let servicesInitialized = $state<boolean>(false);
 
-  // Panel refs
+  // Session state - creation method selection (persisted to sessionStorage)
+  let hasSelectedCreationMethod = $state(false);
+
+  // Panel references for height tracking
   let toolPanelElement: HTMLElement | null = $state(null);
   let toolPanelRef: IToolPanelMethods | null = $state(null);
   let buttonPanelElement: HTMLElement | null = $state(null);
-  let workspaceContainerElement: HTMLElement | null = $state(null);
 
-  // Workspace container dimensions for grid layout calculation
-  let workspaceWidth = $state(0);
-  let workspaceHeight = $state(0);
-
-  // Sequence actions sheet state
+  // Sheet visibility state
   let showSequenceActionsSheet = $state(false);
 
-  // Cleanup functions for effects
-  let effectCleanups: (() => void)[] = [];
+  // Effect lifecycle management
+  let effectCleanup: (() => void) | null = null;
 
-  // Track if user has selected a creation method (starts false, becomes true on selection)
-  let hasSelectedCreationMethod = $state(false);
+  // ============================================================================
+  // DERIVED STATE - Computed values based on reactive state
+  // ============================================================================
 
-  // Derived: Calculate grid rows based on actual beat count and layout
-  const gridRows = $derived(() => {
-    if (!CreateModuleState?.sequenceState?.currentSequence) return 0;
-
-    const beatCount = CreateModuleState.getCurrentBeatCount();
-    if (beatCount === 0) return 0;
-
-    // Calculate grid layout using the same logic as BeatGrid
-    const gridLayout = calculateGridLayout(
-      beatCount,
-      workspaceWidth,
-      workspaceHeight,
-      deviceDetector,
-      { isSideBySideLayout: shouldUseSideBySideLayout }
-    );
-
-    return gridLayout.rows;
-  });
-
-  // Derived: Dynamic flex ratios based on grid rows
-  const flexRatios = $derived(() => {
-    const rows = gridRows();
-
-    // When creation method selector is visible, use collapsed state
-    if (navigationState.isCreationMethodSelectorVisible) {
-      return { workspace: 2, tool: 4 };
-    }
-
-    // Dynamic ratios based on row count
-    if (rows === 0) {
-      return { workspace: 2, tool: 4 }; // Empty state
-    } else if (rows === 1) {
-      return { workspace: 3, tool: 5 }; // 1 row: more tool space
-    } else if (rows === 2) {
-      return { workspace: 4, tool: 5 }; // 2 rows: balanced
-    } else if (rows === 3) {
-      return { workspace: 4.5, tool: 4.5 }; // 3 rows: equal
-    } else {
-      return { workspace: 5, tool: 4 }; // 4+ rows: more workspace space
-    }
-  });
-
+  // Orientation for creation cue (horizontal in side-by-side, vertical in stacked)
   const creationCueOrientation = $derived(() => {
     return shouldUseSideBySideLayout ? "horizontal" : "vertical";
   });
 
+  // Mood for creation cue (changes based on whether user has selected method)
   const creationCueMood = $derived(() => {
     if (!CreateModuleState) return "default";
     return CreateModuleState.getCreationCueMood(hasSelectedCreationMethod);
   });
 
-  // Derived: Check if workspace is empty (no beats and no start position)
+  // Check if workspace is empty (no beats and no start position)
   const isWorkspaceEmpty = $derived(() => {
     if (!CreateModuleState) return true;
     return CreateModuleState.isWorkspaceEmpty();
   });
 
-  // Effect: Sync workspace empty state to navigation (for hiding tabs)
-  // Show selector only when workspace is empty AND user hasn't selected a method yet
+  // ============================================================================
+  // REACTIVE EFFECTS
+  // ============================================================================
+
+  /**
+   * Effect: Sync workspace empty state to navigation
+   * Controls creation method selector visibility based on workspace state
+   */
   $effect(() => {
     const shouldShow = isWorkspaceEmpty() && !hasSelectedCreationMethod;
     navigationState.setCreationMethodSelectorVisible(shouldShow);
   });
 
-  // Effect: Notify parent of tab accessibility changes
+  /**
+   * Effect: Notify parent of tab accessibility changes
+   * Enables/disables Edit and Export tabs based on workspace state
+   */
   $effect(() => {
     if (!CreateModuleState) return;
 
@@ -198,83 +297,78 @@
     }
   });
 
-  // Effect: Notify parent of current word changes (managed by CurrentWordDisplayManager)
+  /**
+   * Effect: Setup all managed effects using EffectCoordinator
+   *
+   * Delegates all reactive effect setup to CreateModuleEffectCoordinator service.
+   * This includes:
+   * - Navigation synchronization
+   * - Layout management
+   * - Auto edit panel behavior
+   * - Single beat edit mode
+   * - PWA engagement tracking
+   * - Current word display updates
+   * - Panel height tracking
+   */
   $effect(() => {
-    if (!servicesInitialized || !CreateModuleState || !constructTabState) return;
-
-    const cleanup = createCurrentWordDisplayEffect({
-      CreateModuleState,
-      constructTabState,
-      hasSelectedCreationMethod: () => hasSelectedCreationMethod,
-      onCurrentWordChange,
-    });
-
-    return cleanup;
-  });
-
-  // Effect: Setup all managed effects when services are initialized
-  $effect(() => {
-    if (!servicesInitialized || !CreateModuleState || !services) return;
+    if (
+      !servicesInitialized ||
+      !CreateModuleState ||
+      !constructTabState ||
+      !services ||
+      !effectCoordinator
+    ) {
+      return;
+    }
 
     // Clean up previous effects
-    effectCleanups.forEach((cleanup) => cleanup());
-    effectCleanups = [];
+    if (effectCleanup) {
+      effectCleanup();
+      effectCleanup = null;
+    }
 
-    // Navigation sync effects
-    const navigationCleanup = createNavigationSyncEffects({
+    // Set up all effects via coordinator
+    effectCleanup = effectCoordinator.setupEffects({
       CreateModuleState,
+      constructTabState,
+      panelState,
       navigationState,
-      navigationSyncService: services.navigationSyncService,
-    });
-    effectCleanups.push(navigationCleanup);
-
-    // Layout effects
-    const layoutCleanup = createLayoutEffects({
       layoutService: services.layoutService,
+      navigationSyncService: services.navigationSyncService,
+      hasSelectedCreationMethod: () => hasSelectedCreationMethod,
       onLayoutChange: (layout) => {
         shouldUseSideBySideLayout = layout;
       },
+      ...(onCurrentWordChange ? { onCurrentWordChange } : {}),
+      toolPanelElement,
+      buttonPanelElement,
     });
-    effectCleanups.push(layoutCleanup);
-
-    // Auto edit panel effects
-    const autoEditCleanup = createAutoEditPanelEffect({
-      CreateModuleState,
-      panelState,
-    });
-    effectCleanups.push(autoEditCleanup);
-
-    const singleBeatCleanup = createSingleBeatEditEffect({
-      CreateModuleState,
-      panelState,
-    });
-    effectCleanups.push(singleBeatCleanup);
-
-    // PWA engagement tracking
-    const pwaCleanup = createPWAEngagementEffect({ CreateModuleState });
-    effectCleanups.push(pwaCleanup);
 
     // Cleanup on unmount
     return () => {
-      effectCleanups.forEach((cleanup) => cleanup());
-      effectCleanups = [];
+      if (effectCleanup) {
+        effectCleanup();
+        effectCleanup = null;
+      }
     };
   });
 
-  // Effect: Track panel heights
-  $effect(() => {
-    if (!toolPanelElement && !buttonPanelElement) return;
+  // ============================================================================
+  // LIFECYCLE - Component Initialization
+  // ============================================================================
 
-    const cleanup = createPanelHeightTracker({
-      toolPanelElement,
-      buttonPanelElement,
-      panelState,
-    });
-
-    return cleanup;
-  });
-
-  // Component initialization
+  /**
+   * onMount: Initialize all services and state
+   *
+   * This is the composition root's initialization sequence:
+   * 1. Verify DI container is initialized
+   * 2. Resolve CreateModuleInitializationService
+   * 3. Initialize all services and state objects
+   * 4. Resolve handler services
+   * 5. Resolve persistence and effect coordinator services
+   * 6. Configure event callbacks
+   * 7. Restore session state (creation method selection)
+   */
   onMount(async () => {
     if (!ensureContainerInitialized()) {
       error = "Dependency injection container not initialized";
@@ -304,8 +398,22 @@
       CreateModuleState = result.CreateModuleState;
       constructTabState = result.constructTabState;
 
-      // Resolve device detector from layout service (it has it injected)
-      deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
+      // Initialize handlers service
+      handlers = resolve<ICreateModuleHandlers>(TYPES.ICreateModuleHandlers);
+
+      // Initialize creation method persistence service
+      creationMethodPersistence = resolve<ICreationMethodPersistenceService>(
+        TYPES.ICreationMethodPersistenceService
+      );
+
+      // Initialize effect coordinator service
+      effectCoordinator = resolve<ICreateModuleEffectCoordinator>(
+        TYPES.ICreateModuleEffectCoordinator
+      );
+
+      // Read initial creation method selection state
+      hasSelectedCreationMethod =
+        creationMethodPersistence.hasUserSelectedMethod();
 
       // Mark services as initialized
       servicesInitialized = true;
@@ -319,6 +427,18 @@
         constructTabState
       );
 
+      // If persistence restored existing data, treat creation method as selected
+      if (
+        !hasSelectedCreationMethod &&
+        CreateModuleState &&
+        !CreateModuleState.isWorkspaceEmpty()
+      ) {
+        hasSelectedCreationMethod = true;
+        creationMethodPersistence.markMethodSelected();
+      }
+
+      // Context is already set up at top level with reactive getters
+      // Services, CreateModuleState, and constructTabState are now initialized
       logger.success("CreateModule initialized successfully");
     } catch (err) {
       const errorMessage =
@@ -330,18 +450,21 @@
     }
   });
 
-  // Event handlers
+  // ============================================================================
+  // EVENT HANDLERS - Delegated to Service Layer
+  // ============================================================================
+  // All business logic is handled by services.
+  // These functions only manage component-level state and service delegation.
+
   async function handleOptionSelected(option: PictographData): Promise<void> {
+    if (!handlers) {
+      error = "Handlers service not initialized";
+      return;
+    }
     try {
-      if (!services?.CreateModuleService) {
-        throw new Error("Create Module Service not initialized");
-      }
-      await services.CreateModuleService.selectOption(option);
+      await handlers.handleOptionSelected(option);
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to select option";
-      error = errorMessage;
-      logger.error("Error handling option selection:", err);
+      error = err instanceof Error ? err.message : "Failed to select option";
     }
   }
 
@@ -350,77 +473,62 @@
   }
 
   function handlePlayAnimation() {
-    panelState.openAnimationPanel();
+    if (!handlers) return;
+    handlers.handlePlayAnimation(panelState);
   }
 
   function handleOpenSharePanel() {
-    panelState.openSharePanel();
+    if (!handlers) return;
+    handlers.handleOpenSharePanel(panelState);
   }
 
   function handleCreationMethodSelected(method: BuildModeId) {
-    // Clear undo history when starting new creation session
-    // This creates a clean mental model: each creation session is independent
-    if (CreateModuleState) {
-      CreateModuleState.clearUndoHistory();
-    }
-
-    // Mark that user has selected a creation method
-    hasSelectedCreationMethod = true;
-    // Switch to the selected tab
-    navigationState.setActiveTab(method);
-    // The effect will automatically hide the selector based on hasSelectedCreationMethod
-  }
-
-  function handleOpenCAPPanel(
-    currentType: any,
-    selectedComponents: Set<any>,
-    onChange: (capType: any) => void
-  ) {
-    panelState.openCAPPanel(currentType, selectedComponents, onChange);
+    if (!handlers || !creationMethodPersistence) return;
+    handlers.handleCreationMethodSelected(
+      method,
+      CreateModuleState,
+      navigationState,
+      () => {
+        hasSelectedCreationMethod = true;
+        creationMethodPersistence!.markMethodSelected();
+      }
+    );
   }
 
   async function handleClearSequence() {
-    if (!CreateModuleState || !constructTabState) return;
+    if (
+      !handlers ||
+      !CreateModuleState ||
+      !constructTabState ||
+      !creationMethodPersistence
+    )
+      return;
 
     try {
-      await executeClearSequenceWorkflow({
+      await handlers.handleClearSequence({
         CreateModuleState,
         constructTabState,
         panelState,
         resetCreationMethodSelection: () => {
           hasSelectedCreationMethod = false;
+          creationMethodPersistence!.resetSelection();
         },
       });
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to clear sequence";
-      error = errorMessage;
-      logger.error("Failed to clear sequence completely", err);
-    }
-  }
-
-  function handleRemoveBeat(beatIndex: number) {
-    if (!services?.beatOperationsService) {
-      logger.warn("Beat operations service not initialized");
-      return;
-    }
-
-    try {
-      services.beatOperationsService.removeBeat(beatIndex, CreateModuleState);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : "Failed to remove beat";
-      error = errorMessage;
-      logger.error("Failed to remove beat", err);
+      error = err instanceof Error ? err.message : "Failed to clear sequence";
     }
   }
 
   function handleOpenFilterPanel() {
-    panelState.openFilterPanel();
+    if (!handlers) return;
+    handlers.handleOpenFilterPanel(panelState);
   }
 
   function handleOpenSequenceActions() {
-    showSequenceActionsSheet = true;
+    if (!handlers) return;
+    handlers.handleOpenSequenceActions((show) => {
+      showSequenceActionsSheet = show;
+    });
   }
 </script>
 
@@ -449,79 +557,19 @@
           <!-- Workspace Content Area -->
           <div class="workspace-content">
             {#if navigationState.isCreationMethodSelectorVisible}
-              <!-- Layout 1: Inviting text when selector is visible -->
-              <div
-                class="welcome-screen"
-                in:fade={{ duration: 400, delay: 200 }}
-                out:fade={{ duration: 200 }}
-              >
-                <!-- Centered welcome content with undo button above -->
-                <div
-                  class="welcome-content"
-                  class:horizontal-cue={creationCueOrientation() ===
-                    "horizontal"}
-                >
-                  <!-- Undo button - centered above title -->
-                  {#if CreateModuleState?.canUndo}
-                    <button
-                      class="welcome-undo-button"
-                      onclick={() => CreateModuleState?.undo()}
-                      transition:fade={{ duration: 200 }}
-                      title={CreateModuleState.undoHistory[
-                        CreateModuleState.undoHistory.length - 1
-                      ]?.metadata?.description || "Undo last action"}
-                    >
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M9 14L4 9L9 4"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M4 9H15A6 6 0 0 1 15 21H13"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
-                      <span>Undo</span>
-                    </button>
-                  {/if}
-
-                  <CreationWelcomeCue
-                    orientation={creationCueOrientation()}
-                    mood={creationCueMood()}
-                  />
-                </div>
-              </div>
+              <!-- Layout 1: Welcome screen when selector is visible -->
+              <CreationWelcomeScreen
+                orientation={creationCueOrientation()}
+                mood={creationCueMood()}
+              />
             {:else}
               <!-- Layout 2: Actual workspace when method is selected -->
-              <div
-                class="workspace-panel-wrapper"
-                in:fade={{ duration: 400, delay: 200 }}
-                out:fade={{ duration: 300 }}
-              >
-                <WorkspacePanel
-                  sequenceState={CreateModuleState.sequenceState}
-                  createModuleState={CreateModuleState}
-                  practiceBeatIndex={panelState.practiceBeatIndex}
-                  {animatingBeatNumber}
-                  isSideBySideLayout={shouldUseSideBySideLayout}
-                  isMobilePortrait={services.layoutService.isMobilePortrait()}
-                  onPlayAnimation={handlePlayAnimation}
-                  animationStateRef={toolPanelRef?.getAnimationStateRef?.()}
-                />
-              </div>
+              {@const animStateRef = toolPanelRef?.getAnimationStateRef?.()}
+              <CreationWorkspaceArea
+                {animatingBeatNumber}
+                onPlayAnimation={handlePlayAnimation}
+                {...animStateRef ? { animationStateRef: animStateRef } : {}}
+              />
             {/if}
           </div>
 
@@ -534,103 +582,51 @@
               out:fade={{ duration: 300 }}
             >
               <ButtonPanel
-                {CreateModuleState}
-                showPlayButton={CreateModuleState.canShowActionButtons()}
                 onPlayAnimation={handlePlayAnimation}
-                isAnimating={panelState.isAnimationPanelOpen}
-                canClearSequence={CreateModuleState.canClearSequence(
-                  hasSelectedCreationMethod
-                )}
                 onClearSequence={handleClearSequence}
-                onRemoveBeat={handleRemoveBeat}
-                showShareButton={CreateModuleState.canShowActionButtons()}
                 onShare={handleOpenSharePanel}
-                isShareOpen={panelState.isSharePanelOpen}
-                showSequenceActions={CreateModuleState.canShowActionButtons()}
                 onSequenceActionsClick={handleOpenSequenceActions}
               />
             </div>
           {/if}
 
           <!-- Animation Coordinator -->
-          <AnimationCoordinator
-            {CreateModuleState}
-            {panelState}
-            bind:animatingBeatNumber
-          />
+          <AnimationCoordinator bind:animatingBeatNumber />
         </div>
 
         <!-- Tool Panel or Creation Method Screen -->
         <div class="tool-panel-container" bind:this={toolPanelElement}>
-          {#if navigationState.isCreationMethodSelectorVisible}
-            <!-- Creation Method Selector (shown when workspace is empty and no method selected) -->
-            <div
-              class="creation-method-container"
-              in:fade={{ duration: 400 }}
-              out:fade={{ duration: 400 }}
-            >
-              <CreationMethodSelector
-                onMethodSelected={handleCreationMethodSelected}
-              />
-            </div>
-          {:else}
-            <!-- Normal Tool Panel (shown after method selection or when workspace has content) -->
-            <div
-              class="tool-panel-wrapper"
-              in:fade={{ duration: 400, delay: 200 }}
-            >
-              <ToolPanel
-                bind:this={toolPanelRef}
-                createModuleState={CreateModuleState}
-                {constructTabState}
-                onOptionSelected={handleOptionSelected}
-                isSideBySideLayout={() => shouldUseSideBySideLayout}
-                onPracticeBeatIndexChange={(index) => {
-                  panelState.setPracticeBeatIndex(index);
-                }}
-                onOpenFilters={handleOpenFilterPanel}
-                onCloseFilters={() => {
-                  panelState.closeFilterPanel();
-                }}
-                isFilterPanelOpen={panelState.isFilterPanelOpen}
-              />
-            </div>
-          {/if}
+          <CreationToolPanelSlot
+            bind:toolPanelRef
+            onMethodSelected={handleCreationMethodSelected}
+            onOptionSelected={handleOptionSelected}
+            onPracticeBeatIndexChange={(index) => {
+              panelState.setPracticeBeatIndex(index);
+            }}
+            onOpenFilters={handleOpenFilterPanel}
+            onCloseFilters={() => {
+              panelState.closeFilterPanel();
+            }}
+          />
         </div>
       </div>
     {/if}
   </div>
 
   <!-- Edit Coordinator -->
-  <EditCoordinator
-    {CreateModuleState}
-    {panelState}
-    beatOperationsService={services.beatOperationsService}
-    {shouldUseSideBySideLayout}
-    onError={(err) => {
-      error = err;
-    }}
-  />
+  <EditCoordinator />
 
   <!-- Share Coordinator -->
-  <ShareCoordinator
-    {CreateModuleState}
-    {panelState}
-    shareService={services.shareService}
-  />
+  <ShareCoordinator />
 
   <!-- Sequence Actions Coordinator -->
-  <SequenceActionsCoordinator
-    {CreateModuleState}
-    {panelState}
-    bind:show={showSequenceActionsSheet}
-  />
+  <SequenceActionsCoordinator bind:show={showSequenceActionsSheet} />
 
   <!-- CAP Coordinator -->
-  <CAPCoordinator {panelState} />
+  <CAPCoordinator />
 
   <!-- Confirmation Dialog Coordinator -->
-  <ConfirmationDialogCoordinator {CreateModuleState} />
+  <ConfirmationDialogCoordinator />
 {/if}
 
 <style>
@@ -709,94 +705,10 @@
     z-index: 10;
   }
 
-  /* Welcome screen (Layout 1) */
-  .welcome-screen {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.1) 0%,
-      rgba(118, 75, 162, 0.1) 100%
-    );
-    backdrop-filter: blur(20px);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-
-  .welcome-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.5rem;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .welcome-content.horizontal-cue {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  /* Welcome screen undo button - centered above title in natural flow */
-  .welcome-undo-button {
-    padding: 0.75rem 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    /* Match ButtonPanel undo button styling */
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-
-    /* Smooth transitions */
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* Backdrop blur for better readability */
-    backdrop-filter: blur(10px);
-  }
-
-  .welcome-undo-button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 1);
-    transform: translateY(-2px);
-  }
-
-  .welcome-undo-button:active {
-    transform: translateY(0);
-  }
-
-  .welcome-undo-button svg {
-    flex-shrink: 0;
-  }
-
-  .welcome-undo-button span {
-    white-space: nowrap;
-  }
-
-  /* Workspace panel wrapper (Layout 2) */
-  .workspace-panel-wrapper {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    padding-bottom: 80px; /* Space for button panel at bottom */
-  }
+  /* Styles moved to extracted components:
+   * - Welcome screen styles → CreationWelcomeScreen.svelte
+   * - Workspace panel wrapper → CreationWorkspaceArea.svelte
+   */
 
   .tool-panel-container {
     flex: 4;
@@ -804,27 +716,7 @@
     position: relative; /* For absolutely positioned creation method selector */
   }
 
-  /* Creation method selector - absolutely positioned to prevent layout shift during transition */
-  .creation-method-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 10; /* Above tool panel */
-  }
-
-  /* Tool panel wrapper - normal flexbox layout */
-  .tool-panel-wrapper {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-  }
+  /* Tool panel styles moved to CreationToolPanelSlot.svelte */
 
   .create-tab.side-by-side .workspace-container {
     flex: 5;

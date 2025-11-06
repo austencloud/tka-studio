@@ -25,19 +25,16 @@
     ANIMATION_AUTO_START_DELAY_MS,
     GIF_EXPORT_SUCCESS_DELAY_MS,
   } from "$create/animate/constants/timing";
-  import type { PanelCoordinationState } from "../../state/panel-coordination-state.svelte";
-  import type { createCreateModuleState as CreateModuleStateType } from "../../state/create-module-state.svelte";
+  import { getCreateModuleContext } from "../../context";
 
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState, panelState } = ctx;
 
-  // Props
+  // Props (only bindable props remain)
   let {
-    CreateModuleState,
-    panelState,
     animatingBeatNumber = $bindable(),
   }: {
-    CreateModuleState: CreateModuleState;
-    panelState: PanelCoordinationState;
     animatingBeatNumber?: number | null;
   } = $props();
 
@@ -80,7 +77,9 @@
         0,
         Math.min(beatIndex, animationPanelState.sequenceData.beats.length - 1)
       );
-      return animationPanelState.sequenceData.beats[clampedIndex]?.letter || null;
+      return (
+        animationPanelState.sequenceData.beats[clampedIndex]?.letter || null
+      );
     }
 
     return null;
@@ -93,7 +92,9 @@
       playbackController = resolve<IAnimationPlaybackController>(
         TYPES.IAnimationPlaybackController
       );
-      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+      hapticService = resolve<IHapticFeedbackService>(
+        TYPES.IHapticFeedbackService
+      );
       gifExportOrchestrator = resolve<IGifExportOrchestrator>(
         TYPES.IGifExportOrchestrator
       );
@@ -139,7 +140,10 @@
 
       // Initialize playback controller
       animationPanelState.setShouldLoop(true);
-      const success = playbackController.initialize(result.sequence, animationPanelState);
+      const success = playbackController.initialize(
+        result.sequence,
+        animationPanelState
+      );
 
       if (!success) {
         throw new Error("Failed to initialize animation playback");
@@ -219,7 +223,9 @@
       isExporting = true;
 
       // Find canvas element
-      const canvasElements = document.querySelectorAll(".animation-panel canvas");
+      const canvasElements = document.querySelectorAll(
+        ".animation-panel canvas"
+      );
       const canvas = canvasElements[0] as HTMLCanvasElement;
 
       if (!canvas) {

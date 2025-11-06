@@ -408,6 +408,11 @@ export function createConstructTabState(
   };
 }
 
+/**
+ * Type for ConstructTabState - the return type of createConstructTabState
+ */
+export type ConstructTabState = ReturnType<typeof createConstructTabState>;
+
 // ============================================================================
 // HMR STATE PERSISTENCE EFFECT
 // ============================================================================

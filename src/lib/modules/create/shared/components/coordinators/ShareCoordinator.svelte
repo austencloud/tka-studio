@@ -10,28 +10,20 @@
 
   import { createComponentLogger } from "$shared";
   import SharePanelSheet from "../../../share/components/SharePanelSheet.svelte";
-  import type { IShareService } from "../../../share/services/contracts";
   import { createShareState } from "../../../share/state";
-  import type { PanelCoordinationState } from "../../state/panel-coordination-state.svelte";
-  import type { createCreateModuleState as CreateModuleStateType } from "../../state/create-module-state.svelte";
+  import { getCreateModuleContext } from "../../context";
 
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
+  const logger = createComponentLogger("ShareCoordinator");
 
-  const logger = createComponentLogger('ShareCoordinator');
-
-  // Props
-  let {
-    CreateModuleState,
-    panelState,
-    shareService
-  }: {
-    CreateModuleState: CreateModuleState;
-    panelState: PanelCoordinationState;
-    shareService: IShareService;
-  } = $props();
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState, panelState, services } = ctx;
+  const shareService = services.shareService;
 
   // Share state for background preview pre-rendering
-  let backgroundShareState = $state<ReturnType<typeof createShareState> | null>(null);
+  let backgroundShareState = $state<ReturnType<typeof createShareState> | null>(
+    null
+  );
 
   // Initialize background share state
   $effect(() => {

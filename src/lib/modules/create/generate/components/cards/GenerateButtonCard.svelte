@@ -68,8 +68,8 @@ Integrates the "Generate New" button into the card grid layout so it scales with
     color: white;
     border-radius: 20px;
 
-    /* 🎯 BIGGER TEXT - scales with container, no uppercase */
-    font-size: clamp(20px, 5cqi, 40px);
+    /* 🎯 TEXT SIZE - more cohesive with other cards */
+    font-size: clamp(16px, 5cqi, 32px);
     font-weight: 800;
     letter-spacing: 0.3px;
     text-shadow:

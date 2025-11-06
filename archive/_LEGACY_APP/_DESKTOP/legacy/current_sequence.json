@@ -1,100 +1,940 @@
 [
-  {
-    "word": "AL",
-    "author": "",
-    "level": 0,
-    "prop_type": "staff",
-    "grid_mode": "diamond",
-    "is_circular": false,
-    "can_be_CAP": false,
-    "is_strict_rotated_CAP": false,
-    "is_strict_mirrored_CAP": false,
-    "is_strict_swapped_CAP": false,
-    "is_mirrored_swapped_CAP": false,
-    "is_rotated_swapped_CAP": false
-  },
-  {
-    "beat": 0,
-    "letter": "α",
-    "letter_type": "Type6",
-    "start_pos": "alpha5",
-    "end_pos": "alpha5",
-    "timing": "none",
-    "direction": "none",
-    "blue_attributes": {
-      "motion_type": "static",
-      "start_ori": "in",
-      "prop_rot_dir": "no_rot",
-      "start_loc": "n",
-      "end_loc": "n",
-      "turns": 0,
-      "end_ori": "in"
+    {
+        "word": "ΔQYIΣ-YΣ-Z-Δ-UΛΛ-ΛZIDΣPZIΔ-ZΔ-Y-Σ-VΛΛ-ΛYIE",
+        "author": "",
+        "level": 0,
+        "prop_type": "staff",
+        "grid_mode": "diamond",
+        "is_circular": false,
+        "can_be_CAP": false,
+        "is_strict_rotated_CAP": false,
+        "is_strict_mirrored_CAP": false,
+        "is_strict_swapped_CAP": false,
+        "is_mirrored_swapped_CAP": false,
+        "is_rotated_swapped_CAP": false
     },
-    "red_attributes": {
-      "motion_type": "static",
-      "start_ori": "in",
-      "prop_rot_dir": "no_rot",
-      "start_loc": "s",
-      "end_loc": "s",
-      "turns": 0,
-      "end_ori": "in"
+    {
+        "beat": 0,
+        "letter": "α",
+        "letter_type": "Type6",
+        "start_pos": "alpha6",
+        "end_pos": "alpha6",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "static",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box"
     },
-    "grid_mode": "diamond"
-  },
-  {
-    "beat": 1,
-    "letter": "A",
-    "start_pos": "alpha5",
-    "end_pos": "alpha7",
-    "timing": "split",
-    "direction": "same",
-    "blue_attributes": {
-      "motion_type": "pro",
-      "start_ori": "in",
-      "prop_rot_dir": "cw",
-      "start_loc": "n",
-      "end_loc": "e",
-      "turns": 0,
-      "end_ori": "in"
+    {
+        "beat": 1,
+        "letter": "Δ",
+        "start_pos": "alpha6",
+        "end_pos": "gamma4",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "cw",
+            "start_loc": "sw",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
     },
-    "red_attributes": {
-      "motion_type": "pro",
-      "start_ori": "in",
-      "prop_rot_dir": "cw",
-      "start_loc": "s",
-      "end_loc": "w",
-      "turns": 0,
-      "end_ori": "in"
+    {
+        "beat": 2,
+        "letter": "Q",
+        "start_pos": "gamma4",
+        "end_pos": "gamma10",
+        "timing": "quarter",
+        "direction": "opp",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "ne",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
     },
-    "grid_mode": "diamond",
-    "duration": 1
-  },
-  {
-    "beat": 2,
-    "letter": "L",
-    "start_pos": "alpha7",
-    "end_pos": "beta1",
-    "timing": "tog",
-    "direction": "opp",
-    "blue_attributes": {
-      "motion_type": "pro",
-      "start_ori": "in",
-      "prop_rot_dir": "ccw",
-      "start_loc": "e",
-      "end_loc": "n",
-      "turns": 1,
-      "end_ori": "out"
+    {
+        "beat": 3,
+        "letter": "Y",
+        "start_pos": "gamma10",
+        "end_pos": "beta4",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "se",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "cw",
+            "start_loc": "ne",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
     },
-    "red_attributes": {
-      "motion_type": "anti",
-      "start_ori": "in",
-      "prop_rot_dir": "ccw",
-      "start_loc": "w",
-      "end_loc": "n",
-      "turns": 0,
-      "end_ori": "out"
+    {
+        "beat": 4,
+        "letter": "I",
+        "start_pos": "beta4",
+        "end_pos": "beta2",
+        "timing": "tog",
+        "direction": "same",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "cw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
     },
-    "grid_mode": "diamond",
-    "duration": 1
-  }
+    {
+        "beat": 5,
+        "letter": "Σ-",
+        "start_pos": "beta2",
+        "end_pos": "gamma14",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "ne",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 6,
+        "letter": "Y",
+        "start_pos": "gamma14",
+        "end_pos": "beta8",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "nw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "cw",
+            "start_loc": "sw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 7,
+        "letter": "Σ-",
+        "start_pos": "beta8",
+        "end_pos": "gamma12",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "nw",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 8,
+        "letter": "Z-",
+        "start_pos": "gamma12",
+        "end_pos": "beta2",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 9,
+        "letter": "Δ-",
+        "start_pos": "beta2",
+        "end_pos": "gamma6",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "ne",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 10,
+        "letter": "U",
+        "start_pos": "gamma6",
+        "end_pos": "gamma4",
+        "timing": "quarter",
+        "direction": "same",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "sw",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 11,
+        "letter": "Λ",
+        "start_pos": "gamma4",
+        "end_pos": "gamma12",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "static",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "se",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 12,
+        "letter": "Λ-",
+        "start_pos": "gamma12",
+        "end_pos": "gamma16",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "se",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 13,
+        "letter": "Λ",
+        "start_pos": "gamma16",
+        "end_pos": "gamma8",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "nw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 14,
+        "letter": "Z",
+        "start_pos": "gamma8",
+        "end_pos": "beta6",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 15,
+        "letter": "I",
+        "start_pos": "beta6",
+        "end_pos": "beta8",
+        "timing": "tog",
+        "direction": "same",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "sw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "cw",
+            "start_loc": "sw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 16,
+        "letter": "D",
+        "start_pos": "beta8",
+        "end_pos": "alpha2",
+        "timing": "split",
+        "direction": "opp",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "cw",
+            "start_loc": "nw",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 17,
+        "letter": "Σ",
+        "start_pos": "alpha2",
+        "end_pos": "gamma8",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "ne",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 18,
+        "letter": "P",
+        "start_pos": "gamma8",
+        "end_pos": "gamma14",
+        "timing": "quarter",
+        "direction": "opp",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "sw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 19,
+        "letter": "Z",
+        "start_pos": "gamma14",
+        "end_pos": "beta8",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "nw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "sw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 20,
+        "letter": "I",
+        "start_pos": "beta8",
+        "end_pos": "beta6",
+        "timing": "tog",
+        "direction": "same",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 21,
+        "letter": "Δ-",
+        "start_pos": "beta6",
+        "end_pos": "gamma10",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "cw",
+            "start_loc": "sw",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 22,
+        "letter": "Z",
+        "start_pos": "gamma10",
+        "end_pos": "beta4",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "se",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "ne",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 23,
+        "letter": "Δ-",
+        "start_pos": "beta4",
+        "end_pos": "gamma16",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "se",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 24,
+        "letter": "Y-",
+        "start_pos": "gamma16",
+        "end_pos": "beta6",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 25,
+        "letter": "Σ-",
+        "start_pos": "beta6",
+        "end_pos": "gamma2",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "sw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 26,
+        "letter": "V",
+        "start_pos": "gamma2",
+        "end_pos": "gamma8",
+        "timing": "quarter",
+        "direction": "same",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "nw",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "ne",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 27,
+        "letter": "Λ",
+        "start_pos": "gamma8",
+        "end_pos": "gamma16",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "nw",
+            "end_loc": "nw",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 28,
+        "letter": "Λ-",
+        "start_pos": "gamma16",
+        "end_pos": "gamma12",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "dash",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "nw",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 29,
+        "letter": "Λ",
+        "start_pos": "gamma12",
+        "end_pos": "gamma4",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "dash",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "sw",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "static",
+            "start_ori": "in",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "se",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 30,
+        "letter": "Y",
+        "start_pos": "gamma4",
+        "end_pos": "beta2",
+        "timing": "none",
+        "direction": "none",
+        "blue_attributes": {
+            "motion_type": "static",
+            "start_ori": "out",
+            "prop_rot_dir": "no_rot",
+            "start_loc": "ne",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "pro",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 31,
+        "letter": "I",
+        "start_pos": "beta2",
+        "end_pos": "beta4",
+        "timing": "tog",
+        "direction": "same",
+        "blue_attributes": {
+            "motion_type": "pro",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "ne",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "in",
+            "prop_rot_dir": "ccw",
+            "start_loc": "ne",
+            "end_loc": "se",
+            "turns": 0,
+            "end_ori": "out"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    },
+    {
+        "beat": 32,
+        "letter": "E",
+        "start_pos": "beta4",
+        "end_pos": "alpha6",
+        "timing": "split",
+        "direction": "opp",
+        "blue_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "cw",
+            "start_loc": "se",
+            "end_loc": "ne",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "red_attributes": {
+            "motion_type": "anti",
+            "start_ori": "out",
+            "prop_rot_dir": "ccw",
+            "start_loc": "se",
+            "end_loc": "sw",
+            "turns": 0,
+            "end_ori": "in"
+        },
+        "grid_mode": "box",
+        "duration": 1
+    }
 ]

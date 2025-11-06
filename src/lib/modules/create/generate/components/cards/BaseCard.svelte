@@ -287,8 +287,8 @@ Provides consistent styling and interaction patterns for all generation setting 
   }
 
   .card-value {
-    /* Container-aware font size - scales smoothly with card size */
-    font-size: clamp(12px, 5cqi, 24px);
+    /* Container-aware font size - more cohesive with toggle cards */
+    font-size: clamp(13px, 7cqi, 30px);
     font-weight: 700;
     color: white;
     text-align: center;

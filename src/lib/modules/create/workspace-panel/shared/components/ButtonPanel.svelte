@@ -5,135 +5,55 @@
   Pure orchestration component - composes individual button components.
 
   Architecture:
+  - Uses CreateModuleContext for state access
+  - Derives all boolean flags locally from context
+  - Only receives event handler callbacks as props
   - No business logic (delegated to services)
-  - No CSS (except layout)
-  - No state management (delegated to button components)
   - Just composition and prop passing
 -->
 <script lang="ts">
-  import type { ICreateModuleState } from "$create/shared/types/create-module-types";
   import { fade } from "svelte/transition";
   import { PresenceAnimation } from "$shared/animation";
+  import { getCreateModuleContext } from "$create/shared/context";
   import {
-    BackButton,
     ClearSequencePanelButton,
     PlayButton,
-    RemoveBeatButton,
     SequenceActionsButton,
     ShareButton,
     UndoButton,
   } from "./buttons/index.js";
 
-  // Props interface
+  // Get context - ButtonPanel is ONLY used inside CreateModule, so context is always available
+  const { CreateModuleState, panelState } = getCreateModuleContext();
+
+  // Props interface - only event handler callbacks
   const {
-    // Back button
-    canGoBack = false,
-    onBack,
-
-    // Create Module State for undo functionality
-    CreateModuleState = null,
-
-    // Remove Beat button
-    canRemoveBeat = false,
-    onRemoveBeat,
-    selectedBeatIndex = null,
-    selectedBeatData = null,
-
-    // Clear Sequence button
-    canClearSequence = false,
     onClearSequence,
-
-    // Sequence Actions button
-    showSequenceActions = false,
     onSequenceActionsClick,
-
-    // Share button
-    showShareButton = false,
     onShare,
-    isShareOpen = false,
-
-    // Play button
-    showPlayButton = false,
     onPlayAnimation,
-    isAnimating = false,
-
-    // Panel visibility
     visible = true,
   }: {
-    // Back button props
-    canGoBack?: boolean;
-    onBack?: () => void;
-
-    // Create Module State for undo functionality
-    CreateModuleState?: ICreateModuleState | null;
-
-    // Remove Beat button props
-    canRemoveBeat?: boolean;
-    onRemoveBeat?: (beatIndex: number) => void;
-    selectedBeatIndex?: number | null;
-    selectedBeatData?: any;
-
-    // Clear Sequence button props
-    canClearSequence?: boolean;
     onClearSequence?: () => void;
-
-    // Sequence Actions button props
-    showSequenceActions?: boolean;
     onSequenceActionsClick?: () => void;
-
-    // Share button props
-    showShareButton?: boolean;
     onShare?: () => void;
-    isShareOpen?: boolean;
-
-    // Play button props
-    showPlayButton?: boolean;
     onPlayAnimation?: () => void;
-    isAnimating?: boolean;
-
-    // Panel visibility
     visible?: boolean;
   } = $props();
 
-  // Determine if Remove Beat button should be shown
-  const shouldShowRemoveBeat = $derived(() => {
-    return (
-      canRemoveBeat &&
-      selectedBeatData &&
-      selectedBeatData.beatNumber >= 1 &&
-      selectedBeatIndex !== null
-    );
-  });
-
-  // Count visible buttons for layout purposes
-  const visibleButtonCount = $derived(() => {
-    let count = 0;
-
-    // Count undo/back button
-    if (CreateModuleState || canGoBack) count++;
-
-    // Count remove beat button
-    if (shouldShowRemoveBeat()) count++;
-
-    // Count clear sequence button
-    if (canClearSequence) count++;
-
-    // Count sequence actions button
-    if (showSequenceActions) count++;
-
-    // Count share button
-    if (showShareButton) count++;
-
-    // Count play button
-    if (showPlayButton) count++;
-
-    return count;
-  });
+  // Derive computed values from context
+  const showPlayButton = $derived(CreateModuleState.canShowActionButtons());
+  const showShareButton = $derived(CreateModuleState.canShowActionButtons());
+  const showSequenceActions = $derived(
+    CreateModuleState.canShowActionButtons()
+  );
+  const canClearSequence = $derived(CreateModuleState.canClearSequence(true));
+  const isAnimating = $derived(panelState.isAnimationPanelOpen);
+  const isShareOpen = $derived(panelState.isSharePanelOpen);
 
   // Count center-zone buttons to key the container (for smooth cross-fade on layout changes)
   const centerZoneButtonCount = $derived(() => {
     let count = 0;
-    if (shouldShowRemoveBeat()) count++;
     if (showPlayButton) count++;
     if (showSequenceActions) count++;
     if (showShareButton) count++;
@@ -146,10 +66,10 @@
    * Replaces old springScaleTransition with physics-based PresenceAnimation
    */
   function presenceTransition(
-    node: Element,
+    _node: Element,
     { duration = 550, delay = 0 }: { duration?: number; delay?: number } = {}
   ) {
-    const animation = new PresenceAnimation('snappy');
+    const animation = new PresenceAnimation("snappy");
 
     // Trigger enter animation
     animation.enter();
@@ -171,18 +91,11 @@
 
 {#if visible}
   <div class="button-panel" transition:fade={{ duration: 200 }}>
-    <!-- LEFT ZONE: Undo/Back button (always left edge) -->
+    <!-- LEFT ZONE: Undo button (always left edge) -->
     <div class="left-zone">
-      <!-- Undo Button (when CreateModuleState is available) or Back Button -->
-      {#if CreateModuleState}
-        <div transition:presenceTransition>
-          <UndoButton {CreateModuleState} showHistoryDropdown={true} />
-        </div>
-      {:else if canGoBack && onBack}
-        <div transition:presenceTransition>
-          <BackButton onclick={onBack} />
-        </div>
-      {/if}
+      <div transition:presenceTransition>
+        <UndoButton {CreateModuleState} showHistoryDropdown={true} />
+      </div>
     </div>
 
     <!-- CENTER ZONE: Contextual action buttons (centered in available space) -->
@@ -231,6 +144,10 @@
 
 <style>
   .button-panel {
+    /* Enable container queries for responsive spacing */
+    container-type: inline-size;
+    container-name: button-panel;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -296,8 +213,8 @@
     user-select: none;
   }
 
-  /* Mobile responsive adjustments - Progressive gap reduction to fit 44px buttons */
-  @media (max-width: 768px) {
+  /* Container-based responsive adjustments - Progressive gap reduction to fit 44px buttons */
+  @container button-panel (max-width: 768px) {
     .button-panel {
       padding: clamp(6px, 1.2vh, 12px) clamp(10px, 1.8vw, 18px);
     }
@@ -309,8 +226,8 @@
     }
   }
 
-  /* Tighter spacing on smaller screens to accommodate 44px buttons */
-  @media (max-width: 480px) {
+  /* Tighter spacing on smaller containers to accommodate 44px buttons */
+  @container button-panel (max-width: 480px) {
     .button-panel {
       padding: clamp(4px, 1vh, 10px) clamp(8px, 1.5vw, 12px);
     }
@@ -322,8 +239,8 @@
     }
   }
 
-  /* Very narrow screens - minimal gaps but NEVER shrink buttons */
-  @media (max-width: 360px) {
+  /* Very narrow containers - minimal gaps but NEVER shrink buttons */
+  @container button-panel (max-width: 360px) {
     .button-panel {
       padding: 6px 8px;
     }
@@ -335,8 +252,8 @@
     }
   }
 
-  /* Extremely narrow screens - hide Remove Beat button to make room */
-  @media (max-width: 340px) {
+  /* Extremely narrow containers */
+  @container button-panel (max-width: 340px) {
     .button-panel {
       padding: 6px 6px;
     }

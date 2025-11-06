@@ -60,7 +60,10 @@ export const TYPES = {
 
   // === Create Module ServiceS ===
   ICreateModuleService: Symbol.for("ICreateModuleService"),
+  ICreateModuleHandlers: Symbol.for("ICreateModuleHandlers"),
   ICreateModuleInitializationService: Symbol.for("ICreateModuleInitializationService"),
+  ICreateModuleEffectCoordinator: Symbol.for("ICreateModuleEffectCoordinator"),
+  ICreationMethodPersistenceService: Symbol.for("ICreationMethodPersistenceService"),
   ICreateModuleLayoutService: Symbol.for("ICreateModuleLayoutService"),
   IResponsiveLayoutService: Symbol.for("IResponsiveLayoutService"),
   INavigationSyncService: Symbol.for("INavigationSyncService"),

@@ -14,36 +14,39 @@
    */
 
   import { fade } from "svelte/transition";
-  import { navigationState, type BuildModeId, type PictographData } from "$shared";
-  import ToolPanel from "../../../tool-panel/core/ToolPanel.svelte";
-  import CreationMethodSelector from "../../../workspace-panel/components/CreationMethodSelector.svelte";
-  import type { createCreateModuleState as CreateModuleStateType } from "../state/create-module-state.svelte";
-  import type { createConstructTabState as ConstructTabStateType } from "../state/construct-tab-state.svelte";
+  import {
+    navigationState,
+    type BuildModeId,
+    type PictographData,
+  } from "$shared";
   import type { IToolPanelMethods } from "../types/create-module-types";
+  import CreationMethodSelector from "../../workspace-panel/components/CreationMethodSelector.svelte";
+  import { ToolPanel } from ".";
+  import { getCreateModuleContext } from "../context";
 
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
-  type ConstructTabState = ReturnType<typeof ConstructTabStateType>;
-
-  // Props
-  let {
-    createModuleState,
+  // Get context
+  const ctx = getCreateModuleContext();
+  const {
+    CreateModuleState: createModuleState,
     constructTabState,
+    panelState,
+    layout,
+  } = ctx;
+
+  // Derive values from context
+  const isSideBySideLayout = () => layout.shouldUseSideBySideLayout;
+  const isFilterPanelOpen = $derived(panelState.isFilterPanelOpen);
+
+  // Props (only callbacks and bindable refs)
+  let {
     toolPanelRef = $bindable(),
-    isSideBySideLayout,
-    practiceBeatIndex,
-    isFilterPanelOpen,
     onMethodSelected,
     onOptionSelected,
     onPracticeBeatIndexChange,
     onOpenFilters,
     onCloseFilters,
   }: {
-    createModuleState: CreateModuleState;
-    constructTabState: ConstructTabState;
     toolPanelRef?: IToolPanelMethods | null;
-    isSideBySideLayout: () => boolean;
-    practiceBeatIndex: number | null;
-    isFilterPanelOpen: boolean;
     onMethodSelected: (method: BuildModeId) => void;
     onOptionSelected: (option: PictographData) => Promise<void>;
     onPracticeBeatIndexChange: (index: number | null) => void;
@@ -70,7 +73,7 @@
       {constructTabState}
       {onOptionSelected}
       {isSideBySideLayout}
-      onPracticeBeatIndexChange={onPracticeBeatIndexChange}
+      {onPracticeBeatIndexChange}
       {onOpenFilters}
       {onCloseFilters}
       {isFilterPanelOpen}

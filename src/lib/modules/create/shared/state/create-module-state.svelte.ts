@@ -815,3 +815,8 @@ export function createCreateModuleState(
     },
   };
 }
+
+/**
+ * Type for CreateModuleState - the return type of createCreateModuleState
+ */
+export type CreateModuleState = ReturnType<typeof createCreateModuleState>;

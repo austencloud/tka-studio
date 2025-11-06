@@ -14,6 +14,7 @@ import {
   WorkbenchService,
 } from "../../../modules";
 import { SequenceAnalysisService } from "../../../modules/create/shared/services/implementations/SequenceAnalysisService";
+import { CreateModuleHandlers } from "../../../modules/create/shared/services/implementations/CreateModuleHandlers";
 import { OptionSizer } from "../../../modules/create/construct/option-picker/option-viewer/services/implementations";
 import { StartPositionService } from "../../../modules/create/construct/start-position-picker/services/implementations";
 import { CreateModuleLayoutService } from "../../../modules/create/shared/layout/services/CreateModuleLayoutService";
@@ -28,6 +29,8 @@ import { KeyboardArrowAdjustmentService } from "../../../modules/create/shared/s
 import { CreateModuleInitializationService } from "../../../modules/create/shared/services/implementations/CreateModuleInitializationService";
 import { NavigationSyncService } from "../../../modules/create/shared/services/implementations/NavigationSyncService";
 import { ResponsiveLayoutService } from "../../../modules/create/shared/services/implementations/ResponsiveLayoutService";
+import { CreationMethodPersistenceService } from "../../../modules/create/shared/services/implementations/CreationMethodPersistenceService";
+import { CreateModuleEffectCoordinator } from "../../../modules/create/shared/services/implementations/CreateModuleEffectCoordinator";
 // Refactored Generation Services
 import {
   OptionFilter,
@@ -91,12 +94,19 @@ export const buildModule = new ContainerModule(
   async (options: ContainerModuleLoadOptions) => {
     // === Create Module ServiceS ===
     options.bind(TYPES.ICreateModuleService).to(CreateModuleService);
+    options.bind(TYPES.ICreateModuleHandlers).to(CreateModuleHandlers);
     options
       .bind(TYPES.ICreateModuleLayoutService)
       .to(CreateModuleLayoutService);
     options
       .bind(TYPES.ICreateModuleInitializationService)
       .to(CreateModuleInitializationService);
+    options
+      .bind(TYPES.ICreateModuleEffectCoordinator)
+      .to(CreateModuleEffectCoordinator);
+    options
+      .bind(TYPES.ICreationMethodPersistenceService)
+      .to(CreationMethodPersistenceService);
     options.bind(TYPES.IResponsiveLayoutService).to(ResponsiveLayoutService);
     options.bind(TYPES.INavigationSyncService).to(NavigationSyncService);
     options.bind(TYPES.IBeatOperationsService).to(BeatOperationsService);

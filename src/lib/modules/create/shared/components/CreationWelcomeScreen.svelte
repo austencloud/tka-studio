@@ -13,20 +13,20 @@
    */
 
   import { fade } from "svelte/transition";
-  import type { createCreateModuleState as CreateModuleStateType } from "../state/create-module-state.svelte";
   import CreationWelcomeCue from "./CreationWelcomeCue.svelte";
+  import { getCreateModuleContext } from "../context";
 
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState } = ctx;
 
-  // Props
+  // Props (only presentation-specific props)
   let {
-    CreateModuleState,
     orientation,
     mood,
   }: {
-    CreateModuleState: CreateModuleState;
     orientation: "horizontal" | "vertical";
-    mood: "default" | "encouraging" | "excited";
+    mood: "default" | "redo" | "returning" | "fresh";
   } = $props();
 </script>
 
@@ -37,7 +37,10 @@
   out:fade={{ duration: 200 }}
 >
   <!-- Centered welcome content with undo button above -->
-  <div class="welcome-content" class:horizontal-cue={orientation === "horizontal"}>
+  <div
+    class="welcome-content"
+    class:horizontal-cue={orientation === "horizontal"}
+  >
     <!-- Undo button - centered above title -->
     {#if CreateModuleState?.canUndo}
       <button

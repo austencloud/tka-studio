@@ -66,7 +66,21 @@
 
   // Track when new pictograph data arrives for fade-in animation
   let enableTransitionsForNewData = $state(false);
-  let previousPictographData = beat.isBlank ? null : beat;
+
+  // Create a pictograph signature that represents the fundamental structure
+  // independent of transformations (which only change arrow locations/rotations)
+  function getPictographSignature(beatData: BeatData): string {
+    if (beatData.isBlank) return 'blank';
+
+    // Core structure: letter + which motion colors are present
+    const hasBlue = !!beatData.motions?.blue;
+    const hasRed = !!beatData.motions?.red;
+    const motionStructure = `${hasBlue ? 'B' : ''}${hasRed ? 'R' : ''}`;
+
+    return `${beatData.letter || 'null'}-${motionStructure}`;
+  }
+
+  let previousSignature = getPictographSignature(beat);
 
   // Reset hasAnimated ONLY when the beat data itself changes (different beat loaded)
   // This prevents re-animating all beats when only one beat should animate
@@ -77,15 +91,15 @@
     }
   });
 
-  // Enable transitions when new pictograph data arrives (for option selection animation)
+  // Enable transitions ONLY when pictograph signature changes (new pictograph selected)
+  // Do NOT enable transitions for transformations (mirror, rotate, color swap)
+  // which only change arrow locations/rotations but keep the same structural signature
   $effect(() => {
-    const currentPictographData = beat.isBlank ? null : beat;
-    const dataChanged =
-      JSON.stringify(currentPictographData) !==
-      JSON.stringify(previousPictographData);
+    const currentSignature = getPictographSignature(beat);
+    const signatureChanged = currentSignature !== previousSignature;
 
-    if (dataChanged && !beat.isBlank) {
-      // New pictograph data - enable transitions for fade-in
+    if (signatureChanged && !beat.isBlank) {
+      // New pictograph selected (structure changed) - enable transitions for fade-in
       enableTransitionsForNewData = true;
 
       // Disable transitions after animation completes
@@ -94,7 +108,7 @@
       }, 350); // Match pictograph fade-in duration
     }
 
-    previousPictographData = currentPictographData;
+    previousSignature = currentSignature;
   });
 
   const shouldAnimateIn = $derived(() => {

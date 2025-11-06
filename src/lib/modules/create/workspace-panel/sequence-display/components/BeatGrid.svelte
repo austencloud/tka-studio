@@ -116,6 +116,20 @@
           // Beats replaced - trigger full animation
           triggerFullAnimation();
         }
+      } else if (beatCountDiff === 0) {
+        // Same number of beats - check if IDs are preserved
+        // This happens during sequence transformations (mirror, rotate, color swap)
+        // 🚀 PERFORMANCE: Quick check - compare first and last beat IDs
+        const firstBeatIdMatch = previousBeatsRef[0]?.id === beats[0]?.id;
+        const lastBeatIdMatch = previousBeatsRef[currentBeatCount - 1]?.id === beats[currentBeatCount - 1]?.id;
+
+        if (firstBeatIdMatch && lastBeatIdMatch && currentBeatCount > 0) {
+          // Beat IDs preserved - this is a data update (transform), not a replacement
+          // NO animation needed - beats will update in place
+        } else {
+          // Beat IDs changed - full sequence replacement (Generate mode)
+          triggerFullAnimation();
+        }
       } else {
         // Full sequence replacement (Generate mode)
         triggerFullAnimation();
@@ -287,7 +301,7 @@
       </div>
 
       <!-- Beat Grid -->
-      {#each beats as beat, index}
+      {#each beats as beat, index (beat.id)}
         {@const position = calculateBeatPosition(index, gridLayout().columns)}
         {@const gridRow = position.row}
         {@const gridCol = position.column}

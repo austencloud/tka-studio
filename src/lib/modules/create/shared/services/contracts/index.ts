@@ -1,7 +1,10 @@
 
 export * from "./IBeatOperationsService";
 export * from "./IKeyboardArrowAdjustmentService";
+export * from "./ICreationMethodPersistenceService";
+export * from "./ICreateModuleEffectCoordinator";
 export * from "./ICreateModuleEventService";
+export * from "./ICreateModuleHandlers";
 export * from "./ICreateModuleInitializationService";
 export * from "./ICreateModuleService";
 export * from "./ICreateModuleTransitionService";

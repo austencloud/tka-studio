@@ -11,30 +11,29 @@
    */
 
   import { fade } from "svelte/transition";
-  import WorkspacePanel from "../../../workspace-panel/core/WorkspacePanel.svelte";
-  import type { createCreateModuleState as CreateModuleStateType } from "../state/create-module-state.svelte";
   import type { IToolPanelMethods } from "../types/create-module-types";
+  import { WorkspacePanel } from "../../workspace-panel";
+  import { getCreateModuleContext } from "../context";
 
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState, panelState, layout } = ctx;
 
-  // Props
+  // Props (only presentation-specific props)
   let {
-    CreateModuleState,
-    practiceBeatIndex,
     animatingBeatNumber,
-    isSideBySideLayout,
-    isMobilePortrait,
     onPlayAnimation,
     animationStateRef,
   }: {
-    CreateModuleState: CreateModuleState;
-    practiceBeatIndex: number | null;
     animatingBeatNumber: number | null;
-    isSideBySideLayout: boolean;
-    isMobilePortrait: boolean;
     onPlayAnimation: () => void;
-    animationStateRef: ReturnType<IToolPanelMethods["getAnimationStateRef"]>;
+    animationStateRef?: ReturnType<IToolPanelMethods["getAnimationStateRef"]>;
   } = $props();
+
+  // Derive values from context
+  const practiceBeatIndex = $derived(panelState.practiceBeatIndex);
+  const isSideBySideLayout = $derived(layout.shouldUseSideBySideLayout);
+  const isMobilePortrait = $derived(layout.isMobilePortrait());
 </script>
 
 <!-- Layout 2: Actual workspace when method is selected -->

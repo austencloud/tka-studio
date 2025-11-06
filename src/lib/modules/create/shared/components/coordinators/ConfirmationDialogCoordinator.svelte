@@ -13,16 +13,11 @@
    */
 
   import ConfirmDialog from "$shared/foundation/ui/ConfirmDialog.svelte";
-  import type { createCreateModuleState as CreateModuleStateType } from "../../state/create-module-state.svelte";
+  import { getCreateModuleContext } from "../../context";
 
-  type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
-
-  // Props
-  let {
-    CreateModuleState,
-  }: {
-    CreateModuleState: CreateModuleState;
-  } = $props();
+  // Get context
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState } = ctx;
 
   // Dialog state
   let showGuidedConfirm = $state(false);

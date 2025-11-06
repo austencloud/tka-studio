@@ -50,6 +50,7 @@ export interface ICreateModuleState {
   clearError: () => void;
   setactiveToolPanel: (panel: BuildModeId) => void;
   goBack: () => void;
+  setGuidedModeHeaderText: (text: string) => void;
 
   // Option history management
   addOptionToHistory: (beatIndex: number, beatData: BeatData) => void;

@@ -27,11 +27,7 @@ Integrates with workspace for real-time updates
   import SinglePropStartPositionPicker from "./SinglePropStartPositionPicker.svelte";
   import SequentialOptionViewer from "./SequentialOptionViewer.svelte";
 
-  const {
-    onSequenceUpdate,
-    onSequenceComplete,
-    onHeaderTextChange,
-  } = $props<{
+  const { onSequenceUpdate, onSequenceComplete, onHeaderTextChange } = $props<{
     onSequenceUpdate?: (sequence: PictographData[]) => void;
     onSequenceComplete?: (sequence: PictographData[]) => void;
     onHeaderTextChange?: (text: string) => void;
@@ -53,7 +49,9 @@ Integrates with workspace for real-time updates
   let isTransitioning = $state(false);
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Notify parent of header text changes
@@ -70,11 +68,11 @@ Integrates with workspace for real-time updates
       return "Choose Starting Position";
     }
 
-    if (sequentialState.currentPhase === 'blue') {
+    if (sequentialState.currentPhase === "blue") {
       return `Blue Hand - Beat ${sequentialState.currentBeatNumber}`;
     }
 
-    if (sequentialState.currentPhase === 'red') {
+    if (sequentialState.currentPhase === "red") {
       return `Red Hand - Beat ${sequentialState.currentBeatNumber} of ${sequentialState.blueSequenceLength}`;
     }
 
@@ -97,7 +95,10 @@ Integrates with workspace for real-time updates
   }
 
   // Handle starting position selection
-  function handleStartPositionSelected(_position: PictographData, location: GridLocation) {
+  function handleStartPositionSelected(
+    _position: PictographData,
+    location: GridLocation
+  ) {
     sequentialState.updateConfig({ startingLocation: location });
     showStartPicker = false;
     updateOptions();
@@ -124,14 +125,13 @@ Integrates with workspace for real-time updates
     hapticService?.trigger("selection");
 
     // Add to appropriate sequence
-    if (sequentialState.currentPhase === 'blue') {
+    if (sequentialState.currentPhase === "blue") {
       sequentialState.addBlueBeat(option);
 
       // Update workspace with blue-only pictograph
       const workspaceSequence = [...sequentialState.blueSequence];
       onSequenceUpdate?.(workspaceSequence);
-
-    } else if (sequentialState.currentPhase === 'red') {
+    } else if (sequentialState.currentPhase === "red") {
       sequentialState.addRedBeat(option);
 
       // Create merged sequence up to current point
@@ -162,7 +162,7 @@ Integrates with workspace for real-time updates
     }
 
     // Brief delay for transition smoothness
-    await new Promise(resolve => setTimeout(resolve, 300));
+    await new Promise((resolve) => setTimeout(resolve, 300));
 
     // Generate next options
     updateOptions();
@@ -172,7 +172,7 @@ Integrates with workspace for real-time updates
   // Handle "Next Hand" button
   function handleNextHand() {
     if (sequentialState.blueSequence.length === 0) {
-      console.warn('Cannot proceed to red hand - no blue beats added');
+      console.warn("Cannot proceed to red hand - no blue beats added");
       return;
     }
 
@@ -189,7 +189,7 @@ Integrates with workspace for real-time updates
     onSequenceComplete?.(sequentialState.mergedSequence as PictographData[]);
 
     // TODO: Trigger confetti animation
-    console.log('🎉 Sequence complete!', sequentialState.mergedSequence);
+    console.log("🎉 Sequence complete!", sequentialState.mergedSequence);
   }
 
   // Handle reset
@@ -207,12 +207,14 @@ Integrates with workspace for real-time updates
   <ConstructPickerHeader
     variant="sequential"
     title={headerText()}
-    showNextHandButton={!showStartPicker && sequentialState.currentPhase === 'blue' && sequentialState.blueSequence.length > 0}
+    showNextHandButton={!showStartPicker &&
+      sequentialState.currentPhase === "blue" &&
+      sequentialState.blueSequence.length > 0}
     nextHandButtonText="Build Red Hand"
     onBackClick={handleReset}
     onNextHand={handleNextHand}
     currentGridMode={sequentialState.config.gridMode}
-    onGridModeChange={showStartPicker ? handleGridModeChange : undefined}
+    {...showStartPicker ? { onGridModeChange: handleGridModeChange } : {}}
   />
 
   <!-- Content Area -->
@@ -246,7 +248,7 @@ Integrates with workspace for real-time updates
         options={currentOptions}
         onOptionSelected={handleOptionSelected}
         visibleHand={sequentialState.currentHand}
-        isTransitioning={isTransitioning}
+        {isTransitioning}
       />
     {/if}
   </div>

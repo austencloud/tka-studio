@@ -47,13 +47,13 @@
     modules.filter((m: ModuleDefinition) => !m.isMain)
   );
 
-  function handlePointerDown(event: PointerEvent) {
+  function handlePointerDown(event: PointerEvent | MouseEvent) {
     dragState.isDragging = false;
     dragState.startY = event.clientY;
     dragState.startTime = Date.now();
   }
 
-  function handlePointerMove(event: PointerEvent) {
+  function handlePointerMove(event: PointerEvent | MouseEvent) {
     const deltaY = Math.abs(event.clientY - dragState.startY);
     // If moved more than 10px vertically, consider it a drag
     if (deltaY > 10) {
@@ -61,7 +61,10 @@
     }
   }
 
-  function handleModuleClick(moduleId: ModuleId, event: PointerEvent) {
+  function handleModuleClick(
+    moduleId: ModuleId,
+    event: PointerEvent | MouseEvent
+  ) {
     // If user was dragging, don't trigger the click
     if (dragState.isDragging) {
       event.preventDefault();

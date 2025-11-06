@@ -254,9 +254,9 @@ Delegates ALL logic to services (SRP compliant)
     }
   }
 
-  /* Desktop optimization: Let cards breathe and use full available space */
+  /* Container-based desktop optimization: Let cards breathe and use full available space */
   /* Standard desktop (1280px+): Cards share space equally */
-  @media (min-width: 1280px) {
+  @container settings-grid (min-width: 1280px) {
     .card-settings-container {
       /* Equal row heights - cards share space proportionally */
       grid-auto-rows: 1fr;
@@ -273,7 +273,7 @@ Delegates ALL logic to services (SRP compliant)
   }
 
   /* Large desktop (1600px+): Same approach with tighter gaps */
-  @media (min-width: 1600px) {
+  @container settings-grid (min-width: 1600px) {
     .card-settings-container {
       grid-auto-rows: 1fr;
       gap: calc(var(--element-spacing) * 0.7);
@@ -281,7 +281,7 @@ Delegates ALL logic to services (SRP compliant)
   }
 
   /* Ultra-wide desktop (1920px+): Keep 6-column layout, just tighter spacing */
-  @media (min-width: 1920px) {
+  @container settings-grid (min-width: 1920px) {
     .card-settings-container {
       /* Keep 6 columns - don't change to 8! */
       grid-template-columns: repeat(6, minmax(0, 1fr));

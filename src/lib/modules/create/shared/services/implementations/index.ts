@@ -3,7 +3,10 @@
  */
 
 // Create module management implementations
+export { CreationMethodPersistenceService } from "./CreationMethodPersistenceService";
+export { CreateModuleEffectCoordinator } from "./CreateModuleEffectCoordinator";
 export { CreateModuleEventService } from "./CreateModuleEventService";
+export { CreateModuleHandlers } from "./CreateModuleHandlers";
 export { CreateModuleService } from "./CreateModuleService";
 export { CreateModuleTransitionService as CreateModuleTransitionService } from "./CreateModuleTransitionService";
 export { ConstructCoordinator } from "./ConstructCoordinator";

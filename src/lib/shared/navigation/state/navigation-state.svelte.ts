@@ -544,5 +544,10 @@ export function createNavigationState() {
   };
 }
 
+/**
+ * Type for NavigationState - the return type of createNavigationState
+ */
+export type NavigationState = ReturnType<typeof createNavigationState>;
+
 // Global navigation state instance
 export const navigationState = createNavigationState();
