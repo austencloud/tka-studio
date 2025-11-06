@@ -23,7 +23,7 @@
   });
 
   // Generate sequence image path - try multiple versions like PNG metadata extractor
-  let imagePath = $derived(() => {
+  let imagePath = $derived.by(() => {
     // Strip " Sequence" suffix from name to get the actual folder/file name
     const word = sequence.name.replace(" Sequence", "");
     return `/gallery/${word}/${word}_ver${imageVersion}.webp`;
@@ -60,7 +60,7 @@
   tabindex="0"
 >
   <img
-    src={imagePath()}
+    src={imagePath}
     alt={sequence.name}
     class="sequence-image"
     class:hidden={imageLoadFailed}

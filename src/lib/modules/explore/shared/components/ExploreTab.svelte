@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { IDeviceDetector, SequenceData } from "$shared";
-  import { resolve, TYPES } from "$shared";
+  import { resolve, TYPES, AnimationSheetCoordinator } from "$shared";
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onMount } from "svelte";
   import { openSpotlightViewer } from "../../../../shared/application/state/app-state.svelte";
@@ -34,6 +34,7 @@
   let deleteConfirmationData = $state<any>(null);
   let error = $state<string | null>(null);
   let activeTab = $state<ExploreTabType>("sequences");
+  let showAnimator = $state<boolean>(false);
   // Remove isInitialized blocking state - show UI immediately with skeletons
 
   // Services
@@ -60,6 +61,20 @@
       activeTab = "users";
     } else if (navTab === "collections") {
       activeTab = "collections";
+    }
+  });
+
+  // ✅ SYNC ANIMATION MODAL STATE
+  // This effect syncs the local showAnimator state with galleryState
+  $effect(() => {
+    showAnimator = galleryState.isAnimationModalOpen;
+  });
+
+  // ✅ SYNC CLOSE HANDLER
+  // When showAnimator is closed, inform galleryState
+  $effect(() => {
+    if (!showAnimator && galleryState.isAnimationModalOpen) {
+      galleryState.closeAnimationModal();
     }
   });
 
@@ -218,6 +233,12 @@
     onCancel={handleDeleteCancel}
   />
 {/if}
+
+<!-- Animation Sheet Coordinator -->
+<AnimationSheetCoordinator
+  sequence={galleryState.sequenceToAnimate}
+  bind:isOpen={showAnimator}
+/>
 
 <!-- Main layout - shows immediately with skeletons while data loads -->
 <div class="explore-content">

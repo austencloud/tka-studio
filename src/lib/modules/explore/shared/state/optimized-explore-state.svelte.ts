@@ -48,14 +48,14 @@ export function createOptimizedExploreState() {
 
   // Computed values
   const isLoading = $derived(
-    () => loadingState.isInitialLoading || loadingState.isLoadingMore
+    loadingState.isInitialLoading || loadingState.isLoadingMore
   );
 
-  const displayedSequences = $derived(() =>
+  const displayedSequences = $derived.by(() =>
     searchQuery.length > 0 ? searchResults : sequences
   );
 
-  const loadingProgress = $derived(() => {
+  const loadingProgress = $derived.by(() => {
     if (loadingState.totalCount === 0) return 0;
     return Math.round(
       (loadingState.loadedCount / loadingState.totalCount) * 100

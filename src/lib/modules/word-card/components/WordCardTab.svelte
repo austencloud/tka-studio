@@ -20,7 +20,7 @@
   // Note: We load directly from explore API instead of using sequence service
 
   // Filtered sequences based on selected length
-  let filteredSequences = $derived(() => {
+  let filteredSequences = $derived.by(() => {
     if (selectedLength === 0) {
       return sequences; // Show all
     }
@@ -28,8 +28,8 @@
   });
 
   // Create pages from filtered sequences (columnCount doesn't affect page content)
-  let pages = $derived(() => {
-    return createPages(filteredSequences());
+  let pages = $derived.by(() => {
+    return createPages(filteredSequences);
   });
 
   // Load sequences on mount
@@ -105,10 +105,10 @@
     if (isLoading) {
       progressMessage = `Loading ${selectedLength === 0 ? "all" : `${selectedLength}-beat`} sequences...`;
     } else {
-      const pageCount = pages().length;
-      const sequenceCount = filteredSequences().length;
+      const pageCount = pages.length;
+      const sequenceCount = filteredSequences.length;
 
-      if (pageCount === 1 && pages()[0]?.isEmpty) {
+      if (pageCount === 1 && pages[0]?.isEmpty) {
         progressMessage = `No ${selectedLength === 0 ? "" : `${selectedLength}-beat `}sequences found`;
       } else {
         progressMessage = `${pageCount} page${pageCount === 1 ? "" : "s"} • ${sequenceCount} sequence${sequenceCount === 1 ? "" : "s"}`;
@@ -142,7 +142,7 @@
     <!-- Page Display Area -->
     <div class="content">
       <PageDisplay
-        pages={pages()}
+        {pages}
         {isLoading}
         {error}
         {columnCount}

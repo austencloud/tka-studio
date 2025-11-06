@@ -9,7 +9,8 @@
   Navigation via bottom tabs (mobile-first UX pattern)
 -->
 <script lang="ts">
-  import { navigationState } from "$shared";
+  import { navigationState, AnimationSheetCoordinator } from "$shared";
+  import type { SequenceData } from "$shared";
   import { onMount } from "svelte";
   import GallerySection from "./components/GallerySection.svelte";
   import AchievementsSection from "./components/AchievementsSection.svelte";
@@ -19,6 +20,10 @@
 
   // Active mode synced with navigation state
   let activeMode = $state<CollectMode>("gallery");
+
+  // Animation sheet state
+  let showAnimator = $state<boolean>(false);
+  let sequenceToAnimate = $state<SequenceData | null>(null);
 
   // Sync with navigation state
   $effect(() => {
@@ -71,6 +76,12 @@
     </div>
   </div>
 </div>
+
+<!-- Animation Sheet Coordinator -->
+<AnimationSheetCoordinator
+  sequence={sequenceToAnimate}
+  bind:isOpen={showAnimator}
+/>
 
 <style>
   .collect-tab {

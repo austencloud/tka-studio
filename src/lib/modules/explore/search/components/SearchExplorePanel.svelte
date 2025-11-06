@@ -35,7 +35,7 @@ Allows natural language queries to find sequences, users, and collections.
   ];
 
   // Filtered results based on type filter
-  const filteredResults = $derived(() => {
+  const filteredResults = $derived.by(() => {
     if (searchFilter === "all") return searchResults;
     // Map plural filter names to singular types
     const typeMap: Record<string, SearchResult["type"]> = {
@@ -223,7 +223,7 @@ Allows natural language queries to find sequences, users, and collections.
         <i class="fas fa-spinner fa-spin"></i>
         <p>Searching...</p>
       </div>
-    {:else if filteredResults().length === 0}
+    {:else if filteredResults.length === 0}
       <!-- No results -->
       <div class="empty-state">
         <i class="fas fa-search"></i>
@@ -235,7 +235,7 @@ Allows natural language queries to find sequences, users, and collections.
     {:else}
       <!-- Search results -->
       <div class="results-list">
-        {#each filteredResults() as result (result.id)}
+        {#each filteredResults as result (result.id)}
           <button class="result-item" onclick={() => handleResultClick(result)}>
             <div class="result-icon">
               <i class="fas {getResultIcon(result.type)}"></i>

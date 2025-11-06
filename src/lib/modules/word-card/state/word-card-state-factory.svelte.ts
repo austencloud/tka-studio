@@ -56,7 +56,7 @@ export function createWordCardState(
   const sequenceLoadError = $state<string | null>(null);
 
   // Filtered sequences using EXISTING ExploreService
-  const filteredSequences = $derived(() => {
+  const filteredSequences = $derived.by(() => {
     if (displayState.selectedLength === 0) {
       return allSequences;
     }
