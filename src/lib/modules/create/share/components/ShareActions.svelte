@@ -4,23 +4,34 @@
   import type { SequenceData } from "$shared";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
+  import InstagramButton from "./InstagramButton.svelte";
+  import InstagramLinkSheet from "./InstagramLinkSheet.svelte";
+  import { getInstagramLink, hasInstagramLink } from "../domain";
+  import type { InstagramLink } from "../domain";
 
   let {
     currentSequence,
     canShare = false,
     isDownloading = false,
     onDownload,
+    onSequenceUpdate,
   }: {
     currentSequence: SequenceData | null;
     canShare?: boolean;
     isDownloading?: boolean;
     onDownload?: () => void;
+    onSequenceUpdate?: (sequence: SequenceData) => void;
   } = $props();
 
   let hapticService: IHapticFeedbackService;
 
+  // Instagram modal state
+  let showInstagramModal = $state(false);
+
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Handle download
@@ -28,6 +39,43 @@
     if (!canShare || isDownloading) return;
     hapticService?.trigger("success");
     onDownload?.();
+  }
+
+  // Instagram handlers
+  function handleAddInstagramLink() {
+    showInstagramModal = true;
+  }
+
+  function handleEditInstagramLink() {
+    showInstagramModal = true;
+  }
+
+  function handleSaveInstagramLink(link: InstagramLink) {
+    if (!currentSequence) return;
+
+    // Update sequence metadata with Instagram link
+    const updatedSequence = {
+      ...currentSequence,
+      metadata: {
+        ...currentSequence.metadata,
+        instagramLink: link,
+      },
+    };
+
+    onSequenceUpdate?.(updatedSequence);
+  }
+
+  function handleRemoveInstagramLink() {
+    if (!currentSequence) return;
+
+    // Remove Instagram link from metadata
+    const { instagramLink, ...restMetadata } = currentSequence.metadata;
+    const updatedSequence = {
+      ...currentSequence,
+      metadata: restMetadata,
+    };
+
+    onSequenceUpdate?.(updatedSequence);
   }
 
   // Get sequence info for display
@@ -42,6 +90,12 @@
       beatCount,
       isEmpty: beatCount === 0,
     };
+  });
+
+  // Get Instagram link from current sequence
+  let instagramLink = $derived(() => {
+    if (!currentSequence) return null;
+    return getInstagramLink(currentSequence.metadata);
   });
 
   // Download button text
@@ -64,8 +118,6 @@
 </script>
 
 <div class="share-actions">
-
-
   <!-- Primary Action: Download -->
   <div class="action-section primary">
     <div class="action-info">
@@ -99,18 +151,31 @@
     </button>
   </div>
 
-  <!-- Future Actions: Social Media -->
+  <!-- Instagram Integration -->
   <div class="action-section secondary">
     <div class="action-info">
-      <h4>Social Media Sharing</h4>
-      <p class="coming-soon">Coming soon! Share directly to Instagram, TikTok, and more.</p>
+      <h4>Instagram Integration</h4>
+      <p class="section-description">
+        Link an Instagram video to this sequence
+      </p>
+    </div>
+
+    <InstagramButton
+      instagramLink={instagramLink()}
+      disabled={!currentSequence}
+      onAddLink={handleAddInstagramLink}
+      onEditLink={handleEditInstagramLink}
+    />
+  </div>
+
+  <!-- Future Actions: More Social Media -->
+  <div class="action-section secondary">
+    <div class="action-info">
+      <h4>More Social Media</h4>
+      <p class="coming-soon">Coming soon! TikTok, YouTube, and more.</p>
     </div>
 
     <div class="social-buttons">
-      <button class="social-button instagram" disabled>
-        <span class="social-icon">📷</span>
-        Instagram
-      </button>
       <button class="social-button tiktok" disabled>
         <span class="social-icon">🎵</span>
         TikTok
@@ -122,6 +187,15 @@
     </div>
   </div>
 </div>
+
+<!-- Instagram Link Sheet -->
+<InstagramLinkSheet
+  show={showInstagramModal}
+  existingLink={instagramLink()}
+  onSave={handleSaveInstagramLink}
+  onRemove={handleRemoveInstagramLink}
+  onClose={() => (showInstagramModal = false)}
+/>
 
 <style>
   .share-actions {
@@ -180,6 +254,12 @@
     font-style: italic;
   }
 
+  .section-description {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
   .action-button {
     display: flex;
     align-items: center;
@@ -224,8 +304,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .social-buttons {

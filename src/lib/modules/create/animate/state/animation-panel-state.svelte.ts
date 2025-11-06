@@ -13,6 +13,7 @@ import type { PropState } from "../domain";
 // ============================================================================
 
 const ANIMATION_LOOP_STATE_KEY = "tka_animation_loop_state";
+const ANIMATION_SPEED_KEY = "tka_animation_speed";
 
 export type AnimationPanelState = {
   // Playback state
@@ -78,10 +79,30 @@ export function createAnimationPanelState(): AnimationPanelState {
     }
   };
 
+  // Load persisted speed
+  const loadSpeed = (): number => {
+    try {
+      const stored = localStorage.getItem(ANIMATION_SPEED_KEY);
+      return stored ? JSON.parse(stored) : 1.0;
+    } catch (error) {
+      console.error("❌ Failed to load speed:", error);
+      return 1.0;
+    }
+  };
+
+  // Save speed to localStorage
+  const saveSpeed = (speed: number): void => {
+    try {
+      localStorage.setItem(ANIMATION_SPEED_KEY, JSON.stringify(speed));
+    } catch (error) {
+      console.error("❌ Failed to save speed:", error);
+    }
+  };
+
   // Playback state
   let currentBeat = $state(0);
   let isPlaying = $state(false);
-  let speed = $state(1.0);
+  let speed = $state(loadSpeed());
   let shouldLoop = $state(loadLoopState());
 
   // Sequence metadata
@@ -124,6 +145,7 @@ export function createAnimationPanelState(): AnimationPanelState {
 
     setSpeed: (newSpeed: number) => {
       speed = Math.max(0.1, Math.min(3.0, newSpeed));
+      saveSpeed(speed);
     },
 
     setShouldLoop: (loop: boolean) => {

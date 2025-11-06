@@ -123,7 +123,7 @@ Refactored to use Drawer component for consistent behavior
   backdropClass="cap-selection-backdrop"
 >
   <div class="cap-modal-content" class:desktop-layout={isSideBySideLayout}>
-    <SheetDragHandle />
+    <SheetDragHandle class={isSideBySideLayout ? "side-handle" : ""} />
     <CAPModalHeader
       title="Select CAP Type"
       {isMultiSelectMode}
@@ -164,7 +164,7 @@ Refactored to use Drawer component for consistent behavior
 <style>
   /* Custom styling for CAP selection bottom sheet */
   /* Matches height of tool panel + button panel (like Animation/Edit panels) */
-  :global(.bottom-sheet.cap-selection-sheet) {
+  :global(.drawer-content.cap-selection-sheet) {
     max-width: 1200px;
     margin: 0 auto;
     border-radius: 20px 20px 0 0;
@@ -174,7 +174,28 @@ Refactored to use Drawer component for consistent behavior
     z-index: 9999;
   }
 
-  :global(.bottom-sheet-backdrop.cap-selection-backdrop) {
+  /* Slide animations for drawer */
+  :global(.drawer-content.cap-selection-sheet[data-placement="bottom"]) {
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  :global(.drawer-content.cap-selection-sheet[data-placement="right"]) {
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  :global(.drawer-content.cap-selection-sheet[data-state="closed"][data-placement="bottom"]) {
+    transform: translateY(100%);
+  }
+
+  :global(.drawer-content.cap-selection-sheet[data-state="closed"][data-placement="right"]) {
+    transform: translateX(100%);
+  }
+
+  :global(.drawer-content.cap-selection-sheet[data-state="open"]) {
+    transform: translate(0, 0);
+  }
+
+  :global(.drawer-overlay.cap-selection-backdrop) {
     z-index: 9998 !important;
     background: rgba(0, 0, 0, 0.85) !important;
     backdrop-filter: blur(8px) !important;
@@ -223,6 +244,18 @@ Refactored to use Drawer component for consistent behavior
   .cap-modal-content.desktop-layout {
     height: 100%;
     border-radius: 0;
+  }
+
+  /* Position drag handle on the left for side-by-side layout */
+  .cap-modal-content.desktop-layout :global(.sheet-drag-handle.side-handle) {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    width: 4px;
+    height: 48px;
+    margin: 0;
+    border-radius: 999px;
+    transform: translateY(-50%);
   }
 
   .info-section {

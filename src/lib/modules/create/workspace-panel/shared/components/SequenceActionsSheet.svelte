@@ -136,7 +136,7 @@
     role="dialog"
     aria-labelledby="sequence-actions-title"
   >
-    <SheetDragHandle />
+    <SheetDragHandle class={isSideBySideLayout ? "side-handle" : ""} />
     <button
       class="close-button"
       onclick={handleClose}
@@ -179,7 +179,7 @@
 
 <style>
   /* Use unified sheet system variables - transparent backdrop to allow workspace interaction */
-  :global(.bottom-sheet.actions-sheet-container) {
+  :global(.drawer-content.actions-sheet-container) {
     --sheet-backdrop-bg: var(--backdrop-transparent);
     --sheet-backdrop-filter: var(--backdrop-blur-none);
     --sheet-backdrop-pointer-events: none;
@@ -190,7 +190,28 @@
     min-height: 300px;
   }
 
-  :global(.bottom-sheet.actions-sheet-container:hover) {
+  /* Slide animations for drawer */
+  :global(.drawer-content.actions-sheet-container[data-placement="bottom"]) {
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  :global(.drawer-content.actions-sheet-container[data-placement="right"]) {
+    transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  :global(.drawer-content.actions-sheet-container[data-state="closed"][data-placement="bottom"]) {
+    transform: translateY(100%);
+  }
+
+  :global(.drawer-content.actions-sheet-container[data-state="closed"][data-placement="right"]) {
+    transform: translateX(100%);
+  }
+
+  :global(.drawer-content.actions-sheet-container[data-state="open"]) {
+    transform: translate(0, 0);
+  }
+
+  :global(.drawer-content.actions-sheet-container:hover) {
     box-shadow: none;
   }
 
@@ -208,6 +229,18 @@
   .actions-panel.desktop-layout {
     padding-bottom: 0;
     height: 100%;
+  }
+
+  /* Position drag handle on the left for side-by-side layout */
+  .actions-panel.desktop-layout :global(.sheet-drag-handle.side-handle) {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    width: 4px;
+    height: 48px;
+    margin: 0;
+    border-radius: 999px;
+    transform: translateY(-50%);
   }
 
   /* Screen reader only */

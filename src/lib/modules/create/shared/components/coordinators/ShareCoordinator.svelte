@@ -64,6 +64,11 @@
   function handleClose() {
     panelState.closeSharePanel();
   }
+
+  // Handle sequence update (for Instagram link)
+  function handleSequenceUpdate(updatedSequence: any) {
+    CreateModuleState.sequenceState.setCurrentSequence(updatedSequence);
+  }
 </script>
 
 <SharePanelSheet
@@ -71,4 +76,5 @@
   sequence={CreateModuleState.sequenceState.currentSequence}
   shareState={backgroundShareState}
   onClose={handleClose}
+  onSequenceUpdate={handleSequenceUpdate}
 />

@@ -1,7 +1,11 @@
 <!-- SharePanel.svelte - Full-Screen Modern Share Interface -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import type { IHapticFeedbackService, SequenceData, IDeviceDetector } from "$shared";
+  import type {
+    IHapticFeedbackService,
+    SequenceData,
+    IDeviceDetector,
+  } from "$shared";
   import { createServiceResolver, resolve, TYPES } from "$shared";
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onMount, untrack } from "svelte";
@@ -9,6 +13,11 @@
   import { createShareState } from "../state";
   import ShareOptionsPanel from "./ShareOptionsPanel.svelte";
   import DownloadSection from "./ShareSection.svelte";
+  import InstagramButton from "./InstagramButton.svelte";
+  import InstagramLinkSheet from "./InstagramLinkSheet.svelte";
+  import InstagramCarouselComposer from "./InstagramCarouselComposer.svelte";
+  import { getInstagramLink } from "../domain";
+  import type { InstagramLink } from "../domain";
 
   // Services
   let hapticService: IHapticFeedbackService;
@@ -24,15 +33,25 @@
     currentSequence = null,
     shareState: providedShareState = null,
     onClose,
+    onSequenceUpdate,
   }: {
     currentSequence?: SequenceData | null;
     shareState?: ReturnType<typeof createShareState> | null;
     onClose?: () => void;
+    onSequenceUpdate?: (sequence: SequenceData) => void;
   } = $props();
+
+  // Instagram modal state
+  let showInstagramModal = $state(false);
+
+  // Instagram posting tab state
+  let activeTab = $state<'download' | 'instagram'>('download');
 
   onMount(() => {
     // Service resolution
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
 
     // Initialize DeviceDetector service
     try {
@@ -51,7 +70,9 @@
   });
 
   // HMR-safe service resolution
-  const shareServiceResolver = createServiceResolver<IShareService>(TYPES.IShareService);
+  const shareServiceResolver = createServiceResolver<IShareService>(
+    TYPES.IShareService
+  );
 
   // Use provided share state or create a new one when service becomes available
   let shareState = $state<ReturnType<typeof createShareState> | null>(null);
@@ -75,7 +96,8 @@
     if (providedShareState) return;
 
     // Only for self-managed state (no background rendering)
-    if (!shareState || !currentSequence || currentSequence.beats?.length === 0) return;
+    if (!shareState || !currentSequence || currentSequence.beats?.length === 0)
+      return;
 
     // Track options as a dependency (so effect re-runs when options change)
     const options = shareState.options;
@@ -105,16 +127,67 @@
     }
   }
 
+  // Instagram handlers
+  function handleAddInstagramLink() {
+    showInstagramModal = true;
+  }
+
+  function handleEditInstagramLink() {
+    showInstagramModal = true;
+  }
+
+  function handleSaveInstagramLink(link: InstagramLink) {
+    if (!currentSequence) return;
+
+    // Update sequence metadata with Instagram link
+    const updatedSequence = {
+      ...currentSequence,
+      metadata: {
+        ...currentSequence.metadata,
+        instagramLink: link,
+      },
+    };
+
+    onSequenceUpdate?.(updatedSequence);
+  }
+
+  function handleRemoveInstagramLink() {
+    if (!currentSequence) return;
+
+    // Remove Instagram link from metadata
+    const { instagramLink, ...restMetadata } = currentSequence.metadata;
+    const updatedSequence = {
+      ...currentSequence,
+      metadata: restMetadata,
+    };
+
+    onSequenceUpdate?.(updatedSequence);
+  }
+
   // Computed properties
   let canShare = $derived(() => {
     return Boolean(
       browser &&
-      shareState &&
-      currentSequence &&
-      currentSequence.beats?.length > 0 &&
-      !shareState.isDownloading
+        shareState &&
+        currentSequence &&
+        currentSequence.beats?.length > 0 &&
+        !shareState.isDownloading
     );
   });
+
+  let instagramLink = $derived(() => {
+    if (!currentSequence) return null;
+    return getInstagramLink(currentSequence.metadata);
+  });
+
+  // Handle successful Instagram post
+  function handleInstagramPostSuccess(postUrl: string) {
+    hapticService?.trigger("success");
+    // Optionally switch back to download tab or show success message
+    activeTab = 'download';
+    // You could also show a toast notification here
+    console.log("Successfully posted to Instagram!", postUrl);
+  }
 </script>
 
 <div class="share-panel">
@@ -140,10 +213,16 @@
         <div class="preview-error">
           <p>Preview failed</p>
           <span>{shareState.previewError}</span>
-          <button class="retry-button" onclick={handleRetryPreview}>Try Again</button>
+          <button class="retry-button" onclick={handleRetryPreview}
+            >Try Again</button
+          >
         </div>
       {:else if shareState?.previewUrl}
-        <img src={shareState.previewUrl} alt="Sequence preview" class="preview-image" />
+        <img
+          src={shareState.previewUrl}
+          alt="Sequence preview"
+          class="preview-image"
+        />
       {:else}
         <div class="preview-placeholder">
           <p>Preview will appear here</p>
@@ -153,25 +232,80 @@
 
     <!-- Right: Options & Share Button -->
     <div class="options-column">
-      {#if shareState?.options}
-        <ShareOptionsPanel
-          options={shareState.options}
-          onOptionsChange={(newOptions) => shareState?.updateOptions(newOptions)}
+      <!-- Tab Switcher -->
+      <div class="tab-switcher">
+        <button
+          class="tab-button"
+          class:active={activeTab === 'download'}
+          onclick={() => (activeTab = 'download')}
+        >
+          <i class="fas fa-download"></i>
+          Download
+        </button>
+        <button
+          class="tab-button"
+          class:active={activeTab === 'instagram'}
+          onclick={() => (activeTab = 'instagram')}
+        >
+          <i class="fab fa-instagram"></i>
+          Post to Instagram
+        </button>
+      </div>
+
+      <!-- Tab Content -->
+      {#if activeTab === 'download'}
+        <!-- Download Tab -->
+        {#if shareState?.options}
+          <ShareOptionsPanel
+            options={shareState.options}
+            onOptionsChange={(newOptions) =>
+              shareState?.updateOptions(newOptions)}
+          />
+        {/if}
+
+        <DownloadSection
+          {currentSequence}
+          canDownload={canShare()}
+          isDownloading={shareState?.isDownloading || false}
+          {isMobile}
+          {shareState}
+          onDownload={handleDownload}
+          onShowExportModal={() => {}}
+        />
+
+        <!-- Instagram Link (Legacy - kept for backwards compatibility) -->
+        <div class="instagram-section">
+          <h3>Link Instagram Post</h3>
+          <p class="section-description">
+            Link an existing Instagram post to this sequence
+          </p>
+          <InstagramButton
+            instagramLink={instagramLink()}
+            disabled={!currentSequence}
+            onAddLink={handleAddInstagramLink}
+            onEditLink={handleEditInstagramLink}
+          />
+        </div>
+      {:else}
+        <!-- Instagram Posting Tab -->
+        <InstagramCarouselComposer
+          {currentSequence}
+          shareOptions={shareState?.options}
+          onPostSuccess={handleInstagramPostSuccess}
         />
       {/if}
-
-      <DownloadSection
-        {currentSequence}
-        canDownload={canShare()}
-        isDownloading={shareState?.isDownloading || false}
-        {isMobile}
-        {shareState}
-        onDownload={handleDownload}
-        onShowExportModal={() => {}}
-      />
     </div>
   </div>
 </div>
+
+<!-- Instagram Link Sheet -->
+<InstagramLinkSheet
+  show={showInstagramModal}
+  existingLink={instagramLink()}
+  onSave={handleSaveInstagramLink}
+  onRemove={handleRemoveInstagramLink}
+  onClose={() => (showInstagramModal = false)}
+/>
 
 <style>
   /* Clean container */
@@ -252,8 +386,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .retry-button {
@@ -284,6 +422,85 @@
     border-radius: 16px;
     padding: 24px;
     gap: 20px;
+    overflow-y: auto;
+    max-height: 100%;
+  }
+
+  /* Tab Switcher */
+  .tab-switcher {
+    display: flex;
+    gap: 8px;
+    padding: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    margin: -12px -12px 0 -12px;
+  }
+
+  .tab-button {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: transparent;
+    color: var(--text-secondary);
+    border: none;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tab-button:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-primary);
+  }
+
+  .tab-button.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .tab-button.active i {
+    color: var(--accent-color);
+  }
+
+  .tab-button i.fa-instagram {
+    background: linear-gradient(
+      45deg,
+      #f09433 0%,
+      #e6683c 25%,
+      #dc2743 50%,
+      #cc2366 75%,
+      #bc1888 100%
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Instagram section */
+  .instagram-section {
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+
+  .instagram-section h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+
+  .instagram-section .section-description {
+    margin: 0 0 1rem 0;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
   }
 
   /* Tablet/Mobile Layout */

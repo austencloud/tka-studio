@@ -15,12 +15,14 @@
     sequence = null,
     shareState = null,
     onClose,
+    onSequenceUpdate,
     heading = "Share Sequence",
   }: {
     show?: boolean;
     sequence?: SequenceData | null;
     shareState?: ShareState | null;
     onClose?: () => void;
+    onSequenceUpdate?: (sequence: SequenceData) => void;
     heading?: string;
   } = $props();
 
@@ -51,7 +53,7 @@
   backdropClass="share-sheet__backdrop"
 >
   <div class="share-sheet__container" class:desktop-layout={isSideBySideLayout}>
-    <SheetDragHandle />
+    <SheetDragHandle class={isSideBySideLayout ? "side-handle" : ""} />
     <header class="share-sheet__header">
       <h2 id="share-panel-title">{heading}</h2>
       <button
@@ -68,6 +70,7 @@
         currentSequence={sequence}
         {shareState}
         onClose={handleClose}
+        {onSequenceUpdate}
       />
     </div>
   </div>
@@ -75,7 +78,7 @@
 
 <style>
   /* Use unified sheet system variables */
-  :global(.bottom-sheet.share-sheet) {
+  :global(.drawer-content.share-sheet) {
     --sheet-z-index: var(--sheet-z-modal);
     --sheet-backdrop-bg: var(--backdrop-opaque);
     --sheet-backdrop-filter: var(--backdrop-blur-strong);
@@ -98,6 +101,18 @@
   .share-sheet__container.desktop-layout {
     height: 100%;
     max-height: none;
+  }
+
+  /* Position drag handle on the left for side-by-side layout */
+  .share-sheet__container.desktop-layout :global(.sheet-drag-handle.side-handle) {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    width: 4px;
+    height: 48px;
+    margin: 0;
+    border-radius: 999px;
+    transform: translateY(-50%);
   }
 
   /* Header - Modern 2026 styling */

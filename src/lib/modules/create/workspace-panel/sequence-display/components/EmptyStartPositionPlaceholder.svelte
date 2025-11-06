@@ -106,15 +106,6 @@ Fills the entire beat cell space with a subtle animated glass effect.
     padding: 1rem;
   }
 
-  .icon-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.7);
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-    animation: iconPulse 2.5s ease-in-out infinite;
-  }
-
   .start-text {
     font-family: Georgia, serif;
     font-size: 1.25rem;
@@ -152,19 +143,6 @@ Fills the entire beat cell space with a subtle animated glass effect.
     50%,
     100% {
       left: 100%;
-    }
-  }
-
-  /* Icon pulse animation */
-  @keyframes iconPulse {
-    0%,
-    100% {
-      transform: scale(1);
-      opacity: 0.7;
-    }
-    50% {
-      transform: scale(1.1);
-      opacity: 1;
     }
   }
 

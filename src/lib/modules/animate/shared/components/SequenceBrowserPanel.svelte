@@ -373,7 +373,6 @@
     color: rgba(255, 255, 255, 0.5);
   }
 
-  .loading-state i,
   .error-state i,
   .empty-state i {
     font-size: 3rem;
