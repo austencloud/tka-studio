@@ -57,14 +57,6 @@ export const LEARN_TABS: Section[] = [
     color: "#f472b6",
     gradient: "linear-gradient(135deg, #f472b6 0%, #ec4899 100%)",
   },
-  {
-    id: "read",
-    label: "Read",
-    icon: '<i class="fas fa-book-open"></i>',
-    description: "Beautiful PDF flipbook reader",
-    color: "#5eead4",
-    gradient: "linear-gradient(135deg, #5eead4 0%, #14b8a6 100%)",
-  },
 ];
 
 // Explore tabs configuration
@@ -128,6 +120,42 @@ export const BUILD_TABS = CREATE_TABS; // Legacy name
 export const LIBRARY_TABS = COLLECT_TABS; // Legacy name
 export const COLLECTION_TABS = COLLECT_TABS; // Legacy name
 
+// Animate tabs configuration
+export const ANIMATE_TABS: Section[] = [
+  {
+    id: "single",
+    label: "Single",
+    icon: '<i class="fas fa-user"></i>',
+    description: "Animate one sequence",
+    color: "#3b82f6",
+    gradient: "linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)",
+  },
+  {
+    id: "tunnel",
+    label: "Tunnel",
+    icon: '<i class="fas fa-users"></i>',
+    description: "Overlay two sequences",
+    color: "#ec4899",
+    gradient: "linear-gradient(135deg, #ec4899 0%, #f472b6 100%)",
+  },
+  {
+    id: "mirror",
+    label: "Mirror",
+    icon: '<i class="fas fa-left-right"></i>',
+    description: "Side-by-side mirrored view",
+    color: "#8b5cf6",
+    gradient: "linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)",
+  },
+  {
+    id: "grid",
+    label: "Grid",
+    icon: '<i class="fas fa-th"></i>',
+    description: "2×2 rotated grid",
+    color: "#f59e0b",
+    gradient: "linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%)",
+  },
+];
+
 // Admin tabs configuration
 export const ADMIN_TABS: Section[] = [
   {
@@ -189,6 +217,14 @@ export const MODULE_DEFINITIONS: ModuleDefinition[] = [
     description: "My gallery, achievements, and challenges",
     isMain: true,
     sections: COLLECT_TABS,
+  },
+  {
+    id: "animate",
+    label: "Animate",
+    icon: '<i class="fas fa-play-circle" style="color: #ec4899;"></i>', // Pink - animation/motion
+    description: "Advanced animation visualization",
+    isMain: true,
+    sections: ANIMATE_TABS,
   },
   // Removed: write and word_card modules (not currently in use)
   {

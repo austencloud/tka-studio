@@ -9,6 +9,7 @@
 export * from "./animation";
 export * from "./application";
 export * from "./background";
+export * from "./coordinators";
 // Export device module explicitly to avoid any re-export ambiguities
 export * from "./device/domain";
 export * from "./device/services";

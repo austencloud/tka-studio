@@ -12,6 +12,7 @@
  */
 
 export * from "./about";
+export * from "./animate";
 export * from "./create";
 export * from "./explore";
 export * from "./learn";

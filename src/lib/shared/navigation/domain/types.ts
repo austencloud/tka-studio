@@ -20,7 +20,7 @@ export interface Section {
 
 
 // Module-based navigation types
-export type ModuleId = "create" | "explore" | "learn" | "collect" | "library" | "write" | "word_card" | "admin";
+export type ModuleId = "create" | "explore" | "learn" | "collect" | "animate" | "library" | "write" | "word_card" | "admin";
 
 /**
  * Module Definition

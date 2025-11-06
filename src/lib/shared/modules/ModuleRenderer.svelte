@@ -14,6 +14,7 @@
   import { isContainerReady, resolve, TYPES } from "../inversify";
   import AboutTab from "../../modules/about/components/AboutTab.svelte";
   import AdminDashboard from "../../modules/admin/components/AdminDashboard.svelte";
+  import AnimateTab from "../../modules/animate/AnimateTab.svelte";
   import CreateModule from "../../modules/create/shared/components/CreateModule.svelte";
   import LearnTab from "../../modules/learn/LearnTab.svelte";
   import CollectTab from "../../modules/collect/CollectTab.svelte";
@@ -97,6 +98,8 @@
         <LearnTab onHeaderChange={onLearnHeaderChange} />
       {:else if isModuleActive("collect")}
         <CollectTab />
+      {:else if isModuleActive("animate")}
+        <AnimateTab />
       {:else if isModuleActive("collection")}
         <CollectTab />
       {:else if isModuleActive("library")}
