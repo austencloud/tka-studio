@@ -117,6 +117,7 @@
     "@tsparticles/basic": "^3.9.1",
     "@tsparticles/engine": "^3.9.1",
     "@tsparticles/preset-snow": "^3.2.0",
+    "bits-ui": "^2.14.2",
     "dexie": "^4.2.0",
     "embla-carousel": "^8.6.0",
     "embla-carousel-svelte": "^8.6.0",
@@ -129,6 +130,7 @@
     "page-flip": "^2.0.7",
     "pdfjs-dist": "^5.4.149",
     "reflect-metadata": "^0.2.2",
+    "vaul-svelte": "^0.3.2",
     "xstate": "^5.21.0",
     "zod": "^3.25.76"
   }
