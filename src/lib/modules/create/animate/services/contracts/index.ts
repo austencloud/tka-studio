@@ -13,6 +13,7 @@ export * from "./IAnimationStateManager";
 export * from "./IBeatCalculator";
 export * from "./IPropInterpolator";
 export * from "./ISequenceAnimationOrchestrator";
+export * from "./ISequenceLoopabilityChecker";
 
 // Calculation & Utility Services
 export * from "./IAngleCalculator";

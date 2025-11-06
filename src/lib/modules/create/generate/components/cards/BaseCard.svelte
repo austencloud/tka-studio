@@ -287,9 +287,12 @@ Provides consistent styling and interaction patterns for all generation setting 
   }
 
   .card-value {
-    /* Container-aware font size - more cohesive with toggle cards */
-    font-size: clamp(13px, 7cqi, 30px);
-    font-weight: 700;
+    /* Use shared card text styling from parent container */
+    font-size: var(--card-text-size);
+    font-weight: var(--card-text-weight);
+    letter-spacing: var(--card-text-spacing);
+    text-shadow: var(--card-text-shadow);
+
     color: white;
     text-align: center;
     line-height: 1.1;
@@ -400,7 +403,7 @@ Provides consistent styling and interaction patterns for all generation setting 
     }
 
     .base-card.cap-card .card-value {
-      font-size: clamp(10px, 3.5cqi, 14px);
+      font-size: clamp(10px, 1.5vmin, 14px);
       margin: 0;
     }
 

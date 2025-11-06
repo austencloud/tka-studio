@@ -81,12 +81,14 @@ Hides header when card height is below 65px for space optimization
       icon={option1.icon}
       isActive={isOption1Active}
       isLandscapeMobile={state.isLandscapeMobile}
+      optionsAreSideBySide={state.optionsAreSideBySide}
     />
     <ToggleOption
       label={option2.label}
       icon={option2.icon}
       isActive={isOption2Active}
       isLandscapeMobile={state.isLandscapeMobile}
+      optionsAreSideBySide={state.optionsAreSideBySide}
     />
   </div>
 </button>

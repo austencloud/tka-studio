@@ -15,23 +15,29 @@ import type { AnimationPanelState } from "../../state/animation-panel-state.svel
 import type { IAnimationLoopService } from "../contracts/IAnimationLoopService";
 import type { IAnimationPlaybackController } from "../contracts/IAnimationPlaybackController";
 import type { ISequenceAnimationOrchestrator } from "../contracts/ISequenceAnimationOrchestrator";
+import type { ISequenceLoopabilityChecker } from "../contracts/ISequenceLoopabilityChecker";
 
 @injectable()
 export class AnimationPlaybackController implements IAnimationPlaybackController {
   private state: AnimationPanelState | null = null;
   private sequenceData: SequenceData | null = null;
-  private isCircularSequence: boolean = false;
+  private isSeamlesslyLoopable: boolean = false;
 
   constructor(
     @inject(TYPES.ISequenceAnimationOrchestrator)
     private readonly animationEngine: ISequenceAnimationOrchestrator,
     @inject(TYPES.IAnimationLoopService)
-    private readonly loopService: IAnimationLoopService
+    private readonly loopService: IAnimationLoopService,
+    @inject(TYPES.ISequenceLoopabilityChecker)
+    private readonly loopabilityChecker: ISequenceLoopabilityChecker
   ) {}
 
   initialize(sequenceData: SequenceData, state: AnimationPanelState): boolean {
     this.state = state;
     this.sequenceData = sequenceData;
+
+    // Check if sequence is seamlessly loopable
+    this.isSeamlesslyLoopable = this.loopabilityChecker.isSeamlesslyLoopable(sequenceData);
 
     // Initialize animation engine with sequence data
     const success = this.animationEngine.initializeWithDomainData(sequenceData);
@@ -156,9 +162,12 @@ export class AnimationPlaybackController implements IAnimationPlaybackController
     const beatDelta = (deltaTime / 1000) * beatsPerSecond;
     const newBeat = this.state.currentBeat + beatDelta;
 
-
-    // Check if we've reached the end (add 1 beat buffer after last beat)
-    const animationEndBeat = this.state.totalBeats + 1;
+    // Determine animation end beat based on whether sequence is seamlessly loopable
+    // If seamlessly loopable, end at totalBeats (skip the start position beat)
+    // Otherwise, add 1 beat buffer to show start position again
+    const animationEndBeat = this.isSeamlesslyLoopable
+      ? this.state.totalBeats
+      : this.state.totalBeats + 1;
 
     if (newBeat > animationEndBeat) {
       if (this.state.shouldLoop) {

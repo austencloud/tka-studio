@@ -196,6 +196,13 @@ Delegates ALL logic to services (SRP compliant)
     /* Use programmatic element spacing from parent */
     gap: var(--element-spacing);
 
+    /* 🎯 SHARED CARD TEXT STYLING - Consistent across all cards */
+    --card-text-size: clamp(16px, 2.2vmin, 30px);
+    --card-text-weight: 700;
+    --card-text-spacing: 0.3px;
+    --card-text-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.5), 0 0 20px rgba(255, 255, 255, 0.2);
+
     min-height: 0; /* Allow flex to shrink */
     overflow: visible; /* Allow cards to pop over neighbors and modals to escape */
 

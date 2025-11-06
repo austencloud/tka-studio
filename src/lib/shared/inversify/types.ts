@@ -256,6 +256,7 @@ export const TYPES = {
   IAnimationStateService: Symbol.for("IAnimationStateService"),
   IBeatCalculationService: Symbol.for("IBeatCalculationService"),
   IPropInterpolationService: Symbol.for("IPropInterpolationService"),
+  ISequenceLoopabilityChecker: Symbol.for("ISequenceLoopabilityChecker"),
 
   // Animator Calculation Services
   IAngleCalculator: Symbol.for("IAngleCalculator"),

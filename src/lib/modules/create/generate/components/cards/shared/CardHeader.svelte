@@ -3,10 +3,7 @@ CardHeader.svelte - Shared card header component
 Reusable header for all card types with consistent styling
 -->
 <script lang="ts">
-  let {
-    title,
-    headerFontSize
-  } = $props<{
+  let { title, headerFontSize } = $props<{
     title: string;
     headerFontSize?: string;
   }>();
@@ -14,7 +11,10 @@ Reusable header for all card types with consistent styling
 
 <div class="card-header-container">
   <div class="card-header">
-    <div class="card-title" style={headerFontSize ? `font-size: ${headerFontSize}` : ''}>
+    <div
+      class="card-title"
+      style={headerFontSize ? `font-size: ${headerFontSize}` : ""}
+    >
       {title}
     </div>
   </div>
@@ -41,7 +41,7 @@ Reusable header for all card types with consistent styling
 
   .card-title {
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
+    color: var(--text-color, rgba(255, 255, 255, 0.9));
     text-align: center;
     letter-spacing: 0.2px;
     text-transform: uppercase;
@@ -66,4 +66,3 @@ Reusable header for all card types with consistent styling
     }
   }
 </style>
-

@@ -45,7 +45,6 @@ Integrates the "Generate New" button into the card grid layout so it scales with
   .generate-button-card {
     width: 100%;
     height: 100%;
-    padding: 0;
     border: none;
 
     /* 🟢 PURE GREEN MONOCHROMATIC: Green = GO psychology (no gold/yellow distraction) */
@@ -57,7 +56,6 @@ Integrates the "Generate New" button into the card grid layout so it scales with
       /* Emerald 400 - Bright green */ #10b981 75%,
       /* Emerald 500 - Main green */ #059669 100% /* Emerald 600 - Deep green */
     );
-    background-size: 300% 300%;
 
     /* Flowing gradient animation + subtle pulse (NO glow animation to prevent overlay) */
     animation:
@@ -68,20 +66,17 @@ Integrates the "Generate New" button into the card grid layout so it scales with
     color: white;
     border-radius: 20px;
 
-    /* 🎯 TEXT SIZE - more cohesive with other cards */
-    font-size: clamp(16px, 5cqi, 32px);
-    font-weight: 800;
-    letter-spacing: 0.3px;
-    text-shadow:
-      0 2px 6px rgba(0, 0, 0, 0.5),
-      0 0 20px rgba(255, 255, 255, 0.2);
+    /* 🎯 TEXT SIZE - Use shared card text styling from parent container */
+    font-size: var(--card-text-size);
+    font-weight: var(--card-text-weight);
+    letter-spacing: var(--card-text-spacing);
+    text-shadow: var(--card-text-shadow);
 
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
 
     /* 🔥 CONTAINED glow - stays within button boundaries */
     box-shadow:

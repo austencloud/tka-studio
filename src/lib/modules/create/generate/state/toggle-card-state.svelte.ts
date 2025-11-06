@@ -26,6 +26,7 @@ export function createToggleCardState(props: {
   // Reactive state
   let isLandscapeMobile = $state(false);
   let cardElement = $state<HTMLButtonElement | null>(null);
+  let optionsAreSideBySide = $state(false); // Track if options are in horizontal layout
 
   /**
    * Initialize services and setup listeners
@@ -48,6 +49,20 @@ export function createToggleCardState(props: {
         }
       });
 
+      // Track card dimensions to determine if options are side-by-side
+      let resizeObserver: ResizeObserver | null = null;
+      if (cardElement) {
+        resizeObserver = new ResizeObserver((entries) => {
+          const entry = entries[0];
+          if (entry) {
+            const { width, height } = entry.contentRect;
+            // Options go side-by-side when aspect-ratio > 2.5 (matches CSS)
+            optionsAreSideBySide = width / height > 2.5;
+          }
+        });
+        resizeObserver.observe(cardElement);
+      }
+
       // Attach ripple effect to card
       const cleanupRipple = cardElement && rippleService
         ? rippleService.attachRipple(cardElement, {
@@ -61,6 +76,7 @@ export function createToggleCardState(props: {
       return () => {
         cleanupDeviceListener();
         cleanupRipple();
+        resizeObserver?.disconnect();
       };
     } catch (error) {
       console.warn("ToggleCardState: Failed to initialize services:", error);
@@ -116,6 +132,9 @@ export function createToggleCardState(props: {
     },
     get isLandscapeMobile() {
       return isLandscapeMobile;
+    },
+    get optionsAreSideBySide() {
+      return optionsAreSideBySide;
     },
 
     // Event handlers

@@ -5,11 +5,12 @@ Presentational component for a single toggle option with icon and label
 <script lang="ts">
   import { FontAwesomeIcon } from "$shared";
 
-  let { label, icon, isActive, isLandscapeMobile } = $props<{
+  let { label, icon, isActive, isLandscapeMobile, optionsAreSideBySide = false } = $props<{
     label: string;
     icon?: string;
     isActive: boolean;
     isLandscapeMobile: boolean;
+    optionsAreSideBySide?: boolean;
   }>();
 
   // Helper function to detect if icon is a Font Awesome icon name
@@ -25,6 +26,7 @@ Presentational component for a single toggle option with icon and label
   class:active={isActive}
   class:inactive={!isActive}
   class:landscape-mobile={isLandscapeMobile}
+  class:side-by-side={optionsAreSideBySide}
   role="presentation"
   title={label}
   aria-label={label}
@@ -78,7 +80,7 @@ Presentational component for a single toggle option with icon and label
   }
 
   .option-icon {
-    font-size: clamp(14px, 6.5cqw, 32px);
+    font-size: clamp(14px, 2.5vmin, 32px);
     line-height: 1;
     flex-shrink: 0;
   }
@@ -89,24 +91,22 @@ Presentational component for a single toggle option with icon and label
     text-overflow: ellipsis;
     text-align: center;
     line-height: 1.2;
-    font-size: clamp(11px, 7cqw, 28px);
+    font-size: clamp(11px, 7cqi, 28px);
   }
 
-  /* Container query: Stack vertically when header is HIDDEN (height < 65px) */
-  /* When header is hidden, we have vertical space to spare, so we can stack icon on top of text */
-  @container toggle-card (height < 65px) {
-    .toggle-option {
-      flex-direction: column; /* Stack icon on top of text */
-      gap: clamp(2px, 0.5cqh, 4px);
-    }
+  /* When options are side-by-side: Stack icon on TOP of text for better fit */
+  /* This is controlled by parent ToggleCard via ResizeObserver (aspect-ratio > 2.5) */
+  .toggle-option.side-by-side {
+    flex-direction: column; /* Stack icon on top of text */
+    gap: clamp(2px, 0.5cqh, 4px);
+  }
 
-    .option-icon {
-      font-size: clamp(20px, 5cqw, 24px);
-    }
+  .toggle-option.side-by-side .option-icon {
+    font-size: clamp(18px, 2.2vmin, 24px);
+  }
 
-    .option-label {
-      font-size: clamp(14px, 5cqw, 18px);
-    }
+  .toggle-option.side-by-side .option-label {
+    font-size: clamp(12px, 2.2vmin, 18px);
   }
 
   .toggle-option.landscape-mobile {
@@ -114,13 +114,13 @@ Presentational component for a single toggle option with icon and label
   }
 
   .toggle-option.landscape-mobile .option-label {
-    font-size: clamp(9px, 3.5cqw, 12px);
+    font-size: clamp(9px, 1.5vmin, 12px);
     white-space: nowrap;
   }
 
   @media (max-width: 320px) {
     .option-label {
-      font-size: clamp(9px, 4cqw, 12px);
+      font-size: clamp(9px, 1.8vmin, 12px);
     }
   }
 </style>

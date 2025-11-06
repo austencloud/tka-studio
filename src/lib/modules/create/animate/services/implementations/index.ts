@@ -12,6 +12,7 @@ export { AnimationStateManager as AnimationStateService } from "./AnimationState
 export { BeatCalculator as BeatCalculationService } from "./BeatCalculator";
 export { PropInterpolator as PropInterpolationService } from "./PropInterpolator";
 export { SequenceAnimationOrchestrator } from "./SequenceAnimationOrchestrator";
+export { SequenceLoopabilityChecker } from "./SequenceLoopabilityChecker";
 
 // Calculation services
 export { AngleCalculator } from "./AngleCalculator";

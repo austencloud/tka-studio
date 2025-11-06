@@ -20,24 +20,28 @@ export class ShiftLocationCalculator implements IShiftLocationCalculator {
 
     // Direction pairs mapping using GridLocation enum values
     const directionPairs: Record<string, GridLocation> = {
-      // North-East combinations
-      [`${GridLocation.NORTH}-${GridLocation.EAST}`]: GridLocation.NORTHEAST,
-      [`${GridLocation.EAST}-${GridLocation.NORTH}`]: GridLocation.NORTHEAST,
+      // Diamond combinations (cardinal to cardinal)
+      [this.createPairKey(GridLocation.NORTH, GridLocation.EAST)]:
+        GridLocation.NORTHEAST,
+      [this.createPairKey(GridLocation.EAST, GridLocation.SOUTH)]:
+        GridLocation.SOUTHEAST,
+      [this.createPairKey(GridLocation.SOUTH, GridLocation.WEST)]:
+        GridLocation.SOUTHWEST,
+      [this.createPairKey(GridLocation.WEST, GridLocation.NORTH)]:
+        GridLocation.NORTHWEST,
 
-      // East-South combinations
-      [`${GridLocation.EAST}-${GridLocation.SOUTH}`]: GridLocation.SOUTHEAST,
-      [`${GridLocation.SOUTH}-${GridLocation.EAST}`]: GridLocation.SOUTHEAST,
-
-      // South-West combinations
-      [`${GridLocation.SOUTH}-${GridLocation.WEST}`]: GridLocation.SOUTHWEST,
-      [`${GridLocation.WEST}-${GridLocation.SOUTH}`]: GridLocation.SOUTHWEST,
-
-      // West-North combinations
-      [`${GridLocation.WEST}-${GridLocation.NORTH}`]: GridLocation.NORTHWEST,
-      [`${GridLocation.NORTH}-${GridLocation.WEST}`]: GridLocation.NORTHWEST,
+      // Box combinations (diagonal to diagonal -> cardinal)
+      [this.createPairKey(GridLocation.NORTHEAST, GridLocation.NORTHWEST)]:
+        GridLocation.NORTH,
+      [this.createPairKey(GridLocation.NORTHEAST, GridLocation.SOUTHEAST)]:
+        GridLocation.EAST,
+      [this.createPairKey(GridLocation.SOUTHWEST, GridLocation.SOUTHEAST)]:
+        GridLocation.SOUTH,
+      [this.createPairKey(GridLocation.NORTHWEST, GridLocation.SOUTHWEST)]:
+        GridLocation.WEST,
     };
 
-    const pairKey = `${startLocation}-${endLocation}`;
+    const pairKey = this.createPairKey(startLocation, endLocation);
     const location = directionPairs[pairKey];
 
     if (!location) {
@@ -48,5 +52,22 @@ export class ShiftLocationCalculator implements IShiftLocationCalculator {
     }
 
     return location;
+  }
+
+  /**
+   * Create a stable key for unordered GridLocation pairs.
+   * Ensures (a,b) and (b,a) resolve to the same lookup string.
+   */
+  private createPairKey(
+    first: GridLocation,
+    second: GridLocation
+  ): string {
+    if (first === second) {
+      return `${first}|${second}`;
+    }
+
+    return first < second
+      ? `${first}|${second}`
+      : `${second}|${first}`;
   }
 }

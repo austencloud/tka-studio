@@ -14,6 +14,7 @@ import {
   MotionCalculator,
   PropInterpolationService,
   SequenceAnimationOrchestrator,
+  SequenceLoopabilityChecker,
   SVGGenerator,
 } from "../../../modules/create/animate/services";
 import { AnimationService } from "../../application/services/implementations";
@@ -33,6 +34,7 @@ export const animatorModule = new ContainerModule(
     options.bind(TYPES.IAnimationStateService).to(AnimationStateService);
     options.bind(TYPES.IBeatCalculationService).to(BeatCalculationService);
     options.bind(TYPES.IPropInterpolationService).to(PropInterpolationService);
+    options.bind(TYPES.ISequenceLoopabilityChecker).to(SequenceLoopabilityChecker);
 
     // === CALCULATION SERVICES ===
     options.bind(TYPES.IAngleCalculator).to(AngleCalculator);
