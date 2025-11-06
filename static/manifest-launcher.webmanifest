@@ -1,7 +1,7 @@
 {
-  "name": "TKA Kinetic Constructor Launcher",
+  "name": "TKA Studio Launcher",
   "short_name": "TKA Launcher",
-  "description": "Advanced version management and development launcher for The Kinetic Constructor applications",
+  "description": "Advanced version management and development launcher for TKA Studio",
   "version": "2.0.0",
   "start_url": "/",
   "display": "standalone",
