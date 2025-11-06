@@ -5,6 +5,7 @@
 -->
 <script lang="ts">
   import { Drawer, SheetDragHandle } from "$shared";
+  import { tryGetCreateModuleContext } from "../../shared/context";
   import type { SequenceData } from "$shared";
   import type { ShareState } from "../state";
   import SharePanel from "./SharePanel.svelte";
@@ -26,6 +27,14 @@
   function handleClose() {
     onClose?.();
   }
+
+  const createModuleContext = tryGetCreateModuleContext();
+  const isSideBySideLayout = $derived(
+    createModuleContext
+      ? createModuleContext.layout.shouldUseSideBySideLayout
+      : false
+  );
+  const drawerPlacement = $derived(isSideBySideLayout ? "right" : "bottom");
 </script>
 
 <Drawer
@@ -37,10 +46,11 @@
   lockScroll={true}
   showHandle={false}
   respectLayoutMode={true}
+  placement={drawerPlacement}
   class="share-sheet"
   backdropClass="share-sheet__backdrop"
 >
-  <div class="share-sheet__container">
+  <div class="share-sheet__container" class:desktop-layout={isSideBySideLayout}>
     <SheetDragHandle />
     <header class="share-sheet__header">
       <h2 id="share-panel-title">{heading}</h2>
@@ -83,6 +93,11 @@
     height: 100vh;
     height: 100dvh;
     overflow: hidden;
+  }
+
+  .share-sheet__container.desktop-layout {
+    height: 100%;
+    max-height: none;
   }
 
   /* Header - Modern 2026 styling */

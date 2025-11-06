@@ -9,12 +9,7 @@ Displays a single preset with icon, name, summary, and action buttons
   import { onMount } from "svelte";
   import type { GenerationPreset } from "../../state/preset.svelte";
 
-  let {
-    preset,
-    onSelect,
-    onEdit,
-    onDelete
-  } = $props<{
+  let { preset, onSelect, onEdit, onDelete } = $props<{
     preset: GenerationPreset;
     onSelect: (preset: GenerationPreset) => void;
     onEdit: (preset: GenerationPreset) => void;
@@ -24,7 +19,9 @@ Displays a single preset with icon, name, summary, and action buttons
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function handleSelect() {
@@ -47,7 +44,8 @@ Displays a single preset with icon, name, summary, and action buttons
   // Format config summary for display
   const configSummary = $derived(() => {
     const { config } = preset;
-    const gridMode = config.gridMode.charAt(0).toUpperCase() + config.gridMode.slice(1);
+    const gridMode =
+      config.gridMode.charAt(0).toUpperCase() + config.gridMode.slice(1);
     const mode = config.mode.charAt(0).toUpperCase() + config.mode.slice(1);
 
     const parts = [
@@ -58,7 +56,9 @@ Displays a single preset with icon, name, summary, and action buttons
     ];
 
     if (config.turnIntensity > 0) {
-      parts.push(`${config.turnIntensity}x turn${config.turnIntensity !== 1 ? 's' : ''}`);
+      parts.push(
+        `${config.turnIntensity}x turn${config.turnIntensity !== 1 ? "s" : ""}`
+      );
     }
 
     return parts.join(" • ");
@@ -67,7 +67,8 @@ Displays a single preset with icon, name, summary, and action buttons
   // Abbreviated config summary for narrow screens
   const configSummaryShort = $derived(() => {
     const { config } = preset;
-    const gridMode = config.gridMode.charAt(0).toUpperCase() + config.gridMode.slice(1);
+    const gridMode =
+      config.gridMode.charAt(0).toUpperCase() + config.gridMode.slice(1);
     const mode = config.mode.charAt(0).toUpperCase() + config.mode.slice(1);
 
     // Shorten "Complementary" to "Compl." for narrow screens
@@ -76,22 +77,19 @@ Displays a single preset with icon, name, summary, and action buttons
       capLabel = "Compl.";
     }
 
-    const parts = [
-      `${config.length} beats`,
-      gridMode,
-      mode,
-      capLabel,
-    ];
+    const parts = [`${config.length} beats`, gridMode, mode, capLabel];
 
     if (config.turnIntensity > 0) {
-      parts.push(`${config.turnIntensity}x turn${config.turnIntensity !== 1 ? 's' : ''}`);
+      parts.push(
+        `${config.turnIntensity}x turn${config.turnIntensity !== 1 ? "s" : ""}`
+      );
     }
 
     return parts.join(" • ");
   });
 
   // Get level-based background color
-  const backgroundColor = $derived(() => {
+  const backgroundColor = $derived.by(() => {
     switch (preset.config.level) {
       case 1:
         return "rgba(186, 230, 253, 0.15)"; // Beginner: Light blue
@@ -105,7 +103,7 @@ Displays a single preset with icon, name, summary, and action buttons
   });
 
   // Get level-based border color
-  const borderColor = $derived(() => {
+  const borderColor = $derived.by(() => {
     switch (preset.config.level) {
       case 1:
         return "rgba(56, 189, 248, 0.3)"; // Beginner: Light blue
@@ -120,7 +118,7 @@ Displays a single preset with icon, name, summary, and action buttons
 
   const icon = $derived(preset.icon || "⚙️");
 
-  const levelLabel = $derived(() => {
+  const levelLabel = $derived.by(() => {
     switch (preset.config.level) {
       case 1:
         return "Beginner";
@@ -133,16 +131,32 @@ Displays a single preset with icon, name, summary, and action buttons
     }
   });
 
-  const levelBadgeColor = $derived(() => {
+  const levelBadgeColor = $derived.by(() => {
     switch (preset.config.level) {
       case 1:
-        return { bg: "rgba(56, 189, 248, 0.2)", border: "rgba(56, 189, 248, 0.5)", text: "#7dd3fc" };
+        return {
+          bg: "rgba(56, 189, 248, 0.2)",
+          border: "rgba(56, 189, 248, 0.5)",
+          text: "#7dd3fc",
+        };
       case 2:
-        return { bg: "rgba(148, 163, 184, 0.2)", border: "rgba(148, 163, 184, 0.5)", text: "#cbd5e1" };
+        return {
+          bg: "rgba(148, 163, 184, 0.2)",
+          border: "rgba(148, 163, 184, 0.5)",
+          text: "#cbd5e1",
+        };
       case 3:
-        return { bg: "rgba(234, 179, 8, 0.2)", border: "rgba(234, 179, 8, 0.5)", text: "#fde047" };
+        return {
+          bg: "rgba(234, 179, 8, 0.2)",
+          border: "rgba(234, 179, 8, 0.5)",
+          text: "#fde047",
+        };
       default:
-        return { bg: "rgba(255, 255, 255, 0.1)", border: "rgba(255, 255, 255, 0.2)", text: "#ffffff" };
+        return {
+          bg: "rgba(255, 255, 255, 0.1)",
+          border: "rgba(255, 255, 255, 0.2)",
+          text: "#ffffff",
+        };
     }
   });
 </script>
@@ -150,7 +164,7 @@ Displays a single preset with icon, name, summary, and action buttons
 <div class="preset-item-container">
   <button
     class="preset-item"
-    style="background: {backgroundColor()}; border-color: {borderColor()};"
+    style="background: {backgroundColor}; border-color: {borderColor};"
     onclick={handleSelect}
     aria-label={`Load preset ${preset.name}: ${configSummary()}`}
   >
@@ -160,9 +174,9 @@ Displays a single preset with icon, name, summary, and action buttons
         <div class="preset-name">{preset.name}</div>
         <div
           class="level-badge"
-          style="background: {levelBadgeColor().bg}; border-color: {levelBadgeColor().border}; color: {levelBadgeColor().text};"
+          style="background: {levelBadgeColor.bg}; border-color: {levelBadgeColor.border}; color: {levelBadgeColor.text};"
         >
-          {levelLabel()}
+          {levelLabel}
         </div>
       </div>
       <div class="preset-summary">
@@ -178,7 +192,8 @@ Displays a single preset with icon, name, summary, and action buttons
     title="Edit preset"
   >
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+      ></path>
       <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
     </svg>
   </button>
@@ -190,7 +205,9 @@ Displays a single preset with icon, name, summary, and action buttons
   >
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <polyline points="3 6 5 6 21 6"></polyline>
-      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+      <path
+        d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+      ></path>
       <line x1="10" y1="11" x2="10" y2="17"></line>
       <line x1="14" y1="11" x2="14" y2="17"></line>
     </svg>

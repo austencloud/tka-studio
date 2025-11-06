@@ -23,7 +23,7 @@
   const onError = handlers.onError;
 
   // Derive beat data reactively from sequence state instead of using snapshot
-  const selectedBeatData = $derived(() => {
+  const selectedBeatData = $derived.by(() => {
     const beatIndex = panelState.editPanelBeatIndex;
     if (beatIndex === null) return null;
 
@@ -170,7 +170,7 @@
 <EditSlidePanel
   isOpen={panelState.isEditPanelOpen}
   selectedBeatNumber={panelState.editPanelBeatIndex}
-  selectedBeatData={selectedBeatData()}
+  {selectedBeatData}
   selectedBeatsData={panelState.editPanelBeatsData}
   combinedPanelHeight={panelState.combinedPanelHeight}
   isSideBySideLayout={shouldUseSideBySideLayout}

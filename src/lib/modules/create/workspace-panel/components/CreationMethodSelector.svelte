@@ -185,7 +185,6 @@ great  CreationMethodSelector.svelte
   }
 
   .method-card:hover .method-icon {
-    background: var(--method-color, rgba(255, 255, 255, 0.1));
     transform: scale(1.1);
   }
 

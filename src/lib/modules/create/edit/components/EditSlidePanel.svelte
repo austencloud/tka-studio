@@ -86,6 +86,9 @@ HMR Test: Nested component change test
 
   // Calculate panel height dynamically to match tool panel + button panel
   const panelHeightStyle = $derived(() => {
+    if (!shouldUseBottomPlacement()) {
+      return "height: 100%;";
+    }
     if (combinedPanelHeight > 0) {
       return `height: ${combinedPanelHeight}px;`;
     }
@@ -222,6 +225,7 @@ HMR Test: Nested component change test
   focusTrap={false}
   lockScroll={false}
   showHandle={false}
+  respectLayoutMode={true}
   placement={shouldUseBottomPlacement() ? "bottom" : "right"}
   class="edit-panel-container"
   backdropClass="edit-panel-backdrop"

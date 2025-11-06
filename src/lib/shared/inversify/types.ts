@@ -285,9 +285,7 @@ export const TYPES = {
   // === MISSING SERVICES ===
   IQuizRepoManager: Symbol.for("IQuizRepoManager"),
 
-  // Learn Module - Read
-  IPDFService: Symbol.for("IPDFService"),
-  IFlipBookService: Symbol.for("IFlipBookService"),
+  // Learn Module
   ICodexService: Symbol.for("ICodexService"),
   ICodexPictographUpdater: Symbol.for("ICodexPictographUpdater"),
   IAngleCalculationService: Symbol.for("IAngleCalculationService"),

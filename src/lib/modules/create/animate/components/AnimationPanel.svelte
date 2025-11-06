@@ -15,6 +15,7 @@
   import AnimationControls from "$create/animate/components/AnimationControls.svelte";
   import GifExportDialog from "$create/animate/components/GifExportDialog.svelte";
   import { Drawer, GridMode, type Letter } from "$shared";
+  import { tryGetCreateModuleContext } from "../../shared/context";
   import type { GifExportProgress } from "$create/animate/services/contracts";
   import type { PropState } from "$create/animate/domain/types/PropState";
 
@@ -66,19 +67,54 @@
     isDragging: boolean;
     startY: number;
     currentY: number;
+    startX: number;
+    currentX: number;
   }>({
     isDragging: false,
     startY: 0,
     currentY: 0,
+    startX: 0,
+    currentX: 0,
   });
 
   // Derived styles
-  const panelHeightStyle = $derived(() => {
-    if (combinedPanelHeight > 0) {
-      return `height: ${combinedPanelHeight}px;`;
+  const createModuleContext = tryGetCreateModuleContext();
+  const isSideBySideLayout = $derived.by(() =>
+    createModuleContext
+      ? createModuleContext.layout.shouldUseSideBySideLayout
+      : false
+  );
+
+  // Drawer handle footprint (height + vertical margins). Keep in sync with SheetDragHandle variables.
+  const drawerHandleFootprint = 29;
+
+  const panelHeightStyle = $derived.by(() => {
+    if (isSideBySideLayout) {
+      return "height: 100%;";
     }
+    if (combinedPanelHeight > 0) {
+      const adjustedHeight = Math.max(
+        combinedPanelHeight - drawerHandleFootprint,
+        0
+      );
+      return `height: ${adjustedHeight}px;`;
+    }
+    // Fallback while measurements resolve
     return "height: 70vh;";
   });
+  const drawerPlacement = $derived.by(() =>
+    isSideBySideLayout ? "right" : "bottom"
+  );
+  const drawerClass = $derived.by(() =>
+    `animation-panel-container glass-surface${
+      isSideBySideLayout ? " side-by-side-layout" : ""
+    }`
+  );
+  const drawerBackdropClass = $derived.by(() =>
+    `animation-panel-backdrop${
+      isSideBySideLayout ? " side-by-side-layout" : ""
+    }`
+  );
 
   function handlePanelPointerDown(event: PointerEvent) {
     // Don't start drag if clicking on interactive elements (buttons)
@@ -95,6 +131,8 @@
     dragState.isDragging = true;
     dragState.startY = event.clientY;
     dragState.currentY = event.clientY;
+    dragState.startX = event.clientX;
+    dragState.currentX = event.clientX;
     (event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
   }
 
@@ -102,14 +140,21 @@
     if (!dragState.isDragging) return;
 
     dragState.currentY = event.clientY;
-    const deltaY = dragState.currentY - dragState.startY;
+    dragState.currentX = event.clientX;
 
-    // Apply visual feedback for downward drag only
-    if (deltaY > 0) {
-      // Find the drawer-content element (parent of drawer-inner)
-      const panel = event.currentTarget as HTMLElement;
-      const drawerContent = panel.closest(".drawer-content") as HTMLElement;
-      if (drawerContent) {
+    const panel = event.currentTarget as HTMLElement;
+    const drawerContent = panel.closest(".drawer-content") as HTMLElement | null;
+    if (!drawerContent) return;
+
+    if (isSideBySideLayout) {
+      const deltaX = dragState.currentX - dragState.startX;
+      if (deltaX > 0) {
+        drawerContent.style.transform = `translateX(${deltaX}px)`;
+        drawerContent.style.transition = "none";
+      }
+    } else {
+      const deltaY = dragState.currentY - dragState.startY;
+      if (deltaY > 0) {
         drawerContent.style.transform = `translateY(${deltaY}px)`;
         drawerContent.style.transition = "none";
       }
@@ -120,14 +165,21 @@
     if (!dragState.isDragging) return;
 
     const deltaY = dragState.currentY - dragState.startY;
+    const deltaX = dragState.currentX - dragState.startX;
     const panel = event.currentTarget as HTMLElement;
     const drawerContent = panel.closest(".drawer-content") as HTMLElement;
 
-    // If dragged down more than 150px, close the panel
-    if (deltaY > 150) {
+    if (isSideBySideLayout) {
+      if (deltaX > 150) {
+        onClose();
+      } else if (drawerContent) {
+        drawerContent.style.transform = "";
+        drawerContent.style.transition =
+          "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
+      }
+    } else if (deltaY > 150) {
       onClose();
     } else if (drawerContent) {
-      // Snap back to original position
       drawerContent.style.transform = "";
       drawerContent.style.transition =
         "transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)";
@@ -146,12 +198,15 @@
   focusTrap={false}
   lockScroll={false}
   showHandle={true}
-  class="animation-panel-container glass-surface"
-  backdropClass="animation-panel-backdrop"
+  respectLayoutMode={false}
+  placement={drawerPlacement}
+  class={drawerClass}
+  backdropClass={drawerBackdropClass}
 >
   <div
     class="animation-panel"
-    style={panelHeightStyle()}
+    class:desktop-layout={isSideBySideLayout}
+    style={panelHeightStyle}
     role="dialog"
     aria-labelledby="animation-panel-title"
     onpointerdown={handlePanelPointerDown}
@@ -211,6 +266,47 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
+  :global(
+      .drawer-content.animation-panel-container.side-by-side-layout[data-placement="right"]
+    ) {
+    top: var(--create-panel-top, 64px);
+    bottom: var(--create-panel-bottom, 0);
+    right: var(--create-panel-inset-right, 0);
+    width: var(
+      --create-panel-width,
+      clamp(360px, 32vw, 520px)
+    );
+    max-width: min(600px, 100%);
+    height: auto;
+    max-height: calc(100vh - var(--create-panel-top, 64px));
+    transform: translateX(100%);
+    transition: transform 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  :global(
+      .drawer-content.animation-panel-container.side-by-side-layout[data-placement="right"][data-state="open"]
+    ) {
+    transform: translateX(0);
+  }
+
+  :global(
+      .drawer-content.animation-panel-container.side-by-side-layout[data-placement="right"][data-state="closed"]
+    ) {
+    transform: translateX(100%);
+  }
+
+  :global(
+      .drawer-content.animation-panel-container[data-placement="bottom"]:not(
+        .side-by-side-layout
+      )
+    ) {
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+  }
+
   :global(.bottom-sheet.animation-panel-container:hover) {
     box-shadow: none;
   }
@@ -221,6 +317,20 @@
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     pointer-events: none !important;
+  }
+
+  :global(
+      .drawer-content.animation-panel-container.side-by-side-layout .drawer-handle
+    ) {
+    position: absolute;
+    top: 50%;
+    left: 18px;
+    width: 4px;
+    height: 48px;
+    margin: 0;
+    border-radius: 999px;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.35);
   }
 
   .animation-panel {
@@ -237,6 +347,11 @@
     transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     /* Background is now on drawer-content, so make this transparent */
     background: transparent;
+  }
+
+  .animation-panel.desktop-layout {
+    padding-bottom: 24px;
+    height: 100%;
   }
 
   .close-button {
@@ -370,5 +485,14 @@
     :global(.bottom-sheet.animation-panel-container) {
       transition: none;
     }
+  }
+
+  :global(
+      .drawer-overlay.animation-panel-backdrop.side-by-side-layout
+    ) {
+    top: var(--create-panel-top, 64px);
+    bottom: var(--create-panel-bottom, 0);
+    left: var(--create-panel-left, 50%);
+    right: 0;
   }
 </style>

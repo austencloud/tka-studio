@@ -66,15 +66,6 @@
    * - IResponsiveLayoutService: Layout detection and management
    * - Plus all services in CreateModuleServices interface
    *
-   * REFACTORING HISTORY:
-   * ====================
-   * - Extracted service initialization to InitializationService
-   * - Extracted event handlers to CreateModuleHandlers
-   * - Extracted effects to manager modules + EffectCoordinator
-   * - Extracted session storage to CreationMethodPersistenceService
-   * - Reduced from ~650 lines to ~480 lines
-   * - Reduced from 19 functions to 6 event handlers
-   * - Reduced from 8+ inline effects to 1 coordinated effect
    *
    * WHY THIS COMPONENT IS LONGER:
    * ==============================
@@ -118,13 +109,13 @@
   import { createPanelCoordinationState } from "../state/panel-coordination-state.svelte";
   import type { IToolPanelMethods } from "../types/create-module-types";
   import {
-    AnimationCoordinator,
     CAPCoordinator,
-    ConfirmationDialogCoordinator,
     EditCoordinator,
     SequenceActionsCoordinator,
     ShareCoordinator,
   } from "./coordinators";
+  import ConfirmationDialogCoordinator from "./coordinators/ConfirmationDialogCoordinator.svelte";
+  import { AnimationSheetCoordinator } from "$shared/coordinators";
   import HandPathSettingsView from "./HandPathSettingsView.svelte";
   import CreationWelcomeScreen from "./CreationWelcomeScreen.svelte";
   import CreationWorkspaceArea from "./CreationWorkspaceArea.svelte";
@@ -278,6 +269,9 @@
    * Controls creation method selector visibility based on workspace state
    */
   $effect(() => {
+    // IMPORTANT: Only sync after persistence is initialized to avoid flash of wrong state
+    if (!CreateModuleState?.isPersistenceInitialized) return;
+
     const shouldShow = isWorkspaceEmpty() && !hasSelectedCreationMethod;
     navigationState.setCreationMethodSelectorVisible(shouldShow);
   });
@@ -433,9 +427,22 @@
         CreateModuleState &&
         !CreateModuleState.isWorkspaceEmpty()
       ) {
+        logger.log(
+          "📦 Marking creation method as selected due to restored data"
+        );
         hasSelectedCreationMethod = true;
         creationMethodPersistence.markMethodSelected();
       }
+
+      logger.log("✅ CreateModule state after initialization:", {
+        servicesInitialized,
+        isPersistenceInitialized:
+          CreateModuleState?.isPersistenceInitialized ?? false,
+        hasSelectedCreationMethod,
+        isWorkspaceEmpty: CreateModuleState?.isWorkspaceEmpty() ?? true,
+        isCreationMethodSelectorVisible:
+          navigationState.isCreationMethodSelectorVisible,
+      });
 
       // Context is already set up at top level with reactive getters
       // Services, CreateModuleState, and constructTabState are now initialized
@@ -534,7 +541,7 @@
 
 {#if error}
   <ErrorBanner message={error} onDismiss={clearError} />
-{:else if CreateModuleState && constructTabState && services}
+{:else if CreateModuleState && constructTabState && services && CreateModuleState.isPersistenceInitialized}
   <div class="create-tab" class:side-by-side={shouldUseSideBySideLayout}>
     <!-- Hand Path Settings View (Pre-Start State) -->
     {#if navigationState.activeTab === "gestural" && !CreateModuleState?.handPathCoordinator?.isStarted}
@@ -591,7 +598,12 @@
           {/if}
 
           <!-- Animation Coordinator -->
-          <AnimationCoordinator bind:animatingBeatNumber />
+          <AnimationSheetCoordinator
+            sequence={CreateModuleState.sequenceState.currentSequence}
+            bind:isOpen={panelState.isAnimationPanelOpen}
+            bind:animatingBeatNumber
+            combinedPanelHeight={panelState.combinedPanelHeight}
+          />
         </div>
 
         <!-- Tool Panel or Creation Method Screen -->

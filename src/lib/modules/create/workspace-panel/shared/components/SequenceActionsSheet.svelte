@@ -1,6 +1,7 @@
 <!-- Slide-up Sheet for Sequence Actions -->
 <script lang="ts">
   import { Drawer, SheetDragHandle } from "$shared";
+  import { tryGetCreateModuleContext } from "../../../shared/context";
 
   let {
     show = false,
@@ -24,12 +25,22 @@
 
   // Calculate panel height dynamically to match tool panel + button panel
   // This ensures the panel slides up exactly to not cover the sequence
-  const panelHeightStyle = $derived(() => {
+  const createModuleContext = tryGetCreateModuleContext();
+  const isSideBySideLayout = $derived(
+    createModuleContext
+      ? createModuleContext.layout.shouldUseSideBySideLayout
+      : false
+  );
+  const panelHeightStyle = $derived.by(() => {
+    if (isSideBySideLayout) {
+      return "height: 100%;";
+    }
     if (combinedPanelHeight > 0) {
       return `height: ${combinedPanelHeight}px;`;
     }
     return "height: 70vh;";
   });
+  const drawerPlacement = $derived(isSideBySideLayout ? "right" : "bottom");
 
   // Action type definition
   type Action = {
@@ -114,12 +125,14 @@
   lockScroll={false}
   showHandle={false}
   respectLayoutMode={true}
+  placement={drawerPlacement}
   class="actions-sheet-container"
   backdropClass="actions-sheet-backdrop"
 >
   <div
     class="actions-panel"
-    style={panelHeightStyle()}
+    class:desktop-layout={isSideBySideLayout}
+    style={panelHeightStyle}
     role="dialog"
     aria-labelledby="sequence-actions-title"
   >
@@ -190,6 +203,11 @@
     position: relative;
     overflow: hidden;
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .actions-panel.desktop-layout {
+    padding-bottom: 0;
+    height: 100%;
   }
 
   /* Screen reader only */

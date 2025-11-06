@@ -48,7 +48,7 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
   let isStarted = $state(false);
 
   // Computed contextual header based on state
-  let contextualHeader = $derived(() => {
+  let contextualHeader = $derived.by(() => {
     if (!isStarted) return "Set Your Settings";
     if (pathState.isSessionComplete) return "Sequence Complete!";
     if (pathState.currentHand === "blue") return "Draw Blue Hand";

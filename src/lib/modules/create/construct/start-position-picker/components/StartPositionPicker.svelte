@@ -3,11 +3,18 @@ StartPositionPicker.svelte - Simplified version with advanced variations
 Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variations
 -->
 <script lang="ts">
-  import type { GridMode, IHapticFeedbackService, PictographData } from "$shared";
+  import type {
+    GridMode,
+    IHapticFeedbackService,
+    PictographData,
+  } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
-  import { createSimplifiedStartPositionState, type SimplifiedStartPositionState } from "../state/start-position-state.svelte";
+  import {
+    createSimplifiedStartPositionState,
+    type SimplifiedStartPositionState,
+  } from "../state/start-position-state.svelte";
   import AdvancedStartPositionPicker from "./AdvancedStartPositionPicker.svelte";
   import PictographGrid from "./PictographGrid.svelte";
   import ConstructPickerHeader from "../../shared/components/ConstructPickerHeader.svelte";
@@ -26,7 +33,8 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
   }>();
 
   // Create simplified state
-  const pickerState = startPositionState ?? createSimplifiedStartPositionState();
+  const pickerState =
+    startPositionState ?? createSimplifiedStartPositionState();
 
   // State for showing advanced picker
   let showAdvancedPicker = $state(false);
@@ -38,7 +46,9 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Expose state for parent components
@@ -100,13 +110,18 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
     variant="start"
     currentGridMode={pickerState.currentGridMode}
     isAdvanced={showAdvancedPicker}
+    isSideBySideLayout={isSideBySideLayout()}
     onToggleAdvanced={handleToggleView}
     onGridModeChange={handleGridModeChange}
   />
 
   <!-- Use {#key} to ensure only one view exists at a time during transitions -->
   {#key showAdvancedPicker}
-    <div class="picker-view" in:fade={{ duration: 250, delay: 250 }} out:fade={{ duration: 250 }}>
+    <div
+      class="picker-view"
+      in:fade={{ duration: 250, delay: 250 }}
+      out:fade={{ duration: 250 }}
+    >
       {#if showAdvancedPicker}
         <!-- Advanced picker with all 16 variations -->
         <AdvancedStartPositionPicker
@@ -118,9 +133,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
           {isAnimating}
         />
       {:else}
-
-
-
         <!-- Always show the pictograph grid - no loading/error states needed -->
         <div class="grid-container">
           <PictographGrid
@@ -154,8 +166,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
     position: relative;
   }
 
-
-
   .grid-container {
     width: 100%;
     height: 100%; /* Take full height */
@@ -164,7 +174,6 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
     align-items: center;
     /* Grid is now centered in the full available space */
   }
-
 
   /* Traditional media queries as fallback */
   @media (max-width: 768px) {
@@ -178,6 +187,4 @@ Shows 3 start positions (Alpha, Beta, Gamma) with toggle to view all 16 variatio
       padding: 12px 0;
     }
   }
-
-
 </style>

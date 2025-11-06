@@ -21,6 +21,7 @@ export interface PanelCoordinationState {
 
   // Animation Panel State
   get isAnimationPanelOpen(): boolean;
+  set isAnimationPanelOpen(value: boolean);
   get isAnimating(): boolean;
 
   openAnimationPanel(): void;
@@ -46,6 +47,10 @@ export interface PanelCoordinationState {
   // Button Panel Height (for accurate slide panel positioning)
   get buttonPanelHeight(): number;
   setButtonPanelHeight(height: number): void;
+
+  // Navigation bar height (responsive to bottom nav safe areas)
+  get navigationBarHeight(): number;
+  setNavigationBarHeight(height: number): void;
 
   // Combined height for slide panels (tool + button)
   get combinedPanelHeight(): number;
@@ -96,6 +101,9 @@ export function createPanelCoordinationState(): PanelCoordinationState {
 
   // Button panel height tracking
   let buttonPanelHeight = $state(0);
+
+  // Navigation bar height tracking (default to 64px)
+  let navigationBarHeight = $state(64);
 
   // Practice mode
   let practiceBeatIndex = $state<number | null>(null);
@@ -148,6 +156,9 @@ export function createPanelCoordinationState(): PanelCoordinationState {
     // Animation Panel Getters
     get isAnimationPanelOpen() {
       return isAnimationPanelOpen;
+    },
+    set isAnimationPanelOpen(value: boolean) {
+      isAnimationPanelOpen = value;
     },
     get isAnimating() {
       return isAnimating;
@@ -209,10 +220,18 @@ export function createPanelCoordinationState(): PanelCoordinationState {
       buttonPanelHeight = height;
     },
 
+    // Navigation Bar Height
+    get navigationBarHeight() {
+      return navigationBarHeight;
+    },
+
+    setNavigationBarHeight(height: number) {
+      navigationBarHeight = height > 0 ? height : 64;
+    },
+
     // Combined Height (navigation bar + tool + button panels)
     // Navigation bar is 64px (min-height from PrimaryNavigation.svelte)
     get combinedPanelHeight() {
-      const navigationBarHeight = 64;
       return navigationBarHeight + toolPanelHeight + buttonPanelHeight;
     },
 

@@ -19,6 +19,7 @@
     compact = false,
     showNextHandButton = false,
     nextHandButtonText = "Build Red Hand",
+    isSideBySideLayout = false,
     onToggleAdvanced,
     onGridModeChange,
     onOpenFilters,
@@ -35,6 +36,7 @@
     compact?: boolean;
     showNextHandButton?: boolean;
     nextHandButtonText?: string;
+    isSideBySideLayout?: boolean;
     onToggleAdvanced?: (isAdvanced: boolean) => void;
     onGridModeChange?: (gridMode: GridMode) => void;
     onOpenFilters?: () => void;
@@ -42,7 +44,9 @@
     onNextHand?: () => void;
   } = $props();
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   function handleAdvancedToggle(nextValue: boolean) {
     onToggleAdvanced?.(nextValue);
@@ -64,11 +68,16 @@
   }
 </script>
 
-<div class="construct-picker-header" data-variant={variant} class:compact={compact}>
+<div
+  class="construct-picker-header"
+  data-variant={variant}
+  class:compact
+  class:side-by-side={isSideBySideLayout}
+>
   {#if variant === "start"}
     <!-- Start variant: traditional 3-column layout -->
     <div class="header-left">
-      <SimpleAdvancedToggle isAdvanced={isAdvanced} onToggle={handleAdvancedToggle} />
+      <SimpleAdvancedToggle {isAdvanced} onToggle={handleAdvancedToggle} />
     </div>
 
     <div class="header-center">
@@ -77,7 +86,7 @@
 
     <div class="header-right">
       {#if onGridModeChange}
-        <GridModeToggle currentGridMode={currentGridMode} onGridModeChange={onGridModeChange} />
+        <GridModeToggle {currentGridMode} {onGridModeChange} />
       {/if}
     </div>
   {:else if variant === "options"}
@@ -86,21 +95,26 @@
       class="options-header-button"
       onclick={handleFilterClick}
       use:swipeGesture={{ onSwipeDown: handleFilterClick }}
-      aria-label="Open filter options - {titleHtml ? 'Type information' : title}"
+      aria-label="Open filter options - {titleHtml
+        ? 'Type information'
+        : title}"
       aria-expanded={isFilterPanelOpen}
     >
       <div class="header-left-spacer"></div>
 
       <div class="header-center-content">
         {#if titleHtml}
-          <span class="header-title rich" aria-live="polite">{@html titleHtml}</span>
+          <span class="header-title rich" aria-live="polite"
+            >{@html titleHtml}</span
+          >
         {:else if title}
           <span class="header-title">{title}</span>
         {/if}
       </div>
 
       <div class="header-right-indicator">
-        <i class="fas fa-chevron-down chevron" class:open={isFilterPanelOpen}></i>
+        <i class="fas fa-chevron-down chevron" class:open={isFilterPanelOpen}
+        ></i>
       </div>
     </button>
   {:else if variant === "sequential"}
@@ -122,10 +136,7 @@
           <i class="fas fa-arrow-right"></i>
         </button>
       {:else if onGridModeChange}
-        <GridModeToggle
-          currentGridMode={currentGridMode}
-          onGridModeChange={onGridModeChange}
-        />
+        <GridModeToggle {currentGridMode} {onGridModeChange} />
       {/if}
     </div>
   {/if}
@@ -133,10 +144,19 @@
 
 <style>
   .construct-picker-header {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%);
-    backdrop-filter: blur(20px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    /* Default: subtle background for portrait/stacked layout */
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     padding: 4px 8px;
+    transition: all 0.3s ease;
+  }
+
+  /* Side-by-side layout: completely transparent, no visual separation */
+  .construct-picker-header.side-by-side {
+    background: transparent;
+    backdrop-filter: none;
+    border-bottom: none;
   }
 
   /* Grid layout for start variant */
@@ -221,7 +241,7 @@
 
   /* Subtle shine effect on hover */
   .options-header-button::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;

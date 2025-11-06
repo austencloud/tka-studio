@@ -37,23 +37,23 @@
     );
   });
 
-  const isStartPosition = $derived(() => {
+  const isStartPosition = $derived.by(() => {
     return beat.beatNumber === 0;
   });
 
-  const displayBeatNumber = $derived(() => {
+  const displayBeatNumber = $derived.by(() => {
     return beat.beatNumber || index + 1;
   });
 
-  const ariaLabel = $derived(() => {
-    if (isStartPosition()) {
+  const ariaLabel = $derived.by(() => {
+    if (isStartPosition) {
       return "Start Position";
     }
-    return `Beat ${displayBeatNumber()} ${beat.isBlank ? "Empty" : "Pictograph"}`;
+    return `Beat ${displayBeatNumber} ${beat.isBlank ? "Empty" : "Pictograph"}`;
   });
 
   // Create beat data with selection state for the Pictograph component
-  const beatDataWithSelection = $derived(() => {
+  const beatDataWithSelection = $derived.by(() => {
     return {
       ...beat,
       isSelected,
@@ -70,14 +70,14 @@
   // Create a pictograph signature that represents the fundamental structure
   // independent of transformations (which only change arrow locations/rotations)
   function getPictographSignature(beatData: BeatData): string {
-    if (beatData.isBlank) return 'blank';
+    if (beatData.isBlank) return "blank";
 
     // Core structure: letter + which motion colors are present
     const hasBlue = !!beatData.motions?.blue;
     const hasRed = !!beatData.motions?.red;
-    const motionStructure = `${hasBlue ? 'B' : ''}${hasRed ? 'R' : ''}`;
+    const motionStructure = `${hasBlue ? "B" : ""}${hasRed ? "R" : ""}`;
 
-    return `${beatData.letter || 'null'}-${motionStructure}`;
+    return `${beatData.letter || "null"}-${motionStructure}`;
   }
 
   let previousSignature = getPictographSignature(beat);
@@ -111,12 +111,12 @@
     previousSignature = currentSignature;
   });
 
-  const shouldAnimateIn = $derived(() => {
+  const shouldAnimateIn = $derived.by(() => {
     return shouldAnimate && !hasAnimated && !beat.isBlank;
   });
 
   // Beats should be invisible ONLY if they're waiting to animate
-  const isVisible = $derived(() => {
+  const isVisible = $derived.by(() => {
     // If it should animate but hasn't yet, hide it (will become visible via animation)
     // This applies to ALL beats, including start position during generation
     if (shouldAnimate && !hasAnimated) return false;
@@ -219,8 +219,8 @@
 
 <div
   class="beat-cell"
-  class:invisible={!isVisible()}
-  class:animate={shouldAnimateIn()}
+  class:invisible={!isVisible}
+  class:animate={shouldAnimateIn}
   class:selected={isSelected}
   class:practice-beat={isPracticeBeat}
   class:multi-select-mode={isMultiSelectMode}
@@ -237,7 +237,7 @@
   onanimationend={handleAnimationEnd}
   role="button"
   tabindex="0"
-  aria-label={ariaLabel()}
+  aria-label={ariaLabel}
 >
   {#if index === -1 && beat.isBlank}
     <!-- Empty start position placeholder -->
@@ -245,7 +245,7 @@
   {:else}
     <!-- Normal pictograph -->
     <Pictograph
-      pictographData={beatDataWithSelection()}
+      pictographData={beatDataWithSelection}
       disableContentTransitions={!enableTransitionsForNewData}
     />
   {/if}

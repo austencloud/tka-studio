@@ -5,6 +5,7 @@ Refactored to use Drawer component for consistent behavior
 <script lang="ts">
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES, Drawer, SheetDragHandle } from "$shared";
+  import { tryGetCreateModuleContext } from "../../../shared/context";
   import { onMount } from "svelte";
   import {
     CAPComponent,
@@ -98,6 +99,14 @@ Refactored to use Drawer component for consistent behavior
     hapticService?.trigger("selection");
     isMultiSelectMode = !isMultiSelectMode;
   }
+
+  const createModuleContext = tryGetCreateModuleContext();
+  const isSideBySideLayout = $derived(
+    createModuleContext
+      ? createModuleContext.layout.shouldUseSideBySideLayout
+      : false
+  );
+  const drawerPlacement = $derived(isSideBySideLayout ? "right" : "bottom");
 </script>
 
 <Drawer
@@ -109,10 +118,11 @@ Refactored to use Drawer component for consistent behavior
   lockScroll={true}
   showHandle={false}
   respectLayoutMode={true}
+  placement={drawerPlacement}
   class="cap-selection-sheet"
   backdropClass="cap-selection-backdrop"
 >
-  <div class="cap-modal-content">
+  <div class="cap-modal-content" class:desktop-layout={isSideBySideLayout}>
     <SheetDragHandle />
     <CAPModalHeader
       title="Select CAP Type"
@@ -208,6 +218,11 @@ Refactored to use Drawer component for consistent behavior
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
 
     overflow: hidden;
+  }
+
+  .cap-modal-content.desktop-layout {
+    height: 100%;
+    border-radius: 0;
   }
 
   .info-section {

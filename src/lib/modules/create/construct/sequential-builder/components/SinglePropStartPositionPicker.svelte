@@ -5,8 +5,25 @@ Shows 4 cardinal positions (N, E, S, W) or 4 corner positions (NE, SE, SW, NW)
 With grid mode toggle to switch between Diamond and Box mode
 -->
 <script lang="ts">
-  import type { GridMode, IHapticFeedbackService, PictographData } from "$shared";
-  import { GridLocation, GridMode as GridModeEnum, Pictograph, resolve, TYPES, createPictographData, createMotionData, MotionColor, MotionType, Orientation, PropType, RotationDirection } from "$shared";
+  import type {
+    GridMode,
+    IHapticFeedbackService,
+    PictographData,
+  } from "$shared";
+  import {
+    GridLocation,
+    GridMode as GridModeEnum,
+    Pictograph,
+    resolve,
+    TYPES,
+    createPictographData,
+    createMotionData,
+    MotionColor,
+    MotionType,
+    Orientation,
+    PropType,
+    RotationDirection,
+  } from "$shared";
   import { onMount } from "svelte";
   import GridModeToggle from "../../shared/components/GridModeToggle.svelte";
 
@@ -17,7 +34,10 @@ With grid mode toggle to switch between Diamond and Box mode
     handColor = MotionColor.BLUE,
     showInlineGridToggle = true,
   } = $props<{
-    onPositionSelected: (position: PictographData, location: GridLocation) => void;
+    onPositionSelected: (
+      position: PictographData,
+      location: GridLocation
+    ) => void;
     onGridModeChange?: (gridMode: GridMode) => void;
     currentGridMode?: GridMode;
     handColor?: MotionColor;
@@ -28,16 +48,31 @@ With grid mode toggle to switch between Diamond and Box mode
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Generate 4 starting position options based on grid mode
-  const startPositions = $derived(() => {
-    const locations = currentGridMode === GridModeEnum.DIAMOND
-      ? [GridLocation.NORTH, GridLocation.EAST, GridLocation.SOUTH, GridLocation.WEST]
-      : [GridLocation.NORTHEAST, GridLocation.SOUTHEAST, GridLocation.SOUTHWEST, GridLocation.NORTHWEST];
+  const startPositions = $derived.by(() => {
+    const locations =
+      currentGridMode === GridModeEnum.DIAMOND
+        ? [
+            GridLocation.NORTH,
+            GridLocation.EAST,
+            GridLocation.SOUTH,
+            GridLocation.WEST,
+          ]
+        : [
+            GridLocation.NORTHEAST,
+            GridLocation.SOUTHEAST,
+            GridLocation.SOUTHWEST,
+            GridLocation.NORTHWEST,
+          ];
 
-    return locations.map(location => createStartPositionPictograph(location, handColor, currentGridMode));
+    return locations.map((location) =>
+      createStartPositionPictograph(location, handColor, currentGridMode)
+    );
   });
 
   // Create a single-prop starting position pictograph
@@ -69,7 +104,10 @@ With grid mode toggle to switch between Diamond and Box mode
   }
 
   // Handle position selection
-  function handlePositionSelect(pictograph: PictographData, location: GridLocation) {
+  function handlePositionSelect(
+    pictograph: PictographData,
+    location: GridLocation
+  ) {
     hapticService?.trigger("selection");
     onPositionSelected(pictograph, location);
   }
@@ -87,7 +125,7 @@ With grid mode toggle to switch between Diamond and Box mode
       <div class="header-spacer"></div>
       <div class="grid-toggle-container">
         <GridModeToggle
-          currentGridMode={currentGridMode}
+          {currentGridMode}
           onGridModeChange={handleGridModeChange}
         />
       </div>
@@ -96,10 +134,21 @@ With grid mode toggle to switch between Diamond and Box mode
 
   <!-- 4 Position Grid -->
   <div class="position-grid">
-    {#each startPositions() as pictograph, index}
-      {@const location = currentGridMode === GridModeEnum.DIAMOND
-        ? [GridLocation.NORTH, GridLocation.EAST, GridLocation.SOUTH, GridLocation.WEST][index]
-        : [GridLocation.NORTHEAST, GridLocation.SOUTHEAST, GridLocation.SOUTHWEST, GridLocation.NORTHWEST][index]}
+    {#each startPositions as pictograph, index}
+      {@const location =
+        currentGridMode === GridModeEnum.DIAMOND
+          ? [
+              GridLocation.NORTH,
+              GridLocation.EAST,
+              GridLocation.SOUTH,
+              GridLocation.WEST,
+            ][index]
+          : [
+              GridLocation.NORTHEAST,
+              GridLocation.SOUTHEAST,
+              GridLocation.SOUTHWEST,
+              GridLocation.NORTHWEST,
+            ][index]}
 
       {#if location}
         <button
@@ -108,10 +157,7 @@ With grid mode toggle to switch between Diamond and Box mode
           aria-label={`Select starting position ${location}`}
         >
           <div class="pictograph-wrapper">
-            <Pictograph
-              pictographData={pictograph}
-              visibleHand={handColor}
-            />
+            <Pictograph pictographData={pictograph} visibleHand={handColor} />
           </div>
           <span class="position-label">{location.toUpperCase()}</span>
         </button>
@@ -137,7 +183,6 @@ With grid mode toggle to switch between Diamond and Box mode
     gap: 1rem;
     padding: 0.5rem;
   }
-
 
   .grid-toggle-container {
     display: flex;
@@ -176,7 +221,7 @@ With grid mode toggle to switch between Diamond and Box mode
   }
 
   .position-button::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(
@@ -235,8 +280,6 @@ With grid mode toggle to switch between Diamond and Box mode
       padding: 0.75rem;
       gap: 1rem;
     }
-
-
 
     .position-grid {
       gap: 1rem;

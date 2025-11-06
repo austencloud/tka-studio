@@ -7,7 +7,11 @@ Orchestrates specialized components and services:
 - This component coordinates them with reactive Svelte 5 runes
 -->
 <script lang="ts">
-  import type { GridMode, IHapticFeedbackService, PictographData } from "$shared";
+  import type {
+    GridMode,
+    IHapticFeedbackService,
+    PictographData,
+  } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { fade } from "svelte/transition";
@@ -21,9 +25,12 @@ Orchestrates specialized components and services:
     IOptionSizer,
     IOptionSorter,
     IOptionTransitionCoordinator,
-    ISectionTitleFormatter
+    ISectionTitleFormatter,
   } from "../services/contracts";
-  import { createContainerDimensionTracker, createOptionPickerState } from "../state";
+  import {
+    createContainerDimensionTracker,
+    createOptionPickerState,
+  } from "../state";
   import OptionFilterPanel from "./OptionFilterPanel.svelte";
   import OptionViewerGridLayout from "./OptionViewerGridLayout.svelte";
   import OptionViewerSwipeLayout from "./OptionViewerSwipeLayout.svelte";
@@ -62,7 +69,9 @@ Orchestrates specialized components and services:
   let hapticService: IHapticFeedbackService | null = null;
 
   // ===== STATE =====
-  let optionPickerState = $state<ReturnType<typeof createOptionPickerState> | null>(null);
+  let optionPickerState = $state<ReturnType<
+    typeof createOptionPickerState
+  > | null>(null);
   let servicesReady = $state(false);
   let currentSectionTitle = $state<string>("Type 1");
   let isFadingOut = $state(false);
@@ -75,8 +84,18 @@ Orchestrates specialized components and services:
   const FADE_OUT_DURATION = 250;
   const FADE_IN_DURATION = 250;
 
+  // Header title constants
+  const GRID_LAYOUT_TITLE = "Choose your next option!";
+
   // ===== DERIVED - Formatted title =====
   const formattedSectionTitle = $derived(() => {
+    // When using grid layout (not swipe), show generic message
+    // because all sections are visible at once
+    if (!shouldUseSwipeLayout()) {
+      return GRID_LAYOUT_TITLE;
+    }
+
+    // When using swipe layout, show section-specific title
     if (!sectionTitleFormatter) return currentSectionTitle;
     return sectionTitleFormatter.formatSectionTitle(currentSectionTitle);
   });
@@ -89,13 +108,16 @@ Orchestrates specialized components and services:
 
     const serviceResult = optionOrganizerService.organizePictographs(
       optionPickerState.filteredOptions,
-      'type'
+      "type"
     );
 
-    return serviceResult.map(section => ({
+    return serviceResult.map((section) => ({
       title: section.title,
       pictographs: section.pictographs,
-      type: section.type === 'grouped' ? 'grouped' as const : 'section' as const
+      type:
+        section.type === "grouped"
+          ? ("grouped" as const)
+          : ("section" as const),
     }));
   });
 
@@ -108,8 +130,8 @@ Orchestrates specialized components and services:
         spacing: 8,
         containerWidth: containerDimensions.width,
         containerHeight: containerDimensions.height,
-        gridColumns: 'repeat(4, 1fr)',
-        gridGap: '8px',
+        gridColumns: "repeat(4, 1fr)",
+        gridGap: "8px",
       };
     }
 
@@ -118,10 +140,11 @@ Orchestrates specialized components and services:
       containerDimensions.width < 600
     );
 
-    const layoutMode: '8-column' | '4-column' = optionsPerRow === 8 ? '8-column' : '4-column';
+    const layoutMode: "8-column" | "4-column" =
+      optionsPerRow === 8 ? "8-column" : "4-column";
 
     const maxPictographsPerSection = Math.max(
-      ...organizedPictographs().map(section => section.pictographs.length),
+      ...organizedPictographs().map((section) => section.pictographs.length),
       8
     );
 
@@ -138,7 +161,7 @@ Orchestrates specialized components and services:
     return {
       optionsPerRow,
       pictographSize: sizingResult.pictographSize,
-      spacing: parseInt(sizingResult.gridGap.replace('px', '')),
+      spacing: parseInt(sizingResult.gridGap.replace("px", "")),
       containerWidth: containerDimensions.width,
       containerHeight: containerDimensions.height,
       gridColumns: `repeat(${optionsPerRow}, 1fr)`,
@@ -176,13 +199,17 @@ Orchestrates specialized components and services:
    * preserve vertical space while maintaining UI symmetry.
    */
   const shouldUseCompactHeader = $derived(() => {
-    if (!optionPickerState?.filteredOptions.length || !optionPickerSizingService || containerDimensions.height === 0) {
+    if (
+      !optionPickerState?.filteredOptions.length ||
+      !optionPickerSizingService ||
+      containerDimensions.height === 0
+    ) {
       return false;
     }
 
     const config = layoutConfig();
     const maxPictographsPerSection = Math.max(
-      ...organizedPictographs().map(section => section.pictographs.length),
+      ...organizedPictographs().map((section) => section.pictographs.length),
       8
     );
 
@@ -218,9 +245,18 @@ Orchestrates specialized components and services:
   $effect(() => {
     if (isTransitioning) return;
 
-    if (optionPickerState && servicesReady && currentSequence && currentSequence.length > 0) {
+    if (
+      optionPickerState &&
+      servicesReady &&
+      currentSequence &&
+      currentSequence.length > 0
+    ) {
       optionPickerState.loadOptions(currentSequence, currentGridMode);
-    } else if (optionPickerState && servicesReady && (!currentSequence || currentSequence.length === 0)) {
+    } else if (
+      optionPickerState &&
+      servicesReady &&
+      (!currentSequence || currentSequence.length === 0)
+    ) {
       optionPickerState.reset();
     }
   });
@@ -229,7 +265,7 @@ Orchestrates specialized components and services:
   $effect(() => {
     if (isUndoingOption && optionPickerState && !isTransitioning) {
       // Clear any existing timeouts
-      transitionTimeouts.forEach(timeout => clearTimeout(timeout));
+      transitionTimeouts.forEach((timeout) => clearTimeout(timeout));
       transitionTimeouts = [];
 
       // Start fade-out
@@ -238,7 +274,11 @@ Orchestrates specialized components and services:
 
       // Mid-fade-out: Reload options
       const midFadeTimeout = setTimeout(() => {
-        if (optionPickerState && currentSequence && currentSequence.length > 0) {
+        if (
+          optionPickerState &&
+          currentSequence &&
+          currentSequence.length > 0
+        ) {
           optionPickerState.loadOptions(currentSequence, currentGridMode);
         }
       }, FADE_OUT_DURATION / 2);
@@ -261,7 +301,10 @@ Orchestrates specialized components and services:
 
   // ===== EFFECTS - Sync continuity state =====
   $effect(() => {
-    if (optionPickerState && optionPickerState.isContinuousOnly !== isContinuousOnly) {
+    if (
+      optionPickerState &&
+      optionPickerState.isContinuousOnly !== isContinuousOnly
+    ) {
       optionPickerState.setContinuousOnly(isContinuousOnly);
     }
   });
@@ -271,15 +314,15 @@ Orchestrates specialized components and services:
     if (!optionPickerState || isTransitioning) return;
 
     try {
-      performance.mark('option-click-start');
+      performance.mark("option-click-start");
       hapticService?.trigger("selection");
 
       // Instant feedback
       onOptionSelected(option);
-      performance.mark('option-selected-callback-complete');
+      performance.mark("option-selected-callback-complete");
 
       // Clear any existing timeouts
-      transitionTimeouts.forEach(timeout => clearTimeout(timeout));
+      transitionTimeouts.forEach((timeout) => clearTimeout(timeout));
       transitionTimeouts = [];
 
       // Start fade-out
@@ -289,10 +332,14 @@ Orchestrates specialized components and services:
       // Mid-fade-out: Update state
       const midFadeTimeout = setTimeout(() => {
         optionPickerState!.selectOption(option);
-        if (optionPickerState && currentSequence && currentSequence.length > 0) {
+        if (
+          optionPickerState &&
+          currentSequence &&
+          currentSequence.length > 0
+        ) {
           optionPickerState.loadOptions(currentSequence, currentGridMode);
         }
-        performance.mark('option-picker-state-complete');
+        performance.mark("option-picker-state-complete");
       }, FADE_OUT_DURATION / 2);
       transitionTimeouts.push(midFadeTimeout);
 
@@ -306,14 +353,14 @@ Orchestrates specialized components and services:
       const completeTimeout = setTimeout(() => {
         isTransitioning = false;
         transitionTimeouts = [];
-        performance.mark('transition-complete');
+        performance.mark("transition-complete");
       }, FADE_OUT_DURATION + FADE_IN_DURATION);
       transitionTimeouts.push(completeTimeout);
     } catch (error) {
       console.error("Failed to select option:", error);
       isFadingOut = false;
       isTransitioning = false;
-      transitionTimeouts.forEach(timeout => clearTimeout(timeout));
+      transitionTimeouts.forEach((timeout) => clearTimeout(timeout));
       transitionTimeouts = [];
     }
   }
@@ -332,12 +379,24 @@ Orchestrates specialized components and services:
       const optionLoader = resolve<IOptionLoader>(TYPES.IOptionLoader);
       const filterService = resolve<IOptionFilter>(TYPES.IOptionFilter);
       const optionSorter = resolve<IOptionSorter>(TYPES.IOptionSorter);
-      optionOrganizerService = resolve<IOptionOrganizer>(TYPES.IOptionOrganizerService);
-      optionPickerSizingService = resolve<IOptionSizer>(TYPES.IOptionPickerSizingService);
-      layoutDetectionService = resolve<ILayoutDetectionService>(TYPES.ILayoutDetectionService);
-      transitionCoordinator = resolve<IOptionTransitionCoordinator>(TYPES.IOptionTransitionCoordinator);
-      sectionTitleFormatter = resolve<ISectionTitleFormatter>(TYPES.ISectionTitleFormatter);
-      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+      optionOrganizerService = resolve<IOptionOrganizer>(
+        TYPES.IOptionOrganizerService
+      );
+      optionPickerSizingService = resolve<IOptionSizer>(
+        TYPES.IOptionPickerSizingService
+      );
+      layoutDetectionService = resolve<ILayoutDetectionService>(
+        TYPES.ILayoutDetectionService
+      );
+      transitionCoordinator = resolve<IOptionTransitionCoordinator>(
+        TYPES.IOptionTransitionCoordinator
+      );
+      sectionTitleFormatter = resolve<ISectionTitleFormatter>(
+        TYPES.ISectionTitleFormatter
+      );
+      hapticService = resolve<IHapticFeedbackService>(
+        TYPES.IHapticFeedbackService
+      );
 
       // Create state
       optionPickerState = createOptionPickerState({
@@ -378,18 +437,18 @@ Orchestrates specialized components and services:
         {isContinuousOnly}
         {isFilterPanelOpen}
         {onOpenFilters}
+        isSideBySideLayout={isSideBySideLayout()}
         compact={shouldUseCompactHeader()}
       />
     </div>
 
     <!-- Main content -->
     <div class="option-picker-content">
-
       {#if !containerDimensions.isReady}
         <div class="loading-state">
           <p>Initializing container...</p>
         </div>
-      {:else if optionPickerState.state === 'loading'}
+      {:else if optionPickerState.state === "loading"}
         <div class="loading-state">
           <p>Loading options...</p>
         </div>
@@ -431,7 +490,7 @@ Orchestrates specialized components and services:
       isOpen={isFilterPanelOpen}
       {isContinuousOnly}
       onClose={onCloseFilters}
-      onToggleContinuous={onToggleContinuous}
+      {onToggleContinuous}
     />
   {/if}
 </div>

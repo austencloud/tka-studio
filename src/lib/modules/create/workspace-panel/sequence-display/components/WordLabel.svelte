@@ -24,7 +24,7 @@
   let copiedTimeout: number | null = $state(null);
 
   // Check if this is a contextual message (not a word)
-  const isContextualMessage = $derived(() => {
+  const isContextualMessage = $derived.by(() => {
     const contextualPhrases = [
       "Configure Your Settings",
       "Drawing Blue Hand Path",
@@ -40,11 +40,11 @@
 
   // Derived simplified word (only truncate actual words, not contextual messages)
   const displayWord = $derived(
-    isContextualMessage() ? word : simplifyAndTruncate(word, 8)
+    isContextualMessage ? word : simplifyAndTruncate(word, 8)
   );
 
   // Check if sequence is circular-capable
-  const isCircularCapable = $derived(() => {
+  const isCircularCapable = $derived.by(() => {
     if (!sequence || !sequenceAnalysisService) return false;
     return sequenceAnalysisService.isCircularCapable(sequence);
   });
@@ -57,11 +57,11 @@
   });
 
   // Only show word label if there's an actual word (not empty, not default sequence names)
-  const shouldShowWordLabel = $derived(() => {
+  const shouldShowWordLabel = $derived.by(() => {
     if (!word) return false;
 
     // Always show contextual messages
-    if (isContextualMessage()) return true;
+    if (isContextualMessage) return true;
 
     // Don't show if it's a default sequence name without actual letters
     // Check if word starts with default sequence name patterns
@@ -77,7 +77,7 @@
    */
   async function copyToClipboard() {
     // Don't copy contextual messages
-    if (!word || isContextualMessage()) return;
+    if (!word || isContextualMessage) return;
 
     try {
       await navigator.clipboard.writeText(word);
@@ -101,17 +101,15 @@
   }
 </script>
 
-{#if shouldShowWordLabel()}
+{#if shouldShowWordLabel}
   <div class="word-label-container" class:scroll-mode={scrollMode}>
     <button
       class="word-label"
-      class:has-word={!!word && !isContextualMessage()}
-      class:contextual-message={isContextualMessage()}
+      class:has-word={!!word && !isContextualMessage}
+      class:contextual-message={isContextualMessage}
       onclick={copyToClipboard}
-      title={isContextualMessage()
-        ? word
-        : "Click to copy '{word}' to clipboard"}
-      aria-label={isContextualMessage()
+      title={isContextualMessage ? word : "Click to copy '{word}' to clipboard"}
+      aria-label={isContextualMessage
         ? word
         : "Current word: {word}. Click to copy."}
     >

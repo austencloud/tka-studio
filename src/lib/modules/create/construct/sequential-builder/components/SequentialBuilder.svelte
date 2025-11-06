@@ -54,16 +54,8 @@ Integrates with workspace for real-time updates
     );
   });
 
-  // Notify parent of header text changes
-  $effect(() => {
-    const text = headerText();
-    if (onHeaderTextChange) {
-      onHeaderTextChange(text);
-    }
-  });
-
   // Header text based on phase
-  const headerText = $derived(() => {
+  const headerText = $derived.by(() => {
     if (showStartPicker) {
       return "Choose Starting Position";
     }
@@ -77,6 +69,14 @@ Integrates with workspace for real-time updates
     }
 
     return "Sequence Complete!";
+  });
+
+  // Notify parent of header text changes
+  $effect(() => {
+    const text = headerText;
+    if (onHeaderTextChange) {
+      onHeaderTextChange(text);
+    }
   });
 
   // Generate options for current state
@@ -206,7 +206,7 @@ Integrates with workspace for real-time updates
   <!-- Header Bar -->
   <ConstructPickerHeader
     variant="sequential"
-    title={headerText()}
+    title={headerText}
     showNextHandButton={!showStartPicker &&
       sequentialState.currentPhase === "blue" &&
       sequentialState.blueSequence.length > 0}
