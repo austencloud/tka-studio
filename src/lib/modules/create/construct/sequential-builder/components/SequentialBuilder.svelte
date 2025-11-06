@@ -211,6 +211,8 @@ Integrates with workspace for real-time updates
     nextHandButtonText="Build Red Hand"
     onBackClick={handleReset}
     onNextHand={handleNextHand}
+    currentGridMode={sequentialState.config.gridMode}
+    onGridModeChange={showStartPicker ? handleGridModeChange : undefined}
   />
 
   <!-- Content Area -->
@@ -222,6 +224,7 @@ Integrates with workspace for real-time updates
         onGridModeChange={handleGridModeChange}
         currentGridMode={sequentialState.config.gridMode}
         handColor={MotionColor.BLUE}
+        showInlineGridToggle={false}
       />
     {:else if sequentialState.isComplete}
       <!-- Completion Screen -->

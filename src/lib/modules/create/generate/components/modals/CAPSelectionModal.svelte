@@ -6,31 +6,31 @@ Refactored to use Drawer component for consistent behavior
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES, Drawer, SheetDragHandle } from "$shared";
   import { onMount } from "svelte";
-  import { CAPComponent, generateExplanationText } from "$create/generate/shared/domain/constants/cap-components";
+  import {
+    CAPComponent,
+    generateExplanationText,
+  } from "$create/generate/shared/domain/constants/cap-components";
   import CAPComponentGrid from "./CAPComponentGrid.svelte";
   import CAPExplanationPanel from "./CAPExplanationPanel.svelte";
   import CAPModalHeader from "./CAPModalHeader.svelte";
 
-  let {
-    isOpen,
-    selectedComponents,
-    onToggleComponent,
-    onConfirm,
-    onClose
-  } = $props<{
-    isOpen: boolean;
-    selectedComponents: Set<CAPComponent>;
-    onToggleComponent: (component: CAPComponent) => void;
-    onConfirm: () => void;
-    onClose: () => void;
-  }>();
+  let { isOpen, selectedComponents, onToggleComponent, onConfirm, onClose } =
+    $props<{
+      isOpen: boolean;
+      selectedComponents: Set<CAPComponent>;
+      onToggleComponent: (component: CAPComponent) => void;
+      onConfirm: () => void;
+      onClose: () => void;
+    }>();
 
   let hapticService: IHapticFeedbackService;
   let capTypeService: any;
   let isMultiSelectMode = $state(false);
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
     capTypeService = resolve(TYPES.ICAPTypeService);
   });
 
@@ -47,10 +47,10 @@ Refactored to use Drawer component for consistent behavior
   const selectionCount = $derived(selectedComponents.size);
   const buttonText = $derived.by(() => {
     if (!isMultiSelectMode) {
-      return 'Click a CAP Type';
+      return "Click a CAP Type";
     }
-    if (selectionCount === 0) return 'Select a CAP Type';
-    if (!isImplemented) return 'Coming Soon!';
+    if (selectionCount === 0) return "Select a CAP Type";
+    if (!isImplemented) return "Coming Soon!";
     if (selectionCount === 1) {
       const component = Array.from(selectedComponents)[0] as CAPComponent;
       const formatted = component.charAt(0) + component.slice(1).toLowerCase();
@@ -102,12 +102,13 @@ Refactored to use Drawer component for consistent behavior
 
 <Drawer
   {isOpen}
-  on:close={handleClose}
+  onclose={handleClose}
   labelledBy="cap-title"
   closeOnBackdrop={false}
   focusTrap={true}
   lockScroll={true}
   showHandle={false}
+  respectLayoutMode={true}
   class="cap-selection-sheet"
   backdropClass="cap-selection-backdrop"
 >
@@ -179,7 +180,8 @@ Refactored to use Drawer component for consistent behavior
     height: 70vh;
     height: 70dvh;
 
-    background: linear-gradient(135deg,
+    background: linear-gradient(
+      135deg,
       #4338ca 0%,
       #6b21a8 12.5%,
       #db2777 25%,
@@ -229,7 +231,8 @@ Refactored to use Drawer component for consistent behavior
   }
 
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
     }
     50% {
@@ -300,7 +303,7 @@ Refactored to use Drawer component for consistent behavior
   }
 
   .cap-modal-content::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
@@ -312,7 +315,8 @@ Refactored to use Drawer component for consistent behavior
   }
 
   @keyframes meshGradientFlow {
-    0%, 100% {
+    0%,
+    100% {
       background-position: 0% 50%;
     }
     25% {

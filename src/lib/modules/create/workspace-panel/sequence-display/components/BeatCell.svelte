@@ -247,6 +247,9 @@
     cursor: pointer;
     margin: 0;
     padding: 0;
+    /* Fill parent container completely */
+    width: 100%;
+    height: 100%;
     /* NO transform or transition - let animations handle everything */
 
     /* Prevent text selection during long-press */

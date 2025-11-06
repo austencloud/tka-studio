@@ -140,7 +140,7 @@
 
 <Drawer
   isOpen={show}
-  on:close={onClose}
+  onclose={onClose}
   labelledBy="animation-panel-title"
   closeOnBackdrop={false}
   focusTrap={false}

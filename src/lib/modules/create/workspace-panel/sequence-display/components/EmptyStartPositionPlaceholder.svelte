@@ -16,10 +16,7 @@ Fills the entire beat cell space with a subtle animated glass effect.
 
   <!-- Content -->
   <div class="placeholder-content">
-    <div class="icon-wrapper">
-      <FontAwesomeIcon icon="play" size="2em" />
-    </div>
-    <div class="start-text">Start</div>
+    <div class="start-text">Choose your start position!</div>
   </div>
 </div>
 
@@ -106,6 +103,7 @@ Fills the entire beat cell space with a subtle animated glass effect.
     align-items: center;
     justify-content: center;
     gap: 12px;
+    padding: 1rem;
   }
 
   .icon-wrapper {
@@ -119,13 +117,12 @@ Fills the entire beat cell space with a subtle animated glass effect.
 
   .start-text {
     font-family: Georgia, serif;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: bold;
     color: rgba(255, 255, 255, 0.9);
     text-align: center;
     letter-spacing: 1px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-    text-transform: uppercase;
   }
 
   /* Glass breathing animation - more pronounced */

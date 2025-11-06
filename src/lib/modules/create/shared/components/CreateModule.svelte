@@ -29,19 +29,18 @@
   import { onMount, setContext } from "svelte";
   import { fade } from "svelte/transition";
   import { cubicOut } from "svelte/easing";
-  import ConfirmDialog from "$shared/foundation/ui/ConfirmDialog.svelte";
   import ErrorBanner from "./ErrorBanner.svelte";
   import ToolPanel from "../../tool-panel/core/ToolPanel.svelte";
   import WorkspacePanel from "../../workspace-panel/core/WorkspacePanel.svelte";
   import ButtonPanel from "../../workspace-panel/shared/components/ButtonPanel.svelte";
   import type { CreateModuleServices } from "../services/ServiceInitializer";
-  import { ServiceInitializer } from "../services/ServiceInitializer";
-  import { getCreateModuleEventService } from "../services/implementations/CreateModuleEventService";
+  import type { ICreateModuleInitializationService } from "../services/contracts/ICreateModuleInitializationService";
   import { createCreateModuleState, createConstructTabState } from "../state";
   import type { createCreateModuleState as CreateModuleStateType } from "../state/create-module-state.svelte";
   import type { createConstructTabState as ConstructTabStateType } from "../state/construct-tab-state.svelte";
   import {
     createAutoEditPanelEffect,
+    createCurrentWordDisplayEffect,
     createLayoutEffects,
     createNavigationSyncEffects,
     createPanelHeightTracker,
@@ -53,13 +52,17 @@
   import {
     AnimationCoordinator,
     CAPCoordinator,
+    ConfirmationDialogCoordinator,
     EditCoordinator,
     SequenceActionsCoordinator,
     ShareCoordinator,
   } from "./coordinators";
   import HandPathSettingsView from "./HandPathSettingsView.svelte";
-  import CreationMethodSelector from "../../workspace-panel/components/CreationMethodSelector.svelte";
   import { calculateGridLayout } from "../../workspace-panel/sequence-display/utils/grid-calculations";
+  import CreationWelcomeScreen from "./CreationWelcomeScreen.svelte";
+  import CreationWorkspaceArea from "./CreationWorkspaceArea.svelte";
+  import CreationToolPanelSlot from "./CreationToolPanelSlot.svelte";
+  import { executeClearSequenceWorkflow } from "../utils/clearSequenceWorkflow";
 
   const logger = createComponentLogger("CreateModule");
 
@@ -113,53 +116,8 @@
   // Sequence actions sheet state
   let showSequenceActionsSheet = $state(false);
 
-  // Guided mode confirmation dialog state
-  let showGuidedConfirm = $state(false);
-  let guidedConfirmResolve: ((confirmed: boolean) => void) | null =
-    $state(null);
-
-  // Exit Guided mode confirmation dialog state
-  let showExitGuidedConfirm = $state(false);
-  let exitGuidedConfirmResolve: ((confirmed: boolean) => void) | null =
-    $state(null);
-
   // Cleanup functions for effects
   let effectCleanups: (() => void)[] = [];
-
-  // Derived: Check if start position is selected
-  const hasStartPosition = $derived(() => {
-    if (!CreateModuleState) return false;
-    const sequenceState = CreateModuleState.sequenceState;
-    if (!sequenceState) return false;
-    return sequenceState.hasStartPosition;
-  });
-
-  // Derived: Get current beat count (actual motion beats, not including start)
-  const currentBeatCount = $derived(() => {
-    if (!CreateModuleState) return 0;
-    const sequenceState = CreateModuleState.sequenceState;
-    if (!sequenceState) return 0;
-    return sequenceState.currentSequence?.beats?.length ?? 0;
-  });
-
-  // Derived: Allow clearing when creation method is selected OR sequence has content
-  const canClearSequence = $derived(() => {
-    // Show if user just selected a creation method in this session
-    if (hasSelectedCreationMethod) return true;
-
-    // Show if there's already sequence content (persisted state)
-    if (hasStartPosition()) return true;
-
-    // Show if there are beats (even without start position)
-    if (currentBeatCount() > 0) return true;
-
-    return false;
-  });
-
-  // Derived: Show play/actions/share when at least one motion beat exists
-  const canShowActionButtons = $derived(() => {
-    return currentBeatCount() >= 1;
-  });
 
   // Track if user has selected a creation method (starts false, becomes true on selection)
   let hasSelectedCreationMethod = $state(false);
@@ -168,8 +126,7 @@
   const gridRows = $derived(() => {
     if (!CreateModuleState?.sequenceState?.currentSequence) return 0;
 
-    const beatCount =
-      CreateModuleState.sequenceState.currentSequence.beats?.length || 0;
+    const beatCount = CreateModuleState.getCurrentBeatCount();
     if (beatCount === 0) return 0;
 
     // Calculate grid layout using the same logic as BeatGrid
@@ -207,12 +164,19 @@
     }
   });
 
+  const creationCueOrientation = $derived(() => {
+    return shouldUseSideBySideLayout ? "horizontal" : "vertical";
+  });
+
+  const creationCueMood = $derived(() => {
+    if (!CreateModuleState) return "default";
+    return CreateModuleState.getCreationCueMood(hasSelectedCreationMethod);
+  });
+
   // Derived: Check if workspace is empty (no beats and no start position)
   const isWorkspaceEmpty = $derived(() => {
-    if (!CreateModuleState?.sequenceState) return true;
-    const beatCount = currentBeatCount();
-    const hasStart = hasStartPosition();
-    return beatCount === 0 && !hasStart;
+    if (!CreateModuleState) return true;
+    return CreateModuleState.isWorkspaceEmpty();
   });
 
   // Effect: Sync workspace empty state to navigation (for hiding tabs)
@@ -234,58 +198,18 @@
     }
   });
 
-  // Effect: Notify parent of current word changes (or contextual message for hand path)
+  // Effect: Notify parent of current word changes (managed by CurrentWordDisplayManager)
   $effect(() => {
-    if (!CreateModuleState) return;
+    if (!servicesInitialized || !CreateModuleState || !constructTabState) return;
 
-    let displayText = "";
+    const cleanup = createCurrentWordDisplayEffect({
+      CreateModuleState,
+      constructTabState,
+      hasSelectedCreationMethod: () => hasSelectedCreationMethod,
+      onCurrentWordChange,
+    });
 
-    // When creation method selector is visible, show selection prompt
-    if (isWorkspaceEmpty() && !hasSelectedCreationMethod) {
-      displayText = "Choose Creation Mode";
-    }
-    // In guided mode, show the header text from Sequential Builder
-    else if (CreateModuleState.activeSection === "guided") {
-      displayText = CreateModuleState.guidedModeHeaderText || "Guided Builder";
-    }
-    // In gestural (hand path) mode, show contextual message instead of word
-    else if (
-      navigationState.activeTab === "gestural" &&
-      CreateModuleState.handPathCoordinator
-    ) {
-      const coordinator = CreateModuleState.handPathCoordinator;
-
-      if (!coordinator.isStarted) {
-        displayText = "Configure Your Settings";
-      } else if (coordinator.pathState.isSessionComplete) {
-        displayText = "Sequence Complete!";
-      } else if (coordinator.pathState.currentHand === "blue") {
-        displayText = "Drawing Blue Hand Path";
-      } else if (coordinator.pathState.currentHand === "red") {
-        displayText = "Drawing Red Hand Path";
-      } else {
-        displayText = "Draw Hand Path";
-      }
-    } else if (navigationState.activeTab === "construct") {
-      // Show contextual instruction based on sequence state
-      if (constructTabState?.shouldShowStartPositionPicker()) {
-        // On start position picker: Show instruction
-        displayText = "Choose your start position!";
-      } else if (currentBeatCount() === 0) {
-        // Has start position but no beats yet
-        displayText = "Select your first beat!";
-      } else {
-        // Has beats: Show the actual sequence word
-        displayText = CreateModuleState.sequenceState?.sequenceWord() ?? "";
-      }
-    } else {
-      // Default: Show current word
-      displayText = CreateModuleState.sequenceState?.sequenceWord() ?? "";
-    }
-
-    if (onCurrentWordChange) {
-      onCurrentWordChange(displayText);
-    }
+    return cleanup;
   });
 
   // Effect: Setup all managed effects when services are initialized
@@ -358,83 +282,41 @@
     }
 
     try {
-      // Resolve all services
-      services = ServiceInitializer.resolveServices();
-
-      // Wait a tick to ensure component context is fully established
-      await new Promise((resolve) => setTimeout(resolve, 0));
-
-      // Create state objects
-      CreateModuleState = createCreateModuleState(
-        services.sequenceService,
-        services.sequencePersistenceService
+      // Use CreateModuleInitializationService for clean initialization
+      const initService = resolve<ICreateModuleInitializationService>(
+        TYPES.ICreateModuleInitializationService
       );
 
-      constructTabState = createConstructTabState(
-        services.CreateModuleService,
-        CreateModuleState.sequenceState,
-        services.sequencePersistenceService,
-        CreateModuleState,
-        navigationState
-      );
+      const result = await initService.initialize();
 
-      // Set the constructTabState reference in CreateModuleState
-      CreateModuleState.setConstructTabState(constructTabState);
+      // Unpack services and state from initialization result
+      services = {
+        sequenceService: result.sequenceService,
+        sequencePersistenceService: result.sequencePersistenceService,
+        startPositionService: result.startPositionService,
+        CreateModuleService: result.CreateModuleService,
+        layoutService: result.layoutService,
+        navigationSyncService: result.navigationSyncService,
+        beatOperationsService: result.beatOperationsService,
+        shareService: resolve(TYPES.IShareService),
+      };
 
-      // Initialize services
-      await ServiceInitializer.initializeServices(services);
+      CreateModuleState = result.CreateModuleState;
+      constructTabState = result.constructTabState;
 
-      // Initialize state with persistence
-      await CreateModuleState.initializeWithPersistence();
-      await constructTabState.initializeConstructTab();
+      // Resolve device detector from layout service (it has it injected)
+      deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
 
       // Mark services as initialized
       servicesInitialized = true;
 
-      // Configure event callbacks
-      const CreateModuleEventService = getCreateModuleEventService();
+      // Configure event callbacks via service
+      initService.configureEventCallbacks(CreateModuleState, panelState);
 
-      CreateModuleEventService.setSequenceStateCallbacks(
-        () => CreateModuleState!.sequenceState.getCurrentSequence(),
-        (sequence) =>
-          CreateModuleState!.sequenceState.setCurrentSequence(sequence)
-      );
-
-      CreateModuleEventService.setAddOptionToHistoryCallback(
-        (beatIndex, beatData) =>
-          CreateModuleState!.addOptionToHistory(beatIndex, beatData)
-      );
-
-      CreateModuleEventService.setPushUndoSnapshotCallback((type, metadata) =>
-        CreateModuleState!.pushUndoSnapshot(type, metadata)
-      );
-
-      // Set up guided mode confirmation callback
-      CreateModuleState.setConfirmGuidedSwitchCallback(async () => {
-        return new Promise<boolean>((resolve) => {
-          showGuidedConfirm = true;
-          guidedConfirmResolve = resolve;
-        });
-      });
-
-      // Set up exit guided mode confirmation callback
-      CreateModuleState.setConfirmExitGuidedCallback(async () => {
-        return new Promise<boolean>((resolve) => {
-          showExitGuidedConfirm = true;
-          exitGuidedConfirmResolve = resolve;
-        });
-      });
-
-      // Set up clear sequence callback (to ensure UI state is properly updated)
-      CreateModuleState.setClearSequenceCompletelyCallback(async () => {
-        if (constructTabState?.clearSequenceCompletely) {
-          await constructTabState.clearSequenceCompletely();
-        }
-      });
-
-      // Load start positions
-      await services.startPositionService.getDefaultStartPositions(
-        GridMode.DIAMOND
+      // Configure clear sequence callback via service
+      initService.configureClearSequenceCallback(
+        CreateModuleState,
+        constructTabState
       );
 
       logger.success("CreateModule initialized successfully");
@@ -498,46 +380,17 @@
   }
 
   async function handleClearSequence() {
-    if (!CreateModuleState) return;
+    if (!CreateModuleState || !constructTabState) return;
 
     try {
-      CreateModuleState.pushUndoSnapshot("CLEAR_SEQUENCE", {
-        description: "Clear sequence",
+      await executeClearSequenceWorkflow({
+        CreateModuleState,
+        constructTabState,
+        panelState,
+        resetCreationMethodSelection: () => {
+          hasSelectedCreationMethod = false;
+        },
       });
-
-      // Start the clearing animation (beats fade out in 300ms)
-      if (CreateModuleState.sequenceState) {
-        CreateModuleState.sequenceState.animationState.startClearing();
-      }
-
-      // Immediately trigger layout transition alongside beat fade-out
-      // This creates a cohesive parallel animation
-      hasSelectedCreationMethod = false;
-
-      // Small delay to let layout transition start rendering
-      await new Promise(resolve => setTimeout(resolve, 50));
-
-      // Clear UI state (start position picker, etc.) without re-triggering animation
-      if (constructTabState) {
-        constructTabState.setShowStartPositionPicker(true);
-        constructTabState.setSelectedStartPosition(null);
-        constructTabState.startPositionStateService.clearSelectedPosition();
-        constructTabState.clearError();
-      }
-
-      // Wait for beat clearing animation to complete (300ms total from start)
-      await new Promise(resolve => setTimeout(resolve, 250));
-
-      // Clear sequence data
-      if (CreateModuleState.sequenceState) {
-        CreateModuleState.sequenceState.setCurrentSequence(null);
-        CreateModuleState.sequenceState.clearSelection();
-        CreateModuleState.sequenceState.clearError();
-        await CreateModuleState.sequenceState.clearPersistedState();
-        CreateModuleState.sequenceState.animationState.endClearing();
-      }
-
-      panelState.closeSharePanel();
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to clear sequence";
@@ -569,50 +422,12 @@
   function handleOpenSequenceActions() {
     showSequenceActionsSheet = true;
   }
-
-  // Guided mode confirmation handlers
-  function handleConfirmGuidedSwitch() {
-    showGuidedConfirm = false;
-    if (guidedConfirmResolve) {
-      guidedConfirmResolve(true);
-      guidedConfirmResolve = null;
-    }
-  }
-
-  function handleCancelGuidedSwitch() {
-    showGuidedConfirm = false;
-    if (guidedConfirmResolve) {
-      guidedConfirmResolve(false);
-      guidedConfirmResolve = null;
-    }
-  }
-
-  // Exit Guided mode confirmation handlers
-  function handleConfirmExitGuided() {
-    showExitGuidedConfirm = false;
-    if (exitGuidedConfirmResolve) {
-      exitGuidedConfirmResolve(true);
-      exitGuidedConfirmResolve = null;
-    }
-  }
-
-  function handleCancelExitGuided() {
-    showExitGuidedConfirm = false;
-    if (exitGuidedConfirmResolve) {
-      exitGuidedConfirmResolve(false);
-      exitGuidedConfirmResolve = null;
-    }
-  }
 </script>
 
 {#if error}
   <ErrorBanner message={error} onDismiss={clearError} />
 {:else if CreateModuleState && constructTabState && services}
-  <div
-    class="create-tab"
-    class:side-by-side={shouldUseSideBySideLayout}
-    class:editing-mode={panelState.isEditPanelOpen}
-  >
+  <div class="create-tab" class:side-by-side={shouldUseSideBySideLayout}>
     <!-- Hand Path Settings View (Pre-Start State) -->
     {#if navigationState.activeTab === "gestural" && !CreateModuleState?.handPathCoordinator?.isStarted}
       <HandPathSettingsView
@@ -641,7 +456,11 @@
                 out:fade={{ duration: 200 }}
               >
                 <!-- Centered welcome content with undo button above -->
-                <div class="welcome-content">
+                <div
+                  class="welcome-content"
+                  class:horizontal-cue={creationCueOrientation() ===
+                    "horizontal"}
+                >
                   <!-- Undo button - centered above title -->
                   {#if CreateModuleState?.canUndo}
                     <button
@@ -679,10 +498,10 @@
                     </button>
                   {/if}
 
-                  <h2 class="welcome-title">Ready to Create?</h2>
-                  <div class="welcome-icon">
-                    <i class="fas fa-arrow-down"></i>
-                  </div>
+                  <CreationWelcomeCue
+                    orientation={creationCueOrientation()}
+                    mood={creationCueMood()}
+                  />
                 </div>
               </div>
             {:else}
@@ -716,16 +535,18 @@
             >
               <ButtonPanel
                 {CreateModuleState}
-                showPlayButton={canShowActionButtons()}
+                showPlayButton={CreateModuleState.canShowActionButtons()}
                 onPlayAnimation={handlePlayAnimation}
                 isAnimating={panelState.isAnimationPanelOpen}
-                canClearSequence={canClearSequence()}
+                canClearSequence={CreateModuleState.canClearSequence(
+                  hasSelectedCreationMethod
+                )}
                 onClearSequence={handleClearSequence}
                 onRemoveBeat={handleRemoveBeat}
-                showShareButton={canShowActionButtons()}
+                showShareButton={CreateModuleState.canShowActionButtons()}
                 onShare={handleOpenSharePanel}
                 isShareOpen={panelState.isSharePanelOpen}
-                showSequenceActions={canShowActionButtons()}
+                showSequenceActions={CreateModuleState.canShowActionButtons()}
                 onSequenceActionsClick={handleOpenSequenceActions}
               />
             </div>
@@ -808,29 +629,8 @@
   <!-- CAP Coordinator -->
   <CAPCoordinator {panelState} />
 
-  <!-- Guided Mode Confirmation Dialog -->
-  <ConfirmDialog
-    isOpen={showGuidedConfirm}
-    title="Switch to Guided Mode?"
-    message="Switching to Guided Mode will clear your current sequence. You can undo this action if needed."
-    confirmText="Clear and Continue"
-    cancelText="Cancel"
-    variant="warning"
-    onConfirm={handleConfirmGuidedSwitch}
-    onCancel={handleCancelGuidedSwitch}
-  />
-
-  <!-- Exit Guided Mode Confirmation Dialog -->
-  <ConfirmDialog
-    isOpen={showExitGuidedConfirm}
-    title="Exit Guided Mode?"
-    message="Your Guided Builder progress will be lost. You can undo this action if needed."
-    confirmText="Exit"
-    cancelText="Cancel"
-    variant="warning"
-    onConfirm={handleConfirmExitGuided}
-    onCancel={handleCancelExitGuided}
-  />
+  <!-- Confirmation Dialog Coordinator -->
+  <ConfirmationDialogCoordinator {CreateModuleState} />
 {/if}
 
 <style>
@@ -842,11 +642,6 @@
     overflow: hidden;
     /* Navigation spacing handled by parent MainInterface.content-area */
     transition: background-color 200ms ease-out;
-  }
-
-  /* Black background when in editing mode */
-  .create-tab.editing-mode {
-    background: #000000;
   }
 
   .create-tab.side-by-side {
@@ -879,7 +674,7 @@
     flex-direction: column;
     overflow: hidden;
     position: relative; /* For absolutely positioned button panel */
-    transition: flex 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: flex 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Collapsed state: workspace container shrinks when creation method selector is visible */
@@ -893,8 +688,8 @@
     pointer-events: none;
     transform: translateY(-20px);
     transition:
-      opacity 400ms cubic-bezier(0.4, 0, 0.2, 1),
-      transform 400ms cubic-bezier(0.4, 0, 0.2, 1);
+      opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
+      transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Workspace content area - fills available space */
@@ -943,22 +738,9 @@
     text-align: center;
   }
 
-  .welcome-title {
-    font-size: clamp(1.5rem, 4vw, 2.5rem);
-    font-weight: 700;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f59e0b 100%);
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin: 0;
-    line-height: 1.2;
-    animation: shimmer 3s ease-in-out infinite;
-  }
-
-  .welcome-icon {
-    font-size: clamp(2rem, 5vw, 3rem);
-    color: rgba(255, 255, 255, 0.8);
-    animation: bounce 2s ease-in-out infinite;
+  .welcome-content.horizontal-cue {
+    align-items: flex-start;
+    text-align: left;
   }
 
   /* Welcome screen undo button - centered above title in natural flow */
@@ -1001,30 +783,6 @@
 
   .welcome-undo-button span {
     white-space: nowrap;
-  }
-
-  /* Shimmer animation for title */
-  @keyframes shimmer {
-    0%,
-    100% {
-      filter: brightness(1) saturate(1);
-    }
-    50% {
-      filter: brightness(1.2) saturate(1.3);
-    }
-  }
-
-  /* Bounce animation for icon */
-  @keyframes bounce {
-    0%,
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    50% {
-      transform: translateY(10px);
-      opacity: 0.7;
-    }
   }
 
   /* Workspace panel wrapper (Layout 2) */

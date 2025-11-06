@@ -15,11 +15,13 @@ With grid mode toggle to switch between Diamond and Box mode
     onGridModeChange,
     currentGridMode = GridModeEnum.DIAMOND,
     handColor = MotionColor.BLUE,
+    showInlineGridToggle = true,
   } = $props<{
     onPositionSelected: (position: PictographData, location: GridLocation) => void;
     onGridModeChange?: (gridMode: GridMode) => void;
     currentGridMode?: GridMode;
     handColor?: MotionColor;
+    showInlineGridToggle?: boolean;
   }>();
 
   // Services
@@ -80,15 +82,17 @@ With grid mode toggle to switch between Diamond and Box mode
 
 <div class="start-position-picker">
   <!-- Header with title and grid mode toggle -->
-  <div class="picker-header">
-    <div class="header-spacer"></div>
-    <div class="grid-toggle-container">
-      <GridModeToggle
-        currentGridMode={currentGridMode}
-        onGridModeChange={handleGridModeChange}
-      />
+  {#if showInlineGridToggle}
+    <div class="picker-header">
+      <div class="header-spacer"></div>
+      <div class="grid-toggle-container">
+        <GridModeToggle
+          currentGridMode={currentGridMode}
+          onGridModeChange={handleGridModeChange}
+        />
+      </div>
     </div>
-  </div>
+  {/if}
 
   <!-- 4 Position Grid -->
   <div class="position-grid">

@@ -2,12 +2,7 @@
   PrivacySheet.svelte - Privacy Policy Bottom Sheet
 -->
 <script lang="ts">
-  import {
-    Drawer,
-    resolve,
-    TYPES,
-    type IHapticFeedbackService,
-  } from "$shared";
+  import { Drawer, resolve, TYPES, type IHapticFeedbackService } from "$shared";
   import { onMount } from "svelte";
 
   // Props
@@ -34,7 +29,7 @@
 <Drawer
   {isOpen}
   labelledBy="privacy-sheet-title"
-  on:close={onClose}
+  onclose={onClose}
   class="privacy-sheet"
   backdropClass="privacy-sheet__backdrop"
 >

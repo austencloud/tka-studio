@@ -8,7 +8,7 @@
    */
   import { onMount } from "svelte";
   import { getActiveTab } from "./application/state/app-state.svelte";
-  import { handleHMRInit } from "./hmr-helper";
+  // import { handleHMRInit } from "./hmr-helper"; // No longer needed
   import {
     layoutState,
     moduleHasPrimaryNav,
@@ -54,6 +54,35 @@
   const isModuleLoading = $derived(activeModule === null);
   const isAboutActive = $derived(activeModule === "about");
 
+  const createHeaderMatches = [
+    "Choose Creation Mode",
+    "Choose Starting Position",
+    "Guided Builder",
+    "Configure Your Settings",
+  ];
+  const createHeaderPrefixes = ["Blue Hand -", "Red Hand -"];
+  const createHeaderFragments = ["Drawing", "Sequence Complete"];
+
+  const isCreateModuleHeaderText = (
+    text: string | null | undefined
+  ): boolean => {
+    if (!text) return false;
+    const normalized = text.trim();
+    if (!normalized) return false;
+
+    if (createHeaderMatches.some((phrase) => normalized === phrase)) {
+      return true;
+    }
+
+    if (createHeaderPrefixes.some((prefix) => normalized.startsWith(prefix))) {
+      return true;
+    }
+
+    return createHeaderFragments.some((fragment) =>
+      normalized.includes(fragment)
+    );
+  };
+
   // Sync state to coordinators
   $effect(() => {
     navigationCoordinator.canAccessEditAndExportPanels =
@@ -62,7 +91,7 @@
 
   onMount(() => {
     if (typeof window === "undefined") return;
-    handleHMRInit();
+    // handleHMRInit(); // Disabled - causing HMR verification loops
 
     // Auto-open landing page for first-time visitors
     if (isFirstVisit()) {
@@ -96,7 +125,7 @@
     {#snippet content()}
       {#if currentModule() === "create" && layoutState.currentCreateWord}
         <!-- Check if it's a contextual message (not a sequence word) -->
-        {#if layoutState.currentCreateWord === "Choose Creation Mode" || layoutState.currentCreateWord === "Configure Your Settings" || layoutState.currentCreateWord.includes("Drawing") || layoutState.currentCreateWord.includes("Sequence Complete")}
+        {#if isCreateModuleHeaderText(layoutState.currentCreateWord)}
           <div class="module-header">{layoutState.currentCreateWord}</div>
         {:else}
           <WordLabel word={layoutState.currentCreateWord} />

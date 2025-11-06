@@ -107,12 +107,13 @@
 
 <Drawer
   isOpen={show}
-  on:close={handleSheetClose}
+  onclose={handleSheetClose}
   labelledBy="sequence-actions-title"
   closeOnBackdrop={false}
   focusTrap={false}
   lockScroll={false}
   showHandle={false}
+  respectLayoutMode={true}
   class="actions-sheet-container"
   backdropClass="actions-sheet-backdrop"
 >

@@ -74,6 +74,12 @@ export function createSingleBeatEditEffect(config: AutoEditPanelConfig): () => v
       const selectedBeatNumber = CreateModuleState.sequenceState.selectedBeatNumber;
       const selectedData = CreateModuleState.sequenceState.selectedBeatData;
 
+      console.log('🟢 AutoEditPanelManager $effect triggered:', {
+        selectedBeatNumber,
+        hasSelectedData: !!selectedData,
+        isEditPanelOpen: panelState.isEditPanelOpen
+      });
+
       // If a beat is selected, open the edit panel
       if (selectedBeatNumber !== null && selectedData) {
         panelState.openEditPanel(selectedBeatNumber, selectedData);

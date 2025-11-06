@@ -45,6 +45,13 @@ export interface ICreateModuleInitializationService {
   configureEventCallbacks(CreateModuleState: any, panelState: PanelCoordinationState): void;
 
   /**
+   * Configure clear sequence callback
+   * @param CreateModuleState Create Module State object
+   * @param constructTabState Construct tab state for clearing
+   */
+  configureClearSequenceCallback(CreateModuleState: any, constructTabState: any): void;
+
+  /**
    * Load default start positions for a grid mode
    * @param gridMode Grid mode to load start positions for
    */

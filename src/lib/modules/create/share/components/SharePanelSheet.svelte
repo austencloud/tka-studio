@@ -31,11 +31,12 @@
 <Drawer
   isOpen={show}
   labelledBy="share-panel-title"
-  on:close={handleClose}
+  onclose={handleClose}
   closeOnBackdrop={true}
   focusTrap={true}
   lockScroll={true}
   showHandle={false}
+  respectLayoutMode={true}
   class="share-sheet"
   backdropClass="share-sheet__backdrop"
 >
@@ -53,7 +54,11 @@
     </header>
 
     <div class="share-sheet__content">
-      <SharePanel currentSequence={sequence} {shareState} onClose={handleClose} />
+      <SharePanel
+        currentSequence={sequence}
+        {shareState}
+        onClose={handleClose}
+      />
     </div>
   </div>
 </Drawer>
@@ -96,7 +101,11 @@
   .share-sheet__header h2 {
     font-size: 20px;
     font-weight: 700;
-    background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%);
+    background: linear-gradient(
+      135deg,
+      #ffffff 0%,
+      rgba(255, 255, 255, 0.8) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -151,8 +160,6 @@
     .share-sheet__header h2 {
       font-size: 18px;
     }
-
-
   }
 
   @media (max-width: 480px) {
@@ -169,8 +176,6 @@
       height: var(--sheet-close-size-small);
       font-size: 18px;
     }
-
-
   }
 
   @media (prefers-reduced-motion: reduce) {

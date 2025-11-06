@@ -17,7 +17,7 @@
 
   type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
 
-  const logger = createComponentLogger('EditCoordinator');
+  const logger = createComponentLogger("EditCoordinator");
 
   // Props
   let {
@@ -25,7 +25,7 @@
     panelState,
     beatOperationsService,
     shouldUseSideBySideLayout,
-    onError
+    onError,
   }: {
     CreateModuleState: CreateModuleState;
     panelState: PanelCoordinationState;
@@ -42,7 +42,10 @@
     // Beat 0 = start position - read from selectedStartPosition and convert to BeatData
     if (beatIndex === 0) {
       const startPos = CreateModuleState.sequenceState.selectedStartPosition;
-      console.log('📍 EditCoordinator selectedBeatData (start position):', startPos);
+      console.log(
+        "📍 EditCoordinator selectedBeatData (start position):",
+        startPos
+      );
       if (!startPos) return null;
 
       // Convert PictographData to BeatData
@@ -52,7 +55,7 @@
         duration: 1000,
         blueReversal: false,
         redReversal: false,
-        isBlank: false
+        isBlank: false,
       };
     }
 
@@ -62,13 +65,19 @@
 
     const arrayIndex = beatIndex - 1;
     const beatData = sequence.beats[arrayIndex] || null;
-    console.log(`📍 EditCoordinator selectedBeatData (beat ${beatIndex}):`, beatData);
+    console.log(
+      `📍 EditCoordinator selectedBeatData (beat ${beatIndex}):`,
+      beatData
+    );
     return beatData;
   });
 
   // Event handlers
   function handleOrientationChange(color: string, orientation: string) {
-    console.log(`🔵 EditCoordinator.handleOrientationChange called:`, { color, orientation });
+    console.log(`🔵 EditCoordinator.handleOrientationChange called:`, {
+      color,
+      orientation,
+    });
 
     const beatIndex = panelState.editPanelBeatIndex;
     console.log(`  beatIndex from panelState:`, beatIndex);
@@ -88,7 +97,8 @@
         panelState
       );
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to update orientation";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update orientation";
       logger.error("Failed to update orientation", err);
       onError?.(errorMessage);
     }
@@ -110,7 +120,8 @@
         panelState
       );
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to update turns";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to update turns";
       logger.error("Failed to update turns", err);
       onError?.(errorMessage);
     }
@@ -120,7 +131,8 @@
     try {
       beatOperationsService.applyBatchChanges(changes, CreateModuleState);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to apply changes";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to apply changes";
       logger.error("Failed to apply batch changes", err);
       onError?.(errorMessage);
 
@@ -134,16 +146,33 @@
     try {
       beatOperationsService.removeBeat(beatNumber - 1, CreateModuleState);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to remove beat";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to remove beat";
       logger.error("Failed to remove beat", err);
       onError?.(errorMessage);
     }
   }
 
   function handleClosePanel() {
+    console.log("🔴 handleClosePanel called");
+    console.log(
+      "🔴 selectedBeatNumber before clear:",
+      CreateModuleState.sequenceState.selectedBeatNumber
+    );
+
     panelState.closeEditPanel();
-    // Exit multi-select mode when closing panel
-    const selectedCount = CreateModuleState.sequenceState.selectedBeatNumbers?.size ?? 0;
+
+    // Clear single beat selection
+    CreateModuleState.sequenceState.clearSelection();
+
+    console.log(
+      "🔴 selectedBeatNumber after clear:",
+      CreateModuleState.sequenceState.selectedBeatNumber
+    );
+
+    // Exit multi-select mode if active
+    const selectedCount =
+      CreateModuleState.sequenceState.selectedBeatNumbers?.size ?? 0;
     if (selectedCount > 0) {
       CreateModuleState.sequenceState.exitMultiSelectMode();
     }

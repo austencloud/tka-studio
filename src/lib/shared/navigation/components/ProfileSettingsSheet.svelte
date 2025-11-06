@@ -6,12 +6,7 @@
   Handles business logic and state management.
 -->
 <script lang="ts">
-  import {
-    Drawer,
-    resolve,
-    TYPES,
-    type IHapticFeedbackService,
-  } from "$shared";
+  import { Drawer, resolve, TYPES, type IHapticFeedbackService } from "$shared";
   import { authStore } from "$shared/auth";
   import { onMount } from "svelte";
   import { cubicOut } from "svelte/easing";
@@ -80,9 +75,12 @@
       const tabParam = urlParams.get("tab");
       if (
         tabParam &&
-        ["personal", "security", "subscription", "achievements"].includes(tabParam)
+        ["personal", "security", "subscription", "achievements"].includes(
+          tabParam
+        )
       ) {
-        uiState.activeTab = tabParam as import("../state/profile-settings-state.svelte").SettingsTab;
+        uiState.activeTab =
+          tabParam as import("../state/profile-settings-state.svelte").SettingsTab;
       }
     }
   });
@@ -156,12 +154,9 @@
 
     // Determine swipe direction and navigate
     if (Math.abs(deltaX) > swipeThreshold) {
-      const tabs: Array<import("../state/profile-settings-state.svelte").SettingsTab> = [
-        "personal",
-        "security",
-        "subscription",
-        "achievements",
-      ];
+      const tabs: Array<
+        import("../state/profile-settings-state.svelte").SettingsTab
+      > = ["personal", "security", "subscription", "achievements"];
       const currentIndex = tabs.indexOf(uiState.activeTab);
       const prevTab = tabs[currentIndex - 1];
       const nextTab = tabs[currentIndex + 1];
@@ -186,12 +181,9 @@
       event.preventDefault();
       hapticService?.trigger("selection");
 
-      const tabs: Array<import("../state/profile-settings-state.svelte").SettingsTab> = [
-        "personal",
-        "security",
-        "subscription",
-        "achievements",
-      ];
+      const tabs: Array<
+        import("../state/profile-settings-state.svelte").SettingsTab
+      > = ["personal", "security", "subscription", "achievements"];
       const currentIndex = tabs.indexOf(tabName);
       let newIndex: number;
 
@@ -383,7 +375,7 @@
 <Drawer
   {isOpen}
   labelledBy="profile-settings-title"
-  on:close={onClose}
+  onclose={onClose}
   class="profile-settings-sheet profile-settings-sheet--full-height"
   backdropClass="profile-settings-sheet__backdrop"
 >

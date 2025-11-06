@@ -14,15 +14,15 @@ HMR Test: Nested component change test
   import type { BeatData } from "$create/workspace-panel";
   import type { IDeviceDetector, IHapticFeedbackService } from "$shared";
   import { Drawer, resolve, TYPES } from "$shared";
-  import { onDestroy, onMount } from 'svelte';
-  import BatchEditLayout from './BatchEditLayout.svelte';
-  import EditPanelLayout from './EditPanelLayout.svelte';
-  import EditSlidePanelHeader from './EditSlidePanelHeader.svelte';
-  import PictographAdjustmentEditorPanel from './PictographAdjustmentEditorPanel.svelte';
+  import { onDestroy, onMount } from "svelte";
+  import BatchEditLayout from "./BatchEditLayout.svelte";
+  import EditPanelLayout from "./EditPanelLayout.svelte";
+  import EditSlidePanelHeader from "./EditSlidePanelHeader.svelte";
+  import PictographAdjustmentEditorPanel from "./PictographAdjustmentEditorPanel.svelte";
 
   // Props
   const {
-    isOpen = false,
+    isOpen: isOpenProp = false,
     onClose,
     selectedBeatNumber,
     selectedBeatData,
@@ -47,6 +47,14 @@ HMR Test: Nested component change test
     onRemoveBeat?: (beatNumber: number) => void; // Remove beat callback
   }>();
 
+  // Local state for isOpen (bindable to Drawer)
+  let isOpen = $state(isOpenProp);
+
+  // Sync local isOpen with prop changes
+  $effect(() => {
+    isOpen = isOpenProp;
+  });
+
   // ============================================================================
   // SERVICES
   // ============================================================================
@@ -62,9 +70,6 @@ HMR Test: Nested component change test
   let isAdjustmentPanelOpen = $state(false);
   let adjustedBeatData = $state<BeatData | null>(null);
 
-  // Component refs
-  let editPanelLayoutRef: EditPanelLayout | null = $state(null);
-
   // ============================================================================
   // DERIVED STATE
   // ============================================================================
@@ -79,13 +84,12 @@ HMR Test: Nested component change test
   // Device detection using service
   const isMobile = $derived(() => deviceDetector?.isMobile() ?? false);
 
-
   // Calculate panel height dynamically to match tool panel + button panel
   const panelHeightStyle = $derived(() => {
     if (combinedPanelHeight > 0) {
       return `height: ${combinedPanelHeight}px;`;
     }
-    return 'height: 70vh;';
+    return "height: 70vh;";
   });
 
   // Determine if we should show the remove beat button
@@ -104,7 +108,7 @@ HMR Test: Nested component change test
 
   // Keyboard handler
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape' && isOpen) {
+    if (event.key === "Escape" && isOpen) {
       event.preventDefault();
       handleClose();
     }
@@ -112,10 +116,47 @@ HMR Test: Nested component change test
 
   // Close handler with haptic feedback
   function handleClose() {
-    hapticService?.trigger('selection');
+    console.log("🟣 EditSlidePanel handleClose called");
+    hapticService?.trigger("selection");
     onClose();
+    console.log("🟣 EditSlidePanel onClose() completed");
   }
 
+  // Custom backdrop click handler
+  // Returns true to close panel, false to keep it open
+  function handleBackdropClick(event: MouseEvent): boolean {
+    console.log("🟣 EditSlidePanel handleBackdropClick called");
+
+    // Get the element at the click coordinates (beneath the backdrop)
+    // We need to temporarily hide the backdrop to see what's underneath
+    const backdrop = event.target as HTMLElement;
+    backdrop.style.pointerEvents = 'none';
+    const elementBeneath = document.elementFromPoint(event.clientX, event.clientY);
+    backdrop.style.pointerEvents = 'auto';
+
+    console.log("🟣 Element beneath backdrop:", elementBeneath);
+
+    // Check if the element beneath is a beat cell or within a beat cell
+    const isBeatClick = elementBeneath?.closest(
+      '.beat-cell, .start-tile, [role="button"][title*="Beat"], [role="button"][title="Start Position"]'
+    );
+
+    if (isBeatClick) {
+      // Clicking on a beat - don't close panel, let the beat's click handler run
+      console.log("🟣 EditSlidePanel: Beat click detected, keeping panel open");
+
+      // Trigger the click on the element beneath
+      if (elementBeneath instanceof HTMLElement) {
+        elementBeneath.click();
+      }
+
+      return false;
+    }
+
+    // Clicking elsewhere - close the panel
+    console.log("🟣 EditSlidePanel: Non-beat click detected, closing panel");
+    return true;
+  }
 
   // Handle remove beat click
   function handleRemoveBeat() {
@@ -127,14 +168,17 @@ HMR Test: Nested component change test
 
   // Handle adjust arrows click
   function handleAdjustArrows() {
-    hapticService?.trigger('selection');
+    hapticService?.trigger("selection");
     adjustedBeatData = selectedBeatData;
     isAdjustmentPanelOpen = true;
   }
 
   // Handle beat data updates from arrow adjustments
   function handleBeatDataUpdate(updatedBeatData: BeatData) {
-    console.log('[EditSlidePanel] Beat data updated with manual adjustments:', updatedBeatData);
+    console.log(
+      "[EditSlidePanel] Beat data updated with manual adjustments:",
+      updatedBeatData
+    );
     adjustedBeatData = updatedBeatData;
   }
 
@@ -144,33 +188,36 @@ HMR Test: Nested component change test
 
   onMount(() => {
     // Resolve services
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
     deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
 
     // Add keyboard listener
-    window.addEventListener('keydown', handleKeydown);
+    window.addEventListener("keydown", handleKeydown);
 
     return () => {
-      window.removeEventListener('keydown', handleKeydown);
+      window.removeEventListener("keydown", handleKeydown);
     };
   });
 
   onDestroy(() => {
-    window.removeEventListener('keydown', handleKeydown);
+    window.removeEventListener("keydown", handleKeydown);
   });
 
   // Trigger haptic when panel opens
   $effect(() => {
     if (isOpen) {
-      hapticService?.trigger('selection');
+      hapticService?.trigger("selection");
     }
   });
 </script>
 
 <Drawer
-  isOpen={isOpen}
+  bind:isOpen
   labelledBy="edit-panel-title"
-  on:close={handleClose}
+  onclose={handleClose}
+  onbackdropclick={handleBackdropClick}
   closeOnBackdrop={true}
   focusTrap={false}
   lockScroll={false}
@@ -204,7 +251,6 @@ HMR Test: Nested component change test
         />
       {:else}
         <EditPanelLayout
-          bind:this={editPanelLayoutRef}
           selectedBeatIndex={selectedBeatNumber}
           {selectedBeatData}
           {onOrientationChanged}
@@ -227,31 +273,17 @@ HMR Test: Nested component change test
 />
 
 <style>
-  /* Use unified sheet system variables - transparent backdrop to allow workspace interaction */
-  :global(.bottom-sheet.edit-panel-container) {
-    --sheet-backdrop-bg: transparent;
-    --sheet-backdrop-filter: none;
-    --sheet-backdrop-pointer-events: none;
-    --sheet-bg: var(--sheet-bg-transparent);
-    --sheet-border: none;
-    --sheet-shadow: none;
-    --sheet-pointer-events: auto;
+  /* Drawer-specific styling for edit panel */
+  :global(.drawer-content.edit-panel-container) {
     --sheet-width: min(600px, 90vw);
     --sheet-max-height: none;
   }
 
-  /* Make backdrop completely invisible and non-interactive */
-  :global(.bottom-sheet.edit-panel-container .bottom-sheet-backdrop) {
-    background: transparent !important;
-    backdrop-filter: none !important;
-    pointer-events: none !important;
-  }
-
-  :global(.bottom-sheet.edit-panel-container[data-placement="bottom"]) {
+  :global(.drawer-content.edit-panel-container[data-placement="bottom"]) {
     --sheet-width: 100%;
   }
 
-  :global(.bottom-sheet.edit-panel-container[data-placement="right"]) {
+  :global(.drawer-content.edit-panel-container[data-placement="right"]) {
     --sheet-max-height: 90vh;
   }
 

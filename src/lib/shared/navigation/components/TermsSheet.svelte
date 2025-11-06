@@ -2,12 +2,7 @@
   TermsSheet.svelte - Terms of Service Bottom Sheet
 -->
 <script lang="ts">
-  import {
-    Drawer,
-    resolve,
-    TYPES,
-    type IHapticFeedbackService,
-  } from "$shared";
+  import { Drawer, resolve, TYPES, type IHapticFeedbackService } from "$shared";
   import { onMount } from "svelte";
 
   // Props
@@ -34,7 +29,7 @@
 <Drawer
   {isOpen}
   labelledBy="terms-sheet-title"
-  on:close={onClose}
+  onclose={onClose}
   class="terms-sheet"
   backdropClass="terms-sheet__backdrop"
 >

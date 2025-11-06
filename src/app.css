@@ -151,63 +151,13 @@ h6 {
   --spacing-2xl: 3rem;
 
   /* Device Detection Service Variables */
-  --min-touch-target: 44px;
   --element-spacing: 16px;
-  --font-scaling: 1;
-  --layout-density: comfortable;
 
   /* Colors - Dark theme by default */
   --background: #0a0a0a;
   --foreground: #ffffff;
   --muted: #525252;
   --muted-foreground: #a3a3a3;
-
-  /* Adaptive Dropdown Colors - Match Background Types */
-  --dropdown-bg-nightSky: linear-gradient(
-    135deg,
-    rgba(8, 12, 23, 1) 0%,
-    rgba(15, 23, 42, 1) 100%
-  );
-  --dropdown-bg-aurora: linear-gradient(
-    135deg,
-    rgba(35, 4, 59, 1) 0%,
-    rgba(59, 7, 100, 1) 100%
-  );
-  --dropdown-bg-snowfall: linear-gradient(
-    135deg,
-    rgba(248, 250, 252, 1) 0%,
-    rgba(241, 245, 249, 1) 100%
-  );
-  --dropdown-bg-deepOcean: linear-gradient(
-    135deg,
-    rgba(7, 44, 66, 1) 0%,
-    rgba(12, 74, 110, 1) 100%
-  );
-
-  --dropdown-text-nightSky: #f8fafc;
-  --dropdown-text-aurora: #faf5ff;
-  --dropdown-text-snowfall: #1e293b;
-  --dropdown-text-deepOcean: #f0f9ff;
-
-  --dropdown-description-nightSky: #cbd5e1;
-  --dropdown-description-aurora: #ddd6fe;
-  --dropdown-description-snowfall: #64748b;
-  --dropdown-description-deepOcean: #bae6fd;
-
-  --dropdown-hover-nightSky: rgba(30, 41, 59, 0.9);
-  --dropdown-hover-aurora: rgba(88, 28, 135, 0.9);
-  --dropdown-hover-snowfall: rgba(226, 232, 240, 0.8);
-  --dropdown-hover-deepOcean: rgba(12, 74, 110, 0.9);
-
-  --dropdown-border-nightSky: 1px solid rgba(99, 102, 241, 0.4);
-  --dropdown-border-aurora: 1px solid rgba(168, 85, 247, 0.4);
-  --dropdown-border-snowfall: 1px solid rgba(148, 163, 184, 0.4);
-  --dropdown-border-deepOcean: 1px solid rgba(6, 182, 212, 0.4);
-
-  --dropdown-current-nightSky: rgba(59, 130, 246, 0.2);
-  --dropdown-current-aurora: rgba(168, 85, 247, 0.3);
-  --dropdown-current-snowfall: rgba(59, 130, 246, 0.2);
-  --dropdown-current-deepOcean: rgba(6, 182, 212, 0.2);
 
   /* Option Picker Header Colors - Match Background Types */
   --header-bg-nightSky: linear-gradient(
@@ -240,14 +190,6 @@ h6 {
   --header-text-aurora: #1a1a1a;
   --header-text-snowfall: #1a1a1a;
   --header-text-deepOcean: #1a1a1a;
-
-  /* Current active dropdown theme (defaults to nightSky) */
-  --dropdown-bg-current: var(--dropdown-bg-nightSky);
-  --dropdown-text-current: var(--dropdown-text-nightSky);
-  --dropdown-description-current: var(--dropdown-description-nightSky);
-  --dropdown-hover-current: var(--dropdown-hover-nightSky);
-  --dropdown-border-current: var(--dropdown-border-nightSky);
-  --dropdown-current-current: var(--dropdown-current-nightSky);
 
   /* Current active header theme (defaults to nightSky) */
   --header-bg-current: var(--header-bg-nightSky);
@@ -344,7 +286,7 @@ h6 {
 
   /* ========================================
      SHEET SYSTEM - Design Tokens
-     Unified styling for BottomSheet components
+     Unified styling for Drawer components
      ======================================== */
 
   /* Z-Index Hierarchy */
@@ -535,91 +477,7 @@ body.aurora-flow {
    - Snow accumulation effect
    All rendering handled by SnowflakeSystem.ts */
 
-body.bubble-float {
-  position: relative;
-  overflow: hidden;
-}
-
-body.bubble-float::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(
-      circle at 30px 140px,
-      rgba(255, 255, 255, 0.4) 3px,
-      transparent 4px
-    ),
-    radial-gradient(
-      circle at 80px 160px,
-      rgba(255, 255, 255, 0.3) 5px,
-      transparent 6px
-    ),
-    radial-gradient(
-      circle at 120px 120px,
-      rgba(255, 255, 255, 0.35) 2px,
-      transparent 3px
-    ),
-    radial-gradient(
-      circle at 170px 180px,
-      rgba(255, 255, 255, 0.4) 4px,
-      transparent 5px
-    ),
-    radial-gradient(
-      circle at 220px 140px,
-      rgba(255, 255, 255, 0.25) 3px,
-      transparent 4px
-    ),
-    radial-gradient(
-      circle at 60px 100px,
-      rgba(255, 255, 255, 0.3) 2px,
-      transparent 3px
-    ),
-    radial-gradient(
-      circle at 200px 60px,
-      rgba(255, 255, 255, 0.4) 6px,
-      transparent 7px
-    );
-  background-size: 250px 200px;
-  animation: bubble-rise 8s ease-in-out infinite;
-  opacity: 0.8;
-  pointer-events: none;
-  z-index: -1;
-}
-
-body.bubble-float::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    linear-gradient(
-      120deg,
-      transparent 0%,
-      rgba(64, 224, 208, 0.1) 30%,
-      transparent 50%
-    ),
-    linear-gradient(
-      60deg,
-      transparent 20%,
-      rgba(135, 206, 250, 0.15) 60%,
-      transparent 80%
-    );
-  background-size:
-    200px 100%,
-    300px 100%;
-  animation: underwater-light 10s ease-in-out infinite;
-  opacity: 0.6;
-  pointer-events: none;
-  z-index: -1;
-}
-
-/* Deep Ocean Flow - Similar to bubble-float but without the rotating overlay */
+/* Deep Ocean Flow */
 body.deep-ocean-flow {
   position: relative;
   overflow: hidden;
@@ -742,35 +600,4 @@ body.deep-ocean-flow::before {
 :focus-visible {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
-}
-
-/* SIMPLIFIED: Standard responsive design instead of complex device detection */
-.touch-target {
-  min-height: 44px;
-  min-width: 44px;
-}
-
-.responsive-layout {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-}
-
-/* Simple responsive adjustments */
-@media (max-width: 768px) {
-  .touch-target {
-    min-height: 48px;
-    min-width: 48px;
-  }
-
-  .responsive-layout {
-    gap: 12px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-}
-
-@container (min-width: 900px) {
-  .responsive-layout {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
 }

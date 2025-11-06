@@ -1,12 +1,18 @@
 <!--
   Drawer.svelte - Wrapper around vaul-svelte with backward-compatible API
 
-  Provides the same API as the old BottomSheet component for easy migration.
   Built on vaul-svelte for improved gesture handling and accessibility.
+
+  RESPONSIVE LAYOUT SUPPORT:
+  - Mobile/stacked layout: Drawer slides up from bottom, full width
+  - Desktop/side-by-side layout: Drawer slides up from bottom, constrained to right half
+  - Uses ResponsiveLayoutService to detect layout mode
 -->
 <script lang="ts">
   import { Drawer as VaulDrawer } from "vaul-svelte";
-  import { createEventDispatcher } from "svelte";
+  import { onMount } from "svelte";
+  import { resolve, TYPES } from "$shared/inversify";
+  import type { IResponsiveLayoutService } from "$lib/modules/create/shared/services/contracts/IResponsiveLayoutService";
 
   type CloseReason = "backdrop" | "escape" | "programmatic";
 
@@ -23,6 +29,9 @@
     class: drawerClass = "",
     backdropClass = "",
     placement = "bottom",
+    respectLayoutMode = false, // NEW: Enable responsive layout behavior
+    onclose, // Svelte 5 event callback
+    onbackdropclick, // Custom backdrop click handler
     children,
   } = $props<{
     isOpen?: boolean;
@@ -37,29 +46,71 @@
     class?: string;
     backdropClass?: string;
     placement?: "bottom" | "top" | "right" | "left";
+    respectLayoutMode?: boolean; // Enable responsive layout behavior
+    onclose?: (event: CustomEvent<{ reason: CloseReason }>) => void; // Svelte 5 event callback
+    onbackdropclick?: (event: MouseEvent) => boolean; // Return true to close, false to keep open
     children?: () => unknown;
   }>();
 
-  const dispatch = createEventDispatcher<{
-    close: { reason: CloseReason };
-  }>();
-
   let lastOpenState = false;
+  let layoutService: IResponsiveLayoutService | null = null;
+  let isSideBySideLayout = $state(false);
+
+  // Initialize layout service if responsive layout is enabled
+  onMount(() => {
+    if (respectLayoutMode) {
+      try {
+        layoutService = resolve(
+          TYPES.IResponsiveLayoutService
+        ) as IResponsiveLayoutService;
+      } catch (error) {
+        console.warn(
+          "ResponsiveLayoutService not available, using default layout"
+        );
+      }
+    }
+  });
+
+  // Reactive layout detection
+  $effect(() => {
+    if (respectLayoutMode && layoutService) {
+      isSideBySideLayout = layoutService.shouldUseSideBySideLayout();
+    }
+  });
+
+  function emitClose(reason: CloseReason) {
+    // Call the onclose callback if provided
+    if (onclose) {
+      onclose(new CustomEvent("close", { detail: { reason } }));
+    }
+  }
 
   function handleOpenChange(open: boolean) {
+    // Update the bindable isOpen prop
     isOpen = open;
 
     // Emit close event when drawer closes
     if (lastOpenState && !open) {
-      dispatch("close", { reason: "programmatic" });
+      emitClose("programmatic");
     }
 
     lastOpenState = open;
   }
 
-  function handleBackdropClick() {
+  function handleBackdropClick(event: MouseEvent) {
+    // If custom handler provided, use it to determine whether to close
+    if (onbackdropclick) {
+      const shouldClose = onbackdropclick(event);
+      if (shouldClose) {
+        emitClose("backdrop");
+        isOpen = false;
+      }
+      return;
+    }
+
+    // Default behavior
     if (closeOnBackdrop) {
-      dispatch("close", { reason: "backdrop" });
+      emitClose("backdrop");
       isOpen = false;
     }
   }
@@ -68,7 +119,7 @@
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === "Escape" && closeOnEscape && isOpen) {
       event.preventDefault();
-      dispatch("close", { reason: "escape" });
+      emitClose("escape");
       isOpen = false;
     }
   }
@@ -87,11 +138,11 @@
 >
   <VaulDrawer.Portal>
     <VaulDrawer.Overlay
-      class={`drawer-overlay ${backdropClass}`.trim()}
+      class={`drawer-overlay ${backdropClass} ${respectLayoutMode && isSideBySideLayout ? "side-by-side-layout" : ""}`.trim()}
       onclick={handleBackdropClick}
     />
     <VaulDrawer.Content
-      class={`drawer-content ${drawerClass}`.trim()}
+      class={`drawer-content ${drawerClass} ${respectLayoutMode && isSideBySideLayout ? "side-by-side-layout" : ""}`.trim()}
       data-placement={placement}
       {role}
       aria-modal="true"
@@ -114,15 +165,22 @@
     position: fixed;
     inset: 0;
     z-index: calc(var(--sheet-z-index, var(--sheet-z-base, 50)) - 1) !important;
-    background: var(--sheet-backdrop-bg, var(--backdrop-medium, rgba(0, 0, 0, 0.5)));
-    backdrop-filter: var(--sheet-backdrop-filter, var(--backdrop-blur-medium, blur(8px)));
+    background: var(
+      --sheet-backdrop-bg,
+      var(--backdrop-medium, rgba(0, 0, 0, 0.5))
+    );
+    backdrop-filter: var(
+      --sheet-backdrop-filter,
+      var(--backdrop-blur-medium, blur(8px))
+    );
   }
 
-  /* Edit panel backdrop - completely transparent */
+  /* Edit panel backdrop - completely transparent but interactive for click detection */
   :global(.drawer-overlay.edit-panel-backdrop) {
     background: transparent !important;
     backdrop-filter: none !important;
-    pointer-events: none !important;
+    /* Keep pointer-events enabled so backdrop clicks are detected */
+    pointer-events: auto !important;
   }
 
   /* Drawer content container */
@@ -135,9 +193,18 @@
 
     /* Default styling for bottom placement */
     background: var(--sheet-bg, var(--sheet-bg-glass, rgba(20, 25, 35, 0.95)));
-    backdrop-filter: var(--sheet-filter, var(--glass-backdrop-strong, blur(24px)));
-    border: var(--sheet-border, var(--sheet-border-subtle, 1px solid rgba(255, 255, 255, 0.1)));
-    box-shadow: var(--sheet-shadow, var(--sheet-shadow-bottom, 0 -4px 24px rgba(0, 0, 0, 0.3)));
+    backdrop-filter: var(
+      --sheet-filter,
+      var(--glass-backdrop-strong, blur(24px))
+    );
+    border: var(
+      --sheet-border,
+      var(--sheet-border-subtle, 1px solid rgba(255, 255, 255, 0.1))
+    );
+    box-shadow: var(
+      --sheet-shadow,
+      var(--sheet-shadow-bottom, 0 -4px 24px rgba(0, 0, 0, 0.3))
+    );
   }
 
   /* Bottom placement */
@@ -146,11 +213,37 @@
     left: 0;
     right: 0;
     width: var(--sheet-width, min(720px, 100%));
-    max-height: var(--sheet-max-height, min(95vh, var(--modal-max-height, 95vh)));
+    max-height: var(
+      --sheet-max-height,
+      min(95vh, var(--modal-max-height, 95vh))
+    );
     margin: 0 auto;
-    border-top-left-radius: var(--sheet-border-radius-top-left, var(--sheet-radius-large, 20px));
-    border-top-right-radius: var(--sheet-border-radius-top-right, var(--sheet-radius-large, 20px));
+    border-top-left-radius: var(
+      --sheet-border-radius-top-left,
+      var(--sheet-radius-large, 20px)
+    );
+    border-top-right-radius: var(
+      --sheet-border-radius-top-right,
+      var(--sheet-radius-large, 20px)
+    );
     border-bottom: none;
+  }
+
+  /* Side-by-side layout: Constrain drawer to right half of viewport */
+  :global(.drawer-overlay.side-by-side-layout) {
+    /* Backdrop only covers right half in side-by-side mode */
+    left: 50%;
+    right: 0;
+  }
+
+  :global(.drawer-content[data-placement="bottom"].side-by-side-layout) {
+    /* Position in right half of viewport */
+    left: 50%;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    /* Maintain bottom slide-up animation, but constrained to right half */
   }
 
   /* Top placement */
@@ -159,7 +252,10 @@
     left: 0;
     right: 0;
     width: var(--sheet-width, min(720px, 100%));
-    max-height: var(--sheet-max-height, min(95vh, var(--modal-max-height, 95vh)));
+    max-height: var(
+      --sheet-max-height,
+      min(95vh, var(--modal-max-height, 95vh))
+    );
     margin: 0 auto;
     border-bottom-left-radius: var(--sheet-radius-large, 20px);
     border-bottom-right-radius: var(--sheet-radius-large, 20px);
@@ -173,7 +269,10 @@
     bottom: 0;
     height: 100vh;
     width: var(--sheet-width, min(600px, 90vw));
-    border-left: var(--sheet-border-strong, 2px solid rgba(255, 255, 255, 0.15));
+    border-left: var(
+      --sheet-border-strong,
+      2px solid rgba(255, 255, 255, 0.15)
+    );
     border-right: none;
     border-top-left-radius: var(--sheet-radius-large, 20px);
     border-bottom-left-radius: var(--sheet-radius-large, 20px);
@@ -186,7 +285,10 @@
     bottom: 0;
     height: 100vh;
     width: var(--sheet-width, min(600px, 90vw));
-    border-right: var(--sheet-border-strong, 2px solid rgba(255, 255, 255, 0.15));
+    border-right: var(
+      --sheet-border-strong,
+      2px solid rgba(255, 255, 255, 0.15)
+    );
     border-left: none;
     border-top-right-radius: var(--sheet-radius-large, 20px);
     border-bottom-right-radius: var(--sheet-radius-large, 20px);

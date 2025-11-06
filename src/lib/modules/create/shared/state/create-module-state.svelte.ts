@@ -742,5 +742,76 @@ export function createCreateModuleState(
     // Persistence functions
     initializeWithPersistence,
     saveCurrentState,
+
+    // ============================================================================
+    // COMPUTED HELPERS FOR UI DERIVED STATE
+    // ============================================================================
+
+    /**
+     * Check if workspace is empty (no beats and no start position)
+     */
+    isWorkspaceEmpty(): boolean {
+      if (!sequenceState) return true;
+      const beatCount = sequenceState.currentSequence?.beats?.length ?? 0;
+      const hasStart = sequenceState.hasStartPosition;
+      return beatCount === 0 && !hasStart;
+    },
+
+    /**
+     * Check if start position is selected
+     */
+    hasStartPosition(): boolean {
+      return sequenceState?.hasStartPosition ?? false;
+    },
+
+    /**
+     * Get current beat count (actual motion beats, not including start)
+     */
+    getCurrentBeatCount(): number {
+      return sequenceState?.currentSequence?.beats?.length ?? 0;
+    },
+
+    /**
+     * Check if action buttons (play/share/actions) should be shown
+     * Requires at least one motion beat
+     */
+    canShowActionButtons(): boolean {
+      return this.getCurrentBeatCount() >= 1;
+    },
+
+    /**
+     * Determine creation cue mood based on state
+     * @param hasSelectedCreationMethod - Whether user has selected a creation method in this session
+     */
+    getCreationCueMood(hasSelectedCreationMethod: boolean): 'default' | 'redo' | 'returning' | 'fresh' {
+      const undoCount = undoService.undoHistory.length;
+      if (!hasSelectedCreationMethod && undoCount > 0) {
+        return 'redo';
+      }
+
+      if (this.hasStartPosition()) {
+        return 'returning';
+      }
+
+      return 'fresh';
+    },
+
+    /**
+     * Check if sequence can be cleared
+     * Returns true if user selected creation method OR sequence has content
+     * @param hasSelectedCreationMethod - Whether user has selected a creation method in this session
+     */
+    canClearSequence(hasSelectedCreationMethod: boolean): boolean {
+      // Show if user just selected a creation method in this session
+      if (hasSelectedCreationMethod) return true;
+
+      // Show if there's already sequence content (persisted state)
+      if (this.hasStartPosition()) return true;
+
+      // Show if there are beats (even without start position)
+      if (this.getCurrentBeatCount() > 0) return true;
+
+      return false;
+    },
   };
 }

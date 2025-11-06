@@ -73,6 +73,18 @@
     }
   });
 
+  // Effect: Sync local selection with sequenceState selection
+  // This ensures UI updates when selection is cleared via edit panel close
+  $effect(() => {
+    if (!sequenceState) return;
+
+    const globalSelection = sequenceState.selectedBeatNumber;
+    // Only sync if animation isn't playing (animation takes precedence)
+    if (animatingBeatNumber === null) {
+      localSelectedBeatNumber = globalSelection;
+    }
+  });
+
   // Multi-select state - use the actual mode from selection state
   const isMultiSelectMode = $derived(sequenceState?.isMultiSelectMode ?? false);
   const selectionCount = $derived(sequenceState?.selectionCount ?? 0);

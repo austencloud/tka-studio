@@ -121,6 +121,11 @@
           {nextHandButtonText}
           <i class="fas fa-arrow-right"></i>
         </button>
+      {:else if onGridModeChange}
+        <GridModeToggle
+          currentGridMode={currentGridMode}
+          onGridModeChange={onGridModeChange}
+        />
       {/if}
     </div>
   {/if}

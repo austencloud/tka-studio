@@ -92,7 +92,7 @@
   }
 </script>
 
-<BottomSheet
+<Drawer
   {isOpen}
   labelledBy="profile-sheet-title"
   on:close={onClose}
@@ -213,7 +213,7 @@
       </div>
     {/if}
   </div>
-</BottomSheet>
+</Drawer>
 
 <style>
   /* ============================================================================

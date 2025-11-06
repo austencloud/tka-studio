@@ -104,6 +104,11 @@ export function createSequenceSelectionState() {
 
     // Selection operations
     selectBeat(beatNumber: number | null) {
+      console.log('🔵 selectBeat called:', {
+        beatNumber,
+        previousValue: state.selectedBeatNumber,
+        stackTrace: new Error().stack
+      });
       state.selectedBeatNumber = beatNumber;
     },
 
@@ -112,6 +117,10 @@ export function createSequenceSelectionState() {
     },
 
     clearSelection() {
+      console.log('🟡 clearSelection called:', {
+        previousValue: state.selectedBeatNumber,
+        stackTrace: new Error().stack
+      });
       state.selectedBeatNumber = null;
     },
 

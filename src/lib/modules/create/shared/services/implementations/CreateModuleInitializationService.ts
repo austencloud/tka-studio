@@ -128,6 +128,15 @@ export class CreateModuleInitializationService implements ICreateModuleInitializ
     };
   }
 
+  configureClearSequenceCallback(CreateModuleState: any, constructTabState: any): void {
+    // Set up clear sequence callback (to ensure UI state is properly updated)
+    CreateModuleState.setClearSequenceCompletelyCallback(async () => {
+      if (constructTabState?.clearSequenceCompletely) {
+        await constructTabState.clearSequenceCompletely();
+      }
+    });
+  }
+
   async loadStartPositions(gridMode: GridMode): Promise<void> {
     if (!this.startPositionService) {
       throw new Error("Start position service not initialized");

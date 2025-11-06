@@ -5,12 +5,7 @@
   Maintains all existing settings logic and tab navigation.
 -->
 <script lang="ts">
-  import {
-    resolve,
-    TYPES,
-    type IHapticFeedbackService,
-    Drawer,
-  } from "$shared";
+  import { resolve, TYPES, type IHapticFeedbackService, Drawer } from "$shared";
   import { onMount } from "svelte";
   import {
     getSettings,
@@ -92,7 +87,10 @@
     // Instant save - apply changes immediately
     isSaving = true;
     const settingsToApply = $state.snapshot(settings);
-    console.log("💾 Auto-saving settings:", JSON.stringify(settingsToApply, null, 2));
+    console.log(
+      "💾 Auto-saving settings:",
+      JSON.stringify(settingsToApply, null, 2)
+    );
 
     await updateSettings(settingsToApply);
 
@@ -118,7 +116,7 @@
 <Drawer
   {isOpen}
   labelledBy="settings-sheet-title"
-  on:close={handleClose}
+  onclose={handleClose}
   class="settings-sheet"
   backdropClass="settings-sheet__backdrop"
   showHandle={true}

@@ -177,7 +177,7 @@
 
 <Drawer
   {isOpen}
-  on:close={handleClose}
+  onclose={handleClose}
   ariaLabel="Achievements & Challenges"
   class="achievements-sheet"
 >
@@ -202,8 +202,7 @@
         <button
           class="close-button"
           onclick={handleClose}
-          aria-label="Close achievements panel"
-          >×</button
+          aria-label="Close achievements panel">×</button
         >
       </div>
 
@@ -451,7 +450,10 @@
   /* Stats Section - Container-aware responsive grid */
   .stats-section {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(120px, 25cqi, 180px), 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(clamp(120px, 25cqi, 180px), 1fr)
+    );
     gap: clamp(8px, 2cqi, 16px);
     padding: clamp(12px, 3cqi, 24px);
   }

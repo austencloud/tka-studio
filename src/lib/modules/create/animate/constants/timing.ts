@@ -4,8 +4,7 @@
  */
 
 /**
- * Delay before loading animation to allow BottomSheet slide animation to complete
- * Should be slightly longer than BottomSheet transition (300ms)
+ * Delay before loading animation to allow Drawer slide animation to complete
  */
 export const ANIMATION_LOAD_DELAY_MS = 320;
 
