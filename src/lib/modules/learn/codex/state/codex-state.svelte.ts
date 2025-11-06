@@ -61,7 +61,7 @@ export function createCodexState() {
   );
 
   // Filtered pictographs by letter for row display
-  const filteredPictographsByLetter = $derived(() => {
+  const filteredPictographsByLetter = $derived.by(() => {
     if (!searchTerm) return pictographsByLetter;
 
     const result: Record<string, PictographData | null> = {};

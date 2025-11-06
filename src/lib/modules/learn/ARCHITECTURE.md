@@ -16,7 +16,6 @@ Learn Tab
 ├── Header (LearnTabHeader)
 │   ├── Concepts Tab 🎯
 │   ├── Drills Tab ⚡
-│   ├── Read Tab 📖
 │   └── [Letters] Button → Opens Codex Panel
 │
 ├── Concepts Tab Content
@@ -36,9 +35,6 @@ Learn Tab
 │   ├── Quiz Workspace (active quiz)
 │   └── Results View
 │
-├── Read Tab Content (ReadTab)
-│   └── PDF Flipbook (Level 1.pdf)
-│
 └── Codex Panel (CodexPanel)
     └── Slide-in from right with letter reference
 ```
@@ -50,7 +46,7 @@ Learn Tab
 - **Location**: `src/lib/modules/learn/LearnTab.svelte`
 - **Purpose**: Top-level coordinator for all learn modes
 - **Features**:
-  - Tab routing (Concepts / Drills / Read)
+  - Tab routing (Concepts / Drills)
   - Concept detail view routing
   - Codex panel state management
   - Syncs with navigationState for persistence
@@ -60,7 +56,7 @@ Learn Tab
 - **Location**: `src/lib/modules/learn/components/LearnTabHeader.svelte`
 - **Purpose**: Navigation header with sub-tabs and Codex button
 - **Features**:
-  - 3 sub-tabs with icons: Concepts 🎯 | Drills ⚡ | Read 📖
+  - 2 sub-tabs with icons: Concepts 🎯 | Drills ⚡
   - Animated active tab indicator (slide animation)
   - "Letters" button to open Codex panel
   - Haptic feedback on interactions
@@ -279,8 +275,7 @@ The Learn module integrates with the global navigation state:
 // Learn modes are defined in navigationState
 export const LEARN_MODES: ModeOption[] = [
   { id: "concepts", label: "Concepts", ... },
-  { id: "drills", label: "Drills", ... },
-  { id: "read", label: "Read", ... }
+  { id: "drills", label: "Drills", ... }
 ];
 
 // Current mode persists to localStorage
@@ -305,15 +300,6 @@ CodexPanel embeds the existing CodexComponent which uses ICodexService:
 - Pictograph grid display
 - Filtering and search
 - Pictograph selection callbacks
-
-### 4. PDF Flipbook
-
-ReadTab remains unchanged, displaying Level 1.pdf with:
-
-- Page turning animations
-- Zoom controls
-- Page navigation
-- Bookmark support
 
 ## User Flow
 
@@ -433,7 +419,6 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 - [ ] Click concept card → Opens detail view
 - [ ] Back button → Returns to path view
 - [ ] Drills tab shows existing quiz selector
-- [ ] Read tab shows PDF flipbook
 - [ ] Letters button opens Codex panel
 - [ ] Codex panel slides in from right
 - [ ] Click backdrop → Closes Codex panel
@@ -467,7 +452,6 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ### Optimizations Implemented
 
 - **Component Reuse**: Tab panels use `display: none` instead of conditional rendering to preserve state
-- **Background PDF Loading**: PDF loads in background on mount for instant ReadTab access
 - **Lazy Rendering**: ConceptDetailView only renders when concept is selected
 - **Hardware Acceleration**: All animations use transform/opacity for GPU acceleration
 - **Subscription Pattern**: ConceptProgressService notifies subscribers only on changes
@@ -475,7 +459,7 @@ ReadTab remains unchanged, displaying Level 1.pdf with:
 ### Future Optimizations
 
 - Virtual scrolling for concept list (when >50 concepts)
-- Code splitting for Read/Quiz tabs (lazy load on tab switch)
+- Code splitting for Quiz tab (lazy load on tab switch)
 - Image lazy loading for concept icons
 - Service worker for offline progress sync
 

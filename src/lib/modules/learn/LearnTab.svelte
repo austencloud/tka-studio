@@ -1,10 +1,9 @@
 <!--
 Learn Tab - Master learning interface
 
-Three learning destinations:
+Two learning destinations:
 - Concepts: Progressive concept mastery path
 - Drills: Quick pictograph flash card quizzes
-- Read: Beautiful PDF flipbook reader
 
 Navigation via bottom tabs (mobile-first UX pattern)
 Plus floating Codex button for quick letter reference
@@ -21,14 +20,14 @@ Plus floating Codex button for quick letter reference
   import ConceptDetailView from "./components/ConceptDetailView.svelte";
   import CodexPanel from "./components/CodexPanel.svelte";
   import QuizTab from "./quiz/components/QuizTab.svelte";
-  import ReadTab from "./read/components/ReadTab.svelte";
-  import { persistentPDFState } from "./read/state";
   import { getConceptById, type LearnConcept } from "./domain";
 
-  type LearnMode = "concepts" | "drills" | "read";
+  type LearnMode = "concepts" | "drills";
 
   // Props
-  let { onHeaderChange }: {
+  let {
+    onHeaderChange,
+  }: {
     onHeaderChange?: (header: string) => void;
   } = $props();
 
@@ -58,8 +57,6 @@ Plus floating Codex button for quick letter reference
       activeMode = "concepts";
     } else if (navMode === "quiz" || navMode === "drills") {
       activeMode = "drills";
-    } else if (navMode === "read") {
-      activeMode = "read";
     }
   });
 
@@ -84,8 +81,6 @@ Plus floating Codex button for quick letter reference
       }
     } else if (activeMode === "drills") {
       header = "Select a Quiz";
-    } else if (activeMode === "read") {
-      header = "Read";
     }
 
     onHeaderChange(header);
@@ -97,13 +92,6 @@ Plus floating Codex button for quick letter reference
     const navMode = navigationState.currentLearnMode;
     if (!navMode || navMode === "codex") {
       navigationState.setLearnMode("concepts");
-    }
-
-    // Preload PDF in background for instant Read tab access
-    try {
-      await persistentPDFState.ensurePDFLoaded("/static/Level 1.pdf");
-    } catch (error) {
-      console.warn("📚 LearnTab: Background PDF load failed:", error);
     }
   });
 
@@ -148,11 +136,6 @@ Plus floating Codex button for quick letter reference
     <div class="mode-panel" class:active={isModeActive("drills")}>
       <QuizTab />
     </div>
-
-    <!-- Read Mode -->
-    <div class="mode-panel" class:active={isModeActive("read")}>
-      <ReadTab />
-    </div>
   </div>
 
   <!-- Floating Codex Button (top-right, thumb-reachable on mobile) -->
@@ -186,7 +169,6 @@ Plus floating Codex button for quick letter reference
     /* Enable container queries for responsive design */
     container-type: size;
     container-name: learn-tab;
-
   }
 
   /* Content container */
@@ -332,7 +314,8 @@ Plus floating Codex button for quick letter reference
     .floating-codex-button {
       /* Account for TopBar (dynamic height) + safe area + margin */
       top: calc(
-        var(--top-bar-height, 56px) + max(1rem, env(safe-area-inset-top) + 0.5rem)
+        var(--top-bar-height, 56px) +
+          max(1rem, env(safe-area-inset-top) + 0.5rem)
       );
       right: max(1rem, env(safe-area-inset-right) + 0.5rem);
     }

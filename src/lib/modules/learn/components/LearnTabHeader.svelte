@@ -2,7 +2,7 @@
 LearnTabHeader - Navigation header for Learn module
 
 Provides sub-tab navigation and quick access buttons:
-- Sub-tabs: Concepts | Drills | Read
+- Sub-tabs: Concepts | Drills
 - Codex button: Opens slide-in reference panel
 - Responsive: Tabs on desktop, compact on mobile
 
@@ -18,9 +18,9 @@ Features:
 
   interface Props {
     /** Currently active sub-tab */
-    activeTab?: "concepts" | "drills" | "read";
+    activeTab?: "concepts" | "drills";
     /** Callback when tab changes */
-    onTabChange?: (tab: "concepts" | "drills" | "read") => void;
+    onTabChange?: (tab: "concepts" | "drills") => void;
     /** Callback when codex button clicked */
     onCodexClick?: () => void;
   }
@@ -39,7 +39,6 @@ Features:
   const tabs = [
     { id: "concepts" as const, label: "Concepts", icon: "🎯" },
     { id: "drills" as const, label: "Drills", icon: "⚡" },
-    { id: "read" as const, label: "Read", icon: "📖" },
   ];
 
   // Handle tab click
@@ -194,7 +193,7 @@ Features:
     position: absolute;
     bottom: -1px;
     left: 0;
-    width: calc(100% / 3);
+    width: calc(100% / 2);
     height: 2px;
     background: var(--accent, #4a9eff);
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);

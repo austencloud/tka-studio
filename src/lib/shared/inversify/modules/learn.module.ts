@@ -13,10 +13,6 @@ import { QuizGradingService } from "../../../modules/learn/quiz/services/QuizGra
 import { QuizFeedbackService } from "../../../modules/learn/quiz/services/QuizFeedbackService";
 import { QuizAchievementService } from "../../../modules/learn/quiz/services/QuizAchievementService";
 import { QuizFormatterService } from "../../../modules/learn/quiz/services/QuizFormatterService";
-import {
-  FlipBookService,
-  PDFService,
-} from "../../../modules/learn/read/services/implementations";
 import { TYPES } from "../types";
 
 export const learnModule = new ContainerModule(
@@ -33,9 +29,5 @@ export const learnModule = new ContainerModule(
     options.bind(TYPES.IQuizFeedbackService).to(QuizFeedbackService);
     options.bind(TYPES.IQuizAchievementService).to(QuizAchievementService);
     options.bind(TYPES.IQuizFormatterService).to(QuizFormatterService);
-
-    // === READ SERVICES ===
-    options.bind(TYPES.IPDFService).to(PDFService);
-    options.bind(TYPES.IFlipBookService).to(FlipBookService);
   }
 );

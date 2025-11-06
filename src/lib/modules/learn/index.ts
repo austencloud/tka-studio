@@ -24,8 +24,5 @@ export * from "./codex";
 // Quiz subdomain (flash card drills)
 export * from "./quiz";
 
-// Read subdomain (PDF flipbook)
-export * from "./read";
-
 // Main tab component
 export * from "./LearnTab.svelte";
