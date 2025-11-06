@@ -59,7 +59,7 @@ matching the legacy desktop app's behavior.
   });
 
   // Derived state - get effective pictograph data with visibility applied
-  const effectivePictographData = $derived(() => {
+  const effectivePictographData = $derived.by(() => {
     // Force reactivity by accessing visibilityUpdateCount
     visibilityUpdateCount;
 

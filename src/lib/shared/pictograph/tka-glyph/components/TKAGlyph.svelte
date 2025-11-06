@@ -92,18 +92,18 @@ Uses pure runes instead of stores for reactivity.
   });
 
   // Derived state - check if we have a valid letter
-  const hasLetter = $derived(() => {
+  const hasLetter = $derived.by(() => {
     return letter != null && letter.trim() !== "";
   });
 
   // Check if letter dimensions are loaded (for TurnsColumn)
-  const dimensionsLoaded = $derived(
+  const dimensionsLoaded = $derived.by(
     () => letterDimensions.width > 0 && letterDimensions.height > 0
   );
 </script>
 
 <!-- TKA Glyph Group -->
-{#if hasLetter()}
+{#if hasLetter}
   <g
     class="tka-glyph"
     data-letter={letter}
@@ -122,13 +122,8 @@ Uses pure runes instead of stores for reactivity.
     />
 
     <!-- Turns Column - displays turn numbers to the right of the letter -->
-    {#if dimensionsLoaded()}
-      <TurnsColumn
-        {turnsTuple}
-        {letter}
-        {letterDimensions}
-        {pictographData}
-      />
+    {#if dimensionsLoaded}
+      <TurnsColumn {turnsTuple} {letter} {letterDimensions} {pictographData} />
     {/if}
   </g>
 {/if}

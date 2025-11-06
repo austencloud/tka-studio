@@ -238,9 +238,11 @@
 
   /* Side-by-side layout: Constrain drawer to right half of viewport */
   :global(.drawer-overlay.side-by-side-layout) {
-    /* Backdrop only covers right half in side-by-side mode */
-    left: 50%;
+    /* Backdrop only covers the panel region in side-by-side mode */
+    left: var(--create-panel-left, 50%);
     right: 0;
+    top: var(--create-panel-top, 0);
+    bottom: var(--create-panel-bottom, 0);
   }
 
   :global(.drawer-content[data-placement="bottom"].side-by-side-layout) {
@@ -283,6 +285,18 @@
     border-right: none;
     border-top-left-radius: var(--sheet-radius-large, 20px);
     border-bottom-left-radius: var(--sheet-radius-large, 20px);
+  }
+
+  :global(.drawer-content[data-placement="right"].side-by-side-layout) {
+    top: var(--create-panel-top, 0);
+    bottom: var(--create-panel-bottom, 0);
+    right: var(--create-panel-inset-right, 0);
+    height: auto;
+    max-height: none;
+    width: var(
+      --create-panel-width,
+      var(--sheet-width, min(600px, 90vw))
+    );
   }
 
   /* Left placement */

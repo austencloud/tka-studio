@@ -22,7 +22,7 @@ Based on the legacy BeatNumberLabel.svelte component architecture.
   }>();
 
   // Only render if conditions are met
-  const shouldRender = $derived(() => {
+  const shouldRender = $derived.by(() => {
     return (
       showBeatNumber &&
       !isStartPosition &&
@@ -34,12 +34,12 @@ Based on the legacy BeatNumberLabel.svelte component architecture.
 
   // Show "Start" text for beat number 0 (start position)
   // Note: showBeatNumber is false for start positions, but we still want to show "Start" text
-  const shouldRenderStartText = $derived(() => {
+  const shouldRenderStartText = $derived.by(() => {
     return hasValidData && beatNumber === 0;
   });
 
   // Get display text - either beat number or "Start"
-  const displayText = $derived(() => {
+  const displayText = $derived.by(() => {
     if (beatNumber === 0) {
       return "Start";
     }
@@ -47,7 +47,7 @@ Based on the legacy BeatNumberLabel.svelte component architecture.
   });
 </script>
 
-{#if shouldRender()}
+{#if shouldRender}
   <text
     x="50"
     y="50"
@@ -63,7 +63,7 @@ Based on the legacy BeatNumberLabel.svelte component architecture.
   >
     {beatNumber}
   </text>
-{:else if shouldRenderStartText()}
+{:else if shouldRenderStartText}
   <text
     x="50"
     y="50"
@@ -77,6 +77,6 @@ Based on the legacy BeatNumberLabel.svelte component architecture.
     stroke-width="5"
     paint-order="stroke"
   >
-    {displayText()}
+    {displayText}
   </text>
 {/if}

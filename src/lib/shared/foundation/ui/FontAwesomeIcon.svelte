@@ -24,7 +24,7 @@ Renders Font Awesome icons with customizable size, color, and style
   }>();
 
   // Map style to Font Awesome class
-  const styleClass = $derived(() => {
+  const styleClass = $derived.by(() => {
     switch (style) {
       case "regular":
         return "far";
@@ -37,7 +37,7 @@ Renders Font Awesome icons with customizable size, color, and style
   });
 
   // Build the full icon class
-  const iconClass = $derived(`${styleClass()} fa-${icon} ${className}`.trim());
+  const iconClass = $derived(`${styleClass} fa-${icon} ${className}`.trim());
 </script>
 
 <i

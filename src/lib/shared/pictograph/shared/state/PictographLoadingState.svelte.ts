@@ -27,19 +27,19 @@ export function createPictographLoadingState(
   let loadedComponents = $state(new Set<string>());
 
   // Derived loading states
-  const allComponentsLoaded = $derived(() => {
+  const allComponentsLoaded = $derived.by(() => {
     const required = requiredComponentsGetter();
     return required.every((component: string) =>
       loadedComponents.has(component)
     );
   });
 
-  const isLoading = $derived(() => {
-    return hasValidDataGetter() && !allComponentsLoaded();
+  const isLoading = $derived.by(() => {
+    return hasValidDataGetter() && !allComponentsLoaded;
   });
 
-  const isLoaded = $derived(() => {
-    return hasValidDataGetter() && allComponentsLoaded();
+  const isLoaded = $derived.by(() => {
+    return hasValidDataGetter() && allComponentsLoaded;
   });
 
   function handleComponentLoaded(componentName: string): void {

@@ -35,12 +35,12 @@ export function createPictographDataState(
   let pictographData = $state<PictographData | null>(initialPictographData);
 
   // Derived data transformation state
-  const dataState = $derived(() => {
+  const dataState = $derived.by(() => {
     return dataTransformationService.transformPictographData(pictographData);
   });
 
   // Derived component requirements
-  const requiredComponents = $derived(() => {
+  const requiredComponents = $derived.by(() => {
     return componentManagementService.getRequiredComponents(pictographData);
   });
 

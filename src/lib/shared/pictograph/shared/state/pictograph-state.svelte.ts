@@ -138,7 +138,7 @@ export function createPictographState(
     const newPropType = settings.propType;
 
     // Only trigger recalculation if prop type actually changed and we have valid data
-    if (newPropType !== currentPropType && dataState().hasValidData) {
+    if (newPropType !== currentPropType && dataState.hasValidData) {
       currentPropType = newPropType;
       calculatePropPositions();
     } else if (currentPropType === undefined) {
@@ -148,7 +148,7 @@ export function createPictographState(
   });
 
   // Derived data transformation state - only when services are ready
-  const dataState = $derived(() => {
+  const dataState = $derived.by(() => {
     if (!servicesInitialized || !dataTransformationService) {
       return {
         hasValidData: false,
@@ -160,7 +160,7 @@ export function createPictographState(
   });
 
   // Derived component requirements - only when services are ready
-  const requiredComponents = $derived(() => {
+  const requiredComponents = $derived.by(() => {
     if (!servicesInitialized || !componentManagementService) {
       return [];
     }
@@ -168,23 +168,23 @@ export function createPictographState(
   });
 
   // Derived loading states
-  const allComponentsLoaded = $derived(() => {
-    return requiredComponents().every((component: string) =>
+  const allComponentsLoaded = $derived.by(() => {
+    return requiredComponents.every((component: string) =>
       loadedComponents.has(component)
     );
   });
 
-  const isLoading = $derived(() => {
-    return dataState().hasValidData && !allComponentsLoaded();
+  const isLoading = $derived.by(() => {
+    return dataState.hasValidData && !allComponentsLoaded;
   });
 
-  const isLoaded = $derived(() => {
-    return dataState().hasValidData && allComponentsLoaded();
+  const isLoaded = $derived.by(() => {
+    return dataState.hasValidData && allComponentsLoaded;
   });
 
   // Effect to recalculate positions when data changes
   $effect(() => {
-    const currentData = dataState().effectivePictographData;
+    const currentData = dataState.effectivePictographData;
     if (currentData) {
       errorMessage = null;
 
@@ -217,7 +217,7 @@ export function createPictographState(
 
   // Actions
   async function calculateArrowPositions(): Promise<void> {
-    const currentData = dataState().effectivePictographData;
+    const currentData = dataState.effectivePictographData;
 
     if (
       !currentData?.motions ||
@@ -263,7 +263,7 @@ export function createPictographState(
   }
 
   async function calculatePropPositions(): Promise<void> {
-    const currentData = dataState().effectivePictographData;
+    const currentData = dataState.effectivePictographData;
 
     if (
       !currentData?.motions ||
@@ -430,21 +430,21 @@ export function createPictographState(
   return {
     // Data state (derived)
     get effectivePictographData() {
-      return dataState().effectivePictographData;
+      return dataState.effectivePictographData;
     },
     get hasValidData() {
-      return dataState().hasValidData;
+      return dataState.hasValidData;
     },
     get displayLetter() {
-      const data = dataState();
+      const data = dataState;
       return "displayLetter" in data ? data.displayLetter : null;
     },
     get motionsToRender() {
-      const data = dataState();
+      const data = dataState;
       return "motionsToRender" in data ? data.motionsToRender : [];
     },
     get requiredComponents() {
-      return requiredComponents();
+      return requiredComponents;
     },
 
     // Arrow positioning state
@@ -474,10 +474,10 @@ export function createPictographState(
 
     // Loading state
     get isLoading() {
-      return isLoading();
+      return isLoading;
     },
     get isLoaded() {
-      return isLoaded();
+      return isLoaded;
     },
     get errorMessage() {
       return errorMessage;
@@ -486,7 +486,7 @@ export function createPictographState(
       return loadedComponents;
     },
     get allComponentsLoaded() {
-      return allComponentsLoaded();
+      return allComponentsLoaded;
     },
 
     // Actions

@@ -44,7 +44,7 @@ colored according to the motion that is reversing between pictographs.
   const R_SPACING = R_SPACING_PERCENT * 10; // Convert to 1000px scale
 
   // Calculate vertical positions when both R's are present
-  const redRY = $derived(() => {
+  const redRY = $derived.by(() => {
     if (blueReversal && redReversal) {
       // Both present: stack vertically with fixed spacing around center
       return CENTER_Y - R_SPACING / 2;
@@ -55,7 +55,7 @@ colored according to the motion that is reversing between pictographs.
     return CENTER_Y;
   });
 
-  const blueRY = $derived(() => {
+  const blueRY = $derived.by(() => {
     if (blueReversal && redReversal) {
       // Both present: blue below red with fixed spacing
       return CENTER_Y + R_SPACING / 2;
@@ -72,7 +72,7 @@ colored according to the motion that is reversing between pictographs.
     {#if redReversal}
       <text
         x={X_POSITION}
-        y={redRY()}
+        y={redRY}
         font-family="Georgia, serif"
         font-size={FONT_SIZE}
         font-weight="bold"
@@ -86,7 +86,7 @@ colored according to the motion that is reversing between pictographs.
     {#if blueReversal}
       <text
         x={X_POSITION}
-        y={blueRY()}
+        y={blueRY}
         font-family="Georgia, serif"
         font-size={FONT_SIZE}
         font-weight="bold"

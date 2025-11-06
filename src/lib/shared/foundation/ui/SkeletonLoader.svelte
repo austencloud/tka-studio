@@ -10,7 +10,7 @@
     width = "100%",
     height,
     count = 1,
-    className = ""
+    className = "",
   } = $props<{
     variant?: "text" | "rect" | "circle" | "card";
     width?: string;
@@ -19,17 +19,21 @@
     className?: string;
   }>();
 
-  const defaultHeight = $derived(() => {
+  const defaultHeight = $derived.by(() => {
     switch (variant) {
-      case "text": return "1rem";
-      case "circle": return "40px";
-      case "card": return "200px";
+      case "text":
+        return "1rem";
+      case "circle":
+        return "40px";
+      case "card":
+        return "200px";
       case "rect":
-      default: return "40px";
+      default:
+        return "40px";
     }
   });
 
-  const computedHeight = $derived(height || defaultHeight());
+  const computedHeight = $derived(height || defaultHeight);
 </script>
 
 <div class="skeleton-container {className}">

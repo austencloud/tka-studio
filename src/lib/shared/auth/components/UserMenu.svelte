@@ -37,7 +37,7 @@
   }
 
   // Get user initials for avatar
-  const userInitials = $derived(() => {
+  const userInitials = $derived.by(() => {
     if (!authStore.user) return "?";
     const name = authStore.user.displayName || authStore.user.email || "User";
     return name
@@ -68,7 +68,7 @@
       <img src={avatarUrl} alt={displayName} class="avatar-image" />
     {:else}
       <div class="avatar-fallback">
-        {userInitials()}
+        {userInitials}
       </div>
     {/if}
   </button>
