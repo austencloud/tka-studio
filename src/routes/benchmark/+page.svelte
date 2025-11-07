@@ -447,7 +447,7 @@
     <p><strong>Note:</strong> Full 16-beat sequence would take ~8x longer</p>
   </div>
 
-  <button on:click={runBenchmark} disabled={running || !renderService}>
+  <button onclick={runBenchmark} disabled={running || !renderService}>
     {running ? "⏳ Running Benchmark..." : "🚀 Run REAL Benchmark"}
   </button>
 

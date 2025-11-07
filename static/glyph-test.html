@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glyph Rendering Debug Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+    h1 { color: #4CAF50; }
+    h2 { color: #2196F3; margin-top: 30px; }
+    canvas {
+      border: 2px solid #fff;
+      background: white;
+      display: block;
+      margin: 20px 0;
+    }
+    .log {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 4px;
+      max-height: 500px;
+      overflow-y: auto;
+      margin-top: 20px;
+    }
+    .log-entry {
+      padding: 6px 0;
+      border-bottom: 1px solid #444;
+      font-size: 13px;
+    }
+    .log-entry.success { color: #4CAF50; }
+    .log-entry.error { color: #f44336; }
+    .log-entry.info { color: #2196F3; }
+    .description {
+      font-size: 12px;
+      color: #999;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔬 Glyph Rendering Debug Test</h1>
+  <p class="description">Testing different methods of rendering SVG to canvas</p>
+
+  <h2>Canvas Output:</h2>
+  <canvas id="testCanvas" width="650" height="120"></canvas>
+  <p class="description">
+    Test 1 (0,0): Simple SVG | Test 2 (130,0): External SVG | Test 3 (260,0): Inlined | Test 4 (390,0): Data URL | Test 5 (520,0): TKAGlyph
+  </p>
+
+  <h2>Test Results:</h2>
+  <div id="logContainer" class="log"></div>
+
+  <h2>SVG Output:</h2>
+  <div id="svgContainer" style="background: #2a2a2a; padding: 15px; border-radius: 4px; max-height: 300px; overflow-y: auto; margin-top: 20px;">
+    <pre id="svgOutput" style="color: #4CAF50; font-size: 11px; white-space: pre-wrap; word-wrap: break-word;"></pre>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('testCanvas');
+    const ctx = canvas.getContext('2d');
+    const logContainer = document.getElementById('logContainer');
+
+    function log(message, type = 'info') {
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logContainer.appendChild(entry);
+      console.log('[TEST]', message);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    async function test1_DirectSVG() {
+      log('=== Test 1: Direct SVG to Canvas ===', 'info');
+      
+      const svgString = `
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+          <rect x="10" y="10" width="80" height="80" fill="blue" />
+          <text x="50" y="60" font-size="40" text-anchor="middle" fill="white">S</text>
+        </svg>
+      `;
+
+      try {
+        const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const img = new Image();
+        img.onload = () => {
+          log('✅ Simple SVG loaded successfully', 'success');
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, 100, 120);
+          ctx.drawImage(img, 0, 0, 100, 100);
+          log('✅ Simple SVG drawn to canvas at (0, 0)', 'success');
+          URL.revokeObjectURL(url);
+        };
+        img.onerror = (e) => {
+          log('❌ Simple SVG failed to load: ' + e, 'error');
+        };
+        img.src = url;
+      } catch (error) {
+        log('❌ Error: ' + error, 'error');
+      }
+    }
+
+    async function test2_ExternalSVG() {
+      log('=== Test 2: Fetch External SVG ===', 'info');
+      
+      try {
+        const response = await fetch('/images/letters_trimmed/Type1/S.svg');
+        if (!response.ok) {
+          log('❌ Failed to fetch: ' + response.status, 'error');
+          return;
+        }
+        const svgText = await response.text();
+        log('✅ Fetched external SVG (' + svgText.length + ' bytes)', 'success');
+        
+        const blob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const img = new Image();
+        img.onload = () => {
+          log('✅ External SVG loaded as image', 'success');
+          ctx.fillStyle = 'lightgray';
+          ctx.fillRect(120, 0, 100, 120);
+          ctx.drawImage(img, 120, 0, 100, 100);
+          log('✅ External SVG drawn to canvas at (120, 0)', 'success');
+          URL.revokeObjectURL(url);
+        };
+        img.onerror = (e) => {
+          log('❌ External SVG failed to load as image', 'error');
+        };
+        img.src = url;
+      } catch (error) {
+        log('❌ Error fetching external SVG: ' + error, 'error');
+      }
+    }
+
+    async function test3_InlinedSVG() {
+      log('=== Test 3: SVG with Inlined External Content ===', 'info');
+      
+      try {
+        const response = await fetch('/images/letters_trimmed/Type1/S.svg');
+        const svgText = await response.text();
+        
+        const parser = new DOMParser();
+        const externalSvgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+        const externalSvgRoot = externalSvgDoc.documentElement;
+        
+        const viewBox = externalSvgRoot.getAttribute('viewBox');
+        log('External SVG viewBox: ' + viewBox, 'info');
+        
+        const inlinedSvg = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+            <g transform="translate(10, 10) scale(0.8)">
+              ${externalSvgRoot.innerHTML}
+            </g>
+          </svg>
+        `;
+        
+        log('Inlined SVG length: ' + inlinedSvg.length + ' bytes', 'info');
+        
+        const blob = new Blob([inlinedSvg], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        
+        const img = new Image();
+        img.onload = () => {
+          log('✅ Inlined SVG loaded as image', 'success');
+          ctx.fillStyle = 'lightyellow';
+          ctx.fillRect(240, 0, 100, 120);
+          ctx.drawImage(img, 240, 0, 100, 100);
+          log('✅ Inlined SVG drawn to canvas at (240, 0)', 'success');
+          URL.revokeObjectURL(url);
+        };
+        img.onerror = (e) => {
+          log('❌ Inlined SVG failed to load as image', 'error');
+        };
+        img.src = url;
+      } catch (error) {
+        log('❌ Error with inlined SVG: ' + error, 'error');
+      }
+    }
+
+    async function test4_DataURL() {
+      log('=== Test 4: Data URL (like AnimatorCanvas uses) ===', 'info');
+
+      try {
+        const response = await fetch('/images/letters_trimmed/Type1/S.svg');
+        const svgText = await response.text();
+
+        const dataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svgText)}`;
+        log('Data URL length: ' + dataUrl.length + ' chars', 'info');
+
+        const img = new Image();
+        img.onload = () => {
+          log('✅ Data URL SVG loaded', 'success');
+          ctx.fillStyle = 'lightblue';
+          ctx.fillRect(390, 0, 100, 120);
+          ctx.drawImage(img, 390, 0, 100, 100);
+          log('✅ Data URL SVG drawn to canvas at (390, 0)', 'success');
+        };
+        img.onerror = (e) => {
+          log('❌ Data URL SVG failed', 'error');
+        };
+        img.src = dataUrl;
+      } catch (error) {
+        log('❌ Error with data URL: ' + error, 'error');
+      }
+    }
+
+    async function test5_TKAGlyphSimulation() {
+      log('=== Test 5: Simulate TKAGlyph Rendering ===', 'info');
+
+      try {
+        // Fetch letter and number SVGs
+        const [letterResponse, numberResponse] = await Promise.all([
+          fetch('/images/letters_trimmed/Type1/S.svg'),
+          fetch('/images/numbers/1.svg')
+        ]);
+
+        const letterSvg = await letterResponse.text();
+        const numberSvg = await numberResponse.text();
+
+        log('✅ Fetched letter and number SVGs', 'success');
+
+        // Parse them
+        const parser = new DOMParser();
+        const letterDoc = parser.parseFromString(letterSvg, 'image/svg+xml');
+        const numberDoc = parser.parseFromString(numberSvg, 'image/svg+xml');
+
+        const letterRoot = letterDoc.documentElement;
+        const numberRoot = numberDoc.documentElement;
+
+        // Create a composite SVG like TKAGlyph does
+        const compositeSvg = `
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 120">
+            <g transform="translate(10, 10)">
+              ${letterRoot.innerHTML}
+            </g>
+            <g transform="translate(100, 80) scale(0.3)">
+              ${numberRoot.innerHTML}
+            </g>
+          </svg>
+        `;
+
+        log('Composite SVG length: ' + compositeSvg.length + ' bytes', 'info');
+
+        // Display the SVG source
+        document.getElementById('svgOutput').textContent = compositeSvg;
+
+        // Try to render it
+        const blob = new Blob([compositeSvg], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+
+        const img = new Image();
+        img.onload = () => {
+          log('✅ TKAGlyph simulation loaded as image', 'success');
+          ctx.fillStyle = 'lavender';
+          ctx.fillRect(520, 0, 100, 120);
+          ctx.drawImage(img, 520, 0, 100, 100);
+          log('✅ TKAGlyph simulation drawn to canvas at (520, 0)', 'success');
+          URL.revokeObjectURL(url);
+        };
+        img.onerror = (e) => {
+          log('❌ TKAGlyph simulation failed to load as image', 'error');
+          URL.revokeObjectURL(url);
+        };
+        img.src = url;
+      } catch (error) {
+        log('❌ Error with TKAGlyph simulation: ' + error, 'error');
+      }
+    }
+
+    // Run all tests
+    (async () => {
+      log('🚀 Starting tests...', 'info');
+
+      await test1_DirectSVG();
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      await test2_ExternalSVG();
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      await test3_InlinedSVG();
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      await test4_DataURL();
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      await test5_TKAGlyphSimulation();
+
+      log('✅ All tests initiated', 'success');
+    })();
+  </script>
+</body>
+</html>
+
