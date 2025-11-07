@@ -93,11 +93,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.1) 0%,
-      rgba(118, 75, 162, 0.1) 100%
-    );
+
     backdrop-filter: blur(20px);
     border-radius: 12px;
     overflow: hidden;

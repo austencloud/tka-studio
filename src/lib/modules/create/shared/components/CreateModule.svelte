@@ -233,9 +233,6 @@
   let toolPanelRef: IToolPanelMethods | null = $state(null);
   let buttonPanelElement: HTMLElement | null = $state(null);
 
-  // Sheet visibility state
-  let showSequenceActionsSheet = $state(false);
-
   // Effect lifecycle management
   let effectCleanup: (() => void) | null = null;
 
@@ -533,9 +530,7 @@
 
   function handleOpenSequenceActions() {
     if (!handlers) return;
-    handlers.handleOpenSequenceActions((show) => {
-      showSequenceActionsSheet = show;
-    });
+    handlers.handleOpenSequenceActions(panelState);
   }
 </script>
 
@@ -632,7 +627,7 @@
   <ShareCoordinator />
 
   <!-- Sequence Actions Coordinator -->
-  <SequenceActionsCoordinator bind:show={showSequenceActionsSheet} />
+  <SequenceActionsCoordinator />
 
   <!-- CAP Coordinator -->
   <CAPCoordinator />
