@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { EmblaCarouselType } from "embla-carousel";
   import emblaCarouselSvelte from "embla-carousel-svelte";
+  import { onDestroy, onMount } from "svelte";
 
   // Props - Compatible with old API
   interface Props {
@@ -77,8 +78,21 @@
   );
 
   // Arrow dimensions for content area calculation
-  const ARROW_WIDTH = 40; // 2.5rem = 40px button width
+  const DEFAULT_ARROW_WIDTH = 40; // Fallback when buttons have not rendered yet
   const ARROW_SPACING = 0; // Additional spacing buffer if needed
+
+  let measuredArrowWidth = $state(DEFAULT_ARROW_WIDTH);
+
+  // Use the measured arrow width only when arrows render
+  let navPadding = $derived(() =>
+    showArrows && shouldShowNavigation ? measuredArrowWidth + ARROW_SPACING : 0
+  );
+
+  let prevArrowButton: HTMLButtonElement | undefined;
+  let nextArrowButton: HTMLButtonElement | undefined;
+
+  let resizeObserver: ResizeObserver | undefined;
+  let resizeFallback: (() => void) | undefined;
 
   // Embla initialization
   function onEmblaInit(event: CustomEvent<EmblaCarouselType>) {
@@ -106,8 +120,10 @@
       const shouldShowNav = currentSlideCount > 1;
 
       // Calculate the actual content area between the arrows
-      const leftOffset = shouldShowNav ? ARROW_WIDTH + ARROW_SPACING : 0;
-      const rightOffset = shouldShowNav ? ARROW_WIDTH + ARROW_SPACING : 0;
+      const navPaddingValue =
+        showArrows && shouldShowNav ? measuredArrowWidth + ARROW_SPACING : 0;
+      const leftOffset = navPaddingValue;
+      const rightOffset = navPaddingValue;
 
       const contentBounds = {
         left: viewportRect.left + leftOffset,
@@ -184,10 +200,60 @@
       emblaApi.scrollTo(index);
     }
   }
+
+  function updateArrowPadding() {
+    const prevWidth = prevArrowButton?.getBoundingClientRect().width ?? 0;
+    const nextWidth = nextArrowButton?.getBoundingClientRect().width ?? 0;
+    const maxWidth = Math.max(prevWidth, nextWidth);
+
+    measuredArrowWidth = maxWidth > 0 ? maxWidth : DEFAULT_ARROW_WIDTH;
+
+    // Update content bounds whenever arrow sizing changes
+    calculateContentAreaBounds();
+  }
+
+  onMount(() => {
+    updateArrowPadding();
+
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => updateArrowPadding());
+    } else {
+      resizeFallback = () => updateArrowPadding();
+      window.addEventListener("resize", resizeFallback);
+    }
+  });
+
+  onDestroy(() => {
+    resizeObserver?.disconnect();
+
+    if (resizeFallback) {
+      window.removeEventListener("resize", resizeFallback);
+    }
+  });
+
+  $effect(() => {
+    const prev = prevArrowButton;
+    const next = nextArrowButton;
+
+    updateArrowPadding();
+
+    if (!resizeObserver) return;
+
+    if (prev) resizeObserver.observe(prev);
+    if (next) resizeObserver.observe(next);
+
+    return () => {
+      if (prev) resizeObserver?.unobserve(prev);
+      if (next) resizeObserver?.unobserve(next);
+    };
+  });
 </script>
 
 <!-- Embla Carousel Container -->
-<div class="embla {className}" style="height: {height}; width: {width};">
+<div
+  class="embla {className}"
+  style="height: {height}; width: {width}; --nav-padding: {navPadding}px;"
+>
   <!-- Navigation Arrows -->
   {#if showArrows && shouldShowNavigation}
     <button
@@ -195,6 +261,7 @@
       onclick={scrollPrev}
       disabled={!canScrollPrev}
       aria-label="Previous slide"
+      bind:this={prevArrowButton}
     >
       <svg class="embla__button__svg" viewBox="0 0 532 532">
         <path
@@ -230,6 +297,7 @@
       onclick={scrollNext}
       disabled={!canScrollNext}
       aria-label="Next slide"
+      bind:this={nextArrowButton}
     >
       <svg class="embla__button__svg" viewBox="0 0 532 532">
         <path
@@ -283,9 +351,9 @@
     transform: translate3d(0, 0, 0);
     flex: 0 0 100%; /* Each panel takes full width */
     min-width: 0;
-    /* Add padding to each panel to create space for arrows */
-    padding-left: 40px;
-    padding-right: 40px;
+    /* Add padding to each panel that matches the rendered arrow size */
+    padding-left: var(--nav-padding, 40px);
+    padding-right: var(--nav-padding, 40px);
     box-sizing: border-box;
   }
 
