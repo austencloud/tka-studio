@@ -1,10 +1,15 @@
 <script lang="ts">
-  export let ctaLabel: string;
-  export let onEnterStudio: () => void = () => {};
+  let {
+    ctaLabel,
+    onEnterStudio = () => {},
+  }: {
+    ctaLabel: string;
+    onEnterStudio?: () => void;
+  } = $props();
 </script>
 
 <div class="cta-section">
-  <button class="cta-button" type="button" on:click={onEnterStudio}>
+  <button class="cta-button" type="button" onclick={onEnterStudio}>
     <i class="fas fa-rocket"></i>
     {ctaLabel}
   </button>

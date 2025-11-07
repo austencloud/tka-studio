@@ -1,13 +1,23 @@
 <script lang="ts">
   import type { LandingDevContent } from "../domain";
 
-  export let panelId: string;
-  export let labelledBy: string;
-  export let copy: LandingDevContent;
-  export let contactEmail: string;
-  export let onContact: () => void = () => {};
-  export let isContactLoading: boolean = false;
-  export let enableSmartContact: boolean = false;
+  let {
+    panelId,
+    labelledBy,
+    copy,
+    contactEmail,
+    onContact = () => {},
+    isContactLoading = false,
+    enableSmartContact = false,
+  }: {
+    panelId: string;
+    labelledBy: string;
+    copy: LandingDevContent;
+    contactEmail: string;
+    onContact?: () => void;
+    isContactLoading?: boolean;
+    enableSmartContact?: boolean;
+  } = $props();
 </script>
 
 <div class="carousel-panel" id={panelId} role="presentation">
@@ -28,7 +38,10 @@
         </div>
       </a>
 
-      <a class="dev-card" href={`mailto:${contactEmail}?subject=Development Collaboration`}>
+      <a
+        class="dev-card"
+        href={`mailto:${contactEmail}?subject=Development Collaboration`}
+      >
         <i class="fas fa-envelope"></i>
         <div>
           <h3>Contact for Dev Work</h3>
@@ -40,12 +53,16 @@
         <button
           class="dev-card contact-card"
           type="button"
-          on:click={onContact}
+          onclick={onContact}
           disabled={isContactLoading}
         >
-          <i class={`fas ${isContactLoading ? "fa-circle-notch fa-spin" : "fa-paper-plane"}`}></i>
+          <i
+            class={`fas ${isContactLoading ? "fa-circle-notch fa-spin" : "fa-paper-plane"}`}
+          ></i>
           <div>
-            <h3>{isContactLoading ? "Preparing Gmail..." : "Compose in Gmail"}</h3>
+            <h3>
+              {isContactLoading ? "Preparing Gmail..." : "Compose in Gmail"}
+            </h3>
             <p>
               {isContactLoading
                 ? "Hang tight while we open a Gmail compose window"

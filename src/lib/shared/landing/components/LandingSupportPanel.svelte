@@ -1,10 +1,17 @@
 <script lang="ts">
   import type { LandingSupportContent, SupportOption } from "../domain";
 
-  export let panelId: string;
-  export let labelledBy: string;
-  export let copy: LandingSupportContent;
-  export let supportOptions: SupportOption[] = [];
+  let {
+    panelId,
+    labelledBy,
+    copy,
+    supportOptions = [],
+  }: {
+    panelId: string;
+    labelledBy: string;
+    copy: LandingSupportContent;
+    supportOptions?: SupportOption[];
+  } = $props();
 </script>
 
 <div class="carousel-panel" id={panelId} role="presentation">

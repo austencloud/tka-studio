@@ -139,6 +139,26 @@ const webpWasmDevPlugin = () => ({
   },
 });
 
+const isStorybook =
+  Boolean(process.env.STORYBOOK) ||
+  process.env.npm_lifecycle_event === "storybook" ||
+  process.argv.some((arg) => arg.includes("storybook"));
+
+const webpStaticCopyPlugin = () => {
+  if (isStorybook || !fs.existsSync(webpEncoderWasm)) {
+    return null;
+  }
+
+  return viteStaticCopy({
+    targets: [
+      {
+        src: webpEncoderWasm,
+        dest: "assets",
+      },
+    ],
+  });
+};
+
 // ============================================================================
 // VITE 6.0 CONFIGURATION (2025 - Optimized for SvelteKit 2)
 // ============================================================================
@@ -155,15 +175,8 @@ export default defineConfig({
     dictionaryPlugin(),
     devCachePlugin(), // ?? 2025: Smart caching (no-cache for CSS/JS, cache for SVGs)
     webpWasmDevPlugin(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: webpEncoderWasm,
-          dest: "assets",
-        },
-      ],
-    }),
-  ],
+    webpStaticCopyPlugin(),
+  ].filter(Boolean),
   resolve: {
     alias: {
       // Aliases handled by SvelteKit

@@ -1,11 +1,19 @@
 <script lang="ts">
   import type { LandingPanelContent, Resource } from "../domain";
 
-  export let panelId: string;
-  export let labelledBy: string;
-  export let copy: LandingPanelContent;
-  export let resources: Resource[] = [];
-  export let onLinkClick: (resource: Resource) => void = () => {};
+  let {
+    panelId,
+    labelledBy,
+    copy,
+    resources = [],
+    onLinkClick = () => {},
+  }: {
+    panelId: string;
+    labelledBy: string;
+    copy: LandingPanelContent;
+    resources?: Resource[];
+    onLinkClick?: (resource: Resource) => void;
+  } = $props();
 </script>
 
 <div class="carousel-panel" id={panelId} role="presentation">
@@ -18,7 +26,7 @@
           href={resource.url}
           target={resource.type === "internal" ? "_self" : "_blank"}
           rel={resource.type !== "internal" ? "noopener noreferrer" : undefined}
-          on:click={() => onLinkClick(resource)}
+          onclick={() => onLinkClick(resource)}
         >
           <div class="resource-icon">
             {#if resource.icon.startsWith("/")}

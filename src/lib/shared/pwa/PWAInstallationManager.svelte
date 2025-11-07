@@ -174,10 +174,7 @@
         try {
           cleanup();
         } catch (error) {
-          console.warn(
-            "Failed to clean up PWA installation manager:",
-            error
-          );
+          console.warn("Failed to clean up PWA installation manager:", error);
         }
       });
     };
@@ -220,7 +217,7 @@
   autoShow={false}
   position="center"
   nagMode={true}
-  on:dismiss={handleMobileInstallDismiss}
+  onDismiss={handleMobileInstallDismiss}
 />
 
 <!-- Subtle Fullscreen Hint (non-blocking) -->

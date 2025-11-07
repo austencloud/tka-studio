@@ -9,7 +9,7 @@
 -->
 <script lang="ts">
   import { resolve, TYPES } from "$shared";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import type { IMobileFullscreenService } from "../services/contracts/IMobileFullscreenService";
 
   let {
@@ -17,14 +17,14 @@
     autoShow = true,
     position = "bottom",
     nagMode = false,
+    onDismiss = () => {},
   }: {
     showPrompt?: boolean;
     autoShow?: boolean;
     position?: "top" | "bottom" | "center";
     nagMode?: boolean;
+    onDismiss?: () => void;
   } = $props();
-
-  const dispatch = createEventDispatcher<{ dismiss: void }>();
 
   let fullscreenService: IMobileFullscreenService | null = null;
 
@@ -191,7 +191,7 @@
 
   function handleDismiss() {
     showPrompt = false;
-    dispatch("dismiss");
+    onDismiss();
   }
 
   type ManualGuidance =
@@ -366,8 +366,8 @@
 
           {#if guidance.support === "native"}
             <p>
-              Install for a distraction-free, fullscreen-like experience and keep
-              the builder only a tap away.
+              Install for a distraction-free, fullscreen-like experience and
+              keep the builder only a tap away.
             </p>
             <div class="prompt-actions">
               <button

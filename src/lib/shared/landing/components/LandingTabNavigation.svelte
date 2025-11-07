@@ -1,9 +1,15 @@
 <script lang="ts">
   import type { LandingSection, LandingTab } from "../domain";
 
-  export let sections: LandingSection[] = [];
-  export let activeTab: LandingTab;
-  export let onSelect: (tabId: LandingTab) => void = () => {};
+  let {
+    sections = [],
+    activeTab,
+    onSelect = () => {},
+  }: {
+    sections?: LandingSection[];
+    activeTab: LandingTab;
+    onSelect?: (tabId: LandingTab) => void;
+  } = $props();
 </script>
 
 <div class="landing-tabs" role="tablist">
@@ -17,7 +23,7 @@
       aria-selected={activeTab === section.id}
       aria-controls={`panel-${section.id}`}
       style="--tab-color: {section.color}; --tab-gradient: {section.gradient};"
-      on:click={() => onSelect(section.id as LandingTab)}
+      onclick={() => onSelect(section.id as LandingTab)}
     >
       <span class="tab-icon">{@html section.icon}</span>
       <span class="tab-label">{section.label}</span>

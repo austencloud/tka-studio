@@ -1,11 +1,19 @@
 <script lang="ts">
   import type { LandingPanelContent, SocialLink } from "../domain";
 
-  export let panelId: string;
-  export let labelledBy: string;
-  export let copy: LandingPanelContent;
-  export let socialLinks: SocialLink[] = [];
-  export let onSocialClick: (event: MouseEvent, social: SocialLink) => void = () => {};
+  let {
+    panelId,
+    labelledBy,
+    copy,
+    socialLinks = [],
+    onSocialClick = () => {},
+  }: {
+    panelId: string;
+    labelledBy: string;
+    copy: LandingPanelContent;
+    socialLinks?: SocialLink[];
+    onSocialClick?: (event: MouseEvent, social: SocialLink) => void;
+  } = $props();
 </script>
 
 <div class="carousel-panel" id={panelId} role="presentation">
@@ -24,7 +32,7 @@
           rel="noopener noreferrer"
           style="--brand-color: {social.color}"
           title={social.name}
-          on:click={(event) => onSocialClick(event, social)}
+          onclick={(event) => onSocialClick(event, social)}
         >
           <i class={social.icon}></i>
           <span>{social.name}</span>

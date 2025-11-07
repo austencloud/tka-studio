@@ -1,8 +1,13 @@
 <script lang="ts">
   import type { LandingHeroContent } from "../domain";
 
-  export let hero: LandingHeroContent;
-  export let titleId: string = "landing-title";
+  let {
+    hero,
+    titleId = "landing-title",
+  }: {
+    hero: LandingHeroContent;
+    titleId?: string;
+  } = $props();
 </script>
 
 <section class="hero-section">

@@ -36,7 +36,10 @@
       hapticService = resolve<IHapticFeedbackService>(
         TYPES.IHapticFeedbackService
       );
-      console.log("✅ [AuthSheet] hapticService resolved:", hapticService !== null);
+      console.log(
+        "✅ [AuthSheet] hapticService resolved:",
+        hapticService !== null
+      );
 
       authService = resolve<IAuthService>(TYPES.IAuthService);
       console.log("✅ [AuthSheet] authService resolved:", authService !== null);
@@ -80,7 +83,7 @@
 <Drawer
   {isOpen}
   labelledBy="auth-sheet-title"
-  on:close={onClose}
+  onclose={onClose}
   class="auth-sheet"
   backdropClass="auth-sheet__backdrop"
 >
@@ -91,10 +94,7 @@
     <!-- Content -->
     <div class="auth-sheet__content">
       <!-- Social Auth Buttons - Compact side-by-side layout -->
-      <SocialAuthCompact
-        mode={authMode}
-        onFacebookAuth={handleFacebookAuth}
-      />
+      <SocialAuthCompact mode={authMode} onFacebookAuth={handleFacebookAuth} />
 
       <!-- Divider -->
       <div class="auth-sheet__divider">
@@ -131,7 +131,10 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: min(90dvh, 700px); /* Use dvh for better mobile keyboard support */
+    max-height: min(
+      90dvh,
+      700px
+    ); /* Use dvh for better mobile keyboard support */
     height: auto;
     background: linear-gradient(
       135deg,
