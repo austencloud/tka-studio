@@ -79,6 +79,7 @@ Shows different states: no link, has link, opening link.
     <button
       class="edit-button"
       onclick={handleEdit}
+      aria-label="Edit Instagram link"
       title="Edit Instagram link"
     >
       <i class="fa-solid fa-pencil"></i>

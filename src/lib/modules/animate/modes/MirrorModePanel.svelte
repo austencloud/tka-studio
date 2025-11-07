@@ -67,9 +67,9 @@
       <!-- Controls -->
       <div class="controls">
         <div class="playback">
-          <button class="control-btn"><i class="fas fa-play"></i></button>
-          <button class="control-btn"><i class="fas fa-stop"></i></button>
-          <button class="control-btn"><i class="fas fa-repeat"></i></button>
+          <button class="control-btn" aria-label="Play animation"><i class="fas fa-play"></i></button>
+          <button class="control-btn" aria-label="Stop animation"><i class="fas fa-stop"></i></button>
+          <button class="control-btn" aria-label="Loop animation"><i class="fas fa-repeat"></i></button>
         </div>
 
         <div class="mirror-settings">

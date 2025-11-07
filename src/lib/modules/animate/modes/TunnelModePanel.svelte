@@ -170,24 +170,25 @@
       <!-- Controls Panel -->
       <div class="controls-panel">
         <div class="playback-controls">
-          <button class="control-button">
+          <button class="control-button" aria-label="Play animation">
             <i class="fas fa-play"></i>
           </button>
-          <button class="control-button">
+          <button class="control-button" aria-label="Stop animation">
             <i class="fas fa-stop"></i>
           </button>
-          <button class="control-button">
+          <button class="control-button" aria-label="Loop animation">
             <i class="fas fa-repeat"></i>
           </button>
         </div>
 
         <div class="tunnel-settings">
           <div class="setting-group">
-            <label>
+            <label for="tunnel-opacity">
               <i class="fas fa-droplet"></i>
               Opacity
             </label>
             <input
+              id="tunnel-opacity"
               type="range"
               min="0.3"
               max="1"
@@ -199,11 +200,12 @@
           </div>
 
           <div class="setting-group">
-            <label>
+            <label for="tunnel-speed">
               <i class="fas fa-gauge"></i>
               Speed
             </label>
             <input
+              id="tunnel-speed"
               type="range"
               min="0.5"
               max="2"

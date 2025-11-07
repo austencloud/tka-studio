@@ -110,10 +110,9 @@ const devCachePlugin = () => ({
   },
 });
 
-const webpEncoderWasm = path.resolve(
-  dirname,
-  "node_modules/webp-encoder/lib/assets/a.out.wasm"
-);
+// Use relative path for vite-plugin-static-copy, absolute for dev server
+const webpEncoderWasmRelative = "node_modules/webp-encoder/lib/assets/a.out.wasm";
+const webpEncoderWasmAbsolute = path.resolve(dirname, webpEncoderWasmRelative);
 
 const webpWasmDevPlugin = () => ({
   name: "webp-wasm-dev-server",
@@ -127,10 +126,10 @@ const webpWasmDevPlugin = () => ({
         if (
           req.url &&
           req.url.endsWith("a.out.wasm") &&
-          fs.existsSync(webpEncoderWasm)
+          fs.existsSync(webpEncoderWasmAbsolute)
         ) {
           res.setHeader("Content-Type", "application/wasm");
-          fs.createReadStream(webpEncoderWasm).pipe(res);
+          fs.createReadStream(webpEncoderWasmAbsolute).pipe(res);
           return;
         }
         next();
@@ -145,14 +144,14 @@ const isStorybook =
   process.argv.some((arg) => arg.includes("storybook"));
 
 const webpStaticCopyPlugin = () => {
-  if (isStorybook || !fs.existsSync(webpEncoderWasm)) {
+  if (isStorybook || !fs.existsSync(webpEncoderWasmAbsolute)) {
     return null;
   }
 
   return viteStaticCopy({
     targets: [
       {
-        src: webpEncoderWasm,
+        src: webpEncoderWasmRelative,
         dest: "assets",
       },
     ],
