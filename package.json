@@ -48,10 +48,18 @@
     "clean:all": "rimraf build .svelte-kit node_modules",
     "analyze:dead-code": "ts-prune --project tsconfig.json > ts-prune-full-report.txt && node analyze-dead-code.js && node verify-usage.js",
     "analyze:dead-code:quick": "ts-prune --project tsconfig.json | grep -v '(used in module)' | grep 'src\\\\lib\\\\modules' | wc -l",
-    "postinstall": "svelte-kit sync"
+    "postinstall": "svelte-kit sync",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "devDependencies": {
+    "@chromatic-com/storybook": "^4.1.2",
     "@playwright/test": "^1.54.2",
+    "@storybook/addon-a11y": "^10.0.5",
+    "@storybook/addon-docs": "^10.0.5",
+    "@storybook/addon-svelte-csf": "^5.0.10",
+    "@storybook/addon-vitest": "^10.0.5",
+    "@storybook/sveltekit": "^10.0.5",
     "@sveltejs/adapter-netlify": "^5.2.4",
     "@sveltejs/kit": "^2.0.0",
     "@sveltejs/vite-plugin-svelte": "^6.1.3",
@@ -64,10 +72,13 @@
     "@types/node": "^24.3.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "@vitest/browser": "3.2.4",
+    "@vitest/coverage-v8": "3.2.4",
     "canvas": "^3.2.0",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
+    "eslint-plugin-storybook": "^10.0.5",
     "eslint-plugin-svelte": "^2.30.0",
     "jscodeshift": "^17.3.0",
     "jsdom": "^26.1.0",
@@ -80,11 +91,13 @@
     "prettier-plugin-tailwindcss": "^0.7.1",
     "rimraf": "^6.0.1",
     "sharp": "^0.34.4",
+    "storybook": "^10.0.5",
     "svelte": "^5.0.0",
     "svelte-check": "^3.4.3",
     "tslib": "^2.4.1",
     "typescript": "^5.0.0",
     "vite": "^6.0.0",
+    "vite-plugin-static-copy": "^3.1.4",
     "vitest": "^3.2.4"
   },
   "engines": {
@@ -129,8 +142,10 @@
     "gif.js": "^0.2.0",
     "html2canvas": "^1.4.1",
     "inversify": "^7.9.1",
+    "page-flip": "^2.0.7",
     "reflect-metadata": "^0.2.2",
     "vaul-svelte": "^0.3.2",
+    "webp-encoder": "^2.1.2",
     "xstate": "^5.21.0",
     "zod": "^3.25.76"
   }

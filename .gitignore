@@ -81,3 +81,6 @@ static/Explore_thumbnails/
 
 # Generated Explore manifest (auto-generated during build)
 static/Explore-manifest.json
+
+*storybook.log
+storybook-static
