@@ -14,6 +14,7 @@
     moduleHasPrimaryNav,
     setCurrentWord,
     setLearnHeader,
+    setPrimaryNavHeight,
     setPrimaryNavLandscape,
     setTabAccessibility,
     setTopBarHeight,
@@ -107,7 +108,7 @@
   class="main-interface"
   class:nav-landscape={layoutState.isPrimaryNavLandscape}
   class:about-active={isAboutActive}
-  style="--top-bar-height: {layoutState.topBarHeight}px;"
+  style="--top-bar-height: {layoutState.topBarHeight}px; --primary-nav-height: {layoutState.primaryNavHeight}px;"
 >
   <!-- Module Switcher -->
   <ModuleSwitcher
@@ -168,6 +169,7 @@
         window.dispatchEvent(new CustomEvent("module-switcher-toggle"));
       }}
       onLayoutChange={setPrimaryNavLandscape}
+      onHeightChange={setPrimaryNavHeight}
     />
   {/if}
 
@@ -217,7 +219,7 @@
   }
 
   .content-area.has-primary-nav {
-    padding-bottom: max(64px, env(safe-area-inset-bottom));
+    padding-bottom: var(--primary-nav-height, 64px);
     padding-left: 0;
   }
 

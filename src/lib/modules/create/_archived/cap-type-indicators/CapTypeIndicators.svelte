@@ -15,38 +15,43 @@
 
   import type { StrictCapType } from "$create/shared/services/contracts";
 
-  let {
-    capTypes = []
-  } = $props<{
+  let { capTypes = [] } = $props<{
     capTypes?: readonly StrictCapType[];
   }>();
 
   // Icon and tooltip data for each CAP type
-  const capTypeInfo: Record<StrictCapType, { faIcon: string; label: string; description: string; color: string }> = {
+  const capTypeInfo: Record<
+    StrictCapType,
+    { faIcon: string; label: string; description: string; color: string }
+  > = {
     rotated: {
-      faIcon: 'rotate-right',
-      label: '90° Rotated',
-      description: 'This is a 90° Rotated CAP - the end position is 90° clockwise from the start',
-      color: '#3b82f6' // blue
+      faIcon: "rotate-right",
+      label: "90° Rotated",
+      description:
+        "This is a 90° Rotated CAP - the end position is 90° clockwise from the start",
+      color: "#3b82f6", // blue
     },
     mirrored: {
-      faIcon: 'left-right',
-      label: '180° Mirrored',
-      description: 'This is a 180° Mirrored CAP - the end position is opposite the start position',
-      color: '#8b5cf6' // purple
+      faIcon: "left-right",
+      label: "180° Mirrored",
+      description:
+        "This is a 180° Mirrored CAP - the end position is opposite the start position",
+      color: "#8b5cf6", // purple
     },
-    'rotated-mirrored': {
-      faIcon: 'arrows-rotate',
-      label: 'Rotated + Mirrored',
-      description: 'This CAP combines both rotation and mirroring transformations',
-      color: '#ec4899' // pink
+    "rotated-mirrored": {
+      faIcon: "arrows-rotate",
+      label: "Rotated + Mirrored",
+      description:
+        "This CAP combines both rotation and mirroring transformations",
+      color: "#ec4899", // pink
     },
     static: {
-      faIcon: 'circle-dot',
-      label: 'Static Loop',
-      description: 'This is a Static CAP - it returns to the same position (complementary)',
-      color: '#10b981' // green
-    }
+      faIcon: "circle-dot",
+      label: "Static Loop",
+      description:
+        "This is a Static CAP - it returns to the same position (complementary)",
+      color: "#10b981", // green
+    },
   };
 
   // Show tooltip state
@@ -102,7 +107,11 @@
     align-items: center;
     gap: 4px;
     padding: 8px 12px;
-    background: linear-gradient(135deg, var(--icon-color), color-mix(in srgb, var(--icon-color) 80%, black));
+    background: linear-gradient(
+      135deg,
+      var(--icon-color),
+      color-mix(in srgb, var(--icon-color) 80%, black)
+    );
     border-radius: 8px;
     cursor: help;
     transition: all 0.2s ease;
@@ -153,7 +162,7 @@
   }
 
   .tooltip::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -6px;
     left: 50%;

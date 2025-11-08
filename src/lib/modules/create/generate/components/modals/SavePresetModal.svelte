@@ -11,10 +11,7 @@ Provides a beautiful, unified experience for creating new presets
   import ModalHeader from "./ModalHeader.svelte";
   import { portal } from "./portal";
 
-  let {
-    onSave,
-    onClose
-  } = $props<{
+  let { onSave, onClose } = $props<{
     onSave: (icon?: string) => void;
     onClose: () => void;
   }>();
@@ -25,7 +22,9 @@ Provides a beautiful, unified experience for creating new presets
   let selectedIcon = $state("⚙️");
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
 
     // Focus the modal for accessibility
     modalElement?.focus();
@@ -81,7 +80,14 @@ Provides a beautiful, unified experience for creating new presets
 
     <div class="modal-body">
       <div class="info-banner">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <circle cx="12" cy="12" r="10"></circle>
           <line x1="12" y1="16" x2="12" y2="12"></line>
           <line x1="12" y1="8" x2="12.01" y2="8"></line>

@@ -30,7 +30,9 @@ Usage:
   }>();
 
   const isMixed = $derived(currentValues.size > 1);
-  const singleValue = $derived(currentValues.size === 1 ? Array.from(currentValues)[0] : undefined);
+  const singleValue = $derived(
+    currentValues.size === 1 ? Array.from(currentValues)[0] : undefined
+  );
 
   const displayText = $derived(() => {
     if (selectedValue !== null) {
@@ -39,21 +41,25 @@ Usage:
     }
     if (isMixed) {
       // @ts-ignore - Type inference issue with Set<number>
-      return `Mixed (${Array.from(currentValues).sort((a: number, b: number) => a - b).join(', ')})`;
+      return `Mixed (${Array.from(currentValues)
+        .sort((a: number, b: number) => a - b)
+        .join(", ")})`;
     }
-    return singleValue !== undefined && singleValue !== null ? singleValue.toString() : '-';
+    return singleValue !== undefined && singleValue !== null
+      ? singleValue.toString()
+      : "-";
   });
 
   const isEdited = $derived(selectedValue !== null);
 
   // Generate unique ID for the select element
-  const selectId = `dropdown-${label.toLowerCase().replace(/\s+/g, '-')}`;
+  const selectId = `dropdown-${label.toLowerCase().replace(/\s+/g, "-")}`;
 
   function handleChange(event: Event) {
     const target = event.target as HTMLSelectElement;
     const value = target.value;
 
-    if (value === 'keep') {
+    if (value === "keep") {
       selectedValue = null;
       onChange?.(null);
     } else {
@@ -74,7 +80,7 @@ Usage:
 
   <div class="dropdown-info">
     <span class="current-value">
-      Current: {isMixed ? 'Mixed' : singleValue}
+      Current: {isMixed ? "Mixed" : singleValue}
     </span>
   </div>
 
@@ -84,16 +90,16 @@ Usage:
     class:mixed={isMixed}
     class:edited={isEdited}
     onchange={handleChange}
-    value={selectedValue !== null ? selectedValue : 'keep'}
+    value={selectedValue !== null ? selectedValue : "keep"}
   >
     <option value="keep">
-      {isMixed ? 'Keep mixed values' : 'No change'}
+      {isMixed ? "Keep mixed values" : "No change"}
     </option>
 
     <optgroup label="Set all to:">
       {#each values as value}
-        <option value={value}>
-          {value} turn{value !== 1 ? 's' : ''}
+        <option {value}>
+          {value} turn{value !== 1 ? "s" : ""}
           {#if currentValues.has(value)}
             (current)
           {/if}

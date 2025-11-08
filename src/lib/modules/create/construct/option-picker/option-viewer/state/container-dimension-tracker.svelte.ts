@@ -54,8 +54,14 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
           const newHeight = entry.contentRect.height;
 
           // Enhanced sanity checks
-          const isValidDimension = newWidth > 0 && newHeight > 0 && newWidth < 10000 && newHeight < 10000;
-          const isDramaticChange = Math.abs(newWidth - width) > (width * 2) || Math.abs(newHeight - height) > (height * 2);
+          const isValidDimension =
+            newWidth > 0 &&
+            newHeight > 0 &&
+            newWidth < 10000 &&
+            newHeight < 10000;
+          const isDramaticChange =
+            Math.abs(newWidth - width) > width * 2 ||
+            Math.abs(newHeight - height) > height * 2;
 
           if (isValidDimension && !isDramaticChange) {
             width = newWidth;
@@ -68,9 +74,13 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
               isReady = true;
             }
           } else if (isDramaticChange) {
-            console.warn(`📐 ContainerDimensionTracker: Ignoring dramatic dimension change ${width}x${height} → ${newWidth}x${newHeight} (likely browser artifact)`);
+            console.warn(
+              `📐 ContainerDimensionTracker: Ignoring dramatic dimension change ${width}x${height} → ${newWidth}x${newHeight} (likely browser artifact)`
+            );
           } else {
-            console.warn(`📐 ContainerDimensionTracker: Ignoring invalid dimensions ${newWidth}x${newHeight}`);
+            console.warn(
+              `📐 ContainerDimensionTracker: Ignoring invalid dimensions ${newWidth}x${newHeight}`
+            );
           }
         }
         resizeTimeout = null;
@@ -84,7 +94,10 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
             const finalHeight = rect.height;
 
             // If dimensions changed since last update, trigger one more update
-            if (Math.abs(finalWidth - lastProcessedWidth) > 1 || Math.abs(finalHeight - lastProcessedHeight) > 1) {
+            if (
+              Math.abs(finalWidth - lastProcessedWidth) > 1 ||
+              Math.abs(finalHeight - lastProcessedHeight) > 1
+            ) {
               width = finalWidth;
               height = finalHeight;
             }
@@ -105,12 +118,19 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
         const initialHeight = rect.height;
 
         // Sanity check: ignore unrealistic dimensions
-        if (initialWidth > 0 && initialHeight > 0 && initialWidth < 10000 && initialHeight < 10000) {
+        if (
+          initialWidth > 0 &&
+          initialHeight > 0 &&
+          initialWidth < 10000 &&
+          initialHeight < 10000
+        ) {
           width = initialWidth;
           height = initialHeight;
           isReady = true;
         } else {
-          console.warn(`📐 ContainerDimensionTracker: Initial measurement ignoring invalid dimensions ${initialWidth}x${initialHeight}`);
+          console.warn(
+            `📐 ContainerDimensionTracker: Initial measurement ignoring invalid dimensions ${initialWidth}x${initialHeight}`
+          );
         }
       }, 100); // Small delay to ensure layout is stable
     });
@@ -137,26 +157,39 @@ export function createContainerDimensionTracker(): ContainerDimensionState {
       const newHeight = rect.height;
 
       // Enhanced sanity checks
-      const isValidDimension = newWidth > 0 && newHeight > 0 && newWidth < 10000 && newHeight < 10000;
-      const isDramaticChange = Math.abs(newWidth - width) > (width * 2) || Math.abs(newHeight - height) > (height * 2);
+      const isValidDimension =
+        newWidth > 0 && newHeight > 0 && newWidth < 10000 && newHeight < 10000;
+      const isDramaticChange =
+        Math.abs(newWidth - width) > width * 2 ||
+        Math.abs(newHeight - height) > height * 2;
 
       if (isValidDimension && !isDramaticChange) {
         width = newWidth;
         height = newHeight;
         isReady = true;
       } else if (isDramaticChange) {
-        console.warn(`📐 ContainerDimensionTracker: Force update ignoring dramatic dimension change ${width}x${height} → ${newWidth}x${newHeight} (likely browser artifact)`);
+        console.warn(
+          `📐 ContainerDimensionTracker: Force update ignoring dramatic dimension change ${width}x${height} → ${newWidth}x${newHeight} (likely browser artifact)`
+        );
       } else {
-        console.warn(`📐 ContainerDimensionTracker: Force update ignoring invalid dimensions ${newWidth}x${newHeight}`);
+        console.warn(
+          `📐 ContainerDimensionTracker: Force update ignoring invalid dimensions ${newWidth}x${newHeight}`
+        );
       }
     }
   }
 
   return {
-    get width() { return width; },
-    get height() { return height; },
-    get isReady() { return isReady; },
+    get width() {
+      return width;
+    },
+    get height() {
+      return height;
+    },
+    get isReady() {
+      return isReady;
+    },
     attachToElement,
-    forceUpdate
+    forceUpdate,
   };
 }

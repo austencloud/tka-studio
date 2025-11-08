@@ -5,7 +5,12 @@
  * Critical for distinguishing PRO vs ANTI motions when rotation is applied.
  */
 
-import type { GridLocation, GridMode, HandMotionType, RotationDirection } from "$shared";
+import type {
+  GridLocation,
+  GridMode,
+  HandMotionType,
+  RotationDirection,
+} from "$shared";
 
 export interface IHandPathDirectionDetector {
   /**

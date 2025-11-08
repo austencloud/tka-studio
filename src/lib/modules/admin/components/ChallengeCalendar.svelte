@@ -1,12 +1,12 @@
 <script lang="ts">
   /**
    * Challenge Calendar
-   * 
+   *
    * Calendar view showing scheduled challenges
    */
-  
+
   import type { ChallengeScheduleEntry } from "../domain/models";
-  
+
   // Props
   let {
     scheduleEntries,
@@ -17,7 +17,7 @@
     onDateSelect: (date: string) => void;
     onDeleteChallenge?: (challengeId: string) => void;
   } = $props();
-  
+
   function formatDate(dateStr: string): string {
     const date = new Date(dateStr);
     return date.toLocaleDateString("en-US", {
@@ -26,21 +26,21 @@
       day: "numeric",
     });
   }
-  
+
   function isToday(dateStr: string): boolean {
-    const today = new Date().toISOString().split("T")[0] || '';
+    const today = new Date().toISOString().split("T")[0] || "";
     return dateStr === today;
   }
 
   function isPast(dateStr: string): boolean {
-    const today = new Date().toISOString().split("T")[0] || '';
+    const today = new Date().toISOString().split("T")[0] || "";
     return dateStr < today;
   }
 
   function handleDelete(event: MouseEvent, challengeId: string) {
     event.stopPropagation();
     if (onDeleteChallenge) {
-      if (confirm('Are you sure you want to delete this challenge?')) {
+      if (confirm("Are you sure you want to delete this challenge?")) {
         onDeleteChallenge(challengeId);
       }
     }
@@ -52,7 +52,7 @@
     <i class="fas fa-calendar-alt"></i>
     Challenge Schedule
   </h3>
-  
+
   <div class="calendar-grid">
     {#each scheduleEntries as entry (entry.date)}
       <div class="calendar-day-wrapper">
@@ -265,4 +265,3 @@
     }
   }
 </style>
-

@@ -46,11 +46,11 @@ Features:
   }>();
 
   // ===== Panel Position Persistence =====
-  const PANEL_STORAGE_KEY = 'tka-option-picker-panel';
+  const PANEL_STORAGE_KEY = "tka-option-picker-panel";
 
   // Load panel position from storage (non-reactive, only read once on initialization)
   function getInitialPanelIndex(): number {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
         const stored = sessionStorage.getItem(PANEL_STORAGE_KEY);
         const panelIndex = stored ? parseInt(stored, 10) : 0;
@@ -65,16 +65,23 @@ Features:
   const initialPanelIndex = getInitialPanelIndex();
 
   // ===== State =====
-  let contentAreaBounds = $state<{ left: number; right: number; width: number } | null>(null);
+  let contentAreaBounds = $state<{
+    left: number;
+    right: number;
+    width: number;
+  } | null>(null);
 
   // ===== Event Handlers =====
   function handlePanelChange(panelIndex: number) {
     // Save panel position to sessionStorage
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       try {
         sessionStorage.setItem(PANEL_STORAGE_KEY, panelIndex.toString());
       } catch (error) {
-        console.error('❌ Failed to save panel position to sessionStorage:', error);
+        console.error(
+          "❌ Failed to save panel position to sessionStorage:",
+          error
+        );
       }
     }
 
@@ -82,7 +89,11 @@ Features:
     onSectionChange(panelIndex);
   }
 
-  function handleContentAreaChange(bounds: { left: number; right: number; width: number }) {
+  function handleContentAreaChange(bounds: {
+    left: number;
+    right: number;
+    width: number;
+  }) {
     contentAreaBounds = bounds;
   }
 </script>
@@ -91,7 +102,7 @@ Features:
   <HorizontalSwipeContainer
     panels={organizedPictographs}
     showIndicators={true}
-    initialPanelIndex={initialPanelIndex}
+    {initialPanelIndex}
     onPanelChange={handlePanelChange}
     onContentAreaChange={handleContentAreaChange}
     freezeNavigation={isTransitioning}
@@ -105,18 +116,22 @@ Features:
       <div
         class="panel"
         data-panel-index={index}
-        data-section-type={section.type || 'individual'}
+        data-section-type={section.type || "individual"}
       >
         <div class="panel-content">
-          {#if section.title === 'Types 4-6' || section.type === 'grouped'}
+          {#if section.title === "Types 4-6" || section.type === "grouped"}
             <!-- Grouped section (Types 4-6) -->
             <OptionPicker456Group
               pictographs={section.pictographs}
               {onPictographSelected}
-              containerWidth={contentAreaBounds?.width || layoutConfig?.containerWidth || 800}
+              containerWidth={contentAreaBounds?.width ||
+                layoutConfig?.containerWidth ||
+                800}
               pictographSize={layoutConfig?.pictographSize || 144}
-              gridGap={layoutConfig?.gridGap || '8px'}
-              layoutMode={layoutConfig?.optionsPerRow === 8 ? '8-column' : '4-column'}
+              gridGap={layoutConfig?.gridGap || "8px"}
+              layoutMode={layoutConfig?.optionsPerRow === 8
+                ? "8-column"
+                : "4-column"}
               {currentSequence}
               {isFadingOut}
               {contentAreaBounds}

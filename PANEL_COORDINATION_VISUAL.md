@@ -22,7 +22,9 @@ Result: Conflicting state, buttons stop working
 ```
 
 ## Solution: Mutual Exclusivity Enforcement
+
 Thank
+
 ```
 User clicks "Share" button
          ↓

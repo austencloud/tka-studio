@@ -26,12 +26,15 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Handle share button click - ONLY share, don't download
   async function handleShareClick() {
-    if (!canDownload || isDownloading || !currentSequence || !shareState) return;
+    if (!canDownload || isDownloading || !currentSequence || !shareState)
+      return;
     hapticService?.trigger("selection");
 
     // Try native sharing with actual image file
@@ -39,19 +42,28 @@
       try {
         // Get the actual image blob from the share service
         const shareService = resolve<any>(TYPES.IShareService);
-        const blob = await shareService.getImageBlob(currentSequence, shareState.options);
+        const blob = await shareService.getImageBlob(
+          currentSequence,
+          shareState.options
+        );
 
         // Create a File object with optimal metadata for Android sharing
-        const filename = shareService.generateFilename(currentSequence, shareState.options);
+        const filename = shareService.generateFilename(
+          currentSequence,
+          shareState.options
+        );
 
         // Ensure proper MIME type based on format
-        const mimeType = shareState.options.format === 'PNG' ? 'image/png' :
-                        shareState.options.format === 'JPEG' ? 'image/jpeg' :
-                        'image/webp';
+        const mimeType =
+          shareState.options.format === "PNG"
+            ? "image/png"
+            : shareState.options.format === "JPEG"
+              ? "image/jpeg"
+              : "image/webp";
 
         const file = new File([blob], filename, {
           type: mimeType,
-          lastModified: Date.now()
+          lastModified: Date.now(),
         });
 
         // Get image dimensions for debugging
@@ -68,9 +80,9 @@
 
         // Check if we can share files
         const shareData = {
-          title: 'TKA Sequence',
-          text: `Check out this TKA sequence: ${currentSequence?.name || 'Untitled'}`,
-          files: [file]
+          title: "TKA Sequence",
+          text: `Check out this TKA sequence: ${currentSequence?.name || "Untitled"}`,
+          files: [file],
         };
 
         if (navigator.canShare(shareData)) {
@@ -80,9 +92,9 @@
         } else {
           // Fallback to URL sharing if file sharing not supported
           await navigator.share({
-            title: 'TKA Sequence',
-            text: `Check out this TKA sequence: ${currentSequence?.name || 'Untitled'}`,
-            url: window.location.href
+            title: "TKA Sequence",
+            text: `Check out this TKA sequence: ${currentSequence?.name || "Untitled"}`,
+            url: window.location.href,
           });
           hapticService?.trigger("success");
           return;
@@ -95,7 +107,9 @@
     }
 
     // If no native sharing available, show message instead of downloading
-    alert('Sharing not available on this device. Use the download button to save the image.');
+    alert(
+      "Sharing not available on this device. Use the download button to save the image."
+    );
     hapticService?.trigger("error");
   }
 
@@ -107,7 +121,7 @@
     return {
       disabled: !isReady,
       showSpinner: isDownloading,
-      canInteract: isReady
+      canInteract: isReady,
     };
   });
 
@@ -203,8 +217,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   /* Reduced motion support */

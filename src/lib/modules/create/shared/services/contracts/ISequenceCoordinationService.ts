@@ -47,7 +47,9 @@ export interface ISequenceCoordinationService {
   /**
    * Check if arrow positioning is complete
    */
-  isArrowPositioningComplete(arrowPositions: Map<string, ArrowPosition>): boolean;
+  isArrowPositioningComplete(
+    arrowPositions: Map<string, ArrowPosition>
+  ): boolean;
 
   /**
    * Get current sequence data as pictograph array

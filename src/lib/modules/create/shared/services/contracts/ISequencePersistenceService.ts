@@ -1,6 +1,6 @@
 /**
  * Sequence Persistence Service Contract
- * 
+ *
  * Service for managing sequence state persistence that survives hot module replacement.
  * This service ensures that sequence state is maintained during development and provides
  * smooth clear sequence functionality.

@@ -86,15 +86,25 @@
                 <span class="rotation-badge"
                   >{animateState.gridRotationOffsets[pos.index]}°</span
                 >
-                <button
+                <div
                   class="remove-btn"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Remove sequence"
                   onclick={(e) => {
                     e.stopPropagation();
                     animateState.setGridSequence(pos.index, null);
                   }}
+                  onkeydown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      animateState.setGridSequence(pos.index, null);
+                    }
+                  }}
                 >
                   <i class="fas fa-times"></i>
-                </button>
+                </div>
               </div>
               <div class="cell-content">
                 <div class="placeholder-icon">
@@ -122,15 +132,24 @@
       <!-- Controls -->
       <div class="controls">
         <div class="playback">
-          <button class="control-btn"><i class="fas fa-play"></i></button>
-          <button class="control-btn"><i class="fas fa-stop"></i></button>
-          <button class="control-btn"><i class="fas fa-repeat"></i></button>
+          <button class="control-btn" aria-label="Play animation"
+            ><i class="fas fa-play"></i></button
+          >
+          <button class="control-btn" aria-label="Stop animation"
+            ><i class="fas fa-stop"></i></button
+          >
+          <button class="control-btn" aria-label="Loop animation"
+            ><i class="fas fa-repeat"></i></button
+          >
         </div>
 
         <div class="grid-settings">
           <div class="setting-group">
-            <label><i class="fas fa-gauge"></i> Speed</label>
+            <label for="grid-mode-speed"
+              ><i class="fas fa-gauge"></i> Speed</label
+            >
             <input
+              id="grid-mode-speed"
               type="range"
               min="0.5"
               max="2"

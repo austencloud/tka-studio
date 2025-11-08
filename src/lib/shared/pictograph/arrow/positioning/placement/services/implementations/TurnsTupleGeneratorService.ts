@@ -19,9 +19,7 @@ type LetterType =
   | "TYPE6";
 
 @injectable()
-export class TurnsTupleGeneratorService
-  implements ITurnsTupleGeneratorService
-{
+export class TurnsTupleGeneratorService implements ITurnsTupleGeneratorService {
   /**
    * Generate turns tuple string matching the legacy turns_tuple_generator logic.
    *
@@ -147,9 +145,7 @@ export class TurnsTupleGeneratorService
     } else {
       // If no float, use pro/anti ordering
       const proMotion =
-        blueMotion.motionType?.toLowerCase() === "pro"
-          ? blueMotion
-          : redMotion;
+        blueMotion.motionType?.toLowerCase() === "pro" ? blueMotion : redMotion;
       const antiMotion =
         blueMotion.motionType?.toLowerCase() === "anti"
           ? blueMotion

@@ -7,9 +7,18 @@ Renders a section with:
 - Beautiful fade animations when options change
 -->
 <script lang="ts">
-  import type { IReversalDetectionService, PictographWithReversals } from "$create/shared/services/contracts/IReversalDetectionService";
+  import type {
+    IReversalDetectionService,
+    PictographWithReversals,
+  } from "$create/shared/services/contracts/IReversalDetectionService";
   import type { IHapticFeedbackService, PictographData } from "$shared";
-  import { getLetterBorderColors, LETTER_TYPE_COLORS, Pictograph, resolve, TYPES } from "$shared";
+  import {
+    getLetterBorderColors,
+    LETTER_TYPE_COLORS,
+    Pictograph,
+    resolve,
+    TYPES,
+  } from "$shared";
   import { onMount } from "svelte";
   import { LetterTypeTextPainter } from "../utils/letter-type-text-painter";
 
@@ -48,7 +57,9 @@ Renders a section with:
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Get type info using shared infrastructure
@@ -61,7 +72,9 @@ Renders a section with:
       Type5: { description: "Dual-Dash", typeName: "Type 5" },
       Type6: { description: "Static", typeName: "Type 6" },
     };
-    const result = typeDescriptions[letterType as keyof typeof typeDescriptions] || {
+    const result = typeDescriptions[
+      letterType as keyof typeof typeDescriptions
+    ] || {
       description: "Unknown",
       typeName: "Type ?",
     };
@@ -78,16 +91,21 @@ Renders a section with:
     };
   });
 
-
-
   // Generate colored button text like desktop
-  const buttonText = $derived(LetterTypeTextPainter.formatSectionHeader(typeInfo.typeName, typeInfo.description));
+  const buttonText = $derived(
+    LetterTypeTextPainter.formatSectionHeader(
+      typeInfo.typeName,
+      typeInfo.description
+    )
+  );
 
   // Pictographs are already filtered when passed to this component
   const sectionPictographs = $derived(() => pictographs);
 
   // Get reversal detection service
-  const reversalDetectionService = resolve(TYPES.IReversalDetectionService) as IReversalDetectionService;
+  const reversalDetectionService = resolve(
+    TYPES.IReversalDetectionService
+  ) as IReversalDetectionService;
 
   // Get pictographs with reversal information from service
   const pictographsWithReversals = $derived(() => {
@@ -138,7 +156,9 @@ Renders a section with:
   $effect(() => {
     if (!sectionContainer) return;
 
-    const viewport = sectionContainer.closest(".embla__viewport") as HTMLElement;
+    const viewport = sectionContainer.closest(
+      ".embla__viewport"
+    ) as HTMLElement;
     if (!viewport) return;
 
     const measureViewportHeight = () => {
@@ -206,14 +226,14 @@ Renders a section with:
     const maxColumns = layoutConfig?.optionsPerRow || 4;
     const columns = Math.min(maxColumns, safeItemCount);
     const basePictographSize = layoutConfig?.pictographSize || 144;
-    const gridGapValue = parseInt(layoutConfig?.gridGap || '8px');
+    const gridGapValue = parseInt(layoutConfig?.gridGap || "8px");
     const targetSize = forcedPictographSize ?? basePictographSize;
 
     if (forcedPictographSize !== undefined) {
       return {
         columns,
         pictographSize: targetSize,
-        gridColumns: `repeat(${columns}, ${targetSize}px)`
+        gridColumns: `repeat(${columns}, ${targetSize}px)`,
       };
     }
 
@@ -226,23 +246,29 @@ Renders a section with:
       const availableForPictographs = estimatedAvailableWidth - totalGapSpace;
       const conservativeMaxSize = Math.floor(availableForPictographs / columns);
 
-      const conservativeSize = Math.min(basePictographSize, conservativeMaxSize);
+      const conservativeSize = Math.min(
+        basePictographSize,
+        conservativeMaxSize
+      );
       const fallbackSize = Math.max(conservativeSize, 40);
 
       return {
         columns,
         pictographSize: fallbackSize,
-        gridColumns: `repeat(${columns}, ${fallbackSize}px)`
+        gridColumns: `repeat(${columns}, ${fallbackSize}px)`,
       };
     }
 
     const totalWidthGapSpace = (columns - 1) * gridGapValue;
     const availableWidthForPictographs = availableWidth - totalWidthGapSpace;
-    const maxWidthBasedSize = Math.floor(availableWidthForPictographs / columns);
+    const maxWidthBasedSize = Math.floor(
+      availableWidthForPictographs / columns
+    );
 
     const rows = Math.ceil(rawItemCount / columns) || 1;
     const totalHeightGapSpace = (rows - 1) * gridGapValue;
-    const availableHeightForPictographs = availableHeight - actualHeaderHeight - totalHeightGapSpace;
+    const availableHeightForPictographs =
+      availableHeight - actualHeaderHeight - totalHeightGapSpace;
     const maxHeightBasedSize = Math.floor(availableHeightForPictographs / rows);
 
     const maxPictographSize = Math.min(maxWidthBasedSize, maxHeightBasedSize);
@@ -252,17 +278,20 @@ Renders a section with:
     return {
       columns,
       pictographSize: finalSize,
-      gridColumns: `repeat(${columns}, ${finalSize}px)`
+      gridColumns: `repeat(${columns}, ${finalSize}px)`,
     };
   });
 
   // Handle pictograph selection
-  function handlePictographClick(pictographWithReversals: PictographWithReversals) {
+  function handlePictographClick(
+    pictographWithReversals: PictographWithReversals
+  ) {
     // Trigger haptic feedback for pictograph selection
     hapticService?.trigger("selection");
 
     // Extract the original PictographData for selection (remove reversal flags)
-    const { blueReversal, redReversal, ...pictographData } = pictographWithReversals;
+    const { blueReversal, redReversal, ...pictographData } =
+      pictographWithReversals;
     onPictographSelected(pictographData as PictographData);
   }
 </script>
@@ -270,7 +299,9 @@ Renders a section with:
 <div
   class="option-picker-section"
   bind:this={sectionContainer}
-  style:--section-width={contentAreaBounds ? `${contentAreaBounds.width}px` : '100%'}
+  style:--section-width={contentAreaBounds
+    ? `${contentAreaBounds.width}px`
+    : "100%"}
   data-letter-type={letterType}
 >
   <!-- Section Header (visual only - no toggle functionality) -->
@@ -295,31 +326,31 @@ Renders a section with:
 
   <!-- Section Content -->
   {#if pictographsWithReversals().length > 0}
-  <div
-    class="pictographs-grid"
-    style:grid-template-columns={optimalLayout().gridColumns}
-    style:gap={layoutConfig?.gridGap || '16px'}
-    style:opacity={isFadingOut ? '0' : '1'}
-    style:transition="opacity 250ms ease-out"
-  >
-    {#each pictographsWithReversals() as pictograph (pictograph.id || `${pictograph.letter}-${pictograph.startPosition}-${pictograph.endPosition}`)}
-      {@const borderColors = getLetterBorderColors(pictograph.letter)}
-      <button
-        class="pictograph-option"
-        onclick={() => handlePictographClick(pictograph)}
-        style:width="{optimalLayout().pictographSize}px"
-        style:height="{optimalLayout().pictographSize}px"
-        style:--border-primary={borderColors.primary}
-        style:--border-secondary={borderColors.secondary}
-        style:--pictograph-size="{optimalLayout().pictographSize}px"
-      >
-        <Pictograph
-          pictographData={pictograph}
-          disableContentTransitions={true}
-        />
-      </button>
-    {/each}
-  </div>
+    <div
+      class="pictographs-grid"
+      style:grid-template-columns={optimalLayout().gridColumns}
+      style:gap={layoutConfig?.gridGap || "16px"}
+      style:opacity={isFadingOut ? "0" : "1"}
+      style:transition="opacity 250ms ease-out"
+    >
+      {#each pictographsWithReversals() as pictograph (pictograph.id || `${pictograph.letter}-${pictograph.startPosition}-${pictograph.endPosition}`)}
+        {@const borderColors = getLetterBorderColors(pictograph.letter)}
+        <button
+          class="pictograph-option"
+          onclick={() => handlePictographClick(pictograph)}
+          style:width="{optimalLayout().pictographSize}px"
+          style:height="{optimalLayout().pictographSize}px"
+          style:--border-primary={borderColors.primary}
+          style:--border-secondary={borderColors.secondary}
+          style:--pictograph-size="{optimalLayout().pictographSize}px"
+        >
+          <Pictograph
+            pictographData={pictograph}
+            disableContentTransitions={true}
+          />
+        </button>
+      {/each}
+    </div>
   {/if}
 </div>
 

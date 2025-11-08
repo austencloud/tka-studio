@@ -6,8 +6,9 @@ Shows different states: no link, has link, opening link.
 -->
 <script lang="ts">
   import { onMount } from "svelte";
-  import type { IInstagramLinkService, IHapticFeedbackService } from "$shared";
+  import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
+  import type { IInstagramLinkService } from "../services/contracts";
   import type { InstagramLink } from "../domain";
 
   let {
@@ -27,8 +28,12 @@ Shows different states: no link, has link, opening link.
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    instagramService = resolve<IInstagramLinkService>(TYPES.IInstagramLinkService);
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    instagramService = resolve<IInstagramLinkService>(
+      TYPES.IInstagramLinkService
+    );
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Handle button click
@@ -112,12 +117,19 @@ Shows different states: no link, has link, opening link.
 
   .instagram-button:hover:not(.disabled) {
     background: var(--bg-tertiary);
-    border-color: #E4405F;
-    color: #E4405F;
+    border-color: #e4405f;
+    color: #e4405f;
   }
 
   .instagram-button.has-link {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    background: linear-gradient(
+      45deg,
+      #f09433 0%,
+      #e6683c 25%,
+      #dc2743 50%,
+      #cc2366 75%,
+      #bc1888 100%
+    );
     color: white;
     border: none;
   }
@@ -175,4 +187,3 @@ Shows different states: no link, has link, opening link.
     }
   }
 </style>
-

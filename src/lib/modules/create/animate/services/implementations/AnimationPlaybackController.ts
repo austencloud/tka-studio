@@ -18,7 +18,9 @@ import type { ISequenceAnimationOrchestrator } from "../contracts/ISequenceAnima
 import type { ISequenceLoopabilityChecker } from "../contracts/ISequenceLoopabilityChecker";
 
 @injectable()
-export class AnimationPlaybackController implements IAnimationPlaybackController {
+export class AnimationPlaybackController
+  implements IAnimationPlaybackController
+{
   private state: AnimationPanelState | null = null;
   private sequenceData: SequenceData | null = null;
   private isSeamlesslyLoopable: boolean = false;
@@ -37,7 +39,8 @@ export class AnimationPlaybackController implements IAnimationPlaybackController
     this.sequenceData = sequenceData;
 
     // Check if sequence is seamlessly loopable
-    this.isSeamlesslyLoopable = this.loopabilityChecker.isSeamlesslyLoopable(sequenceData);
+    this.isSeamlesslyLoopable =
+      this.loopabilityChecker.isSeamlesslyLoopable(sequenceData);
 
     // Initialize animation engine with sequence data
     const success = this.animationEngine.initializeWithDomainData(sequenceData);

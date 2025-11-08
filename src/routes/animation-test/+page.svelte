@@ -17,24 +17,56 @@
   };
 
   const gradientAnimations: GradientAnimation[] = [
-    { id: 'flow', name: 'Flowing Rainbow', description: 'Horizontal flow animation' },
-    { id: 'wave', name: 'Wave Pulse', description: 'Pulsing wave effect' },
-    { id: 'shimmer', name: 'Shimmer', description: 'Shimmering highlight sweep' },
-    { id: 'rotate', name: 'Rotating Gradient', description: 'Circular gradient rotation' },
-    { id: 'pulse', name: 'Rainbow Pulse', description: 'Breathing rainbow effect' },
-    { id: 'diagonal', name: 'Diagonal Flow', description: 'Diagonal sweeping gradient' },
+    {
+      id: "flow",
+      name: "Flowing Rainbow",
+      description: "Horizontal flow animation",
+    },
+    { id: "wave", name: "Wave Pulse", description: "Pulsing wave effect" },
+    {
+      id: "shimmer",
+      name: "Shimmer",
+      description: "Shimmering highlight sweep",
+    },
+    {
+      id: "rotate",
+      name: "Rotating Gradient",
+      description: "Circular gradient rotation",
+    },
+    {
+      id: "pulse",
+      name: "Rainbow Pulse",
+      description: "Breathing rainbow effect",
+    },
+    {
+      id: "diagonal",
+      name: "Diagonal Flow",
+      description: "Diagonal sweeping gradient",
+    },
   ];
 
   const sparkleStyles: SparkleStyle[] = [
-    { id: 'twinkle', name: 'Classic Twinkle', description: 'Rotating cross stars' },
-    { id: 'burst', name: 'Starburst', description: '4-point star burst' },
-    { id: 'float', name: 'Floating Dots', description: 'Floating particle effect' },
-    { id: 'shimmer', name: 'Shimmer Trails', description: 'Trailing shimmer lines' },
-    { id: 'none', name: 'No Sparkles', description: 'Just the gradient' },
+    {
+      id: "twinkle",
+      name: "Classic Twinkle",
+      description: "Rotating cross stars",
+    },
+    { id: "burst", name: "Starburst", description: "4-point star burst" },
+    {
+      id: "float",
+      name: "Floating Dots",
+      description: "Floating particle effect",
+    },
+    {
+      id: "shimmer",
+      name: "Shimmer Trails",
+      description: "Trailing shimmer lines",
+    },
+    { id: "none", name: "No Sparkles", description: "Just the gradient" },
   ];
 
-  let selectedGradient = $state<string>('flow');
-  let selectedSparkle = $state<string>('twinkle');
+  let selectedGradient = $state<string>("flow");
+  let selectedSparkle = $state<string>("twinkle");
 </script>
 
 <div class="animation-test-page">
@@ -49,7 +81,7 @@
           <button
             class="option-button"
             class:active={selectedGradient === anim.id}
-            onclick={() => selectedGradient = anim.id}
+            onclick={() => (selectedGradient = anim.id)}
           >
             <span class="option-name">{anim.name}</span>
             <span class="option-desc">{anim.description}</span>
@@ -65,7 +97,7 @@
           <button
             class="option-button"
             class:active={selectedSparkle === style.id}
-            onclick={() => selectedSparkle = style.id}
+            onclick={() => (selectedSparkle = style.id)}
           >
             <span class="option-name">{style.name}</span>
             <span class="option-desc">{style.description}</span>
@@ -75,8 +107,9 @@
     </div>
 
     <div class="current-selection">
-      <strong>Current:</strong> {gradientAnimations.find(a => a.id === selectedGradient)?.name} +
-      {sparkleStyles.find(s => s.id === selectedSparkle)?.name}
+      <strong>Current:</strong>
+      {gradientAnimations.find((a) => a.id === selectedGradient)?.name} +
+      {sparkleStyles.find((s) => s.id === selectedSparkle)?.name}
     </div>
   </div>
 
@@ -85,7 +118,7 @@
       <h1 class="hero-title" data-gradient={selectedGradient}>
         <span class="gradient-text">The Kinetic Alphabet</span>
 
-        {#if selectedSparkle !== 'none'}
+        {#if selectedSparkle !== "none"}
           <span class="sparkle sparkle-1" data-style={selectedSparkle}></span>
           <span class="sparkle sparkle-2" data-style={selectedSparkle}></span>
           <span class="sparkle sparkle-3" data-style={selectedSparkle}></span>
@@ -102,7 +135,11 @@
 <style>
   .animation-test-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, rgba(20, 20, 30, 1) 0%, rgba(30, 30, 40, 1) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(20, 20, 30, 1) 0%,
+      rgba(30, 30, 40, 1) 100%
+    );
     display: grid;
     grid-template-columns: 400px 1fr;
     color: white;
@@ -256,8 +293,12 @@
   }
 
   @keyframes gradient-flow {
-    0% { background-position: 0% 50%; }
-    100% { background-position: 200% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
   }
 
   /* Wave Pulse */
@@ -279,8 +320,13 @@
   }
 
   @keyframes wave-pulse {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
   }
 
   /* Shimmer */
@@ -301,8 +347,12 @@
   }
 
   @keyframes shimmer {
-    0% { background-position: -100% 0%; }
-    100% { background-position: 200% 0%; }
+    0% {
+      background-position: -100% 0%;
+    }
+    100% {
+      background-position: 200% 0%;
+    }
   }
 
   /* Rotate */
@@ -322,8 +372,12 @@
   }
 
   @keyframes rotate-gradient {
-    0% { filter: hue-rotate(0deg); }
-    100% { filter: hue-rotate(360deg); }
+    0% {
+      filter: hue-rotate(0deg);
+    }
+    100% {
+      filter: hue-rotate(360deg);
+    }
   }
 
   /* Pulse */
@@ -344,7 +398,8 @@
   }
 
   @keyframes pulse-gradient {
-    0%, 100% {
+    0%,
+    100% {
       background-size: 200% 200%;
       opacity: 1;
     }
@@ -372,8 +427,12 @@
   }
 
   @keyframes diagonal-flow {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 100% 100%; }
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 100% 100%;
+    }
   }
 
   /* ============================================================================
@@ -396,7 +455,7 @@
 
   [data-style="twinkle"]::before,
   [data-style="twinkle"]::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -415,7 +474,8 @@
   }
 
   @keyframes twinkle {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
       transform: scale(0) rotate(0deg);
       filter: brightness(1);
@@ -436,13 +496,17 @@
 
   [data-style="burst"]::before,
   [data-style="burst"]::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
     width: 100%;
     height: 3px;
-    background: radial-gradient(ellipse at center, currentColor, transparent 70%);
+    background: radial-gradient(
+      ellipse at center,
+      currentColor,
+      transparent 70%
+    );
     transform: translate(-50%, -50%);
     box-shadow: 0 0 8px currentColor;
   }
@@ -456,7 +520,8 @@
   }
 
   @keyframes burst {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
       transform: scale(0);
     }
@@ -478,7 +543,8 @@
   }
 
   @keyframes float {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
       transform: translateY(0) scale(0);
     }
@@ -498,7 +564,8 @@
   }
 
   @keyframes shimmer-trail {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
       transform: translateX(-30px) scaleX(0);
     }
@@ -553,20 +620,56 @@
   }
 
   /* Size variations */
-  .sparkle-1 { width: 12px; height: 12px; }
-  .sparkle-2 { width: 8px; height: 8px; }
-  .sparkle-3 { width: 10px; height: 10px; }
-  .sparkle-4 { width: 9px; height: 9px; }
-  .sparkle-5 { width: 11px; height: 11px; }
-  .sparkle-6 { width: 7px; height: 7px; }
+  .sparkle-1 {
+    width: 12px;
+    height: 12px;
+  }
+  .sparkle-2 {
+    width: 8px;
+    height: 8px;
+  }
+  .sparkle-3 {
+    width: 10px;
+    height: 10px;
+  }
+  .sparkle-4 {
+    width: 9px;
+    height: 9px;
+  }
+  .sparkle-5 {
+    width: 11px;
+    height: 11px;
+  }
+  .sparkle-6 {
+    width: 7px;
+    height: 7px;
+  }
 
   /* Float style needs different sizes */
-  [data-style="float"].sparkle-1 { width: 8px; height: 8px; }
-  [data-style="float"].sparkle-2 { width: 5px; height: 5px; }
-  [data-style="float"].sparkle-3 { width: 7px; height: 7px; }
-  [data-style="float"].sparkle-4 { width: 6px; height: 6px; }
-  [data-style="float"].sparkle-5 { width: 8px; height: 8px; }
-  [data-style="float"].sparkle-6 { width: 5px; height: 5px; }
+  [data-style="float"].sparkle-1 {
+    width: 8px;
+    height: 8px;
+  }
+  [data-style="float"].sparkle-2 {
+    width: 5px;
+    height: 5px;
+  }
+  [data-style="float"].sparkle-3 {
+    width: 7px;
+    height: 7px;
+  }
+  [data-style="float"].sparkle-4 {
+    width: 6px;
+    height: 6px;
+  }
+  [data-style="float"].sparkle-5 {
+    width: 8px;
+    height: 8px;
+  }
+  [data-style="float"].sparkle-6 {
+    width: 5px;
+    height: 5px;
+  }
 
   /* Reduced Motion */
   @media (prefers-reduced-motion: reduce) {

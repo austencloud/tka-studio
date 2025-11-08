@@ -5,17 +5,19 @@ Integrates GuidedBuilder with the Create module's workspace.
 Handles real-time workspace updates and sequence completion.
 -->
 <script lang="ts">
-  import type { PictographData } from "$shared";
+  import type { PictographData, GridMode } from "$shared";
   import GuidedBuilder from "./GuidedBuilder.svelte";
 
   const {
     onSequenceUpdate,
     onSequenceComplete,
     onHeaderTextChange,
+    onGridModeChange,
   } = $props<{
     onSequenceUpdate?: (sequence: PictographData[]) => void;
     onSequenceComplete?: (sequence: PictographData[]) => void;
     onHeaderTextChange?: (text: string) => void;
+    onGridModeChange?: (gridMode: GridMode) => void;
   }>();
 
   // Handle sequence updates (during building)
@@ -33,7 +35,8 @@ Handles real-time workspace updates and sequence completion.
   <GuidedBuilder
     onSequenceUpdate={handleSequenceUpdate}
     onSequenceComplete={handleSequenceComplete}
-    onHeaderTextChange={onHeaderTextChange}
+    {onHeaderTextChange}
+    {onGridModeChange}
   />
 </div>
 

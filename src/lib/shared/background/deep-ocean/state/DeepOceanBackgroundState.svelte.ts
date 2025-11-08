@@ -1,9 +1,9 @@
 /**
  * Deep Ocean Background State
- * 
+ *
  * Domain state management for deep ocean background configuration.
  * Handles user preferences, performance settings, and runtime state.
- * 
+ *
  * This is PURE STATE - no business logic, just reactive state management.
  */
 import type { QualityLevel, AccessibilitySettings, Dimensions } from "$shared";
@@ -34,7 +34,7 @@ export function createDeepOceanBackgroundState(
     showPerformanceMetrics: false,
     ...initialConfig,
   });
-  
+
   let isInitialized = $state(false);
   let lastPerformanceCheck = $state(0);
   let performanceWarnings = $state<string[]>([]);
@@ -43,7 +43,7 @@ export function createDeepOceanBackgroundState(
   const shouldShowMetrics = $derived(
     config.showPerformanceMetrics && !config.accessibility.reducedMotion
   );
-  
+
   const effectiveQuality = $derived(() => {
     // Reduce quality for accessibility or small screens
     if (config.accessibility.reducedMotion) return "minimal";
@@ -57,16 +57,32 @@ export function createDeepOceanBackgroundState(
 
   return {
     // Getters
-    get dimensions() { return dimensions; },
-    get config() { return config; },
-    get isInitialized() { return isInitialized; },
-    get lastPerformanceCheck() { return lastPerformanceCheck; },
-    get performanceWarnings() { return performanceWarnings; },
-    
+    get dimensions() {
+      return dimensions;
+    },
+    get config() {
+      return config;
+    },
+    get isInitialized() {
+      return isInitialized;
+    },
+    get lastPerformanceCheck() {
+      return lastPerformanceCheck;
+    },
+    get performanceWarnings() {
+      return performanceWarnings;
+    },
+
     // Derived getters
-    get shouldShowMetrics() { return shouldShowMetrics; },
-    get effectiveQuality() { return effectiveQuality(); },
-    get isHighPerformanceMode() { return isHighPerformanceMode; },
+    get shouldShowMetrics() {
+      return shouldShowMetrics;
+    },
+    get effectiveQuality() {
+      return effectiveQuality();
+    },
+    get isHighPerformanceMode() {
+      return isHighPerformanceMode;
+    },
 
     // State updaters
     updateDimensions: (newDimensions: Dimensions) => {
@@ -80,7 +96,7 @@ export function createDeepOceanBackgroundState(
     updateAccessibility: (accessibility: Partial<AccessibilitySettings>) => {
       config = {
         ...config,
-        accessibility: { ...config.accessibility, ...accessibility }
+        accessibility: { ...config.accessibility, ...accessibility },
       };
     },
 
@@ -93,7 +109,10 @@ export function createDeepOceanBackgroundState(
     },
 
     togglePerformanceMetrics: () => {
-      config = { ...config, showPerformanceMetrics: !config.showPerformanceMetrics };
+      config = {
+        ...config,
+        showPerformanceMetrics: !config.showPerformanceMetrics,
+      };
     },
 
     markInitialized: () => {
@@ -122,4 +141,6 @@ export function createDeepOceanBackgroundState(
   };
 }
 
-export type DeepOceanBackgroundState = ReturnType<typeof createDeepOceanBackgroundState>;
+export type DeepOceanBackgroundState = ReturnType<
+  typeof createDeepOceanBackgroundState
+>;

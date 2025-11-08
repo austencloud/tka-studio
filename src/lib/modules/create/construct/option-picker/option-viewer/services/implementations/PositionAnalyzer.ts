@@ -13,7 +13,6 @@ import type { IPositionAnalyzer } from "../contracts/IPositionAnalyzer";
 
 @injectable()
 export class PositionAnalyzer implements IPositionAnalyzer {
-
   constructor(
     @inject(TYPES.IGridPositionDeriver) private positionMapper: any
   ) {}
@@ -21,14 +20,16 @@ export class PositionAnalyzer implements IPositionAnalyzer {
   /**
    * Get the position group (Alpha, Beta, Gamma) from a GridPosition
    */
-  getEndPositionGroup(endPosition: GridPosition | null | undefined): GridPositionGroup | null {
+  getEndPositionGroup(
+    endPosition: GridPosition | null | undefined
+  ): GridPositionGroup | null {
     if (!endPosition) return null;
 
     const positionStr = endPosition.toString();
 
-    if (positionStr.startsWith('alpha')) return GridPositionGroup.ALPHA;
-    if (positionStr.startsWith('beta')) return GridPositionGroup.BETA;
-    if (positionStr.startsWith('gamma')) return GridPositionGroup.GAMMA;
+    if (positionStr.startsWith("alpha")) return GridPositionGroup.ALPHA;
+    if (positionStr.startsWith("beta")) return GridPositionGroup.BETA;
+    if (positionStr.startsWith("gamma")) return GridPositionGroup.GAMMA;
 
     return null;
   }

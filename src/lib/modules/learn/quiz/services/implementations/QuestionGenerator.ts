@@ -42,9 +42,10 @@ export class QuestionGeneratorService {
 
       // Load ALL pictograph variations from CSV (Diamond mode)
       console.log("🔄 QuestionGenerator: Loading pictographs from CSV...");
-      this.allPictographs = await this.letterQueryHandler.getAllPictographVariations(
-        GridMode.DIAMOND
-      );
+      this.allPictographs =
+        await this.letterQueryHandler.getAllPictographVariations(
+          GridMode.DIAMOND
+        );
       console.log(
         `✅ QuestionGenerator: Loaded ${this.allPictographs.length} pictographs`
       );
@@ -55,7 +56,7 @@ export class QuestionGeneratorService {
           letter: this.allPictographs[0]!.letter,
           startPosition: this.allPictographs[0]!.startPosition,
           endPosition: this.allPictographs[0]!.endPosition,
-          hasMotions: !!this.allPictographs[0]!.motions
+          hasMotions: !!this.allPictographs[0]!.motions,
         });
       }
 
@@ -71,7 +72,9 @@ export class QuestionGeneratorService {
         }
       });
 
-      console.log(`📊 QuestionGenerator: ${pictographsWithLetters} pictographs have letters`);
+      console.log(
+        `📊 QuestionGenerator: ${pictographsWithLetters} pictographs have letters`
+      );
 
       // Get available letters
       this.availableLetters = Array.from(this.pictographsByLetter.keys());
@@ -90,9 +93,7 @@ export class QuestionGeneratorService {
   /**
    * Generate a question for a specific quiz type
    */
-  static async generateQuestion(
-    quizType: QuizType
-  ): Promise<QuizQuestionData> {
+  static async generateQuestion(quizType: QuizType): Promise<QuizQuestionData> {
     if (!this.isInitialized) {
       await this.initialize();
     }
@@ -312,9 +313,7 @@ export class QuestionGeneratorService {
   private static generateInitialPictograph(): PictographData {
     const validPictographs = this.allPictographs.filter(
       (p) =>
-        p.startPosition &&
-        p.endPosition &&
-        p.startPosition === p.endPosition
+        p.startPosition && p.endPosition && p.startPosition === p.endPosition
     );
 
     if (validPictographs.length === 0) {

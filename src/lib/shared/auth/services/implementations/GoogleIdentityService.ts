@@ -10,7 +10,11 @@
  * Reference: https://developers.google.com/identity/gsi/web
  */
 
-import { GoogleAuthProvider, signInWithCredential, signInWithPopup } from "firebase/auth";
+import {
+  GoogleAuthProvider,
+  signInWithCredential,
+  signInWithPopup,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 
 interface GoogleIdentityConfig {
@@ -71,7 +75,9 @@ export class GoogleIdentityService {
       }
 
       if (typeof window === "undefined") {
-        reject(new Error("Google Identity Services requires browser environment"));
+        reject(
+          new Error("Google Identity Services requires browser environment")
+        );
         return;
       }
 
@@ -100,7 +106,9 @@ export class GoogleIdentityService {
         clearInterval(checkInterval);
         if (!this.initialized) {
           reject(
-            new Error("Google Identity Services script failed to load after 5 seconds")
+            new Error(
+              "Google Identity Services script failed to load after 5 seconds"
+            )
           );
         }
       }, 5000);
@@ -121,7 +129,10 @@ export class GoogleIdentityService {
       callback: this.handleCredentialResponse.bind(this),
     });
 
-    console.log("✅ [GoogleIdentity] Initialized with client ID:", this.clientId);
+    console.log(
+      "✅ [GoogleIdentity] Initialized with client ID:",
+      this.clientId
+    );
   }
 
   /**
@@ -176,8 +187,13 @@ export class GoogleIdentityService {
       console.error("❌ [GoogleIdentity] Popup sign-in error:", error);
 
       // If popup is blocked by COOP, provide helpful error
-      if (error.code === "auth/popup-blocked" || error.code === "auth/popup-closed-by-user") {
-        throw new Error("Popup was blocked. Please allow popups for this site and try again.");
+      if (
+        error.code === "auth/popup-blocked" ||
+        error.code === "auth/popup-closed-by-user"
+      ) {
+        throw new Error(
+          "Popup was blocked. Please allow popups for this site and try again."
+        );
       } else if (error.code === "auth/cancelled-popup-request") {
         throw new Error("Sign-in cancelled. Please try again.");
       } else {
@@ -202,7 +218,9 @@ export class GoogleIdentityService {
     }
   ): void {
     if (!this.initialized) {
-      console.error("❌ [GoogleIdentity] Not initialized. Call initialize() first.");
+      console.error(
+        "❌ [GoogleIdentity] Not initialized. Call initialize() first."
+      );
       return;
     }
 

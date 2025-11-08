@@ -21,7 +21,9 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function handleClick() {
@@ -38,7 +40,7 @@
   aria-pressed={isActive}
   aria-label={isActive ? "Close share panel" : "Open share panel"}
   title="Share"
-  disabled={disabled}
+  {disabled}
 >
   <i class="fas fa-share-nodes" aria-hidden="true"></i>
 </button>
@@ -57,7 +59,11 @@
     font-size: 18px;
     color: #ffffff;
 
-    background: linear-gradient(135deg, rgba(139, 92, 246, 0.9), rgba(236, 72, 153, 0.9));
+    background: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 0.9),
+      rgba(236, 72, 153, 0.9)
+    );
     border: 1px solid rgba(255, 255, 255, 0.25);
     box-shadow:
       0 2px 8px rgba(79, 70, 229, 0.35),
@@ -88,7 +94,11 @@
   }
 
   .share-button.active {
-    background: linear-gradient(135deg, rgba(139, 92, 246, 1), rgba(236, 72, 153, 1));
+    background: linear-gradient(
+      135deg,
+      rgba(139, 92, 246, 1),
+      rgba(236, 72, 153, 1)
+    );
     box-shadow:
       0 4px 14px rgba(79, 70, 229, 0.55),
       0 10px 26px rgba(236, 72, 153, 0.4);

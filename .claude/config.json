@@ -6,7 +6,12 @@
     },
     "sequential-thinking": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-sequential-thinking"]
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
     },
     "tractatus-thinking": {
       "command": "cmd",
@@ -14,7 +19,14 @@
     },
     "filesystem": {
       "command": "cmd",
-      "args": ["/c", "npx", "-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\auste\\Documents", "C:\\_CA-CODE"]
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "C:\\Users\\auste\\Documents",
+        "C:\\_CA-CODE"
+      ]
     },
     "memory": {
       "command": "cmd",

@@ -4,7 +4,12 @@
  * Provides the static content and configuration used across the landing experience.
  */
 
-import type { LandingTextContent, Resource, SocialLink, SupportOption } from "./types";
+import type {
+  LandingTextContent,
+  Resource,
+  SocialLink,
+  SupportOption,
+} from "./types";
 
 export const CONTACT_EMAIL = "tkaflowarts@gmail.com";
 
@@ -64,7 +69,8 @@ export const SOCIAL_LINKS: SocialLink[] = [
 export const RESOURCES: Resource[] = [
   {
     title: "Level 1 PDF Book",
-    description: "Comprehensive introduction to The Kinetic Alphabet methodology",
+    description:
+      "Comprehensive introduction to The Kinetic Alphabet methodology",
     url: "https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link",
     icon: "/images/level_images/level_1.png",
     type: "download",

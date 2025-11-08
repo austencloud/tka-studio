@@ -23,7 +23,7 @@ Compact inline panel for configuring sequence length and grid mode.
     <div class="controls-row">
       <button
         class="adjust-btn"
-        onclick={() => sequenceLength = Math.max(1, sequenceLength - 1)}
+        onclick={() => (sequenceLength = Math.max(1, sequenceLength - 1))}
         aria-label="Decrease beats"
       >
         <i class="fas fa-minus"></i>
@@ -31,7 +31,7 @@ Compact inline panel for configuring sequence length and grid mode.
       <div class="value-display">{sequenceLength}</div>
       <button
         class="adjust-btn"
-        onclick={() => sequenceLength = Math.min(64, sequenceLength + 1)}
+        onclick={() => (sequenceLength = Math.min(64, sequenceLength + 1))}
         aria-label="Increase beats"
       >
         <i class="fas fa-plus"></i>
@@ -46,7 +46,7 @@ Compact inline panel for configuring sequence length and grid mode.
       <button
         class="grid-btn"
         class:active={gridMode === GridMode.DIAMOND}
-        onclick={() => gridMode = GridMode.DIAMOND}
+        onclick={() => (gridMode = GridMode.DIAMOND)}
         aria-label="Diamond mode"
         title="Diamond (N, E, S, W)"
       >
@@ -56,7 +56,7 @@ Compact inline panel for configuring sequence length and grid mode.
       <button
         class="grid-btn"
         class:active={gridMode === GridMode.BOX}
-        onclick={() => gridMode = GridMode.BOX}
+        onclick={() => (gridMode = GridMode.BOX)}
         aria-label="Box mode"
         title="Box (NE, SE, SW, NW)"
       >
@@ -80,7 +80,11 @@ Compact inline panel for configuring sequence length and grid mode.
     flex-direction: column;
     gap: 0.875rem;
     padding: 1.25rem;
-    background: linear-gradient(135deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.6));
+    background: linear-gradient(
+      135deg,
+      rgba(30, 41, 59, 0.6),
+      rgba(15, 23, 42, 0.6)
+    );
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -126,7 +130,11 @@ Compact inline panel for configuring sequence length and grid mode.
     width: 52px;
     height: 52px;
     padding: 0;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.15));
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.2),
+      rgba(37, 99, 235, 0.15)
+    );
     border: 2px solid rgba(59, 130, 246, 0.4);
     border-radius: 14px;
     color: #60a5fa;
@@ -140,7 +148,11 @@ Compact inline panel for configuring sequence length and grid mode.
   }
 
   .adjust-btn:hover {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.35), rgba(37, 99, 235, 0.25));
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.35),
+      rgba(37, 99, 235, 0.25)
+    );
     border-color: #3b82f6;
     color: #93c5fd;
     transform: translateY(-2px);

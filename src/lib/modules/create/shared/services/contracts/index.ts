@@ -1,4 +1,3 @@
-
 export * from "./IBeatOperationsService";
 export * from "./IKeyboardArrowAdjustmentService";
 export * from "./ICreationMethodPersistenceService";

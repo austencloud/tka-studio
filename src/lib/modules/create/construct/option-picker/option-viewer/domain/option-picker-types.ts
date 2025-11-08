@@ -1,11 +1,10 @@
 import type { PictographData } from "$shared";
 
-
 // ===== Basic State Types =====
-export type OptionPickerState = 'loading' | 'ready' | 'error';
+export type OptionPickerState = "loading" | "ready" | "error";
 
 // ===== Sort and Filter Types =====
-export type SortMethod = 'type' | 'endPosition' | 'reversals';
+export type SortMethod = "type" | "endPosition" | "reversals";
 
 // ===== Type Filter Types =====
 export type TypeFilter = {
@@ -27,11 +26,11 @@ export type EndPositionFilter = {
 // Type for reversal filter
 export type ReversalFilter = {
   continuous: boolean;
-  '1-reversal': boolean;
-  '2-reversals': boolean;
+  "1-reversal": boolean;
+  "2-reversals": boolean;
 };
 export type OrganizedSection = {
   title: string;
   pictographs: PictographData[];
-  type: 'section' | 'grouped';
+  type: "section" | "grouped";
 };

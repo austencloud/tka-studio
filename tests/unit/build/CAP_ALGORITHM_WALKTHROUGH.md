@@ -23,6 +23,7 @@ Beat 1:
 ### Step-by-Step Execution
 
 #### Step 1: Validation
+
 ```typescript
 startPos = ALPHA1
 endPos = ALPHA2  // from last beat
@@ -35,6 +36,7 @@ Result: ✅ YES - this is a valid halved CAP pair
 The validation passes because ALPHA1 and ALPHA2 are configured as a valid halved CAP start/end pair in the position maps.
 
 #### Step 2: Remove Start Position
+
 ```typescript
 Before: [Beat 0 START, Beat 1 A]
 After removing Beat 0: [Beat 1 A]
@@ -42,6 +44,7 @@ sequenceLength = 1
 ```
 
 #### Step 3: Calculate Entries to Add
+
 ```typescript
 sliceSize = HALVED
 entriestoAdd = sequenceLength * 1 = 1 beat
@@ -53,6 +56,7 @@ After adding and re-inserting the start position, we'll have 3 beats total.
 #### Step 4: Generate Beat 2
 
 **4a. Get Previous Matching Beat**
+
 ```typescript
 beatNumber = 2
 finalLength = 2
@@ -63,6 +67,7 @@ Index mapping for HALVED:
 ```
 
 **4b. Calculate New End Position**
+
 ```typescript
 Previous beat (Beat 1):
   - Blue end location: SOUTHWEST
@@ -105,12 +110,14 @@ Now let's execute again:
 #### Step 4 Corrected: Generate Beat 2
 
 **4a. Get Matching Beat**
+
 ```typescript
 beatNumber = 2
 previousMatchingBeat = Beat 1
 ```
 
 **4b. Calculate New End Position**
+
 ```typescript
 Previous beat (Beat 1) end locations:
   - Blue: WEST
@@ -141,6 +148,7 @@ So Beat 2 ends at ALPHA5!
 ```
 
 **4c. Create Transformed Motions**
+
 ```typescript
 For Blue Motion:
   - Start location: previous beat's blue end = WEST
@@ -158,6 +166,7 @@ For Red Motion:
 ```
 
 **4d. Create Beat 2**
+
 ```typescript
 Beat 2:
   beatNumber: 2
@@ -171,6 +180,7 @@ Beat 2:
 ```
 
 **4e. Update Orientations**
+
 ```typescript
 // Update start orientations from previous beat
 Beat 2.blue.startOrientation = Beat 1.blue.endOrientation
@@ -182,6 +192,7 @@ Beat 2.red.endOrientation = orientationCalculator.calculateEndOrientation(...)
 ```
 
 #### Step 5: Re-insert Start Position
+
 ```typescript
 Before: [Beat 1, Beat 2]
 After: [Beat 0 START, Beat 1, Beat 2]
@@ -223,6 +234,7 @@ Let me recalculate what the actual validation expects...
 ### Understanding the Validation
 
 Looking at the validation code:
+
 ```typescript
 const key = `${startPos},${endPos}`;
 if (!HALVED_CAPS.has(key)) {
@@ -231,15 +243,18 @@ if (!HALVED_CAPS.has(key)) {
 ```
 
 So for a HALVED CAP, the sequence must:
+
 1. Start at position X
 2. End at position Y
 3. The pair (X, Y) must be in the HALVED_CAPS validation set
 
 What this means:
+
 - The **input sequence** (before CAP execution) must end at the correct position
 - The HALVED_CAPS set contains pairs where Y is positioned such that when you double the sequence, you return to X
 
 So if the input sequence is:
+
 ```
 Beat 0: ALPHA1 → ALPHA1
 Beat 1: ALPHA1 → ALPHA3
@@ -248,6 +263,7 @@ Beat 1: ALPHA1 → ALPHA3
 The pair "ALPHA1,ALPHA3" must be in HALVED_CAPS. But ALPHA3 is only 90° from ALPHA1, not 180°.
 
 For a HALVED CAP, the input must end at the 180° position, so:
+
 ```
 Beat 0: ALPHA1 → ALPHA1
 Beat 1: ALPHA1 → ALPHA5 (180° opposite)
@@ -351,6 +367,7 @@ The algorithm works by:
 The key insight is that if you rotate a motion by X degrees repeatedly, after 360°/X rotations you return to the start. For HALVED (180°), you need 2 rotations. For QUARTERED (90°), you need 4 rotations.
 
 The implementation correctly:
+
 - ✅ Validates the input sequence can complete the rotation
 - ✅ Determines the rotation direction for each hand
 - ✅ Applies the rotation maps correctly

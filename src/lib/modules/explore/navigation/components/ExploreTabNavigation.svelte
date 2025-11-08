@@ -10,10 +10,7 @@ Allows switching between Sequences, Users, Collections, and Search.
   import { onMount } from "svelte";
   import type { ExploreTabType, ExploreTab } from "../types/explore-tab-types";
 
-  const {
-    currentTab = "sequences",
-    onTabChange = () => {},
-  } = $props<{
+  const { currentTab = "sequences", onTabChange = () => {} } = $props<{
     currentTab?: ExploreTabType;
     onTabChange?: (tab: ExploreTabType) => void;
   }>();

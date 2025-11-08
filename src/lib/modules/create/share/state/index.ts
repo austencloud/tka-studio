@@ -2,4 +2,4 @@
  * Share State
  */
 
-export * from './share-state.svelte';
+export * from "./share-state.svelte";

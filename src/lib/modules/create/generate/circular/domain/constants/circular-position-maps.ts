@@ -289,7 +289,10 @@ export const LOCATION_MAP_CLOCKWISE: Record<GridLocation, GridLocation> = {
  * Counter-clockwise location rotation map
  * Rotates locations 90° counter-clockwise: S → E → N → W → S
  */
-export const LOCATION_MAP_COUNTER_CLOCKWISE: Record<GridLocation, GridLocation> = {
+export const LOCATION_MAP_COUNTER_CLOCKWISE: Record<
+  GridLocation,
+  GridLocation
+> = {
   [GridLocation.SOUTH]: GridLocation.EAST,
   [GridLocation.EAST]: GridLocation.NORTH,
   [GridLocation.NORTH]: GridLocation.WEST,
@@ -348,10 +351,22 @@ export const HAND_ROTATION_DIRECTION_MAP = new Map<
   [`${GridLocation.EAST},${GridLocation.SOUTH}`, RotationDirection.CLOCKWISE],
 
   // Counter-clockwise cardinal rotations
-  [`${GridLocation.WEST},${GridLocation.SOUTH}`, RotationDirection.COUNTER_CLOCKWISE],
-  [`${GridLocation.NORTH},${GridLocation.WEST}`, RotationDirection.COUNTER_CLOCKWISE],
-  [`${GridLocation.EAST},${GridLocation.NORTH}`, RotationDirection.COUNTER_CLOCKWISE],
-  [`${GridLocation.SOUTH},${GridLocation.EAST}`, RotationDirection.COUNTER_CLOCKWISE],
+  [
+    `${GridLocation.WEST},${GridLocation.SOUTH}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
+  [
+    `${GridLocation.NORTH},${GridLocation.WEST}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
+  [
+    `${GridLocation.EAST},${GridLocation.NORTH}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
+  [
+    `${GridLocation.SOUTH},${GridLocation.EAST}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
 
   // Dash (opposite) movements
   [`${GridLocation.SOUTH},${GridLocation.NORTH}`, "dash"],
@@ -366,16 +381,40 @@ export const HAND_ROTATION_DIRECTION_MAP = new Map<
   [`${GridLocation.WEST},${GridLocation.WEST}`, "static"],
 
   // Clockwise diagonal rotations
-  [`${GridLocation.NORTHEAST},${GridLocation.SOUTHEAST}`, RotationDirection.CLOCKWISE],
-  [`${GridLocation.SOUTHEAST},${GridLocation.SOUTHWEST}`, RotationDirection.CLOCKWISE],
-  [`${GridLocation.SOUTHWEST},${GridLocation.NORTHWEST}`, RotationDirection.CLOCKWISE],
-  [`${GridLocation.NORTHWEST},${GridLocation.NORTHEAST}`, RotationDirection.CLOCKWISE],
+  [
+    `${GridLocation.NORTHEAST},${GridLocation.SOUTHEAST}`,
+    RotationDirection.CLOCKWISE,
+  ],
+  [
+    `${GridLocation.SOUTHEAST},${GridLocation.SOUTHWEST}`,
+    RotationDirection.CLOCKWISE,
+  ],
+  [
+    `${GridLocation.SOUTHWEST},${GridLocation.NORTHWEST}`,
+    RotationDirection.CLOCKWISE,
+  ],
+  [
+    `${GridLocation.NORTHWEST},${GridLocation.NORTHEAST}`,
+    RotationDirection.CLOCKWISE,
+  ],
 
   // Counter-clockwise diagonal rotations
-  [`${GridLocation.NORTHEAST},${GridLocation.NORTHWEST}`, RotationDirection.COUNTER_CLOCKWISE],
-  [`${GridLocation.NORTHWEST},${GridLocation.SOUTHWEST}`, RotationDirection.COUNTER_CLOCKWISE],
-  [`${GridLocation.SOUTHWEST},${GridLocation.SOUTHEAST}`, RotationDirection.COUNTER_CLOCKWISE],
-  [`${GridLocation.SOUTHEAST},${GridLocation.NORTHEAST}`, RotationDirection.COUNTER_CLOCKWISE],
+  [
+    `${GridLocation.NORTHEAST},${GridLocation.NORTHWEST}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
+  [
+    `${GridLocation.NORTHWEST},${GridLocation.SOUTHWEST}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
+  [
+    `${GridLocation.SOUTHWEST},${GridLocation.SOUTHEAST}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
+  [
+    `${GridLocation.SOUTHEAST},${GridLocation.NORTHEAST}`,
+    RotationDirection.COUNTER_CLOCKWISE,
+  ],
 
   // Dash diagonal movements
   [`${GridLocation.NORTHEAST},${GridLocation.SOUTHWEST}`, "dash"],

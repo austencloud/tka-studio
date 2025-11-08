@@ -18,9 +18,17 @@ export interface Section {
   disabled?: boolean; // For conditional tab accessibility
 }
 
-
 // Module-based navigation types
-export type ModuleId = "create" | "explore" | "learn" | "collect" | "animate" | "library" | "write" | "word_card" | "admin";
+export type ModuleId =
+  | "create"
+  | "explore"
+  | "learn"
+  | "collect"
+  | "animate"
+  | "library"
+  | "write"
+  | "word_card"
+  | "admin";
 
 /**
  * Module Definition

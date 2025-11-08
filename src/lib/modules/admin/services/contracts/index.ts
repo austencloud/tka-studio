@@ -3,4 +3,3 @@
  */
 
 export type { IAdminChallengeService } from "./IAdminChallengeService";
-

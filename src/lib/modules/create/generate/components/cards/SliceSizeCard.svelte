@@ -14,7 +14,7 @@ Shows BOTH slice size options vertically with clear active/inactive states
     shadowColor = "330deg 75% 55%", // Pink-matched shadow
     gridColumnSpan = 2,
     cardIndex = 0,
-    headerFontSize = "9px"
+    headerFontSize = "9px",
   } = $props<{
     currentSliceSize: SliceSize;
     onSliceSizeChange: (sliceSize: SliceSize) => void;
@@ -28,8 +28,16 @@ Shows BOTH slice size options vertically with clear active/inactive states
 
 <ToggleCard
   title="Slice"
-  option1={{ value: SliceSize.QUARTERED, label: "Quartered", icon: "chart-pie" }}
-  option2={{ value: SliceSize.HALVED, label: "Halved", icon: "circle-half-stroke" }}
+  option1={{
+    value: SliceSize.QUARTERED,
+    label: "Quartered",
+    icon: "chart-pie",
+  }}
+  option2={{
+    value: SliceSize.HALVED,
+    label: "Halved",
+    icon: "circle-half-stroke",
+  }}
   activeOption={currentSliceSize}
   onToggle={onSliceSizeChange}
   {color}

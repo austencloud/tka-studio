@@ -7,7 +7,10 @@ Displays user profiles with their contributions and stats.
 <script lang="ts">
   import { onMount, onDestroy } from "svelte";
   import { resolve, TYPES } from "$shared";
-  import type { IUserExploreService, UserProfile } from "../services/contracts/IUserExploreService";
+  import type {
+    IUserExploreService,
+    UserProfile,
+  } from "../services/contracts/IUserExploreService";
 
   let users = $state<UserProfile[]>([]);
   let isLoading = $state(true);
@@ -41,15 +44,23 @@ Displays user profiles with their contributions and stats.
         users = updatedUsers;
         isLoading = false;
         error = null;
-        console.log(`✅ UsersExplorePanel: Updated with ${updatedUsers.length} users`);
+        console.log(
+          `✅ UsersExplorePanel: Updated with ${updatedUsers.length} users`
+        );
       });
 
       console.log("✅ UsersExplorePanel: Real-time subscription active");
     } catch (err) {
-      console.error("❌ UsersExplorePanel: Error setting up subscription:", err);
+      console.error(
+        "❌ UsersExplorePanel: Error setting up subscription:",
+        err
+      );
 
       // Show generic error message
-      error = err instanceof Error ? err.message : "Failed to load users. Please try again.";
+      error =
+        err instanceof Error
+          ? err.message
+          : "Failed to load users. Please try again.";
       isLoading = false;
     }
   });

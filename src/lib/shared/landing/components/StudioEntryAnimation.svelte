@@ -11,7 +11,15 @@
   import { onMount } from "svelte";
 
   // Generate random sparkles
-  let sparkles = $state<Array<{ id: number; left: number; top: number; delay: number; size: number }>>([]);
+  let sparkles = $state<
+    Array<{
+      id: number;
+      left: number;
+      top: number;
+      delay: number;
+      size: number;
+    }>
+  >([]);
 
   onMount(() => {
     // Generate 30 random sparkles
@@ -26,7 +34,10 @@
 </script>
 
 <!-- Full screen overlay with doors opening animation -->
-<div class="studio-entry-overlay" transition:fade={{ duration: 600, easing: cubicOut }}>
+<div
+  class="studio-entry-overlay"
+  transition:fade={{ duration: 600, easing: cubicOut }}
+>
   <!-- Left Door -->
   <div class="door door-left"></div>
 
@@ -180,7 +191,7 @@
   .welcome-icon {
     font-size: clamp(3rem, 8vw, 5rem);
     margin-bottom: 1.5rem;
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    background: linear-gradient(135deg, #ffd700 0%, #ffa500 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -189,7 +200,8 @@
   }
 
   @keyframes icon-glow {
-    0%, 100% {
+    0%,
+    100% {
       filter: drop-shadow(0 4px 12px rgba(255, 215, 0, 0.4));
     }
     50% {
@@ -254,7 +266,7 @@
   /* Create cross/star shape */
   .sparkle::before,
   .sparkle::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -279,7 +291,8 @@
   }
 
   @keyframes sparkle-twinkle {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 0;
       transform: scale(0) rotate(0deg);
     }

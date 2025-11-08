@@ -5,12 +5,12 @@
  * Leverages the existing ShareService to generate sequence images and GIFs.
  */
 
-import { injectable, inject } from 'inversify';
-import type { IMediaBundlerService, IShareService } from '../contracts';
-import type { SequenceData } from '$shared';
-import type { InstagramMediaItem, ShareOptions } from '../../domain';
-import { validateMediaItem, INSTAGRAM_MEDIA_CONSTRAINTS } from '../../domain';
-import { TYPES } from '$shared/inversify';
+import { injectable, inject } from "inversify";
+import type { IMediaBundlerService, IShareService } from "../contracts";
+import type { SequenceData } from "$shared";
+import type { InstagramMediaItem, ShareOptions } from "../../domain";
+import { validateMediaItem, INSTAGRAM_MEDIA_CONSTRAINTS } from "../../domain";
+import { TYPES } from "$shared/inversify";
 
 @injectable()
 export class MediaBundlerService implements IMediaBundlerService {
@@ -33,7 +33,7 @@ export class MediaBundlerService implements IMediaBundlerService {
       const imageBlob = await this.generateSequenceImage(sequence, options);
       const imageItem = await this.createMediaItemFromBlob(
         imageBlob,
-        'IMAGE',
+        "IMAGE",
         items.length,
         `${sequence.word}_sequence.png`
       );
@@ -43,7 +43,7 @@ export class MediaBundlerService implements IMediaBundlerService {
       const gifBlob = await this.generateSequenceGif(sequence, options);
       const gifItem = await this.createMediaItemFromBlob(
         gifBlob,
-        'IMAGE', // GIFs are treated as images by Instagram
+        "IMAGE", // GIFs are treated as images by Instagram
         items.length,
         `${sequence.word}_animated.gif`
       );
@@ -51,7 +51,7 @@ export class MediaBundlerService implements IMediaBundlerService {
 
       return items;
     } catch (error: any) {
-      console.error('Failed to bundle sequence media:', error);
+      console.error("Failed to bundle sequence media:", error);
       throw new Error(`Media bundling failed: ${error.message}`);
     }
   }
@@ -59,21 +59,23 @@ export class MediaBundlerService implements IMediaBundlerService {
   /**
    * Create media item from user-selected video
    */
-  async createVideoMediaItem(videoFile: File, order: number): Promise<InstagramMediaItem> {
+  async createVideoMediaItem(
+    videoFile: File,
+    order: number
+  ): Promise<InstagramMediaItem> {
     // Validate video file
-    if (!videoFile.type.startsWith('video/')) {
-      throw new Error('File must be a video');
+    if (!videoFile.type.startsWith("video/")) {
+      throw new Error("File must be a video");
     }
 
     // Create preview URL
-    const previewUrl = URL.createObjectURL(videoFile);
+    const url = URL.createObjectURL(videoFile);
 
     const mediaItem: InstagramMediaItem = {
-      type: 'VIDEO',
-      file: videoFile,
-      previewUrl,
-      sizeBytes: videoFile.size,
-      mimeType: videoFile.type,
+      type: "VIDEO",
+      blob: videoFile,
+      url,
+      filename: videoFile.name,
       order,
     };
 
@@ -81,7 +83,7 @@ export class MediaBundlerService implements IMediaBundlerService {
     const validation = validateMediaItem(mediaItem);
     if (!validation.isValid) {
       // Revoke the URL since we're throwing an error
-      URL.revokeObjectURL(previewUrl);
+      URL.revokeObjectURL(url);
       throw new Error(validation.error);
     }
 
@@ -96,7 +98,7 @@ export class MediaBundlerService implements IMediaBundlerService {
     sequence: SequenceData,
     videoFile: File,
     options: ShareOptions,
-    layout: 'video-first' | 'sequence-first' = 'video-first'
+    layout: "video-first" | "sequence-first" = "video-first"
   ): Promise<InstagramMediaItem[]> {
     try {
       // Generate sequence media (image + GIF)
@@ -107,7 +109,7 @@ export class MediaBundlerService implements IMediaBundlerService {
 
       // Arrange based on layout preference
       let items: InstagramMediaItem[];
-      if (layout === 'video-first') {
+      if (layout === "video-first") {
         items = [videoMedia, ...sequenceMedia];
       } else {
         items = [...sequenceMedia, videoMedia];
@@ -122,12 +124,14 @@ export class MediaBundlerService implements IMediaBundlerService {
       // Validate the complete bundle
       const validation = this.validateBundle(items);
       if (!validation.isValid) {
-        throw new Error(`Invalid carousel bundle: ${validation.errors.join(', ')}`);
+        throw new Error(
+          `Invalid carousel bundle: ${validation.errors.join(", ")}`
+        );
       }
 
       return items;
     } catch (error: any) {
-      console.error('Failed to create carousel bundle:', error);
+      console.error("Failed to create carousel bundle:", error);
       throw error;
     }
   }
@@ -169,15 +173,18 @@ export class MediaBundlerService implements IMediaBundlerService {
   /**
    * Remove media item from bundle
    */
-  removeMediaItem(items: InstagramMediaItem[], index: number): InstagramMediaItem[] {
+  removeMediaItem(
+    items: InstagramMediaItem[],
+    index: number
+  ): InstagramMediaItem[] {
     if (index < 0 || index >= items.length) {
       return items;
     }
 
     // Revoke preview URL for cleanup
     const itemToRemove = items[index];
-    if (itemToRemove && itemToRemove.previewUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(itemToRemove.previewUrl);
+    if (itemToRemove && itemToRemove.url.startsWith("blob:")) {
+      URL.revokeObjectURL(itemToRemove.url);
     }
 
     // Create copy without the item
@@ -237,12 +244,9 @@ export class MediaBundlerService implements IMediaBundlerService {
     sequence: SequenceData,
     options: ShareOptions
   ): Promise<Blob> {
-    // Use ShareService to generate image
+    // Use ShareService to generate image blob
     // This leverages your existing rendering infrastructure
-    const dataUrl = await this.shareService.generateImage(sequence, options);
-
-    // Convert data URL to Blob
-    return await this.dataUrlToBlob(dataUrl);
+    return await this.shareService.getImageBlob(sequence, options);
   }
 
   /**
@@ -252,9 +256,9 @@ export class MediaBundlerService implements IMediaBundlerService {
     sequence: SequenceData,
     options: ShareOptions
   ): Promise<Blob> {
-    // Use ShareService to generate GIF
-    const gifBlob = await this.shareService.generateGif(sequence, options);
-    return gifBlob;
+    // For now, use the same image blob until GIF support is added to IShareService
+    // TODO: Add generateGif method to IShareService interface
+    return await this.shareService.getImageBlob(sequence, options);
   }
 
   /**
@@ -270,22 +274,18 @@ export class MediaBundlerService implements IMediaBundlerService {
    */
   private async createMediaItemFromBlob(
     blob: Blob,
-    type: 'IMAGE' | 'VIDEO',
+    type: "IMAGE" | "VIDEO",
     order: number,
     filename: string
   ): Promise<InstagramMediaItem> {
-    // Create File from Blob (for FormData compatibility)
-    const file = new File([blob], filename, { type: blob.type });
-
     // Create preview URL
-    const previewUrl = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
 
     return {
       type,
-      file,
-      previewUrl,
-      sizeBytes: blob.size,
-      mimeType: blob.type,
+      blob,
+      url,
+      filename,
       order,
     };
   }

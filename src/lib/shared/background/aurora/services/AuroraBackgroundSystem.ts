@@ -82,7 +82,8 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
 
       // Adjust existing arrays
       while (this.lensFlares.length > numLensFlares) this.lensFlares.pop();
-      while (this.lensFlares.length < numLensFlares) this.lensFlares.push(this.createLensFlare());
+      while (this.lensFlares.length < numLensFlares)
+        this.lensFlares.push(this.createLensFlare());
 
       while (this.sparkles.length > numSparkles) this.sparkles.pop();
       while (this.sparkles.length < numSparkles)
@@ -291,10 +292,7 @@ export class AuroraBackgroundSystem implements IBackgroundSystem {
         0.5,
         `rgba(${color.r}, ${color.g}, ${color.b}, ${lensFlare.opacity * 0.5})`
       );
-      gradient.addColorStop(
-        1,
-        `rgba(${color.r}, ${color.g}, ${color.b}, 0)`
-      );
+      gradient.addColorStop(1, `rgba(${color.r}, ${color.g}, ${color.b}, 0)`);
 
       ctx.fillStyle = gradient;
       ctx.filter = "blur(20px)"; // Soft glow effect

@@ -147,7 +147,7 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
   {#if !isStarted}
     <!-- Initial setup view -->
     <div class="setup-container" in:fade={{ duration: 200 }}>
-      <h2 class="title">{contextualHeader()}</h2>
+      <h2 class="title">{contextualHeader}</h2>
       <p class="subtitle">Choose your sequence length and grid mode</p>
 
       <SequenceLengthPicker bind:sequenceLength bind:gridMode />
@@ -170,7 +170,7 @@ Provides setup wizard, drawing interface, and conversion to MotionData.
       <!-- Header with inline settings and restart -->
       <div class="drawing-header">
         <div class="header-row">
-          <h2 class="title">{contextualHeader()}</h2>
+          <h2 class="title">{contextualHeader}</h2>
           <button
             class="restart-btn"
             onclick={handleRestart}

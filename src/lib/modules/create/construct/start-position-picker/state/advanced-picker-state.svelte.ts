@@ -36,8 +36,14 @@ export function createAdvancedPickerState() {
   /**
    * Handle grid mode change with transition animation
    */
-  function handleGridModeChange(newGridMode: GridMode, currentGridMode: GridMode) {
-    if (previousGridMode !== currentGridMode && previousGridMode !== undefined) {
+  function handleGridModeChange(
+    newGridMode: GridMode,
+    currentGridMode: GridMode
+  ) {
+    if (
+      previousGridMode !== currentGridMode &&
+      previousGridMode !== undefined
+    ) {
       // Grid mode changed - trigger transition
       isTransitioning = true;
       animatedPictographs.clear();
@@ -89,7 +95,7 @@ export function createAdvancedPickerState() {
       });
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     // Initial check
     requestAnimationFrame(() => {
@@ -97,7 +103,7 @@ export function createAdvancedPickerState() {
     });
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
     };
   }
 
@@ -111,10 +117,18 @@ export function createAdvancedPickerState() {
 
   return {
     // State getters
-    get shouldAnimate() { return shouldAnimate; },
-    get isTransitioning() { return isTransitioning; },
-    get hasOverflow() { return hasOverflow; },
-    get previousGridMode() { return previousGridMode; },
+    get shouldAnimate() {
+      return shouldAnimate;
+    },
+    get isTransitioning() {
+      return isTransitioning;
+    },
+    get hasOverflow() {
+      return hasOverflow;
+    },
+    get previousGridMode() {
+      return previousGridMode;
+    },
 
     // Actions
     initializeAnimations,

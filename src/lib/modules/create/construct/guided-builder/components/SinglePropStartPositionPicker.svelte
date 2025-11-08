@@ -157,7 +157,11 @@ With grid mode toggle to switch between Diamond and Box mode
           aria-label={`Select starting position ${location}`}
         >
           <div class="pictograph-wrapper">
-            <Pictograph pictographData={pictograph} visibleHand={handColor} />
+            <Pictograph
+              pictographData={pictograph}
+              visibleHand={handColor}
+              gridMode={currentGridMode}
+            />
           </div>
           <span class="position-label">{location.toUpperCase()}</span>
         </button>

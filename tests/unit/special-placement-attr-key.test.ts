@@ -94,7 +94,9 @@ describe("Special Placement Attribute Key Integration", () => {
     const dataService = new SpecialPlacementDataService();
     const tupleGenerator = new TurnsTupleGeneratorService();
     const letterClassificationService = new LetterClassificationService();
-    const lookupService = new SpecialPlacementLookupService(letterClassificationService);
+    const lookupService = new SpecialPlacementLookupService(
+      letterClassificationService
+    );
     const specialPlacementService = new SpecialPlacementService(
       dataService,
       tupleGenerator,
@@ -144,7 +146,7 @@ describe("Special Placement Attribute Key Integration", () => {
     console.log("\n🔍 Special Placement Service Call Test:");
     console.log(`   Method called: ${getSpy.mock.calls.length} time(s)`);
     console.log(
-      `   Received attributeKey: "${getSpy.mock.calls[0]?.[3] || 'undefined'}"`
+      `   Received attributeKey: "${getSpy.mock.calls[0]?.[3] || "undefined"}"`
     );
 
     expect(getSpy).toHaveBeenCalledWith(
@@ -159,28 +161,48 @@ describe("Special Placement Attribute Key Integration", () => {
 
   it("should demonstrate the fix: attr_key now flows through the pipeline", () => {
     console.log("\n📋 FIX VERIFICATION:");
-    console.log("   BEFORE: attr_key was generated but NOT passed to SpecialPlacementService");
+    console.log(
+      "   BEFORE: attr_key was generated but NOT passed to SpecialPlacementService"
+    );
     console.log("   - Line in ArrowAdjustmentCalculator:");
-    console.log('     const [_oriKey, _turnsTuple, _attrKey] = ...  // ❌ Underscore prefix!');
-    console.log("     await this.lookupSpecialPlacement(motion, pictograph, color)");
+    console.log(
+      "     const [_oriKey, _turnsTuple, _attrKey] = ...  // ❌ Underscore prefix!"
+    );
+    console.log(
+      "     await this.lookupSpecialPlacement(motion, pictograph, color)"
+    );
     console.log("     // ❌ attrKey NOT passed!");
     console.log("");
-    console.log("   AFTER: attr_key is generated AND passed to SpecialPlacementService");
+    console.log(
+      "   AFTER: attr_key is generated AND passed to SpecialPlacementService"
+    );
     console.log("   - Line in ArrowAdjustmentCalculator:");
-    console.log('     const [oriKey, turnsTuple, attrKey] = ...  // ✅ No underscore!');
-    console.log("     await this.lookupSpecialPlacement(motion, pictograph, color, attrKey)");
+    console.log(
+      "     const [oriKey, turnsTuple, attrKey] = ...  // ✅ No underscore!"
+    );
+    console.log(
+      "     await this.lookupSpecialPlacement(motion, pictograph, color, attrKey)"
+    );
     console.log("     // ✅ attrKey IS passed!");
     console.log("");
-    console.log("   - SpecialPlacementService.getSpecialAdjustment now accepts attributeKey:");
+    console.log(
+      "   - SpecialPlacementService.getSpecialAdjustment now accepts attributeKey:"
+    );
     console.log("     async getSpecialAdjustment(..., attributeKey?: string)");
     console.log("");
     console.log("   - Special placement lookup logic:");
-    console.log('     if (attributeKey && attributeKey in turnData) {');
-    console.log("       return new Point(adjustmentValues[0], adjustmentValues[1]);");
+    console.log("     if (attributeKey && attributeKey in turnData) {");
+    console.log(
+      "       return new Point(adjustmentValues[0], adjustmentValues[1]);"
+    );
     console.log("     }");
     console.log("");
-    console.log("   ✅ Fix complete: Special placements will now be correctly applied!");
-    console.log("   ✅ Overlapping arrows should now get proper special placement adjustments\n");
+    console.log(
+      "   ✅ Fix complete: Special placements will now be correctly applied!"
+    );
+    console.log(
+      "   ✅ Overlapping arrows should now get proper special placement adjustments\n"
+    );
 
     expect(true).toBe(true); // This test is for documentation purposes
   });

@@ -12,11 +12,7 @@ Provides a beautiful, unified experience for customizing presets
   import ModalHeader from "./ModalHeader.svelte";
   import { portal } from "./portal";
 
-  let {
-    preset,
-    onSave,
-    onClose
-  } = $props<{
+  let { preset, onSave, onClose } = $props<{
     preset: GenerationPreset;
     onSave: (name: string, icon?: string) => void;
     onClose: () => void;
@@ -30,7 +26,9 @@ Provides a beautiful, unified experience for customizing presets
   let selectedIcon = $state(preset.icon || "⚙️");
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
 
     // Focus the name input
     nameInput?.focus();
@@ -75,7 +73,10 @@ Provides a beautiful, unified experience for customizing presets
     onClose();
   }
 
-  const canSave = $derived(presetName.trim().length > 0 && (presetName !== preset.name || selectedIcon !== preset.icon));
+  const canSave = $derived(
+    presetName.trim().length > 0 &&
+      (presetName !== preset.name || selectedIcon !== preset.icon)
+  );
 </script>
 
 <div
@@ -234,11 +235,7 @@ Provides a beautiful, unified experience for customizing presets
   .name-input {
     width: 100%;
     padding: 12px 16px;
-    background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.4),
-      rgba(0, 0, 0, 0.3)
-    );
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.3));
     border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     color: white;
@@ -251,11 +248,7 @@ Provides a beautiful, unified experience for customizing presets
   .name-input:focus {
     outline: none;
     border-color: rgba(59, 130, 246, 0.6);
-    background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.5),
-      rgba(0, 0, 0, 0.4)
-    );
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.4));
     box-shadow:
       0 0 0 3px rgba(59, 130, 246, 0.2),
       0 2px 8px rgba(0, 0, 0, 0.2) inset;

@@ -28,7 +28,8 @@ Provides responsive layout:
 
   // ✅ PURE RUNES: Portrait mode detection using DeviceDetector
   const isPortraitMobile = $derived(
-    responsiveSettings?.isMobile && responsiveSettings?.orientation === "portrait"
+    responsiveSettings?.isMobile &&
+      responsiveSettings?.orientation === "portrait"
   );
 
   // Initialize DeviceDetector service

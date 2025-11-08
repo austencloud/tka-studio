@@ -55,8 +55,8 @@ export const coreModule = new ContainerModule(
       .to(PWAInstallDismissalService);
 
     // === DEVICE SERVICES ===
-    options.bind(TYPES.IViewportService).to(ViewportService);
-    options.bind(TYPES.IDeviceDetector).to(DeviceDetector);
+    options.bind(TYPES.IViewportService).to(ViewportService).inSingletonScope();
+    options.bind(TYPES.IDeviceDetector).to(DeviceDetector).inSingletonScope();
 
     // === FOUNDATION SERVICES ===
     options.bind(TYPES.IFileDownloadService).to(FileDownloadService);

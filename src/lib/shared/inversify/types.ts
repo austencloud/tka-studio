@@ -61,14 +61,20 @@ export const TYPES = {
   // === Create Module ServiceS ===
   ICreateModuleService: Symbol.for("ICreateModuleService"),
   ICreateModuleHandlers: Symbol.for("ICreateModuleHandlers"),
-  ICreateModuleInitializationService: Symbol.for("ICreateModuleInitializationService"),
+  ICreateModuleInitializationService: Symbol.for(
+    "ICreateModuleInitializationService"
+  ),
   ICreateModuleEffectCoordinator: Symbol.for("ICreateModuleEffectCoordinator"),
-  ICreationMethodPersistenceService: Symbol.for("ICreationMethodPersistenceService"),
+  ICreationMethodPersistenceService: Symbol.for(
+    "ICreationMethodPersistenceService"
+  ),
   ICreateModuleLayoutService: Symbol.for("ICreateModuleLayoutService"),
   IResponsiveLayoutService: Symbol.for("IResponsiveLayoutService"),
   INavigationSyncService: Symbol.for("INavigationSyncService"),
   IBeatOperationsService: Symbol.for("IBeatOperationsService"),
-  IKeyboardArrowAdjustmentService: Symbol.for("IKeyboardArrowAdjustmentService"),
+  IKeyboardArrowAdjustmentService: Symbol.for(
+    "IKeyboardArrowAdjustmentService"
+  ),
   IUndoService: Symbol.for("IUndoService"),
   IQuizSessionService: Symbol.for("IQuizSessionService"),
   IQuizGradingService: Symbol.for("IQuizGradingService"),
@@ -307,7 +313,7 @@ export const TYPES = {
   IBackgroundConfigurationService: Symbol.for(
     "IBackgroundConfigurationService"
   ),
-  
+
   // === DEEP OCEAN BACKGROUND SERVICES ===
   IBackgroundSystem: Symbol.for("IBackgroundSystem"),
   IBubblePhysics: Symbol.for("IBubblePhysics"),
@@ -316,7 +322,7 @@ export const TYPES = {
   IFishSpriteManager: Symbol.for("IFishSpriteManager"),
   IOceanRenderer: Symbol.for("IOceanRenderer"),
   ILightRayCalculator: Symbol.for("ILightRayCalculator"),
-  
+
   INightSkyCalculationService: Symbol.for("INightSkyCalculationService"),
   IBrowseStatePersister: Symbol.for("IBrowseStatePersister"),
   IArrowPlacementService: Symbol.for("IArrowPlacementService"),
@@ -349,9 +355,7 @@ export const TYPES = {
   ISpecialPlacementDataService: Symbol.for("ISpecialPlacementDataService"),
   ILetterClassificationService: Symbol.for("ILetterClassificationService"),
   ITurnsTupleGeneratorService: Symbol.for("ITurnsTupleGeneratorService"),
-  ISpecialPlacementLookupService: Symbol.for(
-    "ISpecialPlacementLookupService"
-  ),
+  ISpecialPlacementLookupService: Symbol.for("ISpecialPlacementLookupService"),
   IDefaultPlacementService: Symbol.for("IDefaultPlacementService"),
   ISpecialPlacementOriKeyGenerator: Symbol.for(
     "ISpecialPlacementOriKeyGenerator"

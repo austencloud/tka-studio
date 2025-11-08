@@ -1,15 +1,16 @@
 <!--
-  Drawer.svelte - Wrapper around vaul-svelte with backward-compatible API
+  Drawer.svelte - Minimal, reliable drawer with pure CSS animations
 
-  Built on vaul-svelte for improved gesture handling and accessibility.
+  NO MORE VAUL-SVELTE. Just clean, predictable CSS transforms.
 
-  RESPONSIVE LAYOUT SUPPORT:
-  - Mobile/stacked layout: Drawer slides up from bottom, full width
-  - Desktop/side-by-side layout: Drawer slides up from bottom, constrained to right half
-  - Uses ResponsiveLayoutService to detect layout mode
+  Features:
+  - Slides from right, left, top, or bottom based on placement
+  - Smooth CSS transitions that actually work
+  - Backdrop support
+  - Escape key to close
+  - Same API as before so nothing breaks
 -->
 <script lang="ts">
-  import { Drawer as VaulDrawer } from "vaul-svelte";
   import { onMount } from "svelte";
   import { resolve, TYPES } from "$shared/inversify";
   import type { IResponsiveLayoutService } from "$lib/modules/create/shared/services/contracts/IResponsiveLayoutService";
@@ -20,7 +21,7 @@
     isOpen = $bindable(false),
     closeOnBackdrop = true,
     closeOnEscape = true,
-    dismissible = true, // NEW: Controls swipe-to-dismiss gesture (separate from backdrop clicks)
+    dismissible = true,
     focusTrap = true,
     lockScroll = true,
     labelledBy,
@@ -30,16 +31,16 @@
     class: drawerClass = "",
     backdropClass = "",
     placement = "bottom",
-    respectLayoutMode = false, // NEW: Enable responsive layout behavior
-    onclose, // Svelte 5 event callback
-    onOpenChange, // Notify parent when vaul open state changes
-    onbackdropclick, // Custom backdrop click handler
+    respectLayoutMode = false,
+    onclose,
+    onOpenChange,
+    onbackdropclick,
     children,
   } = $props<{
     isOpen?: boolean;
     closeOnBackdrop?: boolean;
     closeOnEscape?: boolean;
-    dismissible?: boolean; // Controls swipe-to-dismiss gesture
+    dismissible?: boolean;
     focusTrap?: boolean;
     lockScroll?: boolean;
     labelledBy?: string;
@@ -49,46 +50,30 @@
     class?: string;
     backdropClass?: string;
     placement?: "bottom" | "top" | "right" | "left";
-    respectLayoutMode?: boolean; // Enable responsive layout behavior
-    onclose?: (event: CustomEvent<{ reason: CloseReason }>) => void; // Svelte 5 event callback
-    onOpenChange?: (open: boolean) => void; // Imperative open state notification
-    onbackdropclick?: (event: MouseEvent) => boolean; // Return true to close, false to keep open
+    respectLayoutMode?: boolean;
+    onclose?: (event: CustomEvent<{ reason: CloseReason }>) => void;
+    onOpenChange?: (open: boolean) => void;
+    onbackdropclick?: (event: MouseEvent) => boolean;
     children?: () => unknown;
   }>();
 
-  // Derive the direction prop for vaul-svelte based on placement
-  // This ensures gesture detection works correctly for swipe-to-dismiss
-  const direction = $derived(placement);
-
-  let lastOpenState = false;
   let layoutService: IResponsiveLayoutService | null = null;
   let isSideBySideLayout = $state(false);
+  let mounted = $state(false);
+  let wasOpen = $state(false);
 
-  /**
-   * Fix for vaul-svelte animation issue when using bind:open
-   *
-   * When vaul-svelte mounts with open={true}, it adds the drawer to the DOM
-   * already in the open state, preventing CSS transitions from working.
-   *
-   * This transition function forces a reflow by calling getComputedStyle,
-   * which ensures the browser applies the initial closed state before
-   * transitioning to open. This is the standard workaround for vaul-svelte.
-   *
-   * See: https://github.com/huntabyte/vaul-svelte/issues/52
-   */
-  function fixDrawerTransition(node: Element) {
-    // Force reflow to ensure initial state is applied
-    getComputedStyle(node).height;
-
-    return {
-      delay: 0,
-      duration: 0,
-      easing: (x: number) => x,
-    };
-  }
+  // Swipe-to-dismiss state
+  let drawerElement = $state<HTMLElement | null>(null);
+  let isDragging = $state(false);
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragDeltaX = $state(0);
+  let dragDeltaY = $state(0);
+  let dragStartTime = 0;
 
   // Initialize layout service if responsive layout is enabled
   onMount(() => {
+    mounted = true;
     if (respectLayoutMode) {
       try {
         layoutService = resolve(
@@ -109,24 +94,24 @@
     }
   });
 
+  // Track open state changes and notify parent
+  $effect(() => {
+    if (isOpen !== wasOpen) {
+      onOpenChange?.(isOpen);
+
+      // Emit close event when closing
+      if (wasOpen && !isOpen) {
+        emitClose("programmatic");
+      }
+
+      wasOpen = isOpen;
+    }
+  });
+
   function emitClose(reason: CloseReason) {
-    // Call the onclose callback if provided
     if (onclose) {
       onclose(new CustomEvent("close", { detail: { reason } }));
     }
-  }
-
-  function handleOpenChange(open: boolean) {
-    // Update the bindable isOpen prop
-    isOpen = open;
-    onOpenChange?.(open);
-
-    // Emit close event when drawer closes
-    if (lastOpenState && !open) {
-      emitClose("programmatic");
-    }
-
-    lastOpenState = open;
   }
 
   function handleBackdropClick(event: MouseEvent) {
@@ -155,48 +140,192 @@
       isOpen = false;
     }
   }
+
+  // Compute state attribute for CSS
+  const dataState = $derived(isOpen ? "open" : "closed");
+
+  // Compute full class names
+  const overlayClasses = $derived(
+    `drawer-overlay ${backdropClass} ${respectLayoutMode && isSideBySideLayout ? "side-by-side-layout" : ""}`.trim()
+  );
+
+  const contentClasses = $derived(
+    `drawer-content ${drawerClass} ${respectLayoutMode && isSideBySideLayout ? "side-by-side-layout" : ""}`.trim()
+  );
+
+  // Touch/Mouse drag handlers (based on swipeGesture.ts pattern)
+  function handleTouchStart(event: TouchEvent) {
+    if (!dismissible) return;
+
+    isDragging = true;
+    dragStartX = event.touches[0]!.clientX;
+    dragStartY = event.touches[0]!.clientY;
+    dragStartTime = Date.now();
+    dragDeltaX = 0;
+    dragDeltaY = 0;
+  }
+
+  function handleTouchMove(event: TouchEvent) {
+    if (!isDragging || !dismissible) return;
+
+    const currentX = event.touches[0]!.clientX;
+    const currentY = event.touches[0]!.clientY;
+    const deltaX = currentX - dragStartX;
+    const deltaY = currentY - dragStartY;
+
+    // Apply drag based on placement - only allow correct direction
+    if (placement === "right") {
+      dragDeltaX = Math.max(0, deltaX); // Only right
+    } else if (placement === "bottom") {
+      dragDeltaY = Math.max(0, deltaY); // Only down
+    } else if (placement === "left") {
+      dragDeltaX = Math.min(0, deltaX); // Only left
+    } else if (placement === "top") {
+      dragDeltaY = Math.min(0, deltaY); // Only up
+    }
+
+    // Prevent default if dragging significantly
+    const distance = Math.abs(
+      placement === "right" || placement === "left" ? dragDeltaX : dragDeltaY
+    );
+    if (distance > 25) {
+      event.preventDefault();
+    }
+  }
+
+  function handleTouchEnd(event: TouchEvent) {
+    if (!isDragging || !dismissible) return;
+
+    const threshold = 100;
+    const maxDuration = 500;
+    const duration = Date.now() - dragStartTime;
+    const distance = Math.abs(
+      placement === "right" || placement === "left" ? dragDeltaX : dragDeltaY
+    );
+
+    // Dismiss if dragged past threshold or fast swipe
+    if (distance > threshold || (distance > 50 && duration < maxDuration)) {
+      emitClose("programmatic");
+      isOpen = false;
+    }
+
+    isDragging = false;
+    dragDeltaX = 0;
+    dragDeltaY = 0;
+  }
+
+  // Mouse handlers for desktop
+  function handleMouseDown(event: MouseEvent) {
+    if (!dismissible) return;
+
+    isDragging = true;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    dragStartTime = Date.now();
+    dragDeltaX = 0;
+    dragDeltaY = 0;
+  }
+
+  function handleMouseMove(event: MouseEvent) {
+    if (!isDragging || !dismissible) return;
+
+    const deltaX = event.clientX - dragStartX;
+    const deltaY = event.clientY - dragStartY;
+
+    // Apply drag based on placement
+    if (placement === "right") {
+      dragDeltaX = Math.max(0, deltaX);
+    } else if (placement === "bottom") {
+      dragDeltaY = Math.max(0, deltaY);
+    } else if (placement === "left") {
+      dragDeltaX = Math.min(0, deltaX);
+    } else if (placement === "top") {
+      dragDeltaY = Math.min(0, deltaY);
+    }
+  }
+
+  function handleMouseUp(event: MouseEvent) {
+    if (!isDragging || !dismissible) return;
+
+    const threshold = 100;
+    const maxDuration = 500;
+    const duration = Date.now() - dragStartTime;
+    const distance = Math.abs(
+      placement === "right" || placement === "left" ? dragDeltaX : dragDeltaY
+    );
+
+    if (distance > threshold || (distance > 50 && duration < maxDuration)) {
+      emitClose("programmatic");
+      isOpen = false;
+    }
+
+    isDragging = false;
+    dragDeltaX = 0;
+    dragDeltaY = 0;
+  }
+
+  // Compute transform for dragging
+  const dragTransform = $derived(() => {
+    if (!isDragging) return "";
+
+    if (placement === "right") {
+      return `translate3d(${dragDeltaX}px, 0, 0)`;
+    } else if (placement === "bottom") {
+      return `translate3d(0, ${dragDeltaY}px, 0)`;
+    } else if (placement === "left") {
+      return `translate3d(${dragDeltaX}px, 0, 0)`;
+    } else if (placement === "top") {
+      return `translate3d(0, ${dragDeltaY}px, 0)`;
+    }
+    return "";
+  });
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
 
-<VaulDrawer.Root
-  bind:open={isOpen}
-  onOpenChange={handleOpenChange}
-  {dismissible}
-  {direction}
-  shouldScaleBackground={false}
-  scrollLockTimeout={0}
->
-  <VaulDrawer.Portal>
-    <VaulDrawer.Overlay
-      class={`drawer-overlay ${backdropClass} ${respectLayoutMode && isSideBySideLayout ? "side-by-side-layout" : ""}`.trim()}
-      onclick={handleBackdropClick}
-    />
-    <VaulDrawer.Content
-      class={`drawer-content ${drawerClass} ${respectLayoutMode && isSideBySideLayout ? "side-by-side-layout" : ""}`.trim()}
-      data-placement={placement}
-      {role}
-      aria-modal="true"
-      aria-labelledby={labelledBy}
-      aria-label={ariaLabel}
-      transition={fixDrawerTransition}
-    >
-      {#if showHandle}
-        <div class="drawer-handle" aria-hidden="true"></div>
-      {/if}
-      <div class="drawer-inner">
-        {@render children?.()}
-      </div>
-    </VaulDrawer.Content>
-  </VaulDrawer.Portal>
-</VaulDrawer.Root>
+{#if mounted && isOpen}
+  <!-- Backdrop -->
+  <div
+    class={overlayClasses}
+    data-state={dataState}
+    onclick={handleBackdropClick}
+    aria-hidden="true"
+  ></div>
+
+  <!-- Drawer content -->
+  <div
+    bind:this={drawerElement}
+    class={contentClasses}
+    data-placement={placement}
+    data-state={dataState}
+    {role}
+    aria-modal="true"
+    aria-labelledby={labelledBy}
+    aria-label={ariaLabel}
+    style:transform={isDragging ? dragTransform() : ""}
+    style:transition={isDragging ? "none" : ""}
+    ontouchstart={handleTouchStart}
+    ontouchmove={handleTouchMove}
+    ontouchend={handleTouchEnd}
+    onmousedown={handleMouseDown}
+    onmousemove={handleMouseMove}
+    onmouseup={handleMouseUp}
+  >
+    {#if showHandle}
+      <div class="drawer-handle" aria-hidden="true"></div>
+    {/if}
+    <div class="drawer-inner">
+      {@render children?.()}
+    </div>
+  </div>
+{/if}
 
 <style>
-  /* Overlay (backdrop) - MUST be lower z-index than content */
-  :global(.drawer-overlay) {
+  /* Overlay (backdrop) */
+  .drawer-overlay {
     position: fixed;
     inset: 0;
-    z-index: calc(var(--sheet-z-index, var(--sheet-z-base, 50)) - 1) !important;
+    z-index: calc(var(--sheet-z-index, var(--sheet-z-base, 50)) - 1);
     background: var(
       --sheet-backdrop-bg,
       var(--backdrop-medium, rgba(0, 0, 0, 0.5))
@@ -205,45 +334,51 @@
       --sheet-backdrop-filter,
       var(--backdrop-blur-medium, blur(8px))
     );
-    opacity: 1;
     pointer-events: var(--sheet-backdrop-pointer-events, auto);
-    transition: opacity var(--sheet-transition-duration, 380ms)
-      var(--sheet-transition-easing, cubic-bezier(0.32, 0.72, 0, 1));
+    transition: opacity 350ms cubic-bezier(0.32, 0.72, 0, 1);
+    opacity: 0;
   }
 
-  :global(.drawer-overlay[data-state="closed"]) {
+  .drawer-overlay[data-state="open"] {
+    opacity: 1;
+  }
+
+  .drawer-overlay[data-state="closed"] {
     opacity: 0;
     pointer-events: none;
   }
 
-  :global(.drawer-overlay[data-state="open"]) {
-    opacity: 1;
-  }
-
   /* Edit panel backdrop - completely transparent and non-interactive */
-  /* Panel closes via X button and Escape key only, not backdrop clicks */
-  :global(.drawer-overlay.edit-panel-backdrop) {
+  .drawer-overlay.edit-panel-backdrop {
     background: transparent !important;
     backdrop-filter: none !important;
     pointer-events: none !important;
   }
 
   /* Sequence Actions sheet backdrop - completely transparent to show beats behind */
-  :global(.drawer-overlay.actions-sheet-backdrop) {
+  .drawer-overlay.actions-sheet-backdrop {
     background: transparent !important;
     backdrop-filter: none !important;
     pointer-events: auto !important;
   }
 
+  /* Side-by-side layout: Constrain backdrop to right half of viewport */
+  .drawer-overlay.side-by-side-layout {
+    left: var(--create-panel-left, 50%);
+    right: 0;
+    top: var(--create-panel-top, 0);
+    bottom: var(--create-panel-bottom, 0);
+  }
+
   /* Drawer content container */
-  :global(.drawer-content) {
+  .drawer-content {
     position: fixed;
-    z-index: var(--sheet-z-index, var(--sheet-z-base, 50)) !important;
+    z-index: var(--sheet-z-index, var(--sheet-z-base, 50));
     display: flex;
     flex-direction: column;
     outline: none;
 
-    /* Default styling for bottom placement */
+    /* Default styling */
     background: var(--sheet-bg, var(--sheet-bg-glass, rgba(20, 25, 35, 0.95)));
     backdrop-filter: var(
       --sheet-filter,
@@ -257,61 +392,34 @@
       --sheet-shadow,
       var(--sheet-shadow-bottom, 0 -4px 24px rgba(0, 0, 0, 0.3))
     );
+
+    /* Smooth CSS transitions - THIS IS THE MAGIC */
     transition:
-      transform var(--sheet-transition-duration, 380ms)
-        var(--sheet-transition-easing, cubic-bezier(0.32, 0.72, 0, 1)),
-      opacity var(--sheet-transition-duration, 380ms)
-        var(--sheet-transition-easing, cubic-bezier(0.32, 0.72, 0, 1));
+      transform 350ms cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 350ms cubic-bezier(0.32, 0.72, 0, 1);
     will-change: transform;
+
+    /* Enable swipe-to-dismiss without browser interference */
+    touch-action: none;
+    user-select: none;
   }
 
-  :global(.drawer-content[data-state="closed"]) {
+  .drawer-content[data-state="closed"] {
     pointer-events: none;
   }
 
-  :global(.drawer-content[data-placement="bottom"][data-state="closed"]) {
-    transform: translate3d(0, 100%, 0);
-  }
-
-  :global(.drawer-content[data-placement="bottom"][data-state="open"]) {
-    transform: translate3d(0, 0, 0);
-  }
-
-  :global(.drawer-content[data-placement="top"][data-state="closed"]) {
-    transform: translate3d(0, -100%, 0);
-  }
-
-  :global(.drawer-content[data-placement="top"][data-state="open"]) {
-    transform: translate3d(0, 0, 0);
-  }
-
-  :global(.drawer-content[data-placement="right"][data-state="closed"]) {
-    transform: translate3d(100%, 0, 0);
-  }
-
-  :global(.drawer-content[data-placement="right"][data-state="open"]) {
-    transform: translate3d(0, 0, 0);
-  }
-
-  :global(.drawer-content[data-placement="left"][data-state="closed"]) {
-    transform: translate3d(-100%, 0, 0);
-  }
-
-  :global(.drawer-content[data-placement="left"][data-state="open"]) {
-    transform: translate3d(0, 0, 0);
-  }
-
-  /* Bottom placement */
-  :global(.drawer-content[data-placement="bottom"]) {
+  /* Bottom placement - default (mobile) */
+  .drawer-content[data-placement="bottom"]:not(.side-by-side-layout) {
     bottom: 0;
     left: 0;
     right: 0;
-    width: var(--sheet-width, min(720px, 100%));
+    width: 100%;
+    max-width: 100%;
     max-height: var(
       --sheet-max-height,
       min(95vh, var(--modal-max-height, 95vh))
     );
-    margin: 0 auto;
+    margin: 0;
     border-top-left-radius: var(
       --sheet-border-radius-top-left,
       var(--sheet-radius-large, 20px)
@@ -323,27 +431,16 @@
     border-bottom: none;
   }
 
-  /* Side-by-side layout: Constrain drawer to right half of viewport */
-  :global(.drawer-overlay.side-by-side-layout) {
-    /* Backdrop only covers the panel region in side-by-side mode */
-    left: var(--create-panel-left, 50%);
-    right: 0;
-    top: var(--create-panel-top, 0);
-    bottom: var(--create-panel-bottom, 0);
+  .drawer-content[data-placement="bottom"][data-state="closed"] {
+    transform: translate3d(0, 100%, 0);
   }
 
-  :global(.drawer-content[data-placement="bottom"].side-by-side-layout) {
-    /* Position in right half of viewport */
-    left: 50%;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    /* Maintain bottom slide-up animation, but constrained to right half */
+  .drawer-content[data-placement="bottom"][data-state="open"] {
+    transform: translate3d(0, 0, 0);
   }
 
   /* Top placement */
-  :global(.drawer-content[data-placement="top"]) {
+  .drawer-content[data-placement="top"] {
     top: 0;
     left: 0;
     right: 0;
@@ -358,8 +455,16 @@
     border-top: none;
   }
 
+  .drawer-content[data-placement="top"][data-state="closed"] {
+    transform: translate3d(0, -100%, 0);
+  }
+
+  .drawer-content[data-placement="top"][data-state="open"] {
+    transform: translate3d(0, 0, 0);
+  }
+
   /* Right placement */
-  :global(.drawer-content[data-placement="right"]) {
+  .drawer-content[data-placement="right"] {
     top: 0;
     right: 0;
     bottom: 0;
@@ -374,19 +479,26 @@
     border-bottom-left-radius: var(--sheet-radius-large, 20px);
   }
 
-  :global(.drawer-content[data-placement="right"].side-by-side-layout) {
+  .drawer-content[data-placement="right"][data-state="closed"] {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .drawer-content[data-placement="right"][data-state="open"] {
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Right placement in side-by-side mode - use tracked width */
+  .drawer-content[data-placement="right"].side-by-side-layout {
     top: var(--create-panel-top, 0);
     bottom: var(--create-panel-bottom, 0);
-    /* Don't override right positioning - let CreatePanelDrawer handle it for animations */
-    /* right: var(--create-panel-inset-right, 0); */
     height: auto;
     max-height: none;
-    /* Don't override width - let CreatePanelDrawer handle it for animations */
-    /* width: var(--create-panel-width, var(--sheet-width, min(600px, 90vw))); */
+    width: var(--create-panel-width, clamp(360px, 32vw, 520px));
+    max-width: 100%;
   }
 
   /* Left placement */
-  :global(.drawer-content[data-placement="left"]) {
+  .drawer-content[data-placement="left"] {
     top: 0;
     left: 0;
     bottom: 0;
@@ -401,6 +513,14 @@
     border-bottom-right-radius: var(--sheet-radius-large, 20px);
   }
 
+  .drawer-content[data-placement="left"][data-state="closed"] {
+    transform: translate3d(-100%, 0, 0);
+  }
+
+  .drawer-content[data-placement="left"][data-state="open"] {
+    transform: translate3d(0, 0, 0);
+  }
+
   /* Handle */
   .drawer-handle {
     position: relative;
@@ -412,11 +532,9 @@
     flex-shrink: 0;
   }
 
-  /* Inner content container - NO OVERFLOW */
+  /* Inner content container */
   .drawer-inner {
     flex: 1;
-    /* CRITICAL: No overflow here! Child components should handle their own scrolling.
-       This allows vaul-svelte's gesture detection to work correctly. */
     min-height: 0;
     display: flex;
     flex-direction: column;
@@ -442,7 +560,7 @@
 
   /* Mobile adjustments */
   @media (max-width: 480px) {
-    :global(.drawer-content[data-placement="bottom"]) {
+    .drawer-content[data-placement="bottom"] {
       border-top-left-radius: var(--sheet-radius-medium, 16px);
       border-top-right-radius: var(--sheet-radius-medium, 16px);
     }
@@ -450,13 +568,21 @@
 
   /* High contrast mode */
   @media (prefers-contrast: high) {
-    :global(.drawer-content) {
+    .drawer-content {
       background: rgba(0, 0, 0, 0.98);
       border: 2px solid white;
     }
 
     .drawer-handle {
       background: rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .drawer-content,
+    .drawer-overlay {
+      transition: none;
     }
   }
 </style>

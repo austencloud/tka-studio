@@ -23,7 +23,10 @@ import type {
   IGifExportOrchestrator,
 } from "../contracts/IGifExportOrchestrator";
 import type { IAnimatedImageTranscoder } from "../contracts/IAnimatedImageTranscoder";
-import type { GifExportProgress, IGifExportService } from "../contracts/IGifExportService";
+import type {
+  GifExportProgress,
+  IGifExportService,
+} from "../contracts/IGifExportService";
 
 interface LetterOverlayAssets {
   image: HTMLImageElement | null;
@@ -36,9 +39,12 @@ export class GifExportOrchestrator implements IGifExportOrchestrator {
   private shouldCancel = false;
 
   constructor(
-    @inject(TYPES.IGifExportService) private readonly gifExportService: IGifExportService,
-    @inject(TYPES.ICanvasRenderer) private readonly canvasRenderer: ICanvasRenderer,
-    @inject(TYPES.ISvgImageService) private readonly svgImageService: ISvgImageService,
+    @inject(TYPES.IGifExportService)
+    private readonly gifExportService: IGifExportService,
+    @inject(TYPES.ICanvasRenderer)
+    private readonly canvasRenderer: ICanvasRenderer,
+    @inject(TYPES.ISvgImageService)
+    private readonly svgImageService: ISvgImageService,
     @inject(TYPES.IFileDownloadService)
     private readonly fileDownloadService: IFileDownloadService,
     @inject(TYPES.IAnimatedImageTranscoder)

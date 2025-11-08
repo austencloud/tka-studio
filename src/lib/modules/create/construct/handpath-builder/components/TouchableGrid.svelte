@@ -127,7 +127,9 @@ Provides visual feedback for current position and drawn path.
   }
 
   // Get coordinates from pointer event relative to container
-  function getRelativeCoordinates(event: PointerEvent): { x: number; y: number } | null {
+  function getRelativeCoordinates(
+    event: PointerEvent
+  ): { x: number; y: number } | null {
     if (!containerElement) return null;
 
     const rect = containerElement.getBoundingClientRect();
@@ -270,18 +272,18 @@ Provides visual feedback for current position and drawn path.
         />
       {:else}
         <line
-          x1={GRID_SIZE / 2 - GRID_SIZE / 3 * 0.707}
-          y1={GRID_SIZE / 2 - GRID_SIZE / 3 * 0.707}
-          x2={GRID_SIZE / 2 + GRID_SIZE / 3 * 0.707}
-          y2={GRID_SIZE / 2 + GRID_SIZE / 3 * 0.707}
+          x1={GRID_SIZE / 2 - (GRID_SIZE / 3) * 0.707}
+          y1={GRID_SIZE / 2 - (GRID_SIZE / 3) * 0.707}
+          x2={GRID_SIZE / 2 + (GRID_SIZE / 3) * 0.707}
+          y2={GRID_SIZE / 2 + (GRID_SIZE / 3) * 0.707}
           stroke="rgba(255, 255, 255, 0.2)"
           stroke-width="2"
         />
         <line
-          x1={GRID_SIZE / 2 + GRID_SIZE / 3 * 0.707}
-          y1={GRID_SIZE / 2 - GRID_SIZE / 3 * 0.707}
-          x2={GRID_SIZE / 2 - GRID_SIZE / 3 * 0.707}
-          y2={GRID_SIZE / 2 + GRID_SIZE / 3 * 0.707}
+          x1={GRID_SIZE / 2 + (GRID_SIZE / 3) * 0.707}
+          y1={GRID_SIZE / 2 - (GRID_SIZE / 3) * 0.707}
+          x2={GRID_SIZE / 2 - (GRID_SIZE / 3) * 0.707}
+          y2={GRID_SIZE / 2 + (GRID_SIZE / 3) * 0.707}
           stroke="rgba(255, 255, 255, 0.2)"
           stroke-width="2"
         />
@@ -318,8 +320,12 @@ Provides visual feedback for current position and drawn path.
 
     <!-- Completed path -->
     {#each pathState.completedSegments as segment, i}
-      {@const startPos = gridPositions.find((p) => p.location === segment.startLocation)}
-      {@const endPos = gridPositions.find((p) => p.location === segment.endLocation)}
+      {@const startPos = gridPositions.find(
+        (p) => p.location === segment.startLocation
+      )}
+      {@const endPos = gridPositions.find(
+        (p) => p.location === segment.endLocation
+      )}
       {#if startPos && endPos}
         <line
           x1={startPos.x}
@@ -336,7 +342,9 @@ Provides visual feedback for current position and drawn path.
 
     <!-- Active drag line -->
     {#if isTracking && startLocation}
-      {@const startPos = gridPositions.find((p) => p.location === startLocation)}
+      {@const startPos = gridPositions.find(
+        (p) => p.location === startLocation
+      )}
       {#if startPos}
         <line
           x1={startPos.x}

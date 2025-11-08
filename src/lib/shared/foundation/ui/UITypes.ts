@@ -14,9 +14,9 @@ export type { ModuleId } from "../../navigation/domain/types";
  */
 export type LegacyTabId =
   | "construct" // Legacy ID that maps to "build" module
-  | "browse"    // Legacy ID for browse/explore
+  | "browse" // Legacy ID for browse/explore
   | "word-card" // Legacy hyphenated version
-  | "about"     // About page (not a proper module)
+  | "about" // About page (not a proper module)
   | "animator"; // Animator feature
 
 /**

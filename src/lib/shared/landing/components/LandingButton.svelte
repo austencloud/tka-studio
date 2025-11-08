@@ -35,7 +35,11 @@
     min-height: 44px;
     border-radius: 50%;
     border: 1px solid rgba(56, 189, 248, 0.3);
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(6, 182, 212, 0.1) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(56, 189, 248, 0.15) 0%,
+      rgba(6, 182, 212, 0.1) 100%
+    );
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
@@ -46,7 +50,11 @@
   }
 
   .landing-button:hover {
-    background: linear-gradient(135deg, rgba(56, 189, 248, 0.25) 0%, rgba(6, 182, 212, 0.2) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(56, 189, 248, 0.25) 0%,
+      rgba(6, 182, 212, 0.2) 100%
+    );
     border-color: rgba(56, 189, 248, 0.5);
     transform: scale(1.05);
   }

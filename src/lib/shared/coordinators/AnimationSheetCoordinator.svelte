@@ -19,13 +19,13 @@
     />
 -->
 <script lang="ts">
-import AnimationPanel from "$create/animate/components/AnimationPanel.svelte";
-import type {
-  AnimationExportFormat,
-  GifExportProgress,
-  IAnimationPlaybackController,
-  IGifExportOrchestrator,
-} from "$create/animate/services/contracts";
+  import AnimationPanel from "$create/animate/components/AnimationPanel.svelte";
+  import type {
+    AnimationExportFormat,
+    GifExportProgress,
+    IAnimationPlaybackController,
+    IGifExportOrchestrator,
+  } from "$create/animate/services/contracts";
   import { createAnimationPanelState } from "$create/animate/state/animation-panel-state.svelte";
   import { loadSequenceForAnimation } from "$create/animate/utils/sequence-loader";
   import type { ISequenceService } from "$create/shared";
@@ -305,7 +305,7 @@ import type {
 </script>
 
 <AnimationPanel
-  show={isOpen}
+  show={isOpen ?? false}
   {combinedPanelHeight}
   loading={animationPanelState.loading}
   error={animationPanelState.error}
@@ -316,7 +316,6 @@ import type {
   gridMode={animationPanelState.sequenceData?.gridMode}
   letter={currentLetter}
   beatData={currentBeatData}
-  {showExportDialog}
   {isExporting}
   {exportProgress}
   onClose={handleClose}

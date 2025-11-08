@@ -28,6 +28,7 @@
   import PersonalTab from "./profile-settings/PersonalTab.svelte";
   import SubscriptionTab from "./profile-settings/SubscriptionTab.svelte";
   import AchievementsTab from "./profile-settings/AchievementsTab.svelte";
+  import DeveloperTab from "./profile-settings/DeveloperTab.svelte";
 
   // Props
   let { isOpen = false, onClose } = $props<{
@@ -73,12 +74,10 @@
     if (isOpen) {
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get("tab");
-      if (
-        tabParam &&
-        ["personal", "security", "subscription", "achievements"].includes(
-          tabParam
-        )
-      ) {
+      const validTabs = import.meta.env.DEV
+        ? ["personal", "security", "subscription", "achievements", "developer"]
+        : ["personal", "security", "subscription", "achievements"];
+      if (tabParam && validTabs.includes(tabParam)) {
         uiState.activeTab =
           tabParam as import("../state/profile-settings-state.svelte").SettingsTab;
       }
@@ -156,7 +155,9 @@
     if (Math.abs(deltaX) > swipeThreshold) {
       const tabs: Array<
         import("../state/profile-settings-state.svelte").SettingsTab
-      > = ["personal", "security", "subscription", "achievements"];
+      > = import.meta.env.DEV
+        ? ["personal", "security", "subscription", "achievements", "developer"]
+        : ["personal", "security", "subscription", "achievements"];
       const currentIndex = tabs.indexOf(uiState.activeTab);
       const prevTab = tabs[currentIndex - 1];
       const nextTab = tabs[currentIndex + 1];
@@ -183,7 +184,9 @@
 
       const tabs: Array<
         import("../state/profile-settings-state.svelte").SettingsTab
-      > = ["personal", "security", "subscription", "achievements"];
+      > = import.meta.env.DEV
+        ? ["personal", "security", "subscription", "achievements", "developer"]
+        : ["personal", "security", "subscription", "achievements"];
       const currentIndex = tabs.indexOf(tabName);
       let newIndex: number;
 
@@ -468,6 +471,25 @@
           <i class="fas fa-trophy" aria-hidden="true"></i>
           Achievements
         </button>
+        {#if import.meta.env.DEV}
+          <button
+            id="developer-tab"
+            class="tab"
+            class:active={uiState.activeTab === "developer"}
+            role="tab"
+            aria-selected={uiState.activeTab === "developer"}
+            aria-controls="developer-panel"
+            tabindex={uiState.activeTab === "developer" ? 0 : -1}
+            onclick={() => {
+              hapticService?.trigger("selection");
+              updateTabTransition("developer");
+            }}
+            onkeydown={(e) => handleTabKeydown(e, "developer")}
+          >
+            <i class="fas fa-code" aria-hidden="true"></i>
+            Developer
+          </button>
+        {/if}
       </div>
 
       <!-- Content -->
@@ -536,6 +558,15 @@
                 tabindex="0"
               >
                 <AchievementsTab />
+              </div>
+            {:else if uiState.activeTab === "developer" && import.meta.env.DEV}
+              <div
+                id="developer-panel"
+                role="tabpanel"
+                aria-labelledby="developer-tab"
+                tabindex="0"
+              >
+                <DeveloperTab />
               </div>
             {/if}
           </div>

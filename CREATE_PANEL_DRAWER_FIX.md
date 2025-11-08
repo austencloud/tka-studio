@@ -35,6 +35,7 @@ Then passed `direction={direction}` to `VaulDrawer.Root` instead of `direction={
 **Change**: Removed all manual pointer event handlers (`dragState`, `handlePanelPointerDown`, `handlePanelPointerMove`, `handlePanelPointerUp`) and their usage in the template.
 
 **Why**: These manual handlers were competing with vaul-svelte's built-in gesture detection system. vaul-svelte already provides smooth, accessible drag-to-dismiss with proper physics and spring animations. The manual implementation:
+
 - Conflicted with vaul's gesture recognition
 - Had inconsistent behavior across panels
 - Didn't respect accessibility preferences
@@ -57,10 +58,11 @@ Then passed `direction={direction}` to `VaulDrawer.Root` instead of `direction={
 ```
 
 **Why**: vaul-svelte needs to detect pointer events on the backdrop to:
+
 - Register drag gestures anywhere on the drawer overlay
 - Calculate drag distance and velocity
 - Determine if the gesture should close the drawer
-The backdrop remains visually transparent but must be interaction-enabled.
+  The backdrop remains visually transparent but must be interaction-enabled.
 
 ### 4. Removed Conflicting CSS Transforms
 
@@ -85,12 +87,13 @@ The backdrop remains visually transparent but must be interaction-enabled.
 ```
 
 **Why**: vaul-svelte manages its own transform animations with:
+
 - Smooth spring physics
 - Proper gesture tracking during drag
 - Automatic snap-back on incomplete swipes
 - Reduced motion support
 - Hardware acceleration
-Manual CSS transforms created conflicts and prevented smooth animations.
+  Manual CSS transforms created conflicts and prevented smooth animations.
 
 ### 5. Fixed State Synchronization
 
@@ -113,12 +116,14 @@ $effect(() => {
 ```
 
 **Why**: The architecture uses:
+
 - Parent component controls open/close via state (`panelState.isAnimationPanelOpen`)
 - Child receives `show` prop (one-way binding)
 - Child notifies parent via `onClose` callback
 - Parent updates state, which flows back down
 
 When vaul-svelte closed the drawer via gesture:
+
 1. vaul called `handleOpenChange(false)` in base Drawer
 2. This updated `bind:isOpen` in CreatePanelDrawer
 3. But `onClose` callback was never called
@@ -130,6 +135,7 @@ The effect detects this transition and ensures `onClose` is always called.
 ## How It Works Now
 
 ### Side-by-Side Layout (Desktop)
+
 1. Drawer slides in from right with smooth animation
 2. User can swipe right anywhere on drawer to dismiss
 3. Backdrop is transparent but detects gestures
@@ -137,13 +143,15 @@ The effect detects this transition and ensures `onClose` is always called.
 5. Parent updates state, drawer can be reopened
 
 ### Top-Bottom Layout (Mobile)
+
 1. Drawer slides up from bottom with smooth animation
 2. User can swipe down anywhere on drawer to dismiss
 3. Same gesture detection and state sync as desktop
 
 ### All Panels Work Consistently
+
 - **Animation Panel**: Right swipe (desktop) / Down swipe (mobile)
-- **Edit Panel**: Right swipe (desktop) / Down swipe (mobile)  
+- **Edit Panel**: Right swipe (desktop) / Down swipe (mobile)
 - **Share Panel**: Right swipe (desktop) / Down swipe (mobile)
 
 ## Testing Checklist
@@ -161,6 +169,7 @@ The effect detects this transition and ensures `onClose` is always called.
 ## Technical Notes
 
 ### vaul-svelte Integration
+
 - Uses Radix Primitives under the hood
 - Provides `Drawer.Root`, `Drawer.Portal`, `Drawer.Overlay`, `Drawer.Content`
 - Manages all gesture detection, physics, and animations
@@ -168,6 +177,7 @@ The effect detects this transition and ensures `onClose` is always called.
 - Handles touch and mouse events uniformly
 
 ### Gesture Detection
+
 - Listens on the `Drawer.Overlay` component
 - Calculates drag velocity and distance
 - Applies spring physics for smooth motion
@@ -175,6 +185,7 @@ The effect detects this transition and ensures `onClose` is always called.
 - Calls `onOpenChange(false)` on successful dismiss
 
 ### State Flow
+
 ```
 Parent State (isAnimationPanelOpen)
   ↓ one-way binding

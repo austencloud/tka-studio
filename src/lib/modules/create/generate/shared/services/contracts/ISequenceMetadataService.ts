@@ -14,4 +14,3 @@ export interface ISequenceMetadataService {
     level: number;
   }): Record<string, any>;
 }
-

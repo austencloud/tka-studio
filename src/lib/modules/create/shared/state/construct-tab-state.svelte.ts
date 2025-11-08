@@ -14,7 +14,10 @@ import type { PictographData } from "../../../../shared";
 import { createHMRState } from "../../../../shared/utils/hmr-state-backup";
 import { createSimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
 import type { BeatData } from "../domain/models/BeatData";
-import type { ICreateModuleService, ISequencePersistenceService } from "../services/contracts";
+import type {
+  ICreateModuleService,
+  ISequencePersistenceService,
+} from "../services/contracts";
 
 /**
  * Creates construct tab state for construct-specific concerns
@@ -42,8 +45,8 @@ export function createConstructTabState(
     initialValue: {
       showStartPositionPicker: null as boolean | null,
       selectedStartPosition: null as PictographData | null,
-      isInitialized: false
-    }
+      isInitialized: false,
+    },
   };
 
   // ============================================================================
@@ -53,8 +56,12 @@ export function createConstructTabState(
   let isLoading = $state(false);
   let error = $state<string | null>(null);
   let isTransitioning = $state(false);
-  let showStartPositionPicker = $state<boolean | null>(hmrBackup.initialValue.showStartPositionPicker);
-  let selectedStartPosition = $state<PictographData | null>(hmrBackup.initialValue.selectedStartPosition);
+  let showStartPositionPicker = $state<boolean | null>(
+    hmrBackup.initialValue.showStartPositionPicker
+  );
+  let selectedStartPosition = $state<PictographData | null>(
+    hmrBackup.initialValue.selectedStartPosition
+  );
   let isInitialized = $state(hmrBackup.initialValue.isInitialized);
   let isContinuousOnly = $state(false); // Filter state for option viewer
 
@@ -79,9 +86,13 @@ export function createConstructTabState(
       return;
     }
 
-    if (source === "user" && createModuleState && createModuleState.pushUndoSnapshot) {
-      createModuleState.pushUndoSnapshot('SELECT_START_POSITION', {
-        description: 'Select start position'
+    if (
+      source === "user" &&
+      createModuleState &&
+      createModuleState.pushUndoSnapshot
+    ) {
+      createModuleState.pushUndoSnapshot("SELECT_START_POSITION", {
+        description: "Select start position",
       });
     }
 
@@ -96,8 +107,6 @@ export function createConstructTabState(
       return;
     }
 
-    console.log("?? ConstructTabState: Creating new sequence with start position");
-
     const beatData: BeatData = {
       ...pictographData,
       id: `beat-${Date.now()}`,
@@ -108,23 +117,29 @@ export function createConstructTabState(
       isBlank: false,
     };
 
-    sequenceState.createSequence({
-      name: `Sequence ${new Date().toLocaleTimeString()}`,
-      length: 0
-    }).then((newSequence: any) => {
-      if (newSequence) {
-        sequenceState.setCurrentSequence(newSequence);
-        try {
-          sequenceState.setStartPosition(beatData);
-        } catch (error) {
-          console.error("? ConstructTabState: Error setting start position:", error);
+    sequenceState
+      .createSequence({
+        name: `Sequence ${new Date().toLocaleTimeString()}`,
+        length: 0,
+      })
+      .then((newSequence: any) => {
+        if (newSequence) {
+          sequenceState.setCurrentSequence(newSequence);
+          try {
+            sequenceState.setStartPosition(beatData);
+          } catch (error) {
+            console.error(
+              "? ConstructTabState: Error setting start position:",
+              error
+            );
+          }
+        } else {
+          console.error("? ConstructTabState: Failed to create new sequence");
         }
-      } else {
-        console.error("? ConstructTabState: Failed to create new sequence");
-      }
-    }).catch((error: any) => {
-      console.error("? ConstructTabState: Error creating sequence:", error);
-    });
+      })
+      .catch((error: any) => {
+        console.error("? ConstructTabState: Error creating sequence:", error);
+      });
   }
   // ============================================================================
   // DERIVED STATE (Construct-specific derived state)
@@ -137,7 +152,9 @@ export function createConstructTabState(
     if (!isInitialized) return null;
     return showStartPositionPicker;
   });
-  const isPickerStateLoading = $derived(!isInitialized || showStartPositionPicker === null); // Loading state detection like main navigation
+  const isPickerStateLoading = $derived(
+    !isInitialized || showStartPositionPicker === null
+  ); // Loading state detection like main navigation
 
   // ============================================================================
   // EFFECTS (Construct-specific effects)
@@ -163,15 +180,23 @@ export function createConstructTabState(
       coordinationSetup = true;
     }
 
-    if (!unsubscribeStartPositionListener && startPositionStateService.onSelectedPositionChange) {
-      unsubscribeStartPositionListener = startPositionStateService.onSelectedPositionChange((position, source) => {
-        handleStartPositionSelected(position, source);
-      });
+    if (
+      !unsubscribeStartPositionListener &&
+      startPositionStateService.onSelectedPositionChange
+    ) {
+      unsubscribeStartPositionListener =
+        startPositionStateService.onSelectedPositionChange(
+          (position, source) => {
+            handleStartPositionSelected(position, source);
+          }
+        );
     }
 
-
     // Register callbacks with Create Module State for undo functionality
-    if (createModuleState && createModuleState.setShowStartPositionPickerCallback) {
+    if (
+      createModuleState &&
+      createModuleState.setShowStartPositionPickerCallback
+    ) {
       createModuleState.setShowStartPositionPickerCallback(() => {
         setShowStartPositionPicker(true);
       });
@@ -195,7 +220,9 @@ export function createConstructTabState(
           setShowStartPositionPicker(false);
           setSelectedStartPosition(savedState.selectedStartPosition);
           if (savedState.selectedStartPosition) {
-            startPositionStateService.setSelectedPosition(savedState.selectedStartPosition);
+            startPositionStateService.setSelectedPosition(
+              savedState.selectedStartPosition
+            );
           }
         } else {
           // No saved state, set default to show start position picker
@@ -203,7 +230,10 @@ export function createConstructTabState(
           startPositionStateService.clearSelectedPosition();
         }
       } catch (error) {
-        console.error("❌ ConstructTabState: Failed to restore persisted state:", error);
+        console.error(
+          "❌ ConstructTabState: Failed to restore persisted state:",
+          error
+        );
         // On error, default to showing start position picker
         setShowStartPositionPicker(true);
         startPositionStateService.clearSelectedPosition();
@@ -218,10 +248,11 @@ export function createConstructTabState(
     // This logic was moved from $effect to avoid effect_orphan error
     if (sequenceState) {
       if (sequenceState.hasStartPosition && showStartPositionPicker === true) {
-        console.log("🔄 ConstructTabState: Syncing picker state - hiding start position picker (hasStartPosition: true)");
         setShowStartPositionPicker(false);
-      } else if (!sequenceState.hasStartPosition && showStartPositionPicker === false) {
-        console.log("🔄 ConstructTabState: Syncing picker state - showing start position picker (hasStartPosition: false)");
+      } else if (
+        !sequenceState.hasStartPosition &&
+        showStartPositionPicker === false
+      ) {
         setShowStartPositionPicker(true);
       }
     }
@@ -271,33 +302,52 @@ export function createConstructTabState(
       clearError();
 
       // Capture the target tab before clearing
-      const shouldNavigate = createModuleState && createModuleState.activeSection === 'animate';
-      const targetTab = shouldNavigate ? createModuleState.lastContentTab : null;
+      const shouldNavigate =
+        createModuleState && createModuleState.activeSection === "animate";
+      const targetTab = shouldNavigate
+        ? createModuleState.lastContentTab
+        : null;
 
       if (shouldNavigate && targetTab) {
-        console.log(`🎬 ConstructTabState: Will return to ${targetTab} after clearing from Animate tab`);
       }
 
       // Clear sequence state asynchronously
       if (sequenceState) {
-        sequenceState.clearSequenceCompletely()
+        sequenceState
+          .clearSequenceCompletely()
           .then(() => {
             // Navigate AFTER sequence is cleared to avoid state conflicts
-            if (shouldNavigate && targetTab && createModuleState && navigationState) {
-              console.log(`🎬 ConstructTabState: Navigating to ${targetTab} after clear`);
+            if (
+              shouldNavigate &&
+              targetTab &&
+              createModuleState &&
+              navigationState
+            ) {
               createModuleState.setactiveToolPanel(targetTab);
               // CRITICAL: Also update navigation state to prevent guard from triggering
               navigationState.setCurrentSection(targetTab);
             }
           })
           .catch((error: unknown) => {
-            console.error("❌ ConstructTabState: Failed to clear sequence state:", error);
-            setError(error instanceof Error ? error.message : "Failed to clear sequence");
+            console.error(
+              "❌ ConstructTabState: Failed to clear sequence state:",
+              error
+            );
+            setError(
+              error instanceof Error
+                ? error.message
+                : "Failed to clear sequence"
+            );
           });
       }
     } catch (error) {
-      console.error("❌ ConstructTabState: Failed to initiate sequence clear:", error);
-      setError(error instanceof Error ? error.message : "Failed to clear sequence");
+      console.error(
+        "❌ ConstructTabState: Failed to initiate sequence clear:",
+        error
+      );
+      setError(
+        error instanceof Error ? error.message : "Failed to clear sequence"
+      );
     }
   }
 
@@ -307,7 +357,6 @@ export function createConstructTabState(
    */
   function restorePickerStateAfterUndo() {
     setShowStartPositionPicker(false);
-    console.log("⏪ ConstructTabState: Restored picker state to show option picker");
   }
 
   /**
@@ -320,13 +369,17 @@ export function createConstructTabState(
 
     // When sequence state has a start position, hide the start position picker
     if (sequenceState.hasStartPosition && showStartPositionPicker === true) {
-      console.log("🔄 ConstructTabState: Syncing picker state - hiding start position picker (hasStartPosition: true)");
+      console.log(
+        "🔄 ConstructTabState: Syncing picker state - hiding start position picker (hasStartPosition: true)"
+      );
       setShowStartPositionPicker(false);
     }
 
     // When sequence state loses start position, show the start position picker
     if (!sequenceState.hasStartPosition && showStartPositionPicker === false) {
-      console.log("🔄 ConstructTabState: Syncing picker state - showing start position picker (hasStartPosition: false)");
+      console.log(
+        "🔄 ConstructTabState: Syncing picker state - showing start position picker (hasStartPosition: false)"
+      );
       setShowStartPositionPicker(true);
     }
   }
@@ -434,18 +487,20 @@ export type ConstructTabState = ReturnType<typeof createConstructTabState>;
  * </script>
  * ```
  */
-export function addHMRBackupEffect(constructTabState: ReturnType<typeof createConstructTabState>) {
+export function addHMRBackupEffect(
+  constructTabState: ReturnType<typeof createConstructTabState>
+) {
   // Auto-save critical state changes for HMR persistence
   $effect(() => {
     const stateToBackup = {
       showStartPositionPicker: constructTabState.showStartPositionPicker,
       selectedStartPosition: constructTabState.selectedStartPosition,
-      isInitialized: constructTabState.isInitialized
+      isInitialized: constructTabState.isInitialized,
     };
 
     // Only save if initialized to avoid saving empty initial state
     if (constructTabState.isInitialized) {
-      const hmrBackup = createHMRState('construct-tab-state', stateToBackup);
+      const hmrBackup = createHMRState("construct-tab-state", stateToBackup);
       hmrBackup.saveState(stateToBackup);
     }
   });

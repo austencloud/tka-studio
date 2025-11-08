@@ -127,7 +127,6 @@ export class GlyphCacheService implements IGlyphCacheService {
 
     const totalItems =
       this.LETTERS_TO_CACHE.length + this.TURN_NUMBERS_TO_CACHE.length;
-    console.log(`🔄 GlyphCache: Preloading ${totalItems} items...`);
     const startTime = performance.now();
 
     // Load all glyphs in parallel (max 10 at a time to avoid overwhelming the browser)
@@ -140,23 +139,18 @@ export class GlyphCacheService implements IGlyphCacheService {
     }
 
     // Load turn numbers
-    for (
-      let i = 0;
-      i < this.TURN_NUMBERS_TO_CACHE.length;
-      i += BATCH_SIZE
-    ) {
+    for (let i = 0; i < this.TURN_NUMBERS_TO_CACHE.length; i += BATCH_SIZE) {
       const batch = this.TURN_NUMBERS_TO_CACHE.slice(i, i + BATCH_SIZE);
-      await Promise.all(batch.map((turnNumber) => this.loadTurnNumber(turnNumber)));
+      await Promise.all(
+        batch.map((turnNumber) => this.loadTurnNumber(turnNumber))
+      );
     }
 
     this.ready = true;
     const duration = performance.now() - startTime;
 
-    console.log(`✅ GlyphCache: Initialized in ${duration.toFixed(0)}ms`);
-    console.log(`   Loaded: ${this.loadedCount}, Failed: ${this.failedCount}`);
-    console.log(
-      `   Total cache entries: ${this.cache.size} (includes multiple keys per item)`
-    );
+    // GlyphCache initialized silently
+    // Debug: ${duration.toFixed(0)}ms, ${this.loadedCount} loaded, ${this.failedCount} failed, ${this.cache.size} cache entries
   }
 
   private async loadGlyph(letter: Letter): Promise<void> {
@@ -186,7 +180,11 @@ export class GlyphCacheService implements IGlyphCacheService {
       try {
         const encodedPath = path
           .split("/")
-          .map((segment, i) => (i === path.split("/").length - 1 ? encodeURIComponent(segment) : segment))
+          .map((segment, i) =>
+            i === path.split("/").length - 1
+              ? encodeURIComponent(segment)
+              : segment
+          )
           .join("/");
         if (encodedPath !== path) {
           this.cache.set(encodedPath, dataUrl);
@@ -262,8 +260,7 @@ export class GlyphCacheService implements IGlyphCacheService {
 
   getStats() {
     return {
-      total:
-        this.LETTERS_TO_CACHE.length + this.TURN_NUMBERS_TO_CACHE.length,
+      total: this.LETTERS_TO_CACHE.length + this.TURN_NUMBERS_TO_CACHE.length,
       loaded: this.loadedCount,
       failed: this.failedCount,
     };

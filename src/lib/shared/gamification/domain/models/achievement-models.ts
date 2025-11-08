@@ -9,11 +9,11 @@
 // ============================================================================
 
 export type AchievementCategory =
-  | "creator"       // Building sequences
-  | "scholar"       // Learning concepts
-  | "practitioner"  // Daily streaks & practice
-  | "explorer"      // Browsing gallery
-  | "performer";    // Video submissions (Phase 3)
+  | "creator" // Building sequences
+  | "scholar" // Learning concepts
+  | "practitioner" // Daily streaks & practice
+  | "explorer" // Browsing gallery
+  | "performer"; // Video submissions (Phase 3)
 
 export type AchievementTier = "bronze" | "silver" | "gold" | "platinum";
 
@@ -30,24 +30,24 @@ export interface Achievement {
 
 export interface AchievementRequirement {
   type:
-    | "sequence_count"        // Create X sequences
-    | "concept_completion"    // Complete X concepts
-    | "daily_streak"          // Login/practice X days in a row
-    | "gallery_exploration"   // Explore X sequences
-    | "letter_usage"          // Create sequence with specific letters
-    | "sequence_length"       // Create sequence of X beats
-    | "generation_count"      // Generate X sequences
-    | "specific_action";      // Complete specific action once
-  target: number;             // How many to complete (1 for one-time achievements)
+    | "sequence_count" // Create X sequences
+    | "concept_completion" // Complete X concepts
+    | "daily_streak" // Login/practice X days in a row
+    | "gallery_exploration" // Explore X sequences
+    | "letter_usage" // Create sequence with specific letters
+    | "sequence_length" // Create sequence of X beats
+    | "generation_count" // Generate X sequences
+    | "specific_action"; // Complete specific action once
+  target: number; // How many to complete (1 for one-time achievements)
   metadata?: Record<string, any>; // Additional data (e.g., required letters, specific concept ID)
 }
 
 export interface UserAchievement {
-  id: string;              // Auto-generated
-  achievementId: string;   // Reference to Achievement
-  userId?: string;         // Optional: For future multi-user support
+  id: string; // Auto-generated
+  achievementId: string; // Reference to Achievement
+  userId?: string; // Optional: For future multi-user support
   unlockedAt: Date;
-  progress: number;        // Current progress toward completion
+  progress: number; // Current progress toward completion
   isCompleted: boolean;
   notificationShown: boolean; // Track if user has seen the unlock notification
 }
@@ -57,8 +57,8 @@ export interface UserAchievement {
 // ============================================================================
 
 export interface UserXP {
-  id: string;              // "xp_progress" (single record per user)
-  userId?: string;         // Optional: For future multi-user support
+  id: string; // "xp_progress" (single record per user)
+  userId?: string; // Optional: For future multi-user support
   totalXP: number;
   currentLevel: number;
   xpToNextLevel: number;
@@ -88,25 +88,25 @@ export type XPActionType =
 // ============================================================================
 
 export type ChallengeType =
-  | "build_sequence"          // Build specific sequence
-  | "use_letters"             // Use specific letters
-  | "sequence_length"         // Create X-beat sequence
-  | "complete_concept"        // Complete specific concept
-  | "explore_gallery"         // Explore X sequences
-  | "generation_challenge";   // Generate sequences with criteria
+  | "build_sequence" // Build specific sequence
+  | "use_letters" // Use specific letters
+  | "sequence_length" // Create X-beat sequence
+  | "complete_concept" // Complete specific concept
+  | "explore_gallery" // Explore X sequences
+  | "generation_challenge"; // Generate sequences with criteria
 
 export type ChallengeDifficulty = "beginner" | "intermediate" | "advanced";
 
 export interface DailyChallenge {
-  id: string;                 // Date-based: e.g., "challenge_2025-11-01"
-  date: string;               // ISO date string (YYYY-MM-DD)
+  id: string; // Date-based: e.g., "challenge_2025-11-01"
+  date: string; // ISO date string (YYYY-MM-DD)
   type: ChallengeType;
   difficulty: ChallengeDifficulty;
   title: string;
   description: string;
   xpReward: number;
   requirement: ChallengeRequirement;
-  expiresAt: Date;            // End of day
+  expiresAt: Date; // End of day
 }
 
 export interface ChallengeRequirement {
@@ -116,7 +116,7 @@ export interface ChallengeRequirement {
 }
 
 export interface UserChallengeProgress {
-  id: string;                 // Auto-generated
+  id: string; // Auto-generated
   challengeId: string;
   userId?: string;
   progress: number;
@@ -130,12 +130,12 @@ export interface UserChallengeProgress {
 // ============================================================================
 
 export interface UserStreak {
-  id: string;                 // "streak_data" (single record per user)
+  id: string; // "streak_data" (single record per user)
   userId?: string;
-  currentStreak: number;      // Days in a row
+  currentStreak: number; // Days in a row
   longestStreak: number;
-  lastActivityDate: string;   // ISO date string (YYYY-MM-DD)
-  streakStartDate: string;    // ISO date string
+  lastActivityDate: string; // ISO date string (YYYY-MM-DD)
+  streakStartDate: string; // ISO date string
 }
 
 // ============================================================================

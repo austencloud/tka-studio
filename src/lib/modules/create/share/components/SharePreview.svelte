@@ -30,7 +30,9 @@
     <div class="preview-placeholder">
       <div class="placeholder-icon">📝</div>
       <p>No sequence selected</p>
-      <span class="placeholder-hint">Create or select a sequence to see preview</span>
+      <span class="placeholder-hint"
+        >Create or select a sequence to see preview</span
+      >
     </div>
   {:else if currentSequence.beats?.length === 0}
     <div class="preview-placeholder">
@@ -48,9 +50,7 @@
       <div class="error-icon">⚠️</div>
       <p>Preview failed</p>
       <span class="error-message">{error}</span>
-      <button class="retry-button" onclick={handleRetry}>
-        Try Again
-      </button>
+      <button class="retry-button" onclick={handleRetry}> Try Again </button>
     </div>
   {:else if previewUrl}
     <div class="preview-image">
@@ -126,8 +126,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   /* Modern Retry Button */

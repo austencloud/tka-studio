@@ -27,10 +27,16 @@ Integrates with workspace for real-time updates
   import SinglePropStartPositionPicker from "./SinglePropStartPositionPicker.svelte";
   import GuidedOptionViewer from "./GuidedOptionViewer.svelte";
 
-  const { onSequenceUpdate, onSequenceComplete, onHeaderTextChange } = $props<{
+  const {
+    onSequenceUpdate,
+    onSequenceComplete,
+    onHeaderTextChange,
+    onGridModeChange,
+  } = $props<{
     onSequenceUpdate?: (sequence: PictographData[]) => void;
     onSequenceComplete?: (sequence: PictographData[]) => void;
     onHeaderTextChange?: (text: string) => void;
+    onGridModeChange?: (gridMode: GridMode) => void;
   }>();
 
   // Services
@@ -57,7 +63,7 @@ Integrates with workspace for real-time updates
   // Header text based on phase
   const headerText = $derived.by(() => {
     if (showStartPicker) {
-      return "Choose Starting Position";
+      return ""; // Empty - text shown in workspace tile instead
     }
 
     if (guidedState.currentPhase === "blue") {
@@ -107,6 +113,9 @@ Integrates with workspace for real-time updates
   // Handle grid mode change
   function handleGridModeChange(newGridMode: GridMode) {
     guidedState.updateConfig({ gridMode: newGridMode });
+
+    // Notify parent so workspace can update grid SVG
+    onGridModeChange?.(newGridMode);
 
     // If we haven't started building yet, just update
     if (showStartPicker) {

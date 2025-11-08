@@ -7,12 +7,12 @@
 
 export class LetterTypeTextPainter {
   static readonly COLORS = {
-    "Shift": "#6F2DA8",  // Purple
-    "Dual": "#00b3ff",   // Blue
-    "Dash": "#26e600",   // Green
-    "Cross": "#26e600",  // Green
-    "Static": "#eb7d00", // Orange
-    "-": "#000000",      // Black
+    Shift: "#6F2DA8", // Purple
+    Dual: "#00b3ff", // Blue
+    Dash: "#26e600", // Green
+    Cross: "#26e600", // Green
+    Static: "#eb7d00", // Orange
+    "-": "#000000", // Black
   } as const;
 
   /**
@@ -23,9 +23,9 @@ export class LetterTypeTextPainter {
    */
   static getColoredText(text: string, bold: boolean = false): string {
     const typeWords = text.split("-");
-    const styledWords = typeWords.map(word => {
-      const color = this.COLORS[word as keyof typeof this.COLORS] || 'black';
-      const fontWeight = bold ? ' font-weight: bold;' : '';
+    const styledWords = typeWords.map((word) => {
+      const color = this.COLORS[word as keyof typeof this.COLORS] || "black";
+      const fontWeight = bold ? " font-weight: bold;" : "";
       return `<span style="color: ${color};${fontWeight}">${word}</span>`;
     });
 
@@ -42,7 +42,11 @@ export class LetterTypeTextPainter {
    * @param bold Whether to make the text bold
    * @returns HTML string with the complete colored header
    */
-  static formatSectionHeader(typeName: string, description: string, bold: boolean = false): string {
+  static formatSectionHeader(
+    typeName: string,
+    description: string,
+    bold: boolean = false
+  ): string {
     const coloredDescription = this.getColoredText(description, bold);
     return `${typeName}:&nbsp;${coloredDescription}`;
   }

@@ -14,7 +14,10 @@ import type {
   IPictographFilterService,
   ITurnManagementService,
 } from "../contracts";
-import type { BeatGenerationOptions, IBeatGenerationOrchestrator } from "../contracts/IBeatGenerationOrchestrator";
+import type {
+  BeatGenerationOptions,
+  IBeatGenerationOrchestrator,
+} from "../contracts/IBeatGenerationOrchestrator";
 
 @injectable()
 export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
@@ -66,13 +69,19 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
     turnRed: number | "fl"
   ): Promise<BeatData> {
     // Get all options
-    const allOptions = await this.letterQueryHandler.getAllPictographVariations(options.gridMode);
+    const allOptions = await this.letterQueryHandler.getAllPictographVariations(
+      options.gridMode
+    );
 
     // Apply filters
     let filteredOptions = allOptions;
-    const lastBeat = sequence.length > 0 ? sequence[sequence.length - 1]! : null;
+    const lastBeat =
+      sequence.length > 0 ? sequence[sequence.length - 1]! : null;
 
-    filteredOptions = this.pictographFilterService.filterByContinuity(filteredOptions, lastBeat ?? null);
+    filteredOptions = this.pictographFilterService.filterByContinuity(
+      filteredOptions,
+      lastBeat ?? null
+    );
 
     if (options.propContinuity === PropContinuity.CONTINUOUS) {
       filteredOptions = this.pictographFilterService.filterByRotation(
@@ -87,10 +96,14 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
     }
 
     // Random selection
-    const selectedOption = this.pictographFilterService.selectRandom(filteredOptions);
+    const selectedOption =
+      this.pictographFilterService.selectRandom(filteredOptions);
 
     // Convert to beat
-    let nextBeat = this.beatConverterService.convertToBeat(selectedOption, sequence.length);
+    let nextBeat = this.beatConverterService.convertToBeat(
+      selectedOption,
+      sequence.length
+    );
 
     // Set turns if level 2 or 3
     if (options.level === 2 || options.level === 3) {
@@ -112,7 +125,8 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
       options.redRotationDirection
     );
 
-    nextBeat = this.orientationCalculationService.updateEndOrientations(nextBeat);
+    nextBeat =
+      this.orientationCalculationService.updateEndOrientations(nextBeat);
 
     return nextBeat;
   }

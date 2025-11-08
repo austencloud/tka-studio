@@ -64,4 +64,3 @@ export interface IMotionCalculator {
    */
   calculateFloatStaffAngle(startStaffAngle: number): number;
 }
-

@@ -9,7 +9,10 @@ import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import { PropContinuity } from "../../../shared/domain/models/generate-models";
 import type { IPictographFilterService } from "../../../shared/services/contracts";
-import type { IRotationDirectionService, RotationDirections } from "../contracts/IRotationDirectionService";
+import type {
+  IRotationDirectionService,
+  RotationDirections,
+} from "../contracts/IRotationDirectionService";
 
 @injectable()
 export class RotationDirectionService implements IRotationDirectionService {
@@ -21,7 +24,9 @@ export class RotationDirectionService implements IRotationDirectionService {
   /**
    * Determine rotation directions based on prop continuity
    */
-  determineRotationDirections(propContinuity?: PropContinuity): RotationDirections {
+  determineRotationDirections(
+    propContinuity?: PropContinuity
+  ): RotationDirections {
     if (propContinuity === PropContinuity.CONTINUOUS) {
       return {
         blueRotationDirection: this.pictographFilterService.selectRandom([

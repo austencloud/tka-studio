@@ -246,7 +246,9 @@ async function loadAllSequenceMetadataFallback(): Promise<SequenceMetadata[]> {
             id: sequenceName,
             word: sequenceName,
             thumbnailUrl: `/gallery/${sequenceName}/${imageFile}`,
-            ...(hasWebP ? { webpThumbnailUrl: `/gallery/${sequenceName}/${webpFile}` } : {}),
+            ...(hasWebP
+              ? { webpThumbnailUrl: `/gallery/${sequenceName}/${webpFile}` }
+              : {}),
             width: 400, // Default dimensions when using fallback
             height: 400,
             length: calculateSequenceLength(sequenceName),

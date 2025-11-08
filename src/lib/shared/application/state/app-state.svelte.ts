@@ -134,11 +134,6 @@ export function getCanUseApp() {
 export async function updateSettings(
   newSettings: Partial<AppSettings>
 ): Promise<void> {
-  console.log(
-    "📝 app-state.updateSettings called with:",
-    JSON.stringify(newSettings, null, 2)
-  );
-
   if (!areServicesInitialized()) {
     console.warn("Settings service not initialized, cannot update settings");
     return;

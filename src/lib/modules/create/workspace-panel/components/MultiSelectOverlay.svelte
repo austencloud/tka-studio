@@ -5,14 +5,12 @@ Dims everything except the beat grid to make it obvious you're in a special mode
 Shows "Select Items" banner and makes escape prominent.
 -->
 <script lang="ts">
-  const {
-    onCancel
-  } = $props<{
+  const { onCancel } = $props<{
     onCancel: () => void;
   }>();
 
   function handleBackdropKeydown(event: KeyboardEvent) {
-    if (event.key === 'Enter' || event.key === ' ') {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       onCancel();
     }

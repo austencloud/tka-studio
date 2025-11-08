@@ -111,8 +111,6 @@ Provides play/pause, speed adjustment (BPM), reset, and metronome toggle.
         +
       </button>
     </div>
-
-
   </div>
 
   <!-- Metronome toggle -->
@@ -281,8 +279,6 @@ Provides play/pause, speed adjustment (BPM), reset, and metronome toggle.
   .speed-slider::-moz-range-thumb:hover {
     transform: scale(1.2);
   }
-
-
 
   /* Metronome control */
   .metronome-control {

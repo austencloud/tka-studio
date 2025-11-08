@@ -16,4 +16,7 @@ export type { IGuidedOptionGenerator } from "./services/GuidedOptionGenerator";
 
 // State
 export { createGuidedConstructState } from "./state/guided-construct-state.svelte";
-export type { GuidedConstructState, GuidedConstructConfig } from "./state/guided-construct-state.svelte";
+export type {
+  GuidedConstructState,
+  GuidedConstructConfig,
+} from "./state/guided-construct-state.svelte";

@@ -20,7 +20,7 @@ import {
   FishSpriteManager,
   OceanRenderer,
   LightRayCalculator,
-  DeepOceanBackgroundOrchestrator
+  DeepOceanBackgroundOrchestrator,
 } from "../../background/deep-ocean";
 
 export const dataModule = new ContainerModule(
@@ -56,10 +56,13 @@ export const dataModule = new ContainerModule(
     options.bind(TYPES.IMarineLifeAnimator).to(MarineLifeAnimator);
     options.bind(TYPES.IParticleSystem).to(ParticleSystem);
     // FishSpriteManager MUST be singleton - sprite cache needs to persist across all usages
-    options.bind(TYPES.IFishSpriteManager).to(FishSpriteManager).inSingletonScope();
+    options
+      .bind(TYPES.IFishSpriteManager)
+      .to(FishSpriteManager)
+      .inSingletonScope();
     options.bind(TYPES.IOceanRenderer).to(OceanRenderer);
     options.bind(TYPES.ILightRayCalculator).to(LightRayCalculator);
-    
+
     // Bind the orchestrator as the main IBackgroundSystem implementation for deep ocean
     // TODO: Update background system selection logic to use this for deep ocean themes
   }

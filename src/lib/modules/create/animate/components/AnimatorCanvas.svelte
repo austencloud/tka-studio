@@ -78,9 +78,10 @@ for sequence animation playback.
   // Resolve SVG image service
   const svgImageService = resolve(TYPES.ISvgImageService) as ISvgImageService;
 
-  // Debug: Log when letter or beatData changes
+  // Track prop changes
   $effect(() => {
-    console.log("[AnimatorCanvas] Props changed:", { letter, beatData });
+    letter;
+    beatData;
   });
 
   // Track prop changes to trigger re-renders
@@ -138,8 +139,10 @@ for sequence animation playback.
 
     const rect = canvasElement.getBoundingClientRect();
     const nextDisplaySize =
-      Math.min(rect.width || DEFAULT_CANVAS_SIZE, rect.height || DEFAULT_CANVAS_SIZE) ||
-      DEFAULT_CANVAS_SIZE;
+      Math.min(
+        rect.width || DEFAULT_CANVAS_SIZE,
+        rect.height || DEFAULT_CANVAS_SIZE
+      ) || DEFAULT_CANVAS_SIZE;
     const pixelRatio =
       typeof window !== "undefined" && window.devicePixelRatio
         ? window.devicePixelRatio
@@ -183,7 +186,6 @@ for sequence animation playback.
 
         // Check if canvas still exists after async operations
         if (!canvasElement) {
-          console.warn("Canvas element became null during image loading");
           return;
         }
 
@@ -255,27 +257,17 @@ for sequence animation playback.
     x: number,
     y: number
   ) {
-    console.log("[AnimatorCanvas] loadGlyphFromSvg called:", {
-      width,
-      height,
-      x,
-      y,
-      svgLength: svgString.length,
-    });
-
     try {
       // Save previous glyph for fade transition
       const hadPreviousGlyph = glyphImage !== null;
       if (hadPreviousGlyph) {
         previousGlyphImage = glyphImage;
         previousGlyphDimensions = glyphDimensions;
-        console.log("[AnimatorCanvas] Saved previous glyph for fade");
       }
 
       // Convert SVG string to image
       // IMPORTANT: The SVG has viewBox="0 0 950 950", so we must create the image at 950x950
       // The width/height/x/y parameters tell us where the glyph is within that 950x950 space
-      console.log("[AnimatorCanvas] Converting SVG to image at 950x950...");
       const newImage = await svgImageService.convertSvgStringToImage(
         svgString,
         950,
@@ -284,20 +276,12 @@ for sequence animation playback.
 
       glyphImage = newImage;
       glyphDimensions = { width, height, x, y };
-      console.log("[AnimatorCanvas] Glyph image loaded successfully:", {
-        width,
-        height,
-        x,
-        y,
-      });
 
       // Start fade transition if we had a previous glyph
       if (hadPreviousGlyph) {
-        console.log("[AnimatorCanvas] Starting fade transition");
         startFadeTransition();
       } else {
         // First glyph - no fade
-        console.log("[AnimatorCanvas] First glyph - starting render loop");
         needsRender = true;
         startRenderLoop();
       }
@@ -426,7 +410,10 @@ for sequence animation playback.
 {/if}
 
 <div class="canvas-wrapper">
-  <canvas bind:this={canvasElement} width={canvasResolution} height={canvasResolution}
+  <canvas
+    bind:this={canvasElement}
+    width={canvasResolution}
+    height={canvasResolution}
   ></canvas>
 </div>
 

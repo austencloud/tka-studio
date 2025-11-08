@@ -11,7 +11,7 @@ Uses stepper pattern for space-efficient level selection
     onLevelChange,
     gridColumnSpan = 2,
     cardIndex = 0,
-    headerFontSize = "9px"
+    headerFontSize = "9px",
   } = $props<{
     currentLevel: DifficultyLevel;
     onLevelChange: (level: DifficultyLevel) => void;
@@ -21,7 +21,10 @@ Uses stepper pattern for space-efficient level selection
   }>();
 
   // 🎨 ENHANCED: Level display data with PRONOUNCED gradient colors for visibility
-  const levelData: Record<DifficultyLevel, { name: string; number: number; color: string; textColor: string }> = {
+  const levelData: Record<
+    DifficultyLevel,
+    { name: string; number: number; color: string; textColor: string }
+  > = {
     [DifficultyLevel.BEGINNER]: {
       name: "No Turns",
       number: 1,
@@ -31,7 +34,7 @@ Uses stepper pattern for space-efficient level selection
         rgb(125, 211, 252) 30%,
         rgb(56, 189, 248) 70%,
         rgb(14, 165, 233) 100%)`,
-      textColor: "black"
+      textColor: "black",
     },
     [DifficultyLevel.INTERMEDIATE]: {
       name: "Whole Turns",
@@ -42,7 +45,7 @@ Uses stepper pattern for space-efficient level selection
         rgb(148, 163, 184) 30%,
         rgb(100, 116, 139) 70%,
         rgb(71, 85, 105) 100%)`,
-      textColor: "white"
+      textColor: "white",
     },
     [DifficultyLevel.ADVANCED]: {
       name: "Half Turns",
@@ -55,24 +58,26 @@ Uses stepper pattern for space-efficient level selection
         rgb(234, 179, 8) 60%,
         rgb(202, 138, 4) 80%,
         rgb(161, 98, 7) 100%)`,
-      textColor: "black"
-    }
+      textColor: "black",
+    },
   };
 
   // Convert DifficultyLevel to numeric value for stepper
   const levelToNumber: Record<DifficultyLevel, number> = {
     [DifficultyLevel.BEGINNER]: 1,
     [DifficultyLevel.INTERMEDIATE]: 2,
-    [DifficultyLevel.ADVANCED]: 3
+    [DifficultyLevel.ADVANCED]: 3,
   };
 
   const numberToLevel: Record<number, DifficultyLevel> = {
     1: DifficultyLevel.BEGINNER,
     2: DifficultyLevel.INTERMEDIATE,
-    3: DifficultyLevel.ADVANCED
+    3: DifficultyLevel.ADVANCED,
   };
 
-  const currentLevelNumber = $derived(levelToNumber[currentLevel as DifficultyLevel]);
+  const currentLevelNumber = $derived(
+    levelToNumber[currentLevel as DifficultyLevel]
+  );
 
   function handleIncrement() {
     const newLevel = Math.min(currentLevelNumber + 1, 3);

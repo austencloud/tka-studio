@@ -23,7 +23,13 @@ export class PropSvgLoader implements IPropSvgLoader {
   private rawSvgCache = new Map<string, string>(); // path -> raw SVG text
   private transformedSvgCache = new Map<string, PropRenderData>(); // path:color -> transformed data
   private loadingPromises = new Map<string, Promise<string>>(); // path -> loading promise (deduplication)
-  private metadataCache = new Map<string, { viewBox: { width: number; height: number }; center: { x: number; y: number } }>();
+  private metadataCache = new Map<
+    string,
+    {
+      viewBox: { width: number; height: number };
+      center: { x: number; y: number };
+    }
+  >();
 
   // Performance monitoring
   private cacheHits = 0;
@@ -63,7 +69,10 @@ export class PropSvgLoader implements IPropSvgLoader {
       const originalSvgText = await this.fetchSvgContentCached(path);
 
       // Parse SVG for viewBox and center (uses metadata cache)
-      const { viewBox, center } = this.parsePropSvgCached(originalSvgText, path);
+      const { viewBox, center } = this.parsePropSvgCached(
+        originalSvgText,
+        path
+      );
 
       // Apply color transformation
       const coloredSvgText = this.applyColorToSvg(originalSvgText, color);
@@ -280,7 +289,10 @@ export class PropSvgLoader implements IPropSvgLoader {
       cacheMisses: this.cacheMisses,
       hitRate:
         this.cacheHits + this.cacheMisses > 0
-          ? ((this.cacheHits / (this.cacheHits + this.cacheMisses)) * 100).toFixed(2) + "%"
+          ? (
+              (this.cacheHits / (this.cacheHits + this.cacheMisses)) *
+              100
+            ).toFixed(2) + "%"
           : "0%",
     };
   }

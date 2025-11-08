@@ -6,7 +6,7 @@
     TYPES,
     type IDeviceDetector,
     type IHapticFeedbackService,
-    shouldHideUIForAnimation,
+    shouldHideUIForPanels,
   } from "$shared";
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onMount } from "svelte";
@@ -22,6 +22,7 @@
     onSectionChange,
     onModuleSwitcherTap,
     onLayoutChange,
+    onHeightChange,
     showModuleSwitcher = true,
     showSettings = true,
   } = $props<{
@@ -30,6 +31,7 @@
     onSectionChange?: (sectionId: string) => void;
     onModuleSwitcherTap?: () => void;
     onLayoutChange?: (isLandscape: boolean) => void;
+    onHeightChange?: (height: number) => void;
     showModuleSwitcher?: boolean;
     showSettings?: boolean;
   }>();
@@ -47,8 +49,8 @@
   // Ref to nav element for container query support detection
   let navElement = $state<HTMLElement | null>(null);
 
-  // Determine if navigation should be hidden (animation panel open in side-by-side layout)
-  let shouldHideNav = $derived(shouldHideUIForAnimation());
+  // Determine if navigation should be hidden (any modal panel open in side-by-side layout)
+  let shouldHideNav = $derived(shouldHideUIForPanels());
 
   // Abbreviated labels for compact mode
   const abbreviations: Record<string, string> = {
@@ -93,7 +95,27 @@
       TYPES.IHapticFeedbackService
     );
 
+    // Set up ResizeObserver to measure and report navigation height
+    let resizeObserver: ResizeObserver | null = null;
+    if (navElement) {
+      resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          const height =
+            entry.borderBoxSize?.[0]?.blockSize ?? entry.contentRect.height;
+          onHeightChange?.(height);
+        }
+      });
+      resizeObserver.observe(navElement);
+
+      // Report initial height
+      const initialHeight = navElement.getBoundingClientRect().height;
+      if (initialHeight > 0) {
+        onHeightChange?.(initialHeight);
+      }
+    }
+
     // Resolve DeviceDetector service
+    let deviceCleanup: (() => void) | undefined;
     try {
       deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
 
@@ -101,10 +123,9 @@
       responsiveSettings = deviceDetector.getResponsiveSettings();
 
       // Return cleanup function from onCapabilitiesChanged
-      const cleanup = deviceDetector.onCapabilitiesChanged(() => {
+      deviceCleanup = deviceDetector.onCapabilitiesChanged(() => {
         responsiveSettings = deviceDetector!.getResponsiveSettings();
       });
-      return cleanup || undefined;
     } catch (error) {
       console.warn(
         "PrimaryNavigation: Failed to resolve DeviceDetector",
@@ -119,12 +140,16 @@
       );
     }
 
-    return undefined;
+    // Return cleanup function
+    return () => {
+      resizeObserver?.disconnect();
+      deviceCleanup?.();
+    };
   });
 </script>
 
 <nav
-  class="primary-navigation glass-surface"
+  class="primary-navigation"
   class:layout-bottom={!isLandscape}
   class:layout-side={isLandscape}
   bind:this={navElement}
@@ -193,7 +218,7 @@
     position: fixed;
     display: flex;
     gap: 4px;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: var(--glass-backdrop-strong);
     z-index: 100;
   }

@@ -10,10 +10,9 @@ import type { SequenceData } from "$shared";
 export interface ISequenceLoopabilityChecker {
   /**
    * Check if a sequence ends in the exact same position and orientation as it starts
-   * 
+   *
    * @param sequence - The sequence to check
    * @returns true if the sequence can loop seamlessly (end state = start state)
    */
   isSeamlesslyLoopable(sequence: SequenceData): boolean;
 }
-

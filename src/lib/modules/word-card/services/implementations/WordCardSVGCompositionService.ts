@@ -141,7 +141,9 @@ export class WordCardSVGCompositionService {
       const responsiveDimensions: WordCardDimensions = {
         width: Math.round(width),
         height: Math.round(height),
-        ...(maxDimensions.scale !== undefined && { scale: maxDimensions.scale }),
+        ...(maxDimensions.scale !== undefined && {
+          scale: maxDimensions.scale,
+        }),
       };
 
       console.log(

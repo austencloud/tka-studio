@@ -38,9 +38,9 @@ Transform tools moved to edit tab.
   <ExportTools
     {disabled}
     {hasSequence}
-    onCopyJson={onCopyJson}
-    onAddToDictionary={onAddToDictionary}
-    onFullscreen={onFullscreen}
+    {onCopyJson}
+    {onAddToDictionary}
+    {onFullscreen}
   />
 
   <!-- Visual Separator -->
@@ -51,8 +51,8 @@ Transform tools moved to edit tab.
     {disabled}
     {hasSelection}
     {hasSequence}
-    onDeleteBeat={onDeleteBeat}
-    onClearSequence={onClearSequence}
+    {onDeleteBeat}
+    {onClearSequence}
   />
 
   {#if renderExtra}

@@ -18,7 +18,7 @@
     isMultiSelectMode = false,
     selectedBeatNumbers = new Set<number>(),
     onBeatLongPress,
-    onStartLongPress
+    onStartLongPress,
   } = $props<{
     sequenceState: SequenceState;
     currentWord?: string;
@@ -49,7 +49,9 @@
 
   // Initialize haptic service on mount
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Effect: Reactive custom event handling for beat animations
@@ -72,10 +74,7 @@
       progressiveWord = "";
     };
 
-    wrapper.addEventListener(
-      "beat-letter-animated",
-      handleBeatLetterAnimated
-    );
+    wrapper.addEventListener("beat-letter-animated", handleBeatLetterAnimated);
     wrapper.addEventListener(
       "sequential-animation-complete",
       handleSequentialAnimationComplete
@@ -110,12 +109,9 @@
       duration: 1000,
       blueReversal: false,
       redReversal: false,
-      isBlank: false
+      isBlank: false,
     };
   });
-
-
-
 
   function handleBeatClick(beatNumber: number) {
     hapticService?.trigger("selection");
@@ -138,10 +134,7 @@
         sequence={currentSequence}
       /> -->
 
-      <div
-        bind:this={beatGridWrapperRef}
-        class="beat-grid-wrapper"
-      >
+      <div bind:this={beatGridWrapperRef} class="beat-grid-wrapper">
         <BeatGrid
           beats={currentSequence?.beats ?? []}
           startPosition={startPositionBeat() ?? undefined}
@@ -156,8 +149,8 @@
           {isSideBySideLayout}
           {isMultiSelectMode}
           {selectedBeatNumbers}
-          onBeatLongPress={onBeatLongPress}
-          onStartLongPress={onStartLongPress}
+          {onBeatLongPress}
+          {onStartLongPress}
         />
       </div>
     </div>
@@ -175,7 +168,6 @@
     padding: 0; /* Removed padding - parent SequenceDisplay handles top spacing for word label */
     box-sizing: border-box;
     transition: all 0.3s ease-out;
-
   }
 
   .content-wrapper {

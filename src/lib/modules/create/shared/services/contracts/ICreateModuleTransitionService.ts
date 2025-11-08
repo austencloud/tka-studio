@@ -6,7 +6,6 @@
 
 import type { ActiveCreateModule } from "../../../../../shared/foundation/ui/UITypes";
 
-
 export interface ICreateModuleTransitionService {
   /**
    * Handle main tab transitions with fade animations

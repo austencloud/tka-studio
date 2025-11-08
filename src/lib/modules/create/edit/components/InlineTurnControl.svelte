@@ -1,31 +1,33 @@
 <!-- InlineTurnControl.svelte - Full turn controls shown inline when space permits -->
 <script lang="ts">
-  import type { BeatData, IHapticFeedbackService } from '$shared';
-  import { resolve, TYPES } from '$shared';
-  import { onMount } from 'svelte';
-  import type { ITurnControlService } from '../services/TurnControlService';
+  import type { BeatData, IHapticFeedbackService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
+  import type { ITurnControlService } from "../services/TurnControlService";
 
   // Props
   const {
     color,
     currentBeatData,
-    layoutMode = 'compact',
+    layoutMode = "compact",
     onTurnAmountChanged,
-    onEditTurnsRequested
+    onEditTurnsRequested,
   } = $props<{
-    color: 'blue' | 'red';
+    color: "blue" | "red";
     currentBeatData: BeatData | null;
-    layoutMode?: 'compact' | 'balanced' | 'comfortable';
+    layoutMode?: "compact" | "balanced" | "comfortable";
     onTurnAmountChanged: (color: string, turnAmount: number) => void;
     onEditTurnsRequested: () => void;
   }>();
 
   // Services
-  const turnControlService = resolve(TYPES.ITurnControlService) as ITurnControlService;
+  const turnControlService = resolve(
+    TYPES.ITurnControlService
+  ) as ITurnControlService;
   let hapticService: IHapticFeedbackService;
 
   // Display helpers
-  const displayLabel = $derived(() => color === 'blue' ? 'Left' : 'Right');
+  const displayLabel = $derived(() => (color === "blue" ? "Left" : "Right"));
 
   function getCurrentTurnValue(): number {
     return turnControlService.getCurrentTurnValue(currentBeatData, color);
@@ -37,10 +39,13 @@
   }
 
   function getMotionType(): string {
-    if (!currentBeatData) return 'Static';
-    const motion = color === 'blue' ? currentBeatData.motions?.blue : currentBeatData.motions?.red;
-    if (!motion) return 'Static';
-    const type = motion.motionType || 'static';
+    if (!currentBeatData) return "Static";
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
+    if (!motion) return "Static";
+    const type = motion.motionType || "static";
     return type.charAt(0).toUpperCase() + type.slice(1);
   }
 
@@ -75,17 +80,19 @@
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
 <div
   class="inline-turn-control"
-  class:blue={color === 'blue'}
-  class:red={color === 'red'}
-  class:compact={layoutMode === 'compact'}
-  class:balanced={layoutMode === 'balanced'}
-  class:comfortable={layoutMode === 'comfortable'}
+  class:blue={color === "blue"}
+  class:red={color === "red"}
+  class:compact={layoutMode === "compact"}
+  class:balanced={layoutMode === "balanced"}
+  class:comfortable={layoutMode === "comfortable"}
   data-testid={`inline-turn-control-${color}`}
 >
   <!-- Header with side label and motion badge -->
@@ -156,7 +163,11 @@
 
   .inline-turn-control.blue {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      white 100%
+    );
   }
 
   .inline-turn-control.red {

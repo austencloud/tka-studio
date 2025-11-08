@@ -17,7 +17,7 @@ import type {
   INavigationSyncService,
   IResponsiveLayoutService,
   ISequencePersistenceService,
-  ISequenceService
+  ISequenceService,
 } from "./contracts";
 
 /**
@@ -47,16 +47,31 @@ export class ServiceInitializer {
     try {
       return {
         sequenceService: resolve<ISequenceService>(TYPES.ISequenceService),
-        sequencePersistenceService: resolve<ISequencePersistenceService>(TYPES.ISequencePersistenceService),
-        startPositionService: resolve<IStartPositionService>(TYPES.IStartPositionService),
-        CreateModuleService: resolve<ICreateModuleService>(TYPES.ICreateModuleService),
-        layoutService: resolve<IResponsiveLayoutService>(TYPES.IResponsiveLayoutService),
-        navigationSyncService: resolve<INavigationSyncService>(TYPES.INavigationSyncService),
-        beatOperationsService: resolve<IBeatOperationsService>(TYPES.IBeatOperationsService),
-        shareService: resolve<IShareService>(TYPES.IShareService)
+        sequencePersistenceService: resolve<ISequencePersistenceService>(
+          TYPES.ISequencePersistenceService
+        ),
+        startPositionService: resolve<IStartPositionService>(
+          TYPES.IStartPositionService
+        ),
+        CreateModuleService: resolve<ICreateModuleService>(
+          TYPES.ICreateModuleService
+        ),
+        layoutService: resolve<IResponsiveLayoutService>(
+          TYPES.IResponsiveLayoutService
+        ),
+        navigationSyncService: resolve<INavigationSyncService>(
+          TYPES.INavigationSyncService
+        ),
+        beatOperationsService: resolve<IBeatOperationsService>(
+          TYPES.IBeatOperationsService
+        ),
+        shareService: resolve<IShareService>(TYPES.IShareService),
       };
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Unknown error resolving services";
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Unknown error resolving services";
       throw new Error(`Failed to resolve CreateModule services: ${message}`);
     }
   }
@@ -64,7 +79,9 @@ export class ServiceInitializer {
   /**
    * Initialize services that require async setup
    */
-  static async initializeServices(services: CreateModuleServices): Promise<void> {
+  static async initializeServices(
+    services: CreateModuleServices
+  ): Promise<void> {
     await services.CreateModuleService.initialize();
   }
 }

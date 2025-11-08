@@ -16,7 +16,7 @@ Used when card aspect ratio is wide/landscape
     handleIncrement,
     handleDecrement,
     handleKeydown,
-    headerFontSize = "9px"
+    headerFontSize = "9px",
   } = $props<{
     title: string;
     displayValue: string;
@@ -26,7 +26,10 @@ Used when card aspect ratio is wide/landscape
     canDecrement: boolean;
     handleIncrement: () => void;
     handleDecrement: () => void;
-    handleKeydown: (event: KeyboardEvent, action: 'increment' | 'decrement') => void;
+    handleKeydown: (
+      event: KeyboardEvent,
+      action: "increment" | "decrement"
+    ) => void;
     headerFontSize?: string;
   }>();
 </script>
@@ -35,13 +38,19 @@ Used when card aspect ratio is wide/landscape
 <button
   class="touch-zone decrement-zone"
   onclick={handleDecrement}
-  onkeydown={(e) => handleKeydown(e, 'decrement')}
+  onkeydown={(e) => handleKeydown(e, "decrement")}
   disabled={!canDecrement}
   aria-label="Decrease {title}"
 >
   <div class="zone-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-      <path d="M5 12h14"/>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="3"
+      stroke-linecap="round"
+    >
+      <path d="M5 12h14" />
     </svg>
   </div>
 </button>
@@ -49,13 +58,19 @@ Used when card aspect ratio is wide/landscape
 <button
   class="touch-zone increment-zone"
   onclick={handleIncrement}
-  onkeydown={(e) => handleKeydown(e, 'increment')}
+  onkeydown={(e) => handleKeydown(e, "increment")}
   disabled={!canIncrement}
   aria-label="Increase {title}"
 >
   <div class="zone-icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round">
-      <path d="M12 5v14M5 12h14"/>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="3"
+      stroke-linecap="round"
+    >
+      <path d="M12 5v14M5 12h14" />
     </svg>
   </div>
 </button>

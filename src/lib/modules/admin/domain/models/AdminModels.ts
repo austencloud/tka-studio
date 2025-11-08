@@ -4,7 +4,11 @@
  * Data models for admin functionality
  */
 
-import type { DailyChallenge, ChallengeType, ChallengeDifficulty } from "$shared/gamification/domain/models";
+import type {
+  DailyChallenge,
+  ChallengeType,
+  ChallengeDifficulty,
+} from "$shared/gamification/domain/models";
 import type { SequenceData } from "$shared";
 
 /**
@@ -38,4 +42,3 @@ export interface ChallengeFormData {
   target: number;
   metadata?: Record<string, any>;
 }
-

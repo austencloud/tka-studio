@@ -159,7 +159,10 @@
 
     /* Use CSS variables calculated from JavaScript */
     grid-template-columns: var(--grid-columns, repeat(3, 1fr));
-    grid-template-rows: var(--grid-rows, repeat(4, 1fr)); /* Equal-height rows */
+    grid-template-rows: var(
+      --grid-rows,
+      repeat(4, 1fr)
+    ); /* Equal-height rows */
 
     /* Fluid gap using container query units - scales smoothly with container size */
     gap: clamp(12px, 3cqi, 24px);

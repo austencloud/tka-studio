@@ -13,4 +13,3 @@ export enum ExploreSortMethod {
   AUTHOR = "author",
   POPULARITY = "popularity",
 }
-

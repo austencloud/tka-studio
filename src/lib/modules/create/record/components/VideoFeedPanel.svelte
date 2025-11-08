@@ -31,12 +31,13 @@ Features square aspect ratio for consistent layout and settings dialog for camer
 
   // Camera constraints - square aspect ratio for consistent layout
   function getCameraConstraints(deviceId?: string): MediaStreamConstraints {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-      navigator.userAgent
-    );
+    const isMobile =
+      /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+        navigator.userAgent
+      );
 
     const videoConstraints: MediaTrackConstraints = {
-      width: { ideal: 720 },  // Square aspect ratio
+      width: { ideal: 720 }, // Square aspect ratio
       height: { ideal: 720 }, // Square aspect ratio
       facingMode: isMobile ? "environment" : "user",
     };
@@ -71,7 +72,9 @@ Features square aspect ratio for consistent layout and settings dialog for camer
   async function getAvailableCameras() {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      availableCameras = devices.filter((device) => device.kind === "videoinput");
+      availableCameras = devices.filter(
+        (device) => device.kind === "videoinput"
+      );
     } catch (err) {
       console.error("Failed to enumerate cameras:", err);
     }
@@ -98,7 +101,8 @@ Features square aspect ratio for consistent layout and settings dialog for camer
 
         // Wait for video to be ready
         videoElement.onloadedmetadata = () => {
-          videoElement?.play()
+          videoElement
+            ?.play()
             .then(() => {
               isCameraActive = true;
               isLoading = false;
@@ -106,7 +110,9 @@ Features square aspect ratio for consistent layout and settings dialog for camer
             })
             .catch((playErr) => {
               console.error("❌ Failed to play video:", playErr);
-              error = "Failed to play video: " + (playErr instanceof Error ? playErr.message : String(playErr));
+              error =
+                "Failed to play video: " +
+                (playErr instanceof Error ? playErr.message : String(playErr));
               isLoading = false;
             });
         };
@@ -123,9 +129,7 @@ Features square aspect ratio for consistent layout and settings dialog for camer
           : "Failed to access camera. Please check permissions.";
       error = errorMessage;
       isLoading = false;
-      onCameraError(
-        err instanceof Error ? err : new Error(errorMessage)
-      );
+      onCameraError(err instanceof Error ? err : new Error(errorMessage));
     }
   }
 
@@ -153,7 +157,8 @@ Features square aspect ratio for consistent layout and settings dialog for camer
   $effect(() => {
     if (videoElement && stream && !videoElement.srcObject) {
       videoElement.srcObject = stream;
-      videoElement.play()
+      videoElement
+        .play()
         .then(() => {
           isCameraActive = true;
         })

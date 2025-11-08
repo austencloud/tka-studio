@@ -18,7 +18,7 @@
 
 import type { PictographData } from "$shared";
 
-export type SelectionMode = 'single' | 'multi';
+export type SelectionMode = "single" | "multi";
 
 export interface SequenceSelectionStateData {
   // Mode
@@ -37,7 +37,7 @@ export interface SequenceSelectionStateData {
 
 export function createSequenceSelectionState() {
   const state = $state<SequenceSelectionStateData>({
-    mode: 'single',
+    mode: "single",
     selectedBeatNumber: null,
     selectedBeatNumbers: new Set<number>(),
     selectedStartPosition: null,
@@ -74,10 +74,10 @@ export function createSequenceSelectionState() {
       return state.mode;
     },
     get isMultiSelectMode() {
-      return state.mode === 'multi';
+      return state.mode === "multi";
     },
     get isSingleSelectMode() {
-      return state.mode === 'single';
+      return state.mode === "single";
     },
 
     // Multi-select getters
@@ -85,18 +85,18 @@ export function createSequenceSelectionState() {
       return state.selectedBeatNumbers;
     },
     get selectionCount(): number {
-      if (state.mode === 'single') {
+      if (state.mode === "single") {
         return state.selectedBeatNumber !== null ? 1 : 0;
       }
       return state.selectedBeatNumbers.size;
     },
     get hasMultipleSelection(): boolean {
-      return state.mode === 'multi' && state.selectedBeatNumbers.size > 1;
+      return state.mode === "multi" && state.selectedBeatNumbers.size > 1;
     },
 
     // Computed
     get hasSelection() {
-      if (state.mode === 'single') {
+      if (state.mode === "single") {
         return state.selectedBeatNumber !== null;
       }
       return state.selectedBeatNumbers.size > 0;
@@ -104,11 +104,6 @@ export function createSequenceSelectionState() {
 
     // Selection operations
     selectBeat(beatNumber: number | null) {
-      console.log('🔵 selectBeat called:', {
-        beatNumber,
-        previousValue: state.selectedBeatNumber,
-        stackTrace: new Error().stack
-      });
       state.selectedBeatNumber = beatNumber;
     },
 
@@ -117,15 +112,11 @@ export function createSequenceSelectionState() {
     },
 
     clearSelection() {
-      console.log('🟡 clearSelection called:', {
-        previousValue: state.selectedBeatNumber,
-        stackTrace: new Error().stack
-      });
       state.selectedBeatNumber = null;
     },
 
     isBeatSelected(beatNumber: number): boolean {
-      if (state.mode === 'single') {
+      if (state.mode === "single") {
         return state.selectedBeatNumber === beatNumber;
       }
       return state.selectedBeatNumbers.has(beatNumber);
@@ -133,38 +124,45 @@ export function createSequenceSelectionState() {
 
     // Multi-select operations
     enterMultiSelectMode(initialBeatNumber: number) {
-      state.mode = 'multi';
+      state.mode = "multi";
       state.selectedBeatNumbers = new Set([initialBeatNumber]);
       state.selectedBeatNumber = null; // Clear single-select
     },
 
     exitMultiSelectMode() {
-      state.mode = 'single';
+      state.mode = "single";
       state.selectedBeatNumbers = new Set<number>(); // Create new Set to trigger reactivity
       state.selectedBeatNumber = null;
     },
 
-    toggleBeatInMultiSelect(beatNumber: number): { success: boolean; error?: string } {
-      if (state.mode !== 'multi') {
-        return { success: false, error: 'Not in multi-select mode' };
+    toggleBeatInMultiSelect(beatNumber: number): {
+      success: boolean;
+      error?: string;
+    } {
+      if (state.mode !== "multi") {
+        return { success: false, error: "Not in multi-select mode" };
       }
 
       // Validate: Cannot mix start position (0) with regular beats (>0)
       const hasStartPosition = state.selectedBeatNumbers.has(0);
-      const hasRegularBeats = Array.from(state.selectedBeatNumbers).some(n => n > 0);
+      const hasRegularBeats = Array.from(state.selectedBeatNumbers).some(
+        (n) => n > 0
+      );
       const isStartPosition = beatNumber === 0;
 
       if (isStartPosition && hasRegularBeats) {
         return {
           success: false,
-          error: 'Cannot select start position with beats. They have different properties.'
+          error:
+            "Cannot select start position with beats. They have different properties.",
         };
       }
 
       if (!isStartPosition && hasStartPosition) {
         return {
           success: false,
-          error: 'Cannot select beats with start position. They have different properties.'
+          error:
+            "Cannot select beats with start position. They have different properties.",
         };
       }
 
@@ -181,13 +179,13 @@ export function createSequenceSelectionState() {
     },
 
     selectAllBeats(beatNumbers: number[]) {
-      if (state.mode !== 'multi') {
-        state.mode = 'multi';
+      if (state.mode !== "multi") {
+        state.mode = "multi";
       }
 
       // Filter out start position if regular beats are included, and vice versa
       const hasStartPosition = beatNumbers.includes(0);
-      const regularBeats = beatNumbers.filter(n => n > 0);
+      const regularBeats = beatNumbers.filter((n) => n > 0);
 
       if (hasStartPosition && regularBeats.length > 0) {
         // If both types, prefer regular beats (more common use case)
@@ -211,19 +209,25 @@ export function createSequenceSelectionState() {
     adjustSelectionForRemovedBeat(removedBeatNumber: number) {
       if (state.selectedBeatNumber === removedBeatNumber) {
         state.selectedBeatNumber = null;
-      } else if (state.selectedBeatNumber !== null && state.selectedBeatNumber > removedBeatNumber) {
+      } else if (
+        state.selectedBeatNumber !== null &&
+        state.selectedBeatNumber > removedBeatNumber
+      ) {
         state.selectedBeatNumber = state.selectedBeatNumber - 1;
       }
     },
 
     adjustSelectionForInsertedBeat(insertedBeatNumber: number) {
-      if (state.selectedBeatNumber !== null && state.selectedBeatNumber >= insertedBeatNumber) {
+      if (
+        state.selectedBeatNumber !== null &&
+        state.selectedBeatNumber >= insertedBeatNumber
+      ) {
         state.selectedBeatNumber = state.selectedBeatNumber + 1;
       }
     },
 
     reset() {
-      state.mode = 'single';
+      state.mode = "single";
       state.selectedBeatNumber = null;
       state.selectedBeatNumbers.clear();
       state.selectedStartPosition = null;
@@ -232,4 +236,6 @@ export function createSequenceSelectionState() {
   };
 }
 
-export type SequenceSelectionState = ReturnType<typeof createSequenceSelectionState>;
+export type SequenceSelectionState = ReturnType<
+  typeof createSequenceSelectionState
+>;

@@ -15,4 +15,3 @@ export interface ITurnIntensityManagerService {
    */
   getAllowedValuesForLevel(level: DifficultyLevel): number[];
 }
-

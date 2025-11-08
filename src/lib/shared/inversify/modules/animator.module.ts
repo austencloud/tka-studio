@@ -35,7 +35,9 @@ export const animatorModule = new ContainerModule(
     options.bind(TYPES.IAnimationStateService).to(AnimationStateService);
     options.bind(TYPES.IBeatCalculationService).to(BeatCalculationService);
     options.bind(TYPES.IPropInterpolationService).to(PropInterpolationService);
-    options.bind(TYPES.ISequenceLoopabilityChecker).to(SequenceLoopabilityChecker);
+    options
+      .bind(TYPES.ISequenceLoopabilityChecker)
+      .to(SequenceLoopabilityChecker);
 
     // === CALCULATION SERVICES ===
     options.bind(TYPES.IAngleCalculator).to(AngleCalculator);
@@ -47,9 +49,7 @@ export const animatorModule = new ContainerModule(
     options.bind(TYPES.ICanvasRenderer).to(CanvasRenderer);
     options.bind(TYPES.ISVGGenerator).to(SVGGenerator);
     options.bind(TYPES.IGifExportService).to(GifExportService);
-    options
-      .bind(TYPES.IAnimatedImageTranscoder)
-      .to(AnimatedImageTranscoder);
+    options.bind(TYPES.IAnimatedImageTranscoder).to(AnimatedImageTranscoder);
     options.bind(TYPES.IGifExportOrchestrator).to(GifExportOrchestrator);
 
     // ============================================================================

@@ -29,11 +29,13 @@
   }
 
   async function clearCache() {
-    if (!confirm(
-      "⚠️ NUCLEAR CACHE CLEAR ⚠️\n\n" +
-      "This will DELETE ALL cached data and reload the page.\n\n" +
-      "Continue?"
-    )) {
+    if (
+      !confirm(
+        "⚠️ NUCLEAR CACHE CLEAR ⚠️\n\n" +
+          "This will DELETE ALL cached data and reload the page.\n\n" +
+          "Continue?"
+      )
+    ) {
       return;
     }
 
@@ -55,8 +57,9 @@
   });
 
   const hasOldProject = $derived(
-    diagnostics?.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor')) ||
-    false
+    diagnostics?.indexedDBDatabases.some((db) =>
+      db.includes("the-kinetic-constructor")
+    ) || false
   );
 </script>
 
@@ -88,7 +91,9 @@
       {#if hasOldProject}
         <div class="alert error">
           <strong>🚨 OLD PROJECT DETECTED!</strong>
-          <p>Found "the-kinetic-constructor" data. This WILL cause auth failures!</p>
+          <p>
+            Found "the-kinetic-constructor" data. This WILL cause auth failures!
+          </p>
           <p>Click "Clear Cache" below to fix.</p>
         </div>
       {:else}
@@ -102,9 +107,9 @@
         <summary>View Database List</summary>
         <ul class="db-list">
           {#each diagnostics.indexedDBDatabases as db}
-            <li class:old={db.includes('the-kinetic-constructor')}>
+            <li class:old={db.includes("the-kinetic-constructor")}>
               {db}
-              {#if db.includes('the-kinetic-constructor')}
+              {#if db.includes("the-kinetic-constructor")}
                 <span class="badge">OLD</span>
               {/if}
             </li>
@@ -114,19 +119,11 @@
     {/if}
 
     <div class="actions">
-      <button
-        class="btn secondary"
-        onclick={runDiagnostics}
-        disabled={loading}
-      >
+      <button class="btn secondary" onclick={runDiagnostics} disabled={loading}>
         {loading ? "Scanning..." : "🔍 Refresh"}
       </button>
 
-      <button
-        class="btn danger"
-        onclick={clearCache}
-        disabled={clearing}
-      >
+      <button class="btn danger" onclick={clearCache} disabled={clearing}>
         {clearing ? "Clearing..." : "💣 Clear Cache"}
       </button>
     </div>

@@ -7,16 +7,15 @@
   import type { IHapticFeedbackService } from "$shared/application/services/contracts";
   import { resolve, TYPES } from "$shared/inversify";
 
-  let {
-    onclick,
-    isAnimating = false,
-  } = $props<{
+  let { onclick, isAnimating = false } = $props<{
     onclick?: () => void;
     isAnimating?: boolean;
   }>();
 
   // Resolve haptic feedback service
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   function handleClick() {
     hapticService?.trigger("selection");
@@ -47,7 +46,12 @@
     width: 48px;
     height: 48px;
     border: none;
-    background: rgba(59, 130, 246, 0.2); /* Subtle blue tint for primary action */
+    background: rgba(
+      59,
+      130,
+      246,
+      0.2
+    ); /* Subtle blue tint for primary action */
     backdrop-filter: blur(10px);
     border-radius: 50%;
     color: rgba(255, 255, 255, 0.95);

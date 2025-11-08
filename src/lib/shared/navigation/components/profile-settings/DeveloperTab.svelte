@@ -16,6 +16,7 @@
   let loading = $state(false);
   let clearing = $state(false);
   let showCacheDiagnostics = $state(false);
+  let hmrEnabled = $state(true);
 
   async function runDiagnostics() {
     loading = true;
@@ -30,17 +31,19 @@
   }
 
   async function clearCache() {
-    if (!confirm(
-      "⚠️ NUCLEAR CACHE CLEAR ⚠️\n\n" +
-      "This will:\n" +
-      "• Delete ALL IndexedDB databases\n" +
-      "• Clear ALL localStorage\n" +
-      "• Clear ALL sessionStorage\n" +
-      "• Delete ALL cookies\n" +
-      "• Clear ALL service worker caches\n\n" +
-      "The page will reload after clearing.\n\n" +
-      "Continue?"
-    )) {
+    if (
+      !confirm(
+        "⚠️ NUCLEAR CACHE CLEAR ⚠️\n\n" +
+          "This will:\n" +
+          "• Delete ALL IndexedDB databases\n" +
+          "• Clear ALL localStorage\n" +
+          "• Clear ALL sessionStorage\n" +
+          "• Delete ALL cookies\n" +
+          "• Clear ALL service worker caches\n\n" +
+          "The page will reload after clearing.\n\n" +
+          "Continue?"
+      )
+    ) {
       return;
     }
 
@@ -74,28 +77,61 @@
 ${diagnostics.indexedDBDatabases.map((db) => `  • ${db}`).join("\n") || "  (none)"}
 
 🗄️ localStorage Keys (${diagnostics.localStorageKeys.length}):
-${diagnostics.localStorageKeys.slice(0, 20).map((key) => `  • ${key}`).join("\n")}
+${diagnostics.localStorageKeys
+  .slice(0, 20)
+  .map((key) => `  • ${key}`)
+  .join("\n")}
 ${diagnostics.localStorageKeys.length > 20 ? `  ... and ${diagnostics.localStorageKeys.length - 20} more` : ""}
 
 📋 sessionStorage Keys (${diagnostics.sessionStorageKeys.length}):
 ${diagnostics.sessionStorageKeys.map((key) => `  • ${key}`).join("\n") || "  (none)"}
 
 🍪 Cookies (${diagnostics.cookies.length}):
-${diagnostics.cookies.slice(0, 20).map((c) => `  • ${c}`).join("\n")}
+${diagnostics.cookies
+  .slice(0, 20)
+  .map((c) => `  • ${c}`)
+  .join("\n")}
 ${diagnostics.cookies.length > 20 ? `  ... and ${diagnostics.cookies.length - 20} more` : ""}
 
 🚨 OLD PROJECT CHECK:
-${diagnostics.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor'))
-  ? '  ⚠️ OLD PROJECT DATABASE DETECTED! This WILL cause auth issues!'
-  : '  ✅ No old project databases found'}
+${
+  diagnostics.indexedDBDatabases.some((db) =>
+    db.includes("the-kinetic-constructor")
+  )
+    ? "  ⚠️ OLD PROJECT DATABASE DETECTED! This WILL cause auth issues!"
+    : "  ✅ No old project databases found"
+}
     `.trim();
 
     navigator.clipboard.writeText(text);
     alert("Diagnostics copied to clipboard!");
   }
 
+  function toggleHMR() {
+    // Note: hmrEnabled is already toggled by bind:checked, so don't toggle it again
+    localStorage.setItem("dev-hmr-enabled", String(hmrEnabled));
+
+    if (import.meta.hot) {
+      if (hmrEnabled) {
+        console.log("🔥 HMR Enabled - Changes will hot-reload automatically");
+        // Force a full reload to re-enable HMR
+        window.location.reload();
+      } else {
+        console.log("❄️ HMR Disabled - Manual refresh required for changes");
+        // Note: Vite doesn't support dynamically disabling HMR
+        // A full page reload is required to apply HMR preference
+        window.location.reload();
+      }
+    }
+  }
+
   onMount(() => {
-    // Don't auto-run diagnostics - only run when user expands the section
+    // Load HMR preference from localStorage
+    const savedHMR = localStorage.getItem("dev-hmr-enabled");
+    hmrEnabled = savedHMR !== "false"; // Default to true
+
+    // Note: HMR preference is applied on next page load
+    // Vite doesn't support dynamically disabling HMR after initial load
   });
 </script>
 
@@ -105,6 +141,35 @@ ${diagnostics.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor
     <p class="description">
       Advanced tools for debugging and cache management.
     </p>
+
+    <!-- HMR Toggle -->
+    <div class="setting-card">
+      <div class="setting-header">
+        <div class="setting-info">
+          <h4>🔥 Hot Module Replacement</h4>
+          <p class="setting-description">
+            Auto-reload code changes without refreshing the entire page
+          </p>
+        </div>
+        <label class="toggle-switch">
+          <input
+            type="checkbox"
+            bind:checked={hmrEnabled}
+            onchange={toggleHMR}
+          />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-status" class:active={hmrEnabled}>
+        {#if hmrEnabled}
+          <i class="fas fa-fire"></i>
+          <span>Active - Changes will hot-reload</span>
+        {:else}
+          <i class="fas fa-snowflake"></i>
+          <span>Disabled - Manual refresh required</span>
+        {/if}
+      </div>
+    </div>
 
     <!-- Cache Diagnostics Toggle -->
     <button
@@ -116,7 +181,9 @@ ${diagnostics.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor
         }
       }}
     >
-      <i class="fas fa-{showCacheDiagnostics ? 'chevron-down' : 'chevron-right'}"></i>
+      <i
+        class="fas fa-{showCacheDiagnostics ? 'chevron-down' : 'chevron-right'}"
+      ></i>
       <span>🔧 Cache Diagnostics</span>
       {#if !showCacheDiagnostics}
         <span class="hint">(Click to expand)</span>
@@ -138,75 +205,77 @@ ${diagnostics.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor
         </div>
 
         {#if diagnostics}
-      <div class="diagnostics-summary">
-        <div class="summary-item">
-          <span class="label">IndexedDB Databases:</span>
-          <span class="value">{diagnostics.indexedDBDatabases.length}</span>
-        </div>
-        <div class="summary-item">
-          <span class="label">localStorage Keys:</span>
-          <span class="value">{diagnostics.localStorageKeys.length}</span>
-        </div>
-        <div class="summary-item">
-          <span class="label">sessionStorage Keys:</span>
-          <span class="value">{diagnostics.sessionStorageKeys.length}</span>
-        </div>
-        <div class="summary-item">
-          <span class="label">Cookies:</span>
-          <span class="value">{diagnostics.cookies.length}</span>
-        </div>
-      </div>
+          <div class="diagnostics-summary">
+            <div class="summary-item">
+              <span class="label">IndexedDB Databases:</span>
+              <span class="value">{diagnostics.indexedDBDatabases.length}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">localStorage Keys:</span>
+              <span class="value">{diagnostics.localStorageKeys.length}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">sessionStorage Keys:</span>
+              <span class="value">{diagnostics.sessionStorageKeys.length}</span>
+            </div>
+            <div class="summary-item">
+              <span class="label">Cookies:</span>
+              <span class="value">{diagnostics.cookies.length}</span>
+            </div>
+          </div>
 
-      {#if diagnostics.indexedDBDatabases.some((db) => db.includes("the-kinetic-constructor"))}
-        <div class="alert alert-error">
-          <strong>🚨 OLD PROJECT DETECTED!</strong>
-          <p>
-            Old "the-kinetic-constructor" database found. This WILL cause
-            authentication failures.
-          </p>
-          <p>Click "Nuclear Cache Clear" below to fix this.</p>
-        </div>
-      {/if}
-
-      <details class="diagnostics-details">
-        <summary>View Detailed Storage</summary>
-
-        <div class="storage-section">
-          <h5>📦 IndexedDB Databases</h5>
-          {#if diagnostics.indexedDBDatabases.length > 0}
-            <ul>
-              {#each diagnostics.indexedDBDatabases as db}
-                <li class:old-project={db.includes("the-kinetic-constructor")}>
-                  {db}
-                  {#if db.includes("the-kinetic-constructor")}
-                    <span class="badge badge-error">OLD PROJECT</span>
-                  {/if}
-                </li>
-              {/each}
-            </ul>
-          {:else}
-            <p class="empty">No databases</p>
+          {#if diagnostics.indexedDBDatabases.some( (db) => db.includes("the-kinetic-constructor") )}
+            <div class="alert alert-error">
+              <strong>🚨 OLD PROJECT DETECTED!</strong>
+              <p>
+                Old "the-kinetic-constructor" database found. This WILL cause
+                authentication failures.
+              </p>
+              <p>Click "Nuclear Cache Clear" below to fix this.</p>
+            </div>
           {/if}
-        </div>
 
-        <div class="storage-section">
-          <h5>🗄️ localStorage Keys</h5>
-          {#if diagnostics.localStorageKeys.length > 0}
-            <ul>
-              {#each diagnostics.localStorageKeys.slice(0, 50) as key}
-                <li>{key}</li>
-              {/each}
-              {#if diagnostics.localStorageKeys.length > 50}
-                <li class="more">
-                  ... and {diagnostics.localStorageKeys.length - 50} more
-                </li>
+          <details class="diagnostics-details">
+            <summary>View Detailed Storage</summary>
+
+            <div class="storage-section">
+              <h5>📦 IndexedDB Databases</h5>
+              {#if diagnostics.indexedDBDatabases.length > 0}
+                <ul>
+                  {#each diagnostics.indexedDBDatabases as db}
+                    <li
+                      class:old-project={db.includes("the-kinetic-constructor")}
+                    >
+                      {db}
+                      {#if db.includes("the-kinetic-constructor")}
+                        <span class="badge badge-error">OLD PROJECT</span>
+                      {/if}
+                    </li>
+                  {/each}
+                </ul>
+              {:else}
+                <p class="empty">No databases</p>
               {/if}
-            </ul>
-          {:else}
-            <p class="empty">No keys</p>
-          {/if}
-        </div>
-      </details>
+            </div>
+
+            <div class="storage-section">
+              <h5>🗄️ localStorage Keys</h5>
+              {#if diagnostics.localStorageKeys.length > 0}
+                <ul>
+                  {#each diagnostics.localStorageKeys.slice(0, 50) as key}
+                    <li>{key}</li>
+                  {/each}
+                  {#if diagnostics.localStorageKeys.length > 50}
+                    <li class="more">
+                      ... and {diagnostics.localStorageKeys.length - 50} more
+                    </li>
+                  {/if}
+                </ul>
+              {:else}
+                <p class="empty">No keys</p>
+              {/if}
+            </div>
+          </details>
         {/if}
 
         <div class="actions">
@@ -238,7 +307,9 @@ ${diagnostics.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor
             <strong>When to use Nuclear Cache Clear:</strong>
           </p>
           <ul>
-            <li>Authentication redirects fail after returning from Google/Facebook</li>
+            <li>
+              Authentication redirects fail after returning from Google/Facebook
+            </li>
             <li>Old project database detected (see alert above)</li>
             <li>App stuck on "Setting up services..."</li>
             <li>White screen or infinite loading</li>
@@ -284,6 +355,114 @@ ${diagnostics.indexedDBDatabases.some(db => db.includes('the-kinetic-constructor
     font-size: 14px;
     color: rgba(255, 255, 255, 0.7);
     margin-bottom: 20px;
+  }
+
+  /* HMR Toggle Setting Card */
+  .setting-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+
+  .setting-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+
+  .setting-info {
+    flex: 1;
+  }
+
+  .setting-info h4 {
+    margin: 0 0 6px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .setting-description {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+  }
+
+  /* Toggle Switch */
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 52px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+    border-radius: 28px;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+  }
+
+  input:checked + .slider {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    box-shadow: 0 0 12px rgba(249, 115, 22, 0.5);
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(24px);
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3);
+  }
+
+  /* Setting Status */
+  .setting-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .setting-status.active {
+    background: rgba(249, 115, 22, 0.1);
+    color: #f97316;
+  }
+
+  .setting-status i {
+    font-size: 14px;
   }
 
   .diagnostics-toggle {

@@ -5,7 +5,7 @@
  * Uses the new Spring and Tween classes (not deprecated functions).
  */
 
-import { Spring, Tween } from 'svelte/motion';
+import { Spring, Tween } from "svelte/motion";
 import {
   springPresets,
   beatAnimationVariants,
@@ -15,7 +15,7 @@ import {
   type SpringPreset,
   type BeatAnimationVariant,
   type AnimationVariantConfig,
-} from './presets';
+} from "./presets";
 
 // ============================================================================
 // Beat Animation
@@ -28,7 +28,7 @@ export class BeatAnimation {
   readonly progress: Spring<number>;
   private readonly variantConfig: AnimationVariantConfig;
 
-  constructor(variant: BeatAnimationVariant = 'springPop') {
+  constructor(variant: BeatAnimationVariant = "springPop") {
     const config = beatAnimationVariants[variant];
     if (!config) {
       throw new Error(`Unknown animation variant: ${variant}`);
@@ -39,7 +39,7 @@ export class BeatAnimation {
 
   trigger() {
     this.progress.target = 0;
-    setTimeout(() => this.progress.target = 1, 50);
+    setTimeout(() => (this.progress.target = 1), 50);
   }
 
   reset() {
@@ -52,7 +52,10 @@ export class BeatAnimation {
   }
 
   getStyle(): string {
-    const values = interpolateVariant(this.variantConfig, this.progress.current);
+    const values = interpolateVariant(
+      this.variantConfig,
+      this.progress.current
+    );
     const parts: string[] = [];
 
     parts.push(`opacity: ${values.opacity}`);
@@ -67,7 +70,7 @@ export class BeatAnimation {
     const filter = buildFilter({ blur: values.blur });
     if (filter) parts.push(`filter: ${filter}`);
 
-    return parts.join('; ');
+    return parts.join("; ");
   }
 }
 
@@ -82,7 +85,7 @@ export class PresenceAnimation {
   readonly opacity: Spring<number>;
   readonly scale: Spring<number>;
 
-  constructor(preset: SpringPreset = 'snappy') {
+  constructor(preset: SpringPreset = "snappy") {
     const config = springPresets[preset];
     this.opacity = new Spring(0, config);
     this.scale = new Spring(0.95, config);
@@ -114,7 +117,7 @@ export class GestureAnimation {
   readonly x: Spring<number>;
   readonly y: Spring<number>;
 
-  constructor(preset: SpringPreset = 'gentle') {
+  constructor(preset: SpringPreset = "gentle") {
     const config = springPresets[preset];
     this.x = new Spring(0, config);
     this.y = new Spring(0, config);
@@ -139,7 +142,7 @@ export class GestureAnimation {
  */
 export function createSpring(
   initialValue: number = 0,
-  preset: SpringPreset = 'snappy'
+  preset: SpringPreset = "snappy"
 ): Spring<number> {
   return new Spring(initialValue, springPresets[preset]);
 }
@@ -152,7 +155,9 @@ export function createTween(
   duration: number = 250,
   easing?: (t: number) => number
 ): Tween<number> {
-  const options: { duration: number; easing?: (t: number) => number } = { duration };
+  const options: { duration: number; easing?: (t: number) => number } = {
+    duration,
+  };
   if (easing !== undefined) {
     options.easing = easing;
   }
@@ -171,16 +176,19 @@ export class StaggeredAnimation {
 
   constructor(
     count: number,
-    preset: SpringPreset = 'snappy',
+    preset: SpringPreset = "snappy",
     private delayMs: number = 50
   ) {
     const config = springPresets[preset];
-    this.animations = Array.from({ length: count }, () => new Spring(0, config));
+    this.animations = Array.from(
+      { length: count },
+      () => new Spring(0, config)
+    );
   }
 
   triggerAll() {
     this.animations.forEach((anim, index) => {
-      setTimeout(() => anim.target = 1, index * this.delayMs);
+      setTimeout(() => (anim.target = 1), index * this.delayMs);
     });
   }
 

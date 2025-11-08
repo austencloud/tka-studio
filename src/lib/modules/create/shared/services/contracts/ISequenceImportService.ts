@@ -1,6 +1,6 @@
 /**
  * Sequence Import Service Contract
- * 
+ *
  * Service for importing sequences from various sources (PNG metadata, etc.)
  */
 

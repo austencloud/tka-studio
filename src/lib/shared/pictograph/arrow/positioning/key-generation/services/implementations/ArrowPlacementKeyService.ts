@@ -170,9 +170,56 @@ export class ArrowPlacementKeyService implements IArrowPlacementKeyService {
 
     // Letter type detection (matching legacy + Greek letters)
     const letter = pictographData.letter;
-    const alphaLetters = ["A", "B", "C", "D", "E", "F", "W", "X", "W-", "X-", "Δ", "Δ-", "θ-", "Ω-"];
-    const betaLetters = ["G", "H", "I", "J", "K", "L", "Y", "Z", "Y-", "Z-", "θ", "Ω"];
-    const gammaLetters = ["M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "Σ", "Σ-", "Φ", "Φ-", "Ψ", "Ψ-", "Λ", "Λ-"];
+    const alphaLetters = [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "W",
+      "X",
+      "W-",
+      "X-",
+      "Δ",
+      "Δ-",
+      "θ-",
+      "Ω-",
+    ];
+    const betaLetters = [
+      "G",
+      "H",
+      "I",
+      "J",
+      "K",
+      "L",
+      "Y",
+      "Z",
+      "Y-",
+      "Z-",
+      "θ",
+      "Ω",
+    ];
+    const gammaLetters = [
+      "M",
+      "N",
+      "O",
+      "P",
+      "Q",
+      "R",
+      "S",
+      "T",
+      "U",
+      "V",
+      "Σ",
+      "Σ-",
+      "Φ",
+      "Φ-",
+      "Ψ",
+      "Ψ-",
+      "Λ",
+      "Λ-",
+    ];
 
     const hasAlphaProps = letter ? alphaLetters.includes(letter) : false;
     const hasBetaProps = letter ? betaLetters.includes(letter) : false;

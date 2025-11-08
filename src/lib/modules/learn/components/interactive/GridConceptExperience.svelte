@@ -28,19 +28,19 @@ Page 3: Location labels (N/E/S/W for Diamond, NE/SE/SW/NW for Box)
 
   // Simple grid point data
   const diamondPoints = [
-    { x: 50, y: 15 },  // N
-    { x: 85, y: 50 },  // E
-    { x: 50, y: 85 },  // S
-    { x: 15, y: 50 },  // W
-    { x: 50, y: 50 },  // Center
+    { x: 50, y: 15 }, // N
+    { x: 85, y: 50 }, // E
+    { x: 50, y: 85 }, // S
+    { x: 15, y: 50 }, // W
+    { x: 50, y: 50 }, // Center
   ];
 
   const boxPoints = [
-    { x: 25, y: 25 },  // NW
-    { x: 75, y: 25 },  // NE
-    { x: 75, y: 75 },  // SE
-    { x: 25, y: 75 },  // SW
-    { x: 50, y: 50 },  // Center
+    { x: 25, y: 25 }, // NW
+    { x: 75, y: 25 }, // NE
+    { x: 75, y: 75 }, // SE
+    { x: 25, y: 75 }, // SW
+    { x: 50, y: 50 }, // Center
   ];
 </script>
 
@@ -51,7 +51,10 @@ Page 3: Location labels (N/E/S/W for Diamond, NE/SE/SW/NW for Box)
       <h2>The Grid</h2>
 
       <p>The Kinetic Alphabet is based on a 4-point grid.</p>
-      <p>There are two 4-point grids: <strong>box mode</strong> and <strong>diamond mode</strong>.</p>
+      <p>
+        There are two 4-point grids: <strong>box mode</strong> and
+        <strong>diamond mode</strong>.
+      </p>
       <p>This guide is written in diamond, but everything translates to box.</p>
 
       <div class="grids-container">
@@ -59,8 +62,24 @@ Page 3: Location labels (N/E/S/W for Diamond, NE/SE/SW/NW for Box)
         <div class="grid-item">
           <h3>Diamond</h3>
           <svg viewBox="0 0 100 100" class="grid-svg">
-            <line x1="50" y1="15" x2="50" y2="85" stroke="white" stroke-width="0.5" opacity="0.3" />
-            <line x1="15" y1="50" x2="85" y2="50" stroke="white" stroke-width="0.5" opacity="0.3" />
+            <line
+              x1="50"
+              y1="15"
+              x2="50"
+              y2="85"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
+            <line
+              x1="15"
+              y1="50"
+              x2="85"
+              y2="50"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
             {#each diamondPoints as point}
               <circle cx={point.x} cy={point.y} r="2.5" fill="white" />
             {/each}
@@ -71,8 +90,24 @@ Page 3: Location labels (N/E/S/W for Diamond, NE/SE/SW/NW for Box)
         <div class="grid-item">
           <h3>Box</h3>
           <svg viewBox="0 0 100 100" class="grid-svg">
-            <line x1="25" y1="25" x2="75" y2="75" stroke="white" stroke-width="0.5" opacity="0.3" />
-            <line x1="75" y1="25" x2="25" y2="75" stroke="white" stroke-width="0.5" opacity="0.3" />
+            <line
+              x1="25"
+              y1="25"
+              x2="75"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
+            <line
+              x1="75"
+              y1="25"
+              x2="25"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
             {#each boxPoints as point}
               <circle cx={point.x} cy={point.y} r="2.5" fill="white" />
             {/each}
@@ -92,11 +127,43 @@ Page 3: Location labels (N/E/S/W for Diamond, NE/SE/SW/NW for Box)
       <div class="merged-grid-container">
         <svg viewBox="0 0 100 100" class="grid-svg merged">
           <!-- Diamond lines -->
-          <line x1="50" y1="15" x2="50" y2="85" stroke="white" stroke-width="0.5" opacity="0.3" />
-          <line x1="15" y1="50" x2="85" y2="50" stroke="white" stroke-width="0.5" opacity="0.3" />
+          <line
+            x1="50"
+            y1="15"
+            x2="50"
+            y2="85"
+            stroke="white"
+            stroke-width="0.5"
+            opacity="0.3"
+          />
+          <line
+            x1="15"
+            y1="50"
+            x2="85"
+            y2="50"
+            stroke="white"
+            stroke-width="0.5"
+            opacity="0.3"
+          />
           <!-- Box lines -->
-          <line x1="25" y1="25" x2="75" y2="75" stroke="white" stroke-width="0.5" opacity="0.3" />
-          <line x1="75" y1="25" x2="25" y2="75" stroke="white" stroke-width="0.5" opacity="0.3" />
+          <line
+            x1="25"
+            y1="25"
+            x2="75"
+            y2="75"
+            stroke="white"
+            stroke-width="0.5"
+            opacity="0.3"
+          />
+          <line
+            x1="75"
+            y1="25"
+            x2="25"
+            y2="75"
+            stroke="white"
+            stroke-width="0.5"
+            opacity="0.3"
+          />
           <!-- All points -->
           <circle cx="50" cy="15" r="2.5" fill="white" />
           <circle cx="75" cy="25" r="2.5" fill="white" />
@@ -124,16 +191,60 @@ Page 3: Location labels (N/E/S/W for Diamond, NE/SE/SW/NW for Box)
         <div class="grid-item">
           <h3>Diamond</h3>
           <svg viewBox="0 0 100 100" class="grid-svg">
-            <line x1="50" y1="15" x2="50" y2="85" stroke="white" stroke-width="0.5" opacity="0.3" />
-            <line x1="15" y1="50" x2="85" y2="50" stroke="white" stroke-width="0.5" opacity="0.3" />
+            <line
+              x1="50"
+              y1="15"
+              x2="50"
+              y2="85"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
+            <line
+              x1="15"
+              y1="50"
+              x2="85"
+              y2="50"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
             {#each diamondPoints as point}
               <circle cx={point.x} cy={point.y} r="2.5" fill="white" />
             {/each}
             <!-- Labels -->
-            <text x="50" y="10" text-anchor="middle" fill="white" font-size="8" class="label">N</text>
-            <text x="90" y="52" text-anchor="start" fill="white" font-size="8" class="label">E</text>
-            <text x="50" y="95" text-anchor="middle" fill="white" font-size="8" class="label">S</text>
-            <text x="10" y="52" text-anchor="end" fill="white" font-size="8" class="label">W</text>
+            <text
+              x="50"
+              y="10"
+              text-anchor="middle"
+              fill="white"
+              font-size="8"
+              class="label">N</text
+            >
+            <text
+              x="90"
+              y="52"
+              text-anchor="start"
+              fill="white"
+              font-size="8"
+              class="label">E</text
+            >
+            <text
+              x="50"
+              y="95"
+              text-anchor="middle"
+              fill="white"
+              font-size="8"
+              class="label">S</text
+            >
+            <text
+              x="10"
+              y="52"
+              text-anchor="end"
+              fill="white"
+              font-size="8"
+              class="label">W</text
+            >
           </svg>
         </div>
 
@@ -141,16 +252,60 @@ Page 3: Location labels (N/E/S/W for Diamond, NE/SE/SW/NW for Box)
         <div class="grid-item">
           <h3>Box</h3>
           <svg viewBox="0 0 100 100" class="grid-svg">
-            <line x1="25" y1="25" x2="75" y2="75" stroke="white" stroke-width="0.5" opacity="0.3" />
-            <line x1="75" y1="25" x2="25" y2="75" stroke="white" stroke-width="0.5" opacity="0.3" />
+            <line
+              x1="25"
+              y1="25"
+              x2="75"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
+            <line
+              x1="75"
+              y1="25"
+              x2="25"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+              opacity="0.3"
+            />
             {#each boxPoints as point}
               <circle cx={point.x} cy={point.y} r="2.5" fill="white" />
             {/each}
             <!-- Labels -->
-            <text x="75" y="20" text-anchor="middle" fill="white" font-size="8" class="label">NE</text>
-            <text x="80" y="77" text-anchor="start" fill="white" font-size="8" class="label">SE</text>
-            <text x="25" y="83" text-anchor="middle" fill="white" font-size="8" class="label">SW</text>
-            <text x="20" y="27" text-anchor="end" fill="white" font-size="8" class="label">NW</text>
+            <text
+              x="75"
+              y="20"
+              text-anchor="middle"
+              fill="white"
+              font-size="8"
+              class="label">NE</text
+            >
+            <text
+              x="80"
+              y="77"
+              text-anchor="start"
+              fill="white"
+              font-size="8"
+              class="label">SE</text
+            >
+            <text
+              x="25"
+              y="83"
+              text-anchor="middle"
+              fill="white"
+              font-size="8"
+              class="label">SW</text
+            >
+            <text
+              x="20"
+              y="27"
+              text-anchor="end"
+              fill="white"
+              font-size="8"
+              class="label">NW</text
+            >
           </svg>
         </div>
       </div>

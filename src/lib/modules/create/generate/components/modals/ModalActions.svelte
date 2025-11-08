@@ -9,7 +9,7 @@ Provides consistent, beautiful button layouts for modal actions
     cancelLabel = "Cancel",
     confirmLabel = "Confirm",
     confirmDisabled = false,
-    confirmVariant = "primary" as "primary" | "success" | "danger"
+    confirmVariant = "primary" as "primary" | "success" | "danger",
   } = $props<{
     onCancel: () => void;
     onConfirm: () => void;
@@ -21,11 +21,7 @@ Provides consistent, beautiful button layouts for modal actions
 </script>
 
 <div class="modal-actions">
-  <button
-    class="action-button cancel-button"
-    onclick={onCancel}
-    type="button"
-  >
+  <button class="action-button cancel-button" onclick={onCancel} type="button">
     {cancelLabel}
   </button>
   <button
@@ -60,7 +56,7 @@ Provides consistent, beautiful button layouts for modal actions
   }
 
   .action-button::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: radial-gradient(

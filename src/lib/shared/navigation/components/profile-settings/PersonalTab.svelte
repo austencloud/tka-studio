@@ -20,7 +20,14 @@
   import EmailChangeSection from "./EmailChangeSection.svelte";
   import { slide } from "svelte/transition";
 
-  let { onSave, onPhotoUpload, onChangeEmail, onSignOut, signingOut, hapticService } = $props<{
+  let {
+    onSave,
+    onPhotoUpload,
+    onChangeEmail,
+    onSignOut,
+    signingOut,
+    hapticService,
+  } = $props<{
     onSave: () => Promise<void>;
     onPhotoUpload: (file: File) => Promise<void>;
     onChangeEmail: () => Promise<void>;
@@ -98,14 +105,12 @@
               Change Email
             </button>
           {:else}
-            <p class="hint">
-              Email is managed by your authentication provider
-            </p>
+            <p class="hint">Email is managed by your authentication provider</p>
           {/if}
         </div>
       {:else}
         <EmailChangeSection
-          onChangeEmail={onChangeEmail}
+          {onChangeEmail}
           onCancel={() => {
             uiState.showEmailChangeSection = false;
           }}

@@ -20,12 +20,11 @@ export class CreateModuleService implements ICreateModuleService {
   private currentTab: string = "construct"; // Default tab
   private tabStates: Map<string, unknown> = new Map();
 
-  constructor(
-    // @inject(TYPES.IStartPositionService)
-    // private readonly startPositionService: IStartPositionService
+  constructor() // @inject(TYPES.IStartPositionService)
+  // private readonly startPositionService: IStartPositionService
 
-    // Start position selection now handled by unified service
-  ) {}
+  // Start position selection now handled by unified service
+  {}
 
   /**
    * Orchestrates the complete start position selection workflow
@@ -75,7 +74,10 @@ export class CreateModuleService implements ICreateModuleService {
       const eventService = constructTabEventService();
       eventService.setupComponentCoordination(); // Not async, no await needed
     } catch (error) {
-      console.error("❌ CreateModuleService: Error initializing Create module:", error);
+      console.error(
+        "❌ CreateModuleService: Error initializing Create module:",
+        error
+      );
       throw error; // Re-throw to let caller handle UI error states
     }
   }

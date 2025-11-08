@@ -3,7 +3,7 @@
  * This ensures modals appear above all other content regardless of stacking context
  */
 
-import { onMount } from 'svelte';
+import { onMount } from "svelte";
 
 /**
  * Action to mount an element directly to document.body
@@ -19,7 +19,7 @@ export function portal(node: HTMLElement) {
       if (node.parentNode === document.body) {
         document.body.removeChild(node);
       }
-    }
+    },
   };
 }
 
@@ -31,8 +31,8 @@ export function useModalPortal() {
 
   onMount(() => {
     // Create a container at body level
-    portalTarget = document.createElement('div');
-    portalTarget.className = 'modal-portal';
+    portalTarget = document.createElement("div");
+    portalTarget.className = "modal-portal";
     document.body.appendChild(portalTarget);
 
     return () => {
@@ -43,5 +43,9 @@ export function useModalPortal() {
     };
   });
 
-  return { get portalTarget() { return portalTarget; } };
+  return {
+    get portalTarget() {
+      return portalTarget;
+    },
+  };
 }

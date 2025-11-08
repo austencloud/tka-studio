@@ -30,15 +30,21 @@ export class SectionTitleFormatter implements ISectionTitleFormatter {
     }
 
     // Handle individual types
-    const typeInfo = this.typeDescriptions[rawTitle as keyof typeof this.typeDescriptions];
+    const typeInfo =
+      this.typeDescriptions[rawTitle as keyof typeof this.typeDescriptions];
     if (typeInfo) {
-      return LetterTypeTextPainter.formatSectionHeader(typeInfo.typeName, typeInfo.description);
+      return LetterTypeTextPainter.formatSectionHeader(
+        typeInfo.typeName,
+        typeInfo.description
+      );
     }
 
     return rawTitle;
   }
 
-  getTypeDescription(typeKey: string): { description: string; typeName: string } | undefined {
+  getTypeDescription(
+    typeKey: string
+  ): { description: string; typeName: string } | undefined {
     return this.typeDescriptions[typeKey as keyof typeof this.typeDescriptions];
   }
 }

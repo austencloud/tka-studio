@@ -10,9 +10,7 @@
   import { onMount } from "svelte";
   import { resolve, TYPES } from "$shared/inversify";
   import { authStore } from "$shared/auth";
-  import type {
-    IDailyChallengeService,
-  } from "$shared/gamification/services/contracts";
+  import type { IDailyChallengeService } from "$shared/gamification/services/contracts";
   import type {
     DailyChallenge,
     UserChallengeProgress,
@@ -122,8 +120,10 @@
 
       <div class="challenge-progress">
         <div class="progress-bar">
-          <div class="progress-fill" style="width: {challengeProgressPercent}%">
-          </div>
+          <div
+            class="progress-fill"
+            style="width: {challengeProgressPercent}%"
+          ></div>
         </div>
         <span class="progress-text">
           {challengeProgressPercent}% ({challengeProgress?.progress ||

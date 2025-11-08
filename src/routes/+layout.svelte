@@ -69,7 +69,10 @@
           );
           await glyphCache.initialize();
         } catch (error) {
-          console.error("❌ Root layout: Failed to set up DI container:", error);
+          console.error(
+            "❌ Root layout: Failed to set up DI container:",
+            error
+          );
           containerError =
             error instanceof Error ? error.message : "Container setup failed";
         }

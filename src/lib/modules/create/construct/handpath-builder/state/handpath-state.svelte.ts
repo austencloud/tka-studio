@@ -195,7 +195,8 @@ export function createGesturalPathState() {
 
     // Update current location to the end of the last remaining segment
     if (completedSegments.length > 0) {
-      currentLocation = completedSegments[completedSegments.length - 1]!.endLocation;
+      currentLocation =
+        completedSegments[completedSegments.length - 1]!.endLocation;
     } else {
       currentLocation = config?.startingLocation || null;
     }

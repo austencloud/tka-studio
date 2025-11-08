@@ -5,9 +5,22 @@
  */
 
 import { injectable } from "inversify";
-import { collection, getDocs, doc, getDoc, query, where, orderBy, limit, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  onSnapshot,
+} from "firebase/firestore";
 import { firestore } from "$shared/auth/firebase";
-import type { IUserExploreService, UserProfile } from "../contracts/IUserExploreService";
+import type {
+  IUserExploreService,
+  UserProfile,
+} from "../contracts/IUserExploreService";
 
 @injectable()
 export class UserExploreService implements IUserExploreService {
@@ -19,7 +32,9 @@ export class UserExploreService implements IUserExploreService {
    */
   async getAllUsers(): Promise<UserProfile[]> {
     try {
-      console.log("🔍 [UserExploreService] Fetching all users from Firestore...");
+      console.log(
+        "🔍 [UserExploreService] Fetching all users from Firestore..."
+      );
 
       const usersRef = collection(firestore, this.USERS_COLLECTION);
       const q = query(usersRef, limit(100));
@@ -49,7 +64,9 @@ export class UserExploreService implements IUserExploreService {
    * Returns an unsubscribe function to stop listening
    */
   subscribeToUsers(callback: (users: UserProfile[]) => void): () => void {
-    console.log("🔔 [UserExploreService] Setting up real-time user subscription...");
+    console.log(
+      "🔔 [UserExploreService] Setting up real-time user subscription..."
+    );
 
     const usersRef = collection(firestore, this.USERS_COLLECTION);
     const q = query(usersRef, limit(100));
@@ -57,7 +74,9 @@ export class UserExploreService implements IUserExploreService {
     const unsubscribe = onSnapshot(
       q,
       async (querySnapshot) => {
-        console.log("🔄 [UserExploreService] Real-time update received, processing users...");
+        console.log(
+          "🔄 [UserExploreService] Real-time update received, processing users..."
+        );
 
         const users: UserProfile[] = [];
 
@@ -69,11 +88,16 @@ export class UserExploreService implements IUserExploreService {
           }
         }
 
-        console.log(`✅ [UserExploreService] Real-time update: ${users.length} users`);
+        console.log(
+          `✅ [UserExploreService] Real-time update: ${users.length} users`
+        );
         callback(users);
       },
       (error) => {
-        console.error("❌ [UserExploreService] Real-time subscription error:", error);
+        console.error(
+          "❌ [UserExploreService] Real-time subscription error:",
+          error
+        );
       }
     );
 
@@ -95,11 +119,17 @@ export class UserExploreService implements IUserExploreService {
         return null;
       }
 
-      const user = await this.mapFirestoreToUserProfile(userDoc.id, userDoc.data());
+      const user = await this.mapFirestoreToUserProfile(
+        userDoc.id,
+        userDoc.data()
+      );
       console.log(`✅ [UserExploreService] Fetched user ${userId}`);
       return user;
     } catch (error) {
-      console.error(`❌ [UserExploreService] Error fetching user ${userId}:`, error);
+      console.error(
+        `❌ [UserExploreService] Error fetching user ${userId}:`,
+        error
+      );
       return null;
     }
   }
@@ -135,7 +165,8 @@ export class UserExploreService implements IUserExploreService {
     try {
       // Get user's display name and avatar from Firebase Auth data or Firestore
       const displayName = data.displayName || data.name || "Anonymous User";
-      const username = data.username || data.email?.split("@")[0] || userId.substring(0, 8);
+      const username =
+        data.username || data.email?.split("@")[0] || userId.substring(0, 8);
       const avatar = data.photoURL || data.avatar || undefined;
 
       // Get counts from subcollections or denormalized fields
@@ -144,7 +175,8 @@ export class UserExploreService implements IUserExploreService {
       const followerCount = data.followerCount || 0;
 
       // Get join date from createdAt timestamp or use current date
-      const joinedDate = data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString();
+      const joinedDate =
+        data.createdAt?.toDate?.()?.toISOString() || new Date().toISOString();
 
       return {
         id: userId,
@@ -159,7 +191,10 @@ export class UserExploreService implements IUserExploreService {
         isFollowing: false, // TODO: Implement following logic
       };
     } catch (error) {
-      console.error(`❌ [UserExploreService] Error mapping user ${userId}:`, error);
+      console.error(
+        `❌ [UserExploreService] Error mapping user ${userId}:`,
+        error
+      );
       return null;
     }
   }

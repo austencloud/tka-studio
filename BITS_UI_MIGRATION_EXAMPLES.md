@@ -7,12 +7,14 @@ This document provides concrete examples of how to migrate existing TKA componen
 ## 1. IOSToggle → Bits UI Switch
 
 ### Current Implementation
+
 **File**: `/src/lib/shared/foundation/ui/IOSToggle.svelte`
 
 **Stats**: 310 lines, 100% custom
 **Challenges**: Complex styling, animation timing, responsive sizing
 
 **Current Features**:
+
 - Two-option toggle
 - Icon support
 - Size variants (small/medium/large)
@@ -106,6 +108,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ```
 
 **Benefits**:
+
 - Reduced from 310 → ~120 lines
 - Bits UI handles complex accessibility (ARIA, keyboard)
 - Styling is still 100% custom (maintains glassmorphism)
@@ -120,6 +123,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ## 2. SelectInput → Bits UI Select
 
 ### Current Implementation
+
 **File**: `/src/lib/shared/settings/components/SelectInput.svelte`
 
 **Stats**: 139 lines, 100% custom
@@ -130,11 +134,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ```svelte
 <!-- New: BitsSelectWrapper.svelte -->
 <script lang="ts">
-  import {
-    Select,
-    createSelect,
-    type CreateSelectProps,
-  } from "bits-ui";
+  import { Select, createSelect, type CreateSelectProps } from "bits-ui";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
@@ -189,10 +189,7 @@ This document provides concrete examples of how to migrate existing TKA componen
   </label>
 
   <Select.Root {disabled}>
-    <Select.Trigger
-      class="select-trigger"
-      aria-label={label}
-    >
+    <Select.Trigger class="select-trigger" aria-label={label}>
       <Select.Value placeholder="Select option" />
     </Select.Trigger>
 
@@ -297,6 +294,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ```
 
 **Benefits**:
+
 - Improved accessibility (proper ARIA, keyboard navigation)
 - Custom styling for dropdown (glassmorphism)
 - Better mobile experience (larger touch targets)
@@ -311,6 +309,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ## 3. ConfirmDialog → Bits UI Dialog
 
 ### Current Implementation
+
 **File**: `/src/lib/shared/foundation/ui/ConfirmDialog.svelte`
 
 **Stats**: 292 lines, 100% custom
@@ -321,10 +320,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ```svelte
 <!-- New: BitsConfirmDialog.svelte -->
 <script lang="ts">
-  import {
-    Dialog,
-    createDialog,
-  } from "bits-ui";
+  import { Dialog, createDialog } from "bits-ui";
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
@@ -414,9 +410,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 
       <!-- Close button for accessibility -->
       <Dialog.Close asChild>
-        <button class="sr-only" aria-label="Close dialog">
-          Close
-        </button>
+        <button class="sr-only" aria-label="Close dialog"> Close </button>
       </Dialog.Close>
     </Dialog.Content>
   </Dialog.Portal>
@@ -564,6 +558,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ```
 
 **Benefits**:
+
 - Reduced from 292 → ~200 lines (before styling)
 - Bits UI handles: focus trapping, ESC key, backdrop clicking
 - Composable: Dialog.Root, Dialog.Content, etc. are reusable
@@ -579,6 +574,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 ## 4. Custom Form Input → Bits UI Input
 
 ### Current Implementation
+
 **File**: `/src/lib/shared/settings/components/TextInput.svelte`
 
 **Stats**: 131 lines, 100% custom HTML input wrapper
@@ -713,6 +709,7 @@ This document provides concrete examples of how to migrate existing TKA componen
 **Note**: The above example maintains the native input approach. For more advanced features with Bits UI, you could use Input primitives when available.
 
 **Benefits**:
+
 - Maintains current functionality
 - Consistent haptic feedback
 - Better mobile touch targets (44px)
@@ -723,9 +720,11 @@ This document provides concrete examples of how to migrate existing TKA componen
 ## 5. Toast Notifications → Bits UI Toast Pattern
 
 ### Current Implementation
+
 **File**: `/src/lib/modules/create/workspace-panel/components/Toast.svelte`
 
-**Current Issues**: 
+**Current Issues**:
+
 - Manual positioning and stacking
 - Single toast at a time
 - Limited variants
@@ -754,7 +753,7 @@ function createToastStore() {
 
   return {
     toasts,
-    
+
     add: (message: string, options?: Partial<Toast>) => {
       const id = Math.random().toString(36).substr(2, 9);
       const toast: Toast = {
@@ -764,22 +763,22 @@ function createToastStore() {
         duration: 3000,
         ...options,
       };
-      
+
       toasts.update((t) => [...t, toast]);
-      
+
       if (toast.duration !== Infinity) {
         setTimeout(() => {
           toasts.update((t) => t.filter((x) => x.id !== id));
         }, toast.duration);
       }
-      
+
       return id;
     },
-    
+
     remove: (id: string) => {
       toasts.update((t) => t.filter((x) => x.id !== id));
     },
-    
+
     success: (message: string) =>
       this.add(message, { variant: "success" }),
     error: (message: string) =>
@@ -877,9 +876,7 @@ export const toastStore = createToastStore();
       {toast.action.label}
     </button>
   {/if}
-  <button class="toast-close" onclick={close} aria-label="Close">
-    ×
-  </button>
+  <button class="toast-close" onclick={close} aria-label="Close"> × </button>
 </div>
 
 <style>
@@ -997,14 +994,15 @@ export const toastStore = createToastStore();
 ```
 
 **Usage**:
+
 ```svelte
 <script lang="ts">
   import { toastStore } from "$lib/shared/ui/toast";
-  
+
   function showSuccess() {
     toastStore.success("Settings saved!");
   }
-  
+
   function showError() {
     toastStore.error("Failed to save");
   }
@@ -1012,6 +1010,7 @@ export const toastStore = createToastStore();
 ```
 
 **Benefits**:
+
 - Stacking support (multiple toasts)
 - Variants: success, error, warning, info
 - Optional action buttons
@@ -1024,6 +1023,7 @@ export const toastStore = createToastStore();
 ## Summary of Migration Strategy
 
 ### High-Priority Components (Start Here)
+
 1. **IOSToggle** → Bits UI Switch (~2 hours)
 2. **SelectInput** → Bits UI Select (~3 hours)
 3. **TextInput** → Keep as-is, add Bits UI Input when ready (~1 hour)
@@ -1031,11 +1031,13 @@ export const toastStore = createToastStore();
 5. **Toast System** → Enhanced Store Pattern (~5 hours)
 
 ### Total Estimated Effort for Phase 1:
+
 - **15 hours of development**
 - **10 components can be migrated**
 - **~1.5 weeks** with testing
 
 ### Key Principles
+
 1. **Maintain glassmorphism design** - All styling is customizable
 2. **Keep haptic feedback** - Service injection pattern preserved
 3. **Preserve accessibility** - Bits UI improves this further
@@ -1043,6 +1045,7 @@ export const toastStore = createToastStore();
 5. **Progressive enhancement** - Don't rush, test thoroughly
 
 ### Testing Checklist Per Component
+
 - [ ] Keyboard navigation works
 - [ ] ARIA attributes correct
 - [ ] Touch targets are 44px minimum
@@ -1055,6 +1058,7 @@ export const toastStore = createToastStore();
 ---
 
 ## Resources
+
 - **Bits UI Docs**: https://bits-ui.com
 - **Bits UI GitHub**: https://github.com/huntabyte/bits-ui
 - **Svelte 5**: https://svelte.dev/blog/svelte-5-is-here
@@ -1063,6 +1067,7 @@ export const toastStore = createToastStore();
 ---
 
 ## Document Version
+
 - **Created**: 2025-11-04
 - **Status**: Ready for Implementation
 - **Code Examples**: All tested in context

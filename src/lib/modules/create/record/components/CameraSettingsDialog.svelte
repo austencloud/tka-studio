@@ -7,7 +7,9 @@ Settings dialog for camera configuration including mirror toggle and camera sour
   import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
 
   // Services
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   // Props
   const {
@@ -51,7 +53,10 @@ Settings dialog for camera configuration including mirror toggle and camera sour
   }
 
   function handleBackdropKeydown(event: KeyboardEvent) {
-    if ((event.key === 'Enter' || event.key === ' ') && event.target === event.currentTarget) {
+    if (
+      (event.key === "Enter" || event.key === " ") &&
+      event.target === event.currentTarget
+    ) {
       event.preventDefault();
       handleClose();
     }
@@ -72,7 +77,11 @@ Settings dialog for camera configuration including mirror toggle and camera sour
       <!-- Header -->
       <div class="dialog-header">
         <h3 class="dialog-title">Camera Settings</h3>
-        <button class="close-button" onclick={handleClose} title="Close settings">
+        <button
+          class="close-button"
+          onclick={handleClose}
+          title="Close settings"
+        >
           <span class="close-icon">✕</span>
         </button>
       </div>
@@ -91,7 +100,9 @@ Settings dialog for camera configuration including mirror toggle and camera sour
               title={isMirrored ? "Disable mirror" : "Enable mirror"}
             >
               <span class="toggle-icon">{isMirrored ? "🪞" : "📹"}</span>
-              <span class="toggle-text">{isMirrored ? "Mirrored" : "Normal"}</span>
+              <span class="toggle-text"
+                >{isMirrored ? "Mirrored" : "Normal"}</span
+              >
             </button>
           </div>
         </div>
@@ -99,7 +110,9 @@ Settings dialog for camera configuration including mirror toggle and camera sour
         <!-- Camera Selection -->
         {#if availableCameras.length > 1}
           <div class="setting-group">
-            <label class="setting-label" for="camera-selector">Camera Source</label>
+            <label class="setting-label" for="camera-selector"
+              >Camera Source</label
+            >
             <div class="setting-control">
               <select
                 id="camera-selector"

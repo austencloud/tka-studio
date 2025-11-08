@@ -5,15 +5,18 @@
  * Replaces 4 complex calculation methods with 1 simple, reliable approach.
  */
 
-import type { IDeviceDetector } from '$shared';
-import { TYPES } from '$shared/inversify/types';
-import { inject, injectable } from 'inversify';
-import type { DeviceConfig, SizingCalculationParams, SizingResult } from '../../domain';
-import type { IOptionSizer } from '../contracts';
+import type { IDeviceDetector } from "$shared";
+import { TYPES } from "$shared/inversify/types";
+import { inject, injectable } from "inversify";
+import type {
+  DeviceConfig,
+  SizingCalculationParams,
+  SizingResult,
+} from "../../domain";
+import type { IOptionSizer } from "../contracts";
 
 @injectable()
 export class OptionSizer implements IOptionSizer {
-
   constructor(
     @inject(TYPES.IDeviceDetector) private deviceDetector: IDeviceDetector
   ) {}
@@ -47,19 +50,23 @@ export class OptionSizer implements IOptionSizer {
    * SIMPLIFIED: Main sizing method that handles all cases
    */
   calculatePictographSize(params: SizingCalculationParams): SizingResult {
-    const { count, containerWidth, containerHeight, columns, isMobileDevice } = params;
+    const { count, containerWidth, containerHeight, columns, isMobileDevice } =
+      params;
 
     // Simple device detection
     const deviceType = this.getDeviceType(containerWidth, isMobileDevice);
-    const deviceConfig = this.DEVICE_CONFIG[deviceType] ?? this.DEVICE_CONFIG.desktop!;
+    const deviceConfig =
+      this.DEVICE_CONFIG[deviceType] ?? this.DEVICE_CONFIG.desktop!;
 
     // Simple size calculation
-    const availableWidth = containerWidth - (deviceConfig.padding.horizontal * 2);
-    const availableHeight = containerHeight - (deviceConfig.padding.vertical * 2);
+    const availableWidth = containerWidth - deviceConfig.padding.horizontal * 2;
+    const availableHeight = containerHeight - deviceConfig.padding.vertical * 2;
 
-    const widthPerItem = (availableWidth - (deviceConfig.gap * (columns - 1))) / columns;
+    const widthPerItem =
+      (availableWidth - deviceConfig.gap * (columns - 1)) / columns;
     const rows = Math.ceil(count / columns);
-    const heightPerItem = (availableHeight - (deviceConfig.gap * (rows - 1))) / rows;
+    const heightPerItem =
+      (availableHeight - deviceConfig.gap * (rows - 1)) / rows;
 
     // Use smaller dimension and apply constraints
     const calculatedSize = Math.min(widthPerItem, heightPerItem);
@@ -89,9 +96,9 @@ export class OptionSizer implements IOptionSizer {
    * SIMPLIFIED: Basic device detection
    */
   private getDeviceType(width: number, isMobileDevice: boolean): string {
-    if (isMobileDevice) return 'mobile';
-    if (width < 1024) return 'tablet';
-    return 'desktop';
+    if (isMobileDevice) return "mobile";
+    if (width < 1024) return "tablet";
+    return "desktop";
   }
 
   /**
@@ -100,19 +107,19 @@ export class OptionSizer implements IOptionSizer {
   calculateOverflowAwareSize(params: {
     containerWidth: number;
     containerHeight: number;
-    layoutMode: '4-column' | '8-column';
+    layoutMode: "4-column" | "8-column";
     maxPictographsPerSection: number;
     isMobileDevice: boolean;
     headerHeight?: number;
     targetOverflowBuffer?: number;
   }): SizingResult {
-    const columns = params.layoutMode === '8-column' ? 8 : 4;
+    const columns = params.layoutMode === "8-column" ? 8 : 4;
     return this.calculatePictographSize({
       count: params.maxPictographsPerSection,
       containerWidth: params.containerWidth,
       containerHeight: params.containerHeight,
       columns,
-      isMobileDevice: params.isMobileDevice
+      isMobileDevice: params.isMobileDevice,
     });
   }
 
@@ -131,7 +138,9 @@ export class OptionSizer implements IOptionSizer {
     return {
       hasOverflow: false,
       overflowAmount: 0,
-      recommendations: { suggestedAction: 'CSS handles overflow automatically' }
+      recommendations: {
+        suggestedAction: "CSS handles overflow automatically",
+      },
     };
   }
 
@@ -152,11 +161,11 @@ export class OptionSizer implements IOptionSizer {
       lastKnownOverflow = overflowStatus.hasOverflow;
       callback(overflowStatus.hasOverflow, overflowStatus.overflowAmount);
     } catch (error) {
-      console.error('❌ Initial overflow detection error:', error);
+      console.error("❌ Initial overflow detection error:", error);
     }
 
     // Start polling every 2 seconds
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       intervalId = setInterval(() => {
         try {
           const overflowStatus = this.detectActualOverflow();
@@ -167,7 +176,7 @@ export class OptionSizer implements IOptionSizer {
             callback(overflowStatus.hasOverflow, overflowStatus.overflowAmount);
           }
         } catch (error) {
-          console.error('❌ Overflow detection error:', error);
+          console.error("❌ Overflow detection error:", error);
         }
       }, 2000);
     }
@@ -187,17 +196,17 @@ export class OptionSizer implements IOptionSizer {
   calculateMaximizedSize(params: {
     containerWidth: number;
     containerHeight: number;
-    layoutMode: '4-column' | '8-column';
+    layoutMode: "4-column" | "8-column";
     maxPictographsPerSection: number;
     isMobileDevice: boolean;
   }): SizingResult {
-    const columns = params.layoutMode === '8-column' ? 8 : 4;
+    const columns = params.layoutMode === "8-column" ? 8 : 4;
     return this.calculatePictographSize({
       count: params.maxPictographsPerSection,
       containerWidth: params.containerWidth,
       containerHeight: params.containerHeight,
       columns,
-      isMobileDevice: params.isMobileDevice
+      isMobileDevice: params.isMobileDevice,
     });
   }
 
@@ -220,7 +229,13 @@ export class OptionSizer implements IOptionSizer {
     columns: number;
     maxPictographsPerSection: number;
   }): boolean {
-    const { containerWidth, containerHeight, pictographSize, columns, maxPictographsPerSection } = params;
+    const {
+      containerWidth,
+      containerHeight,
+      pictographSize,
+      columns,
+      maxPictographsPerSection,
+    } = params;
 
     // Threshold: pictographs smaller than this are uncomfortably small for clicking
     const SMALL_PICTOGRAPH_THRESHOLD = 80;
@@ -236,20 +251,22 @@ export class OptionSizer implements IOptionSizer {
     // Second check: Is height the constraining factor?
     // Only worth showing floating button if removing header will help
     const deviceConfig = this.getDeviceConfig(
-      containerWidth < 1024 ? 'mobile' : 'desktop'
+      containerWidth < 1024 ? "mobile" : "desktop"
     );
 
     const rows = Math.ceil(maxPictographsPerSection / columns);
 
     // Available space after padding
-    const availableWidth = containerWidth - (deviceConfig.padding.horizontal * 2);
-    const availableHeight = containerHeight - (deviceConfig.padding.vertical * 2);
+    const availableWidth = containerWidth - deviceConfig.padding.horizontal * 2;
+    const availableHeight = containerHeight - deviceConfig.padding.vertical * 2;
 
     // What size would the grid naturally want based on width?
-    const widthPerItem = (availableWidth - (deviceConfig.gap * (columns - 1))) / columns;
+    const widthPerItem =
+      (availableWidth - deviceConfig.gap * (columns - 1)) / columns;
 
     // What size is forced by height constraint?
-    const heightPerItem = (availableHeight - (deviceConfig.gap * (rows - 1))) / rows;
+    const heightPerItem =
+      (availableHeight - deviceConfig.gap * (rows - 1)) / rows;
 
     // Height is the limiting factor when heightPerItem < widthPerItem
     const isHeightConstrained = heightPerItem < widthPerItem;
@@ -277,7 +294,10 @@ export class OptionSizer implements IOptionSizer {
    * LEGACY COMPATIBILITY: Simple grid gap calculation
    */
   calculateGridGap(params: SizingCalculationParams): string {
-    const deviceType = this.getDeviceType(params.containerWidth, params.isMobileDevice);
+    const deviceType = this.getDeviceType(
+      params.containerWidth,
+      params.isMobileDevice
+    );
     const deviceConfig = this.getDeviceConfig(deviceType);
     return `${deviceConfig.gap}px`;
   }

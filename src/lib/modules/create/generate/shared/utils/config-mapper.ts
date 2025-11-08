@@ -69,9 +69,10 @@ export function uiConfigToGenerationOptions(
   propType: string = "fan"
 ): GenerationOptions {
   // Force halved mode for CAP types that only support halved (not quartered)
-  const requiresHalved = uiConfig.capType?.includes("mirrored") ||
-                         uiConfig.capType?.includes("swapped") ||
-                         uiConfig.capType?.includes("complementary");
+  const requiresHalved =
+    uiConfig.capType?.includes("mirrored") ||
+    uiConfig.capType?.includes("swapped") ||
+    uiConfig.capType?.includes("complementary");
 
   const sliceSize = requiresHalved ? "halved" : uiConfig.sliceSize;
 
@@ -84,10 +85,17 @@ export function uiConfigToGenerationOptions(
     gridMode: uiConfig.gridMode,
     propType,
     difficulty: levelToDifficulty(uiConfig.level),
-    mode: uiConfig.mode ? (uiConfig.mode as GenerationOptions["mode"]) : undefined,
-    propContinuity: uiConfig.propContinuity ? (uiConfig.propContinuity as GenerationOptions["propContinuity"]) : undefined,
-    turnIntensity: uiConfig.turnIntensity !== undefined ? uiConfig.turnIntensity : undefined,
-    sliceSize: sliceSize ? (sliceSize as GenerationOptions["sliceSize"]) : undefined,
+    mode: uiConfig.mode
+      ? (uiConfig.mode as GenerationOptions["mode"])
+      : undefined,
+    propContinuity: uiConfig.propContinuity
+      ? (uiConfig.propContinuity as GenerationOptions["propContinuity"])
+      : undefined,
+    turnIntensity:
+      uiConfig.turnIntensity !== undefined ? uiConfig.turnIntensity : undefined,
+    sliceSize: sliceSize
+      ? (sliceSize as GenerationOptions["sliceSize"])
+      : undefined,
     capType: uiConfig.capType || undefined,
   };
   return options;

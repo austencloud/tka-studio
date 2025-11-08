@@ -58,8 +58,12 @@ export class TurnColorInterpreter {
     switch (letterType) {
       case "TYPE2": {
         // Top = Shift motion, Bottom = Static motion
-        const shiftMotion = this.isShiftMotion(blueMotion) ? blueMotion : redMotion;
-        const staticMotion = this.isShiftMotion(blueMotion) ? redMotion : blueMotion;
+        const shiftMotion = this.isShiftMotion(blueMotion)
+          ? blueMotion
+          : redMotion;
+        const staticMotion = this.isShiftMotion(blueMotion)
+          ? redMotion
+          : blueMotion;
         return {
           top: this.getMotionColor(shiftMotion.color),
           bottom: this.getMotionColor(staticMotion.color),
@@ -69,9 +73,13 @@ export class TurnColorInterpreter {
       case "TYPE1_HYBRID": {
         // Top = Pro motion, Bottom = Anti motion
         const proMotion =
-          blueMotion.motionType?.toLowerCase() === "pro" ? blueMotion : redMotion;
+          blueMotion.motionType?.toLowerCase() === "pro"
+            ? blueMotion
+            : redMotion;
         const antiMotion =
-          blueMotion.motionType?.toLowerCase() === "anti" ? blueMotion : redMotion;
+          blueMotion.motionType?.toLowerCase() === "anti"
+            ? blueMotion
+            : redMotion;
         return {
           top: this.getMotionColor(proMotion.color),
           bottom: this.getMotionColor(antiMotion.color),

@@ -9,7 +9,11 @@ import type { BeatData, PictographData, SequenceData } from "$shared";
 import { MotionColor } from "$shared";
 import { injectable } from "inversify";
 import { createBeatData } from "../../domain/factories/createBeatData";
-import type { IReversalDetectionService, PictographWithReversals, ReversalInfo } from "../contracts/IReversalDetectionService";
+import type {
+  IReversalDetectionService,
+  PictographWithReversals,
+  ReversalInfo,
+} from "../contracts/IReversalDetectionService";
 
 @injectable()
 export class ReversalDetectionService implements IReversalDetectionService {
@@ -27,14 +31,17 @@ export class ReversalDetectionService implements IReversalDetectionService {
       const reversalInfo = this.detectReversal(previousBeats, currentBeat);
 
       // Apply reversal symbols to the beat
-      const processedBeat = this.applyReversalSymbols(currentBeat, reversalInfo);
+      const processedBeat = this.applyReversalSymbols(
+        currentBeat,
+        reversalInfo
+      );
 
       processedBeats.push(processedBeat);
     }
 
     return {
       ...sequence,
-      beats: processedBeats
+      beats: processedBeats,
     };
   }
 
@@ -45,14 +52,20 @@ export class ReversalDetectionService implements IReversalDetectionService {
     previousBeats: BeatData[],
     currentBeat: BeatData
   ): ReversalInfo {
-    const reversalInfo: ReversalInfo = { blueReversal: false, redReversal: false };
+    const reversalInfo: ReversalInfo = {
+      blueReversal: false,
+      redReversal: false,
+    };
 
     if (currentBeat.isBlank) {
       return reversalInfo;
     }
 
     // Check blue motion reversal
-    const lastBluePropRotDir = this._getLastValidPropRotDir(previousBeats, "blue");
+    const lastBluePropRotDir = this._getLastValidPropRotDir(
+      previousBeats,
+      "blue"
+    );
     const currentBluePropRotDir = this._getPropRotDir(currentBeat, "blue");
 
     if (this._isReversal(lastBluePropRotDir, currentBluePropRotDir)) {
@@ -60,7 +73,10 @@ export class ReversalDetectionService implements IReversalDetectionService {
     }
 
     // Check red motion reversal
-    const lastRedPropRotDir = this._getLastValidPropRotDir(previousBeats, "red");
+    const lastRedPropRotDir = this._getLastValidPropRotDir(
+      previousBeats,
+      "red"
+    );
     const currentRedPropRotDir = this._getPropRotDir(currentBeat, "red");
 
     if (this._isReversal(lastRedPropRotDir, currentRedPropRotDir)) {
@@ -92,7 +108,10 @@ export class ReversalDetectionService implements IReversalDetectionService {
     currentSequence: BeatData[],
     optionPictographData: PictographData
   ): ReversalInfo {
-    const reversalInfo: ReversalInfo = { blueReversal: false, redReversal: false };
+    const reversalInfo: ReversalInfo = {
+      blueReversal: false,
+      redReversal: false,
+    };
 
     if (!optionPictographData || !optionPictographData.motions) {
       return reversalInfo;
@@ -104,12 +123,24 @@ export class ReversalDetectionService implements IReversalDetectionService {
     }
 
     // Get the last valid prop rotation directions from the current sequence
-    const lastBluePropRotDir = this._getLastValidPropRotDirFromSequence(currentSequence, "blue");
-    const lastRedPropRotDir = this._getLastValidPropRotDirFromSequence(currentSequence, "red");
+    const lastBluePropRotDir = this._getLastValidPropRotDirFromSequence(
+      currentSequence,
+      "blue"
+    );
+    const lastRedPropRotDir = this._getLastValidPropRotDirFromSequence(
+      currentSequence,
+      "red"
+    );
 
     // Get the prop rotation directions from the option's motion data
-    const optionBluePropRotDir = this._getPropRotDirFromPictographData(optionPictographData, "blue");
-    const optionRedPropRotDir = this._getPropRotDirFromPictographData(optionPictographData, "red");
+    const optionBluePropRotDir = this._getPropRotDirFromPictographData(
+      optionPictographData,
+      "blue"
+    );
+    const optionRedPropRotDir = this._getPropRotDirFromPictographData(
+      optionPictographData,
+      "red"
+    );
 
     // Check for reversals
     if (this._isReversal(lastBluePropRotDir, optionBluePropRotDir)) {
@@ -126,7 +157,10 @@ export class ReversalDetectionService implements IReversalDetectionService {
   /**
    * Get the last valid prop rotation direction for a color from previous beats
    */
-  private _getLastValidPropRotDir(beats: BeatData[], color: "blue" | "red"): string | null {
+  private _getLastValidPropRotDir(
+    beats: BeatData[],
+    color: "blue" | "red"
+  ): string | null {
     for (let i = beats.length - 1; i >= 0; i--) {
       const beat = beats[i]!;
       const propRotDir = this._getPropRotDir(beat, color);
@@ -151,7 +185,9 @@ export class ReversalDetectionService implements IReversalDetectionService {
     const motionData = beat.motions?.[motionColor];
 
     if (!motionData) {
-      console.log(`⚠️ ReversalDetectionService: No motion data found for ${color} motion`);
+      console.log(
+        `⚠️ ReversalDetectionService: No motion data found for ${color} motion`
+      );
       return null;
     }
 
@@ -164,10 +200,17 @@ export class ReversalDetectionService implements IReversalDetectionService {
   /**
    * Check if there's a reversal between two prop rotation directions
    */
-  private _isReversal(lastPropRotDir: string | null, currentPropRotDir: string | null): boolean {
+  private _isReversal(
+    lastPropRotDir: string | null,
+    currentPropRotDir: string | null
+  ): boolean {
     // If either is null or noRotation, no reversal
-    if (!lastPropRotDir || !currentPropRotDir ||
-        lastPropRotDir === "noRotation" || currentPropRotDir === "noRotation") {
+    if (
+      !lastPropRotDir ||
+      !currentPropRotDir ||
+      lastPropRotDir === "noRotation" ||
+      currentPropRotDir === "noRotation"
+    ) {
       return false;
     }
 
@@ -178,7 +221,10 @@ export class ReversalDetectionService implements IReversalDetectionService {
   /**
    * Get the last valid prop rotation direction from a sequence of beats
    */
-  private _getLastValidPropRotDirFromSequence(beats: BeatData[], color: "blue" | "red"): string | null {
+  private _getLastValidPropRotDirFromSequence(
+    beats: BeatData[],
+    color: "blue" | "red"
+  ): string | null {
     // Iterate backwards through the beats to find the last valid rotation direction
     for (let i = beats.length - 1; i >= 0; i--) {
       const beat = beats[i];
@@ -195,7 +241,10 @@ export class ReversalDetectionService implements IReversalDetectionService {
   /**
    * Get prop rotation direction from PictographData (for option previews)
    */
-  private _getPropRotDirFromPictographData(pictographData: PictographData, color: "blue" | "red"): string | null {
+  private _getPropRotDirFromPictographData(
+    pictographData: PictographData,
+    color: "blue" | "red"
+  ): string | null {
     // Use same MotionColor enum conversion as _getPropRotDir for consistency
     const motionColor = color === "blue" ? MotionColor.BLUE : MotionColor.RED;
     const motionData = pictographData.motions?.[motionColor];
@@ -219,28 +268,43 @@ export class ReversalDetectionService implements IReversalDetectionService {
   ): PictographWithReversals[] {
     // If sequence is empty, no reversals possible
     if (currentSequence.length === 0) {
-      return options.map(option => ({
+      return options.map((option) => ({
         ...option,
         blueReversal: false,
-        redReversal: false
+        redReversal: false,
       }));
     }
 
     // Get the last valid prop rotation directions from the current sequence
-    const lastBluePropRotDir = this._getLastValidPropRotDirFromPictographs(currentSequence, "blue");
-    const lastRedPropRotDir = this._getLastValidPropRotDirFromPictographs(currentSequence, "red");
+    const lastBluePropRotDir = this._getLastValidPropRotDirFromPictographs(
+      currentSequence,
+      "blue"
+    );
+    const lastRedPropRotDir = this._getLastValidPropRotDirFromPictographs(
+      currentSequence,
+      "red"
+    );
 
     // Process each option and add reversal information
-    return options.map(option => {
-      const reversalInfo: ReversalInfo = { blueReversal: false, redReversal: false };
+    return options.map((option) => {
+      const reversalInfo: ReversalInfo = {
+        blueReversal: false,
+        redReversal: false,
+      };
 
       if (!option || !option.motions) {
         return { ...option, ...reversalInfo };
       }
 
       // Get the prop rotation directions from the option's motion data
-      const optionBluePropRotDir = this._getPropRotDirFromPictographData(option, "blue");
-      const optionRedPropRotDir = this._getPropRotDirFromPictographData(option, "red");
+      const optionBluePropRotDir = this._getPropRotDirFromPictographData(
+        option,
+        "blue"
+      );
+      const optionRedPropRotDir = this._getPropRotDirFromPictographData(
+        option,
+        "red"
+      );
 
       // Check for reversals
       if (this._isReversal(lastBluePropRotDir, optionBluePropRotDir)) {
@@ -253,7 +317,7 @@ export class ReversalDetectionService implements IReversalDetectionService {
 
       return {
         ...option,
-        ...reversalInfo
+        ...reversalInfo,
       };
     });
   }
@@ -262,12 +326,18 @@ export class ReversalDetectionService implements IReversalDetectionService {
    * Get the last valid prop rotation direction from a sequence of pictographs
    * Similar to _getLastValidPropRotDirFromSequence but works with PictographData
    */
-  private _getLastValidPropRotDirFromPictographs(pictographs: PictographData[], color: "blue" | "red"): string | null {
+  private _getLastValidPropRotDirFromPictographs(
+    pictographs: PictographData[],
+    color: "blue" | "red"
+  ): string | null {
     // Iterate backwards through the pictographs to find the last valid rotation direction
     for (let i = pictographs.length - 1; i >= 0; i--) {
       const pictograph = pictographs[i];
       if (pictograph && pictograph.motions) {
-        const propRotDir = this._getPropRotDirFromPictographData(pictograph, color);
+        const propRotDir = this._getPropRotDirFromPictographData(
+          pictograph,
+          color
+        );
         if (propRotDir && propRotDir !== "noRotation") {
           return propRotDir;
         }

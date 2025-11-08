@@ -16,7 +16,10 @@ export class ReversalChecker implements IReversalChecker {
    * intrinsic motion data (paths, motion types, turns) and, when available, the
    * surrounding sequence context to determine direction changes.
    */
-  getReversalCount(option: PictographData, sequence: PictographData[] = []): number {
+  getReversalCount(
+    option: PictographData,
+    sequence: PictographData[] = []
+  ): number {
     if (!option?.motions) {
       return 0;
     }
@@ -55,13 +58,19 @@ export class ReversalChecker implements IReversalChecker {
 
       if (motionTypeStr.includes("pro") && motionTypeStr.includes("anti")) {
         reversalCount = Math.max(reversalCount, 1);
-      } else if (motionTypeStr.includes("bi") || motionTypeStr.includes("switch")) {
+      } else if (
+        motionTypeStr.includes("bi") ||
+        motionTypeStr.includes("switch")
+      ) {
         reversalCount = Math.max(reversalCount, 2);
       }
     }
 
     if (Array.isArray(motion?.path)) {
-      reversalCount = Math.max(reversalCount, this.analyzePathForReversals(motion.path));
+      reversalCount = Math.max(
+        reversalCount,
+        this.analyzePathForReversals(motion.path)
+      );
     }
 
     if (typeof motion?.turns === "number" && motion.turns > 1) {
@@ -129,18 +138,23 @@ export class ReversalChecker implements IReversalChecker {
    * Compare the current pictograph's rotation metadata against the prior
    * sequence to detect direction switches.
    */
-  private analyzeSequenceContext(option: PictographData, sequence: PictographData[]): number {
+  private analyzeSequenceContext(
+    option: PictographData,
+    sequence: PictographData[]
+  ): number {
     let reversalCount = 0;
 
     ["blue", "red"].forEach((color) => {
-      const currentRotation = option.motions?.[color as "blue" | "red"]?.rotationDirection;
+      const currentRotation =
+        option.motions?.[color as "blue" | "red"]?.rotationDirection;
 
       if (!currentRotation || currentRotation === "noRotation") {
         return;
       }
 
       for (let i = sequence.length - 1; i >= 0; i--) {
-        const previousRotation = sequence[i]!.motions?.[color as "blue" | "red"]?.rotationDirection;
+        const previousRotation =
+          sequence[i]!.motions?.[color as "blue" | "red"]?.rotationDirection;
 
         if (!previousRotation || previousRotation === "noRotation") {
           continue;

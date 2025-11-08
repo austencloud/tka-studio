@@ -27,4 +27,3 @@ export interface ICoordinateUpdater {
    */
   calculateAngleFromCoordinates(x: number, y: number): number;
 }
-

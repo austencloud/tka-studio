@@ -8,10 +8,10 @@
  * requires media to be hosted on a publicly accessible URL with appropriate CORS headers.
  */
 
-import { json, error } from '@sveltejs/kit';
-import type { RequestHandler } from './$types';
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { app } from '$shared/auth/firebase';
+import { json, error } from "@sveltejs/kit";
+import type { RequestHandler } from "./$types";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { app } from "$shared/auth/firebase";
 
 // Initialize Firebase Storage
 const storage = getStorage(app);
@@ -21,8 +21,8 @@ const MAX_IMAGE_SIZE = 8 * 1024 * 1024; // 8MB
 const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100MB
 
 // Allowed MIME types
-const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/quicktime', 'video/x-m4v'];
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/gif"];
+const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/quicktime", "video/x-m4v"];
 
 /**
  * POST /api/instagram/upload-media
@@ -41,11 +41,11 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   try {
     // Parse multipart form data
     const formData = await request.formData();
-    const file = formData.get('file');
+    const file = formData.get("file");
 
     // Validate file exists
     if (!file || !(file instanceof File)) {
-      throw error(400, 'No file provided');
+      throw error(400, "No file provided");
     }
 
     // Validate file type
@@ -66,7 +66,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
     // Generate unique filename with timestamp
     const timestamp = Date.now();
     const randomString = Math.random().toString(36).substring(7);
-    const fileExtension = file.name.split('.').pop() || 'jpg';
+    const fileExtension = file.name.split(".").pop() || "jpg";
     const filename = `${timestamp}-${randomString}.${fileExtension}`;
 
     // Create storage path (files will be in instagram-uploads folder)
@@ -104,7 +104,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
       type: file.type,
     });
   } catch (err: any) {
-    console.error('Instagram media upload error:', err);
+    console.error("Instagram media upload error:", err);
 
     // Handle known errors
     if (err.status) {
@@ -131,19 +131,19 @@ export const DELETE: RequestHandler = async ({ request }) => {
   try {
     const { path } = await request.json();
 
-    if (!path || typeof path !== 'string') {
-      throw error(400, 'Storage path is required');
+    if (!path || typeof path !== "string") {
+      throw error(400, "Storage path is required");
     }
 
     // Only allow deletion of files in instagram-uploads folder
-    if (!path.startsWith('instagram-uploads/')) {
-      throw error(403, 'Can only delete files from instagram-uploads folder');
+    if (!path.startsWith("instagram-uploads/")) {
+      throw error(403, "Can only delete files from instagram-uploads folder");
     }
 
     const storageRef = ref(storage, path);
 
     // Delete the file
-    const { deleteObject } = await import('firebase/storage');
+    const { deleteObject } = await import("firebase/storage");
     await deleteObject(storageRef);
 
     return json({
@@ -151,7 +151,7 @@ export const DELETE: RequestHandler = async ({ request }) => {
       path,
     });
   } catch (err: any) {
-    console.error('Instagram media deletion error:', err);
+    console.error("Instagram media deletion error:", err);
 
     if (err.status) {
       throw err;

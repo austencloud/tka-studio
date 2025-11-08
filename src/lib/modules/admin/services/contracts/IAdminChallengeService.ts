@@ -1,12 +1,15 @@
 /**
  * Admin Challenge Service Interface
- * 
+ *
  * Handles admin operations for daily challenges
  */
 
 import type { DailyChallenge } from "$shared/gamification/domain/models";
 import type { SequenceData } from "$shared";
-import type { ChallengeScheduleEntry, ChallengeFormData } from "../../domain/models";
+import type {
+  ChallengeScheduleEntry,
+  ChallengeFormData,
+} from "../../domain/models";
 
 export interface IAdminChallengeService {
   /**
@@ -45,4 +48,3 @@ export interface IAdminChallengeService {
    */
   getChallengeByDate(date: string): Promise<DailyChallenge | null>;
 }
-

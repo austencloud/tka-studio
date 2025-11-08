@@ -11,7 +11,7 @@
     isTransitioning?: boolean;
     hasOverflow?: boolean;
     isSideBySideLayout?: () => boolean;
-    children?: import('svelte').Snippet;
+    children?: import("svelte").Snippet;
   } = $props();
 
   let gridWrapperElement: HTMLDivElement | null = null;
@@ -52,7 +52,7 @@
       columns,
       rows,
       gridColumns: `repeat(${columns}, 1fr)`,
-      itemsPerRow: columns
+      itemsPerRow: columns,
     };
   });
 
@@ -69,18 +69,21 @@
     const basePadding = 8;
 
     // Scale factor based on container width, clamped between 0.5x and 1.5x
-    const scaleFactor = Math.min(Math.max(containerWidth / baseWidth, 0.5), 1.5);
+    const scaleFactor = Math.min(
+      Math.max(containerWidth / baseWidth, 0.5),
+      1.5
+    );
 
     return {
       gap: Math.max(Math.round(baseGap * scaleFactor), 4), // Min 4px gap
-      padding: Math.max(Math.round(basePadding * scaleFactor), 4) // Min 4px padding
+      padding: Math.max(Math.round(basePadding * scaleFactor), 4), // Min 4px padding
     };
   });
 
   // Calculate maximum pictograph size to fit within container
   // Intelligently accounts for both width and height constraints
   const maxPictographSize = $derived(() => {
-    if (containerWidth === 0 || containerHeight === 0) return 'auto';
+    if (containerWidth === 0 || containerHeight === 0) return "auto";
 
     const layout = gridLayout();
     const sizing = responsiveSizing();
@@ -95,7 +98,8 @@
 
     // Available space after accounting for gaps and padding
     const availableWidth = containerWidth - totalPaddingWidth - totalGapWidth;
-    const availableHeight = containerHeight - totalPaddingHeight - totalGapHeight;
+    const availableHeight =
+      containerHeight - totalPaddingHeight - totalGapHeight;
 
     // Calculate max size per item based on constraints
     const maxWidthPerItem = availableWidth / layout.columns;
@@ -108,7 +112,7 @@
     // Clamp between minimum touch target (44px) and maximum size
     const clampedSize = Math.max(Math.min(maxSize, 200), 44);
 
-    return clampedSize + 'px';
+    return clampedSize + "px";
   });
 
   // Setup ResizeObserver to track container dimensions for responsive layout
@@ -147,8 +151,8 @@
     class:transitioning={isTransitioning}
     class:eight-column={isEightColumnLayout()}
     style:--grid-columns={gridLayout().gridColumns}
-    style:--grid-gap={responsiveSizing().gap + 'px'}
-    style:--grid-padding={responsiveSizing().padding + 'px'}
+    style:--grid-gap={responsiveSizing().gap + "px"}
+    style:--grid-padding={responsiveSizing().padding + "px"}
     style:--max-pictograph-size={maxPictographSize()}
   >
     {@render children?.()}

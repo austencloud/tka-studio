@@ -65,7 +65,8 @@ export function createCurrentWordDisplayEffect(
       }
       // In guided mode, show the header text from Guided Builder
       else if (CreateModuleState.activeSection === "guided") {
-        displayText = CreateModuleState.guidedModeHeaderText || "Guided Builder";
+        displayText =
+          CreateModuleState.guidedModeHeaderText || "Guided Builder";
       }
       // In gestural (hand path) mode, show contextual message instead of word
       else if (

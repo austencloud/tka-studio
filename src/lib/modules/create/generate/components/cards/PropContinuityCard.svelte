@@ -13,7 +13,7 @@ Shows BOTH continuity options vertically with clear active/inactive states
     shadowColor = "190deg 80% 50%", // Cyan-matched shadow
     gridColumnSpan = 2,
     cardIndex = 0,
-    headerFontSize = "9px"
+    headerFontSize = "9px",
   } = $props<{
     currentContinuity: PropContinuity;
     onContinuityChange: (continuity: PropContinuity) => void;
@@ -27,8 +27,16 @@ Shows BOTH continuity options vertically with clear active/inactive states
 
 <ToggleCard
   title="Continuity"
-  option1={{ value: PropContinuity.CONTINUOUS, label: "Continuous", icon: "link" }}
-  option2={{ value: PropContinuity.RANDOM, label: "Reversals", icon: "left-right" }}
+  option1={{
+    value: PropContinuity.CONTINUOUS,
+    label: "Continuous",
+    icon: "link",
+  }}
+  option2={{
+    value: PropContinuity.RANDOM,
+    label: "Reversals",
+    icon: "left-right",
+  }}
   activeOption={currentContinuity}
   onToggle={onContinuityChange}
   {color}

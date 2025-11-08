@@ -35,7 +35,6 @@ const DEVICE_SIZES = [
 ];
 
 test.describe("Option Viewer - Responsive Layout", () => {
-
   test.beforeEach(async ({ page }) => {
     // Navigate to the build page where option viewer is used
     await page.goto("/");
@@ -44,15 +43,21 @@ test.describe("Option Viewer - Responsive Layout", () => {
     await page.waitForLoadState("networkidle");
 
     // Click on Build tab if available
-    const buildTabButton = page.locator('button:has-text("Build"), a:has-text("Build")');
-    if (await buildTabButton.count() > 0) {
+    const buildTabButton = page.locator(
+      'button:has-text("Build"), a:has-text("Build")'
+    );
+    if ((await buildTabButton.count()) > 0) {
       await buildTabButton.first().click();
       await page.waitForTimeout(1000);
     }
 
     // Select a start position to activate option picker
-    const startPositionButton = page.locator('[data-grid-position], .grid-position-button, button[aria-label*="start position"]').first();
-    if (await startPositionButton.count() > 0) {
+    const startPositionButton = page
+      .locator(
+        '[data-grid-position], .grid-position-button, button[aria-label*="start position"]'
+      )
+      .first();
+    if ((await startPositionButton.count()) > 0) {
       await startPositionButton.click();
       await page.waitForTimeout(500);
     }
@@ -63,7 +68,9 @@ test.describe("Option Viewer - Responsive Layout", () => {
         timeout: 5000,
       });
     } catch (e) {
-      console.log("Option picker not found - test may be running in wrong context");
+      console.log(
+        "Option picker not found - test may be running in wrong context"
+      );
       // Continue anyway for some tests
     }
   });
@@ -83,7 +90,9 @@ test.describe("Option Viewer - Responsive Layout", () => {
         await page.waitForTimeout(1000);
 
         // Get option picker container
-        const container = page.locator('[data-testid="option-picker-container"]');
+        const container = page.locator(
+          '[data-testid="option-picker-container"]'
+        );
 
         // Skip if container doesn't exist (might not be in build mode)
         if ((await container.count()) === 0) {
@@ -101,7 +110,9 @@ test.describe("Option Viewer - Responsive Layout", () => {
         const containerBox = await container.boundingBox();
 
         if (containerBox) {
-          console.log(`${device.name}: Container ${containerBox.width}x${containerBox.height}, Overflow: ${hasOverflow}`);
+          console.log(
+            `${device.name}: Container ${containerBox.width}x${containerBox.height}, Overflow: ${hasOverflow}`
+          );
         }
 
         expect(hasOverflow).toBe(false);
@@ -122,7 +133,9 @@ test.describe("Option Viewer - Responsive Layout", () => {
   });
 
   test.describe("Filter Panel Responsive Tests", () => {
-    test("Filter panel never causes overflow on small screen", async ({ page }) => {
+    test("Filter panel never causes overflow on small screen", async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: 375, height: 667 });
       await page.waitForTimeout(1000);
 
@@ -155,13 +168,17 @@ test.describe("Option Viewer - Responsive Layout", () => {
       const containerBox = await container.boundingBox();
 
       if (panelBox && containerBox) {
-        console.log(`Filter Panel - Container: ${containerBox.width}x${containerBox.height}, Panel: ${panelBox.width}x${panelBox.height}`);
+        console.log(
+          `Filter Panel - Container: ${containerBox.width}x${containerBox.height}, Panel: ${panelBox.width}x${panelBox.height}`
+        );
         expect(panelBox.width).toBeLessThanOrEqual(containerBox.width + 2); // +2 for rounding/borders
         expect(panelBox.height).toBeLessThanOrEqual(containerBox.height + 2);
       }
     });
 
-    test("Filter panel never causes overflow on large screen", async ({ page }) => {
+    test("Filter panel never causes overflow on large screen", async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: 1920, height: 1080 });
       await page.waitForTimeout(1000);
 
@@ -192,7 +209,9 @@ test.describe("Option Viewer - Responsive Layout", () => {
       const containerBox = await container.boundingBox();
 
       if (panelBox && containerBox) {
-        console.log(`Large Screen - Container: ${containerBox.width}x${containerBox.height}, Panel: ${panelBox.width}x${panelBox.height}`);
+        console.log(
+          `Large Screen - Container: ${containerBox.width}x${containerBox.height}, Panel: ${panelBox.width}x${panelBox.height}`
+        );
         expect(panelBox.width).toBeLessThanOrEqual(containerBox.width + 2);
         expect(panelBox.height).toBeLessThanOrEqual(containerBox.height + 2);
       }
@@ -200,7 +219,9 @@ test.describe("Option Viewer - Responsive Layout", () => {
   });
 
   test.describe("Content Height Utilization", () => {
-    test("Option picker content uses full available height", async ({ page }) => {
+    test("Option picker content uses full available height", async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: 390, height: 844 });
       await page.waitForTimeout(1000);
 
@@ -223,7 +244,9 @@ test.describe("Option Viewer - Responsive Layout", () => {
         // Content should take up most of the container height
         const heightUtilization = contentBox.height / containerBox.height;
 
-        console.log(`Content height utilization: ${(heightUtilization * 100).toFixed(1)}% (${contentBox.height}px / ${containerBox.height}px)`);
+        console.log(
+          `Content height utilization: ${(heightUtilization * 100).toFixed(1)}% (${contentBox.height}px / ${containerBox.height}px)`
+        );
 
         // Content should use at least 65% of container height (accounting for header/padding)
         expect(heightUtilization).toBeGreaterThan(0.65);
@@ -237,10 +260,7 @@ test.describe("Option Viewer - Responsive Layout", () => {
 /**
  * Check if an element has overflow (scrollHeight > clientHeight or scrollWidth > clientWidth)
  */
-async function checkForOverflow(
-  page: Page,
-  locator: any
-): Promise<boolean> {
+async function checkForOverflow(page: Page, locator: any): Promise<boolean> {
   return await locator.evaluate((el: HTMLElement) => {
     const verticalOverflow = el.scrollHeight - el.clientHeight;
     const horizontalOverflow = el.scrollWidth - el.clientWidth;
@@ -265,19 +285,29 @@ async function verifyHeaderOrFloatingButton(
     const count = await floatingButton.count();
 
     if (count > 0) {
-      console.log(`  ✓ Floating button shown (height: ${containerHeight}px < ${THRESHOLD}px)`);
+      console.log(
+        `  ✓ Floating button shown (height: ${containerHeight}px < ${THRESHOLD}px)`
+      );
     } else {
-      console.log(`  ⚠ Expected floating button but not found (height: ${containerHeight}px < ${THRESHOLD}px)`);
+      console.log(
+        `  ⚠ Expected floating button but not found (height: ${containerHeight}px < ${THRESHOLD}px)`
+      );
     }
   } else {
     // Should show header
-    const header = page.locator(".construct-picker-header[data-variant='options']");
+    const header = page.locator(
+      ".construct-picker-header[data-variant='options']"
+    );
     const count = await header.count();
 
     if (count > 0) {
-      console.log(`  ✓ Header shown (height: ${containerHeight}px >= ${THRESHOLD}px)`);
+      console.log(
+        `  ✓ Header shown (height: ${containerHeight}px >= ${THRESHOLD}px)`
+      );
     } else {
-      console.log(`  ⚠ Expected header but not found (height: ${containerHeight}px >= ${THRESHOLD}px)`);
+      console.log(
+        `  ⚠ Expected header but not found (height: ${containerHeight}px >= ${THRESHOLD}px)`
+      );
     }
   }
 }

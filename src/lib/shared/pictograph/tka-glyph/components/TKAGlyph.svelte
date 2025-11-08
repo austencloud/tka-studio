@@ -31,7 +31,6 @@ Uses pure runes instead of stores for reactivity.
     scale?: number;
   }>();
 
-
   // Letter dimensions state - match legacy behavior
   let letterDimensions = $state({ width: 0, height: 0 });
 

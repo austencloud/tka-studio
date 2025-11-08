@@ -113,7 +113,10 @@ function splitIntoLetterUnits(word: string): string[] {
  * - simplifyAndTruncate("AW-BX-CY-DZ-", 8) → "AW-BX-CY-DZ-" (4 letter units, no truncation)
  * - simplifyAndTruncate("ABCDEFGHIJK", 8) → "ABCDEFGH..." (truncated to 8)
  */
-export function simplifyAndTruncate(word: string, maxLetters: number = 8): string {
+export function simplifyAndTruncate(
+  word: string,
+  maxLetters: number = 8
+): string {
   // First simplify the word
   const simplified = simplifyRepeatedWord(word);
 

@@ -14,8 +14,8 @@
   import { onMount } from "svelte";
   import { resolve, TYPES } from "$shared";
   import type { IMediaBundlerService } from "../services/contracts";
-  import type { SequenceData, ShareOptions } from "$shared";
-  import type { InstagramMediaItem } from "../domain";
+  import type { SequenceData } from "$shared";
+  import type { InstagramMediaItem, ShareOptions } from "../domain";
 
   let {
     currentSequence,
@@ -40,9 +40,12 @@
   let hasNativeShare = $state(false);
 
   onMount(async () => {
-    mediaBundlerService = resolve<IMediaBundlerService>(TYPES.IMediaBundlerService);
+    mediaBundlerService = resolve<IMediaBundlerService>(
+      TYPES.IMediaBundlerService
+    );
     // Check if Web Share API is available (mobile devices)
-    hasNativeShare = navigator.share !== undefined && navigator.canShare !== undefined;
+    hasNativeShare =
+      navigator.share !== undefined && navigator.canShare !== undefined;
   });
 
   // Handle video file selection
@@ -99,9 +102,12 @@
 
       for (const item of mediaItems) {
         const blob = item.blob;
-        const filename = item.type === "VIDEO" ? "performance.mp4"
-          : item.type === "IMAGE" ? "notation.png"
-          : "animation.webp";
+        const filename =
+          item.type === "VIDEO"
+            ? "performance.mp4"
+            : item.type === "IMAGE"
+              ? "notation.png"
+              : "animation.webp";
 
         files.push(new File([blob], filename, { type: blob.type }));
       }
@@ -213,7 +219,11 @@ ${caption}
     <div class="preview-section">
       <div class="preview-header">
         <h3>Ready to Share</h3>
-        <button class="reset-button" onclick={handleReset} aria-label="Start over">
+        <button
+          class="reset-button"
+          onclick={handleReset}
+          aria-label="Start over"
+        >
           <i class="fas fa-redo"></i>
         </button>
       </div>
@@ -224,7 +234,9 @@ ${caption}
           <div class="media-item">
             <div class="media-thumbnail">
               {#if item.type === "VIDEO"}
-                <video src={URL.createObjectURL(item.blob)} controls></video>
+                <video src={URL.createObjectURL(item.blob)} controls>
+                  <track kind="captions" />
+                </video>
                 <span class="media-label">Performance</span>
               {:else if item.type === "IMAGE"}
                 <img src={URL.createObjectURL(item.blob)} alt="Notation" />
@@ -294,7 +306,14 @@ ${caption}
 
   .instagram-icon {
     font-size: 4rem;
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    background: linear-gradient(
+      45deg,
+      #f09433 0%,
+      #e6683c 25%,
+      #dc2743 50%,
+      #cc2366 75%,
+      #bc1888 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -346,7 +365,14 @@ ${caption}
   }
 
   .share-button {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    background: linear-gradient(
+      45deg,
+      #f09433 0%,
+      #e6683c 25%,
+      #dc2743 50%,
+      #cc2366 75%,
+      #bc1888 100%
+    );
     color: white;
   }
 

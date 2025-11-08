@@ -20,7 +20,10 @@ import { GridMode } from "../../../src/lib/shared/pictograph/grid/domain/enums/g
 import { MotionColor } from "../../../src/lib/shared/pictograph/shared/domain/enums/pictograph-enums";
 import type { PictographData } from "$shared";
 import { initializeContainer } from "$shared/inversify/container";
-import { getValidPictograph, getAllLetterVariants } from "../../helpers/real-pictograph-loader";
+import {
+  getValidPictograph,
+  getAllLetterVariants,
+} from "../../helpers/real-pictograph-loader";
 
 describe("CSV Pictograph Loading", () => {
   let samplePictographs: PictographData[];
@@ -34,7 +37,7 @@ describe("CSV Pictograph Loading", () => {
       getValidPictograph(Letter.A, GridMode.DIAMOND),
       getValidPictograph(Letter.B, GridMode.DIAMOND),
       getValidPictograph(Letter.C, GridMode.DIAMOND),
-    ]).then(pictos => pictos.filter(p => p !== null) as PictographData[]);
+    ]).then((pictos) => pictos.filter((p) => p !== null) as PictographData[]);
   });
 
   describe("CSV Data Loading", () => {
@@ -73,10 +76,13 @@ describe("CSV Pictograph Loading", () => {
     });
 
     it("should load all Letter C variants from CSV", async () => {
-      const letterCVariants = await getAllLetterVariants(Letter.C, GridMode.DIAMOND);
+      const letterCVariants = await getAllLetterVariants(
+        Letter.C,
+        GridMode.DIAMOND
+      );
       expect(letterCVariants.length).toBeGreaterThanOrEqual(1);
 
-      letterCVariants.forEach(variant => {
+      letterCVariants.forEach((variant) => {
         expect(variant.letter).toBe(Letter.C);
         expect(variant.motions[MotionColor.BLUE]).toBeDefined();
         expect(variant.motions[MotionColor.RED]).toBeDefined();
@@ -86,11 +92,14 @@ describe("CSV Pictograph Loading", () => {
 
   describe("Data Variants", () => {
     it("should load multiple variants for Letter A", async () => {
-      const letterAVariants = await getAllLetterVariants(Letter.A, GridMode.DIAMOND);
+      const letterAVariants = await getAllLetterVariants(
+        Letter.A,
+        GridMode.DIAMOND
+      );
       expect(letterAVariants.length).toBeGreaterThan(0);
 
       // All variants should have Letter A
-      letterAVariants.forEach(variant => {
+      letterAVariants.forEach((variant) => {
         expect(variant.letter).toBe(Letter.A);
         expect(variant.startPosition).toBeTruthy();
         expect(variant.endPosition).toBeTruthy();

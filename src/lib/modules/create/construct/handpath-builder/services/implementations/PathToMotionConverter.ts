@@ -45,9 +45,10 @@ export class PathToMotionConverter implements IPathToMotionConverter {
       startOrientation: Orientation.IN, // Default orientation
       endOrientation: Orientation.IN,
       propType,
-      color: segment.handMotionType === HandMotionType.STATIC
-        ? segment.handMotionType as any // Will be determined by context
-        : (rotationDirection as any), // Placeholder - actual color from HandPath
+      color:
+        segment.handMotionType === HandMotionType.STATIC
+          ? (segment.handMotionType as any) // Will be determined by context
+          : (rotationDirection as any), // Placeholder - actual color from HandPath
       gridMode: GridMode.DIAMOND, // Will be overridden by actual grid mode
       isVisible: true,
       // arrowLocation will be calculated by existing services
@@ -97,11 +98,12 @@ export class PathToMotionConverter implements IPathToMotionConverter {
 
     // Determine hand path direction
     // We need to infer grid mode - for now assume DIAMOND (will be passed via HandPath)
-    const handPathDirection = this.handPathDirectionDetector.getHandPathDirection(
-      segment.startLocation,
-      segment.endLocation,
-      GridMode.DIAMOND // TODO: Pass grid mode through segment
-    );
+    const handPathDirection =
+      this.handPathDirectionDetector.getHandPathDirection(
+        segment.startLocation,
+        segment.endLocation,
+        GridMode.DIAMOND // TODO: Pass grid mode through segment
+      );
 
     // If hand path has no rotational direction, default to FLOAT
     if (!handPathDirection) {

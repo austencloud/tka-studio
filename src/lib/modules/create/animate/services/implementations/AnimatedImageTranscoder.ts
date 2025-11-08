@@ -27,7 +27,9 @@ export class AnimatedImageTranscoder implements IAnimatedImageTranscoder {
       losslessFlag
     );
 
-    return new Blob([encodedBuffer], { type: "image/webp" });
+    return new Blob([encodedBuffer.buffer as ArrayBuffer], {
+      type: "image/webp",
+    });
   }
 
   private ensureEncoderReady(): Promise<void> {
@@ -40,7 +42,10 @@ export class AnimatedImageTranscoder implements IAnimatedImageTranscoder {
       const maxAttempts = 200; // ~3s
 
       const schedule = (fn: () => void) => {
-        if (typeof window !== "undefined" && typeof window.requestAnimationFrame === "function") {
+        if (
+          typeof window !== "undefined" &&
+          typeof window.requestAnimationFrame === "function"
+        ) {
           window.requestAnimationFrame(fn);
         } else {
           setTimeout(fn, 16);

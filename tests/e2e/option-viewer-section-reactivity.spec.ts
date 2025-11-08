@@ -360,7 +360,9 @@ test.describe("OptionViewerSection Reactivity", () => {
 
     // All should have same dimensions (within 1px tolerance for rounding)
     for (let i = 1; i < sizes.length; i++) {
-      expect(Math.abs(sizes[i]!.width - sizes[0]!.width)).toBeLessThanOrEqual(1);
+      expect(Math.abs(sizes[i]!.width - sizes[0]!.width)).toBeLessThanOrEqual(
+        1
+      );
       expect(Math.abs(sizes[i]!.height - sizes[0]!.height)).toBeLessThanOrEqual(
         1
       );

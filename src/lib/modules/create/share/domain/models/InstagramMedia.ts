@@ -6,7 +6,7 @@
  */
 
 export interface InstagramMediaItem {
-  type: 'IMAGE' | 'VIDEO';
+  type: "IMAGE" | "VIDEO";
   blob: Blob;
   url: string;
   order: number;
@@ -15,7 +15,7 @@ export interface InstagramMediaItem {
 
 // Legacy types for backwards compatibility (not actively used in new share flow)
 export interface InstagramPostStatus {
-  status: 'uploading' | 'processing' | 'completed' | 'failed';
+  status: "uploading" | "processing" | "completed" | "failed";
   progress?: number;
   message?: string;
   error?: string;
@@ -37,11 +37,14 @@ export interface MediaValidationResult {
   error?: string;
 }
 
-export function validateMediaItem(item: InstagramMediaItem): MediaValidationResult {
+export function validateMediaItem(
+  item: InstagramMediaItem
+): MediaValidationResult {
   // Size validation
-  const maxSize = item.type === 'VIDEO'
-    ? INSTAGRAM_MEDIA_CONSTRAINTS.VIDEO_MAX_SIZE
-    : INSTAGRAM_MEDIA_CONSTRAINTS.IMAGE_MAX_SIZE;
+  const maxSize =
+    item.type === "VIDEO"
+      ? INSTAGRAM_MEDIA_CONSTRAINTS.VIDEO_MAX_SIZE
+      : INSTAGRAM_MEDIA_CONSTRAINTS.IMAGE_MAX_SIZE;
 
   if (item.blob.size > maxSize) {
     return {

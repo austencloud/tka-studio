@@ -11,13 +11,19 @@
 
 import { createComponentLogger } from "$shared";
 import { injectable } from "inversify";
-import type { BuildSection, INavigationSyncService } from "../contracts/INavigationSyncService";
+import type {
+  BuildSection,
+  INavigationSyncService,
+} from "../contracts/INavigationSyncService";
 
 @injectable()
 export class NavigationSyncService implements INavigationSyncService {
-  private logger = createComponentLogger('CreateModule:NavigationSync');
+  private logger = createComponentLogger("CreateModule:NavigationSync");
 
-  syncNavigationToCreateModule(CreateModuleState: any, navigationState: any): void {
+  syncNavigationToCreateModule(
+    CreateModuleState: any,
+    navigationState: any
+  ): void {
     const currentMode = navigationState.currentSection;
     const CreateModuleCurrentMode = CreateModuleState.activeSection;
 
@@ -50,18 +56,34 @@ export class NavigationSyncService implements INavigationSyncService {
     }
 
     // Validate tab access (guard against invalid navigation)
-    if (!this.validateTabAccess(currentMode as BuildSection, CreateModuleState.canAccessEditTab)) {
-      console.warn(`🚫 Cannot access ${currentMode} tab without a sequence. Redirecting to construct.`);
+    if (
+      !this.validateTabAccess(
+        currentMode as BuildSection,
+        CreateModuleState.canAccessEditTab
+      )
+    ) {
+      console.warn(
+        `🚫 Cannot access ${currentMode} tab without a sequence. Redirecting to construct.`
+      );
       navigationState.setCurrentSection(this.getFallbackTab());
       return;
     }
 
-    this.logger.log("Updating CreateModule state from navigation:", currentMode);
+    this.logger.log(
+      "Updating CreateModule state from navigation:",
+      currentMode
+    );
     CreateModuleState.setactiveToolPanel(currentMode);
-    this.logger.success("CreateModule state updated to:", CreateModuleState.activeSection);
+    this.logger.success(
+      "CreateModule state updated to:",
+      CreateModuleState.activeSection
+    );
   }
 
-  syncCreateModuleToNavigation(CreateModuleState: any, navigationState: any): void {
+  syncCreateModuleToNavigation(
+    CreateModuleState: any,
+    navigationState: any
+  ): void {
     // Skip if updating from toggle (toggle already syncs to navigation)
     if (CreateModuleState.isUpdatingFromToggle) {
       return;

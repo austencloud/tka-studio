@@ -5,7 +5,14 @@
  */
 
 import { injectable } from "inversify";
-import { doc, getDoc, setDoc, updateDoc, serverTimestamp, Timestamp } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  serverTimestamp,
+  Timestamp,
+} from "firebase/firestore";
 import { auth, firestore } from "../../../auth/firebase";
 import { db } from "../../../persistence/database/TKADatabase";
 import { getUserStreakPath } from "../../data/firestore-collections";
@@ -28,7 +35,9 @@ export class StreakService implements IStreakService {
 
     const user = auth.currentUser;
     if (!user) {
-      console.log("⚠️ StreakService: No user logged in, skipping initialization");
+      console.log(
+        "⚠️ StreakService: No user logged in, skipping initialization"
+      );
       return;
     }
 
@@ -155,7 +164,9 @@ export class StreakService implements IStreakService {
       streakStartDate,
     });
 
-    console.log(`🔥 Streak updated: ${newStreak} day${newStreak !== 1 ? "s" : ""}`);
+    console.log(
+      `🔥 Streak updated: ${newStreak} day${newStreak !== 1 ? "s" : ""}`
+    );
 
     return {
       streakIncremented: daysDiff === 1,

@@ -105,7 +105,9 @@
 
       <!-- Content -->
       <div class="dialog-content">
-        <DialogPrimitive.Title class="dialog-title">{title}</DialogPrimitive.Title>
+        <DialogPrimitive.Title class="dialog-title"
+          >{title}</DialogPrimitive.Title
+        >
         <DialogPrimitive.Description class="dialog-message">
           {message}
         </DialogPrimitive.Description>

@@ -5,7 +5,10 @@
  * Extracted from SequenceGenerationService for single responsibility.
  */
 import { injectable } from "inversify";
-import type { ITurnAllocator, TurnAllocation } from "../contracts/ITurnAllocator";
+import type {
+  ITurnAllocator,
+  TurnAllocation,
+} from "../contracts/ITurnAllocator";
 
 @injectable()
 export class TurnAllocator implements ITurnAllocator {
@@ -17,8 +20,14 @@ export class TurnAllocator implements ITurnAllocator {
     level: number,
     turnIntensity: number
   ): Promise<TurnAllocation> {
-    const { TurnIntensityManagerService } = await import("./TurnIntensityManagerService");
-    const turnManager = new TurnIntensityManagerService(beatsToGenerate, level, turnIntensity);
+    const { TurnIntensityManagerService } = await import(
+      "./TurnIntensityManagerService"
+    );
+    const turnManager = new TurnIntensityManagerService(
+      beatsToGenerate,
+      level,
+      turnIntensity
+    );
     return turnManager.allocateTurnsForBlueAndRed();
   }
 }

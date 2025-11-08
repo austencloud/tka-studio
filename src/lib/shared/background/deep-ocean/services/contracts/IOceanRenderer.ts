@@ -1,5 +1,9 @@
 import type { Dimensions } from "$shared";
-import type { MarineLife, Bubble, OceanParticle } from "../../domain/models/DeepOceanModels";
+import type {
+  MarineLife,
+  Bubble,
+  OceanParticle,
+} from "../../domain/models/DeepOceanModels";
 
 /**
  * Contract for ocean background rendering
@@ -33,18 +37,12 @@ export interface IOceanRenderer {
   /**
    * Draw bubbles
    */
-  drawBubbles(
-    ctx: CanvasRenderingContext2D,
-    bubbles: Bubble[]
-  ): void;
+  drawBubbles(ctx: CanvasRenderingContext2D, bubbles: Bubble[]): void;
 
   /**
    * Draw marine life
    */
-  drawMarineLife(
-    ctx: CanvasRenderingContext2D,
-    marineLife: MarineLife[]
-  ): void;
+  drawMarineLife(ctx: CanvasRenderingContext2D, marineLife: MarineLife[]): void;
 
   /**
    * Draw particles

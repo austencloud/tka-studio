@@ -1,7 +1,12 @@
 <!-- PictographGrid.svelte - Pictograph grid display for StartPositionPicker -->
 <script lang="ts">
   import type { IHapticFeedbackService, PictographData } from "$shared";
-  import { getLetterBorderColorSafe, Pictograph, resolve, TYPES } from "$shared";
+  import {
+    getLetterBorderColorSafe,
+    Pictograph,
+    resolve,
+    TYPES,
+  } from "$shared";
   import { onMount } from "svelte";
 
   const {
@@ -25,7 +30,9 @@
 
   // Trigger animation on mount
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
 
     // Small delay to ensure DOM is ready, then start staggered animation
     setTimeout(() => {
@@ -165,8 +172,6 @@
     justify-content: center;
     position: relative;
   }
-
-
 
   @media (max-width: 768px) {
     .pictograph-row {

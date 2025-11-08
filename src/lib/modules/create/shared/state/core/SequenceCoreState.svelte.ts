@@ -76,7 +76,9 @@ export function createSequenceCoreState() {
     },
 
     updateSequence(updatedSequence: SequenceData) {
-      const index = state.sequences.findIndex((s) => s.id === updatedSequence.id);
+      const index = state.sequences.findIndex(
+        (s) => s.id === updatedSequence.id
+      );
       if (index >= 0) {
         state.sequences[index] = updatedSequence;
       }

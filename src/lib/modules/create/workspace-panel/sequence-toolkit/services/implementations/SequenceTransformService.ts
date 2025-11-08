@@ -6,10 +6,7 @@
  */
 
 import type { SequenceData } from "$shared";
-import {
-  createSequenceData,
-  updateSequenceData,
-} from "$shared";
+import { createSequenceData, updateSequenceData } from "$shared";
 import { injectable } from "inversify";
 import { createBeatData } from "../../../../shared/domain/factories/createBeatData";
 import type { ISequenceTransformService } from "../contracts";

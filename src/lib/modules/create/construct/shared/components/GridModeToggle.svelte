@@ -3,17 +3,21 @@ GridModeToggle.svelte - Single-button toggle showing opposite grid mode
 Action-oriented pattern: Shows the mode you can switch TO (not current mode)
 -->
 <script lang="ts">
-  import { GridMode, resolve, TYPES, type IHapticFeedbackService } from "$shared";
+  import {
+    GridMode,
+    resolve,
+    TYPES,
+    type IHapticFeedbackService,
+  } from "$shared";
 
-  const {
-    currentGridMode = GridMode.DIAMOND,
-    onGridModeChange,
-  } = $props<{
+  const { currentGridMode = GridMode.DIAMOND, onGridModeChange } = $props<{
     currentGridMode?: GridMode;
     onGridModeChange?: (gridMode: GridMode) => void;
   }>();
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   // Action-oriented: Show the mode you can switch TO
   const oppositeMode = $derived(
@@ -24,9 +28,7 @@ Action-oriented pattern: Shows the mode you can switch TO (not current mode)
     oppositeMode === GridMode.DIAMOND ? "Diamond" : "Box"
   );
 
-  const oppositeIcon = $derived(
-    oppositeMode === GridMode.DIAMOND ? "◇" : "▢"
-  );
+  const oppositeIcon = $derived(oppositeMode === GridMode.DIAMOND ? "◇" : "▢");
 
   function handleToggle() {
     hapticService?.trigger("selection");
@@ -90,8 +92,6 @@ Action-oriented pattern: Shows the mode you can switch TO (not current mode)
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-
-
   .mode-label {
     font-size: 15px;
     font-weight: 600;
@@ -143,7 +143,6 @@ Action-oriented pattern: Shows the mode you can switch TO (not current mode)
       min-height: 40px;
       padding: 0 16px;
     }
-
 
     .mode-label {
       font-size: 14px;

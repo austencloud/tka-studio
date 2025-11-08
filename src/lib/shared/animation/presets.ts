@@ -5,7 +5,7 @@
  * Provides consistent spring physics and easing across the entire application.
  */
 
-import type { Spring } from 'svelte/motion';
+import type { Spring } from "svelte/motion";
 
 // ============================================================================
 // Spring Presets
@@ -55,7 +55,7 @@ export const springPresets = {
  */
 export const easingPresets = {
   /** Smooth ease in and out */
-  easeInOut: (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+  easeInOut: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
 
   /** Ease out (decelerate) */
   easeOut: (t: number) => t * (2 - t),
@@ -108,7 +108,7 @@ export interface AnimationVariantConfig {
     y?: number;
     blur?: number;
   };
-  spring: typeof springPresets[keyof typeof springPresets];
+  spring: (typeof springPresets)[keyof typeof springPresets];
 }
 
 /**
@@ -183,7 +183,7 @@ export function buildTransform(values: {
     parts.push(`rotate(${values.rotate}deg)`);
   }
 
-  return parts.join(' ');
+  return parts.join(" ");
 }
 
 /**
@@ -208,7 +208,7 @@ export function buildFilter(values: {
     parts.push(`contrast(${values.contrast})`);
   }
 
-  return parts.join(' ');
+  return parts.join(" ");
 }
 
 /**

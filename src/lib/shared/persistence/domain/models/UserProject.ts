@@ -101,7 +101,9 @@ export function createUserProject(
 
   return {
     name,
-    ...(options.description !== undefined && { description: options.description }),
+    ...(options.description !== undefined && {
+      description: options.description,
+    }),
     sequenceIds: options.sequenceIds || [],
     ...(options.userId !== undefined && { userId: options.userId }),
     createdAt: now,

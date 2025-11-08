@@ -16,5 +16,7 @@ export interface IRotationDirectionService {
    * @param propContinuity - Continuous or random prop continuity
    * @returns Rotation directions for blue and red props
    */
-  determineRotationDirections(propContinuity?: PropContinuity): RotationDirections;
+  determineRotationDirections(
+    propContinuity?: PropContinuity
+  ): RotationDirections;
 }

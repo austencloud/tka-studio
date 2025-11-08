@@ -48,8 +48,8 @@ Matches the desktop version exactly:
     onPictographSelected = () => {},
     containerWidth = 800,
     pictographSize = 144,
-    gridGap = '8px',
-    layoutMode = '8-column',
+    gridGap = "8px",
+    layoutMode = "8-column",
     typeFilter,
     currentSequence = [],
     isFadingOut = false,
@@ -61,7 +61,7 @@ Matches the desktop version exactly:
     containerWidth?: number;
     pictographSize?: number;
     gridGap?: string;
-    layoutMode?: '4-column' | '8-column';
+    layoutMode?: "4-column" | "8-column";
     typeFilter?: TypeFilter;
     currentSequence?: PictographData[];
     isFadingOut?: boolean;
@@ -69,7 +69,9 @@ Matches the desktop version exactly:
     forcedPictographSize?: number;
   }>();
 
-  const effectivePictographSize = $derived(() => forcedPictographSize ?? pictographSize);
+  const effectivePictographSize = $derived(
+    () => forcedPictographSize ?? pictographSize
+  );
 
   // Reactive container dimension tracking (width AND height)
   let actualContainerWidth = $state(containerWidth);
@@ -79,7 +81,7 @@ Matches the desktop version exactly:
 
   // Update actual container dimensions when the DOM element changes
   $effect(() => {
-    if (containerElement && typeof ResizeObserver !== 'undefined') {
+    if (containerElement && typeof ResizeObserver !== "undefined") {
       // Clean up existing observer
       if (resizeObserver) {
         resizeObserver.disconnect();
@@ -131,10 +133,10 @@ Matches the desktop version exactly:
 
   // Fallback to prop values if no actual measurement available
   const effectiveContainerWidth = $derived(() => {
-    const observedWidth = actualContainerWidth > 0 ? actualContainerWidth : containerWidth;
+    const observedWidth =
+      actualContainerWidth > 0 ? actualContainerWidth : containerWidth;
     const areaWidth = contentAreaWidth();
-    const rawWidth =
-      areaWidth && areaWidth > 0 ? areaWidth : observedWidth;
+    const rawWidth = areaWidth && areaWidth > 0 ? areaWidth : observedWidth;
     // Subtract group-widget padding (8px on each side = 16px total)
     const GROUP_WIDGET_PADDING = 16;
     return Math.max(0, rawWidth - GROUP_WIDGET_PADDING);
@@ -158,16 +160,16 @@ Matches the desktop version exactly:
   function getLetterTypeFromString(letter: string): string {
     try {
       // Convert string to Letter enum
-      const letterEnum = Object.values(Letter).find(l => l === letter);
+      const letterEnum = Object.values(Letter).find((l) => l === letter);
       if (!letterEnum) {
-        return 'Unknown';
+        return "Unknown";
       }
 
       // Use the existing getLetterType function
       const letterType = getLetterType(letterEnum as Letter);
       return letterType;
     } catch (error) {
-      return 'Unknown';
+      return "Unknown";
     }
   }
 
@@ -178,14 +180,17 @@ Matches the desktop version exactly:
     const result: Record<string, PictographData[]> = {};
 
     // Initialize empty arrays for each type
-    groupableTypes.forEach(type => {
+    groupableTypes.forEach((type) => {
       result[type] = [];
     });
 
     // Filter pictographs by type using existing utilities
     if (pictographs.length > 0) {
-      groupableTypes.forEach(type => {
-        const filtered = pictographs.filter((p: PictographData) => p.letter && getLetterTypeFromString(p.letter) === type);
+      groupableTypes.forEach((type) => {
+        const filtered = pictographs.filter(
+          (p: PictographData) =>
+            p.letter && getLetterTypeFromString(p.letter) === type
+        );
         result[type] = filtered;
       });
     }
@@ -196,43 +201,52 @@ Matches the desktop version exactly:
   // Store the result to avoid multiple function calls in template
   const currentPictographsByType = $derived(() => pictographsByType());
 
-
   // Helper function to check if a type is enabled in the filter
   function isTypeEnabled(letterType: string): boolean {
     if (!typeFilter) return true; // If no filter provided, show all types
 
     switch (letterType) {
-      case 'Type4': return typeFilter.type4;
-      case 'Type5': return typeFilter.type5;
-      case 'Type6': return typeFilter.type6;
-      default: return true;
+      case "Type4":
+        return typeFilter.type4;
+      case "Type5":
+        return typeFilter.type5;
+      case "Type6":
+        return typeFilter.type6;
+      default:
+        return true;
     }
   }
 
   // Aspect-ratio-based layout calculation
   function calculateOptimalLayout(
-    typeCounts: Array<{type: string, count: number}>,
+    typeCounts: Array<{ type: string; count: number }>,
     containerWidth: number,
     containerHeight: number,
     aspectRatio: number,
     targetPictographSize: number,
     gridGap: string
   ) {
-    const gap = parseInt(gridGap.replace('px', ''));
+    const gap = parseInt(gridGap.replace("px", ""));
     const minSectionWidth = targetPictographSize + gap * 2;
     const hasMultipleTypes = typeCounts.length > 1;
 
     // Single type: always use full width
     if (!hasMultipleTypes) {
-      return [{
-        types: typeCounts.map(item => item.type),
-        containerWidth: containerWidth,
-        layout: 'single'
-      }];
+      return [
+        {
+          types: typeCounts.map((item) => item.type),
+          containerWidth: containerWidth,
+          layout: "single",
+        },
+      ];
     }
 
     let chosenLayout: string;
-    let result: Array<{types: string[], containerWidth: number, layout: string}>;
+    let result: Array<{
+      types: string[];
+      containerWidth: number;
+      layout: string;
+    }>;
 
     /**
      * ASPECT RATIO LAYOUT STRATEGY (adjusted thresholds for better UX):
@@ -254,36 +268,38 @@ Matches the desktop version exactly:
 
     if (aspectRatio < 0.6) {
       // Portrait: Stack vertically (only for very tall layouts)
-      chosenLayout = 'vertical-stack (portrait)';
-      result = typeCounts.map(item => ({
+      chosenLayout = "vertical-stack (portrait)";
+      result = typeCounts.map((item) => ({
         types: [item.type],
         containerWidth: containerWidth,
-        layout: 'vertical'
+        layout: "vertical",
       }));
     } else if (aspectRatio < 1.6) {
       // Square-ish: 2-row layout (Type 4 on top, Types 5&6 below)
       // This now covers a wider range including slightly portrait/landscape
-      chosenLayout = '2-row (square)';
+      chosenLayout = "2-row (square)";
       result = [
         {
-          types: [typeCounts[0]?.type || 'Type4'], // Type 4
+          types: [typeCounts[0]?.type || "Type4"], // Type 4
           containerWidth: containerWidth,
-          layout: 'row-1'
+          layout: "row-1",
         },
         {
-          types: typeCounts.slice(1).map(item => item.type), // Types 5 & 6
+          types: typeCounts.slice(1).map((item) => item.type), // Types 5 & 6
           containerWidth: containerWidth,
-          layout: 'row-2'
-        }
+          layout: "row-2",
+        },
       ];
     } else {
       // Wide/Landscape: Single horizontal row
-      chosenLayout = 'single-row (wide)';
-      result = [{
-        types: typeCounts.map(item => item.type),
-        containerWidth: containerWidth,
-        layout: 'horizontal'
-      }];
+      chosenLayout = "single-row (wide)";
+      result = [
+        {
+          types: typeCounts.map((item) => item.type),
+          containerWidth: containerWidth,
+          layout: "horizontal",
+        },
+      ];
     }
 
     return result;
@@ -292,7 +308,7 @@ Matches the desktop version exactly:
   // Smart layout organization based on context and available space
   const layoutSections = $derived(() => {
     // Filter types based on typeFilter state
-    const enabledTypes = groupableTypes.filter(type => isTypeEnabled(type));
+    const enabledTypes = groupableTypes.filter((type) => isTypeEnabled(type));
 
     // If no types are enabled, return empty layout
     if (enabledTypes.length === 0) {
@@ -301,10 +317,12 @@ Matches the desktop version exactly:
 
     // Get pictograph counts for each enabled type
     const pictographsByType = currentPictographsByType();
-    const typeCounts = enabledTypes.map(type => ({
-      type,
-      count: pictographsByType[type]?.length || 0
-    })).filter(item => item.count > 0);
+    const typeCounts = enabledTypes
+      .map((type) => ({
+        type,
+        count: pictographsByType[type]?.length || 0,
+      }))
+      .filter((item) => item.count > 0);
 
     if (typeCounts.length === 0) {
       return [];
@@ -322,15 +340,19 @@ Matches the desktop version exactly:
   });
 
   // Calculate section width for each layout row with improved spacing
-  const getSectionWidth = (types: string[], rowContainerWidth: number, layout: string) => {
-    if (layout === 'vertical' || types.length === 1) {
+  const getSectionWidth = (
+    types: string[],
+    rowContainerWidth: number,
+    layout: string
+  ) => {
+    if (layout === "vertical" || types.length === 1) {
       // Vertical layout or single type: use full width
       return rowContainerWidth;
     }
 
     // Horizontal layout: distribute width evenly accounting for CSS gap
     // rowContainerWidth is the group-widget's clientWidth (already accounts for padding)
-    const gap = parseInt(gridGap.replace('px', '')) || 8;
+    const gap = parseInt(gridGap.replace("px", "")) || 8;
     const totalGaps = gap * (types.length - 1);
     const availableWidth = rowContainerWidth - totalGaps;
 
@@ -345,11 +367,14 @@ Matches the desktop version exactly:
     numPictographs: number,
     targetSize: number
   ) => {
-    const gap = parseInt(gridGap.replace('px', '')) || 8;
+    const gap = parseInt(gridGap.replace("px", "")) || 8;
 
     // For Types 4-6, use responsive grid that fits pictographs at target size
     // Calculate how many pictographs can fit per row at target size
-    const pictographsPerRow = Math.max(1, Math.floor(sectionWidth / (targetSize + gap)));
+    const pictographsPerRow = Math.max(
+      1,
+      Math.floor(sectionWidth / (targetSize + gap))
+    );
 
     // Use the target size (don't scale down) - let the grid wrap naturally
     const effectiveSize = targetSize;
@@ -367,20 +392,31 @@ Matches the desktop version exactly:
       gridGap,
     };
   };
-
 </script>
 
 <div
   class="group-widget"
   bind:this={containerElement}
-  style:--content-area-width={contentAreaWidth() ? `${contentAreaWidth()}px` : null}
+  style:--content-area-width={contentAreaWidth()
+    ? `${contentAreaWidth()}px`
+    : null}
 >
   {#each layoutSections() as row, rowIndex (rowIndex)}
     <div class="layout-row">
       {#each row.types as letterType (letterType)}
-        {@const sectionWidth = getSectionWidth(row.types, row.containerWidth, row.layout || 'horizontal')}
-        {@const sectionPictographs = currentPictographsByType()[letterType] || []}
-        {@const sectionLayoutConfig = createSectionLayoutConfig(sectionWidth, letterType, sectionPictographs.length, effectivePictographSize())}
+        {@const sectionWidth = getSectionWidth(
+          row.types,
+          row.containerWidth,
+          row.layout || "horizontal"
+        )}
+        {@const sectionPictographs =
+          currentPictographsByType()[letterType] || []}
+        {@const sectionLayoutConfig = createSectionLayoutConfig(
+          sectionWidth,
+          letterType,
+          sectionPictographs.length,
+          effectivePictographSize()
+        )}
         {#if sectionPictographs && sectionPictographs.length > 0}
           <div
             class="section-container"
@@ -396,7 +432,7 @@ Matches the desktop version exactly:
               {currentSequence}
               {isFadingOut}
               {contentAreaBounds}
-              forcedPictographSize={forcedPictographSize}
+              {forcedPictographSize}
               showHeader={false}
             />
           </div>

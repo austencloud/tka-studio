@@ -228,7 +228,10 @@ Combines video feed with playback controls for practicing sequences.
 
   .progress-fill {
     height: 100%;
-    background: var(--gradient-primary, linear-gradient(90deg, #3b82f6, #8b5cf6));
+    background: var(
+      --gradient-primary,
+      linear-gradient(90deg, #3b82f6, #8b5cf6)
+    );
     transition: width 0.3s ease;
   }
 
@@ -274,7 +277,6 @@ Combines video feed with playback controls for practicing sequences.
     .record-panel {
       padding: var(--spacing-md, 16px);
     }
-
 
     .video-section {
       min-height: 200px;

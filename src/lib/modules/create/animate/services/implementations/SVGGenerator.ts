@@ -88,7 +88,9 @@ export class SVGGenerator implements ISVGGenerator {
   /**
    * Generate blue prop SVG with dynamic prop type
    */
-  async generateBluePropSvg(propType: string = "staff"): Promise<import("../contracts/ISVGGenerator").PropSvgData> {
+  async generateBluePropSvg(
+    propType: string = "staff"
+  ): Promise<import("../contracts/ISVGGenerator").PropSvgData> {
     const path = `/images/props/${propType.toLowerCase()}.svg`;
     const originalSvg = await this.fetchPropSvg(path);
     const coloredSvg = this.applyColorToPropSvg(originalSvg, "#2E3192");
@@ -99,7 +101,9 @@ export class SVGGenerator implements ISVGGenerator {
   /**
    * Generate red prop SVG with dynamic prop type
    */
-  async generateRedPropSvg(propType: string = "staff"): Promise<import("../contracts/ISVGGenerator").PropSvgData> {
+  async generateRedPropSvg(
+    propType: string = "staff"
+  ): Promise<import("../contracts/ISVGGenerator").PropSvgData> {
     const path = `/images/props/${propType.toLowerCase()}.svg`;
     const originalSvg = await this.fetchPropSvg(path);
     const coloredSvg = this.applyColorToPropSvg(originalSvg, "#ED1C24");
@@ -113,7 +117,9 @@ export class SVGGenerator implements ISVGGenerator {
   private async fetchPropSvg(path: string): Promise<string> {
     const response = await fetch(path);
     if (!response.ok) {
-      throw new Error(`Failed to fetch prop SVG from ${path}: ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch prop SVG from ${path}: ${response.statusText}`
+      );
     }
     return await response.text();
   }
@@ -125,23 +131,38 @@ export class SVGGenerator implements ISVGGenerator {
     let coloredSvg = svgText;
 
     // Replace fill colors ONLY if they have an actual color value (not "none" or transparent)
-    coloredSvg = coloredSvg.replace(/fill="(#[0-9A-Fa-f]{3,6}|rgb[a]?\([^)]+\)|[a-z]+)"/gi, (match, capturedColor) => {
-      if (capturedColor.toLowerCase() === "none" || capturedColor.toLowerCase() === "transparent") {
-        return match;
+    coloredSvg = coloredSvg.replace(
+      /fill="(#[0-9A-Fa-f]{3,6}|rgb[a]?\([^)]+\)|[a-z]+)"/gi,
+      (match, capturedColor) => {
+        if (
+          capturedColor.toLowerCase() === "none" ||
+          capturedColor.toLowerCase() === "transparent"
+        ) {
+          return match;
+        }
+        return `fill="${color}"`;
       }
-      return `fill="${color}"`;
-    });
+    );
 
     // Also handle style attributes
-    coloredSvg = coloredSvg.replace(/fill:\s*(#[0-9A-Fa-f]{3,6}|rgb[a]?\([^)]+\)|[a-z]+)/gi, (match, capturedColor) => {
-      if (capturedColor.toLowerCase() === "none" || capturedColor.toLowerCase() === "transparent") {
-        return match;
+    coloredSvg = coloredSvg.replace(
+      /fill:\s*(#[0-9A-Fa-f]{3,6}|rgb[a]?\([^)]+\)|[a-z]+)/gi,
+      (match, capturedColor) => {
+        if (
+          capturedColor.toLowerCase() === "none" ||
+          capturedColor.toLowerCase() === "transparent"
+        ) {
+          return match;
+        }
+        return `fill:${color}`;
       }
-      return `fill:${color}`;
-    });
+    );
 
     // Remove centerPoint circle
-    coloredSvg = coloredSvg.replace(/<circle[^>]*id="centerPoint"[^>]*\/?>/g, "");
+    coloredSvg = coloredSvg.replace(
+      /<circle[^>]*id="centerPoint"[^>]*\/?>/g,
+      ""
+    );
 
     return coloredSvg;
   }
@@ -149,7 +170,10 @@ export class SVGGenerator implements ISVGGenerator {
   /**
    * Extract viewBox dimensions from SVG
    */
-  private extractViewBoxDimensions(svgText: string): { width: number; height: number } {
+  private extractViewBoxDimensions(svgText: string): {
+    width: number;
+    height: number;
+  } {
     // Try to extract from viewBox attribute
     const viewBoxMatch = svgText.match(/viewBox=["']([^"']+)["']/);
     if (viewBoxMatch) {
@@ -166,12 +190,14 @@ export class SVGGenerator implements ISVGGenerator {
     if (widthMatch && heightMatch) {
       return {
         width: parseFloat(widthMatch[1]!),
-        height: parseFloat(heightMatch[1]!)
+        height: parseFloat(heightMatch[1]!),
       };
     }
 
     // Default fallback (staff dimensions)
-    console.warn("Could not extract SVG dimensions, using default staff dimensions");
+    console.warn(
+      "Could not extract SVG dimensions, using default staff dimensions"
+    );
     return { width: 252.8, height: 77.8 };
   }
 }

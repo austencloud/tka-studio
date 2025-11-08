@@ -306,19 +306,39 @@
     height: 200%;
     background-image:
       radial-gradient(circle, white 2px, transparent 2px),
-      radial-gradient(circle, rgba(255,255,255,0.95) 1.5px, transparent 1.5px),
-      radial-gradient(circle, rgba(255,255,255,0.9) 2px, transparent 2px),
+      radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.95) 1.5px,
+        transparent 1.5px
+      ),
+      radial-gradient(circle, rgba(255, 255, 255, 0.9) 2px, transparent 2px),
       radial-gradient(circle, white 1.5px, transparent 1.5px),
-      radial-gradient(circle, rgba(255,255,255,0.85) 2px, transparent 2px),
-      radial-gradient(circle, rgba(255,255,255,0.95) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.85) 2px, transparent 2px),
+      radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.95) 1.5px,
+        transparent 1.5px
+      ),
       radial-gradient(circle, white 1.5px, transparent 1.5px),
-      radial-gradient(circle, rgba(255,255,255,0.9) 2px, transparent 2px);
+      radial-gradient(circle, rgba(255, 255, 255, 0.9) 2px, transparent 2px);
     background-size:
-      79px 97px, 131px 113px, 103px 89px, 109px 107px,
-      89px 101px, 127px 97px, 97px 109px, 113px 103px;
+      79px 97px,
+      131px 113px,
+      103px 89px,
+      109px 107px,
+      89px 101px,
+      127px 97px,
+      97px 109px,
+      113px 103px;
     background-position:
-      7% 11%, 31% 23%, 67% 41%, 89% 7%,
-      19% 53%, 43% 71%, 73% 29%, 97% 59%;
+      7% 11%,
+      31% 23%,
+      67% 41%,
+      89% 7%,
+      19% 53%,
+      43% 71%,
+      73% 29%,
+      97% 59%;
     animation: snowfall-layer1 18s linear infinite;
     filter: blur(0.5px);
   }
@@ -332,22 +352,38 @@
     width: 120%;
     height: 200%;
     background-image:
-      radial-gradient(circle, rgba(255,255,255,0.75) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.65) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.6) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.75) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.65) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px);
+      radial-gradient(circle, rgba(255, 255, 255, 0.75) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.65) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.75) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.65) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.7) 1px, transparent 1px);
     background-size:
-      71px 83px, 101px 97px, 83px 107px, 107px 89px, 97px 113px,
-      89px 79px, 113px 103px, 79px 97px, 103px 89px, 97px 101px;
+      71px 83px,
+      101px 97px,
+      83px 107px,
+      107px 89px,
+      97px 113px,
+      89px 79px,
+      113px 103px,
+      79px 97px,
+      103px 89px,
+      97px 101px;
     background-position:
-      13% 17%, 37% 31%, 61% 13%, 83% 47%, 11% 67%,
-      41% 79%, 71% 37%, 91% 23%, 23% 89%, 53% 53%;
+      13% 17%,
+      37% 31%,
+      61% 13%,
+      83% 47%,
+      11% 67%,
+      41% 79%,
+      71% 37%,
+      91% 23%,
+      23% 89%,
+      53% 53%;
     animation: snowfall-layer2 24s linear infinite;
     animation-delay: -6s;
     opacity: 0.65;
@@ -396,7 +432,13 @@
 
   /* ===== NIGHT SKY BACKGROUND ===== */
   .background-preview[data-background="nightSky"] {
-    background: linear-gradient(180deg, #1a1a3e 0%, #2a2a4e 30%, #26314e 70%, #1f4670 100%);
+    background: linear-gradient(
+      180deg,
+      #1a1a3e 0%,
+      #2a2a4e 30%,
+      #26314e 70%,
+      #1f4670 100%
+    );
   }
 
   .background-preview[data-background="nightSky"]::before {
@@ -408,19 +450,35 @@
     height: 100%;
     background-image:
       radial-gradient(circle, white 1.5px, transparent 1.5px),
-      radial-gradient(circle, rgba(255,255,255,0.9) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px),
       radial-gradient(circle, white 2px, transparent 2px),
-      radial-gradient(circle, rgba(255,255,255,0.7) 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.9) 1.5px, transparent 1.5px),
+      radial-gradient(circle, rgba(255, 255, 255, 0.7) 1px, transparent 1px),
+      radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.9) 1.5px,
+        transparent 1.5px
+      ),
       radial-gradient(circle, white 1px, transparent 1px),
-      radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px);
+      radial-gradient(circle, rgba(255, 255, 255, 0.8) 1px, transparent 1px);
     background-size:
-      200px 200px, 180px 180px, 220px 220px, 250px 250px,
-      190px 190px, 210px 210px, 170px 170px, 240px 240px;
+      200px 200px,
+      180px 180px,
+      220px 220px,
+      250px 250px,
+      190px 190px,
+      210px 210px,
+      170px 170px,
+      240px 240px;
     background-position:
-      0px 0px, 40px 60px, 130px 80px, 70px 120px,
-      150px 30px, 90px 150px, 200px 50px, 160px 110px;
+      0px 0px,
+      40px 60px,
+      130px 80px,
+      70px 120px,
+      150px 30px,
+      90px 150px,
+      200px 50px,
+      160px 110px;
     background-repeat: repeat;
     animation: twinkle 3s ease-in-out infinite;
     filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.9));
@@ -435,7 +493,12 @@
     width: clamp(30px, 12cqi, 60px);
     height: clamp(30px, 12cqi, 60px);
     border-radius: 50%;
-    background: radial-gradient(circle at 35% 35%, #ffffff, #f0f0f0 50%, #d0d0d0);
+    background: radial-gradient(
+      circle at 35% 35%,
+      #ffffff,
+      #f0f0f0 50%,
+      #d0d0d0
+    );
     box-shadow:
       0 0 clamp(15px, 4cqi, 30px) rgba(255, 255, 255, 0.8),
       0 0 clamp(25px, 6cqi, 45px) rgba(255, 255, 255, 0.4),
@@ -444,12 +507,18 @@
   }
 
   @keyframes twinkle {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
 
   @keyframes moon-glow {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
       box-shadow:
         0 0 clamp(15px, 4cqi, 30px) rgba(255, 255, 255, 0.8),
@@ -478,10 +547,26 @@
     width: 200%;
     height: 200%;
     background:
-      radial-gradient(ellipse 40% 30% at 30% 40%, rgba(220, 120, 255, 0.95) 0%, transparent 50%),
-      radial-gradient(ellipse 35% 25% at 70% 60%, rgba(0, 255, 150, 0.9) 0%, transparent 50%),
-      radial-gradient(ellipse 45% 35% at 50% 50%, rgba(80, 240, 255, 0.85) 0%, transparent 50%),
-      radial-gradient(ellipse 30% 25% at 85% 45%, rgba(255, 130, 200, 0.9) 0%, transparent 50%);
+      radial-gradient(
+        ellipse 40% 30% at 30% 40%,
+        rgba(220, 120, 255, 0.95) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 35% 25% at 70% 60%,
+        rgba(0, 255, 150, 0.9) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 45% 35% at 50% 50%,
+        rgba(80, 240, 255, 0.85) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 30% 25% at 85% 45%,
+        rgba(255, 130, 200, 0.9) 0%,
+        transparent 50%
+      );
     animation: aurora-flow 15s ease-in-out infinite;
     filter: blur(clamp(18px, 5.5cqi, 32px)) brightness(1.2);
   }
@@ -494,16 +579,33 @@
     width: 200%;
     height: 200%;
     background:
-      radial-gradient(ellipse 38% 28% at 60% 30%, rgba(255, 100, 200, 0.85) 0%, transparent 50%),
-      radial-gradient(ellipse 42% 32% at 40% 70%, rgba(150, 220, 255, 0.9) 0%, transparent 50%),
-      radial-gradient(ellipse 35% 25% at 80% 50%, rgba(255, 150, 255, 0.8) 0%, transparent 50%),
-      radial-gradient(ellipse 32% 28% at 20% 65%, rgba(255, 230, 100, 0.85) 0%, transparent 50%);
+      radial-gradient(
+        ellipse 38% 28% at 60% 30%,
+        rgba(255, 100, 200, 0.85) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 42% 32% at 40% 70%,
+        rgba(150, 220, 255, 0.9) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 35% 25% at 80% 50%,
+        rgba(255, 150, 255, 0.8) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse 32% 28% at 20% 65%,
+        rgba(255, 230, 100, 0.85) 0%,
+        transparent 50%
+      );
     animation: aurora-flow 20s ease-in-out infinite reverse;
     filter: blur(clamp(22px, 6.5cqi, 40px)) brightness(1.15);
   }
 
   @keyframes aurora-flow {
-    0%, 100% {
+    0%,
+    100% {
       transform: translate(0, 0) rotate(0deg);
       opacity: 0.8;
     }
@@ -535,17 +637,29 @@
     height: 120%;
     background-image:
       radial-gradient(circle, rgba(147, 197, 253, 0.5) 2px, transparent 2px),
-      radial-gradient(circle, rgba(147, 197, 253, 0.4) 1.5px, transparent 1.5px),
+      radial-gradient(
+        circle,
+        rgba(147, 197, 253, 0.4) 1.5px,
+        transparent 1.5px
+      ),
       radial-gradient(circle, rgba(147, 197, 253, 0.35) 1px, transparent 1px),
       radial-gradient(circle, rgba(147, 197, 253, 0.6) 3px, transparent 3px),
       radial-gradient(circle, rgba(147, 197, 253, 0.3) 1px, transparent 1px),
       radial-gradient(circle, rgba(147, 197, 253, 0.45) 2px, transparent 2px);
     background-size:
-      100px 100px, 140px 140px, 120px 120px,
-      90px 90px, 110px 110px, 80px 80px;
+      100px 100px,
+      140px 140px,
+      120px 120px,
+      90px 90px,
+      110px 110px,
+      80px 80px;
     background-position:
-      20px 80px, 70px 120px, 140px 60px,
-      100px 140px, 180px 100px, 40px 150px;
+      20px 80px,
+      70px 120px,
+      140px 60px,
+      100px 140px,
+      180px 100px,
+      40px 150px;
     animation: bubbles 12s ease-in-out infinite;
   }
 
@@ -569,7 +683,9 @@
     .background-preview::before,
     .background-preview::after {
       animation-duration: 10s !important; /* Faster animations for smaller space */
-      filter: blur(clamp(8px, 3cqi, 15px)) !important; /* Less blur for clarity */
+      filter: blur(
+        clamp(8px, 3cqi, 15px)
+      ) !important; /* Less blur for clarity */
     }
   }
 

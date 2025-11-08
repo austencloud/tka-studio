@@ -19,6 +19,7 @@ TKA Studio is a Svelte 5-based web application for creating, exploring, and lear
 The animator is a **drawer-based sheet panel** (not a modal) that slides up from the bottom of the screen. It's tightly integrated with the Create module's sequence display system.
 
 **Key Files:**
+
 - Presentation: `C:\_TKA-STUDIO/src/lib/modules/create/animate/components/AnimationPanel.svelte`
 - Coordinator: `C:\_TKA-STUDIO/src/lib/modules/create/shared/components/coordinators/AnimationCoordinator.svelte`
 - Canvas Renderer: `C:\_TKA-STUDIO/src/lib/modules/create/animate/components/AnimatorCanvas.svelte`
@@ -99,18 +100,22 @@ AnimationPlaybackController (playback control)
 ### 2.1 Module System
 
 **Primary Modules** (isMain: true):
+
 - `create` - Construct, Generate, Guided modes for building sequences
 - `explore` - Browse, discover sequences from the community
 - `learn` - Study concepts, practice drills, read flipbooks
 - `collect` - Personal gallery, achievements, challenges
 
 **Secondary Modules**:
+
 - `admin` - System management (hidden from non-admins)
 
 **Legacy Modules** (not in use):
+
 - `write`, `word-card` - Archived
 
 **Navigation State:**
+
 ```typescript
 // File: C:\_TKA-STUDIO/src/lib/shared/navigation/state/navigation-state.svelte.ts
 navigationState.currentModule: ModuleId  // 'create', 'explore', 'learn', 'collect', 'admin'
@@ -122,19 +127,21 @@ navigationState.lastTabByModule: Map     // Remember last active tab per module
 
 **Three Creation Methods** (mutually exclusive):
 
-| Tab | ID | Purpose | Icon |
-|-----|----|----|-----|
-| Guided | `guided` | Build sequences one hand at a time (6 simple choices) | compass |
-| Standard | `construct` | Create step-by-step with all options | hammer |
-| Generate | `generate` | Auto-create sequences with AI | magic wand |
+| Tab      | ID          | Purpose                                               | Icon       |
+| -------- | ----------- | ----------------------------------------------------- | ---------- |
+| Guided   | `guided`    | Build sequences one hand at a time (6 simple choices) | compass    |
+| Standard | `construct` | Create step-by-step with all options                  | hammer     |
+| Generate | `generate`  | Auto-create sequences with AI                         | magic wand |
 
 **Persistence:**
+
 - Last selected tab saved to `localStorage` as `tka-current-create-mode`
 - Session flag tracks creation method selection via `CreationMethodPersistenceService`
 
 ### 2.3 Navigation Routing
 
 **Architecture:**
+
 - **Not file-based routing** - uses manual navigation state management
 - **SvelteKit routes** are mostly placeholders for pages (Create, Explore, Learn, Collect, Admin)
 - **Within-module navigation** is state-based (not URL-based)
@@ -153,6 +160,7 @@ UI switches to GenerateTabContent component
 ```
 
 **Effect Coordination** (CreateModuleEffectCoordinator):
+
 - Syncs `navigationState.activeTab` with `CreateModuleState.activeSection`
 - Prevents circular updates via `isNavigatingBack` and `isUpdatingFromToggle` flags
 - Tracks navigation history for back button support
@@ -160,6 +168,7 @@ UI switches to GenerateTabContent component
 ### 2.4 Submodule Organization
 
 #### Create Module Structure
+
 ```
 create/
 ├── animate/           # Animation playback system
@@ -182,6 +191,7 @@ create/
 ```
 
 #### Explore Module Structure
+
 ```
 explore/
 ├── display/           # Sequence browsing and display
@@ -193,6 +203,7 @@ explore/
 ```
 
 #### Collect Module Structure
+
 ```
 collect/
 ├── components/
@@ -240,16 +251,17 @@ The `SequenceTransformationService` provides pure transformation functions that 
 **Transformation Maps** (constants in `C:\_TKA-STUDIO/src/lib/modules/create/generate/circular/domain/constants`):
 
 ```typescript
-VERTICAL_MIRROR_POSITION_MAP: Map<GridPosition, GridPosition>
-VERTICAL_MIRROR_LOCATION_MAP: Map<GridLocation, GridLocation>
-QUARTER_POSITION_MAP_CW: Map<GridPosition, GridPosition>
-LOCATION_MAP_CLOCKWISE: Map<GridLocation, GridLocation>
-SWAPPED_POSITION_MAP: Map<GridPosition, GridPosition>
+VERTICAL_MIRROR_POSITION_MAP: Map<GridPosition, GridPosition>;
+VERTICAL_MIRROR_LOCATION_MAP: Map<GridLocation, GridLocation>;
+QUARTER_POSITION_MAP_CW: Map<GridPosition, GridPosition>;
+LOCATION_MAP_CLOCKWISE: Map<GridLocation, GridLocation>;
+SWAPPED_POSITION_MAP: Map<GridPosition, GridPosition>;
 ```
 
 ### 3.4 Integration Points
 
 **SequenceActionsCoordinator** handles user interactions:
+
 - File: `C:\_TKA-STUDIO/src/lib/modules/create/shared/components/coordinators/SequenceActionsCoordinator.svelte`
 - Coordinator receives transformation requests from SequenceActionsSheet
 - Calls `transformationService.mirrorSequence()`, `.rotateSequence()`, etc.
@@ -297,14 +309,15 @@ CanvasRenderer.renderScene()
 
 ```typescript
 interface PropState {
-  centerPathAngle: number;    // Radians, position on circle
+  centerPathAngle: number; // Radians, position on circle
   staffRotationAngle: number; // Radians, rotation of prop itself
-  x?: number;                 // Optional: Cartesian x (dash motions)
-  y?: number;                 // Optional: Cartesian y (dash motions)
+  x?: number; // Optional: Cartesian x (dash motions)
+  y?: number; // Optional: Cartesian y (dash motions)
 }
 ```
 
 **Coordinate Systems:**
+
 - **Polar**: centerPathAngle positions prop on circle (8 main positions)
 - **Cartesian**: x,y used only for dash motions (straight-line movements)
 - **Rotation**: staffRotationAngle independent of position
@@ -321,17 +334,19 @@ else if (currentBeat > 0 && beats exist)
   → beats[floor(currentBeat)].letter
 ```
 
-- Letters are fetched from `getLetterImagePath(letter)` 
+- Letters are fetched from `getLetterImagePath(letter)`
 - Rendered to canvas via `CanvasRenderer.renderLetterToCanvas()`
 - Positioned in bottom-left corner (x=50, y=800 in 950px viewBox)
 
 ### 4.4 Multiple Canvas Support
 
 **Current State:**
+
 - Only **one canvas** in AnimatorCanvas
 - No split-view or multi-canvas rendering yet
 
 **Extensibility:**
+
 - Canvas size is responsive via CSS container queries
 - Could render multiple prop types simultaneously with additional canvas elements
 - GIF export already uses canvas.toDataURL() → could generate multiple GIFs
@@ -343,6 +358,7 @@ else if (currentBeat > 0 && beats exist)
 ### 5.1 Data Model
 
 **SequenceData** (immutable):
+
 ```typescript
 interface SequenceData {
   id: string;
@@ -360,6 +376,7 @@ interface SequenceData {
 ```
 
 **BeatData** (one per beat):
+
 ```typescript
 interface BeatData {
   beatNumber: number;
@@ -397,12 +414,14 @@ interface BeatData {
 ### 5.3 Workspace Sequence vs. Saved Sequences
 
 **Workspace Sequence** (current working):
+
 - Lives in `CreateModuleState.sequenceState.currentSequence`
 - Modified by beat operations, transformations
 - Persisted incrementally (debounced)
 - Only **one** active workspace sequence at a time
 
 **Saved Sequences** (history/library):
+
 - Stored separately in persistence layer
 - Listed in Explore module
 - Can be loaded into workspace
@@ -423,11 +442,13 @@ ISequenceService.getSequence(id) - loads full sequence data
 ```
 
 **No Direct Coupling:**
+
 - Explore doesn't know about Create module state
 - Uses service layer to load sequences
 - Displays are read-only (no editing)
 
 **Collections** (curated playlists):
+
 - Reference multiple sequences
 - Managed in separate collection storage
 - Can be filtered/browsed independently
@@ -441,12 +462,14 @@ ISequenceService.getSequence(id) - loads full sequence data
 **File:** `C:\_TKA-STUDIO/src/lib/modules/create/workspace-panel/sequence-display/components/BeatGrid.svelte`
 
 **Responsibilities:**
+
 - Displays sequence as grid of BeatCell components
 - Manages visual selection, multi-select, animation states
 - Handles user interactions (click, long-press, keyboard)
 - Renders start position placeholder at beginning
 
 **Props:**
+
 ```typescript
 beats: BeatData[]
 startPosition?: BeatData
@@ -463,11 +486,13 @@ onBeatClick, onStartClick, onBeatDelete, onBeatLongPress
 ### 6.2 Workspace State
 
 **Workspace Panel** orchestrates:
+
 - SequenceDisplay (beat grid + word label)
 - SelectionToolbar (multi-select mode controls)
 - Multi-select mode state management
 
 **Non-Modal Integration:**
+
 - Workspace is **always visible** (not a modal)
 - Animator slides up on top of it
 - No focus-trapping or backdrop interaction blocking
@@ -475,16 +500,19 @@ onBeatClick, onStartClick, onBeatDelete, onBeatLongPress
 ### 6.3 Beat Grid Coupling
 
 **Tight Coupling to Create Module:**
+
 - BeatGrid tightly depends on SequenceState
 - Changes to selection immediately propagate
 - No abstraction layer between grid and state
 
 **Animation States:**
+
 - `animatingBeatNumber` - highlights current beat during playback
 - `removingBeatIndex` - fade-out animation when deleting
 - `isClearing` - full grid fade during sequence clear
 
 **Multi-Select Mode:**
+
 - Entered via long-press on beat
 - Selection toolbar appears below grid
 - Can batch-edit multiple beats
@@ -497,6 +525,7 @@ onBeatClick, onStartClick, onBeatDelete, onBeatLongPress
 ### 7.1 Composition Root Pattern
 
 **CreateModule.svelte** is the composition root:
+
 - Resolves all services via DI container
 - Provides CreateModuleContext to descendants
 - Coordinates all effects via CreateModuleEffectCoordinator
@@ -505,6 +534,7 @@ onBeatClick, onStartClick, onBeatDelete, onBeatLongPress
 ### 7.2 Coordinator Pattern
 
 **Coordinators** manage cross-cutting concerns:
+
 - `AnimationCoordinator` - animation panel lifecycle
 - `EditCoordinator` - edit slide panel
 - `ShareCoordinator` - share dialog
@@ -513,6 +543,7 @@ onBeatClick, onStartClick, onBeatDelete, onBeatLongPress
 - `CAPCoordinator` - generate CAP mode
 
 **Pattern:**
+
 ```svelte
 <!-- Coordinator uses context to access state/services -->
 <script>
@@ -527,6 +558,7 @@ onBeatClick, onStartClick, onBeatDelete, onBeatLongPress
 ### 7.3 State Orchestrator Pattern
 
 **SequenceStateOrchestrator** composes multiple sub-states:
+
 - CoreState (sequences, current sequence)
 - SelectionState (beat selection, start position)
 - ArrowState (animation arrows)
@@ -564,35 +596,35 @@ onBeatClick, onStartClick, onBeatDelete, onBeatLongPress
 
 ### Animation Services
 
-| Service | Purpose | File |
-|---------|---------|------|
-| `IAnimationPlaybackController` | Orchestrate playback lifecycle | `AnimationPlaybackController.ts` |
+| Service                          | Purpose                         | File                               |
+| -------------------------------- | ------------------------------- | ---------------------------------- |
+| `IAnimationPlaybackController`   | Orchestrate playback lifecycle  | `AnimationPlaybackController.ts`   |
 | `ISequenceAnimationOrchestrator` | Calculate animation frame state | `SequenceAnimationOrchestrator.ts` |
-| `IAnimationLoopService` | RAF-based frame timing | `AnimationLoopService.ts` |
-| `ICanvasRenderer` | Low-level canvas drawing | `CanvasRenderer.ts` |
-| `ISVGGenerator` | Generate prop/grid SVGs | `SVGGenerator.ts` |
-| `ISequenceLoopabilityChecker` | Detect seamless looping | `SequenceLoopabilityChecker.ts` |
+| `IAnimationLoopService`          | RAF-based frame timing          | `AnimationLoopService.ts`          |
+| `ICanvasRenderer`                | Low-level canvas drawing        | `CanvasRenderer.ts`                |
+| `ISVGGenerator`                  | Generate prop/grid SVGs         | `SVGGenerator.ts`                  |
+| `ISequenceLoopabilityChecker`    | Detect seamless looping         | `SequenceLoopabilityChecker.ts`    |
 
 ### Sequence Services
 
-| Service | Purpose |
-|---------|---------|
-| `ISequenceService` | CRUD operations, service layer |
-| `ISequencePersistenceService` | IndexedDB storage/retrieval |
-| `ISequenceTransformationService` | Mirror, rotate, swap, reverse |
-| `ISequenceValidationService` | Validate beat data |
-| `ISequenceStatisticsService` | Calculate stats (duration, complexity) |
-| `ISequenceAnalysisService` | Analyze motion patterns |
+| Service                          | Purpose                                |
+| -------------------------------- | -------------------------------------- |
+| `ISequenceService`               | CRUD operations, service layer         |
+| `ISequencePersistenceService`    | IndexedDB storage/retrieval            |
+| `ISequenceTransformationService` | Mirror, rotate, swap, reverse          |
+| `ISequenceValidationService`     | Validate beat data                     |
+| `ISequenceStatisticsService`     | Calculate stats (duration, complexity) |
+| `ISequenceAnalysisService`       | Analyze motion patterns                |
 
 ### Create Module Services
 
-| Service | Purpose |
-|---------|---------|
-| `ICreateModuleHandlers` | Event handler delegation |
-| `ICreateModuleInitializationService` | Bootstrap composition root |
-| `ICreateModuleEffectCoordinator` | Manage all reactive effects |
-| `IResponsiveLayoutService` | Detect layout mode changes |
-| `INavigationSyncService` | Sync navigation state |
+| Service                              | Purpose                     |
+| ------------------------------------ | --------------------------- |
+| `ICreateModuleHandlers`              | Event handler delegation    |
+| `ICreateModuleInitializationService` | Bootstrap composition root  |
+| `ICreateModuleEffectCoordinator`     | Manage all reactive effects |
+| `IResponsiveLayoutService`           | Detect layout mode changes  |
+| `INavigationSyncService`             | Sync navigation state       |
 
 ---
 
@@ -615,6 +647,7 @@ IndexedDB / localStorage
 ### 9.2 Persistence Flow
 
 **Save:**
+
 1. User makes change (add beat, edit start position, etc.)
 2. State updated in SequenceState
 3. `saveSequenceDataOnly()` queued via debounce
@@ -622,6 +655,7 @@ IndexedDB / localStorage
 5. Persisted to browser storage
 
 **Load:**
+
 1. App initializes
 2. `CreateModule.onMount()` → `CreateModuleInitializationService.initialize()`
 3. Calls `sequenceState.initializeWithPersistence()`
@@ -629,6 +663,7 @@ IndexedDB / localStorage
 5. Restores working sequence
 
 **Undo/Redo:**
+
 - Managed by `IUndoService`
 - Snapshots captured before destructive operations
 - Stored separately from main sequence persistence
@@ -653,16 +688,18 @@ IndexedDB / localStorage
 **To add new animation features:**
 
 1. **New Animation Modes** - Add to AnimationPanelState:
+
    ```typescript
    enum AnimationMode {
-     NORMAL = 'normal',
-     SLOWMO = 'slowmo',
-     REWIND = 'rewind',
-     FRAME_BY_FRAME = 'frame-by-frame'
+     NORMAL = "normal",
+     SLOWMO = "slowmo",
+     REWIND = "rewind",
+     FRAME_BY_FRAME = "frame-by-frame",
    }
    ```
 
 2. **Multiple Canvas Panels** - Extend AnimationCoordinator:
+
    ```typescript
    // Add canvas slots for:
    // - Full animation
@@ -672,6 +709,7 @@ IndexedDB / localStorage
    ```
 
 3. **Playback Presets** - Extend AnimationPlaybackController:
+
    ```typescript
    interface PlaybackPreset {
      speed: number;
@@ -682,10 +720,11 @@ IndexedDB / localStorage
    ```
 
 4. **Motion Visualization** - Extend CanvasRenderer:
+
    ```typescript
-   renderMotionTrail(ctx, beat1, beat2)
-   renderVelocityVector(ctx, beat)
-   renderAccelerationArrows(ctx, beat)
+   renderMotionTrail(ctx, beat1, beat2);
+   renderVelocityVector(ctx, beat);
+   renderAccelerationArrows(ctx, beat);
    ```
 
 5. **Keyframe Editing** - New coordinator:
@@ -762,6 +801,7 @@ interface IAnimationKeyframeService {
 ## 11. DEPENDENCY INJECTION CONFIGURATION
 
 **DI Container Setup:**
+
 - File: `C:\_TKA-STUDIO/src/lib/shared/inversify/container.ts`
 - Framework: Inversify (TypeScript IoC)
 
@@ -769,22 +809,34 @@ interface IAnimationKeyframeService {
 
 ```typescript
 // Animation services
-container.bind<IAnimationPlaybackController>(TYPES.IAnimationPlaybackController)
-  .to(AnimationPlaybackController).inTransientScope();
+container
+  .bind<IAnimationPlaybackController>(TYPES.IAnimationPlaybackController)
+  .to(AnimationPlaybackController)
+  .inTransientScope();
 
-container.bind<ISequenceAnimationOrchestrator>(TYPES.ISequenceAnimationOrchestrator)
-  .to(SequenceAnimationOrchestrator).inTransientScope();
+container
+  .bind<ISequenceAnimationOrchestrator>(TYPES.ISequenceAnimationOrchestrator)
+  .to(SequenceAnimationOrchestrator)
+  .inTransientScope();
 
 // Sequence services
-container.bind<ISequenceService>(TYPES.ISequenceService)
-  .to(SequenceService).inSingletonScope();
+container
+  .bind<ISequenceService>(TYPES.ISequenceService)
+  .to(SequenceService)
+  .inSingletonScope();
 
-container.bind<ISequencePersistenceService>(TYPES.ISequencePersistenceService)
-  .to(SequencePersistenceService).inSingletonScope();
+container
+  .bind<ISequencePersistenceService>(TYPES.ISequencePersistenceService)
+  .to(SequencePersistenceService)
+  .inSingletonScope();
 
 // Create module services
-container.bind<ICreateModuleInitializationService>(TYPES.ICreateModuleInitializationService)
-  .to(CreateModuleInitializationService).inTransientScope();
+container
+  .bind<ICreateModuleInitializationService>(
+    TYPES.ICreateModuleInitializationService
+  )
+  .to(CreateModuleInitializationService)
+  .inTransientScope();
 ```
 
 ---
@@ -802,6 +854,7 @@ container.bind<ICreateModuleInitializationService>(TYPES.ICreateModuleInitializa
 7. **Panel Height Tracking** - Track tool/button panel heights
 
 **Why Centralized:**
+
 - Prevents circular effect dependencies
 - Makes effect interactions visible and testable
 - Reduces debugging complexity for cross-cutting concerns
@@ -850,6 +903,7 @@ tka-creation-method-selected: boolean  // Did user pick create method this sessi
 ```
 
 **IndexedDB** (via SequencePersistenceService):
+
 - Current working sequence
 - Persisted undo history
 - User preferences (settings)
@@ -889,20 +943,21 @@ tka-creation-method-selected: boolean  // Did user pick create method this sessi
 
 ## Summary Table: Animation System Architecture
 
-| Component | Type | Location | Responsibility |
-|-----------|------|----------|-----------------|
-| AnimationCoordinator | Component | coordinators/ | Orchestration, state management |
-| AnimationPanel | Component | components/ | Presentation (read-only props) |
-| AnimatorCanvas | Component | components/ | Canvas rendering, image loading |
-| AnimationPlaybackController | Service | services/implementations/ | Playback lifecycle |
-| SequenceAnimationOrchestrator | Service | services/implementations/ | Beat state calculation |
-| AnimationLoopService | Service | services/implementations/ | Frame timing via RAF |
-| CanvasRenderer | Service | services/implementations/ | Low-level canvas drawing |
-| SVGGenerator | Service | services/implementations/ | SVG prop generation |
-| AnimationPanelState | Factory | state/ | Reactive local state |
-| GifExportOrchestrator | Service | services/implementations/ | GIF encoding |
+| Component                     | Type      | Location                  | Responsibility                  |
+| ----------------------------- | --------- | ------------------------- | ------------------------------- |
+| AnimationCoordinator          | Component | coordinators/             | Orchestration, state management |
+| AnimationPanel                | Component | components/               | Presentation (read-only props)  |
+| AnimatorCanvas                | Component | components/               | Canvas rendering, image loading |
+| AnimationPlaybackController   | Service   | services/implementations/ | Playback lifecycle              |
+| SequenceAnimationOrchestrator | Service   | services/implementations/ | Beat state calculation          |
+| AnimationLoopService          | Service   | services/implementations/ | Frame timing via RAF            |
+| CanvasRenderer                | Service   | services/implementations/ | Low-level canvas drawing        |
+| SVGGenerator                  | Service   | services/implementations/ | SVG prop generation             |
+| AnimationPanelState           | Factory   | state/                    | Reactive local state            |
+| GifExportOrchestrator         | Service   | services/implementations/ | GIF encoding                    |
 
 This architecture is highly extensible through:
+
 - **Service injection** - Add new services without modifying existing code
 - **State factories** - New state machines via createXxxState() pattern
 - **Coordinator pattern** - New features via new coordinators

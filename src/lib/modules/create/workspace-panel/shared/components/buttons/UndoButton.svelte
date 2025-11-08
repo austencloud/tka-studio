@@ -8,7 +8,7 @@
   let {
     CreateModuleState,
     onUndo = () => {},
-    showHistoryDropdown = false
+    showHistoryDropdown = false,
   }: {
     CreateModuleState: ICreateModuleState;
     onUndo?: () => void;
@@ -16,7 +16,9 @@
   } = $props();
 
   // Resolve haptic feedback service
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   // Debug logging removed - this creates noise during reactive updates
   // $effect(() => {
@@ -27,38 +29,40 @@
   const undoButtonText = $derived(() => {
     if (!CreateModuleState.canUndo) return "Nothing to Undo";
 
-    const lastEntry = CreateModuleState.undoHistory[CreateModuleState.undoHistory.length - 1];
+    const lastEntry =
+      CreateModuleState.undoHistory[CreateModuleState.undoHistory.length - 1];
     if (lastEntry?.metadata?.description) {
       return `Undo ${lastEntry.metadata.description}`;
     }
 
     // Fallback to type-based descriptions
     const typeDescriptions: Record<UndoOperationType, string> = {
-      [UndoOperationType.ADD_BEAT]: 'Add Beat',
-      [UndoOperationType.REMOVE_BEATS]: 'Remove Beats',
-      [UndoOperationType.CLEAR_SEQUENCE]: 'Clear Sequence',
-      [UndoOperationType.SELECT_START_POSITION]: 'Select Start Position',
-      [UndoOperationType.UPDATE_BEAT]: 'Update Beat',
-      [UndoOperationType.INSERT_BEAT]: 'Insert Beat',
-      [UndoOperationType.MIRROR_SEQUENCE]: 'Mirror Sequence',
-      [UndoOperationType.ROTATE_SEQUENCE]: 'Rotate Sequence',
-      [UndoOperationType.SWAP_COLORS]: 'Swap Colors',
-      [UndoOperationType.MODIFY_BEAT_PROPERTIES]: 'Modify Beat Properties',
-      [UndoOperationType.GENERATE_SEQUENCE]: 'Generate Sequence',
+      [UndoOperationType.ADD_BEAT]: "Add Beat",
+      [UndoOperationType.REMOVE_BEATS]: "Remove Beats",
+      [UndoOperationType.CLEAR_SEQUENCE]: "Clear Sequence",
+      [UndoOperationType.SELECT_START_POSITION]: "Select Start Position",
+      [UndoOperationType.UPDATE_BEAT]: "Update Beat",
+      [UndoOperationType.INSERT_BEAT]: "Insert Beat",
+      [UndoOperationType.MIRROR_SEQUENCE]: "Mirror Sequence",
+      [UndoOperationType.ROTATE_SEQUENCE]: "Rotate Sequence",
+      [UndoOperationType.SWAP_COLORS]: "Swap Colors",
+      [UndoOperationType.MODIFY_BEAT_PROPERTIES]: "Modify Beat Properties",
+      [UndoOperationType.GENERATE_SEQUENCE]: "Generate Sequence",
     };
 
-    return `Undo ${lastEntry?.type ? typeDescriptions[lastEntry.type] : 'Last Action'}`;
+    return `Undo ${lastEntry?.type ? typeDescriptions[lastEntry.type] : "Last Action"}`;
   });
 
   const undoTooltip = $derived(() => {
     if (!CreateModuleState.canUndo) return "No actions to undo";
 
-    const lastEntry = CreateModuleState.undoHistory[CreateModuleState.undoHistory.length - 1];
+    const lastEntry =
+      CreateModuleState.undoHistory[CreateModuleState.undoHistory.length - 1];
     if (lastEntry?.metadata?.description) {
       return `Undo: ${lastEntry.metadata.description}`;
     }
 
-    return `Undo last action (${lastEntry?.type || 'Unknown'})`;
+    return `Undo last action (${lastEntry?.type || "Unknown"})`;
   });
 
   // Functions
@@ -69,8 +73,6 @@
       onUndo();
     }
   }
-
-
 </script>
 
 <!-- Professional Undo Button matching ButtonPanel style - always visible but disabled when nothing to undo -->
@@ -106,10 +108,6 @@
     />
   </svg>
 </button>
-
-
-
-
 
 <style>
   .undo-button {

@@ -13,7 +13,9 @@
  * - sessionStorage keys (firebase:*)
  */
 export async function clearAllFirebaseCache(): Promise<void> {
-  console.log("🧹 [Cache Clear] Starting comprehensive Firebase cache clear...");
+  console.log(
+    "🧹 [Cache Clear] Starting comprehensive Firebase cache clear..."
+  );
 
   const clearedItems: string[] = [];
 
@@ -41,7 +43,9 @@ export async function clearAllFirebaseCache(): Promise<void> {
               resolve(null);
             };
             deleteRequest.onerror = () => {
-              console.warn(`⚠️ [Cache Clear] Failed to delete IndexedDB: ${db.name}`);
+              console.warn(
+                `⚠️ [Cache Clear] Failed to delete IndexedDB: ${db.name}`
+              );
               reject(deleteRequest.error);
             };
             deleteRequest.onblocked = () => {

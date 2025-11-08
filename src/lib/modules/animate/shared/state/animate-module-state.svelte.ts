@@ -32,11 +32,22 @@ export type AnimateModuleState = {
   // Sequence selection
   readonly primarySequence: SequenceData | null;
   readonly secondarySequence: SequenceData | null;
-  readonly gridSequences: [SequenceData | null, SequenceData | null, SequenceData | null, SequenceData | null];
+  readonly gridSequences: [
+    SequenceData | null,
+    SequenceData | null,
+    SequenceData | null,
+    SequenceData | null,
+  ];
 
   // Sequence browser panel
   readonly isSequenceBrowserOpen: boolean;
-  readonly browserMode: "primary" | "secondary" | "grid-0" | "grid-1" | "grid-2" | "grid-3";
+  readonly browserMode:
+    | "primary"
+    | "secondary"
+    | "grid-0"
+    | "grid-1"
+    | "grid-2"
+    | "grid-3";
 
   // Tunnel mode settings
   readonly tunnelColors: TunnelColors;
@@ -60,10 +71,15 @@ export type AnimateModuleState = {
   // Sequence selection
   setPrimarySequence: (sequence: SequenceData | null) => void;
   setSecondarySequence: (sequence: SequenceData | null) => void;
-  setGridSequence: (index: 0 | 1 | 2 | 3, sequence: SequenceData | null) => void;
+  setGridSequence: (
+    index: 0 | 1 | 2 | 3,
+    sequence: SequenceData | null
+  ) => void;
 
   // Browser panel
-  openSequenceBrowser: (mode: "primary" | "secondary" | "grid-0" | "grid-1" | "grid-2" | "grid-3") => void;
+  openSequenceBrowser: (
+    mode: "primary" | "secondary" | "grid-0" | "grid-1" | "grid-2" | "grid-3"
+  ) => void;
   closeSequenceBrowser: () => void;
 
   // Tunnel settings
@@ -105,11 +121,20 @@ export function createAnimateModuleState(): AnimateModuleState {
   // Sequence selection
   let primarySequence = $state<SequenceData | null>(null);
   let secondarySequence = $state<SequenceData | null>(null);
-  let gridSequences = $state<[SequenceData | null, SequenceData | null, SequenceData | null, SequenceData | null]>([null, null, null, null]);
+  let gridSequences = $state<
+    [
+      SequenceData | null,
+      SequenceData | null,
+      SequenceData | null,
+      SequenceData | null,
+    ]
+  >([null, null, null, null]);
 
   // Sequence browser panel
   let isSequenceBrowserOpen = $state<boolean>(false);
-  let browserMode = $state<"primary" | "secondary" | "grid-0" | "grid-1" | "grid-2" | "grid-3">("primary");
+  let browserMode = $state<
+    "primary" | "secondary" | "grid-0" | "grid-1" | "grid-2" | "grid-3"
+  >("primary");
 
   // Tunnel mode settings
   let tunnelColors = $state<TunnelColors>({ ...DEFAULT_TUNNEL_COLORS });
@@ -120,7 +145,9 @@ export function createAnimateModuleState(): AnimateModuleState {
   let mirrorShowOriginal = $state<boolean>(true);
 
   // Grid mode settings
-  let gridRotationOffsets = $state<[number, number, number, number]>([0, 90, 180, 270]);
+  let gridRotationOffsets = $state<[number, number, number, number]>([
+    0, 90, 180, 270,
+  ]);
 
   // Playback state
   let isPlaying = $state<boolean>(false);
@@ -129,20 +156,48 @@ export function createAnimateModuleState(): AnimateModuleState {
 
   return {
     // Getters
-    get currentMode() { return currentMode; },
-    get primarySequence() { return primarySequence; },
-    get secondarySequence() { return secondarySequence; },
-    get gridSequences() { return gridSequences; },
-    get isSequenceBrowserOpen() { return isSequenceBrowserOpen; },
-    get browserMode() { return browserMode; },
-    get tunnelColors() { return tunnelColors; },
-    get tunnelOpacity() { return tunnelOpacity; },
-    get mirrorAxis() { return mirrorAxis; },
-    get mirrorShowOriginal() { return mirrorShowOriginal; },
-    get gridRotationOffsets() { return gridRotationOffsets; },
-    get isPlaying() { return isPlaying; },
-    get speed() { return speed; },
-    get shouldLoop() { return shouldLoop; },
+    get currentMode() {
+      return currentMode;
+    },
+    get primarySequence() {
+      return primarySequence;
+    },
+    get secondarySequence() {
+      return secondarySequence;
+    },
+    get gridSequences() {
+      return gridSequences;
+    },
+    get isSequenceBrowserOpen() {
+      return isSequenceBrowserOpen;
+    },
+    get browserMode() {
+      return browserMode;
+    },
+    get tunnelColors() {
+      return tunnelColors;
+    },
+    get tunnelOpacity() {
+      return tunnelOpacity;
+    },
+    get mirrorAxis() {
+      return mirrorAxis;
+    },
+    get mirrorShowOriginal() {
+      return mirrorShowOriginal;
+    },
+    get gridRotationOffsets() {
+      return gridRotationOffsets;
+    },
+    get isPlaying() {
+      return isPlaying;
+    },
+    get speed() {
+      return speed;
+    },
+    get shouldLoop() {
+      return shouldLoop;
+    },
 
     // Mode switching
     setCurrentMode(mode: AnimateMode) {
@@ -158,18 +213,31 @@ export function createAnimateModuleState(): AnimateModuleState {
 
     setSecondarySequence(sequence: SequenceData | null) {
       secondarySequence = sequence;
-      console.log("🎬 AnimateModuleState: Secondary sequence set", sequence?.id);
+      console.log(
+        "🎬 AnimateModuleState: Secondary sequence set",
+        sequence?.id
+      );
     },
 
     setGridSequence(index: 0 | 1 | 2 | 3, sequence: SequenceData | null) {
-      const newGridSequences = [...gridSequences] as [SequenceData | null, SequenceData | null, SequenceData | null, SequenceData | null];
+      const newGridSequences = [...gridSequences] as [
+        SequenceData | null,
+        SequenceData | null,
+        SequenceData | null,
+        SequenceData | null,
+      ];
       newGridSequences[index] = sequence;
       gridSequences = newGridSequences;
-      console.log(`🎬 AnimateModuleState: Grid sequence ${index} set`, sequence?.id);
+      console.log(
+        `🎬 AnimateModuleState: Grid sequence ${index} set`,
+        sequence?.id
+      );
     },
 
     // Browser panel
-    openSequenceBrowser(mode: "primary" | "secondary" | "grid-0" | "grid-1" | "grid-2" | "grid-3") {
+    openSequenceBrowser(
+      mode: "primary" | "secondary" | "grid-0" | "grid-1" | "grid-2" | "grid-3"
+    ) {
       browserMode = mode;
       isSequenceBrowserOpen = true;
       console.log("🎬 AnimateModuleState: Browser opened for", mode);
@@ -200,7 +268,12 @@ export function createAnimateModuleState(): AnimateModuleState {
 
     // Grid settings
     setGridRotationOffset(index: 0 | 1 | 2 | 3, offset: number) {
-      const newOffsets = [...gridRotationOffsets] as [number, number, number, number];
+      const newOffsets = [...gridRotationOffsets] as [
+        number,
+        number,
+        number,
+        number,
+      ];
       newOffsets[index] = offset % 360;
       gridRotationOffsets = newOffsets;
     },

@@ -34,7 +34,9 @@ that triggers the filter panel dropdown.
 
   // Resolve service safely
   if (container.isBound(TYPES.IHapticFeedbackService)) {
-    hapticService = container.get<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = container.get<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   }
 
   /**
@@ -58,7 +60,7 @@ that triggers the filter panel dropdown.
 
     // Calculate actual grid width
     // gridWidth = (pictographSize × columns) + (gap × (columns - 1))
-    const actualGridWidth = (pictographSize * columns) + (gridGap * (columns - 1));
+    const actualGridWidth = pictographSize * columns + gridGap * (columns - 1);
 
     // Calculate leftover space on each side
     const totalLeftoverSpace = containerWidth - actualGridWidth;
@@ -66,7 +68,10 @@ that triggers the filter panel dropdown.
 
     // Calculate maximum safe padding within leftover space
     // Formula: available space = leftoverSpace - buttonSize - safetyMargin
-    const maxSafePadding = Math.max(0, leftoverSpacePerSide - buttonSize - safetyMargin);
+    const maxSafePadding = Math.max(
+      0,
+      leftoverSpacePerSide - buttonSize - safetyMargin
+    );
 
     // Desired padding based on container width (aesthetic preference)
     let desiredPadding: number;
@@ -124,13 +129,16 @@ that triggers the filter panel dropdown.
     min-width: 44px;
     min-height: 44px;
 
-    
     display: flex;
     align-items: center;
     justify-content: center;
 
     /* Appearance */
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.08) 100%
+    );
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
@@ -153,7 +161,11 @@ that triggers the filter panel dropdown.
   /* Hover effects */
   @media (hover: hover) {
     .floating-filter-button:hover {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.25) 0%, rgba(59, 130, 246, 0.15) 100%);
+      background: linear-gradient(
+        135deg,
+        rgba(59, 130, 246, 0.25) 0%,
+        rgba(59, 130, 246, 0.15) 100%
+      );
       border-color: rgba(59, 130, 246, 0.4);
       box-shadow:
         0 6px 20px rgba(59, 130, 246, 0.3),
@@ -171,7 +183,11 @@ that triggers the filter panel dropdown.
 
   /* Open state */
   .floating-filter-button.open {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.2) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.3) 0%,
+      rgba(59, 130, 246, 0.2) 100%
+    );
     border-color: rgba(59, 130, 246, 0.5);
     color: rgba(147, 197, 253, 1);
     box-shadow:
@@ -194,7 +210,8 @@ that triggers the filter panel dropdown.
   }
 
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       opacity: 1;
       transform: scale(1);
     }

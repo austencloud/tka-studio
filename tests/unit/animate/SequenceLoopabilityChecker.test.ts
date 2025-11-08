@@ -9,26 +9,29 @@ import { describe, it, expect } from "vitest";
 import { SequenceLoopabilityChecker } from "$lib/modules/create/animate/services/implementations/SequenceLoopabilityChecker";
 import { createBeatData } from "$lib/modules/create/shared/domain/factories/createBeatData";
 import { GridPosition } from "$lib/shared/pictograph/grid/domain/enums/grid-enums";
-import { Orientation, MotionColor } from "$lib/shared/pictograph/shared/domain/enums/pictograph-enums";
-import type { SequenceData } from "$lib/shared/foundation/domain/models/SequenceData";
+import {
+  Orientation,
+  MotionColor,
+} from "$lib/shared/pictograph/shared/domain/enums/pictograph-enums";
+import { createSequenceData } from "$lib/shared/foundation/domain/models/SequenceData";
 
 describe("SequenceLoopabilityChecker", () => {
   const checker = new SequenceLoopabilityChecker();
 
   describe("isSeamlesslyLoopable", () => {
     it("should return false for empty sequence", () => {
-      const sequence: SequenceData = {
+      const sequence = createSequenceData({
         id: "test",
         word: "TEST",
         author: "Test",
         beats: [],
-      };
+      });
 
       expect(checker.isSeamlesslyLoopable(sequence)).toBe(false);
     });
 
     it("should return true when sequence ends in same position and orientation", () => {
-      const sequence: SequenceData = {
+      const sequence = createSequenceData({
         id: "test",
         word: "TEST",
         author: "Test",
@@ -64,13 +67,13 @@ describe("SequenceLoopabilityChecker", () => {
             },
           }),
         ],
-      };
+      });
 
       expect(checker.isSeamlesslyLoopable(sequence)).toBe(true);
     });
 
     it("should return false when positions don't match", () => {
-      const sequence: SequenceData = {
+      const sequence = createSequenceData({
         id: "test",
         word: "TEST",
         author: "Test",
@@ -98,13 +101,13 @@ describe("SequenceLoopabilityChecker", () => {
             },
           }),
         ],
-      };
+      });
 
       expect(checker.isSeamlesslyLoopable(sequence)).toBe(false);
     });
 
     it("should return false when blue orientations don't match", () => {
-      const sequence: SequenceData = {
+      const sequence = createSequenceData({
         id: "test",
         word: "TEST",
         author: "Test",
@@ -132,13 +135,13 @@ describe("SequenceLoopabilityChecker", () => {
             },
           }),
         ],
-      };
+      });
 
       expect(checker.isSeamlesslyLoopable(sequence)).toBe(false);
     });
 
     it("should return false when red orientations don't match", () => {
-      const sequence: SequenceData = {
+      const sequence = createSequenceData({
         id: "test",
         word: "TEST",
         author: "Test",
@@ -174,13 +177,13 @@ describe("SequenceLoopabilityChecker", () => {
             },
           }),
         ],
-      };
+      });
 
       expect(checker.isSeamlesslyLoopable(sequence)).toBe(false);
     });
 
     it("should return false when first beat has motion but last beat doesn't", () => {
-      const sequence: SequenceData = {
+      const sequence = createSequenceData({
         id: "test",
         word: "TEST",
         author: "Test",
@@ -203,13 +206,13 @@ describe("SequenceLoopabilityChecker", () => {
             motions: {}, // No blue motion
           }),
         ],
-      };
+      });
 
       expect(checker.isSeamlesslyLoopable(sequence)).toBe(false);
     });
 
     it("should handle single beat sequence", () => {
-      const sequence: SequenceData = {
+      const sequence = createSequenceData({
         id: "test",
         word: "TEST",
         author: "Test",
@@ -226,10 +229,9 @@ describe("SequenceLoopabilityChecker", () => {
             },
           }),
         ],
-      };
+      });
 
       expect(checker.isSeamlesslyLoopable(sequence)).toBe(true);
     });
   });
 });
-

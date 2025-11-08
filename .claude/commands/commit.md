@@ -15,6 +15,7 @@ Recent commit messages for style reference:
 Please write a concise, descriptive git commit message for my staged changes.
 
 Follow these guidelines:
+
 - First line: Brief summary (use imperative mood: "Add", "Fix", "Update", not "Added", "Fixed", "Updated")
 - Keep the first line under 50 characters if possible
 - Add a blank line after the summary

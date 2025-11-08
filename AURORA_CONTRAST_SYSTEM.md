@@ -9,6 +9,7 @@ This document describes the **Adaptive Contrast System** that automatically enha
 ## Problem Statement
 
 When the Aurora background is selected:
+
 - The gradient uses light colors: `#667eea`, `#764ba2`, `#f093fb`, `#f5576c`, `#4facfe`
 - UI cards with `rgba(255, 255, 255, 0.05)` backgrounds appear washed out
 - Text contrast is reduced
@@ -38,9 +39,10 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 ## Available CSS Variables
 
 ### Panel Backgrounds
+
 ```css
 --panel-bg-nightSky: rgba(255, 255, 255, 0.05);
---panel-bg-aurora: rgba(20, 10, 40, 0.85);    /* Dark purple overlay */
+--panel-bg-aurora: rgba(20, 10, 40, 0.85); /* Dark purple overlay */
 --panel-bg-snowfall: rgba(255, 255, 255, 0.05);
 --panel-bg-deepOcean: rgba(255, 255, 255, 0.05);
 
@@ -50,15 +52,16 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 --panel-border-deepOcean: rgba(255, 255, 255, 0.1);
 
 --panel-hover-nightSky: rgba(255, 255, 255, 0.08);
---panel-hover-aurora: rgba(30, 15, 60, 0.9);    /* Darker on hover */
+--panel-hover-aurora: rgba(30, 15, 60, 0.9); /* Darker on hover */
 --panel-hover-snowfall: rgba(255, 255, 255, 0.08);
 --panel-hover-deepOcean: rgba(255, 255, 255, 0.08);
 ```
 
 ### Card Backgrounds
+
 ```css
 --card-bg-nightSky: rgba(255, 255, 255, 0.05);
---card-bg-aurora: rgba(25, 15, 45, 0.88);       /* Deep dark purple */
+--card-bg-aurora: rgba(25, 15, 45, 0.88); /* Deep dark purple */
 --card-bg-snowfall: rgba(255, 255, 255, 0.05);
 --card-bg-deepOcean: rgba(255, 255, 255, 0.05);
 
@@ -74,19 +77,26 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 ```
 
 ### Text Colors
+
 ```css
 --text-primary-nightSky: #ffffff;
---text-primary-aurora: #ffffff;                 /* White text on dark overlays */
+--text-primary-aurora: #ffffff; /* White text on dark overlays */
 --text-primary-snowfall: #ffffff;
 --text-primary-deepOcean: #ffffff;
 
 --text-secondary-nightSky: rgba(255, 255, 255, 0.7);
---text-secondary-aurora: rgba(255, 255, 255, 0.85);  /* Brighter for readability */
+--text-secondary-aurora: rgba(
+  255,
+  255,
+  255,
+  0.85
+); /* Brighter for readability */
 --text-secondary-snowfall: rgba(255, 255, 255, 0.7);
 --text-secondary-deepOcean: rgba(255, 255, 255, 0.7);
 ```
 
 ### Input/Search Fields
+
 ```css
 --input-bg-nightSky: rgba(255, 255, 255, 0.05);
 --input-bg-aurora: rgba(30, 20, 50, 0.75);
@@ -105,14 +115,21 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 ```
 
 ### Active Buttons/Filters
+
 ```css
 --button-active-nightSky: rgba(255, 255, 255, 0.15);
---button-active-aurora: rgba(88, 28, 135, 0.75);     /* Rich purple for active state */
+--button-active-aurora: rgba(
+  88,
+  28,
+  135,
+  0.75
+); /* Rich purple for active state */
 --button-active-snowfall: rgba(255, 255, 255, 0.15);
 --button-active-deepOcean: rgba(255, 255, 255, 0.15);
 ```
 
 ### Current Theme Variables (Auto-Updated)
+
 ```css
 --panel-bg-current
 --panel-border-current
@@ -135,6 +152,7 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 ## Usage Examples
 
 ### Before (Hard-coded values)
+
 ```css
 .my-card {
   background: rgba(255, 255, 255, 0.05);
@@ -148,6 +166,7 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 ```
 
 ### After (Theme-aware)
+
 ```css
 .my-card {
   background: var(--card-bg-current);
@@ -161,6 +180,7 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 ```
 
 ### Input Fields
+
 ```css
 .search-input {
   background: var(--input-bg-current);
@@ -174,6 +194,7 @@ We've implemented a system that applies **darker, more opaque overlays** specifi
 ```
 
 ### Filter Buttons
+
 ```css
 .filter-button {
   background: var(--panel-bg-current);
@@ -211,6 +232,7 @@ The following components have been migrated to use the new system:
 When creating new UI components:
 
 1. **Use theme variables instead of hard-coded rgba values**
+
    ```css
    /* ❌ Don't do this */
    background: rgba(255, 255, 255, 0.05);
@@ -269,14 +291,15 @@ When making UI changes, test with all backgrounds:
 
 ## Related Files
 
-- [app.css:257-343](c:\_TKA-STUDIO\src\app.css#L257-L343) - CSS variable definitions
-- [ThemeService.ts](c:\_TKA-STUDIO\src\lib\shared\theme\services\ThemeService.ts) - Theme management logic
-- [MainApplication.svelte:263-270](c:\_TKA-STUDIO\src\lib\shared\application\components\MainApplication.svelte#L263-L270) - Theme initialization
-- [BackgroundGradients.ts](c:\_TKA-STUDIO\src\lib\shared\background\shared\domain\constants\BackgroundGradients.ts) - Background gradient definitions
+- [app.css:257-343](c:_TKA-STUDIO\src\app.css#L257-L343) - CSS variable definitions
+- [ThemeService.ts](c:_TKA-STUDIO\src\lib\shared\theme\services\ThemeService.ts) - Theme management logic
+- [MainApplication.svelte:263-270](c:_TKA-STUDIO\src\lib\shared\application\components\MainApplication.svelte#L263-L270) - Theme initialization
+- [BackgroundGradients.ts](c:_TKA-STUDIO\src\lib\shared\background\shared\domain\constants\BackgroundGradients.ts) - Background gradient definitions
 
 ## Questions or Issues?
 
 If you encounter visibility issues with the Aurora background or have suggestions for improvement, please create an issue with:
+
 - Component name
 - Screenshot with Aurora background
 - Description of the visibility problem

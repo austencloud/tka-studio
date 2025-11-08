@@ -24,11 +24,13 @@
     disableContentTransitions = false,
     arrowsClickable = false,
     visibleHand = null,
+    gridMode: overrideGridMode = null,
   } = $props<{
     pictographData?: (BeatData | PictographData) | null;
     disableContentTransitions?: boolean;
     arrowsClickable?: boolean; // Enable arrow selection for adjustment
     visibleHand?: "blue" | "red" | null; // Show only one hand's prop/arrow (for Guided Construct mode)
+    gridMode?: GridMode | null; // Override grid mode (useful for single-motion start positions)
   }>();
 
   // Extract beat context from pictographData (if it's BeatData)
@@ -78,6 +80,15 @@
   // Update pictograph state when props change
   $effect(() => {
     pictographState.updatePictographData(pictographData);
+  });
+
+  // Recalculate prop and arrow positions when pictograph data changes
+  // This ensures props rotate correctly when gridMode changes in guided mode
+  $effect(() => {
+    if (pictographData) {
+      pictographState.calculatePropPositions();
+      pictographState.calculateArrowPositions();
+    }
   });
 
   // Generate turns tuple from pictograph data for TKA glyph
@@ -158,8 +169,14 @@
   });
 
   // Derive grid mode from pictograph data using Svelte 5 runes
+  // Use override gridMode if provided (for single-motion start positions in Guided mode)
   const gridMode = $derived(
     (() => {
+      // Use override if provided
+      if (overrideGridMode !== null) {
+        return overrideGridMode;
+      }
+
       if (
         !pictographState.effectivePictographData ||
         !pictographState.effectivePictographData.motions?.blue ||

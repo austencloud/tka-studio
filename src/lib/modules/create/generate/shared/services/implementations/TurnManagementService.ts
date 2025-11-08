@@ -7,7 +7,10 @@
 
 import { injectable } from "inversify";
 import type { BeatData } from "$shared";
-import { MotionType, RotationDirection } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
+import {
+  MotionType,
+  RotationDirection,
+} from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 import { PropContinuity } from "../../domain/models/generate-models";
 
 // Legacy constants for rotation directions
@@ -29,7 +32,11 @@ export interface ITurnManagementService {
   /**
    * Set turns on a beat - handles both numeric turns and float conversions
    */
-  setTurns(beat: BeatData, turnBlue: number | "fl", turnRed: number | "fl"): void;
+  setTurns(
+    beat: BeatData,
+    turnBlue: number | "fl",
+    turnRed: number | "fl"
+  ): void;
 
   /**
    * Update rotation directions for dash/static motions based on prop continuity
@@ -52,26 +59,37 @@ export class TurnManagementService implements ITurnManagementService {
   /**
    * Set turns - exact port from legacy set_turns()
    */
-  setTurns(beat: BeatData, turnBlue: number | "fl", turnRed: number | "fl"): void {
+  setTurns(
+    beat: BeatData,
+    turnBlue: number | "fl",
+    turnRed: number | "fl"
+  ): void {
     if (!beat) return;
 
     // Handle blue turns - exact legacy logic
-    this._setTurnForColor(beat, 'blue', turnBlue);
+    this._setTurnForColor(beat, "blue", turnBlue);
 
     // Handle red turns - exact legacy logic
-    this._setTurnForColor(beat, 'red', turnRed);
+    this._setTurnForColor(beat, "red", turnRed);
   }
 
   /**
    * Helper to set turn for a specific color (reduces duplication)
    */
-  private _setTurnForColor(beat: BeatData, color: 'blue' | 'red', turn: number | "fl"): void {
+  private _setTurnForColor(
+    beat: BeatData,
+    color: "blue" | "red",
+    turn: number | "fl"
+  ): void {
     const motion = beat.motions[color];
     if (!motion) return;
 
     if (turn === "fl") {
       // Float conversion logic
-      if (motion.motionType === MotionType.PRO || motion.motionType === MotionType.ANTI) {
+      if (
+        motion.motionType === MotionType.PRO ||
+        motion.motionType === MotionType.ANTI
+      ) {
         beat.motions[color] = {
           ...motion,
           turns: "fl",
@@ -109,7 +127,7 @@ export class TurnManagementService implements ITurnManagementService {
     // Update blue
     this._updateRotationForColor(
       beat,
-      'blue',
+      "blue",
       propContinuity,
       blueRotationDirection
     );
@@ -117,7 +135,7 @@ export class TurnManagementService implements ITurnManagementService {
     // Update red
     this._updateRotationForColor(
       beat,
-      'red',
+      "red",
       propContinuity,
       redRotationDirection
     );
@@ -128,7 +146,7 @@ export class TurnManagementService implements ITurnManagementService {
    */
   private _updateRotationForColor(
     beat: BeatData,
-    color: 'blue' | 'red',
+    color: "blue" | "red",
     propContinuity: PropContinuity,
     rotationDirection: string
   ): void {
@@ -136,7 +154,10 @@ export class TurnManagementService implements ITurnManagementService {
     if (!motion) return;
 
     // Only update dash or static motions
-    if (motion.motionType !== MOTION_TYPES.DASH && motion.motionType !== MOTION_TYPES.STATIC) {
+    if (
+      motion.motionType !== MOTION_TYPES.DASH &&
+      motion.motionType !== MOTION_TYPES.STATIC
+    ) {
       return;
     }
 
@@ -146,9 +167,10 @@ export class TurnManagementService implements ITurnManagementService {
 
     if (propContinuity === PropContinuity.CONTINUOUS) {
       // Continuous: use the provided rotation direction if turns > 0
-      newRotationDirection = typeof turns === "number" && turns > 0
-        ? rotationDirection as RotationDirection
-        : ROTATION_DIRS.noRotation;
+      newRotationDirection =
+        typeof turns === "number" && turns > 0
+          ? (rotationDirection as RotationDirection)
+          : ROTATION_DIRS.noRotation;
     } else {
       // Random: randomly choose rotation if turns > 0
       if (typeof turns === "number" && turns > 0) {

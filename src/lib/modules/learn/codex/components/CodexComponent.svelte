@@ -50,7 +50,7 @@
 
   // Reactive values
   let filteredPictographsByLetter = $derived(
-    codexState.filteredPictographsByLetter()
+    codexState.filteredPictographsByLetter
   );
   let letterRows = $derived(codexState.letterRows);
   let isLoading = $derived(codexState.isLoading);

@@ -39,7 +39,10 @@ export class BubblePhysics implements IBubblePhysics {
 
       // Update position
       bubble.y -= bubble.speed * frameMultiplier;
-      bubble.x += Math.sin(animationTime * bubble.sway + bubble.swayOffset) * 0.5 * frameMultiplier;
+      bubble.x +=
+        Math.sin(animationTime * bubble.sway + bubble.swayOffset) *
+        0.5 *
+        frameMultiplier;
 
       // Remove if off-screen, otherwise keep
       if (bubble.y < -bubble.radius * 2) {

@@ -50,9 +50,14 @@
   const animationPanelState = createAnimationPanelState();
 
   // GIF Export state
-  let showExportDialog = $state(false);
+  let showExportSheet = $state(false);
   let isExporting = $state(false);
   let exportProgress = $state<GifExportProgress | null>(null);
+
+  // Toast notification state
+  let showExportToast = $state(false);
+  let exportToastType = $state<"success" | "error">("success");
+  let exportToastMessage = $state("");
 
   // Derived: Current letter from sequence data
   let currentLetter = $derived.by(() => {
@@ -235,13 +240,15 @@
   }
 
   function handleOpenExport() {
+    console.log("🎬 handleOpenExport called");
     hapticService?.trigger("selection");
-    showExportDialog = true;
+    showExportSheet = true;
+    console.log("🎬 showExportSheet set to:", showExportSheet);
   }
 
   function handleCloseExport() {
     if (!isExporting) {
-      showExportDialog = false;
+      showExportSheet = false;
       exportProgress = null;
     }
   }
@@ -276,16 +283,29 @@
       // Trigger success haptic feedback
       hapticService?.trigger("success");
 
-      // Close dialog after delay
-      setTimeout(() => {
-        handleCloseExport();
-        isExporting = false;
-      }, GIF_EXPORT_SUCCESS_DELAY_MS);
+      // Show success toast
+      exportToastType = "success";
+      exportToastMessage = `Your ${format.toUpperCase()} animation has been downloaded successfully!`;
+      showExportToast = true;
+
+      // Close sheet and reset state
+      showExportSheet = false;
+      isExporting = false;
+      exportProgress = null;
     } catch (error) {
       console.error("GIF export failed:", error);
       // Trigger error haptic feedback
       hapticService?.trigger("error");
+
+      // Show error toast
+      exportToastType = "error";
+      exportToastMessage =
+        error instanceof Error ? error.message : "Failed to export animation";
+      showExportToast = true;
+
+      // Reset export state
       isExporting = false;
+      exportProgress = null;
     }
   }
 
@@ -299,6 +319,10 @@
     isExporting = false;
     exportProgress = null;
     handleCloseExport();
+  }
+
+  function handleDismissToast() {
+    showExportToast = false;
   }
   function handleCanvasReady(canvas: HTMLCanvasElement | null) {
     animationCanvas = canvas;
@@ -318,9 +342,12 @@
   gridMode={animationPanelState.sequenceData?.gridMode}
   letter={currentLetter}
   beatData={currentBeatData}
-  {showExportDialog}
+  {showExportSheet}
   {isExporting}
   {exportProgress}
+  {showExportToast}
+  {exportToastType}
+  {exportToastMessage}
   onClose={handleClose}
   onSpeedChange={handleSpeedChange}
   onOpenExport={handleOpenExport}
@@ -328,4 +355,5 @@
   onExport={handleExport}
   onCancelExport={handleCancelExport}
   onCanvasReady={handleCanvasReady}
+  onDismissToast={handleDismissToast}
 />

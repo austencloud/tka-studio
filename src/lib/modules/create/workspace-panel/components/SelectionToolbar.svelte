@@ -8,8 +8,8 @@ Shows:
 - Select All button (optional)
 -->
 <script lang="ts">
-  import { fly } from 'svelte/transition';
-  import { backOut } from 'svelte/easing';
+  import { fly } from "svelte/transition";
+  import { backOut } from "svelte/easing";
 
   // Props
   const {
@@ -28,7 +28,9 @@ Shows:
 
   const canEdit = $derived(selectionCount > 0);
   const selectionText = $derived(
-    selectionCount === 1 ? '1 beat selected' : `${selectionCount} beats selected`
+    selectionCount === 1
+      ? "1 beat selected"
+      : `${selectionCount} beats selected`
   );
 </script>
 

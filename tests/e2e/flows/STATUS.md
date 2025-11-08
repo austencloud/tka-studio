@@ -3,6 +3,7 @@
 ## ✅ CORRECTED with Real Selectors (Ready to Test):
 
 ### Flow #1: Construct Flow
+
 - **Updated**: YES
 - **Selectors**: Verified from `clear-sequence-navigation.spec.ts`
 - **Key Changes**:
@@ -12,7 +13,8 @@
   - Options: `[data-testid="option-viewer"]` + `.option-card`
 
 ### Flow #2: Generate Flow
-- **Updated**: YES  
+
+- **Updated**: YES
 - **Selectors**: Verified from `generate-card-layout.spec.ts`
 - **Key Changes**:
   - Cards: `.toggle-card`, `.stepper-card` with filters
@@ -22,6 +24,7 @@
 ## ⚠️ NEEDS VERIFICATION (Selectors are guesses):
 
 ### Flow #3-7:
+
 These flows use guessed selectors. They need to be tested against the actual running UI and corrected.
 
 ## Next Steps:

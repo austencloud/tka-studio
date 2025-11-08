@@ -32,7 +32,7 @@ Integrates with standard Workspace/ToolPanel layout.
   <div
     class="hand-path-workspace"
     data-testid="hand-path-workspace"
-    in:slide={{ duration: 400, easing: cubicOut, axis: 'y' }}
+    in:slide={{ duration: 400, easing: cubicOut, axis: "y" }}
   >
     <TouchableGrid
       {pathState}

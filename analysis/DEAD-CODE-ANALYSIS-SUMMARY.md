@@ -9,6 +9,7 @@
 ## Executive Summary
 
 Analyzed **2,010 unused exports** across the codebase:
+
 - **965** in `src/lib/modules/` (feature modules)
 - **976** in `src/lib/shared/` (shared infrastructure)
 - **69** in other locations (routes, config, tests, generated files)
@@ -16,6 +17,7 @@ Analyzed **2,010 unused exports** across the codebase:
 ### Key Findings
 
 **Top 3 modules with dead code:**
+
 1. **Build Module:** 525 unused exports (482 truly unused)
 2. **Word-Card Module:** 188 unused exports (180 truly unused)
 3. **Learn Module:** 102 unused exports (95 truly unused)
@@ -25,16 +27,19 @@ Analyzed **2,010 unused exports** across the codebase:
 ## Modules Analysis
 
 ### 1. Build Module (`src/lib/modules/build/`)
+
 **Status:** 🔴 High Priority
 **Unused Exports:** 525 (largest offender)
 
 #### Subsections with most dead code:
+
 - `build/shared/services/contracts/` - 30 unused service interfaces
 - `build/generate/circular/domain/constants/` - 22 unused constants
 - `build/animate/services/contracts/` - 20 unused service interfaces
 - `build/shared/state/` - 20 unused state management exports
 
 **Recommendation:** This module appears to have significant over-engineering with many service contracts and state managers that were never implemented or used. Consider:
+
 - Archiving unused service contracts
 - Consolidating state management
 - Removing circular generation constants if CAP generation is deprecated
@@ -42,10 +47,12 @@ Analyzed **2,010 unused exports** across the codebase:
 ---
 
 ### 2. Word-Card Module (`src/lib/modules/word-card/`)
+
 **Status:** 🔴 High Priority
 **Unused Exports:** 188
 
 #### Entirely unused files:
+
 - ✅ `components/index.ts` - 4 exports (VERIFIED DEAD)
 - ✅ `domain/index.ts` - 45 exports (VERIFIED DEAD)
 - ✅ `domain/models/index.ts` - 45 exports (VERIFIED DEAD)
@@ -56,10 +63,12 @@ Analyzed **2,010 unused exports** across the codebase:
 ---
 
 ### 3. Learn Module (`src/lib/modules/learn/`)
+
 **Status:** 🟡 Medium Priority
 **Unused Exports:** 102
 
 #### Key dead code:
+
 - `domain/index.ts` - 16 unused concept definitions
 - `ConceptProgressService` and `conceptProgressService` - unused services
 
@@ -68,6 +77,7 @@ Analyzed **2,010 unused exports** across the codebase:
 ---
 
 ### 4. Explore Module (`src/lib/modules/explore/`)
+
 **Status:** 🟡 Medium Priority
 **Unused Exports:** 97
 
@@ -76,10 +86,12 @@ Analyzed **2,010 unused exports** across the codebase:
 ---
 
 ### 5. About Module (`src/lib/modules/about/`)
+
 **Status:** 🟠 Low-Medium Priority
 **Unused Exports:** 37
 
 #### Entirely unused files:
+
 - ✅ `components/index.ts` - 23 exports (VERIFIED DEAD)
 - ✅ `services/index.ts` - 3 exports (VERIFIED DEAD)
 - ✅ `state/index.ts` - 3 exports (VERIFIED DEAD)
@@ -89,10 +101,12 @@ Analyzed **2,010 unused exports** across the codebase:
 ---
 
 ### 6. Write Module (`src/lib/modules/write/`)
+
 **Status:** 🟠 Low-Medium Priority
 **Unused Exports:** 14
 
 #### Entirely unused files:
+
 - ✅ `components/index.ts` - 9 exports (VERIFIED DEAD)
 - ✅ `services/index.ts` - 5 exports (VERIFIED DEAD)
 
@@ -101,10 +115,12 @@ Analyzed **2,010 unused exports** across the codebase:
 ---
 
 ### 7. Library Module (`src/lib/modules/library/`)
+
 **Status:** 🟢 Low Priority
 **Unused Exports:** 2
 
 #### Entirely unused files:
+
 - ✅ `index.ts` - 2 exports (VERIFIED DEAD)
 
 **Recommendation:** Archive barrel exports.
@@ -153,18 +169,22 @@ src/lib/modules/library/index.ts
 The following are **NOT dead code** (even though ts-prune flags them):
 
 ### 1. SvelteKit Routes
+
 - `src/routes/+layout.ts` - Used by SvelteKit framework
 - `src/routes/+page.ts` - Used by SvelteKit framework
 - `src/routes/robots.txt/+server.ts` - Route endpoint
 - `src/routes/sitemap.xml/+server.ts` - Route endpoint
 
 ### 2. Test Helpers
+
 - Files in `tests/` directory - May not be fully utilized yet
 
 ### 3. Generated Files
+
 - `.svelte-kit/types/` - Auto-generated TypeScript definitions
 
 ### 4. Exports marked "(used in module)"
+
 These are internal/private exports used within the same module but not exported publicly. They're fine to keep.
 
 ---
@@ -177,22 +197,24 @@ The majority of dead code follows this pattern:
 
 ```typescript
 // src/lib/modules/foo/components/index.ts
-export { default as ComponentA } from './ComponentA.svelte';
-export { default as ComponentB } from './ComponentB.svelte';
+export { default as ComponentA } from "./ComponentA.svelte";
+export { default as ComponentB } from "./ComponentB.svelte";
 // etc...
 ```
 
 **Why it's unused:**
 Other code imports directly:
+
 ```typescript
 // Direct import (used)
-import ComponentA from '$lib/modules/foo/components/ComponentA.svelte';
+import ComponentA from "$lib/modules/foo/components/ComponentA.svelte";
 
 // Barrel import (unused)
-import { ComponentA } from '$lib/modules/foo/components';
+import { ComponentA } from "$lib/modules/foo/components";
 ```
 
 **Recommendation:** Either:
+
 1. Delete barrel `index.ts` files (safest - they're not being used)
 2. OR enforce barrel imports via ESLint rules (more work)
 
@@ -201,27 +223,35 @@ import { ComponentA } from '$lib/modules/foo/components';
 ## Action Plan
 
 ### Phase 1: Quick Wins (Low Risk)
+
 ✅ **Archive the 9 verified dead barrel export files**
+
 - Estimated cleanup: ~190 unused exports
 - Risk: Very low (zero imports found)
 - Time: 30 minutes
 
 ### Phase 2: Build Module Cleanup (Medium Risk)
+
 🔍 **Review and archive unused service contracts in build module**
+
 - Focus on: `build/shared/services/contracts/`, `build/animate/services/contracts/`
 - Estimated cleanup: ~100 unused exports
 - Risk: Medium (verify these interfaces aren't used at runtime)
 - Time: 2-3 hours
 
 ### Phase 3: Shared Infrastructure (Medium Risk)
+
 🔍 **Review and clean up shared barrel exports**
+
 - Focus on: `shared/pictograph/`, `shared/application/state/`
 - Estimated cleanup: ~300 unused exports
 - Risk: Medium
 - Time: 4-5 hours
 
 ### Phase 4: Module-by-Module Deep Dive (Higher Risk)
+
 🔍 **Analyze each module for truly dead features**
+
 - Word-card domain models (if word-card feature is deprecated)
 - Learn module concepts (if quiz system is deprecated)
 - Build module CAP generation (if circular generation is deprecated)
@@ -257,6 +287,7 @@ node verify-usage.js
 ## Maintenance Recommendations
 
 ### 1. Add a Dead Code Check to CI
+
 ```json
 // package.json
 {
@@ -267,10 +298,12 @@ node verify-usage.js
 ```
 
 ### 2. Regular Cleanup Cadence
+
 - Run analysis quarterly
 - Archive dead code older than 6 months with no imports
 
 ### 3. Prevent Future Dead Code
+
 - Use ESLint rule: `@typescript-eslint/no-unused-vars`
 - Require imports through barrel files OR remove barrel files entirely
 - Code review checklist: "Does this export get used?"
@@ -317,6 +350,7 @@ node verify-usage.js
 
 **Generated by:** ts-prune + custom analysis scripts
 **Full reports available in:**
+
 - `ts-prune-full-report.txt`
 - `dead-code-analysis.json`
 - `usage-verification.json`

@@ -1,7 +1,7 @@
-import type { IDeviceDetector } from '$shared';
-import { TYPES } from '$shared';
-import { inject, injectable } from 'inversify';
-import type { ILayoutDetectionService } from '../contracts/ILayoutDetectionService';
+import type { IDeviceDetector } from "$shared";
+import { TYPES } from "$shared";
+import { inject, injectable } from "inversify";
+import type { ILayoutDetectionService } from "../contracts/ILayoutDetectionService";
 
 @injectable()
 export class LayoutDetectionService implements ILayoutDetectionService {
@@ -21,7 +21,11 @@ export class LayoutDetectionService implements ILayoutDetectionService {
     sectionCount: number,
     enableHorizontalSwipe: boolean
   ): boolean {
-    if (!enableHorizontalSwipe || !layoutConfig || typeof window === 'undefined') {
+    if (
+      !enableHorizontalSwipe ||
+      !layoutConfig ||
+      typeof window === "undefined"
+    ) {
       return false;
     }
 
@@ -41,7 +45,10 @@ export class LayoutDetectionService implements ILayoutDetectionService {
   /**
    * SIMPLIFIED: Basic layout parameters calculation
    */
-  calculateLayoutParameters(containerWidth: number, sectionCount: number): {
+  calculateLayoutParameters(
+    containerWidth: number,
+    sectionCount: number
+  ): {
     useSwipe: boolean;
     optionsPerRow: number;
     hasLimitedColumns: boolean;
@@ -52,13 +59,17 @@ export class LayoutDetectionService implements ILayoutDetectionService {
     const hasLimitedColumns = optionsPerRow < 8;
 
     const mockLayoutConfig = { containerWidth, optionsPerRow };
-    const useSwipe = this.shouldUseHorizontalSwipe(mockLayoutConfig, sectionCount, true);
+    const useSwipe = this.shouldUseHorizontalSwipe(
+      mockLayoutConfig,
+      sectionCount,
+      true
+    );
 
     return {
       useSwipe,
       optionsPerRow,
       hasLimitedColumns,
-      isNarrowScreen
+      isNarrowScreen,
     };
   }
 }

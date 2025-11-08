@@ -45,7 +45,7 @@
   let showInstagramModal = $state(false);
 
   // Instagram posting tab state
-  let activeTab = $state<'download' | 'instagram'>('download');
+  let activeTab = $state<"download" | "instagram">("download");
 
   onMount(() => {
     // Service resolution
@@ -181,12 +181,10 @@
   });
 
   // Handle successful Instagram post
-  function handleInstagramPostSuccess(postUrl: string) {
+  function handleInstagramPostSuccess() {
     hapticService?.trigger("success");
     // Optionally switch back to download tab or show success message
-    activeTab = 'download';
-    // You could also show a toast notification here
-    console.log("Successfully posted to Instagram!", postUrl);
+    activeTab = "download";
   }
 </script>
 
@@ -236,16 +234,16 @@
       <div class="tab-switcher">
         <button
           class="tab-button"
-          class:active={activeTab === 'download'}
-          onclick={() => (activeTab = 'download')}
+          class:active={activeTab === "download"}
+          onclick={() => (activeTab = "download")}
         >
           <i class="fas fa-download"></i>
           Download
         </button>
         <button
           class="tab-button"
-          class:active={activeTab === 'instagram'}
-          onclick={() => (activeTab = 'instagram')}
+          class:active={activeTab === "instagram"}
+          onclick={() => (activeTab = "instagram")}
         >
           <i class="fab fa-instagram"></i>
           Post to Instagram
@@ -253,7 +251,7 @@
       </div>
 
       <!-- Tab Content -->
-      {#if activeTab === 'download'}
+      {#if activeTab === "download"}
         <!-- Download Tab -->
         {#if shareState?.options}
           <ShareOptionsPanel
@@ -288,11 +286,13 @@
         </div>
       {:else}
         <!-- Instagram Posting Tab -->
-        <InstagramCarouselComposer
-          {currentSequence}
-          shareOptions={shareState?.options}
-          onPostSuccess={handleInstagramPostSuccess}
-        />
+        {#if shareState?.options}
+          <InstagramCarouselComposer
+            {currentSequence}
+            shareOptions={shareState.options}
+            onShareComplete={handleInstagramPostSuccess}
+          />
+        {/if}
       {/if}
     </div>
   </div>

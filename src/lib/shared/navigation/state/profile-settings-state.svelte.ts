@@ -37,7 +37,12 @@ export const emailChangeState = $state({
 // UI STATE
 // ============================================================================
 
-export type SettingsTab = "personal" | "security" | "subscription" | "achievements";
+export type SettingsTab =
+  | "personal"
+  | "security"
+  | "subscription"
+  | "achievements"
+  | "developer";
 
 export const uiState = $state({
   activeTab: "personal" as SettingsTab,
@@ -195,9 +200,7 @@ const TAB_ORDER: SettingsTab[] = [
 /**
  * Calculate and update transition direction when tab changes
  */
-export function updateTabTransition(
-  newTab: SettingsTab
-) {
+export function updateTabTransition(newTab: SettingsTab) {
   const oldIndex = TAB_ORDER.indexOf(uiState.activeTab);
   const newIndex = TAB_ORDER.indexOf(newTab);
 

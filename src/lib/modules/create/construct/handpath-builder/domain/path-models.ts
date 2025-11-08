@@ -5,7 +5,13 @@
  * Represents the domain of drawing hand paths on a grid to create sequences.
  */
 
-import type { GridLocation, GridMode, HandMotionType, MotionColor, RotationDirection } from "$shared";
+import type {
+  GridLocation,
+  GridMode,
+  HandMotionType,
+  MotionColor,
+  RotationDirection,
+} from "$shared";
 
 /**
  * Builder mode - how the user draws paths

@@ -4,8 +4,8 @@
  * Service for bundling sequence media (image + GIF + video) into Instagram carousel items.
  */
 
-import type { SequenceData } from '$shared';
-import type { InstagramMediaItem, ShareOptions } from '../../domain';
+import type { SequenceData } from "$shared";
+import type { InstagramMediaItem, ShareOptions } from "../../domain";
 
 export interface IMediaBundlerService {
   /**
@@ -28,7 +28,10 @@ export interface IMediaBundlerService {
    * @param order - Order in carousel (typically 0 for first item)
    * @returns Media item for the video
    */
-  createVideoMediaItem(videoFile: File, order: number): Promise<InstagramMediaItem>;
+  createVideoMediaItem(
+    videoFile: File,
+    order: number
+  ): Promise<InstagramMediaItem>;
 
   /**
    * Create complete carousel media bundle
@@ -44,7 +47,7 @@ export interface IMediaBundlerService {
     sequence: SequenceData,
     videoFile: File,
     options: ShareOptions,
-    layout?: 'video-first' | 'sequence-first'
+    layout?: "video-first" | "sequence-first"
   ): Promise<InstagramMediaItem[]>;
 
   /**
@@ -68,7 +71,10 @@ export interface IMediaBundlerService {
    * @param index - Index to remove
    * @returns Updated array with item removed and orders adjusted
    */
-  removeMediaItem(items: InstagramMediaItem[], index: number): InstagramMediaItem[];
+  removeMediaItem(
+    items: InstagramMediaItem[],
+    index: number
+  ): InstagramMediaItem[];
 
   /**
    * Validate media bundle for Instagram

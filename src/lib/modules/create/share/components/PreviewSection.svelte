@@ -24,12 +24,12 @@
 
   // Get preview status for accessibility
   let previewStatus = $derived(() => {
-    if (!currentSequence) return 'No sequence selected';
-    if (currentSequence.beats?.length === 0) return 'Empty sequence';
-    if (isGenerating) return 'Generating preview';
+    if (!currentSequence) return "No sequence selected";
+    if (currentSequence.beats?.length === 0) return "Empty sequence";
+    if (isGenerating) return "Generating preview";
     if (error) return `Preview error: ${error}`;
-    if (previewUrl) return 'Preview ready';
-    return 'Preview pending';
+    if (previewUrl) return "Preview ready";
+    return "Preview pending";
   });
 </script>
 

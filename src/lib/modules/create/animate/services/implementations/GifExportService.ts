@@ -19,13 +19,13 @@ const GIF_WORKER_PATH = `${base}/gif.worker.js`;
 
 // Load gif.js dynamically
 async function loadGifJs() {
-  if (typeof window === 'undefined') {
-    throw new Error('GIF export is only available in browser environment');
+  if (typeof window === "undefined") {
+    throw new Error("GIF export is only available in browser environment");
   }
 
   if (!GIF) {
     // @ts-ignore - gif.js doesn't have proper ESM exports
-    const module = await import('gif.js');
+    const module = await import("gif.js");
     GIF = module.default || module;
   }
 
@@ -78,26 +78,26 @@ export class GifExportService implements IGifExportService {
       });
 
       // Set up progress event
-      this.currentGif.on('progress', (progress: number) => {
+      this.currentGif.on("progress", (progress: number) => {
         if (this.shouldCancel) return;
 
         onProgress({
           progress,
-          stage: 'encoding',
+          stage: "encoding",
         });
       });
 
       // Set up finished event
       const gifPromise = new Promise<Blob>((resolve, reject) => {
-        this.currentGif.on('finished', (blob: Blob) => {
+        this.currentGif.on("finished", (blob: Blob) => {
           if (this.shouldCancel) {
-            reject(new Error('Export cancelled'));
+            reject(new Error("Export cancelled"));
             return;
           }
 
           onProgress({
             progress: 1,
-            stage: 'complete',
+            stage: "complete",
           });
 
           if (autoDownload) {
@@ -107,8 +107,8 @@ export class GifExportService implements IGifExportService {
           resolve(blob);
         });
 
-        this.currentGif.on('abort', () => {
-          reject(new Error('GIF encoding aborted'));
+        this.currentGif.on("abort", () => {
+          reject(new Error("GIF encoding aborted"));
         });
       });
 
@@ -118,11 +118,11 @@ export class GifExportService implements IGifExportService {
         frameDelay,
         duration,
         (current, total) => {
-          if (this.shouldCancel) throw new Error('Export cancelled');
+          if (this.shouldCancel) throw new Error("Export cancelled");
 
           onProgress({
             progress: current / total,
-            stage: 'capturing',
+            stage: "capturing",
             currentFrame: current,
             totalFrames: total,
           });
@@ -130,13 +130,13 @@ export class GifExportService implements IGifExportService {
       );
 
       if (this.shouldCancel) {
-        throw new Error('Export cancelled');
+        throw new Error("Export cancelled");
       }
 
       // Start encoding
       onProgress({
         progress: 0,
-        stage: 'encoding',
+        stage: "encoding",
       });
 
       this.currentGif.render();
@@ -147,8 +147,8 @@ export class GifExportService implements IGifExportService {
     } catch (error) {
       onProgress({
         progress: 0,
-        stage: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        stage: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
       });
       throw error;
     } finally {
@@ -170,7 +170,7 @@ export class GifExportService implements IGifExportService {
     onProgress: (current: number, total: number) => void
   ): Promise<void> {
     if (this.shouldCancel) {
-      throw new Error('Export cancelled');
+      throw new Error("Export cancelled");
     }
 
     // If no duration was provided, capture a single frame so callers still get output
@@ -184,7 +184,7 @@ export class GifExportService implements IGifExportService {
 
     for (let index = 0; index < totalFrames; index++) {
       if (this.shouldCancel) {
-        throw new Error('Export cancelled');
+        throw new Error("Export cancelled");
       }
 
       // Wait for the browser to paint the latest canvas updates
@@ -201,7 +201,7 @@ export class GifExportService implements IGifExportService {
    */
   addFrameFromCanvas(canvas: HTMLCanvasElement, delay?: number): void {
     if (!this.currentGif || !this.isCurrentlyExporting) {
-      console.warn('No GIF export in progress');
+      console.warn("No GIF export in progress");
       return;
     }
 
@@ -217,7 +217,7 @@ export class GifExportService implements IGifExportService {
    */
   startRendering(): void {
     if (!this.currentGif) {
-      throw new Error('No GIF initialized');
+      throw new Error("No GIF initialized");
     }
 
     this.currentGif.render();
@@ -243,7 +243,7 @@ export class GifExportService implements IGifExportService {
    */
   private downloadBlob(blob: Blob, filename: string): void {
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);
@@ -261,7 +261,7 @@ export class GifExportService implements IGifExportService {
   async createManualExporter(
     width: number,
     height: number,
-    options: Omit<GifExportOptions, 'duration'> = {}
+    options: Omit<GifExportOptions, "duration"> = {}
   ): Promise<{
     addFrame: (canvas: HTMLCanvasElement, delay?: number) => void;
     finish: () => Promise<Blob>;
@@ -310,11 +310,11 @@ export class GifExportService implements IGifExportService {
     const finish = (): Promise<Blob> => {
       return new Promise((resolve, reject) => {
         if (!this.currentGif) {
-          reject(new Error('GIF encoder not initialized'));
+          reject(new Error("GIF encoder not initialized"));
           return;
         }
 
-        this.currentGif.on('finished', (blob: Blob) => {
+        this.currentGif.on("finished", (blob: Blob) => {
           if (autoDownload) {
             this.downloadBlob(blob, filename);
           }
@@ -323,10 +323,10 @@ export class GifExportService implements IGifExportService {
           resolve(blob);
         });
 
-        this.currentGif.on('abort', () => {
+        this.currentGif.on("abort", () => {
           this.isCurrentlyExporting = false;
           this.currentGif = null;
-          reject(new Error('GIF encoding aborted'));
+          reject(new Error("GIF encoding aborted"));
         });
 
         this.currentGif.render();

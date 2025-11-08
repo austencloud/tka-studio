@@ -96,7 +96,10 @@ export class SequenceValidationService implements ISequenceValidationService {
    */
   validateSequenceLength(length: number): { isValid: boolean; error?: string } {
     if (length < 1 || length > 64) {
-      return { isValid: false, error: "Sequence length must be between 1 and 64 beats" };
+      return {
+        isValid: false,
+        error: "Sequence length must be between 1 and 64 beats",
+      };
     }
     return { isValid: true };
   }

@@ -854,19 +854,19 @@ AnimationCoordinator.handleExportGif()
 
 ## Summary Connections
 
-| Component | Depends On | Updates |
-|-----------|-----------|---------|
-| AnimationCoordinator | CreateModuleContext | AnimationPanelState |
-| AnimationPanel | AnimationPanelState props | onClose, onSpeedChange, onExport |
-| AnimatorCanvas | AnimationPanelState | needsRender flag |
-| AnimationPlaybackController | SequenceAnimationOrchestrator | AnimationPanelState.currentBeat |
-| SequenceAnimationOrchestrator | BeatCalculator, PropInterpolator | AnimationStateService |
-| CanvasRenderer | PropState, Images | Canvas pixels |
-| CreateModule | services from DI | CreateModuleContext |
-| SequenceState | SequenceService | currentSequence, beats |
-| BeatGrid | SequenceState | Rerender on sequence/selection change |
-| EditCoordinator | SequenceState | Opens/closes panel |
-| SequenceActionsCoordinator | SequenceTransformationService | Updates currentSequence |
+| Component                     | Depends On                       | Updates                               |
+| ----------------------------- | -------------------------------- | ------------------------------------- |
+| AnimationCoordinator          | CreateModuleContext              | AnimationPanelState                   |
+| AnimationPanel                | AnimationPanelState props        | onClose, onSpeedChange, onExport      |
+| AnimatorCanvas                | AnimationPanelState              | needsRender flag                      |
+| AnimationPlaybackController   | SequenceAnimationOrchestrator    | AnimationPanelState.currentBeat       |
+| SequenceAnimationOrchestrator | BeatCalculator, PropInterpolator | AnimationStateService                 |
+| CanvasRenderer                | PropState, Images                | Canvas pixels                         |
+| CreateModule                  | services from DI                 | CreateModuleContext                   |
+| SequenceState                 | SequenceService                  | currentSequence, beats                |
+| BeatGrid                      | SequenceState                    | Rerender on sequence/selection change |
+| EditCoordinator               | SequenceState                    | Opens/closes panel                    |
+| SequenceActionsCoordinator    | SequenceTransformationService    | Updates currentSequence               |
 
 ---
 

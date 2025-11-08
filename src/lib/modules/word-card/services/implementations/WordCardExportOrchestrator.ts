@@ -256,7 +256,9 @@ export class WordCardExportOrchestrator implements IWordCardExportOrchestrator {
 
     return {
       isActive: true,
-      ...(this.currentOperationId && { currentOperation: this.currentOperationId }),
+      ...(this.currentOperationId && {
+        currentOperation: this.currentOperationId,
+      }),
       ...(progress && { progress }),
     };
   }

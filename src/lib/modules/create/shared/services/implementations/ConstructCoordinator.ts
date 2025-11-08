@@ -7,7 +7,6 @@
  * FIXED: Added proper state synchronization to resolve start position selection getting stuck
  */
 
-
 import type { SequenceData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
@@ -26,9 +25,7 @@ interface ComponentWithEventHandler {
 }
 
 @injectable()
-export class ConstructCoordinator
-  implements IConstructCoordinator
-{
+export class ConstructCoordinator implements IConstructCoordinator {
   private components: Record<string, ComponentWithEventHandler> = {};
   private isHandlingSequenceModification = false;
   private eventListenersSetup = false;
@@ -91,8 +88,6 @@ export class ConstructCoordinator
   async handleStartPositionSet(startPosition: BeatData): Promise<void> {
     try {
       return;
-
-
     } catch (error) {
       console.error("❌ Error handling start position set:", error);
       // Error handling is managed by individual components
@@ -224,7 +219,6 @@ export class ConstructCoordinator
       console.error("❌ Error updating UI based on sequence:", error);
     }
   }
-
 
   private notifyComponents(eventType: string, data: unknown): void {
     // Notify individual components if they have handlers

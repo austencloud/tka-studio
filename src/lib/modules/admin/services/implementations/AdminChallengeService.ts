@@ -1,6 +1,6 @@
 /**
  * Admin Challenge Service Implementation
- * 
+ *
  * Handles admin operations for daily challenges
  */
 
@@ -179,4 +179,3 @@ export class AdminChallengeService implements IAdminChallengeService {
     }
   }
 }
-

@@ -19,13 +19,18 @@ import type {
   INavigationSyncService,
   IResponsiveLayoutService,
   ISequencePersistenceService,
-  ISequenceService
+  ISequenceService,
 } from "../contracts";
-import type { CreateModuleInitializationResult, ICreateModuleInitializationService } from "../contracts/ICreateModuleInitializationService";
+import type {
+  CreateModuleInitializationResult,
+  ICreateModuleInitializationService,
+} from "../contracts/ICreateModuleInitializationService";
 import { getCreateModuleEventService } from "./CreateModuleEventService";
 
 @injectable()
-export class CreateModuleInitializationService implements ICreateModuleInitializationService {
+export class CreateModuleInitializationService
+  implements ICreateModuleInitializationService
+{
   private sequenceService: ISequenceService | null = null;
   private sequencePersistenceService: ISequencePersistenceService | null = null;
   private startPositionService: IStartPositionService | null = null;
@@ -37,15 +42,27 @@ export class CreateModuleInitializationService implements ICreateModuleInitializ
   async initialize(): Promise<CreateModuleInitializationResult> {
     // Resolve all required services
     this.sequenceService = resolve(TYPES.ISequenceService) as ISequenceService;
-    this.sequencePersistenceService = resolve(TYPES.ISequencePersistenceService) as ISequencePersistenceService;
-    this.startPositionService = resolve(TYPES.IStartPositionService) as IStartPositionService;
-    this.CreateModuleService = resolve(TYPES.ICreateModuleService) as ICreateModuleService;
-    this.layoutService = resolve(TYPES.IResponsiveLayoutService) as IResponsiveLayoutService;
-    this.navigationSyncService = resolve(TYPES.INavigationSyncService) as INavigationSyncService;
-    this.beatOperationsService = resolve(TYPES.IBeatOperationsService) as IBeatOperationsService;
+    this.sequencePersistenceService = resolve(
+      TYPES.ISequencePersistenceService
+    ) as ISequencePersistenceService;
+    this.startPositionService = resolve(
+      TYPES.IStartPositionService
+    ) as IStartPositionService;
+    this.CreateModuleService = resolve(
+      TYPES.ICreateModuleService
+    ) as ICreateModuleService;
+    this.layoutService = resolve(
+      TYPES.IResponsiveLayoutService
+    ) as IResponsiveLayoutService;
+    this.navigationSyncService = resolve(
+      TYPES.INavigationSyncService
+    ) as INavigationSyncService;
+    this.beatOperationsService = resolve(
+      TYPES.IBeatOperationsService
+    ) as IBeatOperationsService;
 
     // Wait a tick to ensure component context is fully established
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Create state objects
     const CreateModuleState = createCreateModuleState(
@@ -87,7 +104,10 @@ export class CreateModuleInitializationService implements ICreateModuleInitializ
     };
   }
 
-  configureEventCallbacks(CreateModuleState: any, panelState: PanelCoordinationState): void {
+  configureEventCallbacks(
+    CreateModuleState: any,
+    panelState: PanelCoordinationState
+  ): void {
     const CreateModuleEventService = getCreateModuleEventService();
 
     // Set up sequence state callbacks for CreateModuleEventService
@@ -98,16 +118,21 @@ export class CreateModuleInitializationService implements ICreateModuleInitializ
 
     // Set up option history callback
     CreateModuleEventService.setAddOptionToHistoryCallback(
-      (beatIndex, beatData) => CreateModuleState.addOptionToHistory(beatIndex, beatData)
+      (beatIndex, beatData) =>
+        CreateModuleState.addOptionToHistory(beatIndex, beatData)
     );
 
     // Set up undo snapshot callback
-    CreateModuleEventService.setPushUndoSnapshotCallback(
-      (type, metadata) => CreateModuleState.pushUndoSnapshot(type, metadata)
+    CreateModuleEventService.setPushUndoSnapshotCallback((type, metadata) =>
+      CreateModuleState.pushUndoSnapshot(type, metadata)
     );
 
     // Configure panel state callbacks on sequenceState
-    CreateModuleState.sequenceState.onEditPanelOpen = (beatIndex: number, beatData: any, beatsData: any[]) => {
+    CreateModuleState.sequenceState.onEditPanelOpen = (
+      beatIndex: number,
+      beatData: any,
+      beatsData: any[]
+    ) => {
       if (beatsData && beatsData.length > 0) {
         panelState.openBatchEditPanel(beatsData);
       } else {
@@ -128,7 +153,10 @@ export class CreateModuleInitializationService implements ICreateModuleInitializ
     };
   }
 
-  configureClearSequenceCallback(CreateModuleState: any, constructTabState: any): void {
+  configureClearSequenceCallback(
+    CreateModuleState: any,
+    constructTabState: any
+  ): void {
     // Set up clear sequence callback (to ensure UI state is properly updated)
     CreateModuleState.setClearSequenceCompletelyCallback(async () => {
       if (constructTabState?.clearSequenceCompletely) {

@@ -6,27 +6,42 @@
  * that was previously scattered throughout the massive ConstructTab component.
  */
 
-import { createBeatData, resolve, type BeatData, type IOrientationCalculationService, type PictographData, type SequenceData } from "$shared";
+import {
+  createBeatData,
+  resolve,
+  type BeatData,
+  type IOrientationCalculationService,
+  type PictographData,
+  type SequenceData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { injectable } from "inversify";
-import type { ICreateModuleEventService, IBuildConstructSectionCoordinator } from "../contracts";
-
+import type {
+  ICreateModuleEventService,
+  IBuildConstructSectionCoordinator,
+} from "../contracts";
 
 @injectable()
 export class CreateModuleEventService implements ICreateModuleEventService {
   private constructCoordinator: IBuildConstructSectionCoordinator | null = null;
-  private orientationCalculationService: IOrientationCalculationService | null = null;
+  private orientationCalculationService: IOrientationCalculationService | null =
+    null;
   private initialized = false;
 
   // Callback to access current sequence from component state
   private getCurrentSequenceCallback: (() => SequenceData | null) | null = null;
-  private updateSequenceCallback: ((sequence: SequenceData) => void) | null = null;
+  private updateSequenceCallback: ((sequence: SequenceData) => void) | null =
+    null;
 
   // Callback to add option to history
-  private addOptionToHistoryCallback: ((beatIndex: number, beatData: BeatData) => void) | null = null;
+  private addOptionToHistoryCallback:
+    | ((beatIndex: number, beatData: BeatData) => void)
+    | null = null;
 
   // Callback to push undo snapshot
-  private pushUndoSnapshotCallback: ((type: 'ADD_BEAT', metadata?: any) => void) | null = null;
+  private pushUndoSnapshotCallback:
+    | ((type: "ADD_BEAT", metadata?: any) => void)
+    | null = null;
 
   constructor() {
     // Don't initialize services in constructor - wait for lazy initialization
@@ -38,8 +53,13 @@ export class CreateModuleEventService implements ICreateModuleEventService {
     }
 
     try {
-      this.constructCoordinator = resolve<IBuildConstructSectionCoordinator>(TYPES.IBuildConstructTabCoordinator);
-      this.orientationCalculationService = resolve<IOrientationCalculationService>(TYPES.IOrientationCalculationService);
+      this.constructCoordinator = resolve<IBuildConstructSectionCoordinator>(
+        TYPES.IBuildConstructTabCoordinator
+      );
+      this.orientationCalculationService =
+        resolve<IOrientationCalculationService>(
+          TYPES.IOrientationCalculationService
+        );
       this.initialized = true;
     } catch (error) {
       // This is expected during SSR - services will be resolved once client-side DI container is ready
@@ -71,7 +91,7 @@ export class CreateModuleEventService implements ICreateModuleEventService {
    * Set callback to push undo snapshot
    */
   setPushUndoSnapshotCallback(
-    pushUndoSnapshot: (type: 'ADD_BEAT', metadata?: any) => void
+    pushUndoSnapshot: (type: "ADD_BEAT", metadata?: any) => void
   ): void {
     this.pushUndoSnapshotCallback = pushUndoSnapshot;
   }
@@ -82,14 +102,13 @@ export class CreateModuleEventService implements ICreateModuleEventService {
     }
   }
 
-
   /**
    * Handle option selection in the Create module
    * OPTIMIZED: Add to sequence immediately for responsive UX, then process in background
    */
   async handleOptionSelected(option: PictographData): Promise<void> {
     try {
-      performance.mark('event-service-start');
+      performance.mark("event-service-start");
       this.ensureInitialized();
 
       // Get current sequence from component state
@@ -98,15 +117,15 @@ export class CreateModuleEventService implements ICreateModuleEventService {
         throw new Error("No current sequence available");
       }
 
-      performance.mark('initialization-complete');
+      performance.mark("initialization-complete");
 
       // Calculate correct beat number based on current sequence length
       const nextBeatNumber = currentSequence.beats.length + 1;
 
       // 📸 PUSH UNDO SNAPSHOT: Save state BEFORE adding beat (now deferred via queueMicrotask)
-      this.pushUndoSnapshotCallback?.('ADD_BEAT', {
+      this.pushUndoSnapshotCallback?.("ADD_BEAT", {
         beatNumber: nextBeatNumber,
-        description: `Add beat ${nextBeatNumber}`
+        description: `Add beat ${nextBeatNumber}`,
       });
 
       // Create initial beat data from option with correct beat number
@@ -116,58 +135,82 @@ export class CreateModuleEventService implements ICreateModuleEventService {
         isBlank: false, // This is a real beat with pictograph data
       });
 
-      performance.mark('beat-data-created');
+      performance.mark("beat-data-created");
 
       // 🔄 OPTIMIZATION: Calculate orientations BEFORE UI update to batch into single update
-      if (currentSequence.beats.length > 0 && this.orientationCalculationService) {
-        const lastBeat = currentSequence.beats[currentSequence.beats.length - 1]!;
+      if (
+        currentSequence.beats.length > 0 &&
+        this.orientationCalculationService
+      ) {
+        const lastBeat =
+          currentSequence.beats[currentSequence.beats.length - 1]!;
 
         // Only apply orientation calculations if both beats have motion data
         if (lastBeat && !lastBeat.isBlank && !beatData.isBlank) {
           try {
             // Update start orientations from the last beat's end orientations
-            beatData = this.orientationCalculationService.updateStartOrientations(beatData, lastBeat);
-            performance.mark('start-orientations-complete');
+            beatData =
+              this.orientationCalculationService.updateStartOrientations(
+                beatData,
+                lastBeat
+              );
+            performance.mark("start-orientations-complete");
 
             // Update end orientations based on the motion calculations
-            beatData = this.orientationCalculationService.updateEndOrientations(beatData);
-            performance.mark('end-orientations-complete');
+            beatData =
+              this.orientationCalculationService.updateEndOrientations(
+                beatData
+              );
+            performance.mark("end-orientations-complete");
 
-            console.log(`🧭 CreateModuleEventService: Calculated orientations for beat ${nextBeatNumber}`);
+            console.log(
+              `🧭 CreateModuleEventService: Calculated orientations for beat ${nextBeatNumber}`
+            );
           } catch (orientationError) {
-            console.warn(`⚠️ CreateModuleEventService: Failed to calculate orientations for beat ${nextBeatNumber}:`, orientationError);
+            console.warn(
+              `⚠️ CreateModuleEventService: Failed to calculate orientations for beat ${nextBeatNumber}:`,
+              orientationError
+            );
             // Continue without orientation updates rather than failing completely
           }
         }
       }
-      performance.mark('orientation-processing-complete');
+      performance.mark("orientation-processing-complete");
 
       // 🚀 SINGLE UI UPDATE: Add beat with orientations already calculated
       const finalSequence = {
         ...currentSequence,
-        beats: [...currentSequence.beats, beatData]
+        beats: [...currentSequence.beats, beatData],
       };
-      performance.mark('sequence-updated');
+      performance.mark("sequence-updated");
 
       this.updateSequenceCallback?.(finalSequence);
-      performance.mark('ui-callback-complete');
+      performance.mark("ui-callback-complete");
 
       // 📝 ADD TO HISTORY: Track this option addition for undo functionality
       this.addOptionToHistoryCallback?.(nextBeatNumber - 1, beatData); // beatIndex is 0-based
-      performance.mark('history-updated');
+      performance.mark("history-updated");
 
-      console.log(`🎯 CreateModuleEventService: Added beat ${nextBeatNumber} with option:`, option.letter);
+      console.log(
+        `🎯 CreateModuleEventService: Added beat ${nextBeatNumber} with option:`,
+        option.letter
+      );
 
       // 📡 COORDINATION: Notify other components (async, non-blocking)
-      performance.mark('coordination-start');
+      performance.mark("coordination-start");
       if (this.constructCoordinator) {
-        this.constructCoordinator.handleBeatAdded(beatData).catch(error => {
-          console.warn("⚠️ CreateModuleEventService: Coordination service error:", error);
+        this.constructCoordinator.handleBeatAdded(beatData).catch((error) => {
+          console.warn(
+            "⚠️ CreateModuleEventService: Coordination service error:",
+            error
+          );
         });
       }
-      performance.mark('coordination-complete');
+      performance.mark("coordination-complete");
 
-      console.log(`✅ CreateModuleEventService: Successfully processed beat addition`);
+      console.log(
+        `✅ CreateModuleEventService: Successfully processed beat addition`
+      );
     } catch (error) {
       console.error("❌ Error handling option selection:", error);
       throw error;
@@ -280,7 +323,10 @@ export class CreateModuleEventService implements ICreateModuleEventService {
    * Handle option selection events
    */
   handleOptionSelection(option: any): void {
-    console.log("🔄 CreateModuleEventService: Handling option selection", option);
+    console.log(
+      "🔄 CreateModuleEventService: Handling option selection",
+      option
+    );
     // Implementation for option selection logic
   }
 }

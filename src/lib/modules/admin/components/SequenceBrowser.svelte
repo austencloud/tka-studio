@@ -1,12 +1,12 @@
 <script lang="ts">
   /**
    * Sequence Browser
-   * 
+   *
    * Browse and select user sequences for challenges
    */
-  
+
   import type { SequenceData } from "$shared";
-  
+
   // Props
   let {
     sequences,
@@ -17,7 +17,7 @@
     selectedSequence: SequenceData | null;
     onSequenceSelect: (sequence: SequenceData) => void;
   } = $props();
-  
+
   // State
   let searchQuery = $state("");
 
@@ -26,9 +26,10 @@
     if (!searchQuery) return sequences;
 
     const query = searchQuery.toLowerCase();
-    return sequences.filter(seq =>
-      seq.name.toLowerCase().includes(query) ||
-      seq.word.toLowerCase().includes(query)
+    return sequences.filter(
+      (seq) =>
+        seq.name.toLowerCase().includes(query) ||
+        seq.word.toLowerCase().includes(query)
     );
   });
 </script>
@@ -44,7 +45,9 @@
       />
     </div>
     <div class="sequence-count">
-      {filteredSequences.length} sequence{filteredSequences.length !== 1 ? 's' : ''}
+      {filteredSequences.length} sequence{filteredSequences.length !== 1
+        ? "s"
+        : ""}
     </div>
   </div>
 
@@ -54,7 +57,7 @@
         <i class="fas fa-inbox"></i>
         <p>No sequences found</p>
         {#if searchQuery}
-          <button class="clear-search" onclick={() => searchQuery = ""}>
+          <button class="clear-search" onclick={() => (searchQuery = "")}>
             Clear search
           </button>
         {/if}
@@ -280,4 +283,3 @@
     }
   }
 </style>
-

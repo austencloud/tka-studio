@@ -16,7 +16,10 @@ import {
 } from "../../../shared/domain/enums/pictograph-enums";
 import type { MotionData } from "../../../shared/domain/models/MotionData";
 import type { PictographData } from "../../../shared/domain/models/PictographData";
-import { getBetaOffsetSize, isUnilateralProp } from "../../domain/enums/PropClassification";
+import {
+  getBetaOffsetSize,
+  isUnilateralProp,
+} from "../../domain/enums/PropClassification";
 import { createPropPlacementFromPosition } from "../../domain/factories/createPropPlacementData";
 import type { PropPlacementData } from "../../domain/models/PropPlacementData";
 import type { IBetaDetectionService } from "../contracts/IBetaDetectionService";
@@ -37,14 +40,16 @@ export class PropPlacementService implements IPropPlacementService {
     pictographData: PictographData,
     motionData: MotionData
   ): Promise<PropPlacementData> {
-    // Compute gridMode from motion data - now synchronous!
+    // Use gridMode from motion data if available (supports single-motion pictographs in Guided mode)
+    // Fall back to deriving from full pictograph data only if not set in motion
     const gridMode =
-      pictographData.motions?.blue && pictographData.motions?.red
+      motionData.gridMode ??
+      (pictographData.motions?.blue && pictographData.motions?.red
         ? this.gridModeService.deriveGridMode(
             pictographData.motions.blue,
             pictographData.motions.red
           )
-        : GridMode.DIAMOND;
+        : GridMode.DIAMOND);
     const position = await this.calculatePosition(
       pictographData,
       motionData,
@@ -146,7 +151,10 @@ export class PropPlacementService implements IPropPlacementService {
       (bothRadial && redEndOri !== blueEndOri) ||
       (bothNonRadial && redEndOri !== blueEndOri);
 
-    if (sameTypeButDifferentOrientation && isUnilateralProp(motionData.propType)) {
+    if (
+      sameTypeButDifferentOrientation &&
+      isUnilateralProp(motionData.propType)
+    ) {
       return { x: 0, y: 0 };
     }
 

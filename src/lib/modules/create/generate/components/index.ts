@@ -8,4 +8,3 @@
 
 // Direct component exports (when files are moved here)
 export { default as GeneratePanel } from "./GeneratePanel.svelte";
-

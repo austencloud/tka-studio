@@ -88,8 +88,8 @@
     showArrows && shouldShowNavigation ? measuredArrowWidth + ARROW_SPACING : 0
   );
 
-  let prevArrowButton: HTMLButtonElement | undefined;
-  let nextArrowButton: HTMLButtonElement | undefined;
+  let prevArrowButton = $state<HTMLButtonElement | undefined>();
+  let nextArrowButton = $state<HTMLButtonElement | undefined>();
 
   let resizeObserver: ResizeObserver | undefined;
   let resizeFallback: (() => void) | undefined;

@@ -11,7 +11,7 @@
 
   // Props
   const {
-    onclick
+    onclick,
   }: {
     onclick?: () => void;
   } = $props();
@@ -20,7 +20,9 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function handleClick() {

@@ -783,17 +783,19 @@ export function createCreateModuleState(
      * Determine creation cue mood based on state
      * @param hasSelectedCreationMethod - Whether user has selected a creation method in this session
      */
-    getCreationCueMood(hasSelectedCreationMethod: boolean): 'default' | 'redo' | 'returning' | 'fresh' {
+    getCreationCueMood(
+      hasSelectedCreationMethod: boolean
+    ): "default" | "redo" | "returning" | "fresh" {
       const undoCount = undoService.undoHistory.length;
       if (!hasSelectedCreationMethod && undoCount > 0) {
-        return 'redo';
+        return "redo";
       }
 
       if (this.hasStartPosition()) {
-        return 'returning';
+        return "returning";
       }
 
-      return 'fresh';
+      return "fresh";
     },
 
     /**

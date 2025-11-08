@@ -44,7 +44,9 @@
   // Generate thumbnail URL for sequence
   function getThumbnailUrl(sequence: SequenceData): string {
     if (sequence.thumbnails && sequence.thumbnails.length > 0) {
-      return sequence.thumbnails[0] || '/static/thumbnails/default-sequence.png';
+      return (
+        sequence.thumbnails[0] || "/static/thumbnails/default-sequence.png"
+      );
     }
     // Generate based on sequence content or use placeholder
     return `/static/thumbnails/default-sequence.png`;

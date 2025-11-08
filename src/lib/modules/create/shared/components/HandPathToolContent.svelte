@@ -22,8 +22,8 @@ Contains sequence settings, hand indicator, and action buttons.
   {#if !handPathCoordinator.isStarted}
     <!-- Start Drawing Button -->
     <div
-      in:slide={{ duration: 300, easing: cubicOut, axis: 'y' }}
-      out:slide={{ duration: 250, easing: cubicOut, axis: 'y' }}
+      in:slide={{ duration: 300, easing: cubicOut, axis: "y" }}
+      out:slide={{ duration: 250, easing: cubicOut, axis: "y" }}
     >
       <button
         class="start-drawing-btn"
@@ -36,8 +36,8 @@ Contains sequence settings, hand indicator, and action buttons.
   {:else}
     <!-- Path Control Panel -->
     <div
-      in:slide={{ duration: 400, delay: 200, easing: cubicOut, axis: 'y' }}
-      out:slide={{ duration: 250, easing: cubicOut, axis: 'y' }}
+      in:slide={{ duration: 400, delay: 200, easing: cubicOut, axis: "y" }}
+      out:slide={{ duration: 250, easing: cubicOut, axis: "y" }}
     >
       <PathControlPanel
         pathState={handPathCoordinator.pathState}
@@ -51,7 +51,7 @@ Contains sequence settings, hand indicator, and action buttons.
     {#if handPathCoordinator.pathState.isSessionComplete}
       <div
         class="finish-actions"
-        in:slide={{ duration: 400, delay: 300, easing: cubicOut, axis: 'y' }}
+        in:slide={{ duration: 400, delay: 300, easing: cubicOut, axis: "y" }}
         out:fade={{ duration: 200 }}
       >
         <button

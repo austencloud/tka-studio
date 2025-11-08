@@ -18,5 +18,7 @@ export interface ISectionTitleFormatter {
    * @param typeKey The type key (e.g., "Type1", "Type4")
    * @returns Type description object or undefined
    */
-  getTypeDescription(typeKey: string): { description: string; typeName: string } | undefined;
+  getTypeDescription(
+    typeKey: string
+  ): { description: string; typeName: string } | undefined;
 }

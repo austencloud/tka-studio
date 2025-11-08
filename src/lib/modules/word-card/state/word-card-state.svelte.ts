@@ -68,7 +68,7 @@ export function createWordCardState(
 
   // Current page sequences for grid/list view
   const currentPageSequences = $derived(() => {
-    const sequences = filteredSequences();
+    const sequences = filteredSequences;
     const startIndex = pageLayoutState.currentPage * 24; // items per page
     return sequences.slice(startIndex, startIndex + 24);
   });
@@ -109,7 +109,7 @@ export function createWordCardState(
 
   // Actions that connect to page layout
   async function switchToPrintableMode() {
-    await pageLayoutState.createPages(filteredSequences());
+    await pageLayoutState.createPages(filteredSequences);
   }
 
   async function refreshPages() {

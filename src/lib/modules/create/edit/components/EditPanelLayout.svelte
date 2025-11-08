@@ -42,7 +42,9 @@ Layout Modes (determined by container size):
 
   // Determine if we should use simplified layout based on container width
   // Narrow portrait (Z Fold 344px): <= 500px uses simplified always-visible controls
-  const useSimplifiedLayout = $derived(containerWidth > 0 && containerWidth <= 500);
+  const useSimplifiedLayout = $derived(
+    containerWidth > 0 && containerWidth <= 500
+  );
 
   // Expose getSelectedArrow method to parent
   export function getSelectedArrow(): string | null {
@@ -81,7 +83,11 @@ Layout Modes (determined by container size):
 Container query aware layout
 The container will change layout based on its OWN size, not viewport
 -->
-<div class="edit-panel-layout" data-testid="edit-panel-layout" bind:this={containerElement}>
+<div
+  class="edit-panel-layout"
+  data-testid="edit-panel-layout"
+  bind:this={containerElement}
+>
   <!-- Pictograph Display -->
   <div class="pictograph-container" data-testid="pictograph-container">
     {#if beatDataForPictograph()}

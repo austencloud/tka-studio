@@ -5,6 +5,7 @@ This document explains the comprehensive HMR (Hot Module Replacement) optimizati
 ## Configuration Overview
 
 Our setup is optimized for the fastest possible HMR experience with:
+
 - **Vite 6** (cold start < 50ms)
 - **SvelteKit 2** with **Svelte 5** runes
 - **Node.js 22** with native file watching
@@ -27,7 +28,7 @@ warmup: {
     "./src/lib/shared/application/state/app-state.svelte.ts",
     // Core components used across the app
     "./src/lib/shared/navigation/components/PrimaryNavigation.svelte",
-  ]
+  ];
 }
 ```
 
@@ -68,7 +69,7 @@ const criticalPatterns = [
   /navigation-state/,
   /ui-state/,
   /BackgroundCanvas/,
-  /grid-calculations/
+  /grid-calculations/,
 ];
 ```
 
@@ -80,7 +81,7 @@ Narrowed extension list reduces filesystem checks:
 
 ```typescript
 resolve: {
-  extensions: [".svelte", ".ts", ".js"]
+  extensions: [".svelte", ".ts", ".js"];
 }
 ```
 
@@ -90,7 +91,7 @@ Combined with TypeScript's `allowImportingTsExtensions: true`, this eliminates e
 
 ```typescript
 css: {
-  transformer: "lightningcss"
+  transformer: "lightningcss";
 }
 ```
 
@@ -100,7 +101,7 @@ css: {
 
 ```typescript
 server: {
-  open: true // Vite auto-warms entry point
+  open: true; // Vite auto-warms entry point
 }
 ```
 
@@ -113,8 +114,8 @@ const hmrPerformancePlugin = () => ({
   name: "hmr-performance",
   handleHotUpdate({ file }) {
     // Logs any HMR update > 100ms
-  }
-})
+  },
+});
 ```
 
 Watch your console for `[⚠️  Slow HMR]` warnings to identify bottlenecks.

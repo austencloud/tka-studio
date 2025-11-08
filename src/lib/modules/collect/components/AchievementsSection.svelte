@@ -166,7 +166,9 @@
         <div class="empty-state">
           <i class="fas fa-trophy"></i>
           <p>No achievements unlocked yet</p>
-          <p class="hint">Complete challenges to earn your first achievement!</p>
+          <p class="hint">
+            Complete challenges to earn your first achievement!
+          </p>
         </div>
       {:else}
         <div class="achievements-grid">
@@ -251,7 +253,10 @@
   /* Stats Grid */
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(clamp(140px, 30cqi, 200px), 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(clamp(140px, 30cqi, 200px), 1fr)
+    );
     gap: clamp(12px, 3cqi, 16px);
   }
 

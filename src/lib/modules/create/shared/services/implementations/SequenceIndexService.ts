@@ -18,7 +18,6 @@ interface SearchIndex {
 
 @injectable()
 export class SequenceIndexService implements ISequenceIndexService {
-
   async buildIndex(sequences: SequenceData[]): Promise<void> {
     // Build search index for sequences - placeholder implementation
     console.log(`Building index for ${sequences.length} sequences`);
@@ -135,7 +134,11 @@ export class SequenceIndexService implements ISequenceIndexService {
     }
   }
 
-  private addToIndex(index: Map<string, Set<string>>, key: string, value: string): void {
+  private addToIndex(
+    index: Map<string, Set<string>>,
+    key: string,
+    value: string
+  ): void {
     if (!index.has(key)) {
       index.set(key, new Set());
     }
@@ -206,13 +209,17 @@ export class SequenceIndexService implements ISequenceIndexService {
     tagMatches.forEach((id: string) => results.add(id));
 
     // Search in metadata index
-    const metadataMatches = this.searchIndex.metadataIndex.get(term) || new Set();
+    const metadataMatches =
+      this.searchIndex.metadataIndex.get(term) || new Set();
     metadataMatches.forEach((id: string) => results.add(id));
 
     return results;
   }
 
-  private sortByRelevance(sequences: SequenceData[], query: string): SequenceData[] {
+  private sortByRelevance(
+    sequences: SequenceData[],
+    query: string
+  ): SequenceData[] {
     const queryLower = query.toLowerCase();
     return sequences.sort((a, b) => {
       const scoreA = this.calculateRelevanceScore(a, queryLower);
@@ -221,7 +228,10 @@ export class SequenceIndexService implements ISequenceIndexService {
     });
   }
 
-  private calculateRelevanceScore(sequence: SequenceData, query: string): number {
+  private calculateRelevanceScore(
+    sequence: SequenceData,
+    query: string
+  ): number {
     let score = 0;
 
     // Exact word match gets highest score

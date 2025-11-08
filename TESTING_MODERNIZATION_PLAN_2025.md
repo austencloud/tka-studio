@@ -14,12 +14,14 @@ This document outlines a comprehensive plan to transform TKA Studio's testing fr
 ### Current State Analysis
 
 **Strengths:**
+
 - ✅ Modern foundation: Vitest 3.2.4 + Playwright 1.54.2
 - ✅ Good test organization structure
 - ✅ SvelteKit integration working
 - ✅ E2E flow tests covering critical paths
 
 **Weaknesses:**
+
 - ⚠️ **Inverted test pyramid:** Heavy on E2E (~80 tests), light on unit tests (~21 tests)
 - ⚠️ **Brittle E2E tests:** Using fragile selectors and explicit timeouts
 - ⚠️ **Missing layers:** No component testing, no visual regression testing
@@ -67,18 +69,18 @@ This document outlines a comprehensive plan to transform TKA Studio's testing fr
 
 ```typescript
 // tests/config/vitest.config.ts
-import { defineConfig } from 'vitest/config'
-import { sveltekit } from '@sveltejs/kit/vite'
-import { playwright } from '@vitest/browser-playwright'
+import { defineConfig } from "vitest/config";
+import { sveltekit } from "@sveltejs/kit/vite";
+import { playwright } from "@vitest/browser-playwright";
 
 export default defineConfig({
   plugins: [sveltekit()],
 
   test: {
     // Unit tests (jsdom for non-Svelte code)
-    environment: 'jsdom',
+    environment: "jsdom",
     globals: true,
-    setupFiles: ['./tests/setup/vitest-setup.ts'],
+    setupFiles: ["./tests/setup/vitest-setup.ts"],
 
     // Browser mode for component tests
     browser: {
@@ -88,25 +90,23 @@ export default defineConfig({
           slowMo: 0,
         },
       }),
-      instances: [
-        { browser: 'chromium' },
-      ],
+      instances: [{ browser: "chromium" }],
     },
 
     // Test organization
     include: [
-      'tests/unit/**/*.{test,spec}.{js,ts}',
-      'tests/integration/**/*.{test,spec}.{js,ts}',
-      'tests/components/**/*.{test,spec}.{js,ts}', // NEW
+      "tests/unit/**/*.{test,spec}.{js,ts}",
+      "tests/integration/**/*.{test,spec}.{js,ts}",
+      "tests/components/**/*.{test,spec}.{js,ts}", // NEW
     ],
     exclude: [
-      'node_modules/**/*',
-      'tests/e2e/**/*',
-      'archive/**/*', // Exclude legacy code
+      "node_modules/**/*",
+      "tests/e2e/**/*",
+      "archive/**/*", // Exclude legacy code
     ],
 
     // Performance optimization
-    pool: 'forks',
+    pool: "forks",
     poolOptions: {
       forks: {
         singleFork: true,
@@ -116,20 +116,18 @@ export default defineConfig({
 
     // Coverage configuration
     coverage: {
-      provider: 'v8',
+      provider: "v8",
       enabled: true,
-      reporter: ['text', 'json', 'html', 'json-summary'],
+      reporter: ["text", "json", "html", "json-summary"],
       reportOnFailure: true,
-      include: [
-        'src/**/*.{ts,svelte}',
-      ],
+      include: ["src/**/*.{ts,svelte}"],
       exclude: [
-        '**/node_modules/**',
-        '**/tests/**',
-        '**/*.config.*',
-        '**/types/**',
-        '**/*.d.ts',
-        'archive/**',
+        "**/node_modules/**",
+        "**/tests/**",
+        "**/*.config.*",
+        "**/types/**",
+        "**/*.d.ts",
+        "archive/**",
       ],
       thresholds: {
         lines: 80,
@@ -142,12 +140,13 @@ export default defineConfig({
   },
 
   resolve: {
-    conditions: ['browser'],
+    conditions: ["browser"],
   },
-})
+});
 ```
 
 **Installation:**
+
 ```bash
 npm install -D @vitest/browser-playwright
 npx playwright install chromium
@@ -158,6 +157,7 @@ npx playwright install chromium
 **Why:** Reusable, realistic API mocking at the network level. Works across unit, integration, and E2E tests.
 
 **Installation:**
+
 ```bash
 npm install -D msw
 ```
@@ -166,39 +166,42 @@ npm install -D msw
 
 ```typescript
 // tests/mocks/handlers.ts
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse } from "msw";
 
 export const handlers = [
   // Firebase Firestore mocks
-  http.get('https://firestore.googleapis.com/v1/*', () => {
+  http.get("https://firestore.googleapis.com/v1/*", () => {
     return HttpResponse.json({
       documents: [],
-    })
+    });
   }),
 
   // Firebase Auth mocks
-  http.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword', () => {
-    return HttpResponse.json({
-      idToken: 'mock-token',
-      email: 'test@example.com',
-      refreshToken: 'mock-refresh',
-      expiresIn: '3600',
-    })
-  }),
-]
+  http.post(
+    "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword",
+    () => {
+      return HttpResponse.json({
+        idToken: "mock-token",
+        email: "test@example.com",
+        refreshToken: "mock-refresh",
+        expiresIn: "3600",
+      });
+    }
+  ),
+];
 
 // tests/mocks/server.ts
-import { setupServer } from 'msw/node'
-import { handlers } from './handlers'
+import { setupServer } from "msw/node";
+import { handlers } from "./handlers";
 
-export const server = setupServer(...handlers)
+export const server = setupServer(...handlers);
 
 // tests/setup/vitest-setup.ts
-import { server } from '../mocks/server'
+import { server } from "../mocks/server";
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => server.listen({ onUnhandledRequest: "warn" }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 ```
 
 ### 1.3 Test Factories with TypeScript
@@ -206,6 +209,7 @@ afterAll(() => server.close())
 **Why:** Generate realistic test data quickly without repetitive boilerplate.
 
 **Installation:**
+
 ```bash
 npm install -D @faker-js/faker
 ```
@@ -214,41 +218,45 @@ npm install -D @faker-js/faker
 
 ```typescript
 // tests/factories/sequence.factory.ts
-import { faker } from '@faker-js/faker'
-import type { SequenceData } from '$shared/foundation/domain/models/SequenceData'
-import type { BeatData } from '$create/workbench/domain/models/BeatData'
+import { faker } from "@faker-js/faker";
+import type { SequenceData } from "$shared/foundation/domain/models/SequenceData";
+import type { BeatData } from "$create/workbench/domain/models/BeatData";
 
 export const createMockBeat = (overrides?: Partial<BeatData>): BeatData => ({
   beat_number: faker.number.int({ min: 0, max: 32 }),
-  letter: faker.helpers.arrayElement(['A', 'B', 'C', 'D']),
-  start_location: 'n',
-  end_location: 's',
+  letter: faker.helpers.arrayElement(["A", "B", "C", "D"]),
+  start_location: "n",
+  end_location: "s",
   timing: 1,
-  direction: 'cw',
+  direction: "cw",
   rotation: 0,
-  blue_attributes: { start_ori: 'in', end_ori: 'out' },
-  red_attributes: { start_ori: 'out', end_ori: 'in' },
+  blue_attributes: { start_ori: "in", end_ori: "out" },
+  red_attributes: { start_ori: "out", end_ori: "in" },
   ...overrides,
-})
+});
 
-export const createMockSequence = (overrides?: Partial<SequenceData>): SequenceData => ({
+export const createMockSequence = (
+  overrides?: Partial<SequenceData>
+): SequenceData => ({
   id: faker.string.uuid(),
   name: faker.lorem.words(3),
-  beats: Array.from({ length: 8 }, (_, i) => createMockBeat({ beat_number: i })),
-  prop_type: 'staff',
-  grid_mode: 'diamond',
+  beats: Array.from({ length: 8 }, (_, i) =>
+    createMockBeat({ beat_number: i })
+  ),
+  prop_type: "staff",
+  grid_mode: "diamond",
   created_at: faker.date.recent(),
   updated_at: faker.date.recent(),
   ...overrides,
-})
+});
 
 // Usage in tests:
-import { createMockSequence } from '@tests/factories/sequence.factory'
+import { createMockSequence } from "@tests/factories/sequence.factory";
 
-test('should handle sequence with specific prop type', () => {
-  const sequence = createMockSequence({ prop_type: 'fan' })
+test("should handle sequence with specific prop type", () => {
+  const sequence = createMockSequence({ prop_type: "fan" });
   // Test with realistic data
-})
+});
 ```
 
 ---
@@ -263,49 +271,49 @@ test('should handle sequence with specific prop type', () => {
 
 ```typescript
 // tests/components/BeatCell.component.test.ts
-import { expect, test } from 'vitest'
-import { render, screen } from '@testing-library/svelte'
-import { userEvent } from '@testing-library/user-event'
-import BeatCell from '$lib/modules/create/workspace-panel/sequence-display/components/BeatCell.svelte'
-import { createMockBeat } from '@tests/factories/sequence.factory'
+import { expect, test } from "vitest";
+import { render, screen } from "@testing-library/svelte";
+import { userEvent } from "@testing-library/user-event";
+import BeatCell from "$lib/modules/create/workspace-panel/sequence-display/components/BeatCell.svelte";
+import { createMockBeat } from "@tests/factories/sequence.factory";
 
-test('should render beat number', async () => {
-  const beat = createMockBeat({ beat_number: 5 })
+test("should render beat number", async () => {
+  const beat = createMockBeat({ beat_number: 5 });
 
-  render(BeatCell, { props: { beat } })
+  render(BeatCell, { props: { beat } });
 
-  expect(screen.getByText('5')).toBeInTheDocument()
-})
+  expect(screen.getByText("5")).toBeInTheDocument();
+});
 
-test('should emit select event when clicked', async () => {
-  const beat = createMockBeat()
-  const user = userEvent.setup()
+test("should emit select event when clicked", async () => {
+  const beat = createMockBeat();
+  const user = userEvent.setup();
 
-  const { component } = render(BeatCell, { props: { beat } })
+  const { component } = render(BeatCell, { props: { beat } });
 
-  const selectPromise = new Promise(resolve => {
-    component.$on('select', (e) => resolve(e.detail))
-  })
+  const selectPromise = new Promise((resolve) => {
+    component.$on("select", (e) => resolve(e.detail));
+  });
 
-  await user.click(screen.getByRole('button'))
+  await user.click(screen.getByRole("button"));
 
-  const selectedBeat = await selectPromise
-  expect(selectedBeat).toEqual(beat)
-})
+  const selectedBeat = await selectPromise;
+  expect(selectedBeat).toEqual(beat);
+});
 
-test('should show selected state', async () => {
-  const beat = createMockBeat()
+test("should show selected state", async () => {
+  const beat = createMockBeat();
 
   const { rerender } = render(BeatCell, {
-    props: { beat, selected: false }
-  })
+    props: { beat, selected: false },
+  });
 
-  expect(screen.getByRole('button')).not.toHaveClass('selected')
+  expect(screen.getByRole("button")).not.toHaveClass("selected");
 
-  await rerender({ beat, selected: true })
+  await rerender({ beat, selected: true });
 
-  expect(screen.getByRole('button')).toHaveClass('selected')
-})
+  expect(screen.getByRole("button")).toHaveClass("selected");
+});
 ```
 
 ### 2.2 Test Organization
@@ -337,15 +345,17 @@ tests/
 ### 3.1 Replace Brittle Selectors
 
 **Before (Dinky Car):**
+
 ```typescript
-await page.locator('.nav-tab-container').filter({ hasText: 'Build' }).click()
-await page.waitForTimeout(500) // ❌ Flaky!
+await page.locator(".nav-tab-container").filter({ hasText: "Build" }).click();
+await page.waitForTimeout(500); // ❌ Flaky!
 ```
 
 **After (Rocket Ship):**
+
 ```typescript
-await page.getByRole('tab', { name: 'Build' }).click()
-await page.waitForLoadState('networkidle') // ✅ Reliable!
+await page.getByRole("tab", { name: "Build" }).click();
+await page.waitForLoadState("networkidle"); // ✅ Reliable!
 ```
 
 ### 3.2 Page Object Model Pattern
@@ -354,76 +364,80 @@ await page.waitForLoadState('networkidle') // ✅ Reliable!
 
 ```typescript
 // tests/e2e/pages/ConstructPage.ts
-import { expect, type Page, type Locator } from '@playwright/test'
+import { expect, type Page, type Locator } from "@playwright/test";
 
 export class ConstructPage {
-  readonly page: Page
-  readonly startPositionPicker: Locator
-  readonly optionViewer: Locator
-  readonly animateButton: Locator
-  readonly constructButton: Locator
-  readonly clearButton: Locator
+  readonly page: Page;
+  readonly startPositionPicker: Locator;
+  readonly optionViewer: Locator;
+  readonly animateButton: Locator;
+  readonly constructButton: Locator;
+  readonly clearButton: Locator;
 
   constructor(page: Page) {
-    this.page = page
-    this.startPositionPicker = page.getByRole('region', { name: 'Start Position' })
-    this.optionViewer = page.getByRole('region', { name: 'Options' })
-    this.animateButton = page.getByRole('button', { name: 'Animate' })
-    this.constructButton = page.getByRole('button', { name: 'Construct' })
-    this.clearButton = page.getByRole('button', { name: /clear/i })
+    this.page = page;
+    this.startPositionPicker = page.getByRole("region", {
+      name: "Start Position",
+    });
+    this.optionViewer = page.getByRole("region", { name: "Options" });
+    this.animateButton = page.getByRole("button", { name: "Animate" });
+    this.constructButton = page.getByRole("button", { name: "Construct" });
+    this.clearButton = page.getByRole("button", { name: /clear/i });
   }
 
   async goto() {
-    await this.page.goto('/')
-    await this.page.getByRole('tab', { name: 'Build' }).click()
+    await this.page.goto("/");
+    await this.page.getByRole("tab", { name: "Build" }).click();
   }
 
   async selectStartPosition(index: number = 0) {
-    const positions = this.startPositionPicker.getByRole('button')
-    await positions.nth(index).click()
-    await expect(this.optionViewer).toBeVisible()
+    const positions = this.startPositionPicker.getByRole("button");
+    await positions.nth(index).click();
+    await expect(this.optionViewer).toBeVisible();
   }
 
   async addBeats(count: number) {
     for (let i = 0; i < count; i++) {
-      const optionCard = this.optionViewer.getByRole('button').first()
-      await optionCard.click()
+      const optionCard = this.optionViewer.getByRole("button").first();
+      await optionCard.click();
       // Wait for beat to be added to sequence
       await this.page.waitForFunction(() => {
-        return document.querySelectorAll('[data-testid="beat-cell"]').length > i
-      })
+        return (
+          document.querySelectorAll('[data-testid="beat-cell"]').length > i
+        );
+      });
     }
   }
 
   async clearSequence() {
-    await this.clearButton.click()
-    await expect(this.startPositionPicker).toBeVisible()
+    await this.clearButton.click();
+    await expect(this.startPositionPicker).toBeVisible();
   }
 }
 
 // Usage in test:
-import { ConstructPage } from './pages/ConstructPage'
+import { ConstructPage } from "./pages/ConstructPage";
 
-test('Complete Construct Flow', async ({ page }) => {
-  const constructPage = new ConstructPage(page)
+test("Complete Construct Flow", async ({ page }) => {
+  const constructPage = new ConstructPage(page);
 
-  await constructPage.goto()
-  await constructPage.selectStartPosition()
-  await constructPage.addBeats(4)
-  await constructPage.animateButton.click()
+  await constructPage.goto();
+  await constructPage.selectStartPosition();
+  await constructPage.addBeats(4);
+  await constructPage.animateButton.click();
 
-  await expect(page.getByRole('region', { name: 'Animation' })).toBeVisible()
-})
+  await expect(page.getByRole("region", { name: "Animation" })).toBeVisible();
+});
 ```
 
 ### 3.3 Update Playwright Config
 
 ```typescript
 // tests/config/playwright.config.ts
-import { defineConfig, devices } from '@playwright/test'
+import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
-  testDir: './tests/e2e',
+  testDir: "./tests/e2e",
 
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -431,16 +445,16 @@ export default defineConfig({
   workers: process.env.CI ? 1 : 4,
 
   reporter: process.env.CI
-    ? [['html'], ['json', { outputFile: 'test-results/results.json' }]]
-    : 'list',
+    ? [["html"], ["json", { outputFile: "test-results/results.json" }]]
+    : "list",
 
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: "http://localhost:5173",
 
     // Enable tracing for debugging
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
+    trace: "retain-on-failure",
+    screenshot: "only-on-failure",
+    video: "retain-on-failure",
 
     // Accessibility-first testing
     // Automatically wait for elements to be actionable
@@ -450,34 +464,34 @@ export default defineConfig({
 
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
     },
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: "firefox",
+      use: { ...devices["Desktop Firefox"] },
     },
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: "webkit",
+      use: { ...devices["Desktop Safari"] },
     },
     {
-      name: 'mobile-chrome',
-      use: { ...devices['Pixel 5'] },
+      name: "mobile-chrome",
+      use: { ...devices["Pixel 5"] },
     },
     {
-      name: 'mobile-safari',
-      use: { ...devices['iPhone 12'] },
+      name: "mobile-safari",
+      use: { ...devices["iPhone 12"] },
     },
   ],
 
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:5173',
+    command: "npm run dev",
+    url: "http://localhost:5173",
     reuseExistingServer: !process.env.CI,
     timeout: 120 * 1000,
   },
-})
+});
 ```
 
 ---
@@ -488,47 +502,47 @@ export default defineConfig({
 
 ```typescript
 // tests/e2e/visual/homepage.visual.spec.ts
-import { test, expect } from '@playwright/test'
+import { test, expect } from "@playwright/test";
 
-test.describe('Homepage Visual Regression', () => {
-  test('should match baseline - desktop', async ({ page }) => {
-    await page.goto('/')
+test.describe("Homepage Visual Regression", () => {
+  test("should match baseline - desktop", async ({ page }) => {
+    await page.goto("/");
 
     // Wait for animations to complete
-    await page.waitForLoadState('networkidle')
+    await page.waitForLoadState("networkidle");
 
     // Take full-page screenshot
-    await expect(page).toHaveScreenshot('homepage-desktop.png', {
+    await expect(page).toHaveScreenshot("homepage-desktop.png", {
       fullPage: true,
       threshold: 0.2, // 0.2 = 20% tolerance for anti-aliasing
-    })
-  })
+    });
+  });
 
-  test('should match baseline - mobile', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 667 })
-    await page.goto('/')
-    await page.waitForLoadState('networkidle')
+  test("should match baseline - mobile", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
 
-    await expect(page).toHaveScreenshot('homepage-mobile.png', {
+    await expect(page).toHaveScreenshot("homepage-mobile.png", {
       fullPage: true,
       threshold: 0.2,
-    })
-  })
+    });
+  });
 
-  test('should match BeatCell component', async ({ page }) => {
-    await page.goto('/')
-    await page.getByRole('tab', { name: 'Build' }).click()
+  test("should match BeatCell component", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("tab", { name: "Build" }).click();
 
     // Wait for specific component
-    const beatCell = page.locator('[data-testid="beat-cell"]').first()
-    await beatCell.waitFor()
+    const beatCell = page.locator('[data-testid="beat-cell"]').first();
+    await beatCell.waitFor();
 
     // Screenshot specific element
-    await expect(beatCell).toHaveScreenshot('beat-cell.png', {
+    await expect(beatCell).toHaveScreenshot("beat-cell.png", {
       threshold: 0.1,
-    })
-  })
-})
+    });
+  });
+});
 ```
 
 ### 4.2 Visual Testing Best Practices
@@ -567,8 +581,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -602,8 +616,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -636,8 +650,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-          cache: 'npm'
+          node-version: "22"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -657,12 +671,14 @@ jobs:
 ### 5.2 Performance Optimization
 
 **Expected Results:**
+
 - Unit tests: <5 seconds
 - Component tests: 30-60 seconds
 - E2E tests (single shard): ~2-3 minutes
 - Full suite (parallel): <5 minutes
 
 **Key Optimizations:**
+
 1. **Test sharding:** Split E2E tests across 4 parallel jobs
 2. **Browser caching:** Reuse Playwright browser installations
 3. **Dependency caching:** Cache node_modules
@@ -677,15 +693,15 @@ jobs:
 
 ```typescript
 // tests/matchers/custom-matchers.ts
-import { expect } from 'vitest'
-import type { BeatData } from '$create/workbench/domain/models/BeatData'
+import { expect } from "vitest";
+import type { BeatData } from "$create/workbench/domain/models/BeatData";
 
 interface CustomMatchers<R = unknown> {
-  toBeValidBeat: () => R
-  toHaveSequenceLength: (length: number) => R
+  toBeValidBeat: () => R;
+  toHaveSequenceLength: (length: number) => R;
 }
 
-declare module 'vitest' {
+declare module "vitest" {
   interface Assertion<T = any> extends CustomMatchers<T> {}
   interface AsymmetricMatchersContaining extends CustomMatchers {}
 }
@@ -693,10 +709,10 @@ declare module 'vitest' {
 expect.extend({
   toBeValidBeat(received: BeatData) {
     const pass =
-      typeof received.beat_number === 'number' &&
+      typeof received.beat_number === "number" &&
       received.beat_number >= 0 &&
-      typeof received.letter === 'string' &&
-      received.letter.length === 1
+      typeof received.letter === "string" &&
+      received.letter.length === 1;
 
     return {
       pass,
@@ -704,12 +720,12 @@ expect.extend({
         pass
           ? `Expected beat to be invalid`
           : `Expected beat to be valid, but got: ${JSON.stringify(received)}`,
-    }
+    };
   },
 
   toHaveSequenceLength(received: any, expected: number) {
-    const actualLength = received.beats?.length ?? 0
-    const pass = actualLength === expected
+    const actualLength = received.beats?.length ?? 0;
+    const pass = actualLength === expected;
 
     return {
       pass,
@@ -717,23 +733,23 @@ expect.extend({
         `Expected sequence to have ${expected} beats, but got ${actualLength}`,
       actual: actualLength,
       expected,
-    }
+    };
   },
-})
+});
 
 // Usage:
-import { createMockBeat, createMockSequence } from '@tests/factories'
-import '@tests/matchers/custom-matchers'
+import { createMockBeat, createMockSequence } from "@tests/factories";
+import "@tests/matchers/custom-matchers";
 
-test('should create valid beat', () => {
-  const beat = createMockBeat()
-  expect(beat).toBeValidBeat()
-})
+test("should create valid beat", () => {
+  const beat = createMockBeat();
+  expect(beat).toBeValidBeat();
+});
 
-test('should have correct sequence length', () => {
-  const sequence = createMockSequence()
-  expect(sequence).toHaveSequenceLength(8)
-})
+test("should have correct sequence length", () => {
+  const sequence = createMockSequence();
+  expect(sequence).toHaveSequenceLength(8);
+});
 ```
 
 ### 6.2 Test Scripts in package.json
@@ -787,43 +803,45 @@ npm install -D @axe-core/playwright
 
 ```typescript
 // tests/e2e/accessibility/a11y.spec.ts
-import { test, expect } from '@playwright/test'
-import AxeBuilder from '@axe-core/playwright'
+import { test, expect } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
-test.describe('Accessibility Tests', () => {
-  test('should not have accessibility violations on homepage', async ({ page }) => {
-    await page.goto('/')
+test.describe("Accessibility Tests", () => {
+  test("should not have accessibility violations on homepage", async ({
+    page,
+  }) => {
+    await page.goto("/");
 
     const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-      .analyze()
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
 
-    expect(results.violations).toEqual([])
-  })
+    expect(results.violations).toEqual([]);
+  });
 
-  test('should have accessible navigation', async ({ page }) => {
-    await page.goto('/')
+  test("should have accessible navigation", async ({ page }) => {
+    await page.goto("/");
 
     // Verify keyboard navigation
-    await page.keyboard.press('Tab')
-    const firstFocusable = page.locator(':focus')
-    await expect(firstFocusable).toBeVisible()
+    await page.keyboard.press("Tab");
+    const firstFocusable = page.locator(":focus");
+    await expect(firstFocusable).toBeVisible();
 
     // Verify ARIA labels
-    await expect(page.getByRole('navigation')).toBeVisible()
-    await expect(page.getByRole('main')).toBeVisible()
-  })
+    await expect(page.getByRole("navigation")).toBeVisible();
+    await expect(page.getByRole("main")).toBeVisible();
+  });
 
-  test('should have accessible form controls', async ({ page }) => {
-    await page.goto('/settings')
+  test("should have accessible form controls", async ({ page }) => {
+    await page.goto("/settings");
 
     const results = await new AxeBuilder({ page })
       .include('[role="dialog"]')
-      .analyze()
+      .analyze();
 
-    expect(results.violations).toEqual([])
-  })
-})
+    expect(results.violations).toEqual([]);
+  });
+});
 ```
 
 ---
@@ -867,6 +885,7 @@ test.describe('Accessibility Tests', () => {
 ## 🚀 Implementation Timeline
 
 ### Week 1-2: Foundation
+
 - [ ] Configure Vitest browser mode
 - [ ] Set up MSW for API mocking
 - [ ] Create test factories
@@ -874,30 +893,35 @@ test.describe('Accessibility Tests', () => {
 - [ ] Update test scripts
 
 ### Week 2-3: Component Testing
+
 - [ ] Write 50+ component tests
 - [ ] Test all critical UI components
 - [ ] Set up component test organization
 - [ ] Achieve 80% coverage on components
 
 ### Week 3-4: E2E Hardening
+
 - [ ] Refactor E2E tests with accessibility selectors
 - [ ] Create Page Object Models
 - [ ] Remove all waitForTimeout() calls
 - [ ] Add trace capture on failure
 
 ### Week 4: Visual Regression
+
 - [ ] Set up visual testing
 - [ ] Create baseline screenshots
 - [ ] Add visual tests for critical pages
 - [ ] Configure visual diff thresholds
 
 ### Week 5: CI/CD Optimization
+
 - [ ] Set up GitHub Actions workflow
 - [ ] Configure test sharding
 - [ ] Add coverage reporting
 - [ ] Optimize parallel execution
 
 ### Week 6: DX & Accessibility
+
 - [ ] Create custom matchers
 - [ ] Add VS Code test integration
 - [ ] Set up axe-core testing
@@ -908,6 +932,7 @@ test.describe('Accessibility Tests', () => {
 ## 📊 Success Metrics & KPIs
 
 ### Before (Dinky Car)
+
 - ⚠️ Unit tests: ~21
 - ⚠️ Component tests: 0
 - ⚠️ E2E tests: ~80
@@ -917,6 +942,7 @@ test.describe('Accessibility Tests', () => {
 - ⚠️ CI feedback time: Sequential, slow
 
 ### After (Rocket Ship)
+
 - ✅ Unit tests: 100-200
 - ✅ Component tests: 50-100
 - ✅ E2E tests: 10-15 (focused on critical flows)
@@ -926,6 +952,7 @@ test.describe('Accessibility Tests', () => {
 - ✅ CI feedback time: <5 minutes with sharding
 
 ### Developer Experience Improvements
+
 - ⚡ Unit test feedback: <5 seconds
 - ⚡ Component test feedback: <60 seconds
 - 🎯 Test reliability: >99%
@@ -967,12 +994,14 @@ npx playwright install chromium firefox webkit
 ## 🎓 Learning Resources
 
 ### Official Documentation
+
 - [Vitest 3 Guide](https://vitest.dev/guide/)
 - [Playwright Documentation](https://playwright.dev/docs/intro)
 - [MSW Documentation](https://mswjs.io/docs/)
 - [Testing Library](https://testing-library.com/docs/svelte-testing-library/intro)
 
 ### 2025 Best Practices
+
 - [Vitest Browser Mode Guide](https://vitest.dev/guide/browser/)
 - [Playwright Component Testing](https://playwright.dev/docs/test-components)
 - [Visual Regression Testing](https://playwright.dev/docs/test-snapshots)
@@ -983,22 +1012,27 @@ npx playwright install chromium firefox webkit
 ## 🚧 Potential Challenges & Solutions
 
 ### Challenge 1: Svelte 5 Runes Compatibility
+
 **Problem:** jsdom doesn't support Svelte 5's new reactivity system
 **Solution:** Use Vitest browser mode with Playwright provider
 
 ### Challenge 2: Firebase Mocking
+
 **Problem:** Complex Firebase API interactions
 **Solution:** Use MSW to mock Firestore and Auth at the network level
 
 ### Challenge 3: Test Migration Effort
+
 **Problem:** Rewriting 80+ E2E tests takes time
 **Solution:** Incremental migration - focus on most flaky tests first
 
 ### Challenge 4: CI Performance
+
 **Problem:** Full test suite takes too long
 **Solution:** Implement test sharding and parallel execution
 
 ### Challenge 5: Learning Curve
+
 **Problem:** Team needs to learn new patterns
 **Solution:** Pair programming, documentation, and gradual rollout
 

@@ -5,12 +5,12 @@
  * Uses the render module for image generation.
  */
 
-import type { ISequenceRenderService } from '$render';
-import type { SequenceData } from '$shared';
-import { TYPES } from '$shared/inversify/types';
-import { inject, injectable } from 'inversify';
-import type { ShareOptions } from '../../domain';
-import type { IShareService } from '../contracts';
+import type { ISequenceRenderService } from "$render";
+import type { SequenceData } from "$shared";
+import { TYPES } from "$shared/inversify/types";
+import { inject, injectable } from "inversify";
+import type { ShareOptions } from "../../domain";
+import type { IShareService } from "../contracts";
 
 @injectable()
 export class ShareService implements IShareService {
@@ -19,7 +19,10 @@ export class ShareService implements IShareService {
     private renderService: ISequenceRenderService
   ) {}
 
-  async generatePreview(sequence: SequenceData, options: ShareOptions): Promise<string> {
+  async generatePreview(
+    sequence: SequenceData,
+    options: ShareOptions
+  ): Promise<string> {
     // Convert ShareOptions to SequenceExportOptions for render service
     // Use much smaller scale for thumbnail preview (faster loading)
     const renderOptions = this.convertToPreviewOptions(options);
@@ -28,7 +31,11 @@ export class ShareService implements IShareService {
     return await this.renderService.generatePreview(sequence, renderOptions);
   }
 
-  async downloadImage(sequence: SequenceData, options: ShareOptions, filename?: string): Promise<void> {
+  async downloadImage(
+    sequence: SequenceData,
+    options: ShareOptions,
+    filename?: string
+  ): Promise<void> {
     // Get image blob
     const blob = await this.getImageBlob(sequence, options);
 
@@ -39,21 +46,27 @@ export class ShareService implements IShareService {
     this.triggerDownload(blob, finalFilename);
   }
 
-  async getImageBlob(sequence: SequenceData, options: ShareOptions): Promise<Blob> {
+  async getImageBlob(
+    sequence: SequenceData,
+    options: ShareOptions
+  ): Promise<Blob> {
     // Convert ShareOptions to SequenceExportOptions for render service
     const renderOptions = this.convertToRenderOptions(options);
 
     // Use render service to generate blob
-    return await this.renderService.renderSequenceToBlob(sequence, renderOptions);
+    return await this.renderService.renderSequenceToBlob(
+      sequence,
+      renderOptions
+    );
   }
 
   generateFilename(sequence: SequenceData, options: ShareOptions): string {
-    const sequenceName = sequence.word || sequence.name || 'sequence';
-    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const sequenceName = sequence.word || sequence.name || "sequence";
+    const date = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
     const extension = options.format.toLowerCase();
 
     // Clean filename
-    const cleanName = sequenceName.replace(/[^a-zA-Z0-9-_]/g, '_');
+    const cleanName = sequenceName.replace(/[^a-zA-Z0-9-_]/g, "_");
 
     return `${cleanName}_${date}.${extension}`;
   }
@@ -62,7 +75,7 @@ export class ShareService implements IShareService {
     const errors: string[] = [];
 
     // Validate format
-    if (!['PNG', 'JPEG', 'WebP'].includes(options.format)) {
+    if (!["PNG", "JPEG", "WebP"].includes(options.format)) {
       errors.push(`Invalid format: ${options.format}`);
     }
 
@@ -83,7 +96,7 @@ export class ShareService implements IShareService {
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -111,13 +124,15 @@ export class ShareService implements IShareService {
       blueVisible: true,
 
       // User information
-      userName: shareOptions.userName || 'TKA Studio User',
-      exportDate: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-      }).replace(/\//g, '-'),
-      notes: shareOptions.notes || 'Created with TKA Studio',
+      userName: shareOptions.userName || "TKA Studio User",
+      exportDate: new Date()
+        .toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        })
+        .replace(/\//g, "-"),
+      notes: shareOptions.notes || "Created with TKA Studio",
 
       // Output format
       format: shareOptions.format,
@@ -149,16 +164,18 @@ export class ShareService implements IShareService {
       blueVisible: true,
 
       // User information
-      userName: shareOptions.userName || 'TKA Studio User',
-      exportDate: new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'numeric',
-        day: 'numeric',
-      }).replace(/\//g, '-'),
-      notes: shareOptions.notes || 'Created with TKA Studio',
+      userName: shareOptions.userName || "TKA Studio User",
+      exportDate: new Date()
+        .toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        })
+        .replace(/\//g, "-"),
+      notes: shareOptions.notes || "Created with TKA Studio",
 
       // Output format - Maximum speed optimization
-      format: 'JPEG' as const, // JPEG encodes much faster than PNG
+      format: "JPEG" as const, // JPEG encodes much faster than PNG
       quality: 0.4, // Minimum acceptable quality for instant speed
       scale: 0.15, // Match beatScale for consistency
       backgroundColor: shareOptions.backgroundColor,
@@ -168,7 +185,7 @@ export class ShareService implements IShareService {
   private triggerDownload(blob: Blob, filename: string): void {
     // Create download link and trigger it
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = filename;
     document.body.appendChild(link);

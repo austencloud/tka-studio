@@ -38,11 +38,11 @@ Uses simplified stepper controls matching the single-beat edit pattern.
 
   // Derived layout mode based on actual container size
   const layoutMode = $derived.by(() => {
-    if (containerHeight === 0) return 'default';
-    if (containerHeight < 400) return 'ultra-compact';
-    if (containerHeight < 500) return 'very-compact';
-    if (containerHeight < 600) return 'compact';
-    return 'default';
+    if (containerHeight === 0) return "default";
+    if (containerHeight < 400) return "ultra-compact";
+    if (containerHeight < 500) return "very-compact";
+    if (containerHeight < 600) return "compact";
+    return "default";
   });
 
   // Derived: Should we show header based on available space?
@@ -59,34 +59,35 @@ Uses simplified stepper controls matching the single-beat edit pattern.
 
   // Derived: Smart button text based on available space
   const applyButtonText = $derived.by(() => {
-    if (containerHeight < 400) return 'Apply';
+    if (containerHeight < 400) return "Apply";
     if (containerHeight < 500) return `Apply to ${selectedBeats.length}`;
-    return `Apply to ${selectedBeats.length} beat${selectedBeats.length !== 1 ? 's' : ''}`;
+    return `Apply to ${selectedBeats.length} beat${selectedBeats.length !== 1 ? "s" : ""}`;
   });
 
   // Get current turn values from beat data
-  function getTurnValue(beat: BeatData, color: 'red' | 'blue'): number {
+  function getTurnValue(beat: BeatData, color: "red" | "blue"): number {
     const motion = beat.motions?.[color];
     if (!motion) return 0;
     const turns = motion.turns ?? 0;
     // Handle "fl" (float) case - convert to 0
-    return typeof turns === 'number' ? turns : 0;
+    return typeof turns === "number" ? turns : 0;
   }
 
   // Analyze current values across selection
-  const blueValues = $derived(new Set<number>(selectedBeats.map((b: BeatData) => getTurnValue(b, 'blue'))));
-  const redValues = $derived(new Set<number>(selectedBeats.map((b: BeatData) => getTurnValue(b, 'red'))));
-
-  const hasEdits = $derived(
-    blueTurn !== null ||
-    redTurn !== null
+  const blueValues = $derived(
+    new Set<number>(selectedBeats.map((b: BeatData) => getTurnValue(b, "blue")))
+  );
+  const redValues = $derived(
+    new Set<number>(selectedBeats.map((b: BeatData) => getTurnValue(b, "red")))
   );
 
-  // Value selection handlers
-  function handleSelectValue(field: 'blue' | 'red', value: number) {
-    hapticService?.trigger('selection');
+  const hasEdits = $derived(blueTurn !== null || redTurn !== null);
 
-    if (field === 'blue') {
+  // Value selection handlers
+  function handleSelectValue(field: "blue" | "red", value: number) {
+    hapticService?.trigger("selection");
+
+    if (field === "blue") {
       blueTurn = value;
     } else {
       redTurn = value;
@@ -94,8 +95,8 @@ Uses simplified stepper controls matching the single-beat edit pattern.
   }
 
   // Check if a value is currently selected
-  function isValueSelected(field: 'blue' | 'red', value: number): boolean {
-    if (field === 'blue') {
+  function isValueSelected(field: "blue" | "red", value: number): boolean {
+    if (field === "blue") {
       return blueTurn === value;
     } else {
       return redTurn === value;
@@ -136,7 +137,9 @@ Uses simplified stepper controls matching the single-beat edit pattern.
         containerWidth = inlineSize || entry.contentRect.width;
 
         // Debug logging (can remove in production)
-        console.log(`📏 Batch edit container: ${containerWidth}x${containerHeight}px (${layoutMode})`);
+        console.log(
+          `📏 Batch edit container: ${containerWidth}x${containerHeight}px (${layoutMode})`
+        );
       }
     });
 
@@ -148,17 +151,23 @@ Uses simplified stepper controls matching the single-beat edit pattern.
   });
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
-<div class="batch-edit-layout" bind:this={containerElement} data-layout-mode={layoutMode}>
+<div
+  class="batch-edit-layout"
+  bind:this={containerElement}
+  data-layout-mode={layoutMode}
+>
   <!-- Header - conditionally shown based on available space -->
   {#if showHeader}
     <div class="batch-header">
       <h3 class="batch-title">
         <i class="fas fa-edit"></i>
-        {selectedBeats.length} Beat{selectedBeats.length !== 1 ? 's' : ''}
+        {selectedBeats.length} Beat{selectedBeats.length !== 1 ? "s" : ""}
       </h3>
     </div>
   {/if}
@@ -175,8 +184,8 @@ Uses simplified stepper controls matching the single-beat edit pattern.
         {#each visibleTurnOptions as value}
           <button
             class="value-btn"
-            class:selected={isValueSelected('blue', value)}
-            onclick={() => handleSelectValue('blue', value)}
+            class:selected={isValueSelected("blue", value)}
+            onclick={() => handleSelectValue("blue", value)}
             aria-label={`Set left (blue) turn to ${value}`}
             type="button"
           >
@@ -196,8 +205,8 @@ Uses simplified stepper controls matching the single-beat edit pattern.
         {#each visibleTurnOptions as value}
           <button
             class="value-btn"
-            class:selected={isValueSelected('red', value)}
-            onclick={() => handleSelectValue('red', value)}
+            class:selected={isValueSelected("red", value)}
+            onclick={() => handleSelectValue("red", value)}
             aria-label={`Set right (red) turn to ${value}`}
             type="button"
           >
@@ -287,7 +296,11 @@ Uses simplified stepper controls matching the single-beat edit pattern.
 
   .turn-control.blue {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      white 100%
+    );
   }
 
   .turn-control.red {
@@ -458,7 +471,6 @@ Uses simplified stepper controls matching the single-beat edit pattern.
   .apply-button:active:not(:disabled) {
     transform: translateY(0);
   }
-
 
   /* Container Queries - Responsive to actual available space */
 

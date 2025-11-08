@@ -13,6 +13,7 @@ The ts-prune tool found **2,010 unused exports**, BUT this does NOT mean you hav
 Your codebase follows this pattern:
 
 #### ✅ **What You're Actually Doing (Direct Imports)**
+
 ```typescript
 // In ModuleRenderer.svelte - THIS IS USED
 import AboutTab from "../../modules/about/components/AboutTab.svelte";
@@ -21,6 +22,7 @@ import WriteTab from "../../modules/write/components/WriteTab.svelte";
 ```
 
 #### ❌ **What You're NOT Doing (Barrel Imports)**
+
 ```typescript
 // In about/components/index.ts - THIS IS UNUSED
 export { default as AboutTab } from "./AboutTab.svelte";
@@ -38,16 +40,18 @@ import { AboutTab } from "$lib/modules/about/components";
 ### 1. Your Components ARE Being Used ✅
 
 All these components are actively used in your app:
-- `AboutTab.svelte` - Used in [ModuleRenderer.svelte:15](c:\_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L15)
-- `WordCardTab.svelte` - Used in [ModuleRenderer.svelte:19](c:\_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L19)
-- `WriteTab.svelte` - Used in [ModuleRenderer.svelte:20](c:\_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L20)
-- `LibraryTab.svelte` - Used in [ModuleRenderer.svelte:18](c:\_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L18)
-- `LearnTab.svelte` - Used in [ModuleRenderer.svelte:17](c:\_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L17)
-- `BuildTab.svelte` - Used in [ModuleRenderer.svelte:16](c:\_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L16)
+
+- `AboutTab.svelte` - Used in [ModuleRenderer.svelte:15](c:_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L15)
+- `WordCardTab.svelte` - Used in [ModuleRenderer.svelte:19](c:_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L19)
+- `WriteTab.svelte` - Used in [ModuleRenderer.svelte:20](c:_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L20)
+- `LibraryTab.svelte` - Used in [ModuleRenderer.svelte:18](c:_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L18)
+- `LearnTab.svelte` - Used in [ModuleRenderer.svelte:17](c:_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L17)
+- `BuildTab.svelte` - Used in [ModuleRenderer.svelte:16](c:_TKA-STUDIO\src\lib\shared\modules\ModuleRenderer.svelte#L16)
 
 ### 2. The Barrel `index.ts` Files ARE Unused ❌
 
 These barrel re-export files serve no purpose:
+
 - `src/lib/modules/about/components/index.ts` - Nobody imports from it
 - `src/lib/modules/word-card/components/index.ts` - Nobody imports from it
 - `src/lib/modules/write/components/index.ts` - Nobody imports from it
@@ -72,6 +76,7 @@ Let me verify which components inside the modules are actually being used vs tru
 ### About Module Components
 
 Barrel file exports these (from `about/components/index.ts`):
+
 - AboutTab
 - AboutTheSystem
 - CallToAction
@@ -114,6 +119,7 @@ The build module has the most flagged exports. But we need to check:
 ### Step 1: Verify Barrel Exports Are Actually Unused
 
 The barrel `index.ts` files are probably safe to delete IF:
+
 - Nobody is importing from them
 - All imports go directly to source files
 
@@ -122,6 +128,7 @@ But first, let's verify this pattern is consistent.
 ### Step 2: Check for Truly Dead Components
 
 For each flagged component, search if it's:
+
 1. Imported anywhere (even if directly from `.svelte` file)
 2. Rendered in any parent component
 3. Used in routes
@@ -129,6 +136,7 @@ For each flagged component, search if it's:
 ### Step 3: Check Service Contracts
 
 Service contracts might be "unused" from TypeScript's perspective but:
+
 - Used by Inversify for dependency injection
 - Used as type constraints
 - Used in test mocks
@@ -156,12 +164,15 @@ E. **All of the above**
 ## Current Recommendation (Updated)
 
 ### ✅ Safe to Delete (Probably)
+
 - Barrel `index.ts` files that aren't imported
 
 ### ⚠️ Need to Verify First
+
 - Everything else - need to check actual component usage
 
 ### ❌ Do NOT Delete
+
 - Anything imported directly from `.svelte` files
 - Anything used by Inversify container
 - Anything used in routes

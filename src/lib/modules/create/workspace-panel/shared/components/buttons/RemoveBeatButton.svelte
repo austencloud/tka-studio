@@ -12,7 +12,7 @@
   // Props
   const {
     beatNumber,
-    onclick
+    onclick,
   }: {
     beatNumber: number;
     onclick?: () => void;
@@ -22,7 +22,9 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function handleClick() {

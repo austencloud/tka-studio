@@ -45,7 +45,7 @@ test.describe("Edit Panel Deselection Test", () => {
 
     // Look for option tiles to add a beat
     const optionTiles = page.locator('[role="button"]').filter({
-      has: page.locator('svg'),
+      has: page.locator("svg"),
     });
 
     const optionCount = await optionTiles.count();
@@ -59,7 +59,7 @@ test.describe("Edit Panel Deselection Test", () => {
     }
 
     // Find the beat cell in the workspace
-    const beatCell = page.locator('.beat-cell').first();
+    const beatCell = page.locator(".beat-cell").first();
     await beatCell.waitFor({ state: "visible", timeout: 5000 });
     console.log("🎯 Found beat cell");
 
@@ -69,9 +69,13 @@ test.describe("Edit Panel Deselection Test", () => {
     await page.waitForTimeout(500);
 
     // Verify edit panel is open (look for edit panel container)
-    const editPanel = page.locator('.edit-panel').or(
-      page.locator('[class*="edit"]').filter({ hasText: /Edit|Orientation|Turns/ })
-    );
+    const editPanel = page
+      .locator(".edit-panel")
+      .or(
+        page
+          .locator('[class*="edit"]')
+          .filter({ hasText: /Edit|Orientation|Turns/ })
+      );
     await expect(editPanel.first()).toBeVisible({ timeout: 3000 });
     console.log("✅ Edit panel is open");
 
@@ -112,10 +116,14 @@ test.describe("Edit Panel Deselection Test", () => {
     await expect(beatCell).toHaveClass(/selected/, { timeout: 2000 });
     console.log("✅ Beat is selected again (subsequent selection works)");
 
-    console.log("🎉 Test passed: Edit panel properly deselects pictograph on outside click");
+    console.log(
+      "🎉 Test passed: Edit panel properly deselects pictograph on outside click"
+    );
   });
 
-  test("should not deselect when clicking on another beat", async ({ page }) => {
+  test("should not deselect when clicking on another beat", async ({
+    page,
+  }) => {
     // Navigate to the app
     await page.goto("http://localhost:5173/");
     console.log("🏠 Navigated to app");
@@ -149,7 +157,7 @@ test.describe("Edit Panel Deselection Test", () => {
 
     // Add two beats to the sequence
     const optionTiles = page.locator('[role="button"]').filter({
-      has: page.locator('svg'),
+      has: page.locator("svg"),
     });
 
     if ((await optionTiles.count()) >= 2) {
@@ -164,7 +172,7 @@ test.describe("Edit Panel Deselection Test", () => {
     }
 
     // Find both beat cells
-    const beatCells = page.locator('.beat-cell');
+    const beatCells = page.locator(".beat-cell");
     await expect(beatCells).toHaveCount(2, { timeout: 5000 });
 
     const firstBeat = beatCells.nth(0);
@@ -193,9 +201,13 @@ test.describe("Edit Panel Deselection Test", () => {
     console.log("✅ First beat is no longer selected");
 
     // Edit panel should still be open
-    const editPanel = page.locator('.edit-panel').or(
-      page.locator('[class*="edit"]').filter({ hasText: /Edit|Orientation|Turns/ })
-    );
+    const editPanel = page
+      .locator(".edit-panel")
+      .or(
+        page
+          .locator('[class*="edit"]')
+          .filter({ hasText: /Edit|Orientation|Turns/ })
+      );
     await expect(editPanel.first()).toBeVisible({ timeout: 3000 });
     console.log("✅ Edit panel remains open when switching between beats");
 

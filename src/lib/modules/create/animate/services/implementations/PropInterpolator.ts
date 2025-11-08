@@ -17,7 +17,8 @@ import type { IEndpointCalculator } from "../contracts/IEndpointCalculator";
 export class PropInterpolator implements IPropInterpolator {
   constructor(
     @inject(TYPES.IAngleCalculator) private angleCalculator: IAngleCalculator,
-    @inject(TYPES.IEndpointCalculator) private endpointCalculator: IEndpointCalculator
+    @inject(TYPES.IEndpointCalculator)
+    private endpointCalculator: IEndpointCalculator
   ) {}
 
   /**
@@ -42,13 +43,14 @@ export class PropInterpolator implements IPropInterpolator {
     }
 
     // Calculate endpoints using native MotionData
-    const blueEndpoints = this.endpointCalculator.calculateMotionEndpoints(blueMotion);
-    const redEndpoints = this.endpointCalculator.calculateMotionEndpoints(redMotion);
+    const blueEndpoints =
+      this.endpointCalculator.calculateMotionEndpoints(blueMotion);
+    const redEndpoints =
+      this.endpointCalculator.calculateMotionEndpoints(redMotion);
 
     // Check if motions are dashes - use Cartesian interpolation for straight-through-center movement
     const blueDash = blueMotion.motionType === MotionType.DASH;
     const redDash = redMotion.motionType === MotionType.DASH;
-
 
     // Interpolate blue prop
     const blueAngles = blueDash
@@ -62,7 +64,8 @@ export class PropInterpolator implements IPropInterpolator {
           ),
           // Staff rotation: Use total rotation delta to respect turns
           staffRotationAngle: this.angleCalculator.normalizeAnglePositive(
-            blueEndpoints.startStaffAngle + blueEndpoints.staffRotationDelta * beatProgress
+            blueEndpoints.startStaffAngle +
+              blueEndpoints.staffRotationDelta * beatProgress
           ),
           // Don't set x,y for non-dash motions - let CanvasRenderer calculate from angle
         };
@@ -79,7 +82,8 @@ export class PropInterpolator implements IPropInterpolator {
           ),
           // Staff rotation: Use total rotation delta to respect turns
           staffRotationAngle: this.angleCalculator.normalizeAnglePositive(
-            redEndpoints.startStaffAngle + redEndpoints.staffRotationDelta * beatProgress
+            redEndpoints.startStaffAngle +
+              redEndpoints.staffRotationDelta * beatProgress
           ),
           // Don't set x,y for non-dash motions - let CanvasRenderer calculate from angle
         };
@@ -99,7 +103,12 @@ export class PropInterpolator implements IPropInterpolator {
   private interpolateDashMotion(
     endpoints: MotionEndpoints,
     progress: number
-  ): { centerPathAngle: number; staffRotationAngle: number; x?: number; y?: number } {
+  ): {
+    centerPathAngle: number;
+    staffRotationAngle: number;
+    x?: number;
+    y?: number;
+  } {
     // Convert start and end angles to Cartesian coordinates (unit circle)
     const startX = Math.cos(endpoints.startCenterAngle);
     const startY = Math.sin(endpoints.startCenterAngle);
@@ -139,8 +148,10 @@ export class PropInterpolator implements IPropInterpolator {
       throw new Error("Red motion data is missing for the first beat.");
     }
 
-    const blueStartEndpoints = this.endpointCalculator.calculateMotionEndpoints(blueStartMotion);
-    const redStartEndpoints = this.endpointCalculator.calculateMotionEndpoints(redStartMotion);
+    const blueStartEndpoints =
+      this.endpointCalculator.calculateMotionEndpoints(blueStartMotion);
+    const redStartEndpoints =
+      this.endpointCalculator.calculateMotionEndpoints(redStartMotion);
 
     return {
       blueAngles: {

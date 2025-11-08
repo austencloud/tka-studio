@@ -56,8 +56,14 @@ export class CanvasRenderer implements ICanvasRenderer {
     redStaffImage: HTMLImageElement | null,
     blueProp: PropState,
     redProp: PropState,
-    bluePropViewBoxDimensions: { width: number; height: number } = { width: 252.8, height: 77.8 },
-    redPropViewBoxDimensions: { width: number; height: number } = { width: 252.8, height: 77.8 }
+    bluePropViewBoxDimensions: { width: number; height: number } = {
+      width: 252.8,
+      height: 77.8,
+    },
+    redPropViewBoxDimensions: { width: number; height: number } = {
+      width: 252.8,
+      height: 77.8,
+    }
   ): void {
     // Rendering logging removed - too noisy, use beat transition logging instead
 
@@ -65,7 +71,7 @@ export class CanvasRenderer implements ICanvasRenderer {
     ctx.clearRect(0, 0, canvasSize, canvasSize);
 
     // Draw white background (required for GIF export)
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvasSize, canvasSize);
 
     // Draw grid exactly as in standalone
@@ -73,11 +79,23 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     // Draw props with their viewBox dimensions
     if (blueStaffImage) {
-      this.drawStaff(ctx, canvasSize, blueProp, blueStaffImage, bluePropViewBoxDimensions);
+      this.drawStaff(
+        ctx,
+        canvasSize,
+        blueProp,
+        blueStaffImage,
+        bluePropViewBoxDimensions
+      );
     }
 
     if (redStaffImage) {
-      this.drawStaff(ctx, canvasSize, redProp, redStaffImage, redPropViewBoxDimensions);
+      this.drawStaff(
+        ctx,
+        canvasSize,
+        redProp,
+        redStaffImage,
+        redPropViewBoxDimensions
+      );
     }
   }
 
@@ -133,15 +151,25 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     // Use pre-calculated x,y if provided (dash motions), otherwise calculate from angle
     let x: number, y: number;
-    const staffAngle = (propState.staffRotationAngle * 180 / Math.PI).toFixed(0);
+    const staffAngle = ((propState.staffRotationAngle * 180) / Math.PI).toFixed(
+      0
+    );
     if (propState.x !== undefined && propState.y !== undefined) {
       // Dash motion: use Cartesian coordinates directly (already in unit circle space)
       x = centerX + propState.x * scaledHalfwayRadius * inwardFactor;
       y = centerY + propState.y * scaledHalfwayRadius * inwardFactor;
     } else {
       // Regular motion: calculate from angle using polar coordinates
-      x = centerX + Math.cos(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
-      y = centerY + Math.sin(propState.centerPathAngle) * scaledHalfwayRadius * inwardFactor;
+      x =
+        centerX +
+        Math.cos(propState.centerPathAngle) *
+          scaledHalfwayRadius *
+          inwardFactor;
+      y =
+        centerY +
+        Math.sin(propState.centerPathAngle) *
+          scaledHalfwayRadius *
+          inwardFactor;
     }
 
     // Scale the prop dimensions from viewBox coordinate space to canvas pixels
@@ -192,5 +220,4 @@ export class CanvasRenderer implements ICanvasRenderer {
 
     ctx.drawImage(letterImage, x, y, scaledWidth, scaledHeight);
   }
-
 }

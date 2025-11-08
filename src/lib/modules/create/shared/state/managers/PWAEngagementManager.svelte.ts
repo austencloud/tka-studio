@@ -16,7 +16,7 @@ type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
 let logger: ReturnType<typeof createComponentLogger> | null = null;
 const getLogger = () => {
   if (!logger) {
-    logger = createComponentLogger('PWAEngagementManager');
+    logger = createComponentLogger("PWAEngagementManager");
   }
   return logger;
 };
@@ -29,7 +29,9 @@ export interface PWAEngagementConfig {
  * Creates PWA engagement tracking effect
  * @returns Cleanup function
  */
-export function createPWAEngagementEffect(config: PWAEngagementConfig): () => void {
+export function createPWAEngagementEffect(
+  config: PWAEngagementConfig
+): () => void {
   const { CreateModuleState } = config;
   let hasTrackedSequenceCreation = false;
 

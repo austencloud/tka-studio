@@ -25,9 +25,6 @@ export interface GenerationOptions {
   capType?: string | undefined; // CAP type for circular generation (e.g., "strictRotated", "strictMirrored")
 }
 
-
-
-
 export interface LetterDerivationResult {
   letter: Letter | null;
   confidence: "exact" | "partial" | "none";

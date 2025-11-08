@@ -1,7 +1,12 @@
 <!-- PositionGroupGrid.svelte - Renders a group of pictographs (Alpha, Beta, or Gamma) -->
 <script lang="ts">
   import type { IHapticFeedbackService, PictographData } from "$shared";
-  import { getLetterBorderColorSafe, Pictograph, resolve, TYPES } from "$shared";
+  import {
+    getLetterBorderColorSafe,
+    Pictograph,
+    resolve,
+    TYPES,
+  } from "$shared";
 
   const {
     pictographs,
@@ -23,7 +28,9 @@
     onAnimationEnd: (id: string) => void;
   } = $props();
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   function handleSelect(pictograph: PictographData) {
     hapticService?.trigger("selection");
@@ -46,7 +53,9 @@
     class:transitioning={isTransitioning}
     role="button"
     tabindex="0"
-    style:--letter-border-color={getLetterBorderColorSafe(pictographData.letter)}
+    style:--letter-border-color={getLetterBorderColorSafe(
+      pictographData.letter
+    )}
     style:--animation-delay="{(startIndex + index) * 30}ms"
     onclick={() => handleSelect(pictographData)}
     onkeydown={(e) => handleKeydown(e, pictographData)}

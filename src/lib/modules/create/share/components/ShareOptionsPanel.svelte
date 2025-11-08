@@ -17,41 +17,43 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Toggle options with Font Awesome icons and colors (matching your CAP card style)
   const toggleOptions = [
     {
-      key: 'addWord' as const,
-      icon: 'fa-solid fa-heading',
-      label: 'Word/Title',
-      color: '#3b82f6' // blue
+      key: "addWord" as const,
+      icon: "fa-solid fa-heading",
+      label: "Word/Title",
+      color: "#3b82f6", // blue
     },
     {
-      key: 'addBeatNumbers' as const,
-      icon: 'fa-solid fa-list-ol',
-      label: 'Beat #s',
-      color: '#8b5cf6' // purple
+      key: "addBeatNumbers" as const,
+      icon: "fa-solid fa-list-ol",
+      label: "Beat #s",
+      color: "#8b5cf6", // purple
     },
     {
-      key: 'addUserInfo' as const,
-      icon: 'fa-solid fa-user',
-      label: 'User Info',
-      color: '#ec4899' // pink
+      key: "addUserInfo" as const,
+      icon: "fa-solid fa-user",
+      label: "User Info",
+      color: "#ec4899", // pink
     },
     {
-      key: 'addDifficultyLevel' as const,
-      icon: 'fa-solid fa-star',
-      label: 'Difficulty',
-      color: '#f59e0b' // amber
+      key: "addDifficultyLevel" as const,
+      icon: "fa-solid fa-star",
+      label: "Difficulty",
+      color: "#f59e0b", // amber
     },
     {
-      key: 'includeStartPosition' as const,
-      icon: 'fa-solid fa-bullseye',
-      label: 'Start Pos',
-      color: '#10b981' // green
-    }
+      key: "includeStartPosition" as const,
+      icon: "fa-solid fa-bullseye",
+      label: "Start Pos",
+      color: "#10b981", // green
+    },
   ];
 
   // Handle toggle with haptic feedback
@@ -71,10 +73,10 @@
 
   // Set optimal defaults - PNG format for better Android share preview compatibility
   $effect(() => {
-    if (options && (options.format !== 'PNG' || options.quality !== 1.0)) {
+    if (options && (options.format !== "PNG" || options.quality !== 1.0)) {
       onOptionsChange?.({
-        format: 'PNG',
-        quality: 1.0
+        format: "PNG",
+        quality: 1.0,
       });
     }
   });
@@ -108,7 +110,7 @@
           type="text"
           class="info-input"
           value={options.userName}
-          oninput={handleInputChange('userName')}
+          oninput={handleInputChange("userName")}
           placeholder="Your name"
         />
 
@@ -116,7 +118,7 @@
           type="text"
           class="info-input"
           value={options.notes}
-          oninput={handleInputChange('notes')}
+          oninput={handleInputChange("notes")}
           placeholder="Optional notes"
         />
       </div>
@@ -169,10 +171,15 @@
 
   /* Active state - colorful gradient with glow */
   .toggle-btn.active {
-    background: linear-gradient(135deg, var(--toggle-color), color-mix(in srgb, var(--toggle-color) 80%, black));
+    background: linear-gradient(
+      135deg,
+      var(--toggle-color),
+      color-mix(in srgb, var(--toggle-color) 80%, black)
+    );
     border-color: white;
     border-width: 3px;
-    box-shadow: 0 0 16px color-mix(in srgb, var(--toggle-color) 50%, transparent);
+    box-shadow: 0 0 16px
+      color-mix(in srgb, var(--toggle-color) 50%, transparent);
   }
 
   .toggle-btn:focus-visible {

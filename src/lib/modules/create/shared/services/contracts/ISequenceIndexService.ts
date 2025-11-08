@@ -16,7 +16,10 @@ export interface ISequenceIndexService {
   // Search operations
   searchSequences(query: string): Promise<SequenceData[]>;
   getSequencesByTag(tag: string): Promise<SequenceData[]>;
-  getSuggestions(partialQuery: string, maxSuggestions?: number): Promise<string[]>;
+  getSuggestions(
+    partialQuery: string,
+    maxSuggestions?: number
+  ): Promise<string[]>;
 
   // Index management
   updateIndex(sequence: SequenceData): Promise<void>;

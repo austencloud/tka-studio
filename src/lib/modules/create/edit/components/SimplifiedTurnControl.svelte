@@ -14,11 +14,7 @@ Research-backed design for 344px portrait (Z Fold):
   import { onMount } from "svelte";
 
   // Props
-  const {
-    color,
-    currentBeatData,
-    onTurnAmountChanged,
-  } = $props<{
+  const { color, currentBeatData, onTurnAmountChanged } = $props<{
     color: "blue" | "red";
     currentBeatData: BeatData | null;
     onTurnAmountChanged: (color: string, turnAmount: number) => void;
@@ -33,19 +29,21 @@ Research-backed design for 344px portrait (Z Fold):
   const currentTurn = $derived.by(() => {
     if (!currentBeatData) return 0;
     // Fixed: access motions.blue.turns instead of .blue
-    const turnValue = color === "blue"
-      ? currentBeatData.motions?.blue?.turns
-      : currentBeatData.motions?.red?.turns;
-    return typeof turnValue === 'number' ? turnValue : 0;
+    const turnValue =
+      color === "blue"
+        ? currentBeatData.motions?.blue?.turns
+        : currentBeatData.motions?.red?.turns;
+    return typeof turnValue === "number" ? turnValue : 0;
   });
 
   // Get motion type from motion data
   const motionType = $derived.by(() => {
     if (!currentBeatData) return "";
 
-    const motion = color === "blue"
-      ? currentBeatData.motions?.blue
-      : currentBeatData.motions?.red;
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
 
     if (!motion || !motion.motionType) return "Static";
 
@@ -68,7 +66,9 @@ Research-backed design for 344px portrait (Z Fold):
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
@@ -142,7 +142,11 @@ Research-backed design for 344px portrait (Z Fold):
   /* Color theming */
   .simplified-turn-control.blue {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      white 100%
+    );
   }
 
   .simplified-turn-control.red {

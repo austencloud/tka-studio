@@ -15,10 +15,7 @@
   import { QuizType, type QuizQuestionData } from "../domain";
 
   // Props
-  let {
-    onAnswerSubmit,
-    onNextQuestion,
-  } = $props<{
+  let { onAnswerSubmit, onNextQuestion } = $props<{
     onAnswerSubmit?: (isCorrect: boolean) => void;
     onNextQuestion?: () => void;
   }>();
@@ -145,9 +142,7 @@
   <div class="quiz-container">
     <!-- Question Section -->
     <div class="question-section">
-      <h3 class="question-prompt">
-        Choose the pictograph for the letter:
-      </h3>
+      <h3 class="question-prompt">Choose the pictograph for the letter:</h3>
 
       <div class="letter-display">
         <div class="letter-wrapper">
@@ -190,7 +185,9 @@
         {#if selectedAnswerId && questionData.answerOptions.find((o) => o.id === selectedAnswerId)?.isCorrect}
           <div class="feedback-content">
             <span class="feedback-icon">🎉</span>
-            <span class="feedback-text">Correct! You found the right pictograph for "{questionLetter}"</span>
+            <span class="feedback-text"
+              >Correct! You found the right pictograph for "{questionLetter}"</span
+            >
           </div>
         {:else}
           <div class="feedback-content">
@@ -328,7 +325,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.2),
+      rgba(118, 75, 162, 0.2)
+    );
     backdrop-filter: blur(10px);
     border-radius: 20px;
     border: 2px solid rgba(255, 255, 255, 0.2);

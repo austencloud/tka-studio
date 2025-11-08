@@ -12,7 +12,9 @@ import {
   createSequenceData,
   updateSequenceData,
   GridMode,
+  Letter,
   MotionColor,
+  MotionType,
   RotationDirection,
 } from "$shared";
 import { injectable } from "inversify";
@@ -27,7 +29,9 @@ import {
 } from "$create/generate/circular/domain/constants";
 
 @injectable()
-export class SequenceTransformationService implements ISequenceTransformationService {
+export class SequenceTransformationService
+  implements ISequenceTransformationService
+{
   /**
    * Clear all beats in a sequence (make them blank)
    */
@@ -81,7 +85,9 @@ export class SequenceTransformationService implements ISequenceTransformationSer
     return updateSequenceData(sequence, {
       beats: mirroredBeats,
       ...(mirroredStartPosition && { startPosition: mirroredStartPosition }),
-      ...(mirroredStartingPositionBeat && { startingPositionBeat: mirroredStartingPositionBeat }),
+      ...(mirroredStartingPositionBeat && {
+        startingPositionBeat: mirroredStartingPositionBeat,
+      }),
     });
   }
 
@@ -174,7 +180,9 @@ export class SequenceTransformationService implements ISequenceTransformationSer
     return updateSequenceData(sequence, {
       beats: swappedBeats,
       ...(swappedStartPosition && { startPosition: swappedStartPosition }),
-      ...(swappedStartingPositionBeat && { startingPositionBeat: swappedStartingPositionBeat }),
+      ...(swappedStartingPositionBeat && {
+        startingPositionBeat: swappedStartingPositionBeat,
+      }),
     });
   }
 
@@ -230,7 +238,10 @@ export class SequenceTransformationService implements ISequenceTransformationSer
    * - Rotates all locations clockwise
    * - Toggles grid mode (DIAMOND ↔ BOX)
    */
-  rotateSequence(sequence: SequenceData, _rotationAmount: number): SequenceData {
+  rotateSequence(
+    sequence: SequenceData,
+    _rotationAmount: number
+  ): SequenceData {
     const rotatedBeats = sequence.beats.map((beat) => this.rotateBeat(beat));
 
     // Also rotate the start position if it exists (both fields for compatibility)
@@ -248,7 +259,9 @@ export class SequenceTransformationService implements ISequenceTransformationSer
     return updateSequenceData(sequence, {
       beats: rotatedBeats,
       ...(rotatedStartPosition && { startPosition: rotatedStartPosition }),
-      ...(rotatedStartingPositionBeat && { startingPositionBeat: rotatedStartingPositionBeat }),
+      ...(rotatedStartingPositionBeat && {
+        startingPositionBeat: rotatedStartingPositionBeat,
+      }),
       gridMode: newGridMode,
     });
   }
@@ -343,9 +356,9 @@ export class SequenceTransformationService implements ISequenceTransformationSer
 
     return createBeatData({
       id: `beat-${Date.now()}`,
-      letter: "α", // Use Greek alpha as placeholder - TODO: lookup from dataset
-      startPosition: beat.endPosition,
-      endPosition: beat.endPosition,
+      letter: Letter.ALPHA, // Use Greek alpha as placeholder - TODO: lookup from dataset
+      startPosition: beat.endPosition ?? null,
+      endPosition: beat.endPosition ?? null,
       beatNumber: 0,
       duration: 1000,
       blueReversal: false,
@@ -355,7 +368,7 @@ export class SequenceTransformationService implements ISequenceTransformationSer
         [MotionColor.BLUE]: blueMotion
           ? {
               ...blueMotion,
-              motionType: "static",
+              motionType: MotionType.STATIC,
               rotationDirection: RotationDirection.NO_ROTATION,
               startLocation: blueMotion.endLocation,
               endLocation: blueMotion.endLocation,
@@ -368,7 +381,7 @@ export class SequenceTransformationService implements ISequenceTransformationSer
         [MotionColor.RED]: redMotion
           ? {
               ...redMotion,
-              motionType: "static",
+              motionType: MotionType.STATIC,
               rotationDirection: RotationDirection.NO_ROTATION,
               startLocation: redMotion.endLocation,
               endLocation: redMotion.endLocation,
@@ -398,8 +411,8 @@ export class SequenceTransformationService implements ISequenceTransformationSer
     }
 
     // Swap positions
-    const swappedStartPosition = beat.endPosition;
-    const swappedEndPosition = beat.startPosition;
+    const swappedStartPosition = beat.endPosition ?? null;
+    const swappedEndPosition = beat.startPosition ?? null;
 
     // Reverse motions
     const reversedMotions = { ...beat.motions };

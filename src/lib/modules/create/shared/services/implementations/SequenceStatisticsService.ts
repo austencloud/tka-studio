@@ -61,8 +61,12 @@ export class SequenceStatisticsService implements ISequenceStatisticsService {
     redReversals: number;
     totalReversals: number;
   } {
-    const blueReversals = sequence.beats.filter((beat) => beat.blueReversal).length;
-    const redReversals = sequence.beats.filter((beat) => beat.redReversal).length;
+    const blueReversals = sequence.beats.filter(
+      (beat) => beat.blueReversal
+    ).length;
+    const redReversals = sequence.beats.filter(
+      (beat) => beat.redReversal
+    ).length;
 
     return {
       blueReversals,

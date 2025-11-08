@@ -9,9 +9,12 @@
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import { fade } from 'svelte/transition';
+  import { fade } from "svelte/transition";
 
-  const { canGoBack, onBack }: {
+  const {
+    canGoBack,
+    onBack,
+  }: {
     canGoBack: boolean;
     onBack: () => void;
   } = $props();
@@ -20,7 +23,9 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function handleBack() {

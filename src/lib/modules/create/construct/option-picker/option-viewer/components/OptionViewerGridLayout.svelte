@@ -41,24 +41,29 @@ Features:
     isFadingOut?: boolean;
   }>();
 
-  const uniformPictographSize = $derived(() => layoutConfig?.pictographSize ?? 144);
+  const uniformPictographSize = $derived(
+    () => layoutConfig?.pictographSize ?? 144
+  );
 </script>
 
 <div class="grid-layout">
   {#each organizedPictographs as section (section.title)}
     <div
       class="section-wrapper"
-      class:grouped-section={section.title === 'Types 4-6' || section.type === 'grouped'}
+      class:grouped-section={section.title === "Types 4-6" ||
+        section.type === "grouped"}
     >
-      {#if section.title === 'Types 4-6' || section.type === 'grouped'}
+      {#if section.title === "Types 4-6" || section.type === "grouped"}
         <!-- Grouped section (Types 4-6) -->
         <OptionPicker456Group
           pictographs={section.pictographs}
           {onPictographSelected}
           containerWidth={layoutConfig?.containerWidth || 800}
           pictographSize={layoutConfig?.pictographSize || 144}
-          gridGap={layoutConfig?.gridGap || '8px'}
-          layoutMode={layoutConfig?.optionsPerRow === 8 ? '8-column' : '4-column'}
+          gridGap={layoutConfig?.gridGap || "8px"}
+          layoutMode={layoutConfig?.optionsPerRow === 8
+            ? "8-column"
+            : "4-column"}
           {currentSequence}
           {isFadingOut}
           forcedPictographSize={uniformPictographSize()}

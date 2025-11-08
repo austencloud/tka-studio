@@ -14,7 +14,6 @@ import type { IOptionOrganizer } from "../contracts/IOptionOrganizer";
 
 @injectable()
 export class OptionOrganizer implements IOptionOrganizer {
-
   /**
    * Organize pictographs by sort method into sections
    * OPTIMIZED: Single method eliminates code duplication from original service
@@ -23,9 +22,12 @@ export class OptionOrganizer implements IOptionOrganizer {
     pictographs: PictographData[],
     sortMethod: SortMethod
   ): OrganizedSection[] {
-
     // For type, endPosition, and reversals sorting, use the same type-based organization
-    if (sortMethod === 'type' || sortMethod === 'endPosition' || sortMethod === 'reversals') {
+    if (
+      sortMethod === "type" ||
+      sortMethod === "endPosition" ||
+      sortMethod === "reversals"
+    ) {
       return this.organizeByTypes(pictographs);
     }
 
@@ -38,11 +40,11 @@ export class OptionOrganizer implements IOptionOrganizer {
    * Used for type, endPosition, and reversals sorting
    */
   private organizeByTypes(pictographs: PictographData[]): OrganizedSection[] {
-    const allTypes = ['Type1', 'Type2', 'Type3', 'Type4', 'Type5', 'Type6'];
+    const allTypes = ["Type1", "Type2", "Type3", "Type4", "Type5", "Type6"];
     const groups = new Map<string, PictographData[]>();
 
     // Initialize all types with empty arrays
-    allTypes.forEach(type => {
+    allTypes.forEach((type) => {
       groups.set(type, []);
     });
 
@@ -56,30 +58,30 @@ export class OptionOrganizer implements IOptionOrganizer {
 
     // Create sections for Types 1-3 (individual sections)
     const sections: OrganizedSection[] = [];
-    const individualTypes = ['Type1', 'Type2', 'Type3'];
-    const groupedTypes = ['Type4', 'Type5', 'Type6'];
+    const individualTypes = ["Type1", "Type2", "Type3"];
+    const groupedTypes = ["Type4", "Type5", "Type6"];
     const groupedPictographs: PictographData[] = [];
 
     // Add individual sections (Types 1-3) - always create even if empty
-    individualTypes.forEach(type => {
+    individualTypes.forEach((type) => {
       sections.push({
         title: type,
         pictographs: groups.get(type) || [],
-        type: 'section' as const
+        type: "section" as const,
       });
     });
 
     // Collect Types 4-6 for grouping
-    groupedTypes.forEach(type => {
+    groupedTypes.forEach((type) => {
       const typePictographs = groups.get(type) || [];
       groupedPictographs.push(...typePictographs);
     });
 
     // Always add grouped section for Types 4-6 (even if empty)
     sections.push({
-      title: 'Types 4-6',
+      title: "Types 4-6",
       pictographs: groupedPictographs,
-      type: 'grouped' as const
+      type: "grouped" as const,
     });
 
     return sections;
@@ -88,7 +90,10 @@ export class OptionOrganizer implements IOptionOrganizer {
   /**
    * Generic organization for other sort methods
    */
-  private organizeGeneric(pictographs: PictographData[], sortMethod: SortMethod): OrganizedSection[] {
+  private organizeGeneric(
+    pictographs: PictographData[],
+    sortMethod: SortMethod
+  ): OrganizedSection[] {
     const groups = new Map<string, PictographData[]>();
 
     for (const pictograph of pictographs) {
@@ -111,7 +116,7 @@ export class OptionOrganizer implements IOptionOrganizer {
       sections.push({
         title,
         pictographs: sectionPictographs,
-        type: 'section' as const
+        type: "section" as const,
       });
     }
 
@@ -132,7 +137,10 @@ export class OptionOrganizer implements IOptionOrganizer {
       return letterType; // Returns LetterType enum value (e.g., "Type1")
     } catch (error) {
       // Fallback for invalid letters
-      console.warn(`Failed to determine letter type for "${letter}", defaulting to TYPE1:`, error);
+      console.warn(
+        `Failed to determine letter type for "${letter}", defaulting to TYPE1:`,
+        error
+      );
       return LetterType.TYPE1;
     }
   }

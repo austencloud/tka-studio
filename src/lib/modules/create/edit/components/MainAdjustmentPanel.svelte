@@ -72,7 +72,6 @@
   // as it uses different child components (SimplifiedOrientationControl, InlineOrientationControl, etc.)
   // that don't track selection state in the same way
   export function getSelectedArrow(): string | null {
-
     return null;
   }
 

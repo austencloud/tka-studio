@@ -25,7 +25,9 @@
     const cleanupFns: Array<() => void> = [];
 
     try {
-      hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+      hapticService = resolve<IHapticFeedbackService>(
+        TYPES.IHapticFeedbackService
+      );
     } catch (error) {
       console.warn("Failed to resolve haptic feedback service:", error);
     }

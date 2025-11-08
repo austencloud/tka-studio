@@ -4,7 +4,10 @@ import type { ILightRayCalculator } from "../contracts";
 
 @injectable()
 export class LightRayCalculator implements ILightRayCalculator {
-  initializeLightRays(dimensions: Dimensions, count: number): Array<{
+  initializeLightRays(
+    dimensions: Dimensions,
+    count: number
+  ): Array<{
     x: number;
     opacity: number;
     width: number;
@@ -20,10 +23,12 @@ export class LightRayCalculator implements ILightRayCalculator {
       phase: number;
       speed: number;
     }> = [];
-    
+
     for (let i = 0; i < count; i++) {
       lightRays.push({
-        x: (i / count) * dimensions.width + Math.random() * (dimensions.width / count),
+        x:
+          (i / count) * dimensions.width +
+          Math.random() * (dimensions.width / count),
         opacity: 0.05 + Math.random() * 0.15, // Subtle: 0.05-0.2 instead of 0.1-0.3
         width: 8 + Math.random() * 16, // 8-24px width
         angle: -5 + Math.random() * 10, // Slight angle variation: -5 to +5 degrees
@@ -31,7 +36,7 @@ export class LightRayCalculator implements ILightRayCalculator {
         speed: 0.001 + Math.random() * 0.002, // Very slow animation speed
       });
     }
-    
+
     return lightRays;
   }
 
@@ -60,7 +65,7 @@ export class LightRayCalculator implements ILightRayCalculator {
       return {
         ...ray,
         phase: newPhase,
-        opacity: baseOpacity
+        opacity: baseOpacity,
       };
     });
   }

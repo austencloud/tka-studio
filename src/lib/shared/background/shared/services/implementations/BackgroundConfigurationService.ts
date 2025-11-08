@@ -156,6 +156,10 @@ export class BackgroundConfigurationService
    * Gets a random color from an array of colors
    */
   getRandomColor(colors: string[]): string {
-    return colors[Math.floor(Math.random() * colors.length)] || colors[0] || "#000000";
+    return (
+      colors[Math.floor(Math.random() * colors.length)] ||
+      colors[0] ||
+      "#000000"
+    );
   }
 }

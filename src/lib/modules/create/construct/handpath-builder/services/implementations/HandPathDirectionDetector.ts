@@ -5,7 +5,12 @@
  * Key for converting hand paths to proper MotionType (PRO/ANTI/FLOAT).
  */
 
-import { GridLocation, GridMode, HandMotionType, RotationDirection } from "$shared";
+import {
+  GridLocation,
+  GridMode,
+  HandMotionType,
+  RotationDirection,
+} from "$shared";
 import { injectable } from "inversify";
 import type { IHandPathDirectionDetector } from "../contracts/IHandPathDirectionDetector";
 
@@ -94,7 +99,8 @@ export class HandPathDirectionDetector implements IHandPathDirectionDetector {
       [GridLocation.NORTHWEST]: GridLocation.SOUTHEAST,
     };
 
-    const opposites = gridMode === GridMode.DIAMOND ? diamondOpposites : boxOpposites;
+    const opposites =
+      gridMode === GridMode.DIAMOND ? diamondOpposites : boxOpposites;
 
     return opposites[start] === end;
   }

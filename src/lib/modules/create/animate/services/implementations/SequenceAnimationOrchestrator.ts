@@ -6,19 +6,19 @@
  */
 
 import type {
-    BeatData,
-    PropState,
-    PropStates,
-    SequenceData,
-    SequenceMetadata,
+  BeatData,
+  PropState,
+  PropStates,
+  SequenceData,
+  SequenceMetadata,
 } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type {
-    IAnimationStateManager,
-    IBeatCalculator,
-    IPropInterpolator,
-    ISequenceAnimationOrchestrator,
+  IAnimationStateManager,
+  IBeatCalculator,
+  IPropInterpolator,
+  ISequenceAnimationOrchestrator,
 } from "../contracts";
 
 /**
@@ -205,7 +205,10 @@ export class SequenceAnimationOrchestrator
     }
 
     // Clamp beat index to valid range
-    const beatIndex = Math.max(0, Math.min(this.currentBeatIndex, this.beats.length - 1));
+    const beatIndex = Math.max(
+      0,
+      Math.min(this.currentBeatIndex, this.beats.length - 1)
+    );
     const currentBeat = this.beats[beatIndex];
 
     return currentBeat?.letter || null;

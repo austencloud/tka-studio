@@ -13,13 +13,15 @@ Uses a crossfade technique with two layers to animate between gradients
 
   // Track previous and current gradients for crossfade
   let previousGradient = $state<string>("");
-  let currentGradient = $state<string>(BACKGROUND_GRADIENTS[currentBackground] || '');
+  let currentGradient = $state<string>(
+    BACKGROUND_GRADIENTS[currentBackground] || ""
+  );
   let isTransitioning = $state(false);
   let transitionKey = $state(0);
 
   // Watch for background changes
   $effect(() => {
-    const newGradient = BACKGROUND_GRADIENTS[currentBackground] || '';
+    const newGradient = BACKGROUND_GRADIENTS[currentBackground] || "";
 
     if (newGradient !== currentGradient) {
       // Store previous gradient

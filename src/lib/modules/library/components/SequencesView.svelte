@@ -31,7 +31,7 @@
     try {
       // TODO: Implement actual data loading from your services
       // For now, show a placeholder message
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       sequences = [];
       isLoading = false;
     } catch (err) {

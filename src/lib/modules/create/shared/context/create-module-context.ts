@@ -61,14 +61,14 @@ export function setCreateModuleContext(context: CreateModuleContext): void {
  */
 export function getCreateModuleContext(): CreateModuleContext {
   const context = getContext<CreateModuleContext>(CONTEXT_KEY);
-  
+
   if (!context) {
     throw new Error(
       "CreateModuleContext not found. Make sure you're calling getCreateModuleContext() " +
-      "within a component that is a descendant of CreateModule."
+        "within a component that is a descendant of CreateModule."
     );
   }
-  
+
   return context;
 }
 
@@ -79,4 +79,3 @@ export function getCreateModuleContext(): CreateModuleContext {
 export function tryGetCreateModuleContext(): CreateModuleContext | undefined {
   return getContext<CreateModuleContext>(CONTEXT_KEY);
 }
-

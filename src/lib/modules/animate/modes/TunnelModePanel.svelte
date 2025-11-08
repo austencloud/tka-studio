@@ -42,7 +42,10 @@
           class:selected={!needsPrimary}
           onclick={() => animateState.openSequenceBrowser("primary")}
         >
-          <div class="selector-header" style="background: linear-gradient(135deg, #3b82f6, #ef4444);">
+          <div
+            class="selector-header"
+            style="background: linear-gradient(135deg, #3b82f6, #ef4444);"
+          >
             <i class="fas fa-user"></i>
             <span>Primary Performer</span>
           </div>
@@ -62,8 +65,16 @@
             {/if}
           </div>
           <div class="color-indicators">
-            <div class="color-dot" style="background: #3b82f6;" title="Blue"></div>
-            <div class="color-dot" style="background: #ef4444;" title="Red"></div>
+            <div
+              class="color-dot"
+              style="background: #3b82f6;"
+              title="Blue"
+            ></div>
+            <div
+              class="color-dot"
+              style="background: #ef4444;"
+              title="Red"
+            ></div>
           </div>
         </button>
 
@@ -78,7 +89,10 @@
           class:selected={!needsSecondary}
           onclick={() => animateState.openSequenceBrowser("secondary")}
         >
-          <div class="selector-header" style="background: linear-gradient(135deg, #10b981, #a855f7);">
+          <div
+            class="selector-header"
+            style="background: linear-gradient(135deg, #10b981, #a855f7);"
+          >
             <i class="fas fa-user"></i>
             <span>Secondary Performer</span>
           </div>
@@ -98,8 +112,16 @@
             {/if}
           </div>
           <div class="color-indicators">
-            <div class="color-dot" style="background: #10b981;" title="Green"></div>
-            <div class="color-dot" style="background: #a855f7;" title="Purple"></div>
+            <div
+              class="color-dot"
+              style="background: #10b981;"
+              title="Green"
+            ></div>
+            <div
+              class="color-dot"
+              style="background: #a855f7;"
+              title="Purple"
+            ></div>
           </div>
         </button>
       </div>
@@ -108,8 +130,8 @@
       <div class="help-text">
         <i class="fas fa-info-circle"></i>
         <p>
-          Tunneling overlays two performers on the same canvas with different colors,
-          allowing you to see how they interact in the same space.
+          Tunneling overlays two performers on the same canvas with different
+          colors, allowing you to see how they interact in the same space.
         </p>
       </div>
     </div>
@@ -194,9 +216,14 @@
               max="1"
               step="0.05"
               value={animateState.tunnelOpacity}
-              oninput={(e) => animateState.setTunnelOpacity(parseFloat(e.currentTarget.value))}
+              oninput={(e) =>
+                animateState.setTunnelOpacity(
+                  parseFloat(e.currentTarget.value)
+                )}
             />
-            <span class="setting-value">{Math.round(animateState.tunnelOpacity * 100)}%</span>
+            <span class="setting-value"
+              >{Math.round(animateState.tunnelOpacity * 100)}%</span
+            >
           </div>
 
           <div class="setting-group">
@@ -211,7 +238,8 @@
               max="2"
               step="0.1"
               value={animateState.speed}
-              oninput={(e) => animateState.setSpeed(parseFloat(e.currentTarget.value))}
+              oninput={(e) =>
+                animateState.setSpeed(parseFloat(e.currentTarget.value))}
             />
             <span class="setting-value">{animateState.speed.toFixed(1)}x</span>
           </div>
@@ -438,12 +466,20 @@
   }
 
   .performer-tag.primary {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(239, 68, 68, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.2),
+      rgba(239, 68, 68, 0.2)
+    );
     border: 1px solid rgba(59, 130, 246, 0.3);
   }
 
   .performer-tag.secondary {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(168, 85, 247, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(16, 185, 129, 0.2),
+      rgba(168, 85, 247, 0.2)
+    );
     border: 1px solid rgba(16, 185, 129, 0.3);
   }
 
@@ -488,7 +524,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(20, 25, 35, 0.5) 0%, rgba(15, 20, 30, 0.5) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(20, 25, 35, 0.5) 0%,
+      rgba(15, 20, 30, 0.5) 100%
+    );
   }
 
   .canvas-placeholder {

@@ -5,10 +5,7 @@ Shows at the bottom center of screen, auto-dismisses after 3 seconds
 -->
 <script lang="ts">
   // Props
-  const {
-    message = "",
-    onDismiss
-  } = $props<{
+  const { message = "", onDismiss } = $props<{
     message: string;
     onDismiss?: () => void;
   }>();

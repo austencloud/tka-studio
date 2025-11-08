@@ -15,19 +15,24 @@ import { injectable } from "inversify";
 import type { IKeyboardArrowAdjustmentService } from "../contracts/IKeyboardArrowAdjustmentService";
 
 @injectable()
-export class KeyboardArrowAdjustmentService implements IKeyboardArrowAdjustmentService {
-  private logger = createComponentLogger('KeyboardArrowAdjustment');
+export class KeyboardArrowAdjustmentService
+  implements IKeyboardArrowAdjustmentService
+{
+  private logger = createComponentLogger("KeyboardArrowAdjustment");
 
   /**
    * Calculate adjustment vector based on WASD key
    * Matches legacy logic from arrow_movement_manager.py lines 50-58
    */
-  calculateAdjustment(key: 'w' | 'a' | 's' | 'd', increment: number): { x: number; y: number } {
+  calculateAdjustment(
+    key: "w" | "a" | "s" | "d",
+    increment: number
+  ): { x: number; y: number } {
     const directionMap: Record<string, { x: number; y: number }> = {
-      w: { x: 0, y: -increment },  // Up
-      a: { x: -increment, y: 0 },  // Left
-      s: { x: 0, y: increment },   // Down
-      d: { x: increment, y: 0 },   // Right
+      w: { x: 0, y: -increment }, // Up
+      a: { x: -increment, y: 0 }, // Left
+      s: { x: 0, y: increment }, // Down
+      d: { x: increment, y: 0 }, // Right
     };
 
     return directionMap[key] || { x: 0, y: 0 };
@@ -47,9 +52,13 @@ export class KeyboardArrowAdjustmentService implements IKeyboardArrowAdjustmentS
    * 3. Return updated beat data to trigger re-render
    */
   handleWASDMovement(
-    key: 'w' | 'a' | 's' | 'd',
+    key: "w" | "a" | "s" | "d",
     increment: number,
-    selectedArrow: { motionData: MotionData; color: string; pictographData: any },
+    selectedArrow: {
+      motionData: MotionData;
+      color: string;
+      pictographData: any;
+    },
     beatData: BeatData
   ): BeatData {
     const adjustment = this.calculateAdjustment(key, increment);
@@ -59,15 +68,18 @@ export class KeyboardArrowAdjustmentService implements IKeyboardArrowAdjustmentS
     );
 
     // Get the current motion data for the selected arrow
-    const currentMotion = beatData.motions?.[selectedArrow.color as MotionColor];
+    const currentMotion =
+      beatData.motions?.[selectedArrow.color as MotionColor];
     if (!currentMotion) {
       this.logger.warn(`No motion data found for ${selectedArrow.color} arrow`);
       return beatData;
     }
 
     // Get current manual adjustments (or default to 0)
-    const currentAdjustX = currentMotion.arrowPlacementData?.manualAdjustmentX ?? 0;
-    const currentAdjustY = currentMotion.arrowPlacementData?.manualAdjustmentY ?? 0;
+    const currentAdjustX =
+      currentMotion.arrowPlacementData?.manualAdjustmentX ?? 0;
+    const currentAdjustY =
+      currentMotion.arrowPlacementData?.manualAdjustmentY ?? 0;
 
     // Add the new adjustment to the existing manual adjustments
     // This matches legacy behavior (lines 81-83 in special_placement_data_updater.py)
@@ -77,9 +89,7 @@ export class KeyboardArrowAdjustmentService implements IKeyboardArrowAdjustmentS
     this.logger.log(
       `  Previous adjustment: (${currentAdjustX}, ${currentAdjustY})`
     );
-    this.logger.log(
-      `  New total adjustment: (${newAdjustX}, ${newAdjustY})`
-    );
+    this.logger.log(`  New total adjustment: (${newAdjustX}, ${newAdjustY})`);
 
     // Create updated arrow placement data with new manual adjustments
     const updatedArrowPlacementData = createArrowPlacementData({

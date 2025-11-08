@@ -68,10 +68,10 @@ export function createPictographLoadingState(
 
   return {
     get isLoading() {
-      return isLoading();
+      return isLoading;
     },
     get isLoaded() {
-      return isLoaded();
+      return isLoaded;
     },
     get errorMessage() {
       return errorMessage;
@@ -80,7 +80,7 @@ export function createPictographLoadingState(
       return loadedComponents;
     },
     get allComponentsLoaded() {
-      return allComponentsLoaded();
+      return allComponentsLoaded;
     },
     handleComponentLoaded,
     handleComponentError,

@@ -33,7 +33,9 @@ export async function trackDrillCompleted(
     timestamp: Date.now(),
   });
 
-  console.log(`🎯 Tracked drill completion: ${drillId} (score: ${score || "N/A"})`);
+  console.log(
+    `🎯 Tracked drill completion: ${drillId} (score: ${score || "N/A"})`
+  );
 }
 
 /**

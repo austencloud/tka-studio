@@ -14,7 +14,9 @@ import { injectable } from "inversify";
 import type { ICreateModuleTransitionService } from "../contracts";
 
 @injectable()
-export class CreateModuleTransitionService implements ICreateModuleTransitionService {
+export class CreateModuleTransitionService
+  implements ICreateModuleTransitionService
+{
   /**
    * Handle main tab transitions with fade animations
    * @param targetTab - The tab to transition to
@@ -61,7 +63,9 @@ export class CreateModuleTransitionService implements ICreateModuleTransitionSer
    * Transition to a specific tab
    */
   async transitionToTab(tabId: string): Promise<void> {
-    console.log(`🔄 CreateModuleTransitionService: Transitioning to tab ${tabId}`);
+    console.log(
+      `🔄 CreateModuleTransitionService: Transitioning to tab ${tabId}`
+    );
     // Implementation for tab transition logic
   }
 

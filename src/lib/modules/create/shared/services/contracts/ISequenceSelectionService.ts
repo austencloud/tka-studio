@@ -1,13 +1,21 @@
 /**
  * Service for managing sequence beat and start position selection
  */
-import type { ArrowPosition, BeatData, PictographData, SequenceData } from "$shared";
+import type {
+  ArrowPosition,
+  BeatData,
+  PictographData,
+  SequenceData,
+} from "$shared";
 
 export interface ISequenceSelectionService {
   /**
    * Set the selected beat index
    */
-  setSelectedBeat(sequenceData: SequenceData | null, index: number | null): boolean;
+  setSelectedBeat(
+    sequenceData: SequenceData | null,
+    index: number | null
+  ): boolean;
 
   /**
    * Clear all selections
@@ -33,7 +41,7 @@ export interface ISequenceSelectionService {
    * Get beat data by index, handling selection logic
    */
   getSelectedBeatData(
-    sequenceData: SequenceData | null, 
+    sequenceData: SequenceData | null,
     selectedBeatIndex: number | null,
     selectedStartPosition: PictographData | null,
     isStartPositionSelected: boolean

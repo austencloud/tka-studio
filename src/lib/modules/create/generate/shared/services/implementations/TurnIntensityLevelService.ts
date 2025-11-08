@@ -34,10 +34,13 @@ export class TurnIntensityLevelService implements ITurnIntensityManagerService {
    * Not used by UI - only needed for sequence generation
    * Throws error if called
    */
-  allocateTurnsForBlueAndRed(): { blue: (number | "fl")[]; red: (number | "fl")[] } {
+  allocateTurnsForBlueAndRed(): {
+    blue: (number | "fl")[];
+    red: (number | "fl")[];
+  } {
     throw new Error(
       "TurnIntensityLevelService does not support allocateTurnsForBlueAndRed. " +
-      "Use TurnIntensityManagerService directly for turn allocation."
+        "Use TurnIntensityManagerService directly for turn allocation."
     );
   }
 }

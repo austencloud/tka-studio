@@ -5,7 +5,12 @@
  * Uses the shared persistence service to store and restore sequence state.
  */
 
-import type { ActiveCreateModule, IPersistenceService, PictographData, SequenceData } from "$shared";
+import type {
+  ActiveCreateModule,
+  IPersistenceService,
+  PictographData,
+  SequenceData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { ISequencePersistenceService } from "../contracts";
@@ -13,7 +18,8 @@ import type { ISequencePersistenceService } from "../contracts";
 @injectable()
 export class SequencePersistenceService implements ISequencePersistenceService {
   constructor(
-    @inject(TYPES.IPersistenceService) private persistenceService: IPersistenceService
+    @inject(TYPES.IPersistenceService)
+    private persistenceService: IPersistenceService
   ) {}
 
   async initialize(): Promise<void> {
@@ -21,7 +27,10 @@ export class SequencePersistenceService implements ISequencePersistenceService {
       // Ensure the persistence service is initialized
       await this.persistenceService.initialize();
     } catch (error) {
-      console.error("❌ SequencePersistenceService: Failed to initialize:", error);
+      console.error(
+        "❌ SequencePersistenceService: Failed to initialize:",
+        error
+      );
       throw error;
     }
   }
@@ -35,7 +44,10 @@ export class SequencePersistenceService implements ISequencePersistenceService {
     try {
       await this.persistenceService.saveCurrentSequenceState(state);
     } catch (error) {
-      console.error("❌ SequencePersistenceService: Failed to save current state:", error);
+      console.error(
+        "❌ SequencePersistenceService: Failed to save current state:",
+        error
+      );
       throw error;
     }
   }
@@ -54,12 +66,15 @@ export class SequencePersistenceService implements ISequencePersistenceService {
           currentSequence: state.currentSequence,
           selectedStartPosition: state.selectedStartPosition,
           hasStartPosition: state.hasStartPosition,
-          activeBuildSection: (state as any).activeBuildSection || "construct"
+          activeBuildSection: (state as any).activeBuildSection || "construct",
         };
       }
       return state;
     } catch (error) {
-      console.error("❌ SequencePersistenceService: Failed to load current state:", error);
+      console.error(
+        "❌ SequencePersistenceService: Failed to load current state:",
+        error
+      );
       return null;
     }
   }
@@ -68,7 +83,10 @@ export class SequencePersistenceService implements ISequencePersistenceService {
     try {
       await this.persistenceService.clearCurrentSequenceState();
     } catch (error) {
-      console.error("❌ SequencePersistenceService: Failed to clear current state:", error);
+      console.error(
+        "❌ SequencePersistenceService: Failed to clear current state:",
+        error
+      );
       throw error;
     }
   }
@@ -78,7 +96,10 @@ export class SequencePersistenceService implements ISequencePersistenceService {
       const state = await this.persistenceService.loadCurrentSequenceState();
       return state !== null;
     } catch (error) {
-      console.error("❌ SequencePersistenceService: Failed to check for saved state:", error);
+      console.error(
+        "❌ SequencePersistenceService: Failed to check for saved state:",
+        error
+      );
       return false;
     }
   }
@@ -86,12 +107,15 @@ export class SequencePersistenceService implements ISequencePersistenceService {
   async getLastSaveTimestamp(): Promise<number | null> {
     try {
       const state = await this.persistenceService.loadCurrentSequenceState();
-      if (state && 'timestamp' in state) {
+      if (state && "timestamp" in state) {
         return (state as any).timestamp;
       }
       return null;
     } catch (error) {
-      console.error("❌ SequencePersistenceService: Failed to get last save timestamp:", error);
+      console.error(
+        "❌ SequencePersistenceService: Failed to get last save timestamp:",
+        error
+      );
       return null;
     }
   }

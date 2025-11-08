@@ -159,7 +159,10 @@ export class AuthService implements IAuthService {
         await setPersistence(auth, browserLocalPersistence);
         console.log("✅ [auth] localStorage persistence set");
       } catch (localStorageError: any) {
-        console.error("❌ [auth] Failed to set persistence:", localStorageError);
+        console.error(
+          "❌ [auth] Failed to set persistence:",
+          localStorageError
+        );
         throw new Error(
           `Failed to set persistence: ${localStorageError.message}`
         );

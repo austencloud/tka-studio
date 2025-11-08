@@ -27,7 +27,10 @@ export class RotatedEndPositionSelector {
    * @param startPosition - The starting position of the sequence
    * @returns The required end position to complete the rotation
    */
-  determineRotatedEndPosition(sliceSize: SliceSize, startPosition: GridPosition): GridPosition {
+  determineRotatedEndPosition(
+    sliceSize: SliceSize,
+    startPosition: GridPosition
+  ): GridPosition {
     if (sliceSize === SliceSize.QUARTERED) {
       // For quartered CAPs, randomly choose between clockwise and counter-clockwise
       const cwEndPosition = QUARTER_POSITION_MAP_CW[startPosition];

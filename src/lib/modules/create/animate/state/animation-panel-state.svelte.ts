@@ -121,18 +121,42 @@ export function createAnimationPanelState(): AnimationPanelState {
 
   return {
     // Getters
-    get currentBeat() { return currentBeat; },
-    get isPlaying() { return isPlaying; },
-    get speed() { return speed; },
-    get shouldLoop() { return shouldLoop; },
-    get totalBeats() { return totalBeats; },
-    get sequenceWord() { return sequenceWord; },
-    get sequenceAuthor() { return sequenceAuthor; },
-    get bluePropState() { return bluePropState; },
-    get redPropState() { return redPropState; },
-    get loading() { return loading; },
-    get error() { return error; },
-    get sequenceData() { return sequenceData; },
+    get currentBeat() {
+      return currentBeat;
+    },
+    get isPlaying() {
+      return isPlaying;
+    },
+    get speed() {
+      return speed;
+    },
+    get shouldLoop() {
+      return shouldLoop;
+    },
+    get totalBeats() {
+      return totalBeats;
+    },
+    get sequenceWord() {
+      return sequenceWord;
+    },
+    get sequenceAuthor() {
+      return sequenceAuthor;
+    },
+    get bluePropState() {
+      return bluePropState;
+    },
+    get redPropState() {
+      return redPropState;
+    },
+    get loading() {
+      return loading;
+    },
+    get error() {
+      return error;
+    },
+    get sequenceData() {
+      return sequenceData;
+    },
 
     // Setters
     setCurrentBeat: (beat: number) => {

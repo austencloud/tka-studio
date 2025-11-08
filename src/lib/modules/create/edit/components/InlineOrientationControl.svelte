@@ -1,19 +1,19 @@
 <!-- InlineOrientationControl.svelte - Full orientation controls shown inline when space permits -->
 <script lang="ts">
-  import type { BeatData, IHapticFeedbackService } from '$shared';
-  import { resolve, TYPES } from '$shared';
-  import { onMount } from 'svelte';
+  import type { BeatData, IHapticFeedbackService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
 
   // Props
   const {
     color,
     currentBeatData,
-    layoutMode = 'compact',
-    onOrientationChanged
+    layoutMode = "compact",
+    onOrientationChanged,
   } = $props<{
-    color: 'blue' | 'red';
+    color: "blue" | "red";
     currentBeatData: BeatData | null;
-    layoutMode?: 'compact' | 'balanced' | 'comfortable';
+    layoutMode?: "compact" | "balanced" | "comfortable";
     onOrientationChanged: (color: string, orientation: string) => void;
   }>();
 
@@ -21,36 +21,44 @@
   let hapticService: IHapticFeedbackService;
 
   // Orientation options
-  const orientations = ['in', 'out', 'clock', 'counter'];
+  const orientations = ["in", "out", "clock", "counter"];
 
   // Display helpers
-  const displayLabel = $derived(() => color === 'blue' ? 'Left' : 'Right');
+  const displayLabel = $derived(() => (color === "blue" ? "Left" : "Right"));
   const currentOrientation = $derived(() => {
-    if (!currentBeatData) return 'in';
-    const motion = color === 'blue' ? currentBeatData.motions?.blue : currentBeatData.motions?.red;
-    return motion?.startOrientation || 'in';
+    if (!currentBeatData) return "in";
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
+    return motion?.startOrientation || "in";
   });
 
   // Handlers
   function handleOrientationClick(orientation: string) {
-    console.log(`🟢 InlineOrientationControl.handleOrientationClick:`, { color, orientation });
+    console.log(`🟢 InlineOrientationControl.handleOrientationClick:`, {
+      color,
+      orientation,
+    });
     hapticService?.trigger("selection");
     console.log(`  Calling onOrientationChanged callback...`);
     onOrientationChanged(color, orientation);
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
 <div
   class="inline-orientation-control"
-  class:blue={color === 'blue'}
-  class:red={color === 'red'}
-  class:compact={layoutMode === 'compact'}
-  class:balanced={layoutMode === 'balanced'}
-  class:comfortable={layoutMode === 'comfortable'}
+  class:blue={color === "blue"}
+  class:red={color === "red"}
+  class:compact={layoutMode === "compact"}
+  class:balanced={layoutMode === "balanced"}
+  class:comfortable={layoutMode === "comfortable"}
   data-testid={`inline-orientation-control-${color}`}
 >
   <!-- Header with side label and current orientation -->
@@ -106,7 +114,11 @@
 
   .inline-orientation-control.blue {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      white 100%
+    );
   }
 
   .inline-orientation-control.red {
@@ -235,4 +247,3 @@
     border-color: #ef4444;
   }
 </style>
-

@@ -1,6 +1,6 @@
 /**
  * Sequence Deletion Service Contract
- * 
+ *
  * Defines interface for sequence and beat deletion operations.
  * These operations handle removing sequences and beats with proper cleanup.
  */

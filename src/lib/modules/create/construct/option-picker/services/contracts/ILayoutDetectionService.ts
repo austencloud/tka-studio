@@ -10,8 +10,8 @@ export interface ILayoutDetectionService {
    * @returns Whether to use horizontal swipe layout
    */
   shouldUseHorizontalSwipe(
-    layoutConfig: any, 
-    sectionCount: number, 
+    layoutConfig: any,
+    sectionCount: number,
     enableHorizontalSwipe: boolean
   ): boolean;
 
@@ -21,7 +21,10 @@ export interface ILayoutDetectionService {
    * @param sectionCount - Number of sections
    * @returns Layout parameters
    */
-  calculateLayoutParameters(containerWidth: number, sectionCount: number): {
+  calculateLayoutParameters(
+    containerWidth: number,
+    sectionCount: number
+  ): {
     useSwipe: boolean;
     optionsPerRow: number;
     hasLimitedColumns: boolean;

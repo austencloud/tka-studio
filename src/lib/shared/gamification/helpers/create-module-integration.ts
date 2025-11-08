@@ -25,7 +25,9 @@ export async function trackSequenceCreated(
     sequenceId: sequence.id,
   });
 
-  console.log(`📝 Tracked sequence creation: ${sequence.word} (${beatCount} beats)`);
+  console.log(
+    `📝 Tracked sequence creation: ${sequence.word} (${beatCount} beats)`
+  );
 }
 
 /**

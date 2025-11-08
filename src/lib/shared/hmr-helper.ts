@@ -20,7 +20,8 @@ export function shouldForceReload(): boolean {
 
   // If the root element exists but has no children after HMR, we're in a bad state
   const hasContent = rootElement.children.length > 0;
-  const isHMRUpdate = !!(window as any).__vite_plugin_react_preamble_installed__;
+  const isHMRUpdate = !!(window as any)
+    .__vite_plugin_react_preamble_installed__;
 
   return isHMRUpdate && !hasContent;
 }

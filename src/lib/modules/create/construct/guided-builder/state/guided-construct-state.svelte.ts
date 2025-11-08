@@ -18,7 +18,7 @@ import {
 } from "$shared";
 import { createPictographData } from "$shared";
 
-type BuildPhase = 'blue' | 'red' | 'complete';
+type BuildPhase = "blue" | "red" | "complete";
 
 export interface GuidedConstructConfig {
   startingLocation: GridLocation;
@@ -68,10 +68,12 @@ export function createGuidedConstructState(
   });
 
   // Phase tracking
-  let currentPhase = $state<BuildPhase>('blue');
+  let currentPhase = $state<BuildPhase>("blue");
 
   // Current build state - use derived to reference config reactively
-  let currentLocation = $state<GridLocation>(initialConfig?.startingLocation ?? GridLocation.NORTH);
+  let currentLocation = $state<GridLocation>(
+    initialConfig?.startingLocation ?? GridLocation.NORTH
+  );
   let currentBeatNumber = $state(1); // 1-indexed
 
   // Sequences (mutable arrays)
@@ -81,23 +83,23 @@ export function createGuidedConstructState(
 
   // Computed: current hand color
   const currentHand = $derived<MotionColor>(
-    currentPhase === 'blue' ? MotionColor.BLUE : MotionColor.RED
+    currentPhase === "blue" ? MotionColor.BLUE : MotionColor.RED
   );
 
   // Computed: blue sequence length (locked when moving to red phase)
   const blueSequenceLength = $derived(blueSequence.length);
 
   // Computed: completion states
-  const isBlueHandComplete = $derived(currentPhase !== 'blue');
+  const isBlueHandComplete = $derived(currentPhase !== "blue");
   const isRedHandComplete = $derived(
-    currentPhase === 'red' && redSequence.length >= blueSequenceLength
+    currentPhase === "red" && redSequence.length >= blueSequenceLength
   );
-  const isComplete = $derived(currentPhase === 'complete');
+  const isComplete = $derived(currentPhase === "complete");
 
   // Add beat to blue sequence
   function addBlueBeat(pictograph: PictographData): void {
-    if (currentPhase !== 'blue') {
-      console.warn('Cannot add blue beat - not in blue phase');
+    if (currentPhase !== "blue") {
+      console.warn("Cannot add blue beat - not in blue phase");
       return;
     }
 
@@ -114,8 +116,8 @@ export function createGuidedConstructState(
 
   // Add beat to red sequence
   function addRedBeat(pictograph: PictographData): void {
-    if (currentPhase !== 'red') {
-      console.warn('Cannot add red beat - not in red phase');
+    if (currentPhase !== "red") {
+      console.warn("Cannot add red beat - not in red phase");
       return;
     }
 
@@ -137,32 +139,32 @@ export function createGuidedConstructState(
 
   // Complete blue hand and transition to red hand
   function completeBlueHand(): void {
-    if (currentPhase !== 'blue') {
-      console.warn('Cannot complete blue hand - not in blue phase');
+    if (currentPhase !== "blue") {
+      console.warn("Cannot complete blue hand - not in blue phase");
       return;
     }
 
     if (blueSequence.length === 0) {
-      console.warn('Cannot complete blue hand - no beats added');
+      console.warn("Cannot complete blue hand - no beats added");
       return;
     }
 
     // Transition to red phase
-    currentPhase = 'red';
+    currentPhase = "red";
     currentLocation = config.startingLocation; // Reset to start
     currentBeatNumber = 1; // Reset beat counter
   }
 
   // Complete entire build (merge sequences)
   function completeBuild(): void {
-    currentPhase = 'complete';
+    currentPhase = "complete";
     mergedSequence = mergeBluAndRedSequences();
   }
 
   // Merge blue and red sequences into dual-prop pictographs
   function mergeBluAndRedSequences(): PictographData[] {
     if (blueSequence.length !== redSequence.length) {
-      console.error('Cannot merge: sequences have different lengths');
+      console.error("Cannot merge: sequences have different lengths");
       return [];
     }
 
@@ -186,7 +188,7 @@ export function createGuidedConstructState(
 
   // Reset to initial state
   function reset(): void {
-    currentPhase = 'blue';
+    currentPhase = "blue";
     currentLocation = config.startingLocation;
     currentBeatNumber = 1;
     blueSequence = [];
@@ -206,18 +208,42 @@ export function createGuidedConstructState(
 
   // Return readonly state + actions
   return {
-    get currentPhase() { return currentPhase; },
-    get currentHand() { return currentHand; },
-    get currentLocation() { return currentLocation; },
-    get currentBeatNumber() { return currentBeatNumber; },
-    get blueSequence() { return blueSequence as readonly PictographData[]; },
-    get redSequence() { return redSequence as readonly PictographData[]; },
-    get mergedSequence() { return mergedSequence as readonly PictographData[]; },
-    get blueSequenceLength() { return blueSequenceLength; },
-    get isBlueHandComplete() { return isBlueHandComplete; },
-    get isRedHandComplete() { return isRedHandComplete; },
-    get isComplete() { return isComplete; },
-    get config() { return config; },
+    get currentPhase() {
+      return currentPhase;
+    },
+    get currentHand() {
+      return currentHand;
+    },
+    get currentLocation() {
+      return currentLocation;
+    },
+    get currentBeatNumber() {
+      return currentBeatNumber;
+    },
+    get blueSequence() {
+      return blueSequence as readonly PictographData[];
+    },
+    get redSequence() {
+      return redSequence as readonly PictographData[];
+    },
+    get mergedSequence() {
+      return mergedSequence as readonly PictographData[];
+    },
+    get blueSequenceLength() {
+      return blueSequenceLength;
+    },
+    get isBlueHandComplete() {
+      return isBlueHandComplete;
+    },
+    get isRedHandComplete() {
+      return isRedHandComplete;
+    },
+    get isComplete() {
+      return isComplete;
+    },
+    get config() {
+      return config;
+    },
 
     addBlueBeat,
     addRedBeat,

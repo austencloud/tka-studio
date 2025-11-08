@@ -27,7 +27,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
   const { coreState, selectionState, animationState, onError, onSave } = config;
 
   // Helper functions for in-memory sequence manipulation
-  function addBeatToSequence(sequence: SequenceData, beatData?: Partial<BeatData>): SequenceData {
+  function addBeatToSequence(
+    sequence: SequenceData,
+    beatData?: Partial<BeatData>
+  ): SequenceData {
     const newBeat: BeatData = {
       id: beatData?.id ?? crypto.randomUUID(),
       beatNumber: sequence.beats.length + 1,
@@ -44,7 +47,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     return { ...sequence, beats: [...sequence.beats, newBeat] };
   }
 
-  function removeBeatFromSequence(sequence: SequenceData, beatIndex: number): SequenceData {
+  function removeBeatFromSequence(
+    sequence: SequenceData,
+    beatIndex: number
+  ): SequenceData {
     if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
       return sequence;
     }
@@ -52,7 +58,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     return { ...sequence, beats: newBeats };
   }
 
-  function removeBeatAndSubsequentFromSequence(sequence: SequenceData, beatIndex: number): SequenceData {
+  function removeBeatAndSubsequentFromSequence(
+    sequence: SequenceData,
+    beatIndex: number
+  ): SequenceData {
     if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
       return sequence;
     }
@@ -60,7 +69,11 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     return { ...sequence, beats: newBeats };
   }
 
-  function updateBeatInSequence(sequence: SequenceData, beatIndex: number, beatData: Partial<BeatData>): SequenceData {
+  function updateBeatInSequence(
+    sequence: SequenceData,
+    beatIndex: number,
+    beatData: Partial<BeatData>
+  ): SequenceData {
     if (beatIndex < 0 || beatIndex >= sequence.beats.length) {
       return sequence;
     }
@@ -69,7 +82,11 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     return { ...sequence, beats: newBeats };
   }
 
-  function insertBeatInSequence(sequence: SequenceData, beatIndex: number, beatData: Partial<BeatData>): SequenceData {
+  function insertBeatInSequence(
+    sequence: SequenceData,
+    beatIndex: number,
+    beatData: Partial<BeatData>
+  ): SequenceData {
     const newBeat: BeatData = {
       id: beatData?.id ?? crypto.randomUUID(),
       beatNumber: beatIndex + 1,
@@ -95,7 +112,10 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
     return { ...sequence, beats: [] };
   }
 
-  function getSelectedBeat(sequence: SequenceData, index: number): BeatData | null {
+  function getSelectedBeat(
+    sequence: SequenceData,
+    index: number
+  ): BeatData | null {
     if (index < 0 || index >= sequence.beats.length) {
       return null;
     }
@@ -136,7 +156,9 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
         coreState.setCurrentSequence(updatedSequence);
         selectionState.adjustSelectionForRemovedBeat(beatIndex);
         coreState.clearError();
-        onSave?.().catch(err => console.error("Failed to auto-save after beat removal:", err));
+        onSave?.().catch((err) =>
+          console.error("Failed to auto-save after beat removal:", err)
+        );
       } catch (error) {
         handleError("Failed to remove beat", error);
       }
@@ -157,7 +179,9 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
           coreState.setCurrentSequence(updatedSequence);
           selectionState.adjustSelectionForRemovedBeat(beatIndex);
           coreState.clearError();
-          onSave?.().catch(err => console.error("Failed to auto-save after beat removal:", err));
+          onSave?.().catch((err) =>
+            console.error("Failed to auto-save after beat removal:", err)
+          );
 
           // Wait for slide animation (updated to match new faster animation: 200ms)
           setTimeout(() => {
@@ -182,13 +206,18 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
         coreState.setCurrentSequence(updatedSequence);
         selectionState.clearSelection();
         coreState.clearError();
-        onSave?.().catch(err => console.error("Failed to auto-save after beat removal:", err));
+        onSave?.().catch((err) =>
+          console.error("Failed to auto-save after beat removal:", err)
+        );
       } catch (error) {
         handleError("Failed to remove beat and subsequent beats", error);
       }
     },
 
-    removeBeatAndSubsequentWithAnimation(beatIndex: number, onComplete?: () => void) {
+    removeBeatAndSubsequentWithAnimation(
+      beatIndex: number,
+      onComplete?: () => void
+    ) {
       if (!coreState.currentSequence) return;
 
       const beatsToRemove = coreState.currentSequence.beats.length - beatIndex;
@@ -217,7 +246,8 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
       });
 
       // Remove beats after animations
-      const totalAnimationTime = (beatsToRemove - 1) * staggerDelay + fadeAnimationDuration;
+      const totalAnimationTime =
+        (beatsToRemove - 1) * staggerDelay + fadeAnimationDuration;
       setTimeout(() => {
         try {
           const updatedSequence = removeBeatAndSubsequentFromSequence(
@@ -227,11 +257,15 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
           coreState.setCurrentSequence(updatedSequence);
           selectionState.clearSelection();
           coreState.clearError();
-          onSave?.().catch(err => console.error("Failed to auto-save after beat removal:", err));
+          onSave?.().catch((err) =>
+            console.error("Failed to auto-save after beat removal:", err)
+          );
 
           setTimeout(() => {
             animationState.endRemovingBeats();
-            console.log(`✅ Reverse staggered removal complete for ${beatsToRemove} beats`);
+            console.log(
+              `✅ Reverse staggered removal complete for ${beatsToRemove} beats`
+            );
             onComplete?.();
           }, 200); // Updated to match new faster animation
         } catch (error) {
@@ -302,4 +336,6 @@ export function createSequenceBeatOperations(config: BeatOperationsConfig) {
   };
 }
 
-export type SequenceBeatOperations = ReturnType<typeof createSequenceBeatOperations>;
+export type SequenceBeatOperations = ReturnType<
+  typeof createSequenceBeatOperations
+>;

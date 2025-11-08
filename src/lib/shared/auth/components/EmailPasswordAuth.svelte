@@ -39,7 +39,9 @@
     success = null;
 
     try {
-      console.log(`🔐 [email] ${mode === "signin" ? "Signing in" : "Signing up"}...`);
+      console.log(
+        `🔐 [email] ${mode === "signin" ? "Signing in" : "Signing up"}...`
+      );
 
       // Set persistence
       console.log(`🔐 [email] Setting persistence to IndexedDB...`);
@@ -53,7 +55,11 @@
 
       if (mode === "signup") {
         // Sign up new user
-        const result = await createUserWithEmailAndPassword(auth, email, password);
+        const result = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
         console.log(`✅ [email] User created:`, result.user.uid);
 
         // Update profile with display name if provided
@@ -66,7 +72,8 @@
 
         // Send verification email
         await sendEmailVerification(result.user);
-        success = "Account created! Please check your email to verify your account.";
+        success =
+          "Account created! Please check your email to verify your account.";
 
         // Wait a bit before redirecting
         await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -79,7 +86,6 @@
       // Navigate to home
       console.log(`🔐 [email] Navigating to home page...`);
       goto("/");
-
     } catch (err: any) {
       console.error(`❌ [email] Auth error:`, err);
       console.error(`❌ [email] Error code:`, err.code);
@@ -117,7 +123,13 @@
   }
 </script>
 
-<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="email-auth-form">
+<form
+  onsubmit={(e) => {
+    e.preventDefault();
+    handleSubmit();
+  }}
+  class="email-auth-form"
+>
   <!-- Name field - only shown in signup mode -->
   {#if mode === "signup"}
     <div class="form-group" transition:slide={{ duration: 300 }}>
@@ -181,7 +193,9 @@
   {/if}
 
   {#if success}
-    <p class="success-message" transition:slide={{ duration: 200 }}>{success}</p>
+    <p class="success-message" transition:slide={{ duration: 200 }}>
+      {success}
+    </p>
   {/if}
 
   <button type="submit" disabled={loading} class="submit-button">
@@ -191,8 +205,15 @@
     {mode === "signin" ? "Sign In" : "Create Account"}
   </button>
 
-  <button type="button" onclick={toggleMode} class="toggle-button" disabled={loading}>
-    {mode === "signin" ? "Need an account? Sign up" : "Already have an account? Sign in"}
+  <button
+    type="button"
+    onclick={toggleMode}
+    class="toggle-button"
+    disabled={loading}
+  >
+    {mode === "signin"
+      ? "Need an account? Sign up"
+      : "Already have an account? Sign in"}
   </button>
 </form>
 

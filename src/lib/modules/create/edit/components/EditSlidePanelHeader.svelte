@@ -8,7 +8,7 @@ Contains:
 - Keyboard hint
 -->
 <script lang="ts">
-  import RemoveBeatButton from '../../workspace-panel/shared/components/buttons/RemoveBeatButton.svelte';
+  import RemoveBeatButton from "../../workspace-panel/shared/components/buttons/RemoveBeatButton.svelte";
 
   // Props
   const {
@@ -33,8 +33,8 @@ Contains:
 
   // Derived title
   const title = $derived(() => {
-    if (isBatchMode) return 'Batch Edit';
-    if (selectedBeatNumber === 0) return 'Edit Start Position';
+    if (isBatchMode) return "Batch Edit";
+    if (selectedBeatNumber === 0) return "Edit Start Position";
     return `Edit Beat ${selectedBeatNumber}`;
   });
 </script>
@@ -43,10 +43,7 @@ Contains:
   <!-- Left: Action Buttons -->
   <div class="header-left">
     {#if shouldShowRemoveButton}
-      <RemoveBeatButton
-        beatNumber={selectedBeatNumber}
-        onclick={onRemove}
-      />
+      <RemoveBeatButton beatNumber={selectedBeatNumber} onclick={onRemove} />
     {/if}
     {#if shouldShowAdjustButton}
       <button

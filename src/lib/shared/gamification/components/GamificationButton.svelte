@@ -87,24 +87,28 @@
 </script>
 
 {#if isLoggedIn || isLoading}
-<button class="gamification-button glass-surface" onclick={handleClick} title="View Achievements & Challenges">
-  {#if isLoading}
-    <div class="loading-state">
-      <div class="spinner"></div>
-    </div>
-  {:else if error}
-    <div class="error-state">
-      <span class="icon">⚠️</span>
-    </div>
-  {:else}
-    <!-- Simple trophy icon - minimal design -->
-    <i class="fas fa-trophy icon-minimal"></i>
-    <!-- Optional: Small level badge for levels > 1 -->
-    {#if levelProgress && levelProgress.currentLevel > 1}
-      <span class="level-badge-minimal">{levelProgress.currentLevel}</span>
+  <button
+    class="gamification-button glass-surface"
+    onclick={handleClick}
+    title="View Achievements & Challenges"
+  >
+    {#if isLoading}
+      <div class="loading-state">
+        <div class="spinner"></div>
+      </div>
+    {:else if error}
+      <div class="error-state">
+        <span class="icon">⚠️</span>
+      </div>
+    {:else}
+      <!-- Simple trophy icon - minimal design -->
+      <i class="fas fa-trophy icon-minimal"></i>
+      <!-- Optional: Small level badge for levels > 1 -->
+      {#if levelProgress && levelProgress.currentLevel > 1}
+        <span class="level-badge-minimal">{levelProgress.currentLevel}</span>
+      {/if}
     {/if}
-  {/if}
-</button>
+  </button>
 {/if}
 
 <style>

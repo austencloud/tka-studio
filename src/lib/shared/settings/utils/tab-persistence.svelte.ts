@@ -25,7 +25,6 @@ export function loadActiveTab(
 
     // Validate against known tab IDs
     if (savedTab && validTabIds.includes(savedTab)) {
-      console.log("📂 Loaded saved settings tab:", savedTab);
       return savedTab;
     }
   } catch (error) {
@@ -50,7 +49,6 @@ export function validateActiveTab(
     // Check if saved tab exists in available tabs
     if (savedTab && availableTabs.some((tab) => tab.id === savedTab)) {
       if (currentTab !== savedTab) {
-        console.log("📂 Restored settings tab from localStorage:", savedTab);
         return savedTab;
       }
       return currentTab;
@@ -58,7 +56,6 @@ export function validateActiveTab(
 
     // Current tab is invalid, reset to default
     if (currentTab && !availableTabs.some((tab) => tab.id === currentTab)) {
-      console.log("⚠️ Invalid tab detected, resetting to default");
       saveActiveTab(defaultTab);
       return defaultTab;
     }
@@ -75,7 +72,6 @@ export function validateActiveTab(
 export function saveActiveTab(tabId: string): void {
   try {
     localStorage.setItem(SETTINGS_TAB_STORAGE_KEY, tabId);
-    console.log("💾 Saved settings tab to localStorage:", tabId);
   } catch (error) {
     console.warn("Failed to save settings tab to localStorage:", error);
   }
@@ -87,7 +83,6 @@ export function saveActiveTab(tabId: string): void {
 export function clearActiveTab(): void {
   try {
     localStorage.removeItem(SETTINGS_TAB_STORAGE_KEY);
-    console.log("🗑️ Cleared settings tab from localStorage");
   } catch (error) {
     console.warn("Failed to clear settings tab from localStorage:", error);
   }

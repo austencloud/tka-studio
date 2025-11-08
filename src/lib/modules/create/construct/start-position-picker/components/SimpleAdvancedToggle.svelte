@@ -6,16 +6,15 @@ Action-oriented pattern: Shows the mode you can switch TO (not current mode)
   import type { IHapticFeedbackService } from "$shared";
   import { resolve, TYPES } from "$shared";
 
-  const {
-    isAdvanced = false,
-    onToggle,
-  } = $props<{
+  const { isAdvanced = false, onToggle } = $props<{
     isAdvanced?: boolean;
     onToggle?: (isAdvanced: boolean) => void;
   }>();
 
   // Resolve haptic feedback service
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   // Action-oriented: Show the mode you can switch TO
   const oppositeLabel = $derived(isAdvanced ? "Simple" : "Advanced");
@@ -83,7 +82,6 @@ Action-oriented pattern: Shows the mode you can switch TO (not current mode)
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
-
   .mode-label {
     font-size: 15px;
     font-weight: 600;
@@ -136,8 +134,6 @@ Action-oriented pattern: Shows the mode you can switch TO (not current mode)
       padding: 8px 16px;
       gap: 6px;
     }
-
-
 
     .mode-label {
       font-size: 14px;

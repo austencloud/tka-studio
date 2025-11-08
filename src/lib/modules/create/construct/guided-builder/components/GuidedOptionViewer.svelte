@@ -7,7 +7,11 @@ Shows the 6 valid options from current position:
 Responsive grid layout: 2×3 or 3×2 depending on viewport
 -->
 <script lang="ts">
-  import type { IHapticFeedbackService, MotionColor, PictographData } from "$shared";
+  import type {
+    IHapticFeedbackService,
+    MotionColor,
+    PictographData,
+  } from "$shared";
   import { Pictograph, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
 
@@ -31,7 +35,9 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
   let animatedOptions = $state(new Set<string>());
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
 
     // Trigger staggered animation
     setTimeout(() => {
@@ -67,12 +73,12 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
     const startLoc = motion.startLocation;
     const endLoc = motion.endLocation;
 
-    if (motionType === 'static') return 'Stay';
-    if (motionType === 'dash') return 'Dash';
+    if (motionType === "static") return "Stay";
+    if (motionType === "dash") return "Dash";
 
     // For shifts, show direction + rotation
-    const direction = endLoc.split('_')[0]; // e.g., "NORTH" from "NORTH"
-    const rotation = motionType === 'pro' ? 'Pro' : 'Anti';
+    const direction = endLoc.split("_")[0]; // e.g., "NORTH" from "NORTH"
+    const rotation = motionType === "pro" ? "Pro" : "Anti";
 
     return `${direction} ${rotation}`;
   }
@@ -93,7 +99,7 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
         <div class="pictograph-wrapper">
           <Pictograph
             pictographData={option}
-            visibleHand={visibleHand}
+            {visibleHand}
             disableContentTransitions={false}
           />
         </div>
@@ -166,7 +172,7 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
   }
 
   .option-button::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: linear-gradient(

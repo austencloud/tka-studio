@@ -92,8 +92,12 @@ export class SequenceRenderService implements ISequenceRenderService {
       const blob = await this.formatService.canvasToBlob(canvas, {
         format: fullOptions.format.toLowerCase() as "png" | "jpeg" | "webp",
         quality: fullOptions.quality,
-        ...(fullOptions.width !== undefined ? { width: fullOptions.width } : {}),
-        ...(fullOptions.height !== undefined ? { height: fullOptions.height } : {}),
+        ...(fullOptions.width !== undefined
+          ? { width: fullOptions.width }
+          : {}),
+        ...(fullOptions.height !== undefined
+          ? { height: fullOptions.height }
+          : {}),
       });
 
       return blob;
@@ -134,8 +138,12 @@ export class SequenceRenderService implements ISequenceRenderService {
       return this.formatService.canvasToDataURL(canvas, {
         format: previewOptions.format.toLowerCase() as "png" | "jpeg" | "webp",
         quality: previewOptions.quality,
-        ...(previewOptions.width !== undefined ? { width: previewOptions.width } : {}),
-        ...(previewOptions.height !== undefined ? { height: previewOptions.height } : {}),
+        ...(previewOptions.width !== undefined
+          ? { width: previewOptions.width }
+          : {}),
+        ...(previewOptions.height !== undefined
+          ? { height: previewOptions.height }
+          : {}),
       });
     } catch (error) {
       throw new Error(

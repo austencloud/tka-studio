@@ -107,7 +107,10 @@ export const buildModule = new ContainerModule(
     options
       .bind(TYPES.ICreationMethodPersistenceService)
       .to(CreationMethodPersistenceService);
-    options.bind(TYPES.IResponsiveLayoutService).to(ResponsiveLayoutService);
+    options
+      .bind(TYPES.IResponsiveLayoutService)
+      .to(ResponsiveLayoutService)
+      .inSingletonScope();
     options.bind(TYPES.INavigationSyncService).to(NavigationSyncService);
     options.bind(TYPES.IBeatOperationsService).to(BeatOperationsService);
     options

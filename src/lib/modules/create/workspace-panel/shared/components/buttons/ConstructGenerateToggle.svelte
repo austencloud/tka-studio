@@ -30,7 +30,9 @@ Design Principles:
   let hapticService: IHapticFeedbackService | null = $state(null);
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function handleClick() {
@@ -47,9 +49,15 @@ Design Principles:
   }
 
   // Determine which icon and label to show (opposite of current mode)
-  const targetMode = $derived(activeTab === "construct" ? "generate" : "construct");
-  const targetIcon = $derived(targetMode === "generate" ? "fa-wand-magic-sparkles" : "fa-hammer");
-  const targetLabel = $derived(targetMode === "generate" ? "Generate" : "Construct");
+  const targetMode = $derived(
+    activeTab === "construct" ? "generate" : "construct"
+  );
+  const targetIcon = $derived(
+    targetMode === "generate" ? "fa-wand-magic-sparkles" : "fa-hammer"
+  );
+  const targetLabel = $derived(
+    targetMode === "generate" ? "Generate" : "Construct"
+  );
   const ariaLabel = $derived(`Switch to ${targetLabel} mode`);
 </script>
 

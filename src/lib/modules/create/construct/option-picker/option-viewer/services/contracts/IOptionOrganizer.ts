@@ -8,8 +8,6 @@
 import type { PictographData } from "$shared";
 import type { OrganizedSection, SortMethod } from "../../domain";
 
-
-
 export interface IOptionOrganizer {
   /**
    * Organize pictographs by sort method into sections

@@ -5,6 +5,7 @@
 Based on research from Nielsen Norman Group, Material Design 3, and modern UX best practices, this document provides actionable recommendations to modernize TKA's Explore module for 2025.
 
 **Core Issues Identified:**
+
 1. **Cognitive Overload**: Too many visible actions on each card (Edit, Clear, Play, Star)
 2. **Information Density**: Excessive metadata competing for attention
 3. **Navigation Confusion**: Non-intuitive section scrolling mechanism
@@ -19,17 +20,20 @@ Based on research from Nielsen Norman Group, Material Design 3, and modern UX be
 **Source: Nielsen Norman Group - Cards Component Research**
 
 **Key Findings:**
+
 - Cards work best for **heterogeneous content** with varying complexity
 - Cards are **less scannable than lists** - not ideal when users search for specific items
 - **Progressive disclosure** is critical: show only essential content initially
 - Cards should have **one clear primary action**, with secondary actions hidden
 
 **Applied to TKA:**
+
 - ✅ Your sequences ARE heterogeneous (different levels, lengths, styles)
 - ❌ Currently showing 4 visible actions per card (overwhelming)
 - ❌ Metadata clutters the design (level badge, beat count, action buttons)
 
 **2025 Recommendation:**
+
 > "A card should have ONE obvious primary action. All other actions should be progressively disclosed through overflow menus or contextual reveals."
 
 ---
@@ -39,6 +43,7 @@ Based on research from Nielsen Norman Group, Material Design 3, and modern UX be
 **Sources: NN/g Progressive Disclosure, Interaction Design Foundation**
 
 **Core Principles:**
+
 1. **Initially show only the most important options** (80% of users need only these)
 2. **Hide advanced features in secondary UI** (menus, modals, drawers)
 3. **Make hidden features discoverable** through clear signifiers
@@ -47,6 +52,7 @@ Based on research from Nielsen Norman Group, Material Design 3, and modern UX be
 **Applied to TKA:**
 
 **Current State:**
+
 ```
 Card Surface:
 - ⭐ Favorite (always visible)
@@ -60,6 +66,7 @@ Card Surface:
 **Cognitive Load**: 6 UI elements competing for attention
 
 **2025 Best Practice:**
+
 ```
 Card Surface:
 - Primary Action: ▶️ Play (tap card OR large play button)
@@ -77,6 +84,7 @@ Card Surface:
 **Source: NN/g Scrolling and Attention Research (2018)**
 
 **Key Findings:**
+
 - **57% of viewing time** spent above the fold (down from 80% in 2010)
 - **74% of viewing time** spent in first two screenfuls
 - Users scroll more than before BUT **attention still concentrates at top**
@@ -84,6 +92,7 @@ Card Surface:
 
 **Current Issue:**
 Your "contents list" navigation is:
+
 - Hidden/non-obvious
 - Limited to ~8 items (artificial constraint)
 - Doesn't follow expected patterns (users expect filters, not section jumps)
@@ -91,12 +100,14 @@ Your "contents list" navigation is:
 **2025 Pattern: Sticky Jump Navigation**
 
 **Research-Backed Approach:**
+
 1. **Sticky header** with "Jump to Section" button (Material Design 3)
 2. **Searchable section list** (reduces cognitive load)
 3. **Scroll-snap behavior** (smooth section alignment)
 4. **Active section indicator** (wayfinding)
 
 **Example Implementation:**
+
 ```
 ┌─────────────────────────────────────┐
 │ [Explore]  [🔍 Jump to Section ▾]  │ ← Sticky
@@ -176,9 +187,9 @@ One primary action, one quick toggle, overflow menu for rest.
 ```typescript
 // SequenceCard.svelte (Simplified)
 interface CardActions {
-  primary: 'play'; // Default click behavior
-  quickToggle: 'favorite'; // Always visible
-  overflow: ['edit', 'animate', 'delete', 'share', 'download']; // Hidden in menu
+  primary: "play"; // Default click behavior
+  quickToggle: "favorite"; // Always visible
+  overflow: ["edit", "animate", "delete", "share", "download"]; // Hidden in menu
 }
 ```
 
@@ -228,15 +239,15 @@ Level badges and beat counts visible on all cards.
 // Card metadata visibility
 const cardMetadata = {
   gridView: {
-    visible: ['title'],
-    hidden: ['level', 'beatCount', 'author', 'dateAdded'],
+    visible: ["title"],
+    hidden: ["level", "beatCount", "author", "dateAdded"],
   },
   listView: {
-    visible: ['title', 'level', 'beatCount'],
-    hidden: ['author', 'dateAdded'],
+    visible: ["title", "level", "beatCount"],
+    hidden: ["author", "dateAdded"],
   },
   spotlightView: {
-    visible: 'all', // Full details
+    visible: "all", // Full details
   },
 };
 ```
@@ -336,13 +347,13 @@ Grid/List toggle in controls.
 const densityModes = {
   comfortable: {
     // Current size
-    cardSize: '280px',
-    gap: '24px',
+    cardSize: "280px",
+    gap: "24px",
   },
   compact: {
     // Smaller cards, more per row
-    cardSize: '220px',
-    gap: '16px',
+    cardSize: "220px",
+    gap: "16px",
   },
 };
 ```
@@ -381,22 +392,22 @@ const densityModes = {
 // Overflow menu keyboard support
 function handleOverflowKeyboard(event: KeyboardEvent) {
   switch (event.key) {
-    case 'Escape':
+    case "Escape":
       closeMenu();
       break;
-    case 'ArrowDown':
+    case "ArrowDown":
       focusNextItem();
       event.preventDefault();
       break;
-    case 'ArrowUp':
+    case "ArrowUp":
       focusPreviousItem();
       event.preventDefault();
       break;
-    case 'Home':
+    case "Home":
       focusFirstItem();
       event.preventDefault();
       break;
-    case 'End':
+    case "End":
       focusLastItem();
       event.preventDefault();
       break;
@@ -505,13 +516,13 @@ interface SimplifiedSequenceCardProps {
 }
 
 // Actions in overflow menu
-type OverflowAction = 'edit' | 'animate' | 'delete' | 'share' | 'download';
+type OverflowAction = "edit" | "animate" | "delete" | "share" | "download";
 
 // Visual hierarchy
 const VISUAL_PRIORITY = {
-  primary: 'play', // Large, prominent
-  secondary: 'favorite', // Visible but subtle
-  tertiary: 'overflow', // Hidden until activated
+  primary: "play", // Large, prominent
+  secondary: "favorite", // Visible but subtle
+  tertiary: "overflow", // Hidden until activated
 };
 ```
 
@@ -678,14 +689,14 @@ By following these research-backed patterns, TKA's Explore module will deliver:
 <!-- SimplifiedSequenceCard.svelte -->
 <script lang="ts">
   import type { SequenceData } from "$shared";
-  
+
   const {
     sequence,
     coverUrl,
     isFavorite = false,
     onPrimaryAction,
     onFavoriteToggle,
-    onOverflowAction
+    onOverflowAction,
   } = $props<{
     sequence: SequenceData;
     coverUrl?: string;
@@ -696,21 +707,21 @@ By following these research-backed patterns, TKA's Explore module will deliver:
   }>();
 
   let menuOpen = $state(false);
-  
+
   function handlePlayClick() {
     onPrimaryAction(sequence);
   }
-  
+
   function handleFavoriteClick(e: Event) {
     e.stopPropagation();
     onFavoriteToggle(sequence);
   }
-  
+
   function handleOverflowClick(e: Event) {
     e.stopPropagation();
     menuOpen = !menuOpen;
   }
-  
+
   function handleMenuAction(action: string) {
     menuOpen = false;
     onOverflowAction(action, sequence);
@@ -725,7 +736,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     {:else}
       <div class="placeholder">{sequence.word[0]}</div>
     {/if}
-    
+
     <!-- Favorite Toggle (top-right) -->
     <button
       class="favorite"
@@ -737,7 +748,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
       {isFavorite ? "★" : "☆"}
     </button>
   </div>
-  
+
   <!-- Footer -->
   <div class="card-footer">
     <!-- Overflow Menu -->
@@ -750,24 +761,24 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     >
       ⋮
     </button>
-    
+
     {#if menuOpen}
       <div class="overflow-menu" role="menu">
-        <button role="menuitem" onclick={() => handleMenuAction('edit')}>
+        <button role="menuitem" onclick={() => handleMenuAction("edit")}>
           Edit
         </button>
-        <button role="menuitem" onclick={() => handleMenuAction('animate')}>
+        <button role="menuitem" onclick={() => handleMenuAction("animate")}>
           Animate
         </button>
-        <button role="menuitem" onclick={() => handleMenuAction('delete')}>
+        <button role="menuitem" onclick={() => handleMenuAction("delete")}>
           Delete
         </button>
       </div>
     {/if}
-    
+
     <!-- Title -->
     <span class="title">{sequence.word}</span>
-    
+
     <!-- Play Button -->
     <button
       class="play"
@@ -786,20 +797,22 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
   }
-  
+
   .card:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
   }
-  
+
   .card-image {
     position: relative;
     aspect-ratio: 4/3;
     background: #1a1a1a;
   }
-  
+
   .favorite {
     position: absolute;
     top: 8px;
@@ -812,7 +825,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     font-size: 20px;
     cursor: pointer;
   }
-  
+
   .card-footer {
     display: grid;
     grid-template-columns: 44px 1fr auto;
@@ -820,7 +833,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     gap: 12px;
     padding: 12px;
   }
-  
+
   .overflow {
     width: 44px;
     height: 44px;
@@ -830,13 +843,13 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     font-size: 20px;
     cursor: pointer;
   }
-  
+
   .title {
     font-size: 16px;
     font-weight: 600;
     text-align: center;
   }
-  
+
   .play {
     padding: 8px 16px;
     border-radius: 999px;
@@ -847,7 +860,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     cursor: pointer;
     white-space: nowrap;
   }
-  
+
   /* Mobile */
   @media (max-width: 768px) {
     .favorite,
@@ -865,26 +878,22 @@ By following these research-backed patterns, TKA's Explore module will deliver:
 <!-- JumpToSectionMenu.svelte -->
 <script lang="ts">
   import type { SequenceSection } from "$shared";
-  
-  const {
-    sections,
-    activeSection,
-    onSectionSelect
-  } = $props<{
+
+  const { sections, activeSection, onSectionSelect } = $props<{
     sections: SequenceSection[];
     activeSection: string;
     onSectionSelect: (id: string) => void;
   }>();
-  
+
   let open = $state(false);
   let searchQuery = $state("");
-  
+
   const filteredSections = $derived(
-    sections.filter(s => 
+    sections.filter((s) =>
       s.title.toLowerCase().includes(searchQuery.toLowerCase())
     )
   );
-  
+
   function handleSelect(sectionId: string) {
     onSectionSelect(sectionId);
     open = false;
@@ -894,15 +903,15 @@ By following these research-backed patterns, TKA's Explore module will deliver:
 <div class="jump-menu">
   <button
     class="trigger"
-    onclick={() => open = !open}
+    onclick={() => (open = !open)}
     aria-haspopup="dialog"
     aria-expanded={open}
   >
     🔍 Jump to Section
   </button>
-  
+
   {#if open}
-    <div class="overlay" onclick={() => open = false}>
+    <div class="overlay" onclick={() => (open = false)}>
       <div class="menu" onclick={(e) => e.stopPropagation()}>
         <input
           type="search"
@@ -910,7 +919,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
           bind:value={searchQuery}
           class="search"
         />
-        
+
         <div class="sections">
           {#each filteredSections as section}
             <button
@@ -939,7 +948,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     font-size: 14px;
     cursor: pointer;
   }
-  
+
   .overlay {
     position: fixed;
     inset: 0;
@@ -949,7 +958,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     justify-content: center;
     z-index: 1000;
   }
-  
+
   .menu {
     background: #1a1a1a;
     border-radius: 12px;
@@ -959,7 +968,7 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     max-height: 80vh;
     overflow: auto;
   }
-  
+
   .search {
     width: 100%;
     padding: 12px;
@@ -970,13 +979,13 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     font-size: 16px;
     margin-bottom: 16px;
   }
-  
+
   .sections {
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
-  
+
   .section {
     display: flex;
     align-items: center;
@@ -990,15 +999,15 @@ By following these research-backed patterns, TKA's Explore module will deliver:
     cursor: pointer;
     width: 100%;
   }
-  
+
   .section:hover {
     background: rgba(255, 255, 255, 0.1);
   }
-  
+
   .section.active {
     background: rgba(59, 130, 246, 0.2);
   }
-  
+
   .count {
     margin-left: auto;
     opacity: 0.6;

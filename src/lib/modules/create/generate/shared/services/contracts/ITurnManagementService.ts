@@ -1,7 +1,11 @@
 import type { BeatData } from "$shared";
 
 export interface ITurnManagementService {
-  setTurns(beat: BeatData, turnBlue: number | "fl", turnRed: number | "fl"): void;
+  setTurns(
+    beat: BeatData,
+    turnBlue: number | "fl",
+    turnRed: number | "fl"
+  ): void;
   updateDashStaticRotationDirections(
     beat: BeatData,
     propContinuity: string,
@@ -10,4 +14,3 @@ export interface ITurnManagementService {
   ): void;
   getRandomRotationDirection(): string;
 }
-

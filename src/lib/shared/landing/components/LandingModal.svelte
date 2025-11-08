@@ -16,7 +16,11 @@
     SUPPORT_OPTIONS,
     type LandingTab,
   } from "../domain";
-  import { smartContact, smartEmailContact, DEV_CONTACT_OPTIONS } from "../utils/smart-contact";
+  import {
+    smartContact,
+    smartEmailContact,
+    DEV_CONTACT_OPTIONS,
+  } from "../utils/smart-contact";
 
   import LandingHeroSection from "./LandingHeroSection.svelte";
   import LandingTabNavigation from "./LandingTabNavigation.svelte";
@@ -33,7 +37,7 @@
   let isContactLoading = $state(false);
 
   function handleTabChange(tabId: LandingTab) {
-    const index = LANDING_SECTIONS.findIndex(section => section.id === tabId);
+    const index = LANDING_SECTIONS.findIndex((section) => section.id === tabId);
     if (index !== -1 && emblaApi) {
       emblaApi.scrollTo(index);
     }
@@ -47,7 +51,11 @@
   }
 
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === "Escape" && landingUIState.isOpen && !landingUIState.isAutoOpened) {
+    if (
+      event.key === "Escape" &&
+      landingUIState.isOpen &&
+      !landingUIState.isAutoOpened
+    ) {
       closeLanding(false);
     }
   }
@@ -70,11 +78,14 @@
     event.stopPropagation();
   }
 
-  function handleResourceNavigate(resource: typeof RESOURCES[number]) {
+  function handleResourceNavigate(resource: (typeof RESOURCES)[number]) {
     handleLinkClick(resource.url, resource.type);
   }
 
-  function handleLinkClick(url: string, type: typeof RESOURCES[number]["type"]) {
+  function handleLinkClick(
+    url: string,
+    type: (typeof RESOURCES)[number]["type"]
+  ) {
     if (browser && (type === "download" || type === "external")) {
       window.open(url, "_blank", "noopener,noreferrer");
     }
@@ -95,7 +106,10 @@
     }
   }
 
-  async function handleSocialClick(event: MouseEvent, social: typeof SOCIAL_LINKS[number]) {
+  async function handleSocialClick(
+    event: MouseEvent,
+    social: (typeof SOCIAL_LINKS)[number]
+  ) {
     if (social.url.startsWith("mailto:")) {
       event.preventDefault();
       const email = social.url.replace("mailto:", "");
@@ -150,7 +164,7 @@
 
       <LandingTabNavigation
         sections={LANDING_SECTIONS}
-        activeTab={activeTab}
+        {activeTab}
         onSelect={handleTabChange}
       />
 
@@ -194,13 +208,16 @@
             copy={LANDING_TEXT.dev}
             contactEmail={CONTACT_EMAIL}
             onContact={handleDevContact}
-            isContactLoading={isContactLoading}
+            {isContactLoading}
             enableSmartContact={browser}
           />
         </HorizontalSwipeContainer>
       </div>
 
-      <LandingCTASection ctaLabel={LANDING_TEXT.hero.cta} onEnterStudio={handleEnterStudio} />
+      <LandingCTASection
+        ctaLabel={LANDING_TEXT.hero.cta}
+        onEnterStudio={handleEnterStudio}
+      />
     </div>
   </div>
 {/if}

@@ -28,7 +28,9 @@ describe("ThemeService", () => {
     mockDocumentElement = {
       style: {
         setProperty: vi.fn(),
-        getPropertyValue: vi.fn((prop: string) => computedStyleValues[prop] || ""),
+        getPropertyValue: vi.fn(
+          (prop: string) => computedStyleValues[prop] || ""
+        ),
       },
     };
 
@@ -223,7 +225,8 @@ describe("ThemeService", () => {
 
       backgrounds.forEach((bg) => {
         variables.forEach((variable) => {
-          computedStyleValues[`--${variable}-${bg}`] = `test-value-${bg}-${variable}`;
+          computedStyleValues[`--${variable}-${bg}`] =
+            `test-value-${bg}-${variable}`;
         });
       });
     });
@@ -279,16 +282,14 @@ describe("ThemeService", () => {
 
       backgrounds.forEach((bg) => {
         variables.forEach((variable) => {
-          computedStyleValues[`--${variable}-${bg}`] = `test-value-${bg}-${variable}`;
+          computedStyleValues[`--${variable}-${bg}`] =
+            `test-value-${bg}-${variable}`;
         });
       });
     });
 
     it("should apply theme on initialization", () => {
-      const setPropertySpy = vi.spyOn(
-        mockDocumentElement.style,
-        "setProperty"
-      );
+      const setPropertySpy = vi.spyOn(mockDocumentElement.style, "setProperty");
 
       ThemeService.initialize();
 

@@ -5,7 +5,12 @@
  * No over-engineering, just the core functionality needed.
  */
 
-import { GridMode, resolve, type ISettingsService, type PictographData } from "$shared";
+import {
+  GridMode,
+  resolve,
+  type ISettingsService,
+  type PictographData,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import type { IStartPositionService } from "../services/contracts";
 
@@ -16,7 +21,9 @@ export function createSimplifiedStartPositionState() {
 
   function getService(): IStartPositionService {
     if (!startPositionService) {
-      startPositionService = resolve(TYPES.IStartPositionService) as IStartPositionService;
+      startPositionService = resolve(
+        TYPES.IStartPositionService
+      ) as IStartPositionService;
     }
     return startPositionService;
   }
@@ -34,7 +41,10 @@ export function createSimplifiedStartPositionState() {
       const settings = getSettingsService();
       return settings.currentSettings.gridMode || GridMode.DIAMOND;
     } catch (error) {
-      console.warn("Failed to load grid mode from settings, defaulting to DIAMOND", error);
+      console.warn(
+        "Failed to load grid mode from settings, defaulting to DIAMOND",
+        error
+      );
       return GridMode.DIAMOND;
     }
   }
@@ -44,9 +54,14 @@ export function createSimplifiedStartPositionState() {
   let allVariations = $state<PictographData[]>([]);
   let selectedPosition = $state<PictographData | null>(null);
   let currentGridMode = $state<GridMode>(getInitialGridMode());
-  const selectionListeners = new Set<(position: PictographData | null, source: "user" | "sync") => void>();
+  const selectionListeners = new Set<
+    (position: PictographData | null, source: "user" | "sync") => void
+  >();
 
-  function notifySelectionChange(position: PictographData | null, source: "user" | "sync" = "user") {
+  function notifySelectionChange(
+    position: PictographData | null,
+    source: "user" | "sync" = "user"
+  ) {
     selectionListeners.forEach((listener) => {
       try {
         listener(position, source);
@@ -98,7 +113,9 @@ export function createSimplifiedStartPositionState() {
     setSelectedPosition(null);
   }
 
-  function onSelectedPositionChange(listener: (position: PictographData | null, source: "user" | "sync") => void) {
+  function onSelectedPositionChange(
+    listener: (position: PictographData | null, source: "user" | "sync") => void
+  ) {
     selectionListeners.add(listener);
     return () => {
       selectionListeners.delete(listener);
@@ -110,10 +127,18 @@ export function createSimplifiedStartPositionState() {
 
   return {
     // State
-    get positions() { return positions; },
-    get allVariations() { return allVariations; },
-    get selectedPosition() { return selectedPosition; },
-    get currentGridMode() { return currentGridMode; },
+    get positions() {
+      return positions;
+    },
+    get allVariations() {
+      return allVariations;
+    },
+    get selectedPosition() {
+      return selectedPosition;
+    },
+    get currentGridMode() {
+      return currentGridMode;
+    },
 
     // Actions
     selectPosition,
@@ -125,4 +150,6 @@ export function createSimplifiedStartPositionState() {
   };
 }
 
-export type SimplifiedStartPositionState = ReturnType<typeof createSimplifiedStartPositionState>;
+export type SimplifiedStartPositionState = ReturnType<
+  typeof createSimplifiedStartPositionState
+>;

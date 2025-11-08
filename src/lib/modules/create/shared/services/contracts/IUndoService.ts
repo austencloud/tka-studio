@@ -11,32 +11,32 @@
  * - Persistent history across sessions
  */
 
-import type { ActiveCreateModule, SequenceData } from '$shared';
+import type { ActiveCreateModule, SequenceData } from "$shared";
 
 /**
  * Types of undoable operations in the Create module
  */
 export enum UndoOperationType {
   // Sequence construction operations
-  SELECT_START_POSITION = 'SELECT_START_POSITION',
-  ADD_BEAT = 'ADD_BEAT',
-  REMOVE_BEATS = 'REMOVE_BEATS',
-  CLEAR_SEQUENCE = 'CLEAR_SEQUENCE',
+  SELECT_START_POSITION = "SELECT_START_POSITION",
+  ADD_BEAT = "ADD_BEAT",
+  REMOVE_BEATS = "REMOVE_BEATS",
+  CLEAR_SEQUENCE = "CLEAR_SEQUENCE",
 
   // Beat modification operations Is it a bad idea to leave my King Song 18XL electric unicycle plugged in overnight I'm sorry I finished your thought
-  UPDATE_BEAT = 'UPDATE_BEAT',
-  INSERT_BEAT = 'INSERT_BEAT',
+  UPDATE_BEAT = "UPDATE_BEAT",
+  INSERT_BEAT = "INSERT_BEAT",
 
   // Transform operations
-  MIRROR_SEQUENCE = 'MIRROR_SEQUENCE',
-  ROTATE_SEQUENCE = 'ROTATE_SEQUENCE',
-  SWAP_COLORS = 'SWAP_COLORS',
+  MIRROR_SEQUENCE = "MIRROR_SEQUENCE",
+  ROTATE_SEQUENCE = "ROTATE_SEQUENCE",
+  SWAP_COLORS = "SWAP_COLORS",
 
   // Edit operations
-  MODIFY_BEAT_PROPERTIES = 'MODIFY_BEAT_PROPERTIES',
+  MODIFY_BEAT_PROPERTIES = "MODIFY_BEAT_PROPERTIES",
 
   // Generate operations
-  GENERATE_SEQUENCE = 'GENERATE_SEQUENCE',
+  GENERATE_SEQUENCE = "GENERATE_SEQUENCE",
 }
 
 /**
@@ -54,7 +54,7 @@ export interface UndoMetadata {
  */
 export interface CreateModuleStateSnapshot {
   sequence: SequenceData | null;
-  selectedBeatNumber: number | null;  // 0=start, 1=first beat, 2=second beat
+  selectedBeatNumber: number | null; // 0=start, 1=first beat, 2=second beat
   activeSection: ActiveCreateModule | null;
   shouldShowStartPositionPicker?: boolean;
   timestamp: number;

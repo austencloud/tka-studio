@@ -111,7 +111,8 @@ const devCachePlugin = () => ({
 });
 
 // Use relative path for vite-plugin-static-copy, absolute for dev server
-const webpEncoderWasmRelative = "node_modules/webp-encoder/lib/assets/a.out.wasm";
+const webpEncoderWasmRelative =
+  "node_modules/webp-encoder/lib/assets/a.out.wasm";
 const webpEncoderWasmAbsolute = path.resolve(dirname, webpEncoderWasmRelative);
 
 const webpWasmDevPlugin = () => ({

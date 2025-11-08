@@ -12,7 +12,7 @@
   let {
     sequence,
     isPlaying = $bindable(),
-    animatingBeatNumber = $bindable(),
+    animatingBeatNumber = $bindable(null),
   }: {
     sequence: SequenceData;
     isPlaying?: boolean;
@@ -43,4 +43,3 @@
     background: var(--color-background-primary, #1a1a1a);
   }
 </style>
-

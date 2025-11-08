@@ -15,11 +15,13 @@ This directory contains recorded user flows for The Kinetic Alphabet app. These 
 ## Running the Flows
 
 ### Run All Flows
+
 ```bash
 npm run flows
 ```
 
 ### Run a Specific Flow
+
 ```bash
 npx playwright test flows/1-construct-flow.spec.ts
 npx playwright test flows/2-generate-flow.spec.ts
@@ -28,11 +30,13 @@ npx playwright test flows/3-share-export-flow.spec.ts
 ```
 
 ### Run with UI (Headed Mode)
+
 ```bash
 npx playwright test flows/1-construct-flow.spec.ts --headed
 ```
 
 ### Run with Debug Inspector
+
 ```bash
 npx playwright test flows/1-construct-flow.spec.ts --debug
 ```
@@ -40,6 +44,7 @@ npx playwright test flows/1-construct-flow.spec.ts --debug
 ## Prerequisites
 
 1. **App must be running** on `http://localhost:5173`
+
    ```bash
    npm run dev
    ```
@@ -54,10 +59,10 @@ npx playwright test flows/1-construct-flow.spec.ts --debug
 
 Once these flows are set up, you can tell your AI agent:
 
-- *"Run the construct flow"* → Tests manual sequence building
-- *"Run the generate flow"* → Tests auto-generation
-- *"Run all flows"* → Full regression test
-- *"Run flows in headed mode"* → Watch the tests execute
+- _"Run the construct flow"_ → Tests manual sequence building
+- _"Run the generate flow"_ → Tests auto-generation
+- _"Run all flows"_ → Full regression test
+- _"Run flows in headed mode"_ → Watch the tests execute
 
 ## Customization
 
@@ -71,30 +76,34 @@ Each flow is a standard Playwright test file. You can:
 ## Test Structure
 
 All flows follow this pattern:
+
 ```typescript
-test('Flow Name', async ({ page }) => {
+test("Flow Name", async ({ page }) => {
   // 1. Navigate to app
-  await page.goto('http://localhost:5173');
+  await page.goto("http://localhost:5173");
 
   // 2. Interact with UI
-  await page.click('...');
+  await page.click("...");
 
   // 3. Assert expected behavior
-  await expect(page.locator('...')).toBeVisible();
+  await expect(page.locator("...")).toBeVisible();
 });
 ```
 
 ## Troubleshooting
 
 ### Flow fails with "Element not found"
+
 - UI may have changed - update selectors in the spec file
 - App may not have loaded - increase `waitForTimeout` values
 
 ### Download tests fail
+
 - Check browser download permissions
 - Verify export functionality is working in the app
 
 ### Mobile flow doesn't trigger install prompt
+
 - PWA prompts require HTTPS in production
 - May need to simulate install event manually
 

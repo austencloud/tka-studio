@@ -10,10 +10,20 @@ Provides a beautiful, consistent icon selection experience
   let {
     selectedIcon = $bindable(),
     availableIcons = [
-      "⚙️", "⭐", "🎯", "🔥", "💫", "✨",
-      "🎪", "🎭", "🎨", "🌟", "💎", "🏆"
+      "⚙️",
+      "⭐",
+      "🎯",
+      "🔥",
+      "💫",
+      "✨",
+      "🎪",
+      "🎭",
+      "🎨",
+      "🌟",
+      "💎",
+      "🏆",
     ],
-    label = "Choose an Icon"
+    label = "Choose an Icon",
   } = $props<{
     selectedIcon: string;
     availableIcons?: string[];
@@ -23,7 +33,9 @@ Provides a beautiful, consistent icon selection experience
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function selectIcon(icon: string) {
@@ -89,7 +101,7 @@ Provides a beautiful, consistent icon selection experience
   }
 
   .icon-button::before {
-    content: '';
+    content: "";
     position: absolute;
     inset: 0;
     background: radial-gradient(

@@ -5,10 +5,10 @@
   based on the current sequence state. Receives all state and handlers as props.
 -->
 <script lang="ts">
-	import { GridMode, type PictographData } from "$shared";
-	import { fade } from "svelte/transition";
-	import { OptionViewer, StartPositionPicker } from "../../construct";
-	import type { SimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
+  import { GridMode, type PictographData } from "$shared";
+  import { fade } from "svelte/transition";
+  import { OptionViewer, StartPositionPicker } from "../../construct";
+  import type { SimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
 
   // Props - simplified with unified service
   let {
@@ -56,17 +56,18 @@
           <!-- Start Position Picker -->
           {#if shouldShowStartPositionPicker}
             <StartPositionPicker
-              startPositionState={startPositionState}
+              {startPositionState}
               onNavigateToAdvanced={onStartPositionNavigateToAdvanced}
               onNavigateToDefault={onStartPositionNavigateToDefault}
               {isSideBySideLayout}
             />
-          <!-- Option Grid -->
+            <!-- Option Grid -->
           {:else}
             <OptionViewer
               {onOptionSelected}
               {currentSequence}
-              currentGridMode={startPositionState?.currentGridMode || GridMode.DIAMOND}
+              currentGridMode={startPositionState?.currentGridMode ||
+                GridMode.DIAMOND}
               {isSideBySideLayout}
               {isUndoingOption}
               {onOpenFilters}
@@ -106,8 +107,6 @@
     width: 100%;
     min-height: 0;
   }
-
-
 
   .panel-content {
     flex: 1;

@@ -1,10 +1,13 @@
 # Floating Filter Button Logic Explained
 
 ## The Problem
+
 We want to maximize vertical screen space by showing a compact floating button instead of the full header, but only when it actually helps.
 
 ## The Solution
+
 Show the floating button when **BOTH** conditions are true:
+
 1. **Pictographs are too small** (< 80px) - user needs help clicking
 2. **Height is the constraining factor** - removing header will actually help
 
@@ -17,11 +20,13 @@ If pictographs are small due to width constraints, showing the floating button w
 The grid calculates two potential sizes:
 
 1. **Width-based size:** How big can pictographs be based on horizontal space?
+
    ```
    widthPerItem = (availableWidth - gap × (columns - 1)) / columns
    ```
 
 2. **Height-based size:** How big can pictographs be based on vertical space?
+
    ```
    heightPerItem = (availableHeight - gap × (rows - 1)) / rows
    ```
@@ -39,7 +44,7 @@ const arePictographsTooSmall = pictographSize < 80;
 
 if (!arePictographsTooSmall) {
   // Pictographs are fine, no need to help
-  showFloatingButton = false
+  showFloatingButton = false;
 }
 
 // Step 2: Check if height is the constraint
@@ -48,20 +53,21 @@ if (heightPerItem < widthPerItem) {
   // The grid wanted to be bigger based on width,
   // but was forced to shrink to fit height
   // → Use floating button to reclaim vertical space
-  showFloatingButton = true
+  showFloatingButton = true;
 } else {
   // Grid is WIDTH-CONSTRAINED
   // Floating button won't help (need more width, not height)
-  showFloatingButton = false
+  showFloatingButton = false;
 }
 
 // Final: Both conditions must be true
-showFloatingButton = arePictographsTooSmall && isHeightConstrained
+showFloatingButton = arePictographsTooSmall && isHeightConstrained;
 ```
 
 ## Visual Examples
 
 ### Scenario 1: Wide & Tall Container (Desktop)
+
 ```
 Container: 800px wide × 600px tall
 Columns: 8, Rows: 2 (16 items)
@@ -80,6 +86,7 @@ Result: ✅ Header visible (width is the constraint)
 ```
 
 ### Scenario 2: Wide & Short Container (Landscape Phone)
+
 ```
 Container: 800px wide × 250px tall
 Columns: 8, Rows: 2 (16 items)
@@ -98,6 +105,7 @@ Result: ✅ Header visible (width is still the constraint)
 ```
 
 ### Scenario 3: Narrow & Tall Container (Portrait Phone)
+
 ```
 Container: 400px wide × 600px tall
 Columns: 4, Rows: 4 (16 items)
@@ -116,6 +124,7 @@ Result: ✅ Header visible (width is the constraint)
 ```
 
 ### Scenario 4: Narrow & SHORT Container (Cramped Layout)
+
 ```
 Container: 400px wide × 300px tall
 Columns: 4, Rows: 4 (16 items)
@@ -134,6 +143,7 @@ Result: 🎯 FLOATING BUTTON (height is the constraint!)
 ```
 
 ### Scenario 5: Your Screenshot (298px × 572px)
+
 ```
 Container: 298px wide × 572px tall
 Columns: 4, Rows: 4 (16 items assumed)
@@ -156,6 +166,7 @@ Why: Even though pictographs are small (67px), they're small due to
 ```
 
 ### Scenario 6: Small Pictographs + Height-Constrained (300px × 250px)
+
 ```
 Container: 300px wide × 250px tall
 Columns: 4, Rows: 4 (16 items)
@@ -179,6 +190,7 @@ Why: Pictographs are small (55px) AND height is the limiting factor.
 ```
 
 ### Scenario 7: Large Pictographs + Height-Constrained (800px × 300px)
+
 ```
 Container: 800px wide × 300px tall
 Columns: 8, Rows: 2 (16 items)
@@ -203,12 +215,14 @@ Why: Even though layout is technically width-constrained,
 ## Why This Works Better
 
 ### Old Approach (Fixed Height Threshold)
+
 ❌ Arbitrary cutoff (e.g., "if height < 300px")
 ❌ Doesn't consider actual content
 ❌ Doesn't adapt to different grid configurations
 ❌ Can trigger at wrong times
 
 ### New Approach (Dual-Condition: Size + Constraint)
+
 ✅ **Pragmatic:** Only helps when pictographs are uncomfortably small
 ✅ **Smart:** Only triggers when removing header will actually help
 ✅ **Adaptive:** Works with 4-column, 8-column, any number of items
@@ -229,11 +243,13 @@ Why: Even though layout is technically width-constrained,
 **The floating button appears when pictographs are uncomfortably small (< 80px) AND the grid is height-constrained.**
 
 This dual-condition approach ensures we:
+
 1. **Only help when needed:** Pictographs < 80px are hard to click
 2. **Only help when possible:** Header removal must actually improve things
 3. **Never help pointlessly:** If width-constrained, floating button won't help
 
 ### Decision Tree:
+
 ```
 Are pictographs < 80px?
 ├─ NO → Show header (pictographs are fine)
@@ -243,6 +259,7 @@ Are pictographs < 80px?
 ```
 
 This approach is:
+
 - **Pragmatic:** Based on actual user needs (clickability)
 - **Semantic:** Based on actual layout constraints
 - **Adaptive:** Works across all screen sizes and configurations

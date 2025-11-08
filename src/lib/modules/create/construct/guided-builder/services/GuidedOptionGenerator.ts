@@ -63,20 +63,44 @@ export class GuidedOptionGenerator implements IGuidedOptionGenerator {
     [GridLocation.SOUTH]: { cw: GridLocation.WEST, ccw: GridLocation.EAST },
     [GridLocation.WEST]: { cw: GridLocation.NORTH, ccw: GridLocation.SOUTH },
     // Placeholders for corner positions (not used in Diamond mode)
-    [GridLocation.NORTHEAST]: { cw: GridLocation.SOUTHEAST, ccw: GridLocation.NORTHWEST },
-    [GridLocation.SOUTHEAST]: { cw: GridLocation.SOUTHWEST, ccw: GridLocation.NORTHEAST },
-    [GridLocation.SOUTHWEST]: { cw: GridLocation.NORTHWEST, ccw: GridLocation.SOUTHEAST },
-    [GridLocation.NORTHWEST]: { cw: GridLocation.NORTHEAST, ccw: GridLocation.SOUTHWEST },
+    [GridLocation.NORTHEAST]: {
+      cw: GridLocation.SOUTHEAST,
+      ccw: GridLocation.NORTHWEST,
+    },
+    [GridLocation.SOUTHEAST]: {
+      cw: GridLocation.SOUTHWEST,
+      ccw: GridLocation.NORTHEAST,
+    },
+    [GridLocation.SOUTHWEST]: {
+      cw: GridLocation.NORTHWEST,
+      ccw: GridLocation.SOUTHEAST,
+    },
+    [GridLocation.NORTHWEST]: {
+      cw: GridLocation.NORTHEAST,
+      ccw: GridLocation.SOUTHWEST,
+    },
   };
 
   private readonly boxAdjacent: Record<
     GridLocation,
     { cw: GridLocation; ccw: GridLocation }
   > = {
-    [GridLocation.NORTHEAST]: { cw: GridLocation.SOUTHEAST, ccw: GridLocation.NORTHWEST },
-    [GridLocation.SOUTHEAST]: { cw: GridLocation.SOUTHWEST, ccw: GridLocation.NORTHEAST },
-    [GridLocation.SOUTHWEST]: { cw: GridLocation.NORTHWEST, ccw: GridLocation.SOUTHEAST },
-    [GridLocation.NORTHWEST]: { cw: GridLocation.NORTHEAST, ccw: GridLocation.SOUTHWEST },
+    [GridLocation.NORTHEAST]: {
+      cw: GridLocation.SOUTHEAST,
+      ccw: GridLocation.NORTHWEST,
+    },
+    [GridLocation.SOUTHEAST]: {
+      cw: GridLocation.SOUTHWEST,
+      ccw: GridLocation.NORTHEAST,
+    },
+    [GridLocation.SOUTHWEST]: {
+      cw: GridLocation.NORTHWEST,
+      ccw: GridLocation.SOUTHEAST,
+    },
+    [GridLocation.NORTHWEST]: {
+      cw: GridLocation.NORTHEAST,
+      ccw: GridLocation.SOUTHWEST,
+    },
     // Placeholders for cardinal positions (not used in Box mode)
     [GridLocation.NORTH]: { cw: GridLocation.EAST, ccw: GridLocation.WEST },
     [GridLocation.EAST]: { cw: GridLocation.SOUTH, ccw: GridLocation.NORTH },
@@ -90,7 +114,8 @@ export class GuidedOptionGenerator implements IGuidedOptionGenerator {
     gridMode: GridMode,
     propType: PropType = PropType.HAND
   ): PictographData[] {
-    const adjacent = gridMode === GridMode.DIAMOND ? this.diamondAdjacent : this.boxAdjacent;
+    const adjacent =
+      gridMode === GridMode.DIAMOND ? this.diamondAdjacent : this.boxAdjacent;
     const adjacentLocations = adjacent[currentLocation];
     const oppositeLocation = this.oppositeLocations[currentLocation];
 

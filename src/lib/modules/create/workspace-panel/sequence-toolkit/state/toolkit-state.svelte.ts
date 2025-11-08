@@ -1,15 +1,15 @@
 /**
  * Sequence Toolkit State Management
- * 
+ *
  * Manages state for sequence toolkit operations including tool selection,
  * operation progress, and results. Uses Svelte 5 runes for reactivity.
  */
 
 import type {
-    ToolConfig,
-    ToolOperationResult,
-    ToolOperationType,
-    ToolState,
+  ToolConfig,
+  ToolOperationResult,
+  ToolOperationType,
+  ToolState,
 } from "../domain";
 import { TOOL_OPERATIONS } from "../domain";
 
@@ -35,12 +35,15 @@ export function createToolkitState() {
   let operationHistory = $state<ToolOperationResult[]>([]);
 
   // Derived state
-  const toolState = $derived(() => ({
-    currentOperation,
-    isProcessing,
-    lastResult,
-    selectedTool,
-  } as ToolState));
+  const toolState = $derived(
+    () =>
+      ({
+        currentOperation,
+        isProcessing,
+        lastResult,
+        selectedTool,
+      }) as ToolState
+  );
 
   const hasError = $derived(() => !!error);
   const canPerformOperations = $derived(() => !isProcessing);
@@ -69,10 +72,10 @@ export function createToolkitState() {
     isProcessing = false;
     currentOperation = undefined;
     lastResult = result;
-    
+
     // Add to history
     operationHistory = [...operationHistory, result];
-    
+
     // Keep only last 50 operations
     if (operationHistory.length > 50) {
       operationHistory = operationHistory.slice(-50);
@@ -121,7 +124,7 @@ export function createToolkitState() {
   }
 
   function getOperationsByType(type: ToolOperationType): ToolOperationResult[] {
-    return operationHistory.filter(op => op.operation === type);
+    return operationHistory.filter((op) => op.operation === type);
   }
 
   function reset(): void {
@@ -136,19 +139,41 @@ export function createToolkitState() {
   // Return state interface
   return {
     // State getters
-    get currentOperation() { return currentOperation; },
-    get isProcessing() { return isProcessing; },
-    get lastResult() { return lastResult; },
-    get selectedTool() { return selectedTool; },
-    get error() { return error; },
-    get config() { return config; },
-    get operationHistory() { return operationHistory; },
+    get currentOperation() {
+      return currentOperation;
+    },
+    get isProcessing() {
+      return isProcessing;
+    },
+    get lastResult() {
+      return lastResult;
+    },
+    get selectedTool() {
+      return selectedTool;
+    },
+    get error() {
+      return error;
+    },
+    get config() {
+      return config;
+    },
+    get operationHistory() {
+      return operationHistory;
+    },
 
     // Derived state
-    get toolState() { return toolState; },
-    get hasError() { return hasError; },
-    get canPerformOperations() { return canPerformOperations; },
-    get lastOperationSuccess() { return lastOperationSuccess; },
+    get toolState() {
+      return toolState;
+    },
+    get hasError() {
+      return hasError;
+    },
+    get canPerformOperations() {
+      return canPerformOperations;
+    },
+    get lastOperationSuccess() {
+      return lastOperationSuccess;
+    },
 
     // Actions
     selectTool,

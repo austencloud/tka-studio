@@ -6,7 +6,12 @@
  * hand path direction and user-selected rotation direction.
  */
 
-import type { MotionData, MotionType, PropType, RotationDirection } from "$shared";
+import type {
+  MotionData,
+  MotionType,
+  PropType,
+  RotationDirection,
+} from "$shared";
 import type { HandPath, HandPathSegment } from "../../domain";
 
 export interface IPathToMotionConverter {

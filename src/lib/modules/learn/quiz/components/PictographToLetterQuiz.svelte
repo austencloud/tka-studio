@@ -15,10 +15,7 @@
   import { QuizType, type QuizQuestionData } from "../domain";
 
   // Props
-  let {
-    onAnswerSubmit,
-    onNextQuestion,
-  } = $props<{
+  let { onAnswerSubmit, onNextQuestion } = $props<{
     onAnswerSubmit?: (isCorrect: boolean) => void;
     onNextQuestion?: () => void;
   }>();
@@ -144,7 +141,9 @@
   <div class="quiz-container">
     <!-- Question Section -->
     <div class="question-section">
-      <h3 class="question-prompt">What letter does this pictograph represent?</h3>
+      <h3 class="question-prompt">
+        What letter does this pictograph represent?
+      </h3>
 
       <div class="pictograph-display">
         <div class="pictograph-wrapper">
@@ -176,16 +175,25 @@
 
     <!-- Feedback Banner -->
     {#if showFeedback}
-      <div class="feedback-banner" class:correct={selectedAnswerId && questionData.answerOptions.find(o => o.id === selectedAnswerId)?.isCorrect}>
-        {#if selectedAnswerId && questionData.answerOptions.find(o => o.id === selectedAnswerId)?.isCorrect}
+      <div
+        class="feedback-banner"
+        class:correct={selectedAnswerId &&
+          questionData.answerOptions.find((o) => o.id === selectedAnswerId)
+            ?.isCorrect}
+      >
+        {#if selectedAnswerId && questionData.answerOptions.find((o) => o.id === selectedAnswerId)?.isCorrect}
           <div class="feedback-content">
             <span class="feedback-icon">🎉</span>
-            <span class="feedback-text">Correct! It's the letter "{correctAnswer}"</span>
+            <span class="feedback-text"
+              >Correct! It's the letter "{correctAnswer}"</span
+            >
           </div>
         {:else}
           <div class="feedback-content">
             <span class="feedback-icon">💭</span>
-            <span class="feedback-text">The correct answer is "{correctAnswer}"</span>
+            <span class="feedback-text"
+              >The correct answer is "{correctAnswer}"</span
+            >
           </div>
         {/if}
       </div>
@@ -402,19 +410,28 @@
 
   /* Answer States */
   .answer-btn--selected {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.3),
+      rgba(118, 75, 162, 0.3)
+    );
     border-color: rgba(102, 126, 234, 0.8);
     transform: scale(1.05);
   }
 
   .answer-btn--correct {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.2),
+      rgba(22, 163, 74, 0.2)
+    );
     border-color: rgb(34, 197, 94);
     animation: correctPulse 0.6s ease-out;
   }
 
   @keyframes correctPulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
     }
     50% {
@@ -423,13 +440,18 @@
   }
 
   .answer-btn--incorrect {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.2),
+      rgba(220, 38, 38, 0.2)
+    );
     border-color: rgb(239, 68, 68);
     animation: incorrectShake 0.5s ease-out;
   }
 
   @keyframes incorrectShake {
-    0%, 100% {
+    0%,
+    100% {
       transform: translateX(0);
     }
     25% {

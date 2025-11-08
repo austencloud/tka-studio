@@ -104,7 +104,7 @@ export function createStandalonePictographData(
   data: Partial<PictographData>
 ): PictographData {
   return createPictographData({
-    id: data.id ?? '',
+    id: data.id ?? "",
     letter: data.letter ?? null,
     startPosition: data.startPosition ?? null,
     endPosition: data.endPosition ?? null,

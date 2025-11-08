@@ -1,7 +1,10 @@
 <!-- AccessibilityTab.svelte - Modern User Experience Settings -->
 <script lang="ts">
   import { browser } from "$app/environment";
-  import type { IHapticFeedbackService, IMobileFullscreenService } from "$shared";
+  import type {
+    IHapticFeedbackService,
+    IMobileFullscreenService,
+  } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { nuclearCacheClear } from "$shared/auth";
   import { onMount } from "svelte";
@@ -159,11 +162,13 @@
   }
 
   async function clearCache() {
-    if (!confirm(
-      "⚠️ CLEAR ALL CACHE ⚠️\n\n" +
-      "This will DELETE ALL cached data and reload the page.\n\n" +
-      "Continue?"
-    )) {
+    if (
+      !confirm(
+        "⚠️ CLEAR ALL CACHE ⚠️\n\n" +
+          "This will DELETE ALL cached data and reload the page.\n\n" +
+          "Continue?"
+      )
+    ) {
       return;
     }
 
@@ -263,7 +268,7 @@
     <span class="tip-text">
       💡 <strong>Tip:</strong> Install as PWA for best experience
     </span>
-    <button class="learn-how-btn" onclick={() => showPWAGuide = true}>
+    <button class="learn-how-btn" onclick={() => (showPWAGuide = true)}>
       Learn How
     </button>
   </div>

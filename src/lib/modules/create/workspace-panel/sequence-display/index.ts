@@ -10,4 +10,8 @@ export * from "./state";
 // - from "./utils" for grid calculation layout
 
 // Export specific utilities (avoid GridLayout conflict)
-export { calculateBeatPosition, calculateGridLayout, type GridSizingConfig } from "./utils";
+export {
+  calculateBeatPosition,
+  calculateGridLayout,
+  type GridSizingConfig,
+} from "./utils";

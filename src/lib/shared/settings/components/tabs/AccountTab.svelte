@@ -49,7 +49,9 @@
           />
         {:else}
           <div class="account-tab__avatar-fallback">
-            {(authStore.user.displayName || authStore.user.email || "?").charAt(0).toUpperCase()}
+            {(authStore.user.displayName || authStore.user.email || "?")
+              .charAt(0)
+              .toUpperCase()}
           </div>
         {/if}
 

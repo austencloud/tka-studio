@@ -3,8 +3,8 @@
   import { slide } from "svelte/transition";
   import type { SequenceSection } from "../../shared/domain/models/explore-models";
   import type { IExploreThumbnailService } from "../services/contracts/IExploreThumbnailService";
-import SequenceCard from "./SequenceCard/SequenceCard.svelte";
-import SectionHeader from "./SectionHeader.svelte";
+  import SequenceCard from "./SequenceCard/SequenceCard.svelte";
+  import SectionHeader from "./SectionHeader.svelte";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
   const {

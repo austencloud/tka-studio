@@ -24,15 +24,57 @@ Uses chips/tags for quick filtering with less screen real estate.
 
   // Quick filter options with unique colors
   const quickFilters = [
-    { id: "all", label: "All", icon: "fa-th", color: "#a855f7", gradient: "linear-gradient(135deg, #c084fc 0%, #a855f7 100%)" },
-    { id: "favorites", label: "Favorites", icon: "fa-heart", color: "#ec4899", gradient: "linear-gradient(135deg, #f472b6 0%, #ec4899 100%)" },
-    { id: "recent", label: "Recent", icon: "fa-clock", color: "#06b6d4", gradient: "linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%)" },
-    { id: "difficulty-1", label: "Easy", icon: "fa-star", type: "difficulty", value: 1, color: "#10b981", gradient: "linear-gradient(135deg, #34d399 0%, #10b981 100%)" },
-    { id: "difficulty-2", label: "Medium", icon: "fa-star-half-alt", type: "difficulty", value: 2, color: "#f59e0b", gradient: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)" },
-    { id: "difficulty-3", label: "Hard", icon: "fa-fire", type: "difficulty", value: 3, color: "#ef4444", gradient: "linear-gradient(135deg, #f87171 0%, #ef4444 100%)" },
+    {
+      id: "all",
+      label: "All",
+      icon: "fa-th",
+      color: "#a855f7",
+      gradient: "linear-gradient(135deg, #c084fc 0%, #a855f7 100%)",
+    },
+    {
+      id: "favorites",
+      label: "Favorites",
+      icon: "fa-heart",
+      color: "#ec4899",
+      gradient: "linear-gradient(135deg, #f472b6 0%, #ec4899 100%)",
+    },
+    {
+      id: "recent",
+      label: "Recent",
+      icon: "fa-clock",
+      color: "#06b6d4",
+      gradient: "linear-gradient(135deg, #22d3ee 0%, #06b6d4 100%)",
+    },
+    {
+      id: "difficulty-1",
+      label: "Easy",
+      icon: "fa-star",
+      type: "difficulty",
+      value: 1,
+      color: "#10b981",
+      gradient: "linear-gradient(135deg, #34d399 0%, #10b981 100%)",
+    },
+    {
+      id: "difficulty-2",
+      label: "Medium",
+      icon: "fa-star-half-alt",
+      type: "difficulty",
+      value: 2,
+      color: "#f59e0b",
+      gradient: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%)",
+    },
+    {
+      id: "difficulty-3",
+      label: "Hard",
+      icon: "fa-fire",
+      type: "difficulty",
+      value: 3,
+      color: "#ef4444",
+      gradient: "linear-gradient(135deg, #f87171 0%, #ef4444 100%)",
+    },
   ];
 
-  function handleQuickFilter(filter: typeof quickFilters[0]) {
+  function handleQuickFilter(filter: (typeof quickFilters)[0]) {
     hapticService?.trigger("selection");
     if (filter.type && filter.value !== undefined) {
       onFilterChange(filter.type, filter.value);
@@ -46,9 +88,12 @@ Uses chips/tags for quick filtering with less screen real estate.
     onOpenAdvanced();
   }
 
-  function isFilterActive(filter: typeof quickFilters[0]): boolean {
+  function isFilterActive(filter: (typeof quickFilters)[0]): boolean {
     if (filter.type && filter.value !== undefined) {
-      return currentFilter.type === filter.type && currentFilter.value === filter.value;
+      return (
+        currentFilter.type === filter.type &&
+        currentFilter.value === filter.value
+      );
     }
     return currentFilter.type === filter.id;
   }

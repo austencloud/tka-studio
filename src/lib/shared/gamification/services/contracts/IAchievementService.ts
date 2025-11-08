@@ -58,7 +58,9 @@ export interface IAchievementService {
   /**
    * Get achievement progress for a specific achievement
    */
-  getAchievementProgress(achievementId: string): Promise<UserAchievement | null>;
+  getAchievementProgress(
+    achievementId: string
+  ): Promise<UserAchievement | null>;
 
   /**
    * Manually award XP (for debugging/testing)

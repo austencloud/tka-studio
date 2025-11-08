@@ -1,21 +1,25 @@
 # Edit Panel Deselection Fix
 
 ## Problem
+
 When the edit panel was open with a pictograph selected, clicking outside the panel (not on another pictograph) would close the panel but **fail to deselect the pictograph**. This caused subsequent pictograph selection attempts to fail.
 
 ## Root Cause
+
 The edit panel's backdrop had `pointer-events: none` set in [Drawer.svelte:178-184](src/lib/shared/foundation/ui/Drawer.svelte#L178-L184), which meant clicks went through the backdrop instead of being detected by the `handleBackdropClick` handler.
 
 **Before:**
+
 ```css
 :global(.drawer-overlay.edit-panel-backdrop) {
   background: transparent !important;
   backdrop-filter: none !important;
-  pointer-events: none !important;  /* ❌ Clicks ignored */
+  pointer-events: none !important; /* ❌ Clicks ignored */
 }
 ```
 
 This caused:
+
 1. User clicks outside panel (empty workspace area)
 2. Click goes through transparent backdrop
 3. Backdrop click handler never fires
@@ -26,29 +30,34 @@ This caused:
 ## Solution
 
 ### 1. Fixed Backdrop Pointer Events
+
 Changed `pointer-events: none` to `pointer-events: auto` in [Drawer.svelte:183](src/lib/shared/foundation/ui/Drawer.svelte#L183):
 
 ```css
 :global(.drawer-overlay.edit-panel-backdrop) {
   background: transparent !important;
   backdrop-filter: none !important;
-  pointer-events: auto !important;  /* ✅ Clicks detected */
+  pointer-events: auto !important; /* ✅ Clicks detected */
 }
 ```
 
 ### 2. Enhanced Backdrop Click Detection
+
 Updated `handleBackdropClick` in [EditSlidePanel.svelte:127-159](src/lib/modules/create/edit/components/EditSlidePanel.svelte#L127-L159) to detect elements beneath the backdrop:
 
 ```typescript
 function handleBackdropClick(event: MouseEvent): boolean {
   // Get the element at the click coordinates (beneath the backdrop)
   const backdrop = event.target as HTMLElement;
-  backdrop.style.pointerEvents = 'none';
-  const elementBeneath = document.elementFromPoint(event.clientX, event.clientY);
-  backdrop.style.pointerEvents = 'auto';
+  backdrop.style.pointerEvents = "none";
+  const elementBeneath = document.elementFromPoint(
+    event.clientX,
+    event.clientY
+  );
+  backdrop.style.pointerEvents = "auto";
 
   // Check if the element beneath is a beat cell
-  const isBeatClick = elementBeneath?.closest('.beat-cell, .start-tile, ...');
+  const isBeatClick = elementBeneath?.closest(".beat-cell, .start-tile, ...");
 
   if (isBeatClick) {
     // Trigger click on the beat and keep panel open
@@ -64,6 +73,7 @@ function handleBackdropClick(event: MouseEvent): boolean {
 ```
 
 **Why this approach?**
+
 - The backdrop overlay intercepts all clicks (since it covers the viewport)
 - `event.target` is the backdrop itself, not the element underneath
 - Using `document.elementFromPoint()` with temporarily disabled pointer-events reveals the actual clicked element
@@ -71,6 +81,7 @@ function handleBackdropClick(event: MouseEvent): boolean {
 - If it's empty space, we close the panel
 
 ### 3. Synchronized Local UI State
+
 Added effect in [WorkspacePanel.svelte:76-86](src/lib/modules/create/workspace-panel/core/WorkspacePanel.svelte#L76-L86) to sync visual selection state:
 
 ```typescript
@@ -86,17 +97,20 @@ $effect(() => {
 ```
 
 **Why was this needed?**
+
 - `WorkspacePanel` has its own `localSelectedBeatNumber` for rendering the selection UI
 - When `sequenceState.clearSelection()` was called, it only cleared the global state
 - The local UI state wasn't updating, so the gold border remained
 - This effect keeps them in sync, ensuring the visual state updates when selection is cleared
 
 ### 4. Cleaned Up Old CSS
+
 Removed outdated BottomSheet CSS references in [EditSlidePanel.svelte:264-276](src/lib/modules/create/edit/components/EditSlidePanel.svelte#L264-L276) that were targeting the wrong component classes.
 
 ## Fix Verification
 
 ### Code Flow (After Fix)
+
 1. User clicks outside panel (not on a beat)
 2. Click hits transparent backdrop (pointer-events enabled)
 3. `Drawer.handleBackdropClick` called with event
@@ -114,6 +128,7 @@ Removed outdated BottomSheet CSS references in [EditSlidePanel.svelte:264-276](s
    - Exits multi-select mode if active
 
 ### Files Changed
+
 1. [src/lib/shared/foundation/ui/Drawer.svelte](src/lib/shared/foundation/ui/Drawer.svelte)
    - Line 183: Changed `pointer-events: none` → `pointer-events: auto` for edit panel backdrop
 
@@ -127,6 +142,7 @@ Removed outdated BottomSheet CSS references in [EditSlidePanel.svelte:264-276](s
 ## Manual Test Procedure
 
 ### Test 1: Outside Click Deselection
+
 1. Navigate to Build > Construct
 2. Select a start position (if required)
 3. Click an option tile to add a beat to the sequence
@@ -142,6 +158,7 @@ Removed outdated BottomSheet CSS references in [EditSlidePanel.svelte:264-276](s
    - ✅ Beat is selected again (subsequent selections work)
 
 ### Test 2: Beat-to-Beat Selection Switching
+
 1. Navigate to Build > Construct
 2. Add at least 2 beats to the sequence
 3. Click first beat
@@ -153,6 +170,7 @@ Removed outdated BottomSheet CSS references in [EditSlidePanel.svelte:264-276](s
    - ✅ Edit panel remains open, showing second beat's data
 
 ### Test 3: Escape Key Deselection
+
 1. Select a beat to open edit panel
 2. Press `Escape` key
 3. **Expected**:
@@ -162,6 +180,7 @@ Removed outdated BottomSheet CSS references in [EditSlidePanel.svelte:264-276](s
 ## Technical Details
 
 ### Related Components
+
 - **Drawer.svelte**: Generic drawer/sheet component with backdrop click handling
 - **EditSlidePanel.svelte**: Edit panel wrapper with custom backdrop click logic
 - **EditCoordinator.svelte**: Handles edit panel events and selection state
@@ -169,13 +188,16 @@ Removed outdated BottomSheet CSS references in [EditSlidePanel.svelte:264-276](s
 - **AutoEditPanelManager.svelte.ts**: Opens panel when beats are selected
 
 ### Selection State Management
+
 The selection state uses Svelte 5 runes:
+
 - `selectedBeatNumber`: Stores currently selected beat (null = nothing selected)
 - `clearSelection()`: Sets `selectedBeatNumber = null`
 
 The AutoEditPanelManager effect only opens the panel when `selectedBeatNumber !== null`, so clearing selection won't trigger re-opening.
 
 ## Automated Test
+
 An automated test has been created at [tests/e2e/edit-panel-deselection.spec.ts](tests/e2e/edit-panel-deselection.spec.ts) but requires additional test infrastructure setup to run properly.
 
 ---

@@ -13,12 +13,14 @@
 ### What's Changed
 
 **PWAs are mainstream now:**
+
 - Twitter/X went PWA-only on iOS (removed native app)
 - Spotify, Starbucks, Uber all have excellent PWAs
 - Microsoft pushing PWAs hard (Office, Teams, Edge)
 - Google obviously all-in on PWAs
 
 **But App Stores still matter for:**
+
 - **Discovery** - Users browse App Store, not the web
 - **Trust** - "It's in the App Store" = legitimate
 - **Payments** - In-app purchases easier (but Apple takes 30%)
@@ -27,6 +29,7 @@
 ### What Hasn't Changed
 
 **Apple still gatekeeping:**
+
 - iOS PWAs can't do push notifications (intentional)
 - iOS PWAs can't do background sync (intentional)
 - iOS PWAs have storage limits (intentional)
@@ -35,6 +38,7 @@
 **Why?** App Store is 20% of Apple's revenue. They won't kill it.
 
 **Android is wide open:**
+
 - PWAs can do almost everything native apps can
 - Google Play even accepts PWAs now
 - Chrome on Android treats PWAs as first-class citizens
@@ -46,12 +50,14 @@
 ### PWA Advantages
 
 **Development:**
+
 - ✅ One codebase for all platforms
 - ✅ Use web tech you already know
 - ✅ No platform-specific bugs to fix
 - ✅ No Xcode/Android Studio complexity
 
 **Distribution:**
+
 - ✅ Deploy instantly (no review process)
 - ✅ Update anytime (no waiting for approval)
 - ✅ No $99/year Apple Developer fee
@@ -59,6 +65,7 @@
 - ✅ No Mac required for iOS
 
 **Maintenance:**
+
 - ✅ Fix bugs immediately
 - ✅ A/B test features easily
 - ✅ Roll back bad updates instantly
@@ -67,17 +74,20 @@
 ### App Store Advantages
 
 **Discovery:**
+
 - ✅ Users browse App Store
 - ✅ App Store SEO/rankings
 - ✅ Featured placements possible
 - ✅ "Download on App Store" badge = trust
 
 **Monetization:**
+
 - ✅ In-app purchases (but 30% fee)
 - ✅ Subscriptions (but 30% first year, 15% after)
 - ✅ Users expect to pay for apps
 
 **Features:**
+
 - ✅ Push notifications on iOS
 - ✅ Background sync on iOS
 - ✅ Full hardware access
@@ -90,18 +100,21 @@
 ### What Works Great
 
 **Canvas/Graphics Apps** (like TKA)
+
 - ✅ Fabric.js performs excellently on iOS
 - ✅ No native canvas API differences
 - ✅ Retina displays look perfect
 - ✅ Touch events work great
 
 **Offline-First Apps**
+
 - ✅ Service workers cache everything
 - ✅ IndexedDB for local storage
 - ✅ Works on airplane mode
 - ✅ Syncs when back online
 
 **Creative Tools**
+
 - ✅ File downloads work (FileSaver.js)
 - ✅ Image export works (html2canvas)
 - ✅ Clipboard access works
@@ -110,16 +123,19 @@
 ### What Doesn't Work
 
 **Real-Time Communication**
+
 - ❌ No push notifications on iOS
 - ❌ No background sync on iOS
 - ❌ Can't wake app from background
 
 **Hardware Integration**
+
 - ❌ Limited Bluetooth access
 - ❌ No NFC on iOS
 - ❌ No background location
 
 **Enterprise Features**
+
 - ❌ No MDM integration
 - ❌ No App Store deployment
 - ❌ No enterprise app signing
@@ -170,18 +186,21 @@
 ### Likely Scenarios
 
 **Optimistic:**
+
 - Apple adds push notifications to iOS PWAs (EU pressure)
 - Apple adds background sync to iOS PWAs
 - PWAs become indistinguishable from native
 - App Stores become optional
 
 **Realistic:**
+
 - Apple slowly improves PWAs (grudgingly)
 - Android PWAs reach feature parity with native
 - App Stores remain dominant for discovery
 - PWAs become "good enough" for most apps
 
 **Pessimistic:**
+
 - Apple keeps crippling PWAs to protect App Store
 - Developers forced to maintain native apps
 - Web platform stagnates
@@ -190,12 +209,14 @@
 ### What's Actually Happening
 
 **Evidence PWAs are winning:**
+
 - Major companies going PWA-only (Twitter/X)
 - Microsoft betting on PWAs (Windows 11)
 - Google pushing PWAs hard (Chrome, Android)
 - EU forcing Apple to open up iOS
 
 **Evidence App Stores still matter:**
+
 - App Store revenue still growing
 - Users still browse App Store for discovery
 - Enterprise still wants MDM/App Store
@@ -210,6 +231,7 @@
 ### Why PWA is Perfect
 
 **Your constraints:**
+
 - Solo developer
 - No Mac
 - No iPhone
@@ -217,6 +239,7 @@
 - Limited budget
 
 **TKA's needs:**
+
 - Canvas rendering (works great in PWA)
 - Offline support (PWA strength)
 - File export (works in PWA)
@@ -229,18 +252,21 @@
 ### If You Ever Need App Store
 
 **Option 1: Hire contractor**
+
 - Cost: $500-1000 one-time
 - They wrap your PWA in Capacitor
 - They handle Xcode/submission
 - You keep maintaining web code
 
 **Option 2: DIY Capacitor**
+
 - Cost: $0 (but time investment)
 - Requires Mac for iOS build
 - Can use cloud build services ($$$)
 - More control but more complexity
 
 **Option 3: Android-only App Store**
+
 - Cost: $25 one-time
 - Can build on Windows
 - Google Play more forgiving
@@ -276,16 +302,19 @@
 ## Resources
 
 ### Testing
+
 - [BrowserStack](https://www.browserstack.com) - Real iOS devices ($39/mo)
 - [LambdaTest](https://www.lambdatest.com) - Alternative to BrowserStack
 - [Sauce Labs](https://saucelabs.com) - Another option
 
 ### Learning
+
 - [web.dev PWA Guide](https://web.dev/progressive-web-apps/)
 - [Apple PWA Docs](https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html)
 - [PWA Stats](https://www.pwastats.com) - Case studies
 
 ### Tools
+
 - [Capacitor](https://capacitorjs.com) - PWA to native wrapper
 - [PWA Builder](https://www.pwabuilder.com) - Generate assets
 - [Lighthouse](https://developers.google.com/web/tools/lighthouse) - PWA audit
@@ -301,6 +330,7 @@
 For TKA, the answer is clearly **no**.
 
 You have:
+
 - ✅ A working PWA
 - ✅ iOS compatibility
 - ✅ Offline support

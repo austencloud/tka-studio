@@ -8,9 +8,7 @@
     "plugin:storybook/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint"
-  ],
+  "plugins": ["@typescript-eslint"],
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2020,
@@ -40,31 +38,19 @@
       {
         "patterns": [
           {
-            "group": [
-              "$services",
-              "$services/*"
-            ],
+            "group": ["$services", "$services/*"],
             "message": "Use relative imports instead of $services alias to avoid circular dependencies"
           },
           {
-            "group": [
-              "$domain",
-              "$domain/*"
-            ],
+            "group": ["$domain", "$domain/*"],
             "message": "Use $shared/domain or relative imports instead of $domain alias"
           },
           {
-            "group": [
-              "$implementations",
-              "$implementations/*"
-            ],
+            "group": ["$implementations", "$implementations/*"],
             "message": "Use relative imports within modules instead of $implementations alias"
           },
           {
-            "group": [
-              "$state",
-              "$state/*"
-            ],
+            "group": ["$state", "$state/*"],
             "message": "Use module-specific state imports instead of global $state alias"
           }
         ]
@@ -82,10 +68,7 @@
   ],
   "overrides": [
     {
-      "files": [
-        "tests/**/*.ts",
-        "tests/**/*.js"
-      ],
+      "files": ["tests/**/*.ts", "tests/**/*.js"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off"
       }

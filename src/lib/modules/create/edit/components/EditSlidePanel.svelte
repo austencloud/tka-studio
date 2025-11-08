@@ -178,7 +178,7 @@ HMR Test: Nested component change test
   bind:isOpen
   panelName="edit"
   {combinedPanelHeight}
-  showHandle={false}
+  showHandle={true}
   closeOnBackdrop={false}
   focusTrap={false}
   lockScroll={false}
@@ -268,31 +268,9 @@ HMR Test: Nested component change test
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
   }
 
-  /* Side-by-side layout: Edit panel slides in from right, takes up tool panel space */
-  /* Only set positioning - let base Drawer handle transforms and transitions */
-  :global(
-    .drawer-content.edit-panel-container.side-by-side-layout[data-placement="right"]
-  ) {
-    top: var(--create-panel-top, 64px);
-    bottom: var(--create-panel-bottom, 0);
-    height: auto;
-    max-height: calc(100vh - var(--create-panel-top, 64px));
-    width: clamp(360px, 32vw, 520px);
-    max-width: 100%;
-  }
+  /* Side-by-side layout - width handled by base Drawer */
 
-  /* Mobile layout: Full width at bottom */
-  :global(
-    .drawer-content.edit-panel-container[data-placement="bottom"]:not(
-        .side-by-side-layout
-      )
-  ) {
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-  }
+  /* Mobile layout - positioning handled by base Drawer */
 
   /* Backdrop - ensure no blur/interaction */
   :global(.drawer-overlay.edit-panel-backdrop) {

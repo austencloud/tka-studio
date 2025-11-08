@@ -333,6 +333,8 @@
     padding-bottom: 24px;
     flex: 1;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
   }
 
   /* Empty state */
@@ -356,28 +358,22 @@
     text-align: center;
   }
 
-  /* Actions grid - responsive with container queries */
-  /* Mobile-first approach: start with single column, progressively enhance */
+  /* Actions grid - equal sized buttons that fill space */
   .actions-grid {
     display: grid;
-    gap: 12px;
-    /* Default: single column for small screens */
-    grid-template-columns: 1fr;
-    /* Ensure grid items fill available space */
+    gap: 16px;
     width: 100%;
+    height: 100%;
+    /* 2 columns on mobile, 3 on wider screens */
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 1fr; /* All rows same height */
   }
 
-  /* Container query for medium spaces - 2 columns */
-  @container (min-width: 350px) {
+  /* Wide screens: 3 columns */
+  @container (min-width: 600px) {
     .actions-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  /* Container query for larger spaces - 4 columns horizontal layout */
-  @container (min-width: 500px) {
-    .actions-grid {
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
     }
   }
 
@@ -387,19 +383,21 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    padding: 16px 12px;
+    gap: 12px;
+    padding: 20px 16px;
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--sheet-radius-small);
     color: rgba(255, 255, 255, 0.9);
     cursor: pointer;
-    min-height: 90px;
+
+    /* Fill grid cell completely - no aspect ratio constraints */
+    width: 100%;
+    height: 100%;
+    min-height: 0; /* Allow grid to control height */
+
     position: relative;
     overflow: hidden;
-
-    /* Fill grid cell width intelligently */
-    width: 100%;
     box-sizing: border-box;
 
     /* Smooth spring animation like BeatCell */
@@ -467,9 +465,9 @@
     outline-offset: 3px;
   }
 
-  /* Action icon */
+  /* Action icon - consistent size */
   .action-icon {
-    font-size: 24px;
+    font-size: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -478,13 +476,13 @@
   }
 
   .action-icon :global(.action-svg) {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
   }
 
-  /* Action label */
+  /* Action label - consistent size */
   .action-label {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 500;
     text-align: center;
     line-height: 1.3;
@@ -527,7 +525,8 @@
     }
   }
 
-  /* Mobile responsiveness for very small screens */
+  /* Mobile responsiveness for very small viewport screens */
+  /* Note: Container queries handle button sizing, these are viewport-level adjustments */
   @media (max-width: 380px) {
     .close-button {
       width: 44px; /* Maintain 44px minimum for accessibility */
@@ -550,24 +549,17 @@
       padding: 12px;
       padding-bottom: 20px;
     }
+  }
 
-    .action-button {
-      min-height: 80px;
-      padding: 12px 8px;
-      gap: 8px;
-    }
+  /* Ensure content area can scroll if needed but doesn't overflow */
+  .actions-panel__content {
+    max-height: 100%;
+    box-sizing: border-box;
+  }
 
-    .action-icon {
-      font-size: 20px;
-    }
-
-    .action-icon :global(.action-svg) {
-      width: 20px;
-      height: 20px;
-    }
-
-    .action-label {
-      font-size: 13px;
-    }
+  /* Ensure actions grid never causes horizontal overflow */
+  .actions-grid {
+    max-width: 100%;
+    box-sizing: border-box;
   }
 </style>

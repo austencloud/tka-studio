@@ -1,6 +1,6 @@
 /**
  * ICreateModuleHandlers.ts
- * 
+ *
  * Service interface for CreateModule event handlers.
  * Extracts handler logic from component to improve testability and maintainability.
  */

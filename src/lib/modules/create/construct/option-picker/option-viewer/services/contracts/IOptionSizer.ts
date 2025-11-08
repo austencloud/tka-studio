@@ -5,8 +5,11 @@
  * across all sections and groups in the option picker.
  */
 
-import type { DeviceConfig, SizingCalculationParams, SizingResult } from "../../domain";
-
+import type {
+  DeviceConfig,
+  SizingCalculationParams,
+  SizingResult,
+} from "../../domain";
 
 export interface IOptionSizer {
   /**
@@ -22,7 +25,7 @@ export interface IOptionSizer {
   calculateMaximizedSize(params: {
     containerWidth: number;
     containerHeight: number;
-    layoutMode: '4-column' | '8-column';
+    layoutMode: "4-column" | "8-column";
     maxPictographsPerSection: number;
     isMobileDevice: boolean;
   }): SizingResult;
@@ -34,7 +37,7 @@ export interface IOptionSizer {
   calculateOverflowAwareSize(params: {
     containerWidth: number;
     containerHeight: number;
-    layoutMode: '4-column' | '8-column';
+    layoutMode: "4-column" | "8-column";
     maxPictographsPerSection: number;
     isMobileDevice: boolean;
     headerHeight?: number;

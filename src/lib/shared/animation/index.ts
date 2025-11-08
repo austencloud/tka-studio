@@ -5,10 +5,10 @@
  */
 
 // Core presets and utilities
-export * from './presets';
+export * from "./presets";
 
 // Animation utility classes
-export * from './animations.svelte';
+export * from "./animations.svelte";
 
 // Re-export Svelte 5 motion classes for convenience
-export { Spring, Tween } from 'svelte/motion';
+export { Spring, Tween } from "svelte/motion";

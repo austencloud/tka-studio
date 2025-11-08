@@ -105,7 +105,7 @@
 <Drawer
   isOpen={show}
   onclose={onClose}
-  position="right"
+  placement="right"
   class="sequence-browser-panel"
   labelledBy="sequence-browser-title"
 >

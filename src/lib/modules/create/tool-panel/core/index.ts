@@ -1,1 +1,1 @@
- export { default as ToolPanel } from "./ToolPanel.svelte";
+export { default as ToolPanel } from "./ToolPanel.svelte";

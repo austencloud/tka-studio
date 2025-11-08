@@ -38,7 +38,10 @@
   class:layout-left={navigationLayout === "left"}
   class:has-avatar={authStore.isAuthenticated && authStore.user?.photoURL}
   onclick={handleSettingsClick}
-  title="Settings (Ctrl+,) - Auth: {authStore.isAuthenticated}, Photo: {authStore.user?.photoURL ? 'yes' : 'no'}"
+  title="Settings (Ctrl+,) - Auth: {authStore.isAuthenticated}, Photo: {authStore
+    .user?.photoURL
+    ? 'yes'
+    : 'no'}"
   aria-label="Open Settings"
 >
   <!-- DEBUG: Auth={authStore.isAuthenticated ? 'Y' : 'N'} Photo={authStore.user?.photoURL ? 'Y' : 'N'} -->
@@ -50,7 +53,9 @@
     />
   {:else if authStore.isAuthenticated && authStore.user}
     <div class="user-initial">
-      {(authStore.user.displayName || authStore.user.email || "?").charAt(0).toUpperCase()}
+      {(authStore.user.displayName || authStore.user.email || "?")
+        .charAt(0)
+        .toUpperCase()}
     </div>
   {:else}
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">

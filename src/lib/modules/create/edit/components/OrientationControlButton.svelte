@@ -1,22 +1,22 @@
 <!-- OrientationControlButton.svelte - Collapsible button with preview -->
 <script lang="ts">
-  import type { BeatData, IHapticFeedbackService } from '$shared';
-  import { resolve, TYPES } from '$shared';
-  import { onMount } from 'svelte';
+  import type { BeatData, IHapticFeedbackService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
 
   // Props
   const {
     color,
     currentBeatData,
     isExpanded = false,
-    layoutMode = 'comfortable',
+    layoutMode = "comfortable",
     onExpand,
-    onOrientationChanged
+    onOrientationChanged,
   } = $props<{
-    color: 'blue' | 'red';
+    color: "blue" | "red";
     currentBeatData: BeatData | null;
     isExpanded?: boolean;
-    layoutMode?: 'compact' | 'balanced' | 'comfortable';
+    layoutMode?: "compact" | "balanced" | "comfortable";
     onExpand: () => void;
     onOrientationChanged: (color: string, orientation: string) => void;
   }>();
@@ -25,13 +25,18 @@
   let hapticService: IHapticFeedbackService;
 
   // Get display values
-  const displayLabel = $derived(() => color === 'blue' ? 'Left' : 'Right');
+  const displayLabel = $derived(() => (color === "blue" ? "Left" : "Right"));
   const currentOrientation = $derived(() => {
-    if (!currentBeatData) return 'in';
-    const motion = color === 'blue' ? currentBeatData.motions?.blue : currentBeatData.motions?.red;
-    return motion?.startOrientation || 'in';
+    if (!currentBeatData) return "in";
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
+    return motion?.startOrientation || "in";
   });
-  const previewText = $derived(() => `${displayLabel()}: ${currentOrientation().toUpperCase()}`);
+  const previewText = $derived(
+    () => `${displayLabel()}: ${currentOrientation().toUpperCase()}`
+  );
 
   // Separate line display for compact mode
   const previewLine1 = $derived(() => displayLabel());
@@ -43,18 +48,20 @@
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
 <button
   class="orientation-control-button"
-  class:blue={color === 'blue'}
-  class:red={color === 'red'}
+  class:blue={color === "blue"}
+  class:red={color === "red"}
   class:expanded={isExpanded}
-  class:compact={layoutMode === 'compact'}
-  class:balanced={layoutMode === 'balanced'}
-  class:comfortable={layoutMode === 'comfortable'}
+  class:compact={layoutMode === "compact"}
+  class:balanced={layoutMode === "balanced"}
+  class:comfortable={layoutMode === "comfortable"}
   onclick={handleClick}
   aria-label={previewText()}
   data-testid={`orientation-control-button-${color}`}
@@ -115,12 +122,20 @@
 
   .orientation-control-button.blue {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.08) 0%,
+      rgba(59, 130, 246, 0.04) 100%
+    );
   }
 
   .orientation-control-button.red {
     border-color: #ef4444;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.04) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.08) 0%,
+      rgba(239, 68, 68, 0.04) 100%
+    );
   }
 
   .orientation-control-button:hover:not(.expanded) {
@@ -129,11 +144,19 @@
   }
 
   .orientation-control-button.blue:hover:not(.expanded) {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.06) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.12) 0%,
+      rgba(59, 130, 246, 0.06) 100%
+    );
   }
 
   .orientation-control-button.red:hover:not(.expanded) {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.06) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.12) 0%,
+      rgba(239, 68, 68, 0.06) 100%
+    );
   }
 
   .orientation-control-button:active:not(.expanded) {
@@ -242,4 +265,3 @@
     }
   }
 </style>
-

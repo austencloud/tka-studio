@@ -29,8 +29,17 @@ export interface TransformOperationsConfig {
   onError?: (error: string) => void;
 }
 
-export function createSequenceTransformOperations(config: TransformOperationsConfig) {
-  const { coreState, selectionState, sequenceStatisticsService, sequenceTransformationService, sequenceValidationService, onError } = config;
+export function createSequenceTransformOperations(
+  config: TransformOperationsConfig
+) {
+  const {
+    coreState,
+    selectionState,
+    sequenceStatisticsService,
+    sequenceTransformationService,
+    sequenceValidationService,
+    onError,
+  } = config;
 
   function handleError(message: string, error?: unknown) {
     const errorMsg = error instanceof Error ? error.message : message;
@@ -52,7 +61,9 @@ export function createSequenceTransformOperations(config: TransformOperationsCon
 
         coreState.setCurrentSequence(updatedSequence);
         selectionState.setStartPosition(startPosition);
-        console.log("✅ Transform: Updated hasStartPosition to true (setStartPosition called)");
+        console.log(
+          "✅ Transform: Updated hasStartPosition to true (setStartPosition called)"
+        );
         coreState.clearError();
       } catch (error) {
         handleError("Failed to set start position", error);
@@ -63,7 +74,9 @@ export function createSequenceTransformOperations(config: TransformOperationsCon
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
-        const updatedSequence = sequenceTransformationService.mirrorSequence(coreState.currentSequence);
+        const updatedSequence = sequenceTransformationService.mirrorSequence(
+          coreState.currentSequence
+        );
         coreState.setCurrentSequence(updatedSequence);
 
         // Update selection state with transformed start position so UI re-renders
@@ -81,7 +94,9 @@ export function createSequenceTransformOperations(config: TransformOperationsCon
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
-        const updatedSequence = sequenceTransformationService.swapColors(coreState.currentSequence);
+        const updatedSequence = sequenceTransformationService.swapColors(
+          coreState.currentSequence
+        );
         coreState.setCurrentSequence(updatedSequence);
 
         // Update selection state with transformed start position so UI re-renders
@@ -118,7 +133,8 @@ export function createSequenceTransformOperations(config: TransformOperationsCon
     },
 
     duplicateSequence(newName?: string): SequenceData | null {
-      if (!coreState.currentSequence || !sequenceTransformationService) return null;
+      if (!coreState.currentSequence || !sequenceTransformationService)
+        return null;
 
       try {
         const duplicated = sequenceTransformationService.duplicateSequence(
@@ -137,7 +153,9 @@ export function createSequenceTransformOperations(config: TransformOperationsCon
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
-        const reversedSequence = sequenceTransformationService.reverseSequence(coreState.currentSequence);
+        const reversedSequence = sequenceTransformationService.reverseSequence(
+          coreState.currentSequence
+        );
         coreState.setCurrentSequence(reversedSequence);
 
         // Update selection state with new start position so UI re-renders
@@ -153,26 +171,36 @@ export function createSequenceTransformOperations(config: TransformOperationsCon
 
     validateSequence(): ValidationResult | null {
       if (!coreState.currentSequence || !sequenceValidationService) return null;
-      return sequenceValidationService.validateSequence(coreState.currentSequence);
+      return sequenceValidationService.validateSequence(
+        coreState.currentSequence
+      );
     },
 
     getSequenceStatistics() {
       if (!coreState.currentSequence || !sequenceStatisticsService) return null;
-      return sequenceStatisticsService.getSequenceStatistics(coreState.currentSequence);
+      return sequenceStatisticsService.getSequenceStatistics(
+        coreState.currentSequence
+      );
     },
 
     generateSequenceWord(): string {
       if (!coreState.currentSequence || !sequenceStatisticsService) {
         return "";
       }
-      return sequenceStatisticsService.generateSequenceWord(coreState.currentSequence);
+      return sequenceStatisticsService.generateSequenceWord(
+        coreState.currentSequence
+      );
     },
 
     calculateSequenceDuration(): number {
       if (!coreState.currentSequence || !sequenceStatisticsService) return 0;
-      return sequenceStatisticsService.calculateSequenceDuration(coreState.currentSequence);
+      return sequenceStatisticsService.calculateSequenceDuration(
+        coreState.currentSequence
+      );
     },
   };
 }
 
-export type SequenceTransformOperations = ReturnType<typeof createSequenceTransformOperations>;
+export type SequenceTransformOperations = ReturnType<
+  typeof createSequenceTransformOperations
+>;

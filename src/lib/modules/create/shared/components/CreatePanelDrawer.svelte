@@ -52,6 +52,11 @@
       : false
   );
 
+  // Get measured tool panel width for accurate panel sizing
+  const toolPanelWidth = $derived.by(() =>
+    createModuleContext ? createModuleContext.panelState.toolPanelWidth : 0
+  );
+
   // Drawer handle footprint (height + vertical margins). Keep in sync with SheetDragHandle variables.
   const drawerHandleFootprint = 29;
 
@@ -90,6 +95,14 @@
         isSideBySideLayout ? " side-by-side-layout" : ""
       }`
   );
+
+  // Dynamic inline styles for width - use measured tool panel width in side-by-side mode
+  const drawerStyle = $derived.by(() => {
+    if (isSideBySideLayout && toolPanelWidth > 0) {
+      return `--measured-panel-width: ${toolPanelWidth}px;`;
+    }
+    return "";
+  });
 
   // Handle close event
   function handleClose() {
@@ -175,6 +188,7 @@
 
   /*
    * Side-by-side layout (Desktop): Panels slide from right
+   * Width uses measured tool panel container width for pixel-perfect alignment
    * Only set positioning - let base Drawer handle transforms and transitions
    */
   :global(
@@ -184,7 +198,8 @@
     bottom: var(--create-panel-bottom, 0);
     height: auto;
     max-height: calc(100vh - var(--create-panel-top, 64px));
-    width: clamp(360px, 32vw, 520px);
+    /* Use measured tool panel width for exact alignment */
+    width: var(--measured-panel-width, clamp(360px, 44.44vw, 900px));
     max-width: 100%;
   }
 

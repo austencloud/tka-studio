@@ -5,7 +5,12 @@
  * and desktop.modern.domain.models for actual validation and business rules.
  */
 
-import type { BeatData, SequenceData, ValidationErrorInfo, ValidationResult } from "$shared";
+import type {
+  BeatData,
+  SequenceData,
+  ValidationErrorInfo,
+  ValidationResult,
+} from "$shared";
 import { GridMode } from "$shared";
 // Domain types
 // import type { SequenceCreateRequest } from "$shared";
@@ -16,7 +21,6 @@ import { injectable } from "inversify";
 
 @injectable()
 export class SequenceDomainService {
-
   validateSequence(sequence: any): boolean {
     // TODO: Implement sequence validation
     return true;
@@ -166,9 +170,7 @@ export class SequenceDomainService {
     }
 
     // Extract letters from beats (desktop logic)
-    const word = sequence.beats
-      .map((beat: any) => beat?.letter)
-      .join("");
+    const word = sequence.beats.map((beat: any) => beat?.letter).join("");
 
     // Apply word simplification for circular sequences (desktop logic)
     return this.simplifyRepeatedWord(word);

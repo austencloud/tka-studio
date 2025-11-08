@@ -16,7 +16,6 @@ import { describe, it, expect } from "vitest";
 import type { BeatData } from "$shared";
 
 describe("StrictSwappedCAPExecutor - Comprehensive Regression Test", () => {
-
   /**
    * Verify that in a swapped sequence, Blue does what Red did and vice versa
    */
@@ -284,7 +283,9 @@ describe("StrictSwappedCAPExecutor - Comprehensive Regression Test", () => {
     const colorResult = verifyColorsCorrect([...firstHalf, ...secondHalf]);
     expect(colorResult.isValid).toBe(true);
 
-    console.log("✅ Helper functions verified: Action swapping and color preservation work correctly");
+    console.log(
+      "✅ Helper functions verified: Action swapping and color preservation work correctly"
+    );
   });
 
   it("detects when colors are wrong (regression check for Bug 2)", () => {
@@ -308,7 +309,9 @@ describe("StrictSwappedCAPExecutor - Comprehensive Regression Test", () => {
     expect(result.errors[0]).toContain("Blue motion has wrong color");
     expect(result.errors[1]).toContain("Red motion has wrong color");
 
-    console.log("✅ Color verification catches Bug 2 regression: Wrong colors detected correctly");
+    console.log(
+      "✅ Color verification catches Bug 2 regression: Wrong colors detected correctly"
+    );
   });
 
   it("detects when actions aren't swapped (regression check for Bug 1)", () => {
@@ -350,7 +353,9 @@ describe("StrictSwappedCAPExecutor - Comprehensive Regression Test", () => {
     expect(result.errors.length).toBeGreaterThan(0);
     expect(result.errors[0]).toContain("doesn't match");
 
-    console.log("✅ Action swapping verification catches Bug 1 regression: Unswapped actions detected");
+    console.log(
+      "✅ Action swapping verification catches Bug 1 regression: Unswapped actions detected"
+    );
   });
 
   it("explains manual testing procedure for 50 sequences", () => {

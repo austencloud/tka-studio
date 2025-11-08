@@ -81,7 +81,7 @@
         currentSequence={sequence}
         {shareState}
         onClose={handleClose}
-        {onSequenceUpdate}
+        {...onSequenceUpdate ? { onSequenceUpdate } : {}}
       />
     </div>
   </div>

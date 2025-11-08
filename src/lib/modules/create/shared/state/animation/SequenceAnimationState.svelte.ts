@@ -59,7 +59,10 @@ export function createSequenceAnimationState() {
 
     addRemovingBeat(index: number) {
       // Create new Set to trigger Svelte reactivity
-      state.removingBeatIndices = new Set([...state.removingBeatIndices, index]);
+      state.removingBeatIndices = new Set([
+        ...state.removingBeatIndices,
+        index,
+      ]);
     },
 
     endRemovingBeats() {
@@ -90,4 +93,6 @@ export function createSequenceAnimationState() {
   };
 }
 
-export type SequenceAnimationState = ReturnType<typeof createSequenceAnimationState>;
+export type SequenceAnimationState = ReturnType<
+  typeof createSequenceAnimationState
+>;

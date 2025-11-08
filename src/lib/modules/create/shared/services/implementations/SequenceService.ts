@@ -13,11 +13,11 @@ import type { BeatData, SequenceCreateRequest, SequenceData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type {
-    IPersistenceService,
-    ISequenceDomainService,
-    ISequenceImportService,
-    ISequenceService,
-    IReversalDetectionService,
+  IPersistenceService,
+  ISequenceDomainService,
+  ISequenceImportService,
+  ISequenceService,
+  IReversalDetectionService,
 } from "../contracts";
 
 @injectable()
@@ -127,7 +127,7 @@ export class SequenceService implements ISequenceService {
       const sequences = await this.persistenceService.loadAllSequences();
 
       // Apply reversal detection to all sequences
-      return sequences.map(sequence =>
+      return sequences.map((sequence) =>
         this.reversalDetectionService.processReversals(sequence)
       );
     } catch (error) {

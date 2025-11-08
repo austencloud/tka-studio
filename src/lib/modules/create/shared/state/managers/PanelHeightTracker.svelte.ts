@@ -19,7 +19,9 @@ export interface PanelHeightTrackerConfig {
  * Creates panel height tracking effects
  * @returns Cleanup function
  */
-export function createPanelHeightTracker(config: PanelHeightTrackerConfig): () => void {
+export function createPanelHeightTracker(
+  config: PanelHeightTrackerConfig
+): () => void {
   const { toolPanelElement, buttonPanelElement, panelState } = config;
 
   const cleanups: (() => void)[] = [];
@@ -41,17 +43,20 @@ export function createPanelHeightTracker(config: PanelHeightTrackerConfig): () =
   const updateToolPanelMetrics = () => {
     if (!toolPanelElement) {
       panelState.setToolPanelHeight(0);
+      panelState.setToolPanelWidth(0);
       clearCreatePanelMetrics();
       return;
     }
 
     if (typeof window === "undefined") {
       panelState.setToolPanelHeight(toolPanelElement.clientHeight ?? 0);
+      panelState.setToolPanelWidth(toolPanelElement.clientWidth ?? 0);
       return;
     }
 
     const rect = toolPanelElement.getBoundingClientRect();
     panelState.setToolPanelHeight(rect.height);
+    panelState.setToolPanelWidth(rect.width);
 
     if (!rootElement) {
       return;
@@ -64,7 +69,10 @@ export function createPanelHeightTracker(config: PanelHeightTrackerConfig): () =
     const width = Math.max(rect.width, 0);
 
     rootElement.style.setProperty("--create-panel-left", `${insetLeft}px`);
-    rootElement.style.setProperty("--create-panel-inset-right", `${insetRight}px`);
+    rootElement.style.setProperty(
+      "--create-panel-inset-right",
+      `${insetRight}px`
+    );
     rootElement.style.setProperty("--create-panel-top", `${insetTop}px`);
     rootElement.style.setProperty("--create-panel-bottom", `${insetBottom}px`);
     rootElement.style.setProperty("--create-panel-width", `${width}px`);
@@ -113,7 +121,7 @@ export function createPanelHeightTracker(config: PanelHeightTrackerConfig): () =
   }
 
   return () => {
-    cleanups.forEach(cleanup => cleanup());
+    cleanups.forEach((cleanup) => cleanup());
     clearCreatePanelMetrics();
   };
 }

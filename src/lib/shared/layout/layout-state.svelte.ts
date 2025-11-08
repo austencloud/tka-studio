@@ -13,6 +13,9 @@ export const layoutState = $state({
   // TopBar height - measured dynamically by TopBar component
   topBarHeight: 56, // Default fallback
 
+  // PrimaryNavigation height - measured dynamically by PrimaryNavigation component
+  primaryNavHeight: 64, // Default fallback
+
   // Navigation layout state - updated by PrimaryNavigation
   isPrimaryNavLandscape: false,
 
@@ -30,6 +33,10 @@ export const layoutState = $state({
 // Helper functions
 export function setTopBarHeight(height: number) {
   layoutState.topBarHeight = height;
+}
+
+export function setPrimaryNavHeight(height: number) {
+  layoutState.primaryNavHeight = height;
 }
 
 export function setPrimaryNavLandscape(isLandscape: boolean) {

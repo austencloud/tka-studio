@@ -48,4 +48,3 @@ export interface IAngleCalculator {
     progress: number
   ): number;
 }
-

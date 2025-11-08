@@ -1,33 +1,35 @@
 <!-- ExpandedTurnPanel - REFACTORED with Design Tokens -->
 <script lang="ts">
-  import type { BeatData, IHapticFeedbackService } from '$shared';
-  import { resolve, TYPES } from '$shared';
-  import { onMount } from 'svelte';
-  import type { ITurnControlService } from '../services/TurnControlService';
+  import type { BeatData, IHapticFeedbackService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
+  import type { ITurnControlService } from "../services/TurnControlService";
 
   // Props
   const {
     color,
     currentBeatData,
-    layoutMode = 'comfortable',
+    layoutMode = "comfortable",
     onTurnAmountChanged,
     onEditTurnsRequested,
-    onCollapse
+    onCollapse,
   } = $props<{
-    color: 'blue' | 'red';
+    color: "blue" | "red";
     currentBeatData: BeatData | null;
-    layoutMode?: 'compact' | 'balanced' | 'comfortable';
+    layoutMode?: "compact" | "balanced" | "comfortable";
     onTurnAmountChanged: (color: string, turnAmount: number) => void;
     onEditTurnsRequested: () => void;
     onCollapse: () => void;
   }>();
 
   // Services
-  const turnControlService = resolve(TYPES.ITurnControlService) as ITurnControlService;
+  const turnControlService = resolve(
+    TYPES.ITurnControlService
+  ) as ITurnControlService;
   let hapticService: IHapticFeedbackService;
 
   // Display helpers
-  const displayLabel = $derived(() => color === 'blue' ? 'Left' : 'Right');
+  const displayLabel = $derived(() => (color === "blue" ? "Left" : "Right"));
 
   function getCurrentTurnValue(): number {
     return turnControlService.getCurrentTurnValue(currentBeatData, color);
@@ -39,23 +41,29 @@
   }
 
   function getMotionType(): string {
-    if (!currentBeatData) return 'Static';
-    const motion = color === 'blue' ? currentBeatData.motions?.blue : currentBeatData.motions?.red;
-    if (!motion) return 'Static';
-    const type = motion.motionType || 'static';
+    if (!currentBeatData) return "Static";
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
+    if (!motion) return "Static";
+    const type = motion.motionType || "static";
     return type.charAt(0).toUpperCase() + type.slice(1);
   }
 
   function getRotationDirection(): string {
-    if (!currentBeatData) return 'NO_ROTATION';
-    const motion = color === 'blue' ? currentBeatData.motions?.blue : currentBeatData.motions?.red;
-    if (!motion) return 'NO_ROTATION';
-    return motion.rotationDirection || 'NO_ROTATION';
+    if (!currentBeatData) return "NO_ROTATION";
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
+    if (!motion) return "NO_ROTATION";
+    return motion.rotationDirection || "NO_ROTATION";
   }
 
   function shouldShowRotationButtons(): boolean {
     const rotDir = getRotationDirection();
-    return rotDir !== 'NO_ROTATION';
+    return rotDir !== "NO_ROTATION";
   }
 
   function canDecrementTurn(): boolean {
@@ -94,17 +102,19 @@
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
 <div
   class="turn-panel"
-  class:blue={color === 'blue'}
-  class:red={color === 'red'}
-  class:compact={layoutMode === 'compact'}
-  class:balanced={layoutMode === 'balanced'}
-  class:comfortable={layoutMode === 'comfortable'}
+  class:blue={color === "blue"}
+  class:red={color === "red"}
+  class:compact={layoutMode === "compact"}
+  class:balanced={layoutMode === "balanced"}
+  class:comfortable={layoutMode === "comfortable"}
   data-testid={`expanded-turn-panel-${color}`}
 >
   <!-- Header -->
@@ -113,11 +123,7 @@
       <span class="turn-label">{displayLabel()}</span>
       <span class="motion-badge">{getMotionType()}</span>
     </div>
-    <button
-      class="close-btn"
-      onclick={handleClose}
-      aria-label="Close panel"
-    >
+    <button class="close-btn" onclick={handleClose} aria-label="Close panel">
       <i class="fas fa-times"></i>
     </button>
   </div>
@@ -158,14 +164,14 @@
       <div class="rotation-btns">
         <div
           class="rotation-indicator"
-          class:active={getRotationDirection() === 'COUNTER_CLOCKWISE'}
+          class:active={getRotationDirection() === "COUNTER_CLOCKWISE"}
           aria-label="Counter-clockwise rotation"
         >
           <i class="fas fa-undo"></i>
         </div>
         <div
           class="rotation-indicator"
-          class:active={getRotationDirection() === 'CLOCKWISE'}
+          class:active={getRotationDirection() === "CLOCKWISE"}
           aria-label="Clockwise rotation"
         >
           <i class="fas fa-redo"></i>
@@ -186,9 +192,10 @@
     /* Smooth height transition for expansion/collapse */
     max-height: 500px; /* Large enough to accommodate all content */
     overflow: hidden;
-    transition: max-height var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
-                opacity var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
-                transform var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+    transition:
+      max-height var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
+      opacity var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
+      transform var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
 
     /* Initial animation when first rendered */
     animation: expandIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -222,7 +229,11 @@
   .turn-panel.blue {
     border-color: #3b82f6;
     border-style: solid;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      white 100%
+    );
   }
 
   .turn-panel.red {

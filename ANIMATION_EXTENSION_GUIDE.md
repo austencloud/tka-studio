@@ -27,10 +27,7 @@ setMyNewFeature: (value: boolean) => {
 
 ```svelte
 <script lang="ts">
-  let {
-    myNewFeatureValue = false,
-    onMyNewFeatureChange = () => {},
-  } = $props();
+  let { myNewFeatureValue = false, onMyNewFeatureChange = () => {} } = $props();
 </script>
 
 <button onclick={() => onMyNewFeatureChange(!myNewFeatureValue)}>
@@ -67,13 +64,16 @@ function handleMyNewFeatureChange(value: boolean) {
 // C:\_TKA-STUDIO/src/lib/modules/create/animate/services/contracts/IAnimationModeService.ts
 
 export interface IAnimationModeService {
-  applyMode(mode: AnimationMode, playbackController: IAnimationPlaybackController): void;
+  applyMode(
+    mode: AnimationMode,
+    playbackController: IAnimationPlaybackController
+  ): void;
 }
 
 export enum AnimationMode {
-  NORMAL = 'normal',
-  SLOWMO = 'slowmo',
-  REWIND = 'rewind',
+  NORMAL = "normal",
+  SLOWMO = "slowmo",
+  REWIND = "rewind",
 }
 ```
 
@@ -84,7 +84,10 @@ export enum AnimationMode {
 
 @injectable()
 export class AnimationModeService implements IAnimationModeService {
-  applyMode(mode: AnimationMode, playbackController: IAnimationPlaybackController): void {
+  applyMode(
+    mode: AnimationMode,
+    playbackController: IAnimationPlaybackController
+  ): void {
     switch (mode) {
       case AnimationMode.SLOWMO:
         playbackController.setSpeed(0.5); // Half speed
@@ -105,8 +108,10 @@ export class AnimationModeService implements IAnimationModeService {
 ```typescript
 // C:\_TKA-STUDIO/src/lib/shared/inversify/container.ts
 
-container.bind<IAnimationModeService>(TYPES.IAnimationModeService)
-  .to(AnimationModeService).inSingletonScope();
+container
+  .bind<IAnimationModeService>(TYPES.IAnimationModeService)
+  .to(AnimationModeService)
+  .inSingletonScope();
 ```
 
 **4. Use in Coordinator**
@@ -140,11 +145,11 @@ export interface ICanvasManager {
 }
 
 export enum CanvasPurpose {
-  MAIN = 'main',
-  SPLIT_LEFT = 'split-left',
-  SPLIT_RIGHT = 'split-right',
-  TRAILS = 'trails',
-  ANALYSIS = 'analysis'
+  MAIN = "main",
+  SPLIT_LEFT = "split-left",
+  SPLIT_RIGHT = "split-right",
+  TRAILS = "trails",
+  ANALYSIS = "analysis",
 }
 ```
 
@@ -218,7 +223,7 @@ export enum CanvasPurpose {
     grid-template-columns: 1fr;
     gap: 8px;
   }
-  
+
   .canvas-grid.multi-canvas {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
@@ -229,13 +234,17 @@ export enum CanvasPurpose {
 
 ```svelte
 <script lang="ts">
-  let canvasMode = $state<'single' | 'split' | 'detail'>('single');
-  
+  let canvasMode = $state<"single" | "split" | "detail">("single");
+
   const canvasPurposes = $derived(() => {
     switch (canvasMode) {
-      case 'split':
-        return [CanvasPurpose.MAIN, CanvasPurpose.SPLIT_LEFT, CanvasPurpose.SPLIT_RIGHT];
-      case 'detail':
+      case "split":
+        return [
+          CanvasPurpose.MAIN,
+          CanvasPurpose.SPLIT_LEFT,
+          CanvasPurpose.SPLIT_RIGHT,
+        ];
+      case "detail":
         return [CanvasPurpose.MAIN, CanvasPurpose.TRAILS];
       default:
         return [CanvasPurpose.MAIN];
@@ -245,11 +254,11 @@ export enum CanvasPurpose {
 
 <div class="animation-panel">
   <div class="canvas-mode-selector">
-    <button onclick={() => canvasMode = 'single'}>Single</button>
-    <button onclick={() => canvasMode = 'split'}>Split</button>
-    <button onclick={() => canvasMode = 'detail'}>Detail</button>
+    <button onclick={() => (canvasMode = "single")}>Single</button>
+    <button onclick={() => (canvasMode = "split")}>Split</button>
+    <button onclick={() => (canvasMode = "detail")}>Detail</button>
   </div>
-  
+
   <MultiCanvasRenderer purposes={canvasPurposes()} ... />
 </div>
 ```
@@ -274,24 +283,28 @@ export interface Keyframe {
 export function createKeyframeState() {
   let keyframes = $state<Keyframe[]>([]);
   let editingKeyframe = $state<number | null>(null);
-  
+
   return {
-    get keyframes() { return keyframes; },
-    get editingKeyframe() { return editingKeyframe; },
-    
+    get keyframes() {
+      return keyframes;
+    },
+    get editingKeyframe() {
+      return editingKeyframe;
+    },
+
     addKeyframe: (beat: number, blue: PropState, red: PropState) => {
       keyframes.push({ beat, bluePropState: blue, redPropState: red });
       keyframes.sort((a, b) => a.beat - b.beat);
     },
-    
+
     updateKeyframe: (index: number, newState: Partial<Keyframe>) => {
       keyframes[index] = { ...keyframes[index], ...newState };
     },
-    
+
     removeKeyframe: (index: number) => {
       keyframes.splice(index, 1);
     },
-    
+
     setEditingKeyframe: (index: number | null) => {
       editingKeyframe = index;
     },
@@ -327,32 +340,38 @@ export function createKeyframeState() {
       </button>
     {/each}
   </div>
-  
+
   {#if editingKeyframe !== null}
     <div class="keyframe-properties">
       <h3>Edit Keyframe {keyframes[editingKeyframe].beat}</h3>
-      
+
       <div class="property">
         <label>Blue Center Angle</label>
         <input
           type="range"
           min="0"
           max="360"
-          value={keyframes[editingKeyframe].bluePropState.centerPathAngle * 180 / Math.PI}
+          value={(keyframes[editingKeyframe].bluePropState.centerPathAngle *
+            180) /
+            Math.PI}
         />
       </div>
-      
+
       <div class="property">
         <label>Red Center Angle</label>
         <input
           type="range"
           min="0"
           max="360"
-          value={keyframes[editingKeyframe].redPropState.centerPathAngle * 180 / Math.PI}
+          value={(keyframes[editingKeyframe].redPropState.centerPathAngle *
+            180) /
+            Math.PI}
         />
       </div>
-      
-      <button onclick={() => onKeyframeDelete(editingKeyframe)}>Delete Keyframe</button>
+
+      <button onclick={() => onKeyframeDelete(editingKeyframe)}
+        >Delete Keyframe</button
+      >
     </div>
   {/if}
 </div>
@@ -369,7 +388,7 @@ function handleCaptureKeyframe() {
   const currentBeat = animationPanelState.currentBeat;
   const blueProp = animationPanelState.bluePropState;
   const redProp = animationPanelState.redPropState;
-  
+
   keyframeState.addKeyframe(currentBeat, blueProp, redProp);
 }
 
@@ -397,7 +416,7 @@ export interface IMotionTrailRenderer {
     beat1: number,
     beat2: number,
     orchestrator: ISequenceAnimationOrchestrator,
-    color: 'blue' | 'red'
+    color: "blue" | "red"
   ): void;
 }
 ```
@@ -415,37 +434,38 @@ export class MotionTrailRenderer implements IMotionTrailRenderer {
     beat1: number,
     beat2: number,
     orchestrator: ISequenceAnimationOrchestrator,
-    color: 'blue' | 'red'
+    color: "blue" | "red"
   ): void {
     const centerX = canvasSize / 2;
     const centerY = canvasSize / 2;
     const gridScaleFactor = canvasSize / 950;
     const radius = 150 * gridScaleFactor;
-    
-    ctx.strokeStyle = color === 'blue' ? '#0066ff' : '#ff0033';
+
+    ctx.strokeStyle = color === "blue" ? "#0066ff" : "#ff0033";
     ctx.lineWidth = 2;
     ctx.setLineDash([5, 5]);
     ctx.globalAlpha = 0.5;
-    
+
     ctx.beginPath();
-    
+
     // Draw path from beat1 to beat2
     for (let beat = beat1; beat <= beat2; beat += 0.1) {
       orchestrator.calculateState(beat);
-      const propState = color === 'blue'
-        ? orchestrator.getBluePropState()
-        : orchestrator.getRedPropState();
-      
+      const propState =
+        color === "blue"
+          ? orchestrator.getBluePropState()
+          : orchestrator.getRedPropState();
+
       const x = centerX + Math.cos(propState.centerPathAngle) * radius;
       const y = centerY + Math.sin(propState.centerPathAngle) * radius;
-      
+
       if (beat === beat1) {
         ctx.moveTo(x, y);
       } else {
         ctx.lineTo(x, y);
       }
     }
-    
+
     ctx.stroke();
     ctx.setLineDash([]);
     ctx.globalAlpha = 1.0;
@@ -462,8 +482,8 @@ export class MotionTrailRenderer implements IMotionTrailRenderer {
   let showTrails = $state(false);
 </script>
 
-<button onclick={() => showTrails = !showTrails}>
-  {showTrails ? 'Hide' : 'Show'} Trails
+<button onclick={() => (showTrails = !showTrails)}>
+  {showTrails ? "Hide" : "Show"} Trails
 </button>
 
 {#if showTrails}
@@ -496,7 +516,7 @@ function renderLoop(): void {
     render();
     needsRender = false;
   }
-  
+
   // Only request new frame if render was needed
   if (needsRender) {
     rafId = requestAnimationFrame(renderLoop);
@@ -523,12 +543,12 @@ private beatStateCache = new Map<number, BeatState>();
 
 calculateState(currentBeat: number): void {
   const cacheKey = Math.floor(currentBeat);
-  
+
   if (this.beatStateCache.has(cacheKey)) {
     // Return cached calculation
     return;
   }
-  
+
   // Do expensive calculation...
   this.beatStateCache.set(cacheKey, result);
 }
@@ -541,13 +561,13 @@ calculateState(currentBeat: number): void {
 
 async function loadPropImages() {
   if (imagesLoaded) return; // Skip if already loaded
-  
+
   try {
     [blueStaffImage, redStaffImage] = await Promise.all([
       svgImageService.convertSvgStringToImage(...),
       svgImageService.convertSvgStringToImage(...),
     ]);
-    
+
     imagesLoaded = true;
     needsRender = true;
   } catch (err) {
@@ -565,23 +585,23 @@ async function loadPropImages() {
 ```typescript
 // C:\_TKA-STUDIO/tests/animate/my-feature.test.ts
 
-import { describe, it, expect, beforeEach } from 'vitest';
-import { MyFeatureService } from '$create/animate/services/implementations';
+import { describe, it, expect, beforeEach } from "vitest";
+import { MyFeatureService } from "$create/animate/services/implementations";
 
-describe('MyFeatureService', () => {
+describe("MyFeatureService", () => {
   let service: MyFeatureService;
-  
+
   beforeEach(() => {
     service = new MyFeatureService();
   });
-  
-  it('should correctly calculate feature state', () => {
+
+  it("should correctly calculate feature state", () => {
     const result = service.calculateState({
-      input: 'test-data'
+      input: "test-data",
     });
-    
+
     expect(result).toEqual({
-      expected: 'output'
+      expected: "output",
     });
   });
 });
@@ -592,20 +612,20 @@ describe('MyFeatureService', () => {
 ```typescript
 // C:\_TKA-STUDIO/tests/animate/animation-integration.test.ts
 
-import { describe, it, expect } from 'vitest';
-import { render } from '@testing-library/svelte';
-import AnimationCoordinator from '$create/shared/components/coordinators/AnimationCoordinator.svelte';
+import { describe, it, expect } from "vitest";
+import { render } from "@testing-library/svelte";
+import AnimationCoordinator from "$create/shared/components/coordinators/AnimationCoordinator.svelte";
 
-describe('AnimationCoordinator Integration', () => {
-  it('should load sequence and start animation', async () => {
+describe("AnimationCoordinator Integration", () => {
+  it("should load sequence and start animation", async () => {
     const { container } = render(AnimationCoordinator);
-    
+
     // Verify initial state
-    expect(container.querySelector('.animation-panel')).toBeFalsy();
-    
+    expect(container.querySelector(".animation-panel")).toBeFalsy();
+
     // Simulate panel open
     // TODO: Trigger through component
-    
+
     // Verify animation started
     // TODO: Assert animation state
   });

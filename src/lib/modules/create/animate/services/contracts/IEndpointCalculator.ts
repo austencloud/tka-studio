@@ -18,4 +18,3 @@ export interface IEndpointCalculator {
    */
   calculateEndpointStaffAngle(motionData: MotionData): number;
 }
-

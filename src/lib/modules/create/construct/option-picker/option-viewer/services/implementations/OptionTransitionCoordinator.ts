@@ -16,7 +16,9 @@ const FADE_OUT_DURATION = 250;
 const FADE_IN_DURATION = 250;
 
 @injectable()
-export class OptionTransitionCoordinator implements IOptionTransitionCoordinator {
+export class OptionTransitionCoordinator
+  implements IOptionTransitionCoordinator
+{
   private _isFadingOut = false;
   private _isTransitioning = false;
   private activeTimeouts: Array<ReturnType<typeof setTimeout>> = [];

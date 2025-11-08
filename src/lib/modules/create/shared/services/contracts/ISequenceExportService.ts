@@ -6,7 +6,7 @@ export interface ISequenceExportService {
    * Create a condensed, human-readable version of sequence data
    * Removes: IDs, placement data, metadata, redundant fields
    * Keeps: Essential motion data for reconstruction
-   * 
+   *
    * @param sequenceData - The full sequence data to condense
    * @returns Condensed sequence data suitable for sharing and debugging
    */
@@ -71,4 +71,3 @@ export interface CondensedMotionData {
   startOrientation: string;
   endOrientation: string;
 }
-

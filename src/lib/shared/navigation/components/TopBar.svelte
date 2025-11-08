@@ -24,8 +24,8 @@
   } = $props<{
     navigationLayout?: "top" | "left";
     onHeightChange?: (height: number) => void;
-    left?: import('svelte').Snippet;
-    content?: import('svelte').Snippet;
+    left?: import("svelte").Snippet;
+    content?: import("svelte").Snippet;
   }>();
 
   // Services
@@ -40,7 +40,9 @@
   // Reactive responsive values based on device detector
   const isMobile = $derived(responsiveSettings?.isMobile ?? false);
   const computedHeight = $derived(isMobile ? 52 : 56);
-  const computedPadding = $derived(isMobile ? "var(--spacing-sm)" : "var(--spacing-md)");
+  const computedPadding = $derived(
+    isMobile ? "var(--spacing-sm)" : "var(--spacing-md)"
+  );
 
   // Reactive height state (actual measured height may differ from computed)
   let topBarHeight = $state(56); // Default fallback
@@ -62,9 +64,11 @@
       responsiveSettings = deviceDetector.getResponsiveSettings();
 
       // Return cleanup function from onCapabilitiesChanged
-      return deviceDetector.onCapabilitiesChanged(() => {
-        responsiveSettings = deviceDetector!.getResponsiveSettings();
-      }) || undefined;
+      return (
+        deviceDetector.onCapabilitiesChanged(() => {
+          responsiveSettings = deviceDetector!.getResponsiveSettings();
+        }) || undefined
+      );
     } catch (error) {
       console.warn("TopBar: Failed to resolve DeviceDetector", error);
     }
@@ -106,7 +110,7 @@
 
 <div
   bind:this={topBarElement}
-  class="top-bar glass-surface"
+  class="top-bar"
   class:layout-top={navigationLayout === "top"}
   class:layout-left={navigationLayout === "left"}
   style:height="{computedHeight}px"
@@ -142,10 +146,12 @@
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    background: rgba(255, 255, 255, 0.05);
+    /* Slightly higher opacity to compensate for darker gradient behind it */
+    background: rgba(255, 255, 255, 0.08);
     backdrop-filter: var(--glass-backdrop-strong);
     z-index: 100;
     border-radius: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   /* ============================================================================

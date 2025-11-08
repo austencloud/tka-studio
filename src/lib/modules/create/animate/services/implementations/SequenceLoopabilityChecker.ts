@@ -28,8 +28,7 @@ export class SequenceLoopabilityChecker implements ISequenceLoopabilityChecker {
     }
 
     // Check if positions match
-    const positionsMatch = 
-      firstBeat.startPosition === lastBeat.endPosition;
+    const positionsMatch = firstBeat.startPosition === lastBeat.endPosition;
 
     if (!positionsMatch) {
       return false;
@@ -40,9 +39,9 @@ export class SequenceLoopabilityChecker implements ISequenceLoopabilityChecker {
     const blueMotionLast = lastBeat.motions?.blue;
 
     if (blueMotionFirst && blueMotionLast) {
-      const blueOrientationsMatch = 
+      const blueOrientationsMatch =
         blueMotionFirst.startOrientation === blueMotionLast.endOrientation;
-      
+
       if (!blueOrientationsMatch) {
         return false;
       }
@@ -56,9 +55,9 @@ export class SequenceLoopabilityChecker implements ISequenceLoopabilityChecker {
     const redMotionLast = lastBeat.motions?.red;
 
     if (redMotionFirst && redMotionLast) {
-      const redOrientationsMatch = 
+      const redOrientationsMatch =
         redMotionFirst.startOrientation === redMotionLast.endOrientation;
-      
+
       if (!redOrientationsMatch) {
         return false;
       }
@@ -71,4 +70,3 @@ export class SequenceLoopabilityChecker implements ISequenceLoopabilityChecker {
     return true;
   }
 }
-

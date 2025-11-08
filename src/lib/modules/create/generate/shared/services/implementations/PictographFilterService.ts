@@ -20,7 +20,10 @@ export interface IPictographFilterService {
   /**
    * Filter pictographs by continuity - next beat's start position must match last beat's end position
    */
-  filterByContinuity(options: PictographData[], lastBeat: BeatData | null): PictographData[];
+  filterByContinuity(
+    options: PictographData[],
+    lastBeat: BeatData | null
+  ): PictographData[];
 
   /**
    * Filter pictographs by rotation direction for continuous prop continuity
@@ -47,7 +50,10 @@ export class PictographFilterService implements IPictographFilterService {
   /**
    * Filter by continuity - next beat's start position must match last beat's end position
    */
-  filterByContinuity(options: PictographData[], lastBeat: BeatData | null): PictographData[] {
+  filterByContinuity(
+    options: PictographData[],
+    lastBeat: BeatData | null
+  ): PictographData[] {
     if (!lastBeat) {
       return options; // No filtering needed for first beat
     }
@@ -61,7 +67,9 @@ export class PictographFilterService implements IPictographFilterService {
 
     // If filtering eliminates all options, return original options (legacy behavior)
     if (filtered.length === 0) {
-      console.warn(`⚠️ No options match end position "${lastEndPosition}", using all options`);
+      console.warn(
+        `⚠️ No options match end position "${lastEndPosition}", using all options`
+      );
       return options;
     }
 

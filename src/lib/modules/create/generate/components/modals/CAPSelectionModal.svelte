@@ -183,11 +183,15 @@ Refactored to use Drawer component for consistent behavior
     transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1);
   }
 
-  :global(.drawer-content.cap-selection-sheet[data-state="closed"][data-placement="bottom"]) {
+  :global(
+    .drawer-content.cap-selection-sheet[data-state="closed"][data-placement="bottom"]
+  ) {
     transform: translateY(100%);
   }
 
-  :global(.drawer-content.cap-selection-sheet[data-state="closed"][data-placement="right"]) {
+  :global(
+    .drawer-content.cap-selection-sheet[data-state="closed"][data-placement="right"]
+  ) {
     transform: translateX(100%);
   }
 

@@ -12,25 +12,22 @@ Features:
   import { Pictograph } from "$shared";
 
   // Props
-  const {
-    selectedBeats = [],
-  } = $props<{
+  const { selectedBeats = [] } = $props<{
     selectedBeats: BeatData[];
   }>();
 
   const MAX_VISIBLE = 6;
   const visibleBeats = $derived(selectedBeats.slice(0, MAX_VISIBLE));
-  const remainingCount = $derived(Math.max(0, selectedBeats.length - MAX_VISIBLE));
+  const remainingCount = $derived(
+    Math.max(0, selectedBeats.length - MAX_VISIBLE)
+  );
   const hasMore = $derived(remainingCount > 0);
 </script>
 
 <div class="thumbnail-grid">
   {#each visibleBeats as beat (beat.id || beat.beatNumber)}
     <div class="thumbnail-wrapper">
-      <Pictograph
-        pictographData={beat}
-        disableContentTransitions={true}
-      />
+      <Pictograph pictographData={beat} disableContentTransitions={true} />
       <div class="beat-number-badge">
         {beat.beatNumber}
       </div>

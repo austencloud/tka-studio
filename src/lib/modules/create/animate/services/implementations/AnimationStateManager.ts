@@ -56,7 +56,10 @@ export class AnimationStateManager implements IAnimationStateManager {
       centerPathAngle: interpolationResult.blueAngles.centerPathAngle,
       staffRotationAngle: interpolationResult.blueAngles.staffRotationAngle,
     };
-    if ('x' in interpolationResult.blueAngles && 'y' in interpolationResult.blueAngles) {
+    if (
+      "x" in interpolationResult.blueAngles &&
+      "y" in interpolationResult.blueAngles
+    ) {
       blueUpdate.x = interpolationResult.blueAngles.x;
       blueUpdate.y = interpolationResult.blueAngles.y;
     }
@@ -67,7 +70,10 @@ export class AnimationStateManager implements IAnimationStateManager {
       centerPathAngle: interpolationResult.redAngles.centerPathAngle,
       staffRotationAngle: interpolationResult.redAngles.staffRotationAngle,
     };
-    if ('x' in interpolationResult.redAngles && 'y' in interpolationResult.redAngles) {
+    if (
+      "x" in interpolationResult.redAngles &&
+      "y" in interpolationResult.redAngles
+    ) {
       redUpdate.x = interpolationResult.redAngles.x;
       redUpdate.y = interpolationResult.redAngles.y;
     }
@@ -83,14 +89,16 @@ export class AnimationStateManager implements IAnimationStateManager {
    */
   updateBluePropState(updates: Partial<PropState>): void {
     const newState: PropState = {
-      centerPathAngle: updates.centerPathAngle ?? this.bluePropState.centerPathAngle,
-      staffRotationAngle: updates.staffRotationAngle ?? this.bluePropState.staffRotationAngle,
+      centerPathAngle:
+        updates.centerPathAngle ?? this.bluePropState.centerPathAngle,
+      staffRotationAngle:
+        updates.staffRotationAngle ?? this.bluePropState.staffRotationAngle,
     };
 
     // Only include x,y if explicitly provided in updates (DASH motions)
     // This ensures stale x,y from previous DASH motion doesn't persist into non-DASH motions
-    if ('x' in updates && updates.x !== undefined) newState.x = updates.x;
-    if ('y' in updates && updates.y !== undefined) newState.y = updates.y;
+    if ("x" in updates && updates.x !== undefined) newState.x = updates.x;
+    if ("y" in updates && updates.y !== undefined) newState.y = updates.y;
 
     this.bluePropState = newState;
   }
@@ -102,14 +110,16 @@ export class AnimationStateManager implements IAnimationStateManager {
    */
   updateRedPropState(updates: Partial<PropState>): void {
     const newState: PropState = {
-      centerPathAngle: updates.centerPathAngle ?? this.redPropState.centerPathAngle,
-      staffRotationAngle: updates.staffRotationAngle ?? this.redPropState.staffRotationAngle,
+      centerPathAngle:
+        updates.centerPathAngle ?? this.redPropState.centerPathAngle,
+      staffRotationAngle:
+        updates.staffRotationAngle ?? this.redPropState.staffRotationAngle,
     };
 
     // Only include x,y if explicitly provided in updates (DASH motions)
     // This ensures stale x,y from previous DASH motion doesn't persist into non-DASH motions
-    if ('x' in updates && updates.x !== undefined) newState.x = updates.x;
-    if ('y' in updates && updates.y !== undefined) newState.y = updates.y;
+    if ("x" in updates && updates.x !== undefined) newState.x = updates.x;
+    if ("y" in updates && updates.y !== undefined) newState.y = updates.y;
 
     this.redPropState = newState;
   }

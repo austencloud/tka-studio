@@ -11,7 +11,7 @@ Container-aware and aspect-ratio responsive
     componentInfo,
     isMultiSelectMode = false,
     isSelected = false,
-    onClick
+    onClick,
   } = $props<{
     componentInfo: CAPComponentInfo;
     isMultiSelectMode?: boolean;
@@ -41,7 +41,12 @@ Container-aware and aspect-ratio responsive
   {#if isMultiSelectMode}
     <!-- Multi-select mode: Show checkbox -->
     <div class="selection-indicator checkbox" class:checked={isSelected}>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
         <rect x="3" y="3" width="18" height="18" rx="3"></rect>
         {#if isSelected}
           <polyline points="6,12 10,16 18,8" stroke-width="3"></polyline>
@@ -96,13 +101,21 @@ Container-aware and aspect-ratio responsive
   }
 
   .cap-component-button.selected {
-    background: color-mix(in srgb, var(--component-color) 25%, rgba(0, 0, 0, 0.3));
+    background: color-mix(
+      in srgb,
+      var(--component-color) 25%,
+      rgba(0, 0, 0, 0.3)
+    );
     border-color: var(--component-color);
     border-width: 2px;
   }
 
   .cap-component-button.selected:hover {
-    background: color-mix(in srgb, var(--component-color) 35%, rgba(0, 0, 0, 0.3));
+    background: color-mix(
+      in srgb,
+      var(--component-color) 35%,
+      rgba(0, 0, 0, 0.3)
+    );
   }
 
   .cap-component-icon {

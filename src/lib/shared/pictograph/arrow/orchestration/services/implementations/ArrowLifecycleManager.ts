@@ -70,13 +70,15 @@ export class ArrowLifecycleManager implements IArrowLifecycleManager {
         );
 
       // Apply manual adjustments from keyboard controls (WASD)
-      const manualAdjustX = motionData.arrowPlacementData?.manualAdjustmentX || 0;
-      const manualAdjustY = motionData.arrowPlacementData?.manualAdjustmentY || 0;
+      const manualAdjustX =
+        motionData.arrowPlacementData?.manualAdjustmentX || 0;
+      const manualAdjustY =
+        motionData.arrowPlacementData?.manualAdjustmentY || 0;
 
       return createArrowPosition({
         x: x + manualAdjustX,
         y: y + manualAdjustY,
-        rotation
+        rotation,
       });
     } catch (error) {
       console.error("Failed to calculate arrow position:", error);

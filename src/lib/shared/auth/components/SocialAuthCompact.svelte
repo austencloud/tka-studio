@@ -14,10 +14,7 @@
   const PUBLIC_GOOGLE_OAUTH_CLIENT_ID = env.PUBLIC_GOOGLE_OAUTH_CLIENT_ID;
 
   // Props
-  let {
-    mode = "signin",
-    onFacebookAuth,
-  } = $props<{
+  let { mode = "signin", onFacebookAuth } = $props<{
     mode: "signin" | "signup";
     onFacebookAuth: () => void;
   }>();
@@ -29,21 +26,27 @@
   // Initialize Google Identity Services
   onMount(async () => {
     try {
-      console.log("🔐 [SocialAuthCompact] Initializing Google Identity Services...");
-      console.log("🔐 [SocialAuthCompact] Client ID:", PUBLIC_GOOGLE_OAUTH_CLIENT_ID);
-
       if (!PUBLIC_GOOGLE_OAUTH_CLIENT_ID) {
-        console.warn("⚠️ [SocialAuthCompact] Google OAuth Client ID not configured");
+        console.warn(
+          "⚠️ [SocialAuthCompact] Google OAuth Client ID not configured"
+        );
         return;
       }
 
-      googleIdentityService = new GoogleIdentityService(PUBLIC_GOOGLE_OAUTH_CLIENT_ID);
+      googleIdentityService = new GoogleIdentityService(
+        PUBLIC_GOOGLE_OAUTH_CLIENT_ID
+      );
       await googleIdentityService.initialize();
 
       googleButtonReady = true;
-      console.log("✅ [SocialAuthCompact] Google Identity Services initialized");
+      console.log(
+        "✅ [SocialAuthCompact] Google Identity Services initialized"
+      );
     } catch (error) {
-      console.error("❌ [SocialAuthCompact] Failed to initialize Google Identity Services:", error);
+      console.error(
+        "❌ [SocialAuthCompact] Failed to initialize Google Identity Services:",
+        error
+      );
     }
   });
 
@@ -52,8 +55,12 @@
     console.log("🖱️ [SocialAuthCompact] Google button clicked");
 
     if (!googleIdentityService) {
-      console.error("❌ [SocialAuthCompact] Google Identity Service not initialized");
-      alert("Google Sign-In is not ready. Please refresh the page and try again.");
+      console.error(
+        "❌ [SocialAuthCompact] Google Identity Service not initialized"
+      );
+      alert(
+        "Google Sign-In is not ready. Please refresh the page and try again."
+      );
       return;
     }
 
@@ -67,7 +74,9 @@
   }
 
   function handleFacebookClick() {
-    console.log("🖱️ [SocialAuthCompact] Facebook button clicked, calling onFacebookAuth");
+    console.log(
+      "🖱️ [SocialAuthCompact] Facebook button clicked, calling onFacebookAuth"
+    );
     onFacebookAuth();
   }
 </script>

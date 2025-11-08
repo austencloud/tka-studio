@@ -17,7 +17,9 @@
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Handle options button click
@@ -29,32 +31,32 @@
   // Get current preset display name
   function getPresetDisplayName(presetName: string): string {
     switch (presetName) {
-      case 'social':
-        return 'Social Media';
-      case 'print':
-        return 'Print Quality';
-      case 'web':
-        return 'Web Sharing';
-      case 'custom':
-        return 'Custom';
+      case "social":
+        return "Social Media";
+      case "print":
+        return "Print Quality";
+      case "web":
+        return "Web Sharing";
+      case "custom":
+        return "Custom";
       default:
-        return 'Unknown';
+        return "Unknown";
     }
   }
 
   // Get preset description
   function getPresetDescription(presetName: string): string {
     switch (presetName) {
-      case 'social':
-        return 'Optimized for Instagram, TikTok, and social platforms';
-      case 'print':
-        return 'High resolution for printing and detailed viewing';
-      case 'web':
-        return 'Balanced quality and file size for web sharing';
-      case 'custom':
-        return 'Customized settings';
+      case "social":
+        return "Optimized for Instagram, TikTok, and social platforms";
+      case "print":
+        return "High resolution for printing and detailed viewing";
+      case "web":
+        return "Balanced quality and file size for web sharing";
+      case "custom":
+        return "Customized settings";
       default:
-        return '';
+        return "";
     }
   }
 
@@ -65,17 +67,17 @@
     const options = shareState.options;
     const features = [];
 
-    if (options.addWord) features.push('Word');
-    if (options.addBeatNumbers) features.push('Beat #s');
-    if (options.addUserInfo) features.push('User Info');
-    if (options.addDifficultyLevel) features.push('Difficulty');
-    if (options.includeStartPosition) features.push('Start Pos');
+    if (options.addWord) features.push("Word");
+    if (options.addBeatNumbers) features.push("Beat #s");
+    if (options.addUserInfo) features.push("User Info");
+    if (options.addDifficultyLevel) features.push("Difficulty");
+    if (options.includeStartPosition) features.push("Start Pos");
 
     return {
       preset: getPresetDisplayName(shareState.selectedPreset),
       format: options.format,
-      features: features.length > 0 ? features.join(', ') : 'Basic',
-      hasCustomizations: features.length > 0
+      features: features.length > 0 ? features.join(", ") : "Basic",
+      hasCustomizations: features.length > 0,
     };
   });
 </script>
@@ -84,7 +86,9 @@
   <!-- Section Header -->
   <div class="section-header">
     <h3 class="section-title">Content Options</h3>
-    <p class="section-description">Customize what appears in your shared image</p>
+    <p class="section-description">
+      Customize what appears in your shared image
+    </p>
   </div>
 
   <!-- Current Settings Summary -->
@@ -94,15 +98,18 @@
         <span class="setting-label">Preset:</span>
         <span class="setting-value">{optionsSummary()?.preset}</span>
       </div>
-      
+
       <div class="setting-row">
         <span class="setting-label">Format:</span>
         <span class="setting-value">{optionsSummary()?.format}</span>
       </div>
-      
+
       <div class="setting-row">
         <span class="setting-label">Includes:</span>
-        <span class="setting-value" class:has-features={optionsSummary()?.hasCustomizations}>
+        <span
+          class="setting-value"
+          class:has-features={optionsSummary()?.hasCustomizations}
+        >
           {optionsSummary()?.features}
         </span>
       </div>
@@ -124,10 +131,8 @@
       <span class="btn-text">Customize Options</span>
       <span class="btn-arrow">→</span>
     </button>
-    
-    <p class="customize-hint">
-      Adjust format, quality, and content options
-    </p>
+
+    <p class="customize-hint">Adjust format, quality, and content options</p>
   </div>
 </div>
 

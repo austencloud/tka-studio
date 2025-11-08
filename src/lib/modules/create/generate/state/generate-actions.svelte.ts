@@ -34,10 +34,10 @@ export function createGenerationActionsState(
         );
       }
 
-      const generatedSequence = await orchestrationService.generateSequence(options);
+      const generatedSequence =
+        await orchestrationService.generateSequence(options);
       lastGeneratedSequence = generatedSequence;
       await updateWorkbenchWithSequence(generatedSequence);
-
     } catch (error) {
       generationError =
         error instanceof Error ? error.message : "Unknown generation error";
@@ -54,22 +54,23 @@ export function createGenerationActionsState(
       const hasExistingSequence = sequenceState.getCurrentBeats().length > 0;
 
       if (hasExistingSequence) {
-        window.dispatchEvent(new CustomEvent('clear-sequence-animation'));
-        await new Promise(resolve => setTimeout(resolve, 300));
+        window.dispatchEvent(new CustomEvent("clear-sequence-animation"));
+        await new Promise((resolve) => setTimeout(resolve, 300));
       }
 
       const isSequential = getIsSequential?.() ?? false;
 
       // Dispatch BEFORE updating sequence to prepare BeatGrid for animation
-      window.dispatchEvent(new CustomEvent('prepare-sequence-animation', {
-        detail: {
-          isSequential,
-          beatCount: sequence.beats.length
-        }
-      }));
+      window.dispatchEvent(
+        new CustomEvent("prepare-sequence-animation", {
+          detail: {
+            isSequential,
+            beatCount: sequence.beats.length,
+          },
+        })
+      );
 
       sequenceState.setCurrentSequence(sequence);
-
     } catch (error) {
       throw new Error(
         `Workbench update failed: ${error instanceof Error ? error.message : "Unknown error"}`

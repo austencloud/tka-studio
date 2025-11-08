@@ -7,7 +7,10 @@ export interface ILightRayCalculator {
   /**
    * Initialize light rays for the given dimensions
    */
-  initializeLightRays(dimensions: Dimensions, count: number): Array<{
+  initializeLightRays(
+    dimensions: Dimensions,
+    count: number
+  ): Array<{
     x: number;
     opacity: number;
     width: number;

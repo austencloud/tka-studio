@@ -65,9 +65,11 @@ export function createCreateModuleEffects(config: EffectConfig) {
 
     layoutConfig = layoutService.calculateLayout();
 
-    const unsubscribe = layoutService.onLayoutChange((config: LayoutConfiguration) => {
-      layoutConfig = config;
-    });
+    const unsubscribe = layoutService.onLayoutChange(
+      (config: LayoutConfiguration) => {
+        layoutConfig = config;
+      }
+    );
 
     return unsubscribe;
   });

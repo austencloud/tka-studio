@@ -1,19 +1,29 @@
 import { inject, injectable } from "inversify";
 import type { Dimensions } from "$shared";
 import { TYPES } from "$shared/inversify/types";
-import type { MarineLife, MarineLifeType, FishMarineLife, JellyfishMarineLife } from "../../domain/models/DeepOceanModels";
+import type {
+  MarineLife,
+  MarineLifeType,
+  FishMarineLife,
+  JellyfishMarineLife,
+} from "../../domain/models/DeepOceanModels";
 import type { IMarineLifeAnimator, IFishSpriteManager } from "../contracts";
 
 @injectable()
 export class MarineLifeAnimator implements IMarineLifeAnimator {
-  private pendingSpawns: Array<{ type: MarineLifeType; spawnTime: number }> = [];
+  private pendingSpawns: Array<{ type: MarineLifeType; spawnTime: number }> =
+    [];
 
   constructor(
     @inject(TYPES.IFishSpriteManager)
     private fishSpriteManager: IFishSpriteManager
   ) {}
 
-  async initializeMarineLife(dimensions: Dimensions, fishCount: number, jellyfishCount: number): Promise<MarineLife[]> {
+  async initializeMarineLife(
+    dimensions: Dimensions,
+    fishCount: number,
+    jellyfishCount: number
+  ): Promise<MarineLife[]> {
     // Preload sprites FIRST to ensure fish get actual sprites
     await this.fishSpriteManager.preloadSprites();
 
@@ -178,13 +188,15 @@ export class MarineLifeAnimator implements IMarineLifeAnimator {
           jellyfish.x += jellyfish.horizontalSpeed * deltaSeconds;
           jellyfish.baseY += jellyfish.verticalSpeed * deltaSeconds;
           jellyfish.y =
-            jellyfish.baseY + Math.sin(jellyfish.animationPhase) * jellyfish.waveAmplitude;
+            jellyfish.baseY +
+            Math.sin(jellyfish.animationPhase) * jellyfish.waveAmplitude;
 
           // Wrap around boundaries
           const wrappedLeft = jellyfish.x < -jellyfish.size;
           const wrappedRight = jellyfish.x > dimensions.width + jellyfish.size;
           const wrappedTop = jellyfish.y < -jellyfish.size;
-          const wrappedBottom = jellyfish.y > dimensions.height + jellyfish.size;
+          const wrappedBottom =
+            jellyfish.y > dimensions.height + jellyfish.size;
 
           if (wrappedLeft || wrappedRight || wrappedTop || wrappedBottom) {
             // Replace with new jellyfish
@@ -219,7 +231,10 @@ export class MarineLifeAnimator implements IMarineLifeAnimator {
     this.pendingSpawns.push({ type, spawnTime });
   }
 
-  processPendingSpawns(dimensions: Dimensions, currentTime: number): MarineLife[] {
+  processPendingSpawns(
+    dimensions: Dimensions,
+    currentTime: number
+  ): MarineLife[] {
     const newMarineLife: MarineLife[] = [];
 
     for (let i = this.pendingSpawns.length - 1; i >= 0; i--) {

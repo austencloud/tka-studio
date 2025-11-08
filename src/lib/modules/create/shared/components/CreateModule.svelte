@@ -92,7 +92,7 @@
     TYPES,
     type BuildModeId,
     type PictographData,
-    setAnimationPanelOpen,
+    setAnyPanelOpen,
     setSideBySideLayout,
   } from "$shared";
   import { onMount, setContext } from "svelte";
@@ -175,6 +175,17 @@
   // This must be at top level during component initialization.
   // Provides reactive access to state, services, and layout for all descendants.
 
+  // CRITICAL: Create stable layout context object with reactive getters
+  // This object reference never changes, but getters access reactive $state
+  const layoutContext = {
+    get shouldUseSideBySideLayout() {
+      return shouldUseSideBySideLayout;
+    },
+    isMobilePortrait() {
+      return services?.layoutService?.isMobilePortrait() ?? false;
+    },
+  };
+
   setCreateModuleContext({
     get CreateModuleState() {
       if (!CreateModuleState) {
@@ -195,17 +206,8 @@
       }
       return services;
     },
-    layout: {
-      get shouldUseSideBySideLayout() {
-        return shouldUseSideBySideLayout;
-      },
-      isMobilePortrait: () => {
-        if (!services) {
-          throw new Error("Services not yet initialized");
-        }
-        return services.layoutService.isMobilePortrait();
-      },
-    },
+    // Pass stable object with reactive getters
+    layout: layoutContext,
     handlers: {
       onError: (err: string) => {
         error = err;
@@ -291,12 +293,12 @@
   });
 
   /**
-   * Effect: Sync animation panel and layout state to global state
-   * Allows PrimaryNavigation to hide when animation is open in side-by-side layout
+   * Effect: Sync panel states and layout to global state
+   * Allows ButtonPanel and PrimaryNavigation to hide when panels are open in side-by-side layout
    */
   $effect(() => {
-    // Sync animation panel state
-    setAnimationPanelOpen(panelState.isAnimationPanelOpen);
+    // Sync single "any panel open" state (covers all mutually exclusive panels)
+    setAnyPanelOpen(panelState.isAnyPanelOpen);
 
     // Sync layout state
     setSideBySideLayout(shouldUseSideBySideLayout);
@@ -342,7 +344,10 @@
       navigationSyncService: services.navigationSyncService,
       hasSelectedCreationMethod: () => hasSelectedCreationMethod,
       onLayoutChange: (layout) => {
+        // Update local reactive state (accessed by layoutContext getter)
         shouldUseSideBySideLayout = layout;
+        // Update global state for UI coordination
+        setSideBySideLayout(layout);
       },
       ...(onCurrentWordChange ? { onCurrentWordChange } : {}),
       toolPanelElement,

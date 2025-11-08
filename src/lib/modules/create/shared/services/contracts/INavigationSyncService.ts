@@ -24,14 +24,20 @@ export interface INavigationSyncService {
    * @param createModuleState Create module state object
    * @param navigationState Navigation state object
    */
-  syncNavigationToCreateModule(createModuleState: any, navigationState: any): void;
+  syncNavigationToCreateModule(
+    createModuleState: any,
+    navigationState: any
+  ): void;
 
   /**
    * Sync create module state changes back to navigation state
    * @param createModuleState Create module state object
    * @param navigationState Navigation state object
    */
-  syncCreateModuleToNavigation(createModuleState: any, navigationState: any): void;
+  syncCreateModuleToNavigation(
+    createModuleState: any,
+    navigationState: any
+  ): void;
 
   /**
    * Validate if a tab is accessible based on sequence state

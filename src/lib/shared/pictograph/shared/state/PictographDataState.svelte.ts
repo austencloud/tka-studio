@@ -50,21 +50,19 @@ export function createPictographDataState(
 
   return {
     get effectivePictographData() {
-      return dataState().effectivePictographData;
+      return dataState.effectivePictographData;
     },
     get hasValidData() {
-      return dataState().hasValidData;
+      return dataState.hasValidData;
     },
     get displayLetter() {
-      const data = dataState();
-      return "displayLetter" in data ? data.displayLetter : null;
+      return "displayLetter" in dataState ? dataState.displayLetter : null;
     },
     get motionsToRender() {
-      const data = dataState();
-      return "motionsToRender" in data ? data.motionsToRender : [];
+      return "motionsToRender" in dataState ? dataState.motionsToRender : [];
     },
     get requiredComponents() {
-      return requiredComponents();
+      return requiredComponents;
     },
     get pictographData() {
       return pictographData;

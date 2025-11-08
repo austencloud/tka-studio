@@ -140,35 +140,58 @@
 
   /* Pause/Resume button */
   .pause-button {
-    background: linear-gradient(135deg, rgba(251, 146, 60, 0.2), rgba(249, 115, 22, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(251, 146, 60, 0.2),
+      rgba(249, 115, 22, 0.2)
+    );
     border-color: rgba(251, 146, 60, 0.4);
   }
 
   .pause-button:hover:not(:disabled) {
-    background: linear-gradient(135deg, rgba(251, 146, 60, 0.3), rgba(249, 115, 22, 0.3));
+    background: linear-gradient(
+      135deg,
+      rgba(251, 146, 60, 0.3),
+      rgba(249, 115, 22, 0.3)
+    );
     border-color: rgba(251, 146, 60, 0.6);
   }
 
   /* Resume state styling */
   .pause-button.paused {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.2),
+      rgba(22, 163, 74, 0.2)
+    );
     border-color: rgba(34, 197, 94, 0.4);
   }
 
   .pause-button.paused:hover:not(:disabled) {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.3));
+    background: linear-gradient(
+      135deg,
+      rgba(34, 197, 94, 0.3),
+      rgba(22, 163, 74, 0.3)
+    );
     border-color: rgba(34, 197, 94, 0.6);
   }
 
   /* Restart button */
   .restart-button {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.2),
+      rgba(118, 75, 162, 0.2)
+    );
     border-color: rgba(102, 126, 234, 0.4);
   }
 
   .restart-button:hover:not(:disabled) {
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.3),
+      rgba(118, 75, 162, 0.3)
+    );
     border-color: rgba(102, 126, 234, 0.6);
   }
-
 </style>

@@ -62,7 +62,7 @@ export function createOptimizedExploreState() {
     );
   });
 
-  const canLoadMore = $derived(
+  const canLoadMore = $derived.by(
     () => hasMore && !isLoading && !loadingState.error
   );
 
@@ -232,7 +232,7 @@ export function createOptimizedExploreState() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && canLoadMore()) {
+          if (entry.isIntersecting && canLoadMore) {
             loadMoreSequences();
           }
         });

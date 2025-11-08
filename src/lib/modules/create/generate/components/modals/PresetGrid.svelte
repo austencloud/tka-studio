@@ -6,12 +6,7 @@ Displays a list of presets in a scrollable grid layout
   import type { GenerationPreset } from "../../state/preset.svelte";
   import PresetCard from "./PresetCard.svelte";
 
-  let {
-    presets,
-    onPresetSelect,
-    onPresetEdit,
-    onPresetDelete
-  } = $props<{
+  let { presets, onPresetSelect, onPresetEdit, onPresetDelete } = $props<{
     presets: GenerationPreset[];
     onPresetSelect: (preset: GenerationPreset) => void;
     onPresetEdit: (preset: GenerationPreset) => void;

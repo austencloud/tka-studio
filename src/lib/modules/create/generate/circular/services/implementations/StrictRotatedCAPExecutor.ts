@@ -89,7 +89,9 @@ export class StrictRotatedCAPExecutor {
    */
   private _validateSequence(sequence: BeatData[], sliceSize: SliceSize): void {
     if (sequence.length < 2) {
-      throw new Error("Sequence must have at least 2 beats (start position + 1 beat)");
+      throw new Error(
+        "Sequence must have at least 2 beats (start position + 1 beat)"
+      );
     }
 
     const startPos = sequence[0]!.startPosition;
@@ -101,7 +103,8 @@ export class StrictRotatedCAPExecutor {
 
     // Check if the (start, end) pair is valid for the slice size
     const key = `${startPos},${endPos}`;
-    const validationSet = sliceSize === SliceSize.HALVED ? HALVED_CAPS : QUARTERED_CAPS;
+    const validationSet =
+      sliceSize === SliceSize.HALVED ? HALVED_CAPS : QUARTERED_CAPS;
 
     if (!validationSet.has(key)) {
       throw new Error(
@@ -114,7 +117,10 @@ export class StrictRotatedCAPExecutor {
   /**
    * Calculate how many beats need to be added based on slice size
    */
-  private _calculateEntriesToAdd(sequenceLength: number, sliceSize: SliceSize): number {
+  private _calculateEntriesToAdd(
+    sequenceLength: number,
+    sliceSize: SliceSize
+  ): number {
     if (sliceSize === SliceSize.HALVED) {
       return sequenceLength; // Double the sequence
     } else if (sliceSize === SliceSize.QUARTERED) {
@@ -143,7 +149,10 @@ export class StrictRotatedCAPExecutor {
     );
 
     // Calculate new end position
-    const newEndPosition = this._calculateNewEndPosition(previousMatchingBeat, previousBeat);
+    const newEndPosition = this._calculateNewEndPosition(
+      previousMatchingBeat,
+      previousBeat
+    );
 
     // Create the new beat with transformed attributes
     const newBeat: BeatData = {
@@ -167,11 +176,15 @@ export class StrictRotatedCAPExecutor {
     };
 
     // Update orientations
-    const beatWithStartOri = this.orientationCalculationService.updateStartOrientations(
-      newBeat,
-      previousBeat
-    );
-    const finalBeat = this.orientationCalculationService.updateEndOrientations(beatWithStartOri);
+    const beatWithStartOri =
+      this.orientationCalculationService.updateStartOrientations(
+        newBeat,
+        previousBeat
+      );
+    const finalBeat =
+      this.orientationCalculationService.updateEndOrientations(
+        beatWithStartOri
+      );
 
     return finalBeat;
   }
@@ -207,7 +220,10 @@ export class StrictRotatedCAPExecutor {
   /**
    * Generate index mapping for retrieving corresponding beats
    */
-  private _getIndexMap(sliceSize: SliceSize, length: number): Record<number, number> {
+  private _getIndexMap(
+    sliceSize: SliceSize,
+    length: number
+  ): Record<number, number> {
     // Handle edge cases for very short sequences
     if (length < 4 && sliceSize === SliceSize.QUARTERED) {
       const map: Record<number, number> = {};
@@ -254,7 +270,9 @@ export class StrictRotatedCAPExecutor {
     const redMotion = previousMatchingBeat.motions[MotionColor.RED];
 
     if (!blueMotion || !redMotion) {
-      throw new Error("Previous matching beat must have both blue and red motions");
+      throw new Error(
+        "Previous matching beat must have both blue and red motions"
+      );
     }
 
     // Get hand rotation directions
@@ -272,8 +290,10 @@ export class StrictRotatedCAPExecutor {
     const redLocationMap = getLocationMapForHandRotation(redHandRotDir);
 
     // Calculate new end locations
-    const previousBlueEndLoc = previousBeat.motions[MotionColor.BLUE]?.endLocation;
-    const previousRedEndLoc = previousBeat.motions[MotionColor.RED]?.endLocation;
+    const previousBlueEndLoc =
+      previousBeat.motions[MotionColor.BLUE]?.endLocation;
+    const previousRedEndLoc =
+      previousBeat.motions[MotionColor.RED]?.endLocation;
 
     if (!previousBlueEndLoc || !previousRedEndLoc) {
       throw new Error("Previous beat must have end locations for both colors");
@@ -316,7 +336,8 @@ export class StrictRotatedCAPExecutor {
     const locationMap = getLocationMapForHandRotation(handRotDir);
 
     // Calculate rotated end location
-    const newEndLocation = locationMap[previousMotion.endLocation as GridLocation];
+    const newEndLocation =
+      locationMap[previousMotion.endLocation as GridLocation];
 
     // Create transformed motion
     return {

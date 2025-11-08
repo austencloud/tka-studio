@@ -1,10 +1,17 @@
 <!-- BeatGrid.svelte - Responsive beat grid with display animations -->
 <script lang="ts">
-  import type { BeatData, IDeviceDetector, IHapticFeedbackService } from "$shared";
+  import type {
+    BeatData,
+    IDeviceDetector,
+    IHapticFeedbackService,
+  } from "$shared";
   import { createBeatData, resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
   import { createBeatGridDisplayState, createScrollState } from "../state";
-  import { calculateBeatPosition, calculateGridLayout } from "../utils/grid-calculations";
+  import {
+    calculateBeatPosition,
+    calculateGridLayout,
+  } from "../utils/grid-calculations";
   import BeatCell from "./BeatCell.svelte";
 
   // Services
@@ -83,7 +90,8 @@
   async function triggerFullAnimation() {
     if (!containerRef) return;
 
-    const dispatchEvent = (event: CustomEvent) => containerRef?.dispatchEvent(event);
+    const dispatchEvent = (event: CustomEvent) =>
+      containerRef?.dispatchEvent(event);
     const mode = displayState.isSequentialMode ? "sequential" : "all-at-once";
 
     if (mode === "sequential") {
@@ -106,8 +114,10 @@
         // This is O(1) instead of O(n), eliminating the 60-70ms setTimeout violations
         const lastPreviousBeat = previousBeatsRef[previousBeatCount - 1];
         const lastCurrentBeat = beats[previousBeatCount - 1];
-        const previousBeatsUnchanged = lastPreviousBeat && lastCurrentBeat &&
-                                       lastPreviousBeat.id === lastCurrentBeat.id;
+        const previousBeatsUnchanged =
+          lastPreviousBeat &&
+          lastCurrentBeat &&
+          lastPreviousBeat.id === lastCurrentBeat.id;
 
         if (previousBeatsUnchanged) {
           // Single beat added (Construct mode)
@@ -121,7 +131,9 @@
         // This happens during sequence transformations (mirror, rotate, color swap)
         // 🚀 PERFORMANCE: Quick check - compare first and last beat IDs
         const firstBeatIdMatch = previousBeatsRef[0]?.id === beats[0]?.id;
-        const lastBeatIdMatch = previousBeatsRef[currentBeatCount - 1]?.id === beats[currentBeatCount - 1]?.id;
+        const lastBeatIdMatch =
+          previousBeatsRef[currentBeatCount - 1]?.id ===
+          beats[currentBeatCount - 1]?.id;
 
         if (firstBeatIdMatch && lastBeatIdMatch && currentBeatCount > 0) {
           // Beat IDs preserved - this is a data update (transform), not a replacement
@@ -153,7 +165,9 @@
 
   // Initialize services on mount
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
     deviceDetector = resolve<IDeviceDetector>(TYPES.IDeviceDetector);
   });
 
@@ -294,7 +308,9 @@
           beat={startPosition || placeholderBeat}
           index={-1}
           shouldAnimate={displayState.shouldAnimateStartPosition}
-          isSelected={isMultiSelectMode ? selectedBeatNumbers.has(0) : selectedBeatNumber === 0}
+          isSelected={isMultiSelectMode
+            ? selectedBeatNumbers.has(0)
+            : selectedBeatNumber === 0}
           {isMultiSelectMode}
           onLongPress={onStartLongPress}
         />
@@ -307,7 +323,9 @@
         {@const gridCol = position.column}
         {@const isDeleting = removingBeatIndices.has(index)}
         {@const shouldSlide =
-          removingBeatIndex !== null && !isDeleting && index > removingBeatIndex}
+          removingBeatIndex !== null &&
+          !isDeleting &&
+          index > removingBeatIndex}
         {@const shouldAnimateBeat = displayState.shouldBeatAnimate(index)}
         {@const shouldHideBeat = displayState.shouldBeatBeHidden(index)}
         <div
@@ -327,7 +345,9 @@
             onClick={() => handleBeatClick(beat.beatNumber)}
             onDelete={() => onBeatDelete?.(beat.beatNumber)}
             shouldAnimate={shouldAnimateBeat}
-            isSelected={isMultiSelectMode ? selectedBeatNumbers.has(beat.beatNumber) : selectedBeatNumber === beat.beatNumber}
+            isSelected={isMultiSelectMode
+              ? selectedBeatNumbers.has(beat.beatNumber)
+              : selectedBeatNumber === beat.beatNumber}
             isPracticeBeat={practiceBeatNumber === beat.beatNumber}
             {isMultiSelectMode}
             onLongPress={() => onBeatLongPress?.(beat.beatNumber)}
@@ -348,7 +368,6 @@
     height: 100%;
     flex: 1 1 auto;
     min-height: 0;
-
   }
 
   .beat-grid-scroll {
@@ -381,7 +400,9 @@
     box-sizing: border-box;
     opacity: 1;
     transform: scale(1) translateY(0);
-    transition: opacity 300ms ease-out, transform 300ms ease-out;
+    transition:
+      opacity 300ms ease-out,
+      transform 300ms ease-out;
   }
 
   .beat-grid.clearing {
@@ -416,7 +437,8 @@
   }
 
   .beat-container.sliding {
-    animation: slideIntoPlace 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: slideIntoPlace 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)
+      forwards;
   }
 
   /* Hide beats waiting for sequential animation */
@@ -455,5 +477,4 @@
       transform: translateX(0) translateY(0);
     }
   }
-
 </style>

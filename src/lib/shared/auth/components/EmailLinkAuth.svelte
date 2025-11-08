@@ -41,7 +41,7 @@
       // Configure the email action handler
       const actionCodeSettings = {
         // URL where the user will be redirected after clicking the link
-        url: window.location.origin + '/auth/login',
+        url: window.location.origin + "/auth/login",
         handleCodeInApp: true,
       };
 
@@ -49,11 +49,10 @@
       await sendSignInLinkToEmail(auth, email, actionCodeSettings);
 
       // Save the email locally so we can complete sign-in on the same device
-      window.localStorage.setItem('emailForSignIn', email);
+      window.localStorage.setItem("emailForSignIn", email);
 
       console.log(`✅ [email-link] Email sent successfully to ${email}`);
       success = `Magic link sent! Check your email at ${email}`;
-
     } catch (err: any) {
       console.error(`❌ [email-link] Error sending email:`, err);
       console.error(`❌ [email-link] Error code:`, err.code);
@@ -85,13 +84,15 @@
       }
 
       // Get the email from localStorage
-      let savedEmail = window.localStorage.getItem('emailForSignIn');
+      let savedEmail = window.localStorage.getItem("emailForSignIn");
 
       if (!savedEmail) {
         // User opened the link on a different device
         // Ask for email to prevent session fixation attacks
         console.log("⚠️ [email-link] Email not found in storage, asking user");
-        savedEmail = window.prompt('Please enter your email address to confirm:');
+        savedEmail = window.prompt(
+          "Please enter your email address to confirm:"
+        );
       }
 
       if (!savedEmail) {
@@ -102,18 +103,21 @@
       console.log(`🔐 [email-link] Signing in with email: ${savedEmail}`);
 
       // Sign in with the email link
-      const result = await signInWithEmailLink(auth, savedEmail, window.location.href);
+      const result = await signInWithEmailLink(
+        auth,
+        savedEmail,
+        window.location.href
+      );
 
       console.log(`✅ [email-link] User signed in:`, result.user.uid);
       console.log(`✅ [email-link] Email verified:`, result.user.emailVerified);
 
       // Clear the email from storage
-      window.localStorage.removeItem('emailForSignIn');
+      window.localStorage.removeItem("emailForSignIn");
 
       // Navigate to home
       console.log(`🔐 [email-link] Navigating to home...`);
       goto("/");
-
     } catch (err: any) {
       console.error(`❌ [email-link] Sign-in error:`, err);
       console.error(`❌ [email-link] Error code:`, err.code);
@@ -121,7 +125,8 @@
       if (err.code === "auth/invalid-email") {
         error = "Invalid email address.";
       } else if (err.code === "auth/invalid-action-code") {
-        error = "This link is invalid or has expired. Please request a new one.";
+        error =
+          "This link is invalid or has expired. Please request a new one.";
       } else if (err.code === "auth/expired-action-code") {
         error = "This link has expired. Please request a new one.";
       } else {
@@ -135,7 +140,13 @@
   }
 </script>
 
-<form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="email-link-form">
+<form
+  onsubmit={(e) => {
+    e.preventDefault();
+    handleSubmit();
+  }}
+  class="email-link-form"
+>
   <div class="form-header">
     <h3>Sign in with Email Link</h3>
     <p>We'll send you a magic link - no password needed!</p>
@@ -159,7 +170,17 @@
 
   {#if success}
     <div class="success-message">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
         <polyline points="22 4 12 14.01 9 11.01"></polyline>
       </svg>
@@ -172,8 +193,20 @@
       <span class="spinner"></span>
       Sending...
     {:else}
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+        ></path>
         <polyline points="22,6 12,13 2,6"></polyline>
       </svg>
       Send Magic Link

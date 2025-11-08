@@ -6,28 +6,42 @@
  */
 
 import type { PictographData } from "$shared";
-import type { EndPositionFilter, ReversalFilter, TypeFilter } from "../../domain";
-
-
+import type {
+  EndPositionFilter,
+  ReversalFilter,
+  TypeFilter,
+} from "../../domain";
 
 export interface IOptionFilter {
   /**
    * Apply type filtering to options
    */
-  applyTypeFiltering(options: PictographData[], typeFilter: TypeFilter): PictographData[];
+  applyTypeFiltering(
+    options: PictographData[],
+    typeFilter: TypeFilter
+  ): PictographData[];
 
   /**
    * Apply end position filtering to options
    */
-  applyEndPositionFiltering(options: PictographData[], endPositionFilter: EndPositionFilter): PictographData[];
+  applyEndPositionFiltering(
+    options: PictographData[],
+    endPositionFilter: EndPositionFilter
+  ): PictographData[];
 
   /**
    * Apply reversal filtering to options
    */
-  applyReversalFiltering(options: PictographData[], reversalFilter: ReversalFilter): PictographData[];
+  applyReversalFiltering(
+    options: PictographData[],
+    reversalFilter: ReversalFilter
+  ): PictographData[];
 
   /**
    * Filter pictographs by letter type
    */
-  filterPictographsByType(pictographs: PictographData[], letterType: string): PictographData[];
+  filterPictographsByType(
+    pictographs: PictographData[],
+    letterType: string
+  ): PictographData[];
 }

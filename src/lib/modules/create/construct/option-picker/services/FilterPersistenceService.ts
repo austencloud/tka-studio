@@ -1,8 +1,13 @@
-import { injectable } from 'inversify';
-import type { SortMethod, TypeFilter } from '../option-viewer';
+import { injectable } from "inversify";
+import type { SortMethod, TypeFilter } from "../option-viewer";
 
 export interface IFilterPersistenceService {
-  saveFilters(sortMethod: SortMethod, typeFilter: TypeFilter, endPositionFilter: Record<string, boolean>, reversalFilter: Record<string, boolean>): void;
+  saveFilters(
+    sortMethod: SortMethod,
+    typeFilter: TypeFilter,
+    endPositionFilter: Record<string, boolean>,
+    reversalFilter: Record<string, boolean>
+  ): void;
   loadFilters(): {
     sortMethod: SortMethod;
     typeFilter: TypeFilter;
@@ -14,7 +19,7 @@ export interface IFilterPersistenceService {
 
 @injectable()
 export class FilterPersistenceService implements IFilterPersistenceService {
-  private readonly STORAGE_KEY = 'tka-option-picker-filters';
+  private readonly STORAGE_KEY = "tka-option-picker-filters";
 
   saveFilters(
     sortMethod: SortMethod,
@@ -28,13 +33,15 @@ export class FilterPersistenceService implements IFilterPersistenceService {
         typeFilter,
         endPositionFilter,
         reversalFilter,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       };
 
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(filterData));
-
     } catch (error) {
-      console.warn('⚠️ FilterPersistenceService: Failed to save filters:', error);
+      console.warn(
+        "⚠️ FilterPersistenceService: Failed to save filters:",
+        error
+      );
     }
   }
 
@@ -47,7 +54,6 @@ export class FilterPersistenceService implements IFilterPersistenceService {
     try {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (!stored) {
-
         return null;
       }
 
@@ -55,19 +61,23 @@ export class FilterPersistenceService implements IFilterPersistenceService {
 
       // Validate the data structure
       if (!filterData.sortMethod || !filterData.typeFilter) {
-        console.warn('⚠️ FilterPersistenceService: Invalid filter data structure');
+        console.warn(
+          "⚠️ FilterPersistenceService: Invalid filter data structure"
+        );
         return null;
       }
-
 
       return {
         sortMethod: filterData.sortMethod,
         typeFilter: filterData.typeFilter,
         endPositionFilter: filterData.endPositionFilter || {},
-        reversalFilter: filterData.reversalFilter || {}
+        reversalFilter: filterData.reversalFilter || {},
       };
     } catch (error) {
-      console.warn('⚠️ FilterPersistenceService: Failed to load filters:', error);
+      console.warn(
+        "⚠️ FilterPersistenceService: Failed to load filters:",
+        error
+      );
       return null;
     }
   }
@@ -75,9 +85,11 @@ export class FilterPersistenceService implements IFilterPersistenceService {
   clearFilters(): void {
     try {
       localStorage.removeItem(this.STORAGE_KEY);
-
     } catch (error) {
-      console.warn('⚠️ FilterPersistenceService: Failed to clear filters:', error);
+      console.warn(
+        "⚠️ FilterPersistenceService: Failed to clear filters:",
+        error
+      );
     }
   }
 }

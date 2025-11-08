@@ -64,7 +64,7 @@ export interface IFirebaseVideoUploadService {
   uploadAnimatedSequence(
     sequenceId: string,
     animationBlob: Blob,
-    format: 'webp' | 'gif'
+    format: "webp" | "gif"
   ): Promise<string>;
 
   /**

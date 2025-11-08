@@ -16,8 +16,21 @@
   import { resolve, TYPES } from "$shared/inversify";
   import type { IArrowSvgLoader, IPropSvgLoader } from "$shared";
 
-  let arrowStats = $state({ rawCacheSize: 0, transformedCacheSize: 0, cacheHits: 0, cacheMisses: 0, hitRate: "0%" });
-  let propStats = $state({ rawCacheSize: 0, transformedCacheSize: 0, metadataCacheSize: 0, cacheHits: 0, cacheMisses: 0, hitRate: "0%" });
+  let arrowStats = $state({
+    rawCacheSize: 0,
+    transformedCacheSize: 0,
+    cacheHits: 0,
+    cacheMisses: 0,
+    hitRate: "0%",
+  });
+  let propStats = $state({
+    rawCacheSize: 0,
+    transformedCacheSize: 0,
+    metadataCacheSize: 0,
+    cacheHits: 0,
+    cacheMisses: 0,
+    hitRate: "0%",
+  });
   let updateInterval: ReturnType<typeof setInterval> | null = null;
   let isExpanded = $state(false);
 
@@ -91,7 +104,10 @@
         <div class="stats-grid">
           <div class="stat-item">
             <span class="stat-label">Hit Rate:</span>
-            <span class="stat-value" class:good={parseFloat(arrowStats.hitRate) > 80}>
+            <span
+              class="stat-value"
+              class:good={parseFloat(arrowStats.hitRate) > 80}
+            >
               {arrowStats.hitRate}
             </span>
           </div>
@@ -109,7 +125,9 @@
           </div>
           <div class="stat-item">
             <span class="stat-label">Transformed:</span>
-            <span class="stat-value">{arrowStats.transformedCacheSize} items</span>
+            <span class="stat-value"
+              >{arrowStats.transformedCacheSize} items</span
+            >
           </div>
         </div>
       </div>
@@ -120,7 +138,10 @@
         <div class="stats-grid">
           <div class="stat-item">
             <span class="stat-label">Hit Rate:</span>
-            <span class="stat-value" class:good={parseFloat(propStats.hitRate) > 80}>
+            <span
+              class="stat-value"
+              class:good={parseFloat(propStats.hitRate) > 80}
+            >
               {propStats.hitRate}
             </span>
           </div>
@@ -138,7 +159,9 @@
           </div>
           <div class="stat-item">
             <span class="stat-label">Transformed:</span>
-            <span class="stat-value">{propStats.transformedCacheSize} items</span>
+            <span class="stat-value"
+              >{propStats.transformedCacheSize} items</span
+            >
           </div>
           <div class="stat-item">
             <span class="stat-label">Metadata:</span>
@@ -149,9 +172,7 @@
 
       <!-- Actions -->
       <div class="actions">
-        <button class="btn-clear" onclick={clearCaches}>
-          Clear Caches
-        </button>
+        <button class="btn-clear" onclick={clearCaches}> Clear Caches </button>
       </div>
     </div>
   {/if}
@@ -164,7 +185,7 @@
     right: 0;
     background: rgba(0, 0, 0, 0.9);
     color: #00ff00;
-    font-family: 'Courier New', monospace;
+    font-family: "Courier New", monospace;
     font-size: 12px;
     z-index: 9999;
     border-top-left-radius: 8px;

@@ -30,7 +30,9 @@ Moved from workbench to edit tab as these are editing functions.
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   function handle(fn?: () => void) {
@@ -43,7 +45,9 @@ Moved from workbench to edit tab as these are editing functions.
 <div class="sequence-transform-tools">
   <div class="tools-header">
     <h4>Sequence Transforms</h4>
-    <span class="tools-description">Apply transformations to the entire sequence</span>
+    <span class="tools-description"
+      >Apply transformations to the entire sequence</span
+    >
   </div>
 
   <div class="tools-grid">

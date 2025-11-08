@@ -26,14 +26,16 @@ export const selectedArrowState = {
     return _selectedArrow;
   },
 
-  selectArrow(motionData: MotionData, color: string, pictographData: PictographData) {
+  selectArrow(
+    motionData: MotionData,
+    color: string,
+    pictographData: PictographData
+  ) {
     _selectedArrow = { motionData, color, pictographData };
-    console.log('[SelectedArrowState STUB] Arrow selected:', color, motionData.motionType);
   },
 
   clearSelection() {
     _selectedArrow = null;
-    console.log('[SelectedArrowState STUB] Selection cleared');
   },
 
   isSelected(motionData: MotionData, color: string): boolean {
@@ -44,5 +46,5 @@ export const selectedArrowState = {
       _selectedArrow.motionData.startLocation === motionData.startLocation &&
       _selectedArrow.motionData.endLocation === motionData.endLocation
     );
-  }
+  },
 };

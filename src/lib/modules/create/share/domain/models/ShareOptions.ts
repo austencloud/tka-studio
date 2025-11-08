@@ -50,8 +50,8 @@ export const SHARE_PRESETS: Record<string, SharePreset> = {
       margin: 20,
       backgroundColor: "#ffffff",
       userName: "",
-      notes: ""
-    }
+      notes: "",
+    },
   },
 
   print: {
@@ -69,8 +69,8 @@ export const SHARE_PRESETS: Record<string, SharePreset> = {
       margin: 50,
       backgroundColor: "#ffffff",
       userName: "TKA Studio User",
-      notes: "Created with TKA Studio"
-    }
+      notes: "Created with TKA Studio",
+    },
   },
 
   web: {
@@ -88,9 +88,9 @@ export const SHARE_PRESETS: Record<string, SharePreset> = {
       margin: 30,
       backgroundColor: "#ffffff",
       userName: "TKA Studio User",
-      notes: ""
-    }
-  }
+      notes: "",
+    },
+  },
 };
 
 // Optimized default options for modern devices and sharing
@@ -109,5 +109,5 @@ export const DEFAULT_SHARE_OPTIONS: ShareOptions = {
   addWord: true,
   addDifficultyLevel: false,
   userName: "",
-  notes: ""
+  notes: "",
 };

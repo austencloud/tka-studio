@@ -75,7 +75,8 @@ Displays user-created collections/playlists of sequences.
         {
           id: "2",
           name: "Advanced Transitions",
-          description: "Complex transition sequences for experienced practitioners",
+          description:
+            "Complex transition sequences for experienced practitioners",
           creator: "Kinetic Artist",
           creatorId: "2",
           sequenceCount: 8,
@@ -424,6 +425,7 @@ Displays user-created collections/playlists of sequences.
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }

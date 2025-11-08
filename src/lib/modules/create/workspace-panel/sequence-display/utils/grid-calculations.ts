@@ -7,7 +7,10 @@
  */
 
 import type { IDeviceDetector } from "$shared";
-import { getBeatFrameLayout, getMaxColumnsForBeatCount } from "../domain/models/beat-frame-layouts";
+import {
+  getBeatFrameLayout,
+  getMaxColumnsForBeatCount,
+} from "../domain/models/beat-frame-layouts";
 
 export interface GridLayout {
   rows: number;
@@ -52,7 +55,8 @@ export function calculateGridLayout(
   // Determine if we should use wide layout based on container width and layout mode
   // Side-by-side layout: ALWAYS use narrow layout (ignore width)
   // Top-and-bottom layout: Use width to determine narrow vs wide
-  const useWideLayout = !sizing.isSideBySideLayout && containerWidth >= sizing.columnBreakpoint;
+  const useWideLayout =
+    !sizing.isSideBySideLayout && containerWidth >= sizing.columnBreakpoint;
 
   // Get optimal layout from desktop-aligned configuration
   const optimalLayout = getBeatFrameLayout(beatCount, useWideLayout);
@@ -60,7 +64,11 @@ export function calculateGridLayout(
   // Determine max columns based on layout mode and optimal layout
   // Side-by-side layout: Always 4 columns max (ignores container width)
   // Top-and-bottom layout: Width-based (4 or 8 columns depending on width)
-  const maxColumns = getMaxColumnsForBeatCount(beatCount, sizing.isSideBySideLayout, containerWidth);
+  const maxColumns = getMaxColumnsForBeatCount(
+    beatCount,
+    sizing.isSideBySideLayout,
+    containerWidth
+  );
 
   // Calculate actual columns based on beat count and max columns
   // For small beat counts, use the optimal count; for larger counts, respect max columns

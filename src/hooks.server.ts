@@ -45,26 +45,14 @@ export const handle: Handle = async ({ event, resolve }) => {
   );
 
   // COEP header - allows cross-origin resources needed for OAuth
-  response.headers.set(
-    "Cross-Origin-Embedder-Policy",
-    "unsafe-none"
-  );
+  response.headers.set("Cross-Origin-Embedder-Policy", "unsafe-none");
 
   // Additional security headers for production-ready app
-  response.headers.set(
-    "X-Frame-Options",
-    "SAMEORIGIN"
-  );
+  response.headers.set("X-Frame-Options", "SAMEORIGIN");
 
-  response.headers.set(
-    "X-Content-Type-Options",
-    "nosniff"
-  );
+  response.headers.set("X-Content-Type-Options", "nosniff");
 
-  response.headers.set(
-    "Referrer-Policy",
-    "strict-origin-when-cross-origin"
-  );
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
 
   return response;
 };

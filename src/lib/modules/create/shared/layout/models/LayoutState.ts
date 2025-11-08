@@ -65,4 +65,3 @@ export interface LayoutChangeEvent {
   factors: LayoutDecisionFactors;
   timestamp: number;
 }
-

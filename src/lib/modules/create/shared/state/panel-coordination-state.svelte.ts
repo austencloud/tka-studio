@@ -62,9 +62,12 @@ export interface PanelCoordinationState {
   openSequenceActionsPanel(): void;
   closeSequenceActionsPanel(): void;
 
-  // Tool Panel Height (for sizing other panels)
+  // Tool Panel Dimensions (for sizing other panels)
   get toolPanelHeight(): number;
   setToolPanelHeight(height: number): void;
+
+  get toolPanelWidth(): number;
+  setToolPanelWidth(width: number): void;
 
   // Button Panel Height (for accurate slide panel positioning)
   get buttonPanelHeight(): number;
@@ -99,6 +102,9 @@ export interface PanelCoordinationState {
 
   openCreationMethodPanel(): void;
   closeCreationMethodPanel(): void;
+
+  // Derived: Any Panel Open (for UI hiding coordination)
+  get isAnyPanelOpen(): boolean;
 }
 
 export function createPanelCoordinationState(): PanelCoordinationState {
@@ -121,8 +127,9 @@ export function createPanelCoordinationState(): PanelCoordinationState {
   // Sequence Actions panel state
   let isSequenceActionsPanelOpen = $state(false);
 
-  // Tool panel height tracking
+  // Tool panel dimensions tracking
   let toolPanelHeight = $state(0);
+  let toolPanelWidth = $state(0);
 
   // Button panel height tracking
   let buttonPanelHeight = $state(0);
@@ -148,16 +155,16 @@ export function createPanelCoordinationState(): PanelCoordinationState {
    */
   function closeAllPanels() {
     getLogger().log("🚪 Closing all panels for mutual exclusivity");
-    
+
     // Close all modal/slide panels
     isEditPanelOpen = false;
     editPanelBeatIndex = null;
     editPanelBeatData = null;
     editPanelBeatsData = [];
-    
+
     isAnimationPanelOpen = false;
     isAnimating = false;
-    
+
     isSharePanelOpen = false;
     isFilterPanelOpen = false;
     isSequenceActionsPanelOpen = false;
@@ -166,7 +173,7 @@ export function createPanelCoordinationState(): PanelCoordinationState {
     capSelectedComponents = null;
     capCurrentType = null;
     capOnChange = null;
-    
+
     isCreationMethodPanelOpen = false;
   }
 
@@ -195,7 +202,11 @@ export function createPanelCoordinationState(): PanelCoordinationState {
     },
 
     openBatchEditPanel(beatsData: any[]) {
-      getLogger().log("📝 Opening Batch Edit Panel for", beatsData.length, "beats");
+      getLogger().log(
+        "📝 Opening Batch Edit Panel for",
+        beatsData.length,
+        "beats"
+      );
       closeAllPanels(); // Close others first
       editPanelBeatsData = beatsData;
       editPanelBeatIndex = null;
@@ -285,13 +296,21 @@ export function createPanelCoordinationState(): PanelCoordinationState {
       isSequenceActionsPanelOpen = false;
     },
 
-    // Tool Panel Height
+    // Tool Panel Dimensions
     get toolPanelHeight() {
       return toolPanelHeight;
     },
 
     setToolPanelHeight(height: number) {
       toolPanelHeight = height;
+    },
+
+    get toolPanelWidth() {
+      return toolPanelWidth;
+    },
+
+    setToolPanelWidth(width: number) {
+      toolPanelWidth = width;
     },
 
     // Button Panel Height
@@ -376,6 +395,19 @@ export function createPanelCoordinationState(): PanelCoordinationState {
     closeCreationMethodPanel() {
       getLogger().log("✖️ Closing Creation Method Panel");
       isCreationMethodPanelOpen = false;
+    },
+
+    // Derived: Check if any modal/slide panel is open
+    get isAnyPanelOpen() {
+      return (
+        isEditPanelOpen ||
+        isAnimationPanelOpen ||
+        isSharePanelOpen ||
+        isFilterPanelOpen ||
+        isSequenceActionsPanelOpen ||
+        isCAPPanelOpen ||
+        isCreationMethodPanelOpen
+      );
     },
   };
 }

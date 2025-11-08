@@ -52,39 +52,20 @@ canvas rendering. This ensures the entire glyph fades as a unified unit.
     const currentLetter = letter;
     const currentTurnsTuple = turnsTuple;
 
-    console.log("[GlyphRenderer] Effect triggered:", {
-      currentLetter,
-      currentTurnsTuple,
-      svgElement: !!svgElement,
-      isReady,
-    });
-
     if (currentLetter && svgElement && isReady) {
-      console.log("[GlyphRenderer] Scheduling serialization...");
       // Give the DOM a tick to fully render the TKAGlyph
       setTimeout(() => {
         serializeAndNotify();
       }, 50); // Increased timeout to ensure TKAGlyph is fully rendered
-    } else {
-      console.log("[GlyphRenderer] Skipping serialization:", {
-        hasLetter: !!currentLetter,
-        hasSvgElement: !!svgElement,
-        isReady,
-      });
     }
   });
 
   onMount(() => {
-    console.log("[GlyphRenderer] Component mounted!", { letter, beatData });
     isReady = true;
   });
 
   async function serializeAndNotify() {
     if (!svgElement || !onSvgReady) {
-      console.warn("[GlyphRenderer] Cannot serialize:", {
-        svgElement: !!svgElement,
-        onSvgReady: !!onSvgReady,
-      });
       return;
     }
 
@@ -92,7 +73,6 @@ canvas rendering. This ensures the entire glyph fades as a unified unit.
       // Get the bounding box of the glyph group
       const glyphGroup = svgElement.querySelector(".tka-glyph");
       if (!glyphGroup) {
-        console.warn("[GlyphRenderer] No glyph group found in SVG");
         return;
       }
 
@@ -110,13 +90,6 @@ canvas rendering. This ensures the entire glyph fades as a unified unit.
       const viewBoxWidth = bbox.width;
       const viewBoxHeight = bbox.height;
 
-      console.log("[GlyphRenderer] Serializing glyph:", {
-        letter,
-        turnsTuple,
-        bbox: { x: bbox.x, y: bbox.y, width: bbox.width, height: bbox.height },
-        actualPosition: { x: viewBoxX, y: viewBoxY },
-      });
-
       // Create a new SVG with proper viewBox for just the glyph
       const svgCopy = svgElement.cloneNode(true) as SVGSVGElement;
 
@@ -125,17 +98,11 @@ canvas rendering. This ensures the entire glyph fades as a unified unit.
       // (like <image href="...">) are blocked for security reasons.
       // We must fetch and inline the SVG content directly.
       const imageElements = svgCopy.querySelectorAll("image");
-      console.log(
-        "[GlyphRenderer] Found",
-        imageElements.length,
-        "image elements to inline"
-      );
 
       for (const img of imageElements) {
         const href = img.getAttribute("href");
         if (href && href.endsWith(".svg")) {
           try {
-            console.log("[GlyphRenderer] Fetching external SVG:", href);
             const response = await fetch(href);
             const svgText = await response.text();
 
@@ -168,8 +135,10 @@ canvas rendering. This ensures the entire glyph fades as a unified unit.
               const [, , vbWidth, vbHeight] = viewBox
                 .split(" ")
                 .map(parseFloat);
-              scaleX = width / vbWidth;
-              scaleY = height / vbHeight;
+              if (vbWidth && vbHeight) {
+                scaleX = width / vbWidth;
+                scaleY = height / vbHeight;
+              }
             }
 
             // Apply transform to position and scale the inlined content
@@ -185,7 +154,6 @@ canvas rendering. This ensures the entire glyph fades as a unified unit.
 
             // Replace the <image> with the <g>
             img.parentNode?.replaceChild(g, img);
-            console.log("[GlyphRenderer] Inlined SVG:", href);
           } catch (error) {
             console.error("[GlyphRenderer] Failed to inline SVG:", href, error);
           }
@@ -201,28 +169,6 @@ canvas rendering. This ensures the entire glyph fades as a unified unit.
 
       const serializer = new XMLSerializer();
       const svgString = serializer.serializeToString(svgCopy);
-
-      console.log("[GlyphRenderer] SVG serialized with inlined content:", {
-        svgLength: svgString.length,
-        svgPreview: svgString.substring(0, 200),
-        viewBox: "0 0 950 950",
-        glyphBbox: {
-          x: viewBoxX,
-          y: viewBoxY,
-          width: viewBoxWidth,
-          height: viewBoxHeight,
-        },
-      });
-
-      console.log(
-        "[GlyphRenderer] Calling onSvgReady with glyph bbox (viewBox is full 950x950):",
-        {
-          width: viewBoxWidth,
-          height: viewBoxHeight,
-          x: viewBoxX,
-          y: viewBoxY,
-        }
-      );
 
       if (onSvgReady) {
         // Pass the glyph bbox dimensions so AnimatorCanvas knows where to draw it

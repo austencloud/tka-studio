@@ -21,22 +21,18 @@
 
   // Derived display states
   let isProcessing = $derived(
-    status.status === "uploading" ||
-      status.status === "processing" ||
-      status.status === "publishing"
+    status.status === "uploading" || status.status === "processing"
   );
   let isComplete = $derived(status.status === "completed");
   let isFailed = $derived(status.status === "failed");
 
   // Status icon and color
-  let statusIcon = $derived(() => {
+  let statusIcon = $derived.by(() => {
     switch (status.status) {
       case "uploading":
         return "fa-cloud-upload-alt";
       case "processing":
         return "fa-cog fa-spin";
-      case "publishing":
-        return "fa-paper-plane";
       case "completed":
         return "fa-check-circle";
       case "failed":
@@ -46,7 +42,7 @@
     }
   });
 
-  let statusColor = $derived(() => {
+  let statusColor = $derived.by(() => {
     switch (status.status) {
       case "completed":
         return "#10b981";
@@ -64,11 +60,11 @@
   }
 </script>
 
-<div class="progress-container" style="--status-color: {statusColor()}">
+<div class="progress-container" style="--status-color: {statusColor}">
   <!-- Header -->
   <div class="progress-header">
     <div class="status-icon" class:spinning={isProcessing}>
-      <i class="fas {statusIcon()}"></i>
+      <i class="fas {statusIcon}"></i>
     </div>
     <h3 class="status-title">
       {#if isProcessing}
@@ -82,12 +78,9 @@
   </div>
 
   <!-- Progress Bar -->
-  {#if isProcessing}
+  {#if isProcessing && status.progress !== undefined}
     <div class="progress-bar-container">
-      <div
-        class="progress-bar-fill"
-        style="width: {status.progress}%"
-      ></div>
+      <div class="progress-bar-fill" style="width: {status.progress}%"></div>
     </div>
     <p class="progress-percentage">{Math.round(status.progress)}%</p>
   {/if}
@@ -102,8 +95,7 @@
         <i class="fas fa-bug"></i>
         <span>Error Details</span>
       </div>
-      <p class="error-code">{status.error.code}</p>
-      <p class="error-message">{status.error.message}</p>
+      <p class="error-message">{status.error}</p>
     </div>
   {/if}
 
@@ -178,7 +170,11 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: radial-gradient(circle, var(--status-color, #3b82f6) 0%, transparent 70%);
+    background: radial-gradient(
+      circle,
+      var(--status-color, #3b82f6) 0%,
+      transparent 70%
+    );
     border: 3px solid var(--status-color, #3b82f6);
   }
 
@@ -222,7 +218,11 @@
 
   .progress-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--status-color, #3b82f6), var(--status-color, #2563eb));
+    background: linear-gradient(
+      90deg,
+      var(--status-color, #3b82f6),
+      var(--status-color, #2563eb)
+    );
     border-radius: 4px;
     transition: width 0.3s ease;
   }

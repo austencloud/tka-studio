@@ -4,7 +4,7 @@ Now with click interaction and selection visual feedback
 -->
 <script lang="ts">
   import {
-  resolve,
+    resolve,
     TYPES,
     type IHapticFeedbackService,
     type MotionData,
@@ -127,7 +127,9 @@ Now with click interaction and selection visual feedback
     pointer-events: none;
     /* Smooth transition for position and rotation changes */
     /* IMPORTANT: transform must be a CSS property (not SVG attribute) for transitions to work */
-    transition: transform 0.2s ease, filter 0.2s ease;
+    transition:
+      transform 0.2s ease,
+      filter 0.2s ease;
   }
 
   .arrow-svg.clickable {

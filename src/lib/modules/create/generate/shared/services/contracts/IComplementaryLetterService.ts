@@ -1,6 +1,6 @@
 /**
  * Complementary Letter Service Interface
- * 
+ *
  * Provides complementary letter mappings for CAP (Circular Arrangement Pattern) generation.
  * Complementary letters are pairs that flip when applying complementary transformations.
  */
@@ -13,4 +13,3 @@ export interface IComplementaryLetterService {
    */
   getComplementaryLetter(letter: string): string;
 }
-

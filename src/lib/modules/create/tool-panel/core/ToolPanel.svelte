@@ -282,6 +282,10 @@
                 // Update the guided mode header text in CreateModuleState
                 createModuleState.setGuidedModeHeaderText(text);
               }}
+              onGridModeChange={(gridMode) => {
+                // Update grid mode in sequence state
+                createModuleState.sequenceState.setGridMode(gridMode);
+              }}
             />
           {:else if activeToolPanel === "construct"}
             {#if isPickerStateLoading}

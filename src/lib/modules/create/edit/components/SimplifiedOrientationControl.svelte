@@ -14,11 +14,7 @@ Research-backed design for 344px portrait (Z Fold):
   import { onMount } from "svelte";
 
   // Props
-  const {
-    color,
-    currentBeatData,
-    onOrientationChanged,
-  } = $props<{
+  const { color, currentBeatData, onOrientationChanged } = $props<{
     color: "blue" | "red";
     currentBeatData: BeatData | null;
     onOrientationChanged: (color: string, orientation: string) => void;
@@ -36,9 +32,10 @@ Research-backed design for 344px portrait (Z Fold):
   const currentOrientation = $derived.by(() => {
     if (!currentBeatData) return "in"; // Default to "in"
     // Fixed: access motions.blue.startOrientation instead of .blueOrientation
-    const motion = color === "blue"
-      ? currentBeatData.motions?.blue
-      : currentBeatData.motions?.red;
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
     return motion?.startOrientation ?? "in";
   });
 
@@ -52,9 +49,10 @@ Research-backed design for 344px portrait (Z Fold):
   const motionType = $derived.by(() => {
     if (!currentBeatData) return "";
 
-    const motion = color === "blue"
-      ? currentBeatData.motions?.blue
-      : currentBeatData.motions?.red;
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
 
     if (!motion || !motion.motionType) return "Static";
 
@@ -66,7 +64,8 @@ Research-backed design for 344px portrait (Z Fold):
   // Handlers - cycle through orientations
   function handlePrevious() {
     hapticService?.trigger("selection");
-    const prevIndex = currentIndex === 0 ? orientations.length - 1 : currentIndex - 1;
+    const prevIndex =
+      currentIndex === 0 ? orientations.length - 1 : currentIndex - 1;
     const newOrientation = orientations[prevIndex];
     onOrientationChanged(color, newOrientation);
   }
@@ -79,7 +78,9 @@ Research-backed design for 344px portrait (Z Fold):
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
@@ -153,7 +154,11 @@ Research-backed design for 344px portrait (Z Fold):
   /* Color theming */
   .simplified-orientation-control.blue {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      white 100%
+    );
   }
 
   .simplified-orientation-control.red {
@@ -236,7 +241,11 @@ Research-backed design for 344px portrait (Z Fold):
     font-size: 14px; /* Reduced from 16px to fit better */
     font-weight: 700;
     color: #1a1a2e;
-    --orientation-slot-width: clamp(72px, 11ch, 96px); /* Future-proof spacing (covers COUNTER + localization) */
+    --orientation-slot-width: clamp(
+      72px,
+      11ch,
+      96px
+    ); /* Future-proof spacing (covers COUNTER + localization) */
     width: var(--orientation-slot-width);
     min-width: var(--orientation-slot-width);
     text-align: center;
@@ -276,7 +285,11 @@ Research-backed design for 344px portrait (Z Fold):
 
     .orientation-display {
       font-size: 16px;
-      --orientation-slot-width: clamp(60px, 10ch, 84px); /* Tighten slot for ultra narrow containers without crushing text */
+      --orientation-slot-width: clamp(
+        60px,
+        10ch,
+        84px
+      ); /* Tighten slot for ultra narrow containers without crushing text */
     }
 
     .motion-badge {

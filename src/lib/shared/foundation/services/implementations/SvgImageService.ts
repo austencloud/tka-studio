@@ -37,13 +37,15 @@ export class SvgImageService implements ISvgImageService {
 
       // Set up success handler
       img.onload = () => {
-        console.log('[SvgImageService] Image loaded:', {
-          naturalWidth: img.naturalWidth,
-          naturalHeight: img.naturalHeight,
-          width: img.width,
-          height: img.height,
-          complete: img.complete
-        });
+        // Image loaded successfully - silently resolve
+        // Debug logging (disabled):
+        // console.log('[SvgImageService] Image loaded:', {
+        //   naturalWidth: img.naturalWidth,
+        //   naturalHeight: img.naturalHeight,
+        //   width: img.width,
+        //   height: img.height,
+        //   complete: img.complete
+        // });
         this.cleanupBlobUrl(blobUrl);
         resolve(img);
       };
@@ -54,10 +56,10 @@ export class SvgImageService implements ISvgImageService {
         let modifiedSvg = svgString;
 
         // Add or update width/height attributes on the <svg> element
-        if (modifiedSvg.includes('<svg')) {
+        if (modifiedSvg.includes("<svg")) {
           // Remove existing width/height if present
-          modifiedSvg = modifiedSvg.replace(/\s+width="[^"]*"/g, '');
-          modifiedSvg = modifiedSvg.replace(/\s+height="[^"]*"/g, '');
+          modifiedSvg = modifiedSvg.replace(/\s+width="[^"]*"/g, "");
+          modifiedSvg = modifiedSvg.replace(/\s+height="[^"]*"/g, "");
 
           // Add new width/height right after <svg
           modifiedSvg = modifiedSvg.replace(

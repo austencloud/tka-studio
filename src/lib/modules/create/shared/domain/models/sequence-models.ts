@@ -9,8 +9,6 @@ import type { SequenceData } from "$shared";
 
 export type WorkbenchMode = "view" | "edit" | "construct";
 
-
-
 // Additional domain models that were in the main workbench/domain
 export interface SequenceCreateRequest {
   name: string;

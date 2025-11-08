@@ -196,7 +196,7 @@ Progressive loading Explore with:
 
   // Keyboard navigation for grid
   function handleGridKeydown(event: KeyboardEvent) {
-    const sequences = ExploreState.displayedSequences();
+    const sequences = ExploreState.displayedSequences;
     if (sequences.length === 0) return;
 
     // Determine grid columns (matches CSS grid)
@@ -272,12 +272,12 @@ Progressive loading Explore with:
 </div>
 
 <!-- Loading Progress -->
-{#if ExploreState.isLoading() && ExploreState.loadingProgress() > 0}
+{#if ExploreState.isLoading && ExploreState.loadingProgress > 0}
   <div class="loading-progress">
     <div class="progress-bar">
       <div
         class="progress-fill"
-        style="width: {ExploreState.loadingProgress()}%"
+        style="width: {ExploreState.loadingProgress}%"
       ></div>
     </div>
     <div class="progress-text">
@@ -299,9 +299,9 @@ Progressive loading Explore with:
   onkeydown={handleGridKeydown}
 >
   <!-- Actual Sequences -->
-  {#if ExploreState.displayedSequences().length > 0}
+  {#if ExploreState.displayedSequences.length > 0}
     <div class="sequences-grid" bind:this={gridElement}>
-      {#each ExploreState.displayedSequences() as sequence, index (sequence.id)}
+      {#each ExploreState.displayedSequences as sequence, index (sequence.id)}
         <ExploreThumbnail
           sequence={convertToSequenceData(sequence)}
           {thumbnailService}
@@ -324,13 +324,13 @@ Progressive loading Explore with:
   {/if}
 
   <!-- Infinite Scroll Trigger -->
-  {#if ExploreState.canLoadMore()}
+  {#if ExploreState.canLoadMore}
     <div bind:this={loadMoreTrigger} class="load-more-trigger">
       <!-- Fallback Load More Button -->
       <button
         class="load-more-btn"
         onclick={handleLoadMore}
-        disabled={ExploreState.isLoading()}
+        disabled={ExploreState.isLoading}
       >
         {ExploreState.loadingState.isLoadingMore ? "Loading..." : "Load More"}
       </button>
@@ -354,7 +354,7 @@ Progressive loading Explore with:
   {/if}
 
   <!-- Empty State -->
-  {#if !ExploreState.isLoading() && ExploreState.displayedSequences().length === 0}
+  {#if !ExploreState.isLoading && ExploreState.displayedSequences.length === 0}
     <div class="empty-state">
       {#if ExploreState.searchQuery}
         <p>No sequences found for "{ExploreState.searchQuery}"</p>

@@ -9,11 +9,7 @@
  * RESPONSIBILITY: Persistence coordination, observes state changes
  */
 
-import type {
-    ActiveCreateModule,
-    PictographData,
-    SequenceData,
-} from "$shared";
+import type { ActiveCreateModule, PictographData, SequenceData } from "$shared";
 import type { ISequencePersistenceService } from "../../services/contracts";
 
 export interface PersistenceState {
@@ -57,8 +53,14 @@ export function createSequencePersistenceCoordinator(
         await persistenceService.initialize();
         const savedState = await persistenceService.loadCurrentState();
 
-        if (savedState && savedState.currentSequence && applyReversalDetection) {
-          savedState.currentSequence = applyReversalDetection(savedState.currentSequence);
+        if (
+          savedState &&
+          savedState.currentSequence &&
+          applyReversalDetection
+        ) {
+          savedState.currentSequence = applyReversalDetection(
+            savedState.currentSequence
+          );
         }
 
         // Cache the active tab for future saves
@@ -69,7 +71,10 @@ export function createSequencePersistenceCoordinator(
         state.isInitialized = true;
         return savedState;
       } catch (error) {
-        console.error("❌ PersistenceCoordinator: Failed to initialize:", error);
+        console.error(
+          "❌ PersistenceCoordinator: Failed to initialize:",
+          error
+        );
         state.isInitialized = true; // Continue without persistence
         return null;
       }
@@ -83,7 +88,10 @@ export function createSequencePersistenceCoordinator(
         cachedActiveTab = persistenceState.activeBuildSection;
         await persistenceService.saveCurrentState(persistenceState);
       } catch (error) {
-        console.error("❌ PersistenceCoordinator: Failed to save state:", error);
+        console.error(
+          "❌ PersistenceCoordinator: Failed to save state:",
+          error
+        );
       }
     },
 
@@ -104,7 +112,10 @@ export function createSequencePersistenceCoordinator(
           activeBuildSection: cachedActiveTab,
         });
       } catch (error) {
-        console.error("❌ PersistenceCoordinator: Failed to save sequence:", error);
+        console.error(
+          "❌ PersistenceCoordinator: Failed to save sequence:",
+          error
+        );
       }
     },
 
@@ -114,7 +125,10 @@ export function createSequencePersistenceCoordinator(
       try {
         await persistenceService.clearCurrentState();
       } catch (error) {
-        console.error("❌ PersistenceCoordinator: Failed to clear state:", error);
+        console.error(
+          "❌ PersistenceCoordinator: Failed to clear state:",
+          error
+        );
       }
     },
 

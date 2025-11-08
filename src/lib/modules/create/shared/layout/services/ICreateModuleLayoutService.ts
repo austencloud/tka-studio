@@ -18,7 +18,9 @@ export interface ICreateModuleLayoutService {
    * @param callback Function to call when layout changes
    * @returns Unsubscribe function
    */
-  subscribeToLayoutChanges(callback: (config: LayoutConfiguration) => void): () => void;
+  subscribeToLayoutChanges(
+    callback: (config: LayoutConfiguration) => void
+  ): () => void;
 
   /**
    * Get current viewport dimensions

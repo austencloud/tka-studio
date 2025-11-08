@@ -15,7 +15,10 @@ export interface IRotatedEndPositionSelector {
    * @param startPosition - The starting position of the sequence
    * @returns The required end position to complete the rotation
    */
-  determineRotatedEndPosition(sliceSize: SliceSize, startPosition: GridPosition): GridPosition;
+  determineRotatedEndPosition(
+    sliceSize: SliceSize,
+    startPosition: GridPosition
+  ): GridPosition;
 
   /**
    * Check if a given (start, end) position pair is valid for the slice size
@@ -31,4 +34,3 @@ export interface IRotatedEndPositionSelector {
     endPosition: GridPosition
   ): boolean;
 }
-

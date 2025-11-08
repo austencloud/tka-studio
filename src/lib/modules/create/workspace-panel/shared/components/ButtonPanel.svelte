@@ -14,6 +14,7 @@
 <script lang="ts">
   import { fade } from "svelte/transition";
   import { PresenceAnimation } from "$shared/animation";
+  import { shouldHideUIForPanels } from "$shared";
   import { getCreateModuleContext } from "$create/shared/context";
   import {
     ClearSequencePanelButton,
@@ -51,10 +52,8 @@
   const isAnimating = $derived(panelState.isAnimationPanelOpen);
   const isShareOpen = $derived(panelState.isSharePanelOpen);
 
-  // Determine if button panel should be hidden (animation panel open in side-by-side layout)
-  const shouldHidePanel = $derived(
-    isAnimating && layout.shouldUseSideBySideLayout
-  );
+  // Determine if button panel should be hidden (any modal panel open in side-by-side layout)
+  const shouldHidePanel = $derived(shouldHideUIForPanels());
 
   // Count center-zone buttons to key the container (for smooth cross-fade on layout changes)
   const centerZoneButtonCount = $derived(() => {

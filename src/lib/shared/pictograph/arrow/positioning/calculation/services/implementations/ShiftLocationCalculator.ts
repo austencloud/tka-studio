@@ -58,16 +58,11 @@ export class ShiftLocationCalculator implements IShiftLocationCalculator {
    * Create a stable key for unordered GridLocation pairs.
    * Ensures (a,b) and (b,a) resolve to the same lookup string.
    */
-  private createPairKey(
-    first: GridLocation,
-    second: GridLocation
-  ): string {
+  private createPairKey(first: GridLocation, second: GridLocation): string {
     if (first === second) {
       return `${first}|${second}`;
     }
 
-    return first < second
-      ? `${first}|${second}`
-      : `${second}|${first}`;
+    return first < second ? `${first}|${second}` : `${second}|${first}`;
   }
 }

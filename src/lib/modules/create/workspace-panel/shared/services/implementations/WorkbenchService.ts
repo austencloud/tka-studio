@@ -11,14 +11,18 @@ import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import { createBeatData } from "../../../../shared/domain/factories/createBeatData";
 import type { BeatData } from "../../../../shared/domain/models/BeatData";
-import type { IPersistenceService, ISequenceService } from "../../../../shared/services/contracts";
+import type {
+  IPersistenceService,
+  ISequenceService,
+} from "../../../../shared/services/contracts";
 import type { IWorkbenchService } from "../contracts";
 
 @injectable()
 export class WorkbenchService implements IWorkbenchService {
   constructor(
     @inject(TYPES.ISequenceService) private sequenceService: ISequenceService,
-    @inject(TYPES.IPersistenceService) private persistenceService: IPersistenceService
+    @inject(TYPES.IPersistenceService)
+    private persistenceService: IPersistenceService
   ) {}
 
   // ============================================================================
@@ -78,7 +82,10 @@ export class WorkbenchService implements IWorkbenchService {
   /**
    * Add a beat to a sequence
    */
-  async addBeat(sequenceId: string, beatData?: Partial<BeatData>): Promise<SequenceData> {
+  async addBeat(
+    sequenceId: string,
+    beatData?: Partial<BeatData>
+  ): Promise<SequenceData> {
     try {
       const sequence = await this.sequenceService.getSequence(sequenceId);
       if (!sequence) {
@@ -107,7 +114,10 @@ export class WorkbenchService implements IWorkbenchService {
   /**
    * Set construction start position
    */
-  async setConstructionStartPosition(sequenceId: string, startPosition: BeatData): Promise<SequenceData> {
+  async setConstructionStartPosition(
+    sequenceId: string,
+    startPosition: BeatData
+  ): Promise<SequenceData> {
     try {
       const sequence = await this.sequenceService.getSequence(sequenceId);
       if (!sequence) {

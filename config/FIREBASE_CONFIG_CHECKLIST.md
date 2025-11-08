@@ -3,6 +3,7 @@
 ## ✅ Current Status
 
 Your app is configured for:
+
 - **Project ID**: `the-kinetic-alphabet`
 - **Auth Domain**: `the-kinetic-alphabet.firebaseapp.com`
 
@@ -92,16 +93,19 @@ service cloud.firestore {
 ### What to Check
 
 **🚨 RED FLAGS:**
+
 - Any database named `the-kinetic-constructor` (OLD PROJECT)
 - Any localStorage keys referencing `the-kinetic-constructor`
 
 **✅ GOOD:**
+
 - Only `the-kinetic-alphabet` databases
 - Clean localStorage/sessionStorage
 
 ### If You See Old Data
 
 Click **💣 Nuclear Cache Clear** button - this will:
+
 - Delete ALL IndexedDB databases
 - Clear ALL localStorage
 - Clear ALL sessionStorage
@@ -150,23 +154,25 @@ Look for these key messages after clicking "Sign in with Google":
 ## 🆘 Still Not Working?
 
 If you still have issues after:
+
 1. ✅ Verifying all Firebase/Google Cloud configs
 2. ✅ Running Nuclear Cache Clear
 3. ✅ Confirming NO `the-kinetic-constructor` references
 
 Then copy the full diagnostics output and send it to me with:
+
 - Browser console logs (from the moment you click Sign in to when it fails)
 - Screenshot of the Developer tab diagnostics
 - What browser/device you're using
 
 ## 📝 Quick Reference
 
-| Config File | Purpose |
-|-------------|---------|
-| `firebase.ts` | App Firebase config (hardcoded) |
-| `authStore.svelte.ts` | Auth state management + diagnostics |
-| `nuclearCacheClear.ts` | Cache clearing utilities |
-| `DeveloperTab.svelte` | UI for diagnostics |
+| Config File            | Purpose                             |
+| ---------------------- | ----------------------------------- |
+| `firebase.ts`          | App Firebase config (hardcoded)     |
+| `authStore.svelte.ts`  | Auth state management + diagnostics |
+| `nuclearCacheClear.ts` | Cache clearing utilities            |
+| `DeveloperTab.svelte`  | UI for diagnostics                  |
 
 **Current Project**: `the-kinetic-alphabet`
 **Old Project** (should be gone): `the-kinetic-constructor`

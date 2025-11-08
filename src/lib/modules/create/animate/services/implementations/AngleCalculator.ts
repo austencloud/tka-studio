@@ -7,7 +7,12 @@
 
 import { GridLocation, Orientation, RotationDirection } from "$shared";
 import { injectable } from "inversify";
-import { HALF_PI, LOCATION_ANGLES, PI, TWO_PI } from "../../domain/math-constants.js";
+import {
+  HALF_PI,
+  LOCATION_ANGLES,
+  PI,
+  TWO_PI,
+} from "../../domain/math-constants.js";
 import type { IAngleCalculator } from "../contracts/IAngleCalculator";
 
 // ============================================================================
@@ -28,7 +33,10 @@ export function mapPositionToAngle(loc: GridLocation): number {
   return LOCATION_ANGLES[loc] ?? 0;
 }
 
-export function mapOrientationToAngle(ori: Orientation, centerPathAngle: number): number {
+export function mapOrientationToAngle(
+  ori: Orientation,
+  centerPathAngle: number
+): number {
   if (!ori) return centerPathAngle + PI;
 
   if (ori === Orientation.IN) {

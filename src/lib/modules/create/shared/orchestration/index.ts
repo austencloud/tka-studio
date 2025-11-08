@@ -5,6 +5,9 @@
  */
 
 export type {
-    CreateModuleServices,
-    CreateModuleStates, InitializationResult, InitializationStatus, LayoutConfiguration
+  CreateModuleServices,
+  CreateModuleStates,
+  InitializationResult,
+  InitializationStatus,
+  LayoutConfiguration,
 } from "./types";

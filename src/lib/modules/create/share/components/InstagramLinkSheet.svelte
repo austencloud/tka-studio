@@ -25,12 +25,16 @@
   } = $props();
 
   // Services
-  let instagramService: IInstagramLinkService;
-  let hapticService: IHapticFeedbackService;
+  let instagramService = $state<IInstagramLinkService>();
+  let hapticService = $state<IHapticFeedbackService>();
 
   onMount(() => {
-    instagramService = resolve(TYPES.IInstagramLinkService) as IInstagramLinkService;
-    hapticService = resolve(TYPES.IHapticFeedbackService) as IHapticFeedbackService;
+    instagramService = resolve(
+      TYPES.IInstagramLinkService
+    ) as IInstagramLinkService;
+    hapticService = resolve(
+      TYPES.IHapticFeedbackService
+    ) as IHapticFeedbackService;
   });
 
   // Form state
@@ -76,12 +80,20 @@
       return;
     }
 
-    const link = instagramService.createLink(url, {
-      caption: caption.trim() || undefined,
-    });
+    const trimmedCaption = caption.trim();
+    const link = instagramService.createLink(
+      url,
+      trimmedCaption
+        ? {
+            caption: trimmedCaption,
+          }
+        : undefined
+    );
 
-    onSave?.(link);
-    handleClose();
+    if (link) {
+      onSave?.(link);
+      handleClose();
+    }
   }
 
   function handleRemove() {
@@ -249,7 +261,14 @@
 
   .instagram-icon {
     font-size: 1.5rem;
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    background: linear-gradient(
+      45deg,
+      #f09433 0%,
+      #e6683c 25%,
+      #dc2743 50%,
+      #cc2366 75%,
+      #bc1888 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -473,4 +492,3 @@
     }
   }
 </style>
-

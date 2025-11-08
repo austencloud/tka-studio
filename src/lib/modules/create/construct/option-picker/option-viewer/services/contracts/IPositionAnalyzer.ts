@@ -12,7 +12,9 @@ export interface IPositionAnalyzer {
   /**
    * Get the position group (Alpha, Beta, Gamma) from a GridPosition
    */
-  getEndPositionGroup(endPosition: GridPosition | null | undefined): GridPositionGroup | null;
+  getEndPositionGroup(
+    endPosition: GridPosition | null | undefined
+  ): GridPositionGroup | null;
 
   /**
    * Calculate end position from motion data

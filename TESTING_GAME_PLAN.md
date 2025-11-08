@@ -21,15 +21,15 @@
 
 ### Primary KPIs
 
-| Metric | Current | Target | Priority |
-|--------|---------|--------|----------|
-| **Unit Test Count** | 21 | 150+ | 🔴 Critical |
-| **Component Test Count** | 0 | 50+ | 🔴 Critical |
-| **E2E Test Count** | ~80 | 12-15 | 🟡 Medium |
-| **Code Coverage** | Unknown | 80% | 🔴 Critical |
-| **Test Execution Time** | ~5-10 min | <2 min | 🟢 Nice-to-have |
-| **Flaky Test Rate** | Unknown | <1% | 🔴 Critical |
-| **CI Feedback Time** | Sequential | <5 min | 🟡 Medium |
+| Metric                   | Current    | Target | Priority        |
+| ------------------------ | ---------- | ------ | --------------- |
+| **Unit Test Count**      | 21         | 150+   | 🔴 Critical     |
+| **Component Test Count** | 0          | 50+    | 🔴 Critical     |
+| **E2E Test Count**       | ~80        | 12-15  | 🟡 Medium       |
+| **Code Coverage**        | Unknown    | 80%    | 🔴 Critical     |
+| **Test Execution Time**  | ~5-10 min  | <2 min | 🟢 Nice-to-have |
+| **Flaky Test Rate**      | Unknown    | <1%    | 🔴 Critical     |
+| **CI Feedback Time**     | Sequential | <5 min | 🟡 Medium       |
 
 ### Quality Gates
 
@@ -55,46 +55,46 @@
 
 #### Pure Utility Functions (~15-20 tests)
 
-| File | Test Complexity | Priority | Est. Tests |
-|------|----------------|----------|------------|
-| `StorageService.ts` | ⭐ Easy | 🔴 High | 10 |
-| `transitions.ts` | ⭐ Easy | 🟡 Medium | 8 |
-| `scroll-lock.svelte.ts` | ⭐⭐ Medium | 🟡 Medium | 6 |
-| `focus-trap.svelte.ts` | ⭐⭐ Medium | 🟢 Low | 6 |
-| `device-utils.ts` | ⭐ Easy | 🔴 High | 12 |
-| `grid-calculations.ts` | ⭐⭐ Medium | 🔴 High | 10 |
-| `CsvLoader.ts` | ⭐⭐ Medium | 🟡 Medium | 4 |
-| `CsvParser.ts` | ⭐⭐ Medium | 🟡 Medium | 8 |
-| `EnumMapper.ts` | ⭐ Easy | 🟡 Medium | 4 |
+| File                    | Test Complexity | Priority  | Est. Tests |
+| ----------------------- | --------------- | --------- | ---------- |
+| `StorageService.ts`     | ⭐ Easy         | 🔴 High   | 10         |
+| `transitions.ts`        | ⭐ Easy         | 🟡 Medium | 8          |
+| `scroll-lock.svelte.ts` | ⭐⭐ Medium     | 🟡 Medium | 6          |
+| `focus-trap.svelte.ts`  | ⭐⭐ Medium     | 🟢 Low    | 6          |
+| `device-utils.ts`       | ⭐ Easy         | 🔴 High   | 12         |
+| `grid-calculations.ts`  | ⭐⭐ Medium     | 🔴 High   | 10         |
+| `CsvLoader.ts`          | ⭐⭐ Medium     | 🟡 Medium | 4          |
+| `CsvParser.ts`          | ⭐⭐ Medium     | 🟡 Medium | 8          |
+| `EnumMapper.ts`         | ⭐ Easy         | 🟡 Medium | 4          |
 
 **Total:** ~68 tests
 
 #### UI Components (~50-100 tests)
 
-| Component | Test Complexity | Priority | Est. Tests |
-|-----------|----------------|----------|------------|
-| `ConfirmDialog.svelte` | ⭐ Easy | 🔴 High | 8 |
-| `Drawer.svelte` | ⭐⭐ Medium | 🔴 High | 10 |
-| `ErrorScreen.svelte` | ⭐ Easy | 🟡 Medium | 4 |
-| `FontAwesomeIcon.svelte` | ⭐ Easy | 🟢 Low | 3 |
-| `HorizontalSwipeContainer.svelte` | ⭐⭐⭐ Hard | 🟡 Medium | 12 |
-| `SheetDragHandle.svelte` | ⭐⭐ Medium | 🟡 Medium | 6 |
-| `SimpleGlassScroll.svelte` | ⭐ Easy | 🟢 Low | 4 |
-| `SkeletonLoader.svelte` | ⭐ Easy | 🟢 Low | 3 |
-| `SettingsSheet.svelte` | ⭐⭐⭐ Hard | 🔴 High | 15 |
-| `ButtonPanel.svelte` | ⭐⭐ Medium | 🔴 High | 10 |
+| Component                         | Test Complexity | Priority  | Est. Tests |
+| --------------------------------- | --------------- | --------- | ---------- |
+| `ConfirmDialog.svelte`            | ⭐ Easy         | 🔴 High   | 8          |
+| `Drawer.svelte`                   | ⭐⭐ Medium     | 🔴 High   | 10         |
+| `ErrorScreen.svelte`              | ⭐ Easy         | 🟡 Medium | 4          |
+| `FontAwesomeIcon.svelte`          | ⭐ Easy         | 🟢 Low    | 3          |
+| `HorizontalSwipeContainer.svelte` | ⭐⭐⭐ Hard     | 🟡 Medium | 12         |
+| `SheetDragHandle.svelte`          | ⭐⭐ Medium     | 🟡 Medium | 6          |
+| `SimpleGlassScroll.svelte`        | ⭐ Easy         | 🟢 Low    | 4          |
+| `SkeletonLoader.svelte`           | ⭐ Easy         | 🟢 Low    | 3          |
+| `SettingsSheet.svelte`            | ⭐⭐⭐ Hard     | 🔴 High   | 15         |
+| `ButtonPanel.svelte`              | ⭐⭐ Medium     | 🔴 High   | 10         |
 
 **Total:** ~75 tests (focusing on high-priority components first)
 
 #### E2E Infrastructure Tests (~5 tests)
 
-| Test | Purpose | Priority |
-|------|---------|----------|
-| Homepage loads | Smoke test | 🔴 Critical |
-| Navigation works | Tab switching | 🔴 Critical |
-| Settings panel opens | UI interaction | 🔴 Critical |
-| Theme toggle works | State persistence | 🟡 Medium |
-| Mobile responsive | Layout adapts | 🟡 Medium |
+| Test                 | Purpose           | Priority    |
+| -------------------- | ----------------- | ----------- |
+| Homepage loads       | Smoke test        | 🔴 Critical |
+| Navigation works     | Tab switching     | 🔴 Critical |
+| Settings panel opens | UI interaction    | 🔴 Critical |
+| Theme toggle works   | State persistence | 🟡 Medium   |
+| Mobile responsive    | Layout adapts     | 🟡 Medium   |
 
 **Total AI-Can-Write Tests: ~150 tests**
 
@@ -108,15 +108,16 @@ These tests require understanding of expected behavior but not deep domain knowl
 
 #### Component Integration Tests (~20-30 tests)
 
-| Component | What AI Needs From You | Priority |
-|-----------|------------------------|----------|
-| `BeatCell.svelte` | What should happen on click? What states exist? | 🔴 High |
-| `ToolPanel.svelte` | What tools are available? Expected behavior? | 🔴 High |
-| `ExploreThumbnail.svelte` | What data structure? Click behavior? | 🟡 Medium |
-| `SearchExplorePanel.svelte` | What search behavior? Filter logic? | 🟡 Medium |
-| `CollectionsExplorePanel.svelte` | How do collections work? | 🟡 Medium |
+| Component                        | What AI Needs From You                          | Priority  |
+| -------------------------------- | ----------------------------------------------- | --------- |
+| `BeatCell.svelte`                | What should happen on click? What states exist? | 🔴 High   |
+| `ToolPanel.svelte`               | What tools are available? Expected behavior?    | 🔴 High   |
+| `ExploreThumbnail.svelte`        | What data structure? Click behavior?            | 🟡 Medium |
+| `SearchExplorePanel.svelte`      | What search behavior? Filter logic?             | 🟡 Medium |
+| `CollectionsExplorePanel.svelte` | How do collections work?                        | 🟡 Medium |
 
 **Process:**
+
 1. Claude writes component test skeleton
 2. You provide: "When user clicks X, Y should happen"
 3. Claude implements the specific assertions
@@ -131,24 +132,26 @@ These tests require understanding of expected behavior but not deep domain knowl
 
 #### Business Logic Tests (~50-80 tests)
 
-| Service | Domain Complexity | Why Human-Required |
-|---------|------------------|-------------------|
-| `GridPositionDeriver.ts` | ⭐⭐⭐⭐⭐ | Requires understanding of alpha/beta/gamma position system |
-| `ArrowQuadrantCalculator.ts` | ⭐⭐⭐⭐⭐ | Diamond vs Box grid quadrant logic |
-| `OrientationCalculator.ts` | ⭐⭐⭐⭐⭐ | 449 lines of prop orientation rules |
-| `BetaDetectionService.ts` | ⭐⭐⭐⭐ | Beta position rules |
-| `ReversalChecker.ts` | ⭐⭐⭐⭐ | Motion reversal logic |
-| `PositionAnalyzer.ts` | ⭐⭐⭐⭐ | Position relationship rules |
-| All CAP Executors | ⭐⭐⭐⭐⭐ | Circular pattern generation algorithms |
-| `RotationDirectionService.ts` | ⭐⭐⭐⭐ | Rotation rules |
-| `motion-utils.ts` | ⭐⭐⭐⭐ | Handpath determination logic |
+| Service                       | Domain Complexity | Why Human-Required                                         |
+| ----------------------------- | ----------------- | ---------------------------------------------------------- |
+| `GridPositionDeriver.ts`      | ⭐⭐⭐⭐⭐        | Requires understanding of alpha/beta/gamma position system |
+| `ArrowQuadrantCalculator.ts`  | ⭐⭐⭐⭐⭐        | Diamond vs Box grid quadrant logic                         |
+| `OrientationCalculator.ts`    | ⭐⭐⭐⭐⭐        | 449 lines of prop orientation rules                        |
+| `BetaDetectionService.ts`     | ⭐⭐⭐⭐          | Beta position rules                                        |
+| `ReversalChecker.ts`          | ⭐⭐⭐⭐          | Motion reversal logic                                      |
+| `PositionAnalyzer.ts`         | ⭐⭐⭐⭐          | Position relationship rules                                |
+| All CAP Executors             | ⭐⭐⭐⭐⭐        | Circular pattern generation algorithms                     |
+| `RotationDirectionService.ts` | ⭐⭐⭐⭐          | Rotation rules                                             |
+| `motion-utils.ts`             | ⭐⭐⭐⭐          | Handpath determination logic                               |
 
 **These require:**
+
 - Test cases: "Given [start position] and [end position], expect [result]"
 - Edge cases: "When two props are at same location, expect..."
 - Business rules: "Static motion only when start === end"
 
 **Recommendation:**
+
 - Start with existing unit tests as examples
 - You write 1-2 test cases per service
 - Claude can then expand test coverage based on your patterns
@@ -161,15 +164,16 @@ These tests require understanding of expected behavior but not deep domain knowl
 
 **Confidence Level:** 🟡 30% - Claude can automate, you define the user journey
 
-| Flow | Description | Who Does What |
-|------|-------------|---------------|
-| Construct Flow | Select start → add beats → animate | **You:** Define expected beats/positions<br>**Claude:** Automate the interactions |
-| Generate Flow | Circular pattern generation | **You:** Specify CAP type & expected result<br>**Claude:** Automate UI interactions |
-| Share/Export | Create sequence → export GIF | **You:** Verify export format<br>**Claude:** Automate flow |
-| Library Save/Load | Save → reload → verify | **You:** Define what should persist<br>**Claude:** Automate persistence check |
-| Handpath Builder | Draw path → verify motion | **You:** Define valid paths<br>**Claude:** Automate drawing |
+| Flow              | Description                        | Who Does What                                                                       |
+| ----------------- | ---------------------------------- | ----------------------------------------------------------------------------------- |
+| Construct Flow    | Select start → add beats → animate | **You:** Define expected beats/positions<br>**Claude:** Automate the interactions   |
+| Generate Flow     | Circular pattern generation        | **You:** Specify CAP type & expected result<br>**Claude:** Automate UI interactions |
+| Share/Export      | Create sequence → export GIF       | **You:** Verify export format<br>**Claude:** Automate flow                          |
+| Library Save/Load | Save → reload → verify             | **You:** Define what should persist<br>**Claude:** Automate persistence check       |
+| Handpath Builder  | Draw path → verify motion          | **You:** Define valid paths<br>**Claude:** Automate drawing                         |
 
 **Process:**
+
 1. You provide: "User should be able to..."
 2. Claude implements: Page Object Model + automation
 3. You review: Does it match actual behavior?
@@ -210,10 +214,12 @@ These tests require understanding of expected behavior but not deep domain knowl
    - **Success:** 20/20 passing, >80% coverage on these files
 
 **Human Tasks (Your Input):**
+
 - Review test config: Does it match your preferences?
 - Verify factory data: Does generated data look realistic?
 
 **Deliverables:**
+
 - ✅ Test infrastructure configured
 - ✅ 20 pure utility tests passing
 - ✅ Test factories available
@@ -242,10 +248,12 @@ These tests require understanding of expected behavior but not deep domain knowl
    - `PropTypeTab.component.test.ts` (5 tests)
 
 **Human Tasks (Your Input):**
+
 - Review component behavior: Do tests match actual usage?
 - Provide missing info: "When X happens, Y should..."
 
 **Deliverables:**
+
 - ✅ 50 component tests passing
 - ✅ >80% coverage on tested components
 - ✅ Visual regression baselines captured
@@ -274,11 +282,13 @@ These tests require understanding of expected behavior but not deep domain knowl
    - Enable trace capture on failure
 
 **Human Tasks (Your Input - 20%):**
+
 - Identify: Which 12 E2E tests are most critical?
 - Verify: Do refactored tests cover the right flows?
 - Test: Run E2E suite and report any failures
 
 **Deliverables:**
+
 - ✅ 12 E2E tests refactored
 - ✅ Page Object Models created
 - ✅ Flaky test rate <1%
@@ -297,6 +307,7 @@ These tests require understanding of expected behavior but not deep domain knowl
 **Step 1: You Provide Test Cases (1-2 hours)**
 
 Example format:
+
 ```typescript
 // GridPositionDeriver - Expected Behavior
 // Test: "should derive alpha1 position"
@@ -316,45 +327,47 @@ Example format:
 
 ```typescript
 // tests/unit/pictograph/GridPositionDeriver.test.ts
-import { GridPositionDeriver } from '@/services/GridPositionDeriver'
+import { GridPositionDeriver } from "@/services/GridPositionDeriver";
 
-describe('GridPositionDeriver', () => {
-  let deriver: GridPositionDeriver
+describe("GridPositionDeriver", () => {
+  let deriver: GridPositionDeriver;
 
   beforeEach(() => {
-    deriver = new GridPositionDeriver()
-  })
+    deriver = new GridPositionDeriver();
+  });
 
-  test('should derive alpha1 position from n to e', () => {
-    const result = deriver.derivePosition('n', 'e')
-    expect(result).toBe('alpha1')
-  })
+  test("should derive alpha1 position from n to e", () => {
+    const result = deriver.derivePosition("n", "e");
+    expect(result).toBe("alpha1");
+  });
 
   // Claude expands with more test cases based on your pattern
-  test('should derive alpha2 position from ne to e', () => {
-    const result = deriver.derivePosition('ne', 'e')
-    expect(result).toBe('alpha2')
-  })
+  test("should derive alpha2 position from ne to e", () => {
+    const result = deriver.derivePosition("ne", "e");
+    expect(result).toBe("alpha2");
+  });
 
   // ... more tests following your pattern
-})
+});
 ```
 
 **Step 3: You Review & Refine (30 min)**
+
 - Do assertions match expected behavior?
 - Any missing edge cases?
 - Any incorrect assumptions?
 
 **Target Services for Phase 4:**
 
-| Service | Your Input Needed | Est. Tests |
-|---------|------------------|------------|
-| `GridPositionDeriver` | 5 example test cases | 20 tests |
-| `motion-utils` | 3 example test cases | 10 tests |
-| `BetaDetectionService` | 3 example test cases | 8 tests |
-| `ReversalChecker` | 2 example test cases | 6 tests |
+| Service                | Your Input Needed    | Est. Tests |
+| ---------------------- | -------------------- | ---------- |
+| `GridPositionDeriver`  | 5 example test cases | 20 tests   |
+| `motion-utils`         | 3 example test cases | 10 tests   |
+| `BetaDetectionService` | 3 example test cases | 8 tests    |
+| `ReversalChecker`      | 2 example test cases | 6 tests    |
 
 **Deliverables:**
+
 - ✅ 44 domain logic tests passing
 - ✅ Coverage on 4 critical services
 - ✅ Test patterns established for future tests
@@ -383,6 +396,7 @@ describe('GridPositionDeriver', () => {
    - Animation panel
 
 **Deliverables:**
+
 - ✅ 15 visual regression tests
 - ✅ Baseline screenshots committed
 - ✅ Visual diff detection working
@@ -410,6 +424,7 @@ describe('GridPositionDeriver', () => {
    - Set up selective test runs
 
 **Deliverables:**
+
 - ✅ CI pipeline running in <5 minutes
 - ✅ Test sharding working
 - ✅ Coverage reports uploaded
@@ -441,6 +456,7 @@ describe('GridPositionDeriver', () => {
    - Add WCAG compliance checks
 
 **Deliverables:**
+
 - ✅ Custom matchers working
 - ✅ All test scripts configured
 - ✅ Accessibility tests passing
@@ -455,6 +471,7 @@ describe('GridPositionDeriver', () => {
 ### What Claude Does (80% of work)
 
 #### Infrastructure & Tooling
+
 - ✅ Configure all testing tools
 - ✅ Set up test factories
 - ✅ Create MSW handlers
@@ -462,22 +479,26 @@ describe('GridPositionDeriver', () => {
 - ✅ Write documentation
 
 #### Tests - Pure Utilities
+
 - ✅ Write 100% of pure utility tests
 - ✅ No domain knowledge required
 - ✅ ~68 tests
 
 #### Tests - UI Components
+
 - ✅ Write 100% of foundation component tests
 - ✅ Write component test skeletons
 - ✅ ~50 tests
 
 #### Tests - E2E Infrastructure
+
 - ✅ Create Page Object Models
 - ✅ Refactor E2E test selectors
 - ✅ Remove flaky waits
 - ✅ Add trace capture
 
 #### Tests - Visual Regression
+
 - ✅ Create all visual tests
 - ✅ Capture baseline screenshots
 - ✅ ~15 tests
@@ -485,22 +506,26 @@ describe('GridPositionDeriver', () => {
 ### What You Do (20% of work)
 
 #### Provide Domain Knowledge
+
 - 📝 Write 5-10 example test cases per service
 - 📝 Define expected behavior for business logic
 - 📝 Specify test data fixtures
 
 #### Review & Verify
+
 - 👀 Review component tests for correctness
 - 👀 Run E2E tests and report failures
 - 👀 Verify visual regression baselines
 
 #### Write Complex Domain Tests
+
 - 🧠 Write tests for most complex services:
   - `OrientationCalculator` (449 lines)
   - CAP Executors
   - `ArrowQuadrantCalculator`
 
 **Time Investment:**
+
 - **Week 1:** 2 hours (review infrastructure)
 - **Week 2:** 2 hours (review component tests)
 - **Week 3:** 3 hours (provide domain test cases)
@@ -514,30 +539,30 @@ describe('GridPositionDeriver', () => {
 
 ### Test Count Dashboard
 
-| Category | Current | Week 1 | Week 2 | Week 3 | Week 4 | Target |
-|----------|---------|--------|--------|--------|--------|--------|
-| **Unit Tests** | 21 | 41 | 71 | 115 | 150 | 150 |
-| **Component Tests** | 0 | 20 | 50 | 50 | 50 | 50 |
-| **E2E Tests** | ~80 | ~80 | 12 | 12 | 12 | 12 |
-| **Visual Tests** | 0 | 0 | 0 | 15 | 15 | 15 |
-| **Total Tests** | ~101 | ~141 | ~133 | ~192 | ~227 | ~227 |
+| Category            | Current | Week 1 | Week 2 | Week 3 | Week 4 | Target |
+| ------------------- | ------- | ------ | ------ | ------ | ------ | ------ |
+| **Unit Tests**      | 21      | 41     | 71     | 115    | 150    | 150    |
+| **Component Tests** | 0       | 20     | 50     | 50     | 50     | 50     |
+| **E2E Tests**       | ~80     | ~80    | 12     | 12     | 12     | 12     |
+| **Visual Tests**    | 0       | 0      | 0      | 15     | 15     | 15     |
+| **Total Tests**     | ~101    | ~141   | ~133   | ~192   | ~227   | ~227   |
 
 ### Coverage Dashboard
 
-| Category | Current | Week 1 | Week 2 | Week 3 | Week 4 | Target |
-|----------|---------|--------|--------|--------|--------|--------|
-| **Pure Utilities** | Unknown | 85% | 90% | 90% | 90% | 90% |
-| **UI Components** | Unknown | 40% | 80% | 80% | 80% | 80% |
-| **Business Logic** | Unknown | 10% | 20% | 60% | 70% | 70% |
-| **Overall Coverage** | Unknown | 45% | 63% | 77% | 80% | 80% |
+| Category             | Current | Week 1 | Week 2 | Week 3 | Week 4 | Target |
+| -------------------- | ------- | ------ | ------ | ------ | ------ | ------ |
+| **Pure Utilities**   | Unknown | 85%    | 90%    | 90%    | 90%    | 90%    |
+| **UI Components**    | Unknown | 40%    | 80%    | 80%    | 80%    | 80%    |
+| **Business Logic**   | Unknown | 10%    | 20%    | 60%    | 70%    | 70%    |
+| **Overall Coverage** | Unknown | 45%    | 63%    | 77%    | 80%    | 80%    |
 
 ### Quality Metrics Dashboard
 
-| Metric | Current | Week 1 | Week 2 | Week 3 | Week 4 | Target |
-|--------|---------|--------|--------|--------|--------|--------|
-| **Flaky Test Rate** | Unknown | <5% | <2% | <1% | <1% | <1% |
-| **Test Speed (full)** | ~8 min | ~6 min | ~4 min | ~3 min | <2 min | <2 min |
-| **CI Feedback** | ~10 min | ~8 min | ~6 min | ~5 min | <5 min | <5 min |
+| Metric                | Current | Week 1 | Week 2 | Week 3 | Week 4 | Target |
+| --------------------- | ------- | ------ | ------ | ------ | ------ | ------ |
+| **Flaky Test Rate**   | Unknown | <5%    | <2%    | <1%    | <1%    | <1%    |
+| **Test Speed (full)** | ~8 min  | ~6 min | ~4 min | ~3 min | <2 min | <2 min |
+| **CI Feedback**       | ~10 min | ~8 min | ~6 min | ~5 min | <5 min | <5 min |
 
 ---
 
@@ -546,6 +571,7 @@ describe('GridPositionDeriver', () => {
 ### Week 1: Foundation ✅
 
 **Deliverables:**
+
 - [x] Test infrastructure configured
 - [x] 20 pure utility tests passing
 - [x] Test factories created
@@ -553,6 +579,7 @@ describe('GridPositionDeriver', () => {
 - [x] 20 component tests for foundation UI
 
 **Exit Criteria:**
+
 - ✅ `npm run test` works without errors
 - ✅ Coverage reports generated
 - ✅ At least 40 tests passing
@@ -561,12 +588,14 @@ describe('GridPositionDeriver', () => {
 ### Week 2: Component Testing 🚧
 
 **Deliverables:**
+
 - [ ] 50 component tests total
 - [ ] Page Object Models created
 - [ ] 12 E2E tests refactored
 - [ ] Component coverage at 80%
 
 **Exit Criteria:**
+
 - ✅ Component tests pass in <60 seconds
 - ✅ E2E tests use accessibility selectors
 - ✅ No `waitForTimeout()` in E2E tests
@@ -575,12 +604,14 @@ describe('GridPositionDeriver', () => {
 ### Week 3: Domain Logic 🚧
 
 **Deliverables:**
+
 - [ ] 44 domain logic tests (with your guidance)
 - [ ] 15 visual regression tests
 - [ ] Test patterns documented
 - [ ] Business logic coverage at 60%
 
 **Exit Criteria:**
+
 - ✅ Domain tests follow consistent patterns
 - ✅ Visual baselines captured
 - ✅ Coverage at ~77%
@@ -588,6 +619,7 @@ describe('GridPositionDeriver', () => {
 ### Week 4: CI/CD & Polish 🚧
 
 **Deliverables:**
+
 - [ ] GitHub Actions workflow
 - [ ] Test sharding working
 - [ ] Custom matchers created
@@ -595,6 +627,7 @@ describe('GridPositionDeriver', () => {
 - [ ] Documentation complete
 
 **Exit Criteria:**
+
 - ✅ CI runs in <5 minutes
 - ✅ Coverage at 80%
 - ✅ All quality gates passing
@@ -605,6 +638,7 @@ describe('GridPositionDeriver', () => {
 ## 🎯 Definition of Done (Per Phase)
 
 ### For Every Test File:
+
 - ✅ All tests passing locally
 - ✅ All tests passing in CI
 - ✅ Coverage >80% for tested code
@@ -613,6 +647,7 @@ describe('GridPositionDeriver', () => {
 - ✅ Follows AAA pattern (Arrange, Act, Assert)
 
 ### For Component Tests:
+
 - ✅ Tests user interactions (clicks, typing, etc.)
 - ✅ Tests visual states (loading, error, success)
 - ✅ Uses accessibility selectors (`getByRole`, `getByLabel`)
@@ -620,6 +655,7 @@ describe('GridPositionDeriver', () => {
 - ✅ No implementation details tested
 
 ### For E2E Tests:
+
 - ✅ Uses Page Object Model
 - ✅ No explicit waits (`waitForTimeout`)
 - ✅ Trace capture enabled on failure
@@ -627,6 +663,7 @@ describe('GridPositionDeriver', () => {
 - ✅ Runs in <30 seconds per test
 
 ### For Domain Logic Tests:
+
 - ✅ Test cases reviewed by domain expert (you!)
 - ✅ Edge cases covered
 - ✅ Error conditions tested
@@ -639,12 +676,14 @@ describe('GridPositionDeriver', () => {
 ### Step 1: Confirm Direction (5 min)
 
 **You decide:**
+
 - Start with Phase 1 (Foundation)?
 - Or pick a different starting point?
 
 ### Step 2: First Implementation (30 min)
 
 **Claude will:**
+
 1. Configure Vitest browser mode
 2. Set up MSW
 3. Create test factories
@@ -653,6 +692,7 @@ describe('GridPositionDeriver', () => {
 ### Step 3: Your Review (10 min)
 
 **You verify:**
+
 - Do tests run?
 - Does configuration look right?
 - Any issues or questions?
@@ -668,20 +708,24 @@ Based on your feedback, continue to next batch of tests or adjust approach.
 ### When Claude Needs Your Input:
 
 **For Component Tests:**
+
 - "What should happen when user clicks the 'Clear' button?"
 - "What are the possible states for BeatCell?"
 
 **For Domain Tests:**
+
 - "Given startLocation='n' and endLocation='e', what's the expected gridPosition?"
 - "When is a beat considered a 'reversal'?"
 
 **For E2E Tests:**
+
 - "Which 12 user flows are most critical?"
 - "After clicking 'Generate', what should the user see?"
 
 ### How to Provide Feedback:
 
 **Good:**
+
 ```
 "When user clicks BeatCell:
 1. Beat should be selected
@@ -690,11 +734,13 @@ Based on your feedback, continue to next batch of tests or adjust approach.
 ```
 
 **Also Good:**
+
 ```
 "Check out line 45 in construct-flow.spec.ts - that's the behavior I want"
 ```
 
 **Not Helpful:**
+
 ```
 "It should work correctly"
 ```
@@ -706,6 +752,7 @@ Based on your feedback, continue to next batch of tests or adjust approach.
 When you can check all these boxes, the rocket ship has launched:
 
 ### Tests
+
 - [ ] 150+ unit tests passing
 - [ ] 50+ component tests passing
 - [ ] 12-15 E2E tests passing
@@ -713,16 +760,19 @@ When you can check all these boxes, the rocket ship has launched:
 - [ ] 80%+ code coverage
 
 ### Performance
+
 - [ ] Full test suite runs in <2 minutes
 - [ ] Unit tests give feedback in <5 seconds
 - [ ] CI pipeline completes in <5 minutes
 
 ### Reliability
+
 - [ ] Flaky test rate <1%
 - [ ] No explicit timeouts in E2E tests
 - [ ] Trace viewer available for failures
 
 ### Developer Experience
+
 - [ ] Vitest UI mode working
 - [ ] Test factories available
 - [ ] Custom matchers created
@@ -730,6 +780,7 @@ When you can check all these boxes, the rocket ship has launched:
 - [ ] Team can write tests easily
 
 ### Quality Gates
+
 - [ ] Coverage gate enforced (80%)
 - [ ] Accessibility tests passing
 - [ ] Visual regression detection working

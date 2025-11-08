@@ -34,10 +34,14 @@ export class CreateModuleLayoutService implements ICreateModuleLayoutService {
     const hasWideViewport = viewportWidth >= LAYOUT_BREAKPOINTS.WIDE_VIEWPORT;
 
     // Landscape detection: Use side-by-side for significantly landscape orientations
-    const isSignificantlyLandscape = aspectRatio > LAYOUT_BREAKPOINTS.LANDSCAPE_ASPECT_RATIO;
+    const isSignificantlyLandscape =
+      aspectRatio > LAYOUT_BREAKPOINTS.LANDSCAPE_ASPECT_RATIO;
 
     // Z Fold specific: More flexible detection that accounts for browser UI
-    const isLikelyZFoldUnfolded = this.isZFoldUnfolded(viewportWidth, aspectRatio);
+    const isLikelyZFoldUnfolded = this.isZFoldUnfolded(
+      viewportWidth,
+      aspectRatio
+    );
 
     // Determine if should use side-by-side layout
     const shouldUseSideBySideLayout =
@@ -64,7 +68,9 @@ export class CreateModuleLayoutService implements ICreateModuleLayoutService {
   /**
    * Subscribe to viewport changes and call callback with new configuration
    */
-  subscribeToLayoutChanges(callback: (config: LayoutConfiguration) => void): () => void {
+  subscribeToLayoutChanges(
+    callback: (config: LayoutConfiguration) => void
+  ): () => void {
     return this.viewportService.onViewportChange(() => {
       const newConfig = this.calculateLayoutConfiguration();
       callback(newConfig);
@@ -101,4 +107,3 @@ export class CreateModuleLayoutService implements ICreateModuleLayoutService {
     return config.shouldUseSideBySideLayout;
   }
 }
-

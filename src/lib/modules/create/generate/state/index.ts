@@ -4,8 +4,8 @@
 
 // UI configuration state
 export {
-    createGenerationConfigState,
-    type UIGenerationConfig
+  createGenerationConfigState,
+  type UIGenerationConfig,
 } from "./generate-config.svelte";
 
 // Generation actions state

@@ -1,14 +1,14 @@
 <!-- TurnControlPanel.svelte - Container-aware turn controls with multiple layout modes -->
 <script lang="ts">
-  import type { BeatData, IDeviceDetector } from '$shared';
-  import { resolve, TYPES } from '$shared';
-  import { onMount } from 'svelte';
-  import { slide } from 'svelte/transition';
-  import ExpandedTurnPanel from './ExpandedTurnPanel.svelte';
-  import InlineTurnControl from './InlineTurnControl.svelte';
-  import SimplifiedTurnControl from './SimplifiedTurnControl.svelte';
-  import { createTurnControlExpansionState } from './turn-control-expansion-state.svelte';
-  import TurnControlButton from './TurnControlButton.svelte';
+  import type { BeatData, IDeviceDetector } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
+  import { slide } from "svelte/transition";
+  import ExpandedTurnPanel from "./ExpandedTurnPanel.svelte";
+  import InlineTurnControl from "./InlineTurnControl.svelte";
+  import SimplifiedTurnControl from "./SimplifiedTurnControl.svelte";
+  import { createTurnControlExpansionState } from "./turn-control-expansion-state.svelte";
+  import TurnControlButton from "./TurnControlButton.svelte";
 
   // Props
   const {
@@ -37,13 +37,13 @@
   // Responsive sizing strategy based on device type
   const layoutMode = $derived(() => {
     // Desktop: Minimize vertical space usage
-    if (isDesktop) return 'compact';
+    if (isDesktop) return "compact";
 
     // Tablet: Balanced layout
-    if (isTablet) return 'balanced';
+    if (isTablet) return "balanced";
 
     // Mobile: Full touch-friendly sizing
-    return 'comfortable';
+    return "comfortable";
   });
 
   // Container width detection (passed from parent via container queries)
@@ -66,9 +66,9 @@
 
   // Determine control mode based on container (will be set via CSS)
   const controlMode = $derived(() => {
-    if (useSimplifiedControls) return 'simplified';
-    if (shouldShowInlineControls()) return 'inline';
-    return 'expandable';
+    if (useSimplifiedControls) return "simplified";
+    if (shouldShowInlineControls()) return "inline";
+    return "expandable";
   });
 
   // Track previous beat index
@@ -80,7 +80,10 @@
       const currentBeatIndex = currentBeatData.beatNumber;
 
       // If beat changed, collapse (don't auto-expand)
-      if (previousBeatIndex !== null && previousBeatIndex !== currentBeatIndex) {
+      if (
+        previousBeatIndex !== null &&
+        previousBeatIndex !== currentBeatIndex
+      ) {
         expansionState.collapse();
       }
 
@@ -90,11 +93,11 @@
 
   // Handlers
   function handleBlueExpand() {
-    expansionState.expand('blue');
+    expansionState.expand("blue");
   }
 
   function handleRedExpand() {
-    expansionState.expand('red');
+    expansionState.expand("red");
   }
 
   function handleCollapse() {
@@ -108,16 +111,16 @@
 
 <div
   class="turn-control-panel"
-  class:compact={layoutMode() === 'compact'}
-  class:balanced={layoutMode() === 'balanced'}
-  class:comfortable={layoutMode() === 'comfortable'}
-  class:mode-simplified={controlMode() === 'simplified'}
-  class:mode-inline={controlMode() === 'inline'}
-  class:mode-expandable={controlMode() === 'expandable'}
+  class:compact={layoutMode() === "compact"}
+  class:balanced={layoutMode() === "balanced"}
+  class:comfortable={layoutMode() === "comfortable"}
+  class:mode-simplified={controlMode() === "simplified"}
+  class:mode-inline={controlMode() === "inline"}
+  class:mode-expandable={controlMode() === "expandable"}
   data-testid="turn-control-panel"
 >
   <div class="controls-container">
-    {#if controlMode() === 'simplified'}
+    {#if controlMode() === "simplified"}
       <!-- Simplified always-visible controls for narrow portrait (344px Z Fold) -->
       <SimplifiedTurnControl
         color="blue"
@@ -129,7 +132,7 @@
         {currentBeatData}
         {onTurnAmountChanged}
       />
-    {:else if controlMode() === 'inline'}
+    {:else if controlMode() === "inline"}
       <!-- Inline controls when enough space is available (Desktop) -->
       <InlineTurnControl
         color="blue"
@@ -149,7 +152,7 @@
       <!-- Expandable button/panel pattern for constrained spaces (Tablet/Mobile) -->
       <!-- Blue/Left Control -->
       {#if expansionState.isBlueExpanded()}
-        <div transition:slide={{ duration: 300, axis: 'y' }}>
+        <div transition:slide={{ duration: 300, axis: "y" }}>
           <ExpandedTurnPanel
             color="blue"
             {currentBeatData}
@@ -172,7 +175,7 @@
 
       <!-- Red/Right Control -->
       {#if expansionState.isRedExpanded()}
-        <div transition:slide={{ duration: 300, axis: 'y' }}>
+        <div transition:slide={{ duration: 300, axis: "y" }}>
           <ExpandedTurnPanel
             color="red"
             {currentBeatData}
@@ -237,27 +240,20 @@
     padding: 0px;
   }
 
-
-
   /* Balanced mode - Tablet landscape, moderate sizing */
   .turn-control-panel.balanced {
     padding: 0px;
   }
-
-
 
   /* Compact mode - Desktop, minimal vertical space */
   .turn-control-panel.compact {
     padding: 8px;
   }
 
-
-
   /* Responsive adjustments for very small screens */
   @media (max-width: 400px) {
     .turn-control-panel {
       padding: 12px;
     }
-
   }
 </style>

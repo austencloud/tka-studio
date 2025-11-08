@@ -11,25 +11,22 @@ Displays user-saved presets with delete option and allows loading preset configu
   import { portal } from "./portal";
   import PresetGrid from "./PresetGrid.svelte";
 
-  let {
-    presets,
-    onPresetSelect,
-    onPresetDelete,
-    onPresetEdit,
-    onClose
-  } = $props<{
-    presets: GenerationPreset[];
-    onPresetSelect: (preset: GenerationPreset) => void;
-    onPresetDelete: (presetId: string) => void;
-    onPresetEdit: (preset: GenerationPreset) => void;
-    onClose: () => void;
-  }>();
+  let { presets, onPresetSelect, onPresetDelete, onPresetEdit, onClose } =
+    $props<{
+      presets: GenerationPreset[];
+      onPresetSelect: (preset: GenerationPreset) => void;
+      onPresetDelete: (presetId: string) => void;
+      onPresetEdit: (preset: GenerationPreset) => void;
+      onClose: () => void;
+    }>();
 
   let hapticService: IHapticFeedbackService;
   let modalElement: HTMLElement;
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
 
     // Focus the modal for accessibility
     modalElement?.focus();
@@ -75,12 +72,7 @@ Displays user-saved presets with delete option and allows loading preset configu
 >
   <div class="modal-content">
     <ModalHeader title="Load Preset" icon="⚙️" onClose={handleClose} />
-    <PresetGrid
-      {presets}
-      {onPresetSelect}
-      {onPresetEdit}
-      {onPresetDelete}
-    />
+    <PresetGrid {presets} {onPresetSelect} {onPresetEdit} {onPresetDelete} />
   </div>
 </div>
 

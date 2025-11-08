@@ -3,12 +3,7 @@ CAPModalHeader.svelte - Modal header with centered title for CAP Selection Modal
 Uses grid layout for perfect centering with multi-select toggle
 -->
 <script lang="ts">
-  let {
-    title,
-    isMultiSelectMode,
-    onToggleMultiSelect,
-    onClose
-  } = $props<{
+  let { title, isMultiSelectMode, onToggleMultiSelect, onClose } = $props<{
     title: string;
     isMultiSelectMode: boolean;
     onToggleMultiSelect: () => void;
@@ -21,19 +16,38 @@ Uses grid layout for perfect centering with multi-select toggle
     class="multi-select-toggle"
     class:active={isMultiSelectMode}
     onclick={onToggleMultiSelect}
-    aria-label={isMultiSelectMode ? "Exit multi-select mode" : "Enter multi-select mode"}
+    aria-label={isMultiSelectMode
+      ? "Exit multi-select mode"
+      : "Enter multi-select mode"}
     title={isMultiSelectMode ? "Single Select" : "Multi-Select"}
   >
     {#if isMultiSelectMode}
       <!-- Multi-select mode: Multiple checkboxes (some checked) -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+      >
         <!-- Top-left checkbox (checked) -->
-        <rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor"></rect>
-        <polyline points="5,7 7,9 11,5" stroke="white" stroke-width="1.5" fill="none"></polyline>
+        <rect x="3" y="3" width="8" height="8" rx="1.5" fill="currentColor"
+        ></rect>
+        <polyline
+          points="5,7 7,9 11,5"
+          stroke="white"
+          stroke-width="1.5"
+          fill="none"
+        ></polyline>
 
         <!-- Top-right checkbox (checked) -->
-        <rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor"></rect>
-        <polyline points="15,7 17,9 21,5" stroke="white" stroke-width="1.5" fill="none"></polyline>
+        <rect x="13" y="3" width="8" height="8" rx="1.5" fill="currentColor"
+        ></rect>
+        <polyline
+          points="15,7 17,9 21,5"
+          stroke="white"
+          stroke-width="1.5"
+          fill="none"
+        ></polyline>
 
         <!-- Bottom-left checkbox (unchecked) -->
         <rect x="3" y="13" width="8" height="8" rx="1.5"></rect>
@@ -43,7 +57,12 @@ Uses grid layout for perfect centering with multi-select toggle
       </svg>
     {:else}
       <!-- Single-select mode: One checkbox (unchecked) -->
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+      >
         <rect x="6" y="6" width="12" height="12" rx="2"></rect>
       </svg>
     {/if}

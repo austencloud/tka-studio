@@ -27,7 +27,7 @@
     onClose?: () => void;
   } = $props();
 
-  let selectedFormat: AnimationExportFormat = "gif";
+  let selectedFormat = $state<AnimationExportFormat>("gif");
 
   const formatCopy: Record<AnimationExportFormat, string> = {
     gif: "Maximum compatibility",
@@ -72,7 +72,10 @@
       <h3 id="export-dialog-title">Export Animation</h3>
 
       {#if !isExporting && !progress}
-        <p>Select an output format. WebP offers smaller files while GIF maximizes compatibility.</p>
+        <p>
+          Select an output format. WebP offers smaller files while GIF maximizes
+          compatibility.
+        </p>
         <div class="export-options">
           <label class="export-option">
             <input
@@ -113,27 +116,32 @@
         </div>
       {:else if progress}
         <div class="export-progress">
-          {#if progress.stage === 'capturing'}
-            <p>Capturing frames... ({progress.currentFrame}/{progress.totalFrames})</p>
+          {#if progress.stage === "capturing"}
+            <p>
+              Capturing frames... ({progress.currentFrame}/{progress.totalFrames})
+            </p>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: {progress.progress * 100}%"></div>
+              <div
+                class="progress-fill"
+                style="width: {progress.progress * 100}%"
+              ></div>
             </div>
-          {:else if progress.stage === 'encoding'}
+          {:else if progress.stage === "encoding"}
             <p>Encoding frames...</p>
             <div class="progress-bar">
               <div class="progress-fill progress-fill--indeterminate"></div>
             </div>
-          {:else if progress.stage === 'transcoding'}
+          {:else if progress.stage === "transcoding"}
             <p>Optimizing for WebP...</p>
             <div class="progress-bar">
               <div class="progress-fill progress-fill--indeterminate"></div>
             </div>
-          {:else if progress.stage === 'complete'}
+          {:else if progress.stage === "complete"}
             <p class="export-success">
               <i class="fas fa-check-circle"></i>
               Export complete! Your file is downloading.
             </p>
-          {:else if progress.stage === 'error'}
+          {:else if progress.stage === "error"}
             <p class="export-error">
               <i class="fas fa-exclamation-circle"></i>
               Error: {progress.error}
@@ -143,8 +151,11 @@
             </button>
           {/if}
 
-          {#if isExporting && progress.stage !== 'complete' && progress.stage !== 'error'}
-            <button class="export-action-button export-action-button--danger" onclick={onCancel}>
+          {#if isExporting && progress.stage !== "complete" && progress.stage !== "error"}
+            <button
+              class="export-action-button export-action-button--danger"
+              onclick={onCancel}
+            >
               Cancel Export
             </button>
           {/if}
@@ -171,7 +182,11 @@
   }
 
   .export-dialog {
-    background: linear-gradient(135deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 30, 0.95));
+    background: linear-gradient(
+      135deg,
+      rgba(30, 30, 40, 0.95),
+      rgba(20, 20, 30, 0.95)
+    );
     backdrop-filter: blur(20px);
     border-radius: 16px;
     padding: 24px;
@@ -271,12 +286,16 @@
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
   }
 
-  .export-action-button:not(.export-action-button--primary):not(.export-action-button--danger) {
+  .export-action-button:not(.export-action-button--primary):not(
+      .export-action-button--danger
+    ) {
     background: rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.9);
   }
 
-  .export-action-button:not(.export-action-button--primary):not(.export-action-button--danger):hover {
+  .export-action-button:not(.export-action-button--primary):not(
+      .export-action-button--danger
+    ):hover {
     background: rgba(255, 255, 255, 0.15);
   }
 

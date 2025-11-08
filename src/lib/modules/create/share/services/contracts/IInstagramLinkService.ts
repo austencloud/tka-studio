@@ -5,7 +5,7 @@
  * Phase 1: External linking without API integration.
  */
 
-import type { InstagramLink, InstagramUrlValidation } from '../../domain';
+import type { InstagramLink, InstagramUrlValidation } from "../../domain";
 
 export interface IInstagramLinkService {
   /**
@@ -63,4 +63,3 @@ export interface IInstagramLinkService {
    */
   isInstagramUrl(url: string): boolean;
 }
-

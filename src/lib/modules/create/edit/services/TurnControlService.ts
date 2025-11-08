@@ -1,5 +1,5 @@
-import { injectable } from 'inversify';
-import type { BeatData } from '$shared';
+import { injectable } from "inversify";
+import type { BeatData } from "$shared";
 
 export interface ITurnControlService {
   getTurnValues(): number[];
@@ -9,7 +9,7 @@ export interface ITurnControlService {
   decrementTurn(currentValue: number | "fl" | undefined): number;
   getTurnValue(turns: number | "fl" | undefined): string;
   getTurnDescription(turns: number | "fl" | undefined): string;
-  getCurrentTurnValue(beatData: BeatData | null, color: 'blue' | 'red'): number;
+  getCurrentTurnValue(beatData: BeatData | null, color: "blue" | "red"): number;
   formatTurnDisplay(turnAmount: number): string;
 }
 
@@ -22,17 +22,17 @@ export class TurnControlService implements ITurnControlService {
   }
 
   canDecrementTurn(turnValue: number | "fl" | undefined): boolean {
-    if (typeof turnValue !== 'number') return false;
+    if (typeof turnValue !== "number") return false;
     return this.turnValues.indexOf(turnValue) > 0;
   }
 
   canIncrementTurn(turnValue: number | "fl" | undefined): boolean {
-    if (typeof turnValue !== 'number') return false;
+    if (typeof turnValue !== "number") return false;
     return this.turnValues.indexOf(turnValue) < this.turnValues.length - 1;
   }
 
   incrementTurn(currentValue: number | "fl" | undefined): number {
-    if (typeof currentValue !== 'number') return 0;
+    if (typeof currentValue !== "number") return 0;
     const currentIndex = this.turnValues.indexOf(currentValue);
     if (currentIndex < this.turnValues.length - 1) {
       return this.turnValues[currentIndex + 1]!;
@@ -41,7 +41,7 @@ export class TurnControlService implements ITurnControlService {
   }
 
   decrementTurn(currentValue: number | "fl" | undefined): number {
-    if (typeof currentValue !== 'number') return 0;
+    if (typeof currentValue !== "number") return 0;
     const currentIndex = this.turnValues.indexOf(currentValue);
     if (currentIndex > 0) {
       return this.turnValues[currentIndex - 1]!;
@@ -63,11 +63,15 @@ export class TurnControlService implements ITurnControlService {
     return "Unknown";
   }
 
-  getCurrentTurnValue(beatData: BeatData | null, color: 'blue' | 'red'): number {
-    const turnValue = color === 'blue'
-      ? beatData?.motions?.blue?.turns
-      : beatData?.motions?.red?.turns;
-    return typeof turnValue === 'number' ? turnValue : 0;
+  getCurrentTurnValue(
+    beatData: BeatData | null,
+    color: "blue" | "red"
+  ): number {
+    const turnValue =
+      color === "blue"
+        ? beatData?.motions?.blue?.turns
+        : beatData?.motions?.red?.turns;
+    return typeof turnValue === "number" ? turnValue : 0;
   }
 
   formatTurnDisplay(turnAmount: number): string {

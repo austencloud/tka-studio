@@ -5,10 +5,7 @@ First interactive quiz for "The Grid" concept
 <script lang="ts">
   import { resolve, TYPES, type IHapticFeedbackService } from "$shared";
 
-  let {
-    onCorrect,
-    onIncorrect,
-  } = $props<{
+  let { onCorrect, onIncorrect } = $props<{
     onCorrect?: () => void;
     onIncorrect?: () => void;
   }>();
@@ -28,7 +25,9 @@ First interactive quiz for "The Grid" concept
   function handleAnswer(side: "left" | "right") {
     selectedAnswer = side;
 
-    const isDiamondCorrect = (side === "left" && diamondOnLeft) || (side === "right" && !diamondOnLeft);
+    const isDiamondCorrect =
+      (side === "left" && diamondOnLeft) ||
+      (side === "right" && !diamondOnLeft);
 
     if (isDiamondCorrect) {
       quizState = "correct";
@@ -71,7 +70,9 @@ First interactive quiz for "The Grid" concept
 <div class="grid-quiz">
   <!-- Quiz header -->
   <div class="quiz-header">
-    <h3 class="quiz-title">🎯 Quick Quiz: Can You Identify The Diamond Grid?</h3>
+    <h3 class="quiz-title">
+      🎯 Quick Quiz: Can You Identify The Diamond Grid?
+    </h3>
     <p class="quiz-instruction">
       Click on the grid that shows the <strong>Diamond</strong> pattern
     </p>
@@ -85,7 +86,9 @@ First interactive quiz for "The Grid" concept
       class:selected={selectedAnswer === "left"}
       class:correct={quizState === "correct" && selectedAnswer === "left"}
       class:incorrect={quizState === "incorrect" && selectedAnswer === "left"}
-      class:correct-answer={quizState !== "idle" && diamondOnLeft && selectedAnswer !== "left"}
+      class:correct-answer={quizState !== "idle" &&
+        diamondOnLeft &&
+        selectedAnswer !== "left"}
       onclick={() => quizState === "idle" && handleAnswer("left")}
       disabled={quizState !== "idle"}
     >
@@ -93,11 +96,39 @@ First interactive quiz for "The Grid" concept
       <svg viewBox="0 0 100 100" class="option-grid">
         <g class="connection-lines" opacity="0.3">
           {#if diamondOnLeft}
-            <line x1="50" y1="15" x2="50" y2="85" stroke="white" stroke-width="0.5" />
-            <line x1="15" y1="50" x2="85" y2="50" stroke="white" stroke-width="0.5" />
+            <line
+              x1="50"
+              y1="15"
+              x2="50"
+              y2="85"
+              stroke="white"
+              stroke-width="0.5"
+            />
+            <line
+              x1="15"
+              y1="50"
+              x2="85"
+              y2="50"
+              stroke="white"
+              stroke-width="0.5"
+            />
           {:else}
-            <line x1="25" y1="25" x2="75" y2="75" stroke="white" stroke-width="0.5" />
-            <line x1="75" y1="25" x2="25" y2="75" stroke="white" stroke-width="0.5" />
+            <line
+              x1="25"
+              y1="25"
+              x2="75"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+            />
+            <line
+              x1="75"
+              y1="25"
+              x2="25"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+            />
           {/if}
         </g>
 
@@ -122,7 +153,9 @@ First interactive quiz for "The Grid" concept
       class:selected={selectedAnswer === "right"}
       class:correct={quizState === "correct" && selectedAnswer === "right"}
       class:incorrect={quizState === "incorrect" && selectedAnswer === "right"}
-      class:correct-answer={quizState !== "idle" && !diamondOnLeft && selectedAnswer !== "right"}
+      class:correct-answer={quizState !== "idle" &&
+        !diamondOnLeft &&
+        selectedAnswer !== "right"}
       onclick={() => quizState === "idle" && handleAnswer("right")}
       disabled={quizState !== "idle"}
     >
@@ -130,11 +163,39 @@ First interactive quiz for "The Grid" concept
       <svg viewBox="0 0 100 100" class="option-grid">
         <g class="connection-lines" opacity="0.3">
           {#if !diamondOnLeft}
-            <line x1="50" y1="15" x2="50" y2="85" stroke="white" stroke-width="0.5" />
-            <line x1="15" y1="50" x2="85" y2="50" stroke="white" stroke-width="0.5" />
+            <line
+              x1="50"
+              y1="15"
+              x2="50"
+              y2="85"
+              stroke="white"
+              stroke-width="0.5"
+            />
+            <line
+              x1="15"
+              y1="50"
+              x2="85"
+              y2="50"
+              stroke="white"
+              stroke-width="0.5"
+            />
           {:else}
-            <line x1="25" y1="25" x2="75" y2="75" stroke="white" stroke-width="0.5" />
-            <line x1="75" y1="25" x2="25" y2="75" stroke="white" stroke-width="0.5" />
+            <line
+              x1="25"
+              y1="25"
+              x2="75"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+            />
+            <line
+              x1="75"
+              y1="25"
+              x2="25"
+              y2="75"
+              stroke="white"
+              stroke-width="0.5"
+            />
           {/if}
         </g>
 
@@ -156,15 +217,20 @@ First interactive quiz for "The Grid" concept
 
   <!-- Feedback section -->
   {#if quizState !== "idle"}
-    <div class="quiz-feedback" class:correct={quizState === "correct"} class:incorrect={quizState === "incorrect"}>
+    <div
+      class="quiz-feedback"
+      class:correct={quizState === "correct"}
+      class:incorrect={quizState === "incorrect"}
+    >
       {#if quizState === "correct"}
         <div class="feedback-content">
           <span class="feedback-icon">🎉</span>
           <div class="feedback-text">
             <h4>Correct!</h4>
             <p>
-              Great job! You correctly identified the Diamond grid. The diamond pattern has
-              points arranged vertically and horizontally, making it intuitive for flow patterns.
+              Great job! You correctly identified the Diamond grid. The diamond
+              pattern has points arranged vertically and horizontally, making it
+              intuitive for flow patterns.
             </p>
           </div>
         </div>
@@ -174,16 +240,15 @@ First interactive quiz for "The Grid" concept
           <div class="feedback-text">
             <h4>Not quite!</h4>
             <p>
-              The Diamond grid has points arranged in a <strong>+ shape</strong> (vertical and horizontal),
-              while the Box grid has points arranged in an <strong>X shape</strong> (diagonals).
+              The Diamond grid has points arranged in a <strong>+ shape</strong>
+              (vertical and horizontal), while the Box grid has points arranged
+              in an <strong>X shape</strong> (diagonals).
             </p>
           </div>
         </div>
       {/if}
 
-      <button class="try-again-button" onclick={resetQuiz}>
-        Try Again
-      </button>
+      <button class="try-again-button" onclick={resetQuiz}> Try Again </button>
     </div>
   {/if}
 </div>

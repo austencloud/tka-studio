@@ -1,6 +1,6 @@
 /**
  * Sequence Domain Service Contract
- * 
+ *
  * Service for sequence domain operations and business logic
  */
 
@@ -12,7 +12,11 @@ export interface ISequenceDomainService {
    * @param sequence - Sequence to validate
    * @returns Validation result with errors and warnings
    */
-  validateSequence(sequence: SequenceData): { isValid: boolean; errors: string[]; warnings: string[] };
+  validateSequence(sequence: SequenceData): {
+    isValid: boolean;
+    errors: string[];
+    warnings: string[];
+  };
 
   /**
    * Calculate sequence statistics
@@ -55,5 +59,9 @@ export interface ISequenceDomainService {
    * @param beatData - New beat data
    * @returns Updated sequence
    */
-  updateBeat(sequence: SequenceData, beatIndex: number, beatData: BeatData): SequenceData;
+  updateBeat(
+    sequence: SequenceData,
+    beatIndex: number,
+    beatData: BeatData
+  ): SequenceData;
 }

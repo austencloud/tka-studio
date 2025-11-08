@@ -144,7 +144,11 @@ export function createGenerationValidationState() {
 
     // Map level number to difficulty
     const difficulty: DifficultyLevel =
-      level === 1 ? DifficultyLevel.BEGINNER : level === 2 ? DifficultyLevel.INTERMEDIATE : DifficultyLevel.ADVANCED;
+      level === 1
+        ? DifficultyLevel.BEGINNER
+        : level === 2
+          ? DifficultyLevel.INTERMEDIATE
+          : DifficultyLevel.ADVANCED;
 
     const rules = VALIDATION_RULES.turnIntensity[difficulty];
 

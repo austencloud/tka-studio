@@ -25,22 +25,22 @@ export interface FilterLabelMapper {
 export class FilterLabelMapperImpl implements FilterLabelMapper {
   private readonly labelMap: Record<string, string> = {
     // Type filters
-    type1: 'Type 1',
-    type2: 'Type 2',
-    type3: 'Type 3',
-    type4: 'Type 4',
-    type5: 'Type 5',
-    type6: 'Type 6',
+    type1: "Type 1",
+    type2: "Type 2",
+    type3: "Type 3",
+    type4: "Type 4",
+    type5: "Type 5",
+    type6: "Type 6",
 
     // End position filters
-    alpha: 'Alpha',
-    beta: 'Beta',
-    gamma: 'Gamma',
+    alpha: "Alpha",
+    beta: "Beta",
+    gamma: "Gamma",
 
     // Reversal filters
-    continuous: 'Continuous',
-    '1-reversal': '1-Rev',
-    '2-reversals': '2-Rev',
+    continuous: "Continuous",
+    "1-reversal": "1-Rev",
+    "2-reversals": "2-Rev",
   };
 
   mapFilterKeyToLabel(key: string): string {
@@ -48,7 +48,7 @@ export class FilterLabelMapperImpl implements FilterLabelMapper {
   }
 
   mapFilterKeysToLabels(keys: string[]): string[] {
-    return keys.map(key => this.mapFilterKeyToLabel(key));
+    return keys.map((key) => this.mapFilterKeyToLabel(key));
   }
 
   getAllFilterLabels(): Record<string, string> {

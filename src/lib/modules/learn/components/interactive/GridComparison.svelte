@@ -30,7 +30,8 @@ Shows both grids simultaneously for comparison
   <div class="comparison-header">
     <h2 class="comparison-title">Grid Modes: Diamond vs Box</h2>
     <p class="comparison-subtitle">
-      The Kinetic Alphabet uses a 4-point grid system. There are two modes: Diamond and Box.
+      The Kinetic Alphabet uses a 4-point grid system. There are two modes:
+      Diamond and Box.
     </p>
   </div>
 
@@ -41,7 +42,11 @@ Shows both grids simultaneously for comparison
         <GridVisualizer mode="diamond" />
         <div class="grid-description">
           <h4>💎 Diamond Grid</h4>
-          <p>Points arranged in a diamond pattern. <strong>Easier for beginners!</strong></p>
+          <p>
+            Points arranged in a diamond pattern. <strong
+              >Easier for beginners!</strong
+            >
+          </p>
           <p>Most practitioners prefer diamond mode for its intuitive flow.</p>
         </div>
       </div>
@@ -81,11 +86,13 @@ Shows both grids simultaneously for comparison
       <div class="merged-explanation">
         <h3>🌟 The 8-Point Grid</h3>
         <p>
-          When you combine Diamond (4 points) and Box (4 points), you get the complete
+          When you combine Diamond (4 points) and Box (4 points), you get the
+          complete
           <strong>8-point grid</strong>.
         </p>
         <p>
-          This expanded grid gives you even more possibilities for complex patterns and transitions!
+          This expanded grid gives you even more possibilities for complex
+          patterns and transitions!
         </p>
 
         <button class="split-button" onclick={handleSplit}>
@@ -189,7 +196,11 @@ Shows both grids simultaneously for comparison
     align-items: center;
     gap: 0.75rem;
     padding: 1rem 2rem;
-    background: linear-gradient(135deg, rgba(74, 158, 255, 0.2), rgba(123, 104, 238, 0.2));
+    background: linear-gradient(
+      135deg,
+      rgba(74, 158, 255, 0.2),
+      rgba(123, 104, 238, 0.2)
+    );
     border: 2px solid rgba(123, 104, 238, 0.4);
     border-radius: 12px;
     color: white;
@@ -201,7 +212,11 @@ Shows both grids simultaneously for comparison
   }
 
   .merge-button:hover:not(:disabled) {
-    background: linear-gradient(135deg, rgba(74, 158, 255, 0.3), rgba(123, 104, 238, 0.3));
+    background: linear-gradient(
+      135deg,
+      rgba(74, 158, 255, 0.3),
+      rgba(123, 104, 238, 0.3)
+    );
     border-color: rgba(123, 104, 238, 0.6);
     transform: translateY(-2px);
     box-shadow: 0 8px 24px rgba(123, 104, 238, 0.3);
@@ -253,7 +268,11 @@ Shows both grids simultaneously for comparison
 
   .merged-explanation {
     padding: 2rem;
-    background: linear-gradient(135deg, rgba(123, 104, 238, 0.1), rgba(74, 158, 255, 0.1));
+    background: linear-gradient(
+      135deg,
+      rgba(123, 104, 238, 0.1),
+      rgba(74, 158, 255, 0.1)
+    );
     border: 2px solid rgba(123, 104, 238, 0.3);
     border-radius: 16px;
     text-align: center;

@@ -1,6 +1,6 @@
 /**
  * Sequence Transform Service Contract
- * 
+ *
  * Defines interface for sequence transformation operations like mirror, rotate, and swap colors.
  * These operations transform sequence data without side effects.
  */

@@ -173,7 +173,10 @@ export class ArrowSvgLoader implements IArrowSvgLoader {
       cacheMisses: this.cacheMisses,
       hitRate:
         this.cacheHits + this.cacheMisses > 0
-          ? ((this.cacheHits / (this.cacheHits + this.cacheMisses)) * 100).toFixed(2) + "%"
+          ? (
+              (this.cacheHits / (this.cacheHits + this.cacheMisses)) *
+              100
+            ).toFixed(2) + "%"
           : "0%",
     };
   }

@@ -1,20 +1,25 @@
 <script lang="ts">
   /**
    * Daily Challenge Scheduler
-   * 
+   *
    * Admin tool for scheduling daily challenges
    */
-  
+
   import { onMount } from "svelte";
   import type { IAdminChallengeService } from "../services/contracts";
-  import type { ChallengeScheduleEntry, ChallengeFormData } from "../domain/models";
+  import type {
+    ChallengeScheduleEntry,
+    ChallengeFormData,
+  } from "../domain/models";
   import type { SequenceData } from "$shared";
   import ChallengeCalendar from "./ChallengeCalendar.svelte";
   import SequenceBrowser from "./SequenceBrowser.svelte";
-  
+
   // Props
-  let { adminChallengeService }: { adminChallengeService: IAdminChallengeService } = $props();
-  
+  let {
+    adminChallengeService,
+  }: { adminChallengeService: IAdminChallengeService } = $props();
+
   // State
   let isLoading = $state(true);
   let scheduleEntries = $state<ChallengeScheduleEntry[]>([]);
@@ -26,19 +31,21 @@
   // Customization state
   let customTitle = $state("");
   let customDescription = $state("");
-  let customDifficulty = $state<"beginner" | "intermediate" | "advanced">("intermediate");
+  let customDifficulty = $state<"beginner" | "intermediate" | "advanced">(
+    "intermediate"
+  );
   let customXP = $state(50);
-  
+
   // Date range (show 2 weeks: 1 week past, 1 week future)
   const startDate = new Date();
   startDate.setDate(startDate.getDate() - 7);
   const endDate = new Date();
   endDate.setDate(endDate.getDate() + 7);
-  
+
   onMount(async () => {
     await loadData();
   });
-  
+
   async function loadData() {
     isLoading = true;
     try {
@@ -46,7 +53,7 @@
         adminChallengeService.getScheduledChallenges(startDate, endDate),
         adminChallengeService.getUserSequences(),
       ]);
-      
+
       scheduleEntries = entries;
       userSequences = sequences;
     } catch (error) {
@@ -55,12 +62,12 @@
       isLoading = false;
     }
   }
-  
+
   function handleDateSelect(date: string) {
     selectedDate = date;
     showSequenceBrowser = true;
   }
-  
+
   function handleSequenceSelect(sequence: SequenceData) {
     selectedSequence = sequence;
     // Auto-populate title and description when sequence is selected
@@ -71,7 +78,7 @@
       customDescription = `Complete this sequence to earn XP!`;
     }
   }
-  
+
   async function handleScheduleChallenge() {
     if (!selectedDate || !selectedSequence) return;
 
@@ -81,7 +88,12 @@
         sequenceId: selectedSequence.id,
         title: customTitle || `Daily Challenge: ${selectedSequence.name}`,
         description: customDescription || `Complete this sequence to earn XP!`,
-        difficulty: customDifficulty === "beginner" ? "beginner" : customDifficulty === "advanced" ? "advanced" : "intermediate",
+        difficulty:
+          customDifficulty === "beginner"
+            ? "beginner"
+            : customDifficulty === "advanced"
+              ? "advanced"
+              : "intermediate",
         xpReward: customXP,
         type: "build_sequence",
         target: 1,
@@ -111,7 +123,7 @@
       alert("Failed to schedule challenge. Please try again.");
     }
   }
-  
+
   function handleCancel() {
     selectedDate = null;
     selectedSequence = null;
@@ -150,19 +162,23 @@
         onDateSelect={handleDateSelect}
         onDeleteChallenge={handleDeleteChallenge}
       />
-      
+
       {#if showSequenceBrowser}
         <div class="sequence-selection">
           <div class="selection-header">
             <h3>Select Sequence for {selectedDate}</h3>
-            <button class="close-button" onclick={handleCancel} aria-label="Close sequence browser">
+            <button
+              class="close-button"
+              onclick={handleCancel}
+              aria-label="Close sequence browser"
+            >
               <i class="fas fa-times"></i>
             </button>
           </div>
-          
+
           <SequenceBrowser
             sequences={userSequences}
-            selectedSequence={selectedSequence}
+            {selectedSequence}
             onSequenceSelect={handleSequenceSelect}
           />
 
@@ -193,7 +209,10 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="challenge-difficulty">Difficulty</label>
-                  <select id="challenge-difficulty" bind:value={customDifficulty}>
+                  <select
+                    id="challenge-difficulty"
+                    bind:value={customDifficulty}
+                  >
                     <option value="beginner">Beginner</option>
                     <option value="intermediate">Intermediate</option>
                     <option value="advanced">Advanced</option>
@@ -441,4 +460,3 @@
     }
   }
 </style>
-

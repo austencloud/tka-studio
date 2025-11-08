@@ -64,7 +64,9 @@ export class PersistenceInitializationService
     return {
       isInitialized: this.isInitialized,
       isAvailable: this.persistenceService.isAvailable(),
-      ...(this.initializationError !== undefined && { error: this.initializationError }),
+      ...(this.initializationError !== undefined && {
+        error: this.initializationError,
+      }),
     };
   }
 

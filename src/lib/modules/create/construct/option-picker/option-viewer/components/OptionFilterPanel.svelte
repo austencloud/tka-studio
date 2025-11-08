@@ -28,7 +28,9 @@ Provides a dedicated UI for filtering option viewer content:
     onToggleContinuous?: (isContinuousOnly: boolean) => void;
   }>();
 
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   // Container-aware sizing state
   let panelElement: HTMLElement | null = $state(null);
@@ -64,7 +66,9 @@ Provides a dedicated UI for filtering option viewer content:
 
   // Responsive sizing based on container dimensions
   const isCompact = $derived(containerWidth < 350 || containerHeight < 400);
-  const isExtraCompact = $derived(containerWidth < 300 || containerHeight < 300);
+  const isExtraCompact = $derived(
+    containerWidth < 300 || containerHeight < 300
+  );
 
   function handleClose() {
     onClose();
@@ -474,4 +478,3 @@ Provides a dedicated UI for filtering option viewer content:
     font-size: 0.75rem;
   }
 </style>
-

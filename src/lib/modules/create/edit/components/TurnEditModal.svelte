@@ -16,7 +16,9 @@ Implements the proven DirectSetTurnsDialog pattern from the legacy desktop app:
   let hapticService: IHapticFeedbackService | null = $state(null);
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Props following desktop app pattern
@@ -24,7 +26,7 @@ Implements the proven DirectSetTurnsDialog pattern from the legacy desktop app:
     isOpen = false,
     currentBeatData = null,
     onClose,
-    onTurnAmountChanged
+    onTurnAmountChanged,
   } = $props<{
     isOpen?: boolean;
     currentBeatData?: BeatData | null;
@@ -43,22 +45,22 @@ Implements the proven DirectSetTurnsDialog pattern from the legacy desktop app:
   let modalElement = $state<HTMLElement>();
 
   // Handle turn selection (desktop app pattern)
-  function handleTurnSelect(color: 'blue' | 'red', value: number) {
-    hapticService?.trigger('selection');
+  function handleTurnSelect(color: "blue" | "red", value: number) {
+    hapticService?.trigger("selection");
     onTurnAmountChanged?.(color, value);
   }
 
   // Handle escape key and backdrop clicks
   function handleKeydown(event: KeyboardEvent) {
     if (event.key === "Escape") {
-      hapticService?.trigger('selection');
+      hapticService?.trigger("selection");
       onClose?.();
     }
   }
 
   function handleBackdropClick(event: MouseEvent) {
     if (event.target === event.currentTarget) {
-      hapticService?.trigger('selection');
+      hapticService?.trigger("selection");
       onClose?.();
     }
   }
@@ -106,7 +108,7 @@ Implements the proven DirectSetTurnsDialog pattern from the legacy desktop app:
           <button
             class="turn-btn"
             class:selected={blueTurnAmount === value}
-            onclick={() => handleTurnSelect('blue', value)}
+            onclick={() => handleTurnSelect("blue", value)}
             type="button"
           >
             {value}
@@ -126,7 +128,7 @@ Implements the proven DirectSetTurnsDialog pattern from the legacy desktop app:
           <button
             class="turn-btn"
             class:selected={redTurnAmount === value}
-            onclick={() => handleTurnSelect('red', value)}
+            onclick={() => handleTurnSelect("red", value)}
             type="button"
           >
             {value}
@@ -136,9 +138,7 @@ Implements the proven DirectSetTurnsDialog pattern from the legacy desktop app:
     </div>
 
     <!-- Close Button -->
-    <button class="close-btn" onclick={onClose} type="button">
-      Close
-    </button>
+    <button class="close-btn" onclick={onClose} type="button"> Close </button>
   </div>
 {/if}
 

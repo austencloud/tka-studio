@@ -8,7 +8,7 @@
  * - Expansion state transitions
  */
 
-export type ExpandedSide = 'blue' | 'red' | null;
+export type ExpandedSide = "blue" | "red" | null;
 
 export function createOrientationControlExpansionState() {
   // Current expanded side
@@ -30,7 +30,7 @@ export function createOrientationControlExpansionState() {
     },
 
     // Actions
-    expand: (side: 'blue' | 'red') => {
+    expand: (side: "blue" | "red") => {
       expandedSide = side;
       lastExpandedSide = side;
     },
@@ -40,7 +40,7 @@ export function createOrientationControlExpansionState() {
       // Note: lastExpandedSide is preserved for persistence
     },
 
-    toggle: (side: 'blue' | 'red') => {
+    toggle: (side: "blue" | "red") => {
       if (expandedSide === side) {
         expandedSide = null;
       } else {
@@ -57,10 +57,11 @@ export function createOrientationControlExpansionState() {
     },
 
     // Check if a specific side is expanded
-    isBlueExpanded: () => expandedSide === 'blue',
-    isRedExpanded: () => expandedSide === 'red',
+    isBlueExpanded: () => expandedSide === "blue",
+    isRedExpanded: () => expandedSide === "red",
   };
 }
 
-export type OrientationControlExpansionState = ReturnType<typeof createOrientationControlExpansionState>;
-
+export type OrientationControlExpansionState = ReturnType<
+  typeof createOrientationControlExpansionState
+>;

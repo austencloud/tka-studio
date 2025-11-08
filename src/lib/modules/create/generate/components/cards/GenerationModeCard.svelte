@@ -14,7 +14,7 @@ Shows BOTH Freeform and Circular options vertically with clear active/inactive s
     shadowColor = "270deg 70% 55%", // Purple-matched shadow
     gridColumnSpan = 2,
     cardIndex = 0,
-    headerFontSize = "9px"
+    headerFontSize = "9px",
   } = $props<{
     currentMode: GenerationMode;
     onModeChange: (mode: GenerationMode) => void;
@@ -28,8 +28,16 @@ Shows BOTH Freeform and Circular options vertically with clear active/inactive s
 
 <ToggleCard
   title="Gen Mode"
-  option1={{ value: GenerationMode.CIRCULAR, label: "Circular", icon: "arrows-rotate" }}
-  option2={{ value: GenerationMode.FREEFORM, label: "Freeform", icon: "bullseye" }}
+  option1={{
+    value: GenerationMode.CIRCULAR,
+    label: "Circular",
+    icon: "arrows-rotate",
+  }}
+  option2={{
+    value: GenerationMode.FREEFORM,
+    label: "Freeform",
+    icon: "bullseye",
+  }}
   activeOption={currentMode}
   onToggle={onModeChange}
   {color}

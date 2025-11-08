@@ -84,7 +84,9 @@ export class ArrowPlacementService implements IArrowPlacementService {
         const filteredData: {
           [placementKey: string]: { [turns: string]: [number, number] };
         } = {};
-        for (const [placementKey, turnsData] of Object.entries(placementData ?? {})) {
+        for (const [placementKey, turnsData] of Object.entries(
+          placementData ?? {}
+        )) {
           filteredData[placementKey] = {};
           for (const [turns, coords] of Object.entries(turnsData ?? {})) {
             if (
@@ -151,7 +153,13 @@ export class ArrowPlacementService implements IArrowPlacementService {
     if (!placementData) {
       // Only warn if this isn't a simple motion type fallback key
       // (e.g., "static", "pro", "anti" are expected to not have direct entries)
-      const isSimpleMotionType = ['static', 'pro', 'anti', 'dash', 'float'].includes(placementKey);
+      const isSimpleMotionType = [
+        "static",
+        "pro",
+        "anti",
+        "dash",
+        "float",
+      ].includes(placementKey);
       if (!isSimpleMotionType) {
         console.warn(`No placement data for key: ${placementKey}`);
       }

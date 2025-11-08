@@ -69,12 +69,11 @@ Displays current state, beat progress, rotation selector, and action buttons.
 </script>
 
 <div class="control-panel">
-
   <!-- Progress bar -->
   <div class="progress-section">
     <div class="progress-label">
-
-      Beat {pathState.currentBeatNumber} of {pathState.config?.sequenceLength || 0}
+      Beat {pathState.currentBeatNumber} of {pathState.config?.sequenceLength ||
+        0}
     </div>
     <div class="progress-bar">
       <div
@@ -92,7 +91,8 @@ Displays current state, beat progress, rotation selector, and action buttons.
     <div class="rotation-buttons">
       <button
         class="rotation-btn"
-        class:selected={pathState.selectedRotationDirection === RotationDirection.CLOCKWISE}
+        class:selected={pathState.selectedRotationDirection ===
+          RotationDirection.CLOCKWISE}
         onclick={() => selectRotation(RotationDirection.CLOCKWISE)}
         aria-label="Clockwise rotation"
       >
@@ -101,7 +101,8 @@ Displays current state, beat progress, rotation selector, and action buttons.
       </button>
       <button
         class="rotation-btn"
-        class:selected={pathState.selectedRotationDirection === RotationDirection.COUNTER_CLOCKWISE}
+        class:selected={pathState.selectedRotationDirection ===
+          RotationDirection.COUNTER_CLOCKWISE}
         onclick={() => selectRotation(RotationDirection.COUNTER_CLOCKWISE)}
         aria-label="Counter-clockwise rotation"
       >
@@ -110,7 +111,8 @@ Displays current state, beat progress, rotation selector, and action buttons.
       </button>
       <button
         class="rotation-btn"
-        class:selected={pathState.selectedRotationDirection === RotationDirection.NO_ROTATION}
+        class:selected={pathState.selectedRotationDirection ===
+          RotationDirection.NO_ROTATION}
         onclick={() => selectRotation(RotationDirection.NO_ROTATION)}
         aria-label="No rotation"
       >
@@ -128,7 +130,9 @@ Displays current state, beat progress, rotation selector, and action buttons.
         {#each pathState.completedSegments.slice(-3) as segment}
           <div class="segment-item">
             <span class="beat-num">Beat {segment.beatNumber}:</span>
-            <span class="motion-type">{getMotionTypeText(segment.handMotionType)}</span>
+            <span class="motion-type"
+              >{getMotionTypeText(segment.handMotionType)}</span
+            >
             <span class="locations">
               {segment.startLocation} → {segment.endLocation}
             </span>
@@ -190,7 +194,6 @@ Displays current state, beat progress, rotation selector, and action buttons.
     justify-content: center;
     gap: 0.5rem;
   }
-
 
   .progress-bar {
     height: 8px;
@@ -421,7 +424,8 @@ Displays current state, beat progress, rotation selector, and action buttons.
   }
 
   @keyframes pulse {
-    0%, 100% {
+    0%,
+    100% {
       transform: scale(1);
     }
     50% {
@@ -445,8 +449,6 @@ Displays current state, beat progress, rotation selector, and action buttons.
       gap: 0.25rem;
     }
 
- 
-
     .progress-bar {
       height: 5px;
     }
@@ -465,7 +467,7 @@ Displays current state, beat progress, rotation selector, and action buttons.
 
     .rotation-btn {
       padding: 0.25rem;
-      min-height: 44px;  /* Maintain accessibility */
+      min-height: 44px; /* Maintain accessibility */
       gap: 0.125rem;
       font-size: 0.65625rem;
     }
@@ -480,7 +482,7 @@ Displays current state, beat progress, rotation selector, and action buttons.
 
     .action-btn {
       padding: 0.375rem 0.5rem;
-      min-height: 44px;  /* Maintain accessibility */
+      min-height: 44px; /* Maintain accessibility */
       font-size: 0.8125rem;
     }
   }

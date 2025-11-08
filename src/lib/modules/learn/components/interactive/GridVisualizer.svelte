@@ -89,26 +89,65 @@ Shows box and diamond grids side-by-side with animations
         8-Point Grid (Merged)
       {/if}
     </h3>
-    <div class="grid-mode-badge" class:diamond={mode === "diamond"} class:box={mode === "box"} class:merged={mode === "merged"}>
+    <div
+      class="grid-mode-badge"
+      class:diamond={mode === "diamond"}
+      class:box={mode === "box"}
+      class:merged={mode === "merged"}
+    >
       {mode.toUpperCase()}
     </div>
   </div>
 
   <!-- Grid Container -->
   <div class="grid-container">
-    <svg viewBox="0 0 100 100" class="grid-svg" class:merged={mode === "merged"}>
+    <svg
+      viewBox="0 0 100 100"
+      class="grid-svg"
+      class:merged={mode === "merged"}
+    >
       <!-- Connection lines (drawn first, under points) -->
       <g class="connection-lines" opacity="0.3">
         {#if mode === "diamond" || mode === "merged"}
           <!-- Diamond grid lines -->
-          <line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="0.5" />
-          <line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="0.5" />
+          <line
+            x1="50"
+            y1="10"
+            x2="50"
+            y2="90"
+            stroke="white"
+            stroke-width="0.5"
+          />
+          <line
+            x1="10"
+            y1="50"
+            x2="90"
+            y2="50"
+            stroke="white"
+            stroke-width="0.5"
+          />
         {/if}
 
         {#if mode === "box" || mode === "merged"}
           <!-- Box grid lines -->
-          <line x1="20" y1="20" x2="80" y2="80" stroke="white" stroke-width="0.5" opacity="0.5" />
-          <line x1="80" y1="20" x2="20" y2="80" stroke="white" stroke-width="0.5" opacity="0.5" />
+          <line
+            x1="20"
+            y1="20"
+            x2="80"
+            y2="80"
+            stroke="white"
+            stroke-width="0.5"
+            opacity="0.5"
+          />
+          <line
+            x1="80"
+            y1="20"
+            x2="20"
+            y2="80"
+            stroke="white"
+            stroke-width="0.5"
+            opacity="0.5"
+          />
         {/if}
       </g>
 
@@ -116,14 +155,23 @@ Shows box and diamond grids side-by-side with animations
       <g class="grid-points">
         {#each Object.entries(getPoints()) as [key, point]}
           {@const isHighlighted = highlightedPoints.has(key)}
-          {@const pointRadius = isCenter(key) ? 2.5 : isHandPoint(key) ? 2 : 1.5}
-          {@const pointColor = isCenter(key) ? "#FFD700" : isHandPoint(key) ? "#4A9EFF" : "#FF4A4A"}
+          {@const pointRadius = isCenter(key)
+            ? 2.5
+            : isHandPoint(key)
+              ? 2
+              : 1.5}
+          {@const pointColor = isCenter(key)
+            ? "#FFD700"
+            : isHandPoint(key)
+              ? "#4A9EFF"
+              : "#FF4A4A"}
 
           <g
             class="grid-point"
             class:highlighted={isHighlighted}
             onclick={() => handlePointClick(key)}
-            onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && handlePointClick(key)}
+            onkeydown={(e) =>
+              (e.key === "Enter" || e.key === " ") && handlePointClick(key)}
             role="button"
             tabindex="0"
             aria-label={point.label}
@@ -156,7 +204,8 @@ Shows box and diamond grids side-by-side with animations
             {#if showLabels}
               <text
                 x={point.x}
-                y={point.y + (isCenter(key) ? -4 : isHandPoint(key) ? -3.5 : -3)}
+                y={point.y +
+                  (isCenter(key) ? -4 : isHandPoint(key) ? -3.5 : -3)}
                 text-anchor="middle"
                 class="point-label"
                 class:highlighted={isHighlighted}
@@ -231,19 +280,19 @@ Shows box and diamond grids side-by-side with animations
 
   .grid-mode-badge.diamond {
     background: rgba(74, 158, 255, 0.2);
-    color: #4A9EFF;
+    color: #4a9eff;
     border: 2px solid rgba(74, 158, 255, 0.3);
   }
 
   .grid-mode-badge.box {
     background: rgba(255, 74, 158, 0.2);
-    color: #FF4A9E;
+    color: #ff4a9e;
     border: 2px solid rgba(255, 74, 158, 0.3);
   }
 
   .grid-mode-badge.merged {
     background: rgba(123, 104, 238, 0.2);
-    color: #7B68EE;
+    color: #7b68ee;
     border: 2px solid rgba(123, 104, 238, 0.3);
   }
 
@@ -283,15 +332,15 @@ Shows box and diamond grids side-by-side with animations
   }
 
   .point-circle.center {
-    filter: drop-shadow(0 0 4px #FFD700);
+    filter: drop-shadow(0 0 4px #ffd700);
   }
 
   .point-circle.hand {
-    filter: drop-shadow(0 0 3px #4A9EFF);
+    filter: drop-shadow(0 0 3px #4a9eff);
   }
 
   .point-circle.outer {
-    filter: drop-shadow(0 0 3px #FF4A4A);
+    filter: drop-shadow(0 0 3px #ff4a4a);
   }
 
   .point-glow {
@@ -311,7 +360,10 @@ Shows box and diamond grids side-by-side with animations
   .point-label {
     pointer-events: none;
     user-select: none;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
     font-weight: 600;
     transition: opacity 0.2s ease;
   }

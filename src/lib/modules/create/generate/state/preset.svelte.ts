@@ -155,7 +155,11 @@ export function createPresetState() {
   /**
    * Save a new preset
    */
-  function savePreset(name: string, config: UIGenerationConfig, icon?: string): GenerationPreset {
+  function savePreset(
+    name: string,
+    config: UIGenerationConfig,
+    icon?: string
+  ): GenerationPreset {
     const now = Date.now();
     const newPreset: GenerationPreset = {
       id: generatePresetId(),
@@ -175,7 +179,10 @@ export function createPresetState() {
   /**
    * Update an existing preset
    */
-  function updatePreset(id: string, updates: Partial<Pick<GenerationPreset, "name" | "icon" | "config">>): boolean {
+  function updatePreset(
+    id: string,
+    updates: Partial<Pick<GenerationPreset, "name" | "icon" | "config">>
+  ): boolean {
     const index = presets.findIndex((p) => p.id === id);
     if (index === -1) {
       return false;
@@ -191,7 +198,11 @@ export function createPresetState() {
       updatedAt: Date.now(),
     };
 
-    presets = [...presets.slice(0, index), updated, ...presets.slice(index + 1)];
+    presets = [
+      ...presets.slice(0, index),
+      updated,
+      ...presets.slice(index + 1),
+    ];
     savePresetsToStorage(presets);
 
     return true;

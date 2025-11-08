@@ -12,5 +12,8 @@ export interface IOptionSorter {
   /**
    * Apply sorting to options based on the specified sort method
    */
-  applySorting(options: PictographData[], sortMethod: SortMethod): PictographData[];
+  applySorting(
+    options: PictographData[],
+    sortMethod: SortMethod
+  ): PictographData[];
 }

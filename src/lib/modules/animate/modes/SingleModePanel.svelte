@@ -94,11 +94,12 @@
         </div>
 
         <div class="speed-control">
-          <label>
+          <label for="single-mode-speed">
             <i class="fas fa-gauge"></i>
             Speed
           </label>
           <input
+            id="single-mode-speed"
             type="range"
             min="0.5"
             max="2"

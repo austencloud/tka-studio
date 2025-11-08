@@ -17,7 +17,7 @@ export interface IKeyboardArrowAdjustmentService {
    * @returns Updated beat data with arrow adjustment applied
    */
   handleWASDMovement(
-    key: 'w' | 'a' | 's' | 'd',
+    key: "w" | "a" | "s" | "d",
     increment: number,
     selectedArrow: { motionData: any; color: string; pictographData: any },
     beatData: BeatData
@@ -29,5 +29,8 @@ export interface IKeyboardArrowAdjustmentService {
    * @param increment - The pixel increment
    * @returns Adjustment coordinates {x, y}
    */
-  calculateAdjustment(key: 'w' | 'a' | 's' | 'd', increment: number): { x: number; y: number };
+  calculateAdjustment(
+    key: "w" | "a" | "s" | "d",
+    increment: number
+  ): { x: number; y: number };
 }

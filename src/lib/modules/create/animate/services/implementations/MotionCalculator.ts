@@ -11,7 +11,11 @@ import { inject, injectable } from "inversify";
 import { PI, TWO_PI } from "../../domain/math-constants.js";
 import type { IAngleCalculator } from "../contracts/IAngleCalculator";
 import type { IMotionCalculator } from "../contracts/IMotionCalculator";
-import { mapOrientationToAngle, normalizeAnglePositive, normalizeAngleSigned } from "./AngleCalculator";
+import {
+  mapOrientationToAngle,
+  normalizeAnglePositive,
+  normalizeAngleSigned,
+} from "./AngleCalculator";
 
 // ============================================================================
 // Standalone utility functions (exported for use by domain layer)
@@ -31,8 +35,11 @@ export function calculateProTargetAngle(
   turns: number,
   rotationDirection: RotationDirection
 ): number {
-  const centerMovement = normalizeAngleSigned(targetCenterAngle - startCenterAngle);
-  const dir = rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
+  const centerMovement = normalizeAngleSigned(
+    targetCenterAngle - startCenterAngle
+  );
+  const dir =
+    rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
   const propRotation = dir * turns * PI; // 1 turn = 180°, not 360°
   const staffMovement = centerMovement; // PRO: same direction as grid movement
   const targetStaffAngle = startStaffAngle + staffMovement + propRotation;
@@ -46,8 +53,11 @@ export function calculateAntispinTargetAngle(
   turns: number,
   rotationDirection: RotationDirection
 ): number {
-  const centerMovement = normalizeAngleSigned(targetCenterAngle - startCenterAngle);
-  const dir = rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
+  const centerMovement = normalizeAngleSigned(
+    targetCenterAngle - startCenterAngle
+  );
+  const dir =
+    rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
   const propRotation = dir * turns * PI; // 1 turn = 180°, not 360°
   const staffMovement = -centerMovement; // ANTI: opposite direction to grid movement
   const targetStaffAngle = startStaffAngle + staffMovement + propRotation;
@@ -87,7 +97,8 @@ export function calculateDashTargetAngle(
   }
 
   // Add prop rotation: 1 turn = 180° (π) for all motion types
-  const dir = rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
+  const dir =
+    rotationDirection === RotationDirection.COUNTER_CLOCKWISE ? -1 : 1;
   const propRotation = dir * turns * PI;
   const targetStaffAngle = baseAngle + propRotation;
 
@@ -164,7 +175,11 @@ export class MotionCalculator implements IMotionCalculator {
     endOrientation: Orientation,
     targetCenterAngle: number
   ): number {
-    return calculateStaticStaffAngle(startStaffAngle, endOrientation, targetCenterAngle);
+    return calculateStaticStaffAngle(
+      startStaffAngle,
+      endOrientation,
+      targetCenterAngle
+    );
   }
 
   /**
@@ -178,7 +193,13 @@ export class MotionCalculator implements IMotionCalculator {
     turns: number,
     rotationDirection: RotationDirection
   ): number {
-    return calculateDashTargetAngle(startStaffAngle, endOrientation, targetCenterAngle, turns, rotationDirection);
+    return calculateDashTargetAngle(
+      startStaffAngle,
+      endOrientation,
+      targetCenterAngle,
+      turns,
+      rotationDirection
+    );
   }
 
   /**

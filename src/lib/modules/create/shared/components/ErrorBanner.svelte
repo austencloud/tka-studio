@@ -5,7 +5,11 @@
 	Displays error messages with dismiss and optional retry actions.
 -->
 <script lang="ts">
-  const { message, onDismiss, onRetry }: {
+  const {
+    message,
+    onDismiss,
+    onRetry,
+  }: {
     message: string;
     onDismiss?: () => void;
     onRetry?: () => void;

@@ -35,13 +35,6 @@ const firebaseConfig = {
   measurementId: "G-CQH94GGM6B",
 };
 
-// DEBUG: Log the Firebase configuration being used
-console.log("🔧 [Firebase Config Debug] HARDCODED CONFIG", {
-  projectId: firebaseConfig.projectId,
-  authDomain: firebaseConfig.authDomain,
-  apiKey: firebaseConfig.apiKey?.substring(0, 20) + '...',
-});
-
 /**
  * Initialize Firebase App
  * Prevents multiple initializations in development with HMR
@@ -77,9 +70,6 @@ if (typeof window !== "undefined") {
     .then((supported) => {
       if (supported) {
         analytics = getAnalytics(app);
-        console.log("✅ [Firebase] Analytics initialized");
-      } else {
-        console.warn("⚠️ [Firebase] Analytics not supported in this environment");
       }
     })
     .catch((error) => {
@@ -96,36 +86,33 @@ export { analytics };
  */
 if (typeof window !== "undefined") {
   setPersistence(auth, indexedDBLocalPersistence)
-    .catch((indexedDBError) => {
-      console.warn("⚠️ [Firebase] IndexedDB persistence failed, using localStorage fallback:", indexedDBError);
+    .catch(() => {
       return setPersistence(auth, browserLocalPersistence);
     })
     .catch((error) => {
-      console.error("❌ [Firebase] Failed to set any persistence:", error);
+      console.error("❌ [Firebase] Failed to set persistence:", error);
     });
 
   // Enable Firestore offline persistence
   // Try multi-tab first (best for PWA), fallback to single-tab
   enableMultiTabIndexedDbPersistence(firestore)
-    .then(() => {
-      console.log("✅ [Firestore] Multi-tab offline persistence enabled");
-      return undefined;
-    })
+    .then(() => undefined)
     .catch((error) => {
       if (error.code === "failed-precondition") {
         // Multiple tabs open, fallback to single-tab
-        console.warn("⚠️ [Firestore] Multiple tabs detected, using single-tab persistence");
         return enableIndexedDbPersistence(firestore);
       } else if (error.code === "unimplemented") {
-        console.warn("⚠️ [Firestore] Offline persistence not supported in this browser");
         return undefined;
       } else {
-        console.error("❌ [Firestore] Failed to enable offline persistence:", error);
+        console.error(
+          "❌ [Firestore] Failed to enable offline persistence:",
+          error
+        );
         return undefined;
       }
     })
     .catch((error) => {
-      console.error("❌ [Firestore] Failed to enable any persistence:", error);
+      console.error("❌ [Firestore] Failed to enable persistence:", error);
     });
 }
 

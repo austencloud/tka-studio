@@ -1,6 +1,6 @@
 /**
  * Panel Coordination State Tests
- * 
+ *
  * Comprehensive test suite verifying panel mutual exclusivity rules:
  * - Only ONE panel can be open at a time
  * - Opening a panel automatically closes all other panels
@@ -89,9 +89,9 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close other panels when opening animation", () => {
       panelState.openEditPanel(0, { id: 1 });
       panelState.openFilterPanel();
-      
+
       panelState.openAnimationPanel();
-      
+
       expect(panelState.isAnimationPanelOpen).toBe(true);
       expect(panelState.isEditPanelOpen).toBe(false);
       expect(panelState.isFilterPanelOpen).toBe(false);
@@ -100,7 +100,7 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close animation panel", () => {
       panelState.openAnimationPanel();
       panelState.closeAnimationPanel();
-      
+
       expect(panelState.isAnimationPanelOpen).toBe(false);
     });
   });
@@ -114,9 +114,9 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close other panels when opening share", () => {
       panelState.openAnimationPanel();
       panelState.openEditPanel(0, { id: 1 });
-      
+
       panelState.openSharePanel();
-      
+
       expect(panelState.isSharePanelOpen).toBe(true);
       expect(panelState.isAnimationPanelOpen).toBe(false);
       expect(panelState.isEditPanelOpen).toBe(false);
@@ -125,7 +125,7 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close share panel", () => {
       panelState.openSharePanel();
       panelState.closeSharePanel();
-      
+
       expect(panelState.isSharePanelOpen).toBe(false);
     });
   });
@@ -138,9 +138,9 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
 
     it("should close other panels when opening filter", () => {
       panelState.openCAPPanel({}, new Set(), () => {});
-      
+
       panelState.openFilterPanel();
-      
+
       expect(panelState.isFilterPanelOpen).toBe(true);
       expect(panelState.isCAPPanelOpen).toBe(false);
     });
@@ -148,7 +148,7 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close filter panel", () => {
       panelState.openFilterPanel();
       panelState.closeFilterPanel();
-      
+
       expect(panelState.isFilterPanelOpen).toBe(false);
     });
   });
@@ -170,9 +170,9 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close other panels when opening CAP", () => {
       panelState.openSharePanel();
       panelState.openFilterPanel();
-      
+
       panelState.openCAPPanel({}, new Set(), () => {});
-      
+
       expect(panelState.isCAPPanelOpen).toBe(true);
       expect(panelState.isSharePanelOpen).toBe(false);
       expect(panelState.isFilterPanelOpen).toBe(false);
@@ -198,7 +198,7 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close other panels when opening creation method", () => {
       panelState.openAnimationPanel();
       panelState.openCreationMethodPanel();
-      
+
       expect(panelState.isCreationMethodPanelOpen).toBe(true);
       expect(panelState.isAnimationPanelOpen).toBe(false);
     });
@@ -206,7 +206,7 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should close creation method panel", () => {
       panelState.openCreationMethodPanel();
       panelState.closeCreationMethodPanel();
-      
+
       expect(panelState.isCreationMethodPanelOpen).toBe(false);
     });
   });
@@ -264,14 +264,14 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
     it("should properly clean up edit panel state when opening another panel", () => {
       const mockBeatData = { id: 1, name: "Test" };
       panelState.openEditPanel(5, mockBeatData);
-      
+
       // Verify state is set
       expect(panelState.editPanelBeatIndex).toBe(5);
       expect(panelState.editPanelBeatData).toEqual(mockBeatData);
-      
+
       // Open another panel
       panelState.openAnimationPanel();
-      
+
       // Edit panel state should be cleared
       expect(panelState.editPanelBeatIndex).toBe(null);
       expect(panelState.editPanelBeatData).toBe(null);
@@ -284,10 +284,10 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
       const mockOnChange = () => {};
 
       panelState.openCAPPanel(mockType, mockComponents, mockOnChange);
-      
+
       // Open another panel
       panelState.openEditPanel(0, { id: 1 });
-      
+
       // CAP panel state should be cleared
       expect(panelState.capCurrentType).toBe(null);
       expect(panelState.capSelectedComponents).toBe(null);
@@ -307,7 +307,7 @@ describe("Panel Coordination State - Mutual Exclusivity", () => {
 
     it("should handle closing already closed panel", () => {
       expect(panelState.isSharePanelOpen).toBe(false);
-      
+
       // Close already closed panel - should not error
       panelState.closeSharePanel();
       expect(panelState.isSharePanelOpen).toBe(false);

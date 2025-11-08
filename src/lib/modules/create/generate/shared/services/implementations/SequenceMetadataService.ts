@@ -7,7 +7,10 @@
 
 import { injectable } from "inversify";
 import type { BeatData } from "$shared";
-import { DifficultyLevel, type GenerationOptions } from "../../domain/models/generate-models";
+import {
+  DifficultyLevel,
+  type GenerationOptions,
+} from "../../domain/models/generate-models";
 
 export interface ISequenceMetadataService {
   /**

@@ -4,18 +4,22 @@
  * Generates partial sequences for circular mode (CAP preparation).
  * Extracted from SequenceGenerationService - EXACT original logic preserved.
  */
-import type { BeatData, IGridPositionDeriver, ILetterQueryHandler } from "$shared";
+import type {
+  BeatData,
+  IGridPositionDeriver,
+  ILetterQueryHandler,
+} from "$shared";
 import { RotationDirection } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { GenerationOptions } from "../../../shared/domain/models/generate-models";
 import { PropContinuity } from "../../../shared/domain/models/generate-models";
 import type {
-    IBeatConverterService,
-    IOrientationCalculationService,
-    IPictographFilterService,
-    ISequenceMetadataService,
-    ITurnManagementService,
+  IBeatConverterService,
+  IOrientationCalculationService,
+  IPictographFilterService,
+  ISequenceMetadataService,
+  ITurnManagementService,
 } from "../../../shared/services/contracts";
 import type { IPartialSequenceGenerator } from "../contracts/IPartialSequenceGenerator";
 
@@ -54,17 +58,29 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
 
     // Step 1: Create Type 6 static start position beat (beat 0)
     // Use the same approach as StartPositionService to create a proper Type 6 motion
-    const { MotionType, MotionColor, Orientation, RotationDirection, PropType, Letter, GridPosition } = await import("$shared");
+    const {
+      MotionType,
+      MotionColor,
+      Orientation,
+      RotationDirection,
+      PropType,
+      Letter,
+      GridPosition,
+    } = await import("$shared");
     const { createMotionData, createPictographData } = await import("$shared");
 
     // Get hand locations for this start position
-    const [blueLocation, redLocation] = this.gridPositionDeriver.getGridLocationsFromPosition(startPos);
+    const [blueLocation, redLocation] =
+      this.gridPositionDeriver.getGridLocationsFromPosition(startPos);
 
     // Determine the letter based on the position
     let letter: any;
     if (startPos === GridPosition.ALPHA1 || startPos === GridPosition.ALPHA2) {
       letter = Letter.ALPHA;
-    } else if (startPos === GridPosition.BETA5 || startPos === GridPosition.BETA4) {
+    } else if (
+      startPos === GridPosition.BETA5 ||
+      startPos === GridPosition.BETA4
+    ) {
       letter = Letter.BETA;
     } else {
       letter = Letter.GAMMA;
@@ -82,7 +98,7 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
       color: MotionColor.BLUE,
       isVisible: true,
       propType: PropType.STAFF,
-      arrowLocation: blueLocation
+      arrowLocation: blueLocation,
     });
 
     const redMotion = createMotionData({
@@ -96,7 +112,7 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
       color: MotionColor.RED,
       isVisible: true,
       propType: PropType.STAFF,
-      arrowLocation: redLocation
+      arrowLocation: redLocation,
     });
 
     // Create the start position pictograph
@@ -107,23 +123,29 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
       endPosition: startPos,
       motions: {
         [MotionColor.BLUE]: blueMotion,
-        [MotionColor.RED]: redMotion
-      }
+        [MotionColor.RED]: redMotion,
+      },
     });
 
-    const startBeat = this.beatConverterService.convertToBeat(startPictograph, 0);
+    const startBeat = this.beatConverterService.convertToBeat(
+      startPictograph,
+      0
+    );
     const sequence: BeatData[] = [startBeat];
 
     // Now get all options for generating the rest of the sequence
-    const allOptions = await this.letterQueryHandler.getAllPictographVariations(options.gridMode);
+    const allOptions = await this.letterQueryHandler.getAllPictographVariations(
+      options.gridMode
+    );
 
     // Step 2: Calculate word length (legacy formula)
     // word_length = length // 2 for halved, length // 4 for quartered
     // This is the total REAL BEATS we need in the partial sequence (excluding start position)
     // The start position (beatNumber 0) is not counted toward the user's requested length
-    const wordLength = sliceSize === SliceSize.HALVED
-      ? Math.floor(options.length / 2)
-      : Math.floor(options.length / 4);
+    const wordLength =
+      sliceSize === SliceSize.HALVED
+        ? Math.floor(options.length / 2)
+        : Math.floor(options.length / 4);
 
     // Step 3: Generate beats to fill the partial sequence
     // Total REAL BEATS needed: wordLength
@@ -138,18 +160,21 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     const turnIntensity = options.turnIntensity || 1;
 
     // Calculate turn allocation for the beats we're generating
-    const turnAllocation = await this._allocateTurns(beatsToGenerate, level, turnIntensity);
+    const turnAllocation = await this._allocateTurns(
+      beatsToGenerate,
+      level,
+      turnIntensity
+    );
 
     // Determine rotation directions
-    const { blueRotationDirection, redRotationDirection } = this._determineRotationDirections(
-      options.propContinuity
-    );
+    const { blueRotationDirection, redRotationDirection } =
+      this._determineRotationDirections(options.propContinuity);
 
     // Generate intermediate beats (not constrained to end position)
     for (let i = 0; i < beatsToGenerate; i++) {
       const blueRotation = turnAllocation.blue[i];
       const redRotation = turnAllocation.red[i];
-      
+
       // Add null checks for array access
       if (blueRotation === undefined || redRotation === undefined) {
         throw new Error(`Missing rotation direction at index ${i}`);
@@ -173,13 +198,17 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     if (!lastBeat) {
       throw new Error("No beats in sequence to generate final beat from");
     }
-    
-    let finalMoves = allOptions.filter((p: any) =>
-      p.startPosition === lastBeat.endPosition && p.endPosition === endPos
+
+    let finalMoves = allOptions.filter(
+      (p: any) =>
+        p.startPosition === lastBeat.endPosition && p.endPosition === endPos
     );
 
     // Apply the same filters as intermediate beats to respect continuity setting
-    finalMoves = this.pictographFilterService.filterByContinuity(finalMoves, lastBeat);
+    finalMoves = this.pictographFilterService.filterByContinuity(
+      finalMoves,
+      lastBeat
+    );
 
     if (options.propContinuity === PropContinuity.CONTINUOUS) {
       finalMoves = this.pictographFilterService.filterByRotation(
@@ -192,40 +221,49 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     if (finalMoves.length === 0) {
       throw new Error(
         `No valid move from ${lastBeat.endPosition} to required end position ${endPos} ` +
-        `that respects continuity=${options.propContinuity}. ` +
-        `This combination may not be possible with the current settings.`
+          `that respects continuity=${options.propContinuity}. ` +
+          `This combination may not be possible with the current settings.`
       );
     }
 
-    const finalPictograph = this.pictographFilterService.selectRandom(finalMoves);
-    let finalBeat = this.beatConverterService.convertToBeat(finalPictograph, sequence.length);
+    const finalPictograph =
+      this.pictographFilterService.selectRandom(finalMoves);
+    let finalBeat = this.beatConverterService.convertToBeat(
+      finalPictograph,
+      sequence.length
+    );
 
     // Set turns if level 2 or 3
-    const finalTurnIndex = Math.min(sequence.length - 1, turnAllocation.blue.length - 1);
+    const finalTurnIndex = Math.min(
+      sequence.length - 1,
+      turnAllocation.blue.length - 1
+    );
     if (level === 2 || level === 3) {
       const blueTurn = turnAllocation.blue[finalTurnIndex];
       const redTurn = turnAllocation.red[finalTurnIndex];
-      
+
       if (blueTurn === undefined || redTurn === undefined) {
-        throw new Error(`Missing turn allocation at final index ${finalTurnIndex}`);
+        throw new Error(
+          `Missing turn allocation at final index ${finalTurnIndex}`
+        );
       }
-      
-      this.turnManagementService.setTurns(
-        finalBeat,
-        blueTurn,
-        redTurn
-      );
+
+      this.turnManagementService.setTurns(finalBeat, blueTurn, redTurn);
     }
 
     // Update orientations
-    finalBeat = this.orientationCalculationService.updateStartOrientations(finalBeat, lastBeat);
+    finalBeat = this.orientationCalculationService.updateStartOrientations(
+      finalBeat,
+      lastBeat
+    );
     this.turnManagementService.updateDashStaticRotationDirections(
       finalBeat,
       options.propContinuity || PropContinuity.CONTINUOUS,
       blueRotationDirection,
       redRotationDirection
     );
-    finalBeat = this.orientationCalculationService.updateEndOrientations(finalBeat);
+    finalBeat =
+      this.orientationCalculationService.updateEndOrientations(finalBeat);
 
     sequence.push(finalBeat);
 
@@ -241,8 +279,14 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     level: number,
     turnIntensity: number
   ): Promise<{ blue: (number | "fl")[]; red: (number | "fl")[] }> {
-    const { TurnIntensityManagerService } = await import("../../../shared/services/implementations/TurnIntensityManagerService");
-    const turnManager = new TurnIntensityManagerService(beatsToGenerate, level, turnIntensity);
+    const { TurnIntensityManagerService } = await import(
+      "../../../shared/services/implementations/TurnIntensityManagerService"
+    );
+    const turnManager = new TurnIntensityManagerService(
+      beatsToGenerate,
+      level,
+      turnIntensity
+    );
     return turnManager.allocateTurnsForBlueAndRed();
   }
 
@@ -254,7 +298,6 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     blueRotationDirection: string;
     redRotationDirection: string;
   } {
-
     if (propContinuity === PropContinuity.CONTINUOUS) {
       return {
         blueRotationDirection: this.pictographFilterService.selectRandom([
@@ -286,7 +329,8 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     gridMode: any
   ): Promise<BeatData> {
     // Get all options
-    const allOptions = await this.letterQueryHandler.getAllPictographVariations(gridMode);
+    const allOptions =
+      await this.letterQueryHandler.getAllPictographVariations(gridMode);
 
     // Apply filters
     let filteredOptions = allOptions;
@@ -294,7 +338,10 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
 
     // Handle undefined case from array access
     const lastBeatSafe = lastBeat ?? null;
-    filteredOptions = this.pictographFilterService.filterByContinuity(filteredOptions, lastBeatSafe);
+    filteredOptions = this.pictographFilterService.filterByContinuity(
+      filteredOptions,
+      lastBeatSafe
+    );
 
     if (propContinuity === PropContinuity.CONTINUOUS) {
       filteredOptions = this.pictographFilterService.filterByRotation(
@@ -309,10 +356,14 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     }
 
     // Random selection
-    const selectedOption = this.pictographFilterService.selectRandom(filteredOptions);
+    const selectedOption =
+      this.pictographFilterService.selectRandom(filteredOptions);
 
     // Convert to beat
-    let nextBeat = this.beatConverterService.convertToBeat(selectedOption, sequence.length);
+    let nextBeat = this.beatConverterService.convertToBeat(
+      selectedOption,
+      sequence.length
+    );
 
     // Set turns if level 2 or 3
     if (level === 2 || level === 3) {
@@ -325,7 +376,7 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
       if (!previousBeat) {
         throw new Error("Expected previous beat but found undefined");
       }
-      
+
       nextBeat = this.orientationCalculationService.updateStartOrientations(
         nextBeat,
         previousBeat
@@ -339,7 +390,8 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
       redRotationDirection
     );
 
-    nextBeat = this.orientationCalculationService.updateEndOrientations(nextBeat);
+    nextBeat =
+      this.orientationCalculationService.updateEndOrientations(nextBeat);
 
     return nextBeat;
   }

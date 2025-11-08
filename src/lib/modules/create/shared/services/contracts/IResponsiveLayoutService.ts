@@ -34,7 +34,7 @@ export interface IResponsiveLayoutService {
   /**
    * Get current navigation layout (top or left)
    */
-  getNavigationLayout(): 'top' | 'left';
+  getNavigationLayout(): "top" | "left";
 
   /**
    * Determine if CreateModule panels should use side-by-side layout

@@ -62,19 +62,24 @@ export class FishSpriteManager implements IFishSpriteManager {
     return Promise.all(loadPromises).then(() => {});
   }
 
-  getRandomSpriteEntry(): { sprite: FishSprite; image?: HTMLImageElement } | undefined {
+  getRandomSpriteEntry():
+    | { sprite: FishSprite; image?: HTMLImageElement }
+    | undefined {
     if (this.fishSprites.length === 0) {
       return undefined;
     }
 
-    const sprite = this.fishSprites[Math.floor(Math.random() * this.fishSprites.length)];
+    const sprite =
+      this.fishSprites[Math.floor(Math.random() * this.fishSprites.length)];
     if (!sprite) return undefined;
     const entry = this.fishSpriteCache.get(sprite.path);
 
     return entry ?? undefined;
   }
 
-  getAnyLoadedSpriteEntry(): { sprite: FishSprite; image: HTMLImageElement } | undefined {
+  getAnyLoadedSpriteEntry():
+    | { sprite: FishSprite; image: HTMLImageElement }
+    | undefined {
     // Find any loaded sprite to use
     for (const entry of this.fishSpriteCache.values()) {
       if (entry.image && entry.image.complete && entry.ready) {
@@ -98,11 +103,11 @@ export class FishSpriteManager implements IFishSpriteManager {
 
   isReady(): boolean {
     if (this.fishSpriteCache.size === 0) return false;
-    
+
     for (const entry of this.fishSpriteCache.values()) {
       if (!entry.ready) return false;
     }
-    
+
     return true;
   }
 }

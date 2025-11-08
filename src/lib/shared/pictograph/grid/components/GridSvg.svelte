@@ -121,25 +121,28 @@ Uses pure runes instead of stores for reactivity.
 >
   {#if !hasError}
     <!-- Native SVG grid for better performance -->
-    {#await loadGridSvg() then gridSvgContent}
-      <g class="grid-svg">
-        {@html gridSvgContent}
-      </g>
-    {:catch}
-      <!-- Fallback grid rendering -->
-      <g class="fallback-grid">
-        <path
-          d={fallbackGridPath()}
-          fill="none"
-          stroke="#e5e7eb"
-          stroke-width="2"
-          stroke-dasharray="5,5"
-        />
+    <!-- Key on gridMode to reload SVG when mode changes -->
+    {#key gridMode}
+      {#await loadGridSvg() then gridSvgContent}
+        <g class="grid-svg">
+          {@html gridSvgContent}
+        </g>
+      {:catch}
+        <!-- Fallback grid rendering -->
+        <g class="fallback-grid">
+          <path
+            d={fallbackGridPath()}
+            fill="none"
+            stroke="#e5e7eb"
+            stroke-width="2"
+            stroke-dasharray="5,5"
+          />
 
-        <!-- Center point -->
-        <circle cx="475" cy="475" r="3" fill="#9ca3af" />
-      </g>
-    {/await}
+          <!-- Center point -->
+          <circle cx="475" cy="475" r="3" fill="#9ca3af" />
+        </g>
+      {/await}
+    {/key}
   {:else}
     <!-- Error fallback -->
     <g class="fallback-grid">

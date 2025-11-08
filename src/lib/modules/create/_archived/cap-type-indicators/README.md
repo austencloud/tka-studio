@@ -14,6 +14,7 @@ The CapTypeIndicators component provides **educational feedback** to users about
 - **Static Loop CAP**: Green badge with `fa-circle-dot` icon
 
 Each badge includes:
+
 - Font Awesome icon
 - Text label (e.g., "90° Rotated")
 - Hover tooltip with educational description
@@ -48,11 +49,13 @@ The component was removed from the Create module because:
 
 ```svelte
 <script lang="ts">
-  import CapTypeIndicators from './CapTypeIndicators.svelte';
-  import type { ISequenceAnalysisService } from '$create/shared/services/contracts';
-  import { resolve, TYPES } from '$shared/inversify';
+  import CapTypeIndicators from "./CapTypeIndicators.svelte";
+  import type { ISequenceAnalysisService } from "$create/shared/services/contracts";
+  import { resolve, TYPES } from "$shared/inversify";
 
-  const sequenceAnalysisService = resolve<ISequenceAnalysisService>(TYPES.ISequenceAnalysisService);
+  const sequenceAnalysisService = resolve<ISequenceAnalysisService>(
+    TYPES.ISequenceAnalysisService
+  );
 
   const capTypes = $derived(() => {
     if (!sequence) return [];
@@ -68,16 +71,19 @@ The component was removed from the Create module because:
 This component could be valuable in:
 
 ### Learn Tab
+
 - **Codex**: Show CAP types next to sequence examples
 - **Quiz**: Educational feedback when users complete pattern exercises
 - **Read**: Annotate textbook examples with CAP type badges
 
 ### Create module (Optional/Toggleable)
+
 - As a minimal, opt-in feature in settings
 - Only show icon (no label) for advanced users
 - Collapsible educational panel
 
 ### Explore
+
 - Show CAP types for saved sequences
 - Filter sequences by CAP type
 - Educational annotations on shared sequences

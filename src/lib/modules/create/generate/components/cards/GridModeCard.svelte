@@ -13,7 +13,7 @@ Shows BOTH grid mode options vertically with clear active/inactive states
     shadowColor = "160deg 75% 45%", // Green-matched shadow
     gridColumnSpan = 2,
     cardIndex = 0,
-    headerFontSize = "9px"
+    headerFontSize = "9px",
   } = $props<{
     currentMode: GridMode;
     onModeChange: (mode: GridMode) => void;

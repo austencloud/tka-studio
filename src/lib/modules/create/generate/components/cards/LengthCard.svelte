@@ -12,7 +12,7 @@ Shows current length with +/- stepper controls for quick adjustment
     color = "radial-gradient(ellipse at top left, #60a5fa 0%, #3b82f6 40%, #1d4ed8 100%)",
     shadowColor = "220deg 80% 55%", // Blue-matched shadow
     gridColumnSpan = 2,
-    headerFontSize = "9px"
+    headerFontSize = "9px",
   } = $props<{
     currentLength: number;
     onLengthChange: (length: number) => void;
@@ -50,7 +50,7 @@ Shows current length with +/- stepper controls for quick adjustment
   step={STEP}
   onIncrement={handleIncrement}
   onDecrement={handleDecrement}
-  formatValue={formatValue}
+  {formatValue}
   {color}
   {shadowColor}
   {gridColumnSpan}

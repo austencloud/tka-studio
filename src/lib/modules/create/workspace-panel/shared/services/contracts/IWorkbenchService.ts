@@ -38,7 +38,10 @@ export interface IWorkbenchService {
    * @param beatData - Optional beat data
    * @returns Promise resolving to updated sequence
    */
-  addBeat(sequenceId: string, beatData?: Partial<BeatData>): Promise<SequenceData>;
+  addBeat(
+    sequenceId: string,
+    beatData?: Partial<BeatData>
+  ): Promise<SequenceData>;
 
   /**
    * Set construction start position
@@ -46,7 +49,10 @@ export interface IWorkbenchService {
    * @param startPosition - Start position beat data
    * @returns Promise resolving to updated sequence
    */
-  setConstructionStartPosition(sequenceId: string, startPosition: BeatData): Promise<SequenceData>;
+  setConstructionStartPosition(
+    sequenceId: string,
+    startPosition: BeatData
+  ): Promise<SequenceData>;
 
   /**
    * Validate beat operations

@@ -45,6 +45,7 @@ import { AboutTab } from "$lib/modules/about/components";
 **Result:** The barrel `index.ts` files export things that nobody imports from.
 
 **Example:** `src/lib/modules/about/components/index.ts` exports:
+
 ```typescript
 export { default as AboutTab } from "./AboutTab.svelte";
 export { default as ContactSection } from "./ContactSection.svelte";
@@ -54,6 +55,7 @@ export { default as ContactSection } from "./ContactSection.svelte";
 **But:** All imports go directly to the `.svelte` files, so the `index.ts` file is unused.
 
 **Is this bad?** No! Direct imports are actually better for:
+
 - Tree-shaking (smaller bundles)
 - Faster TypeScript compilation
 - Clearer dependency graphs
@@ -66,7 +68,7 @@ Many "unused" exports are actually used by your dependency injection system:
 
 ```typescript
 // Flagged as "unused" by ts-prune
-export interface IAnimationService { }
+export interface IAnimationService {}
 
 // But used in Inversify bindings
 container.bind<IAnimationService>(TYPES.IAnimationService).to(AnimationService);
@@ -87,10 +89,10 @@ Many exports are TypeScript types used only at compile time:
 
 ```typescript
 // Flagged as unused
-export interface AnimationConfig { }
+export interface AnimationConfig {}
 
 // But used as type constraints
-function createAnimation(config: AnimationConfig) { }
+function createAnimation(config: AnimationConfig) {}
 ```
 
 **Why ts-prune flags them:** Types are erased at runtime, so imports might not be detected as "usage".
@@ -104,6 +106,7 @@ function createAnimation(config: AnimationConfig) { }
 ### ✅ About Module (15/15 components used - 100%)
 
 All components verified as used:
+
 - `AboutTab` → Used in [ModuleRenderer.svelte](src/lib/shared/modules/ModuleRenderer.svelte)
 - `AboutTheSystem` → Used in AboutTab
 - `CallToAction` → Used in Home
@@ -128,6 +131,7 @@ All components verified as used:
 ### ✅ Word Card Module (4/4 components used - 100%)
 
 All components verified as used:
+
 - `WordCardTab` → Used in [ModuleRenderer.svelte](src/lib/shared/modules/ModuleRenderer.svelte)
 - `PageDisplay` → Used in WordCardTab
 - `WordCard` → Used in PageDisplay
@@ -141,6 +145,7 @@ All components verified as used:
 ### ⚠️ Write Module (7/9 components used - 77.8%)
 
 Used components:
+
 - `WriteTab` → Used in [ModuleRenderer.svelte](src/lib/shared/modules/ModuleRenderer.svelte)
 - `ActBrowser` → Used in WriteTab
 - `ActHeader` → Used in ActSheet
@@ -150,6 +155,7 @@ Used components:
 - `WriteToolbar` → Used in WriteTab
 
 **Dead Components:**
+
 - ❌ `WriteSequenceGrid` - No imports or usages found
 - ❌ `WriteSequenceThumbnail` - No imports or usages found
 
@@ -160,6 +166,7 @@ Used components:
 ### ✅ Library Module (2/2 components used - 100%)
 
 All components verified as used:
+
 - `LibraryTab` → Used in [ModuleRenderer.svelte](src/lib/shared/modules/ModuleRenderer.svelte)
 - `SequencesView` → Used in LibraryTab
 
@@ -184,11 +191,13 @@ The build module has the most flagged exports (525), but most are:
 ## Summary Statistics
 
 ### Component Usage
+
 - **Total Components Analyzed:** 30
 - **Components Used:** 28 (93.3%)
 - **Components Unused:** 2 (6.7%)
 
 ### Export Statements
+
 - **Total "Unused" Exports (ts-prune):** 2,010
 - **Barrel Export Statements (unused but harmless):** ~190
 - **Service Contracts (used by Inversify):** ~200
@@ -202,6 +211,7 @@ The build module has the most flagged exports (525), but most are:
 ### Immediate Actions (Low Risk)
 
 #### 1. Archive the 2 Dead Components
+
 ```bash
 mkdir -p archive/write-module-unused-components-2025-11
 git mv src/lib/modules/write/components/WriteSequenceGrid.svelte archive/write-module-unused-components-2025-11/
@@ -212,6 +222,7 @@ git commit -m "Archive unused Write module components"
 #### 2. Optionally Delete Barrel `index.ts` Files (Optional - Zero Impact)
 
 These files serve no purpose in your codebase:
+
 ```bash
 # Example (test first!)
 git rm src/lib/modules/about/components/index.ts
@@ -234,11 +245,13 @@ git rm src/lib/modules/library/index.ts
 #### 3. Analyze Build Module Service Contracts
 
 Review the 30+ unused service contracts in the build module:
+
 - Are these from an old architecture?
 - Are they future interfaces you plan to implement?
 - Are they actually used by Inversify but ts-prune can't detect it?
 
 **Tools to help:**
+
 ```bash
 # Search for Inversify bindings
 git grep "bind<IServiceName>"
@@ -248,6 +261,7 @@ git grep "TYPES.IServiceName"
 #### 4. Review Shared Infrastructure Exports
 
 The shared modules have 976 "unused" exports. Many are likely:
+
 - Type definitions
 - Service contracts
 - Utility functions
@@ -261,13 +275,17 @@ Review file-by-file to determine what's truly dead.
 #### 5. Set Up ESLint Rule
 
 Add to your ESLint config:
+
 ```json
 {
   "rules": {
-    "@typescript-eslint/no-unused-vars": ["error", {
-      "argsIgnorePattern": "^_",
-      "varsIgnorePattern": "^_"
-    }]
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ]
   }
 }
 ```
@@ -277,6 +295,7 @@ This catches unused variables/imports during development.
 #### 6. Quarterly Code Reviews
 
 Run the component verification tool quarterly:
+
 ```bash
 npm run analyze:dead-code
 node verify-component-usage.js
@@ -291,6 +310,7 @@ Archive anything that's been unused for 6+ months.
 **Your codebase is cleaner than ts-prune suggests.**
 
 Out of 2,010 "unused exports":
+
 - **~190** are harmless barrel exports (delete if you want)
 - **~500-800** are service contracts and types (used at runtime/compile-time)
 - **~500-1000** are potentially dead but need careful review
@@ -318,6 +338,7 @@ npm run analyze:dead-code:quick
 ```
 
 Reports generated:
+
 - `component-usage-verification.json` - Which components are used
 - `dead-code-analysis.json` - ts-prune analysis by module
 - `usage-verification.json` - Import verification

@@ -1,6 +1,6 @@
 /**
  * Persistence Service Contract
- * 
+ *
  * Service for data persistence operations
  */
 

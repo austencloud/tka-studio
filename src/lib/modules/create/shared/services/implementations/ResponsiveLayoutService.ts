@@ -45,10 +45,10 @@ export class ResponsiveLayoutService implements IResponsiveLayoutService {
     return this.viewportService.height;
   }
 
-  getNavigationLayout(): 'top' | 'left' {
+  getNavigationLayout(): "top" | "left" {
     const layout = this.deviceDetector.getNavigationLayoutImmediate();
     // Filter out 'bottom' if present, default to 'top'
-    return layout === 'left' ? 'left' : 'top';
+    return layout === "left" ? "left" : "top";
   }
 
   shouldUseSideBySideLayout(): boolean {

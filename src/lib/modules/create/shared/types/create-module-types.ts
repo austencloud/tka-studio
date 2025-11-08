@@ -7,7 +7,10 @@
 
 import type { BuildModeId, BeatData, PictographData } from "$shared";
 import type { SimplifiedStartPositionState } from "../../construct/start-position-picker/state/start-position-state.svelte";
-import type { UndoHistoryEntry, UndoMetadata } from "../services/contracts/IUndoService";
+import type {
+  UndoHistoryEntry,
+  UndoMetadata,
+} from "../services/contracts/IUndoService";
 import type { SequenceState } from "../state/SequenceStateOrchestrator.svelte";
 
 /**
@@ -54,13 +57,21 @@ export interface ICreateModuleState {
 
   // Option history management
   addOptionToHistory: (beatIndex: number, beatData: BeatData) => void;
-  popLastOptionFromHistory: () => { beatIndex: number; beatData: BeatData; timestamp: number } | null;
+  popLastOptionFromHistory: () => {
+    beatIndex: number;
+    beatData: BeatData;
+    timestamp: number;
+  } | null;
   clearOptionHistory: () => void;
 
   // Undo history management
   readonly undoHistory: ReadonlyArray<UndoHistoryEntry>;
   pushUndoSnapshot: (
-    type: 'REMOVE_BEATS' | 'CLEAR_SEQUENCE' | 'ADD_BEAT' | 'SELECT_START_POSITION',
+    type:
+      | "REMOVE_BEATS"
+      | "CLEAR_SEQUENCE"
+      | "ADD_BEAT"
+      | "SELECT_START_POSITION",
     metadata?: UndoMetadata
   ) => void;
   undo: () => boolean;
@@ -121,7 +132,10 @@ export interface IConstructTabState {
   syncPickerStateWithSequence: () => void;
 
   // Event handlers
-  handleStartPositionSelected: (pictographData: PictographData | null, source?: "user" | "sync") => void;
+  handleStartPositionSelected: (
+    pictographData: PictographData | null,
+    source?: "user" | "sync"
+  ) => void;
 
   // Initialization
   initializeConstructTab: () => Promise<void>;

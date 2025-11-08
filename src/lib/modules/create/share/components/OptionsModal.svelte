@@ -26,10 +26,10 @@
   // Services
   let hapticService: IHapticFeedbackService;
 
-
-
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 
   // Handle modal close
@@ -44,8 +44,6 @@
     onDownload?.();
     onClose?.(); // Close modal after download
   }
-
-
 
   // Handle input changes for user info
   function handleInputChange(key: keyof ShareOptions) {
@@ -64,7 +62,7 @@
 
   // Handle escape key
   function handleKeydown(event: KeyboardEvent) {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       handleClose();
     }
   }
@@ -83,12 +81,14 @@
     tabindex="-1"
   >
     <div class="modal-content">
-            <!-- Modal Header -->
+      <!-- Modal Header -->
       <div class="modal-header">
-        <h3 id="modal-title" class="modal-title">
-          Customize Share Options
-        </h3>
-        <button class="modal-close-btn" onclick={handleClose} aria-label="Close modal">
+        <h3 id="modal-title" class="modal-title">Customize Share Options</h3>
+        <button
+          class="modal-close-btn"
+          onclick={handleClose}
+          aria-label="Close modal"
+        >
           ✕
         </button>
       </div>
@@ -99,7 +99,8 @@
         {#if shareState?.options}
           <ShareOptionsPanel
             options={shareState.options}
-            onOptionsChange={(newOptions) => shareState?.updateOptions(newOptions)}
+            onOptionsChange={(newOptions) =>
+              shareState?.updateOptions(newOptions)}
           />
         {/if}
 
@@ -114,7 +115,7 @@
                 type="text"
                 class="text-input"
                 value={shareState.options.userName}
-                oninput={handleInputChange('userName')}
+                oninput={handleInputChange("userName")}
                 placeholder="Your name"
               />
             </label>
@@ -125,22 +126,17 @@
                 type="text"
                 class="text-input"
                 value={shareState.options.notes}
-                oninput={handleInputChange('notes')}
+                oninput={handleInputChange("notes")}
                 placeholder="Optional notes"
               />
             </label>
           </div>
         {/if}
-
-
-
       </div>
 
       <!-- Modal Footer -->
       <div class="modal-footer">
-        <button class="modal-cancel-btn" onclick={handleClose}>
-          Done
-        </button>
+        <button class="modal-cancel-btn" onclick={handleClose}> Done </button>
       </div>
     </div>
   </div>

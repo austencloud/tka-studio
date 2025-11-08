@@ -80,7 +80,9 @@ export class SimpleJsonCache {
       return await response.json();
     } catch (error) {
       // Only log non-404 errors
-      if (!(error instanceof Error && error.message.startsWith('File not found:'))) {
+      if (
+        !(error instanceof Error && error.message.startsWith("File not found:"))
+      ) {
         console.error(`JSON load failed for ${path}:`, error);
       }
       throw error;

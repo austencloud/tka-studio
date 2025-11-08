@@ -5,7 +5,10 @@
   import { onMount } from "svelte";
 
   // Props
-  let { currentBeatData = null, onorientationchanged }: {
+  let {
+    currentBeatData = null,
+    onorientationchanged,
+  }: {
     currentBeatData?: BeatData | null;
     onorientationchanged?: (data: {
       color: MotionColor;
@@ -70,7 +73,9 @@
   });
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 

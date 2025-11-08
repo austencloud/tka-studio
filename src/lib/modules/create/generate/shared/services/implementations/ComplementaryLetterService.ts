@@ -1,6 +1,6 @@
 /**
  * Complementary Letter Service Implementation
- * 
+ *
  * Provides complementary letter mappings for CAP (Circular Arrangement Pattern) generation.
  * Uses the existing complementary letter mapping from the circular generation constants.
  */
@@ -20,4 +20,3 @@ export class ComplementaryLetterService implements IComplementaryLetterService {
     return getComplementaryLetter(letter);
   }
 }
-

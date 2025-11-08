@@ -23,7 +23,10 @@
       <i class="fas fa-left-right" style="font-size: 5rem; opacity: 0.2;"></i>
       <h2>Mirror Mode</h2>
       <p>Animate one sequence side-by-side with its mirrored version</p>
-      <button class="select-button" onclick={() => animateState.openSequenceBrowser("primary")}>
+      <button
+        class="select-button"
+        onclick={() => animateState.openSequenceBrowser("primary")}
+      >
         <i class="fas fa-folder-open"></i>
         Select Sequence
       </button>
@@ -41,7 +44,10 @@
             <span>Mirrored ({animateState.mirrorAxis})</span>
           </div>
         </div>
-        <button class="change-button" onclick={() => animateState.openSequenceBrowser("primary")}>
+        <button
+          class="change-button"
+          onclick={() => animateState.openSequenceBrowser("primary")}
+        >
           <i class="fas fa-exchange-alt"></i>
           Change
         </button>
@@ -67,9 +73,15 @@
       <!-- Controls -->
       <div class="controls">
         <div class="playback">
-          <button class="control-btn" aria-label="Play animation"><i class="fas fa-play"></i></button>
-          <button class="control-btn" aria-label="Stop animation"><i class="fas fa-stop"></i></button>
-          <button class="control-btn" aria-label="Loop animation"><i class="fas fa-repeat"></i></button>
+          <button class="control-btn" aria-label="Play animation"
+            ><i class="fas fa-play"></i></button
+          >
+          <button class="control-btn" aria-label="Stop animation"
+            ><i class="fas fa-stop"></i></button
+          >
+          <button class="control-btn" aria-label="Loop animation"
+            ><i class="fas fa-repeat"></i></button
+          >
         </div>
 
         <div class="mirror-settings">
@@ -167,7 +179,11 @@
   .canvas-split {
     flex: 1;
     display: flex;
-    background: linear-gradient(135deg, rgba(20, 25, 35, 0.5) 0%, rgba(15, 20, 30, 0.5) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(20, 25, 35, 0.5) 0%,
+      rgba(15, 20, 30, 0.5) 100%
+    );
   }
 
   .canvas-half {
@@ -196,7 +212,12 @@
 
   .divider {
     width: 2px;
-    background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
   }
 
   .controls {

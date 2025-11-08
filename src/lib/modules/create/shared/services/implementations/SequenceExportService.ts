@@ -1,12 +1,12 @@
-import { injectable } from 'inversify';
+import { injectable } from "inversify";
 import type {
   ISequenceExportService,
   CondensedSequenceData,
   CondensedStartPosition,
   CondensedBeatData,
   CondensedMotionData,
-  CondensedStartMotion
-} from '../contracts/ISequenceExportService';
+  CondensedStartMotion,
+} from "../contracts/ISequenceExportService";
 
 /**
  * Service for exporting sequence data in various formats
@@ -22,18 +22,21 @@ export class SequenceExportService implements ISequenceExportService {
   createCondensedSequence(sequenceData: any): CondensedSequenceData {
     const condensed: CondensedSequenceData = {
       word: sequenceData.word,
-      beats: []
+      beats: [],
     };
 
     // Include start position FIRST if it exists
     if (sequenceData.startingPositionBeat || sequenceData.startPosition) {
-      const startPos = sequenceData.startingPositionBeat || sequenceData.startPosition;
+      const startPos =
+        sequenceData.startingPositionBeat || sequenceData.startPosition;
       condensed.startPosition = this.extractStartPosition(startPos);
     }
 
     // Process each beat AFTER start position
     if (sequenceData.beats && Array.isArray(sequenceData.beats)) {
-      condensed.beats = sequenceData.beats.map((beat: any) => this.extractBeatData(beat));
+      condensed.beats = sequenceData.beats.map((beat: any) =>
+        this.extractBeatData(beat)
+      );
     }
 
     return condensed;
@@ -48,8 +51,8 @@ export class SequenceExportService implements ISequenceExportService {
       gridPosition: startPos.gridPosition,
       motions: {
         blue: this.extractStartMotion(startPos.motions?.blue),
-        red: this.extractStartMotion(startPos.motions?.red)
-      }
+        red: this.extractStartMotion(startPos.motions?.red),
+      },
     };
   }
 
@@ -59,7 +62,7 @@ export class SequenceExportService implements ISequenceExportService {
   private extractStartMotion(motion: any): CondensedStartMotion {
     return {
       startLocation: motion?.startLocation,
-      startOrientation: motion?.startOrientation
+      startOrientation: motion?.startOrientation,
     };
   }
 
@@ -76,8 +79,8 @@ export class SequenceExportService implements ISequenceExportService {
       redReversal: beat.redReversal,
       motions: {
         blue: this.extractMotionData(beat.motions?.blue),
-        red: this.extractMotionData(beat.motions?.red)
-      }
+        red: this.extractMotionData(beat.motions?.red),
+      },
     };
   }
 
@@ -92,8 +95,7 @@ export class SequenceExportService implements ISequenceExportService {
       endLocation: motion?.endLocation,
       turns: motion?.turns,
       startOrientation: motion?.startOrientation,
-      endOrientation: motion?.endOrientation
+      endOrientation: motion?.endOrientation,
     };
   }
 }
-

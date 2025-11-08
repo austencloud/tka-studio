@@ -28,7 +28,11 @@ export interface ISequenceCRUDService {
   /**
    * Update a specific beat in a sequence
    */
-  updateBeat(sequenceId: string, beatIndex: number, beat: BeatData): Promise<void>;
+  updateBeat(
+    sequenceId: string,
+    beatIndex: number,
+    beat: BeatData
+  ): Promise<void>;
 
   /**
    * Add a beat to a sequence

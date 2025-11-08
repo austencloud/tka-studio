@@ -15,36 +15,50 @@ import type { IWorkbenchService } from "../services/contracts";
  */
 export function createWorkbenchState() {
   // Get the service
-  const workbenchService = resolve(TYPES.IWorkbenchService) as IWorkbenchService;
+  const workbenchService = resolve(
+    TYPES.IWorkbenchService
+  ) as IWorkbenchService;
 
   // Simple reactive state - just what we need
   let selectedBeatIndex = $state<number | null>(null);
   let error = $state<string | null>(null);
 
   // Computed values
-  const hasSelection = $derived(selectedBeatIndex !== null && selectedBeatIndex >= 0);
+  const hasSelection = $derived(
+    selectedBeatIndex !== null && selectedBeatIndex >= 0
+  );
 
   // ============================================================================
   // ACTIONS
   // ============================================================================
 
   // Handle beat click
-  function handleBeatClick(beatIndex: number, sequence: SequenceData | null): boolean {
+  function handleBeatClick(
+    beatIndex: number,
+    sequence: SequenceData | null
+  ): boolean {
     try {
-      const shouldSelect = workbenchService.handleBeatClick(beatIndex, sequence);
+      const shouldSelect = workbenchService.handleBeatClick(
+        beatIndex,
+        sequence
+      );
       if (shouldSelect) {
         selectedBeatIndex = beatIndex;
       }
       return shouldSelect;
     } catch (err) {
       console.error("Error handling beat click:", err);
-      error = err instanceof Error ? err.message : "Failed to handle beat click";
+      error =
+        err instanceof Error ? err.message : "Failed to handle beat click";
       return false;
     }
   }
 
   // Edit a beat
-  function editBeat(beatIndex: number, sequence: SequenceData): BeatData | null {
+  function editBeat(
+    beatIndex: number,
+    sequence: SequenceData
+  ): BeatData | null {
     try {
       const updatedBeat = workbenchService.editBeat(beatIndex, sequence);
       error = null;
@@ -57,7 +71,10 @@ export function createWorkbenchState() {
   }
 
   // Clear a beat
-  function clearBeat(beatIndex: number, sequence: SequenceData): BeatData | null {
+  function clearBeat(
+    beatIndex: number,
+    sequence: SequenceData
+  ): BeatData | null {
     try {
       const updatedBeat = workbenchService.clearBeat(beatIndex, sequence);
       error = null;
@@ -80,9 +97,15 @@ export function createWorkbenchState() {
 
   return {
     // State getters
-    get selectedBeatIndex() { return selectedBeatIndex; },
-    get error() { return error; },
-    get hasSelection() { return hasSelection; },
+    get selectedBeatIndex() {
+      return selectedBeatIndex;
+    },
+    get error() {
+      return error;
+    },
+    get hasSelection() {
+      return hasSelection;
+    },
 
     // Actions
     handleBeatClick,
@@ -91,6 +114,8 @@ export function createWorkbenchState() {
     clearError,
 
     // Service access for advanced operations
-    get service() { return workbenchService; }
+    get service() {
+      return workbenchService;
+    },
   };
 }

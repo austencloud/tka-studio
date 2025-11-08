@@ -36,7 +36,10 @@ export * from "./construct-tab-state.svelte";
 
 // Main exports
 export { createSequenceState } from "./SequenceStateOrchestrator.svelte";
-export type { SequenceState, SequenceStateServices } from "./SequenceStateOrchestrator.svelte";
+export type {
+  SequenceState,
+  SequenceStateServices,
+} from "./SequenceStateOrchestrator.svelte";
 
 // Export sub-states for advanced usage
 export { createSequenceCoreState } from "./core/SequenceCoreState.svelte";

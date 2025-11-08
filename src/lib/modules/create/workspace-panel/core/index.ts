@@ -1,1 +1,1 @@
- export { default as WorkspacePanel } from "./WorkspacePanel.svelte";
+export { default as WorkspacePanel } from "./WorkspacePanel.svelte";

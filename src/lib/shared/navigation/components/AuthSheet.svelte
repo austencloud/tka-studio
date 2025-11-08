@@ -31,33 +31,19 @@
   let authMode = $state<"signin" | "signup">("signin");
 
   onMount(() => {
-    console.log("🎬 [AuthSheet] onMount - resolving services...");
     try {
       hapticService = resolve<IHapticFeedbackService>(
         TYPES.IHapticFeedbackService
       );
-      console.log(
-        "✅ [AuthSheet] hapticService resolved:",
-        hapticService !== null
-      );
-
       authService = resolve<IAuthService>(TYPES.IAuthService);
-      console.log("✅ [AuthSheet] authService resolved:", authService !== null);
     } catch (error) {
       console.error("❌ [AuthSheet] Failed to resolve services:", error);
     }
   });
 
-  // Track when sheet opens/closes
-  $effect(() => {
-    console.log("🎭 [AuthSheet] isOpen changed:", isOpen);
-  });
-
   // Auto-close when user becomes authenticated
   $effect(() => {
     if (authStore.isAuthenticated && isOpen) {
-      console.log("✅ [AuthSheet] User authenticated, auto-closing auth sheet");
-      // Small delay for smooth transition
       setTimeout(() => {
         onClose();
       }, 300);

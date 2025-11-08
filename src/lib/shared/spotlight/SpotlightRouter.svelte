@@ -83,8 +83,10 @@
 {#if (showSpotlight && spotlightSequence && spotlightThumbnailService) || spotlightSequenceId}
   <SpotlightViewer
     show={showSpotlight || !!spotlightSequenceId}
-    {...(spotlightSequence ? { sequence: spotlightSequence } : {})}
-    {...(spotlightThumbnailService ? { thumbnailService: spotlightThumbnailService } : {})}
+    {...spotlightSequence ? { sequence: spotlightSequence } : {}}
+    {...spotlightThumbnailService
+      ? { thumbnailService: spotlightThumbnailService }
+      : {}}
     onClose={handleClose}
   />
 {/if}

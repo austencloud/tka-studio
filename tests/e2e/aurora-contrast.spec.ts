@@ -21,15 +21,21 @@ test.describe("Aurora Background Contrast System", () => {
     page,
   }) => {
     // Open settings
-    await page.click('[data-testid="settings-button"], button:has-text("Settings"), .settings-trigger');
+    await page.click(
+      '[data-testid="settings-button"], button:has-text("Settings"), .settings-trigger'
+    );
     await page.waitForTimeout(500);
 
     // Navigate to Background tab
-    await page.click('button:has-text("Background"), [data-testid="background-tab"]');
+    await page.click(
+      'button:has-text("Background"), [data-testid="background-tab"]'
+    );
     await page.waitForTimeout(300);
 
     // Select Aurora background
-    await page.click('button:has-text("Aurora"), [data-testid="aurora-background"]');
+    await page.click(
+      'button:has-text("Aurora"), [data-testid="aurora-background"]'
+    );
     await page.waitForTimeout(1000); // Wait for background transition
 
     // Check that CSS variables are applied
@@ -61,7 +67,9 @@ test.describe("Aurora Background Contrast System", () => {
     page,
   }) => {
     // First, set Aurora background
-    await page.click('[data-testid="settings-button"], button:has-text("Settings")');
+    await page.click(
+      '[data-testid="settings-button"], button:has-text("Settings")'
+    );
     await page.waitForTimeout(500);
     await page.click('button:has-text("Background")');
     await page.waitForTimeout(300);
@@ -77,7 +85,9 @@ test.describe("Aurora Background Contrast System", () => {
     expect(panelBg.trim()).toContain("rgba(20, 10, 40, 0.85)");
 
     // Switch to Night Sky
-    await page.click('button:has-text("Night Sky"), [data-testid="nightSky-background"]');
+    await page.click(
+      'button:has-text("Night Sky"), [data-testid="nightSky-background"]'
+    );
     await page.waitForTimeout(1000);
 
     // Verify Night Sky styles are applied (light overlays)
@@ -94,7 +104,9 @@ test.describe("Aurora Background Contrast System", () => {
     page,
   }) => {
     // Set Aurora background
-    await page.click('[data-testid="settings-button"], button:has-text("Settings")');
+    await page.click(
+      '[data-testid="settings-button"], button:has-text("Settings")'
+    );
     await page.waitForTimeout(500);
     await page.click('button:has-text("Background")');
     await page.waitForTimeout(300);
@@ -115,7 +127,7 @@ test.describe("Aurora Background Contrast System", () => {
 
     // Check if collection cards exist and have proper styling
     const collectionCard = page.locator(".collection-card").first();
-    if (await collectionCard.count() > 0) {
+    if ((await collectionCard.count()) > 0) {
       const cardBg = await collectionCard.evaluate((el) => {
         return window.getComputedStyle(el).backgroundColor;
       });
@@ -130,7 +142,9 @@ test.describe("Aurora Background Contrast System", () => {
     page,
   }) => {
     // Set Aurora background
-    await page.click('[data-testid="settings-button"], button:has-text("Settings")');
+    await page.click(
+      '[data-testid="settings-button"], button:has-text("Settings")'
+    );
     await page.waitForTimeout(500);
     await page.click('button:has-text("Background")');
     await page.waitForTimeout(300);
@@ -148,8 +162,10 @@ test.describe("Aurora Background Contrast System", () => {
     await page.waitForTimeout(500);
 
     // Check search input styling
-    const searchInput = page.locator(".search-input, input[type='text']").first();
-    if (await searchInput.count() > 0) {
+    const searchInput = page
+      .locator(".search-input, input[type='text']")
+      .first();
+    if ((await searchInput.count()) > 0) {
       const inputBg = await searchInput.evaluate((el) => {
         return window.getComputedStyle(el).backgroundColor;
       });
@@ -163,7 +179,9 @@ test.describe("Aurora Background Contrast System", () => {
     page,
   }) => {
     // Set Aurora background
-    await page.click('[data-testid="settings-button"], button:has-text("Settings")');
+    await page.click(
+      '[data-testid="settings-button"], button:has-text("Settings")'
+    );
     await page.waitForTimeout(500);
     await page.click('button:has-text("Background")');
     await page.waitForTimeout(300);
@@ -187,7 +205,9 @@ test.describe("Aurora Background Contrast System", () => {
 
   test("should apply all 20 theme variables for Aurora", async ({ page }) => {
     // Set Aurora background
-    await page.click('[data-testid="settings-button"], button:has-text("Settings")');
+    await page.click(
+      '[data-testid="settings-button"], button:has-text("Settings")'
+    );
     await page.waitForTimeout(500);
     await page.click('button:has-text("Background")');
     await page.waitForTimeout(300);
@@ -229,7 +249,9 @@ test.describe("Aurora Background Contrast System", () => {
     page,
   }) => {
     // Set Aurora background
-    await page.click('[data-testid="settings-button"], button:has-text("Settings")');
+    await page.click(
+      '[data-testid="settings-button"], button:has-text("Settings")'
+    );
     await page.waitForTimeout(500);
     await page.click('button:has-text("Background")');
     await page.waitForTimeout(300);
@@ -248,7 +270,7 @@ test.describe("Aurora Background Contrast System", () => {
 
     // Check filter buttons
     const filterButton = page.locator(".filter-button").first();
-    if (await filterButton.count() > 0) {
+    if ((await filterButton.count()) > 0) {
       const buttonBg = await filterButton.evaluate((el) => {
         return window.getComputedStyle(el).backgroundColor;
       });

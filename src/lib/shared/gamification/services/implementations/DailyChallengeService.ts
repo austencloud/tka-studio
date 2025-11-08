@@ -137,7 +137,8 @@ const CHALLENGE_TEMPLATES: Array<{
     type: "use_letters",
     difficulty: "advanced",
     title: "Spell Your Name",
-    description: "Create a sequence that spells your name (or any 5+ letter word)",
+    description:
+      "Create a sequence that spells your name (or any 5+ letter word)",
     xpReward: 200,
     target: 1,
     metadata: { minLength: 5 },
@@ -207,7 +208,10 @@ export class DailyChallengeService implements IDailyChallengeService {
     // Read from Firestore (admin pre-created challenges only)
     try {
       const challengesPath = getDailyChallengesPath();
-      const challengeDocRef = doc(firestore, `${challengesPath}/${challengeId}`);
+      const challengeDocRef = doc(
+        firestore,
+        `${challengesPath}/${challengeId}`
+      );
       const challengeDoc = await getDoc(challengeDocRef);
 
       if (challengeDoc.exists()) {
@@ -218,7 +222,9 @@ export class DailyChallengeService implements IDailyChallengeService {
 
         return firestoreChallenge;
       } else {
-        console.warn("⚠️ No daily challenge found for today. Admin needs to create it.");
+        console.warn(
+          "⚠️ No daily challenge found for today. Admin needs to create it."
+        );
         return null;
       }
     } catch (error) {
@@ -226,8 +232,6 @@ export class DailyChallengeService implements IDailyChallengeService {
       return null;
     }
   }
-
-
 
   // ============================================================================
   // CHALLENGE PROGRESS
@@ -365,10 +369,9 @@ export class DailyChallengeService implements IDailyChallengeService {
       throw new Error("No daily challenge available");
     }
 
-    await this.updateChallengeProgress(
-      challenge.requirement.target,
-      { manualCompletion: true }
-    );
+    await this.updateChallengeProgress(challenge.requirement.target, {
+      manualCompletion: true,
+    });
 
     return {
       xpAwarded: challenge.xpReward,
@@ -385,9 +388,7 @@ export class DailyChallengeService implements IDailyChallengeService {
   // CHALLENGE HISTORY
   // ============================================================================
 
-  async getChallengeHistory(
-    days: number = 7
-  ): Promise<
+  async getChallengeHistory(days: number = 7): Promise<
     Array<{
       challenge: DailyChallenge;
       progress: UserChallengeProgress | null;

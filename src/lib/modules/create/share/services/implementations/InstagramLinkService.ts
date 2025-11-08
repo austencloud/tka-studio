@@ -5,10 +5,10 @@
  * Phase 1: External linking without API integration.
  */
 
-import { injectable } from 'inversify';
-import type { IInstagramLinkService } from '../contracts/IInstagramLinkService';
-import type { InstagramLink, InstagramUrlValidation } from '../../domain';
-import { INSTAGRAM_URL_PATTERNS, createInstagramLink } from '../../domain';
+import { injectable } from "inversify";
+import type { IInstagramLinkService } from "../contracts/IInstagramLinkService";
+import type { InstagramLink, InstagramUrlValidation } from "../../domain";
+import { INSTAGRAM_URL_PATTERNS, createInstagramLink } from "../../domain";
 
 @injectable()
 export class InstagramLinkService implements IInstagramLinkService {
@@ -25,19 +25,20 @@ export class InstagramLinkService implements IInstagramLinkService {
         isValid: false,
         postId: null,
         username: null,
-        error: 'URL cannot be empty',
+        error: "URL cannot be empty",
       };
     }
 
     // Try to extract post ID using all patterns
     const postId = this.extractPostId(trimmedUrl);
-    
+
     if (!postId) {
       return {
         isValid: false,
         postId: null,
         username: null,
-        error: 'Invalid Instagram URL. Please use a valid Instagram post, reel, or video URL.',
+        error:
+          "Invalid Instagram URL. Please use a valid Instagram post, reel, or video URL.",
       };
     }
 
@@ -64,7 +65,7 @@ export class InstagramLinkService implements IInstagramLinkService {
       if (match) {
         // For PROFILE_POST pattern, post ID is in group 2
         // For all others, it's in group 1
-        return match[2] || match[1];
+        return (match[2] || match[1]) ?? null;
       }
     }
 
@@ -100,7 +101,7 @@ export class InstagramLinkService implements IInstagramLinkService {
     // Validate URL first
     const validation = this.validateUrl(url);
     if (!validation.isValid) {
-      console.error('Invalid Instagram URL:', validation.error);
+      console.error("Invalid Instagram URL:", validation.error);
       return;
     }
 
@@ -108,19 +109,19 @@ export class InstagramLinkService implements IInstagramLinkService {
     if (preferApp && this.isMobileDevice()) {
       // Try Instagram app deep link first
       const appUrl = this.convertToAppUrl(url);
-      
+
       // Try to open in app, fallback to web
-      const appWindow = window.open(appUrl, '_blank');
-      
+      const appWindow = window.open(appUrl, "_blank");
+
       // If app didn't open, fallback to web URL after short delay
       setTimeout(() => {
         if (!appWindow || appWindow.closed) {
-          window.open(url, '_blank', 'noopener,noreferrer');
+          window.open(url, "_blank", "noopener,noreferrer");
         }
       }, 500);
     } else {
       // Open in new tab (web)
-      window.open(url, '_blank', 'noopener,noreferrer');
+      window.open(url, "_blank", "noopener,noreferrer");
     }
   }
 
@@ -134,14 +135,14 @@ export class InstagramLinkService implements IInstagramLinkService {
     }
   ): InstagramLink | null {
     const validation = this.validateUrl(url);
-    
+
     if (!validation.isValid || !validation.postId) {
       return null;
     }
 
     return createInstagramLink(url, validation.postId, {
-      username: validation.username || undefined,
-      caption: options?.caption,
+      ...(validation.username && { username: validation.username }),
+      ...(options?.caption && { caption: options.caption }),
     });
   }
 
@@ -171,7 +172,7 @@ export class InstagramLinkService implements IInstagramLinkService {
    * @private
    */
   private isMobileDevice(): boolean {
-    if (typeof navigator === 'undefined') {
+    if (typeof navigator === "undefined") {
       return false;
     }
 
@@ -180,4 +181,3 @@ export class InstagramLinkService implements IInstagramLinkService {
     );
   }
 }
-

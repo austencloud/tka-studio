@@ -186,7 +186,7 @@ export class NotificationService implements INotificationService {
     if (!user) {
       // Try local DB
       return await db.achievementNotifications
-        .filter(n => n.isRead === false)
+        .filter((n) => n.isRead === false)
         .toArray();
     }
 
@@ -233,7 +233,7 @@ export class NotificationService implements INotificationService {
 
     // Update local DB
     const unread = await db.achievementNotifications
-      .filter(n => n.isRead === false)
+      .filter((n) => n.isRead === false)
       .toArray();
 
     for (const notification of unread) {

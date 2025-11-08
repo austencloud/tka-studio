@@ -11,5 +11,8 @@ export interface IOptionLoader {
   /**
    * Load available options based on current sequence and grid mode
    */
-  loadOptions(sequence: PictographData[], gridMode: GridMode): Promise<PictographData[]>;
+  loadOptions(
+    sequence: PictographData[],
+    gridMode: GridMode
+  ): Promise<PictographData[]>;
 }

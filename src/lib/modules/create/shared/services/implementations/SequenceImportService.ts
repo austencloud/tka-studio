@@ -7,7 +7,20 @@
 
 import { PngMetadataExtractor } from "$lib/shared/pictograph/shared/utils/png-metadata-extractor";
 import type { BeatData, IEnumMapper, Letter, SequenceData } from "$shared";
-import { createMotionData, createPictographData, createSequenceData, GridLocation, GridMode, MotionColor, MotionType, Orientation, parseStrict, PngMetadataArraySchema, PropType, RotationDirection } from "$shared";
+import {
+  createMotionData,
+  createPictographData,
+  createSequenceData,
+  GridLocation,
+  GridMode,
+  MotionColor,
+  MotionType,
+  Orientation,
+  parseStrict,
+  PngMetadataArraySchema,
+  PropType,
+  RotationDirection,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { ISequenceImportService } from "../contracts";
@@ -73,8 +86,9 @@ export class SequenceImportService implements ISequenceImportService {
           blue: createMotionData({
             color: MotionColor.BLUE,
             motionType:
-              this.enumMapper.mapMotionType(step.blue_attributes?.motion_type) ||
-              MotionType.STATIC,
+              this.enumMapper.mapMotionType(
+                step.blue_attributes?.motion_type
+              ) || MotionType.STATIC,
             startLocation:
               this.enumMapper.mapLocation(step.blue_attributes?.start_loc) ||
               GridLocation.NORTH,
@@ -198,7 +212,9 @@ export class SequenceImportService implements ISequenceImportService {
       isFavorite: validSequenceData.isFavorite ?? false,
       isCircular: validSequenceData.isCircular ?? false,
       tags: validSequenceData.tags || [],
-      ...(validSequenceData.metadata ? { metadata: validSequenceData.metadata } : {}),
+      ...(validSequenceData.metadata
+        ? { metadata: validSequenceData.metadata }
+        : {}),
       propType: validSequenceData.propType || PropType.FAN,
       gridMode: validSequenceData.gridMode || GridMode.DIAMOND,
       difficultyLevel: validSequenceData.difficultyLevel || "beginner",

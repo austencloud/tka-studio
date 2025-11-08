@@ -217,7 +217,11 @@ export class AchievementService implements IAchievementService {
         `✅ Tracked action: ${action} (+${xpGained} XP, ${achievementsUnlocked.length} achievements unlocked)`
       );
 
-      const result: { xpGained: number; achievementsUnlocked: Achievement[]; newLevel?: number } = {
+      const result: {
+        xpGained: number;
+        achievementsUnlocked: Achievement[];
+        newLevel?: number;
+      } = {
         xpGained,
         achievementsUnlocked,
       };
@@ -255,7 +259,11 @@ export class AchievementService implements IAchievementService {
         return XP_REWARDS.DAILY_CHALLENGE_COMPLETED;
       case "achievement_unlocked":
         // Variable XP based on achievement tier (passed in metadata)
-        const tier = metadata?.tier as "bronze" | "silver" | "gold" | "platinum";
+        const tier = metadata?.tier as
+          | "bronze"
+          | "silver"
+          | "gold"
+          | "platinum";
         if (tier === "bronze") return XP_REWARDS.ACHIEVEMENT_UNLOCKED_BRONZE;
         if (tier === "silver") return XP_REWARDS.ACHIEVEMENT_UNLOCKED_SILVER;
         if (tier === "gold") return XP_REWARDS.ACHIEVEMENT_UNLOCKED_GOLD;
@@ -430,17 +438,19 @@ export class AchievementService implements IAchievementService {
    * Get achievements relevant to a specific action
    */
   private getRelevantAchievements(action: XPActionType): Achievement[] {
-    const typeMapping: Record<XPActionType, Achievement["requirement"]["type"][]> =
-      {
-        sequence_created: ["sequence_count", "letter_usage", "sequence_length"],
-        sequence_generated: ["generation_count"],
-        concept_learned: ["concept_completion"],
-        drill_completed: ["specific_action"],
-        sequence_explored: ["gallery_exploration"],
-        daily_login: ["daily_streak"],
-        daily_challenge_completed: ["specific_action"],
-        achievement_unlocked: [],
-      };
+    const typeMapping: Record<
+      XPActionType,
+      Achievement["requirement"]["type"][]
+    > = {
+      sequence_created: ["sequence_count", "letter_usage", "sequence_length"],
+      sequence_generated: ["generation_count"],
+      concept_learned: ["concept_completion"],
+      drill_completed: ["specific_action"],
+      sequence_explored: ["gallery_exploration"],
+      daily_login: ["daily_streak"],
+      daily_challenge_completed: ["specific_action"],
+      achievement_unlocked: [],
+    };
 
     const relevantTypes = typeMapping[action] || [];
 
@@ -670,7 +680,9 @@ export class AchievementService implements IAchievementService {
     );
 
     const snapshot = await getDocs(recentQuery);
-    return snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }) as UserAchievement);
+    return snapshot.docs.map(
+      (doc) => ({ ...doc.data(), id: doc.id }) as UserAchievement
+    );
   }
 
   async getAchievementProgress(
@@ -680,14 +692,20 @@ export class AchievementService implements IAchievementService {
     if (!user) return null;
 
     const achievementsPath = getUserAchievementsPath(user.uid);
-    const achievementDocRef = doc(firestore, `${achievementsPath}/${achievementId}`);
+    const achievementDocRef = doc(
+      firestore,
+      `${achievementsPath}/${achievementId}`
+    );
     const achievementDoc = await getDoc(achievementDocRef);
 
     if (!achievementDoc.exists()) {
       return null;
     }
 
-    return { ...achievementDoc.data(), id: achievementDoc.id } as UserAchievement;
+    return {
+      ...achievementDoc.data(),
+      id: achievementDoc.id,
+    } as UserAchievement;
   }
 
   async getStats(): Promise<{

@@ -86,10 +86,7 @@ export class RotationAngleOverrideKeyGenerator
     const endOri = motionData.endOrientation;
     if (endOri === Orientation.IN || endOri === Orientation.OUT) {
       return "layer1";
-    } else if (
-      endOri === Orientation.CLOCK ||
-      endOri === Orientation.COUNTER
-    ) {
+    } else if (endOri === Orientation.CLOCK || endOri === Orientation.COUNTER) {
       return "layer2";
     }
     return "layer1"; // Default fallback
@@ -140,8 +137,7 @@ export class RotationAngleOverrideKeyGenerator
       // Mixed if one is layer1 (IN/OUT) and other is layer2 (CLOCK/COUNTER)
       const blueLayer1 =
         blueEnd === Orientation.IN || blueEnd === Orientation.OUT;
-      const redLayer1 =
-        redEnd === Orientation.IN || redEnd === Orientation.OUT;
+      const redLayer1 = redEnd === Orientation.IN || redEnd === Orientation.OUT;
 
       return blueLayer1 !== redLayer1;
     } catch {

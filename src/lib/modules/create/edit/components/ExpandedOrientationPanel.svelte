@@ -1,20 +1,20 @@
 <!-- ExpandedOrientationPanel.svelte - Expanded orientation controls with 2x2 grid -->
 <script lang="ts">
-  import type { BeatData, IHapticFeedbackService } from '$shared';
-  import { resolve, TYPES } from '$shared';
-  import { onMount } from 'svelte';
+  import type { BeatData, IHapticFeedbackService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
 
   // Props
   const {
     color,
     currentBeatData,
-    layoutMode = 'comfortable',
+    layoutMode = "comfortable",
     onOrientationChanged,
-    onCollapse
+    onCollapse,
   } = $props<{
-    color: 'blue' | 'red';
+    color: "blue" | "red";
     currentBeatData: BeatData | null;
-    layoutMode?: 'compact' | 'balanced' | 'comfortable';
+    layoutMode?: "compact" | "balanced" | "comfortable";
     onOrientationChanged: (color: string, orientation: string) => void;
     onCollapse: () => void;
   }>();
@@ -23,19 +23,25 @@
   let hapticService: IHapticFeedbackService;
 
   // Orientation options
-  const orientations = ['in', 'out', 'clock', 'counter'];
+  const orientations = ["in", "out", "clock", "counter"];
 
   // Display helpers
-  const displayLabel = $derived(() => color === 'blue' ? 'Left' : 'Right');
+  const displayLabel = $derived(() => (color === "blue" ? "Left" : "Right"));
   const currentOrientation = $derived(() => {
-    if (!currentBeatData) return 'in';
-    const motion = color === 'blue' ? currentBeatData.motions?.blue : currentBeatData.motions?.red;
-    return motion?.startOrientation || 'in';
+    if (!currentBeatData) return "in";
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
+    return motion?.startOrientation || "in";
   });
 
   // Handlers
   function handleOrientationClick(orientation: string) {
-    console.log(`🟢 ExpandedOrientationPanel.handleOrientationClick:`, { color, orientation });
+    console.log(`🟢 ExpandedOrientationPanel.handleOrientationClick:`, {
+      color,
+      orientation,
+    });
     hapticService?.trigger("selection");
     console.log(`  Calling onOrientationChanged callback...`);
     onOrientationChanged(color, orientation);
@@ -47,17 +53,19 @@
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
 <div
   class="orientation-panel"
-  class:blue={color === 'blue'}
-  class:red={color === 'red'}
-  class:compact={layoutMode === 'compact'}
-  class:balanced={layoutMode === 'balanced'}
-  class:comfortable={layoutMode === 'comfortable'}
+  class:blue={color === "blue"}
+  class:red={color === "red"}
+  class:compact={layoutMode === "compact"}
+  class:balanced={layoutMode === "balanced"}
+  class:comfortable={layoutMode === "comfortable"}
   data-testid={`expanded-orientation-panel-${color}`}
 >
   <!-- Header -->
@@ -66,11 +74,7 @@
       <span class="orientation-label">{displayLabel()}</span>
       <span class="current-badge">{currentOrientation().toUpperCase()}</span>
     </div>
-    <button
-      class="close-btn"
-      onclick={handleClose}
-      aria-label="Close panel"
-    >
+    <button class="close-btn" onclick={handleClose} aria-label="Close panel">
       <i class="fas fa-times"></i>
     </button>
   </div>
@@ -101,9 +105,10 @@
     /* Smooth height transition for expansion/collapse */
     max-height: 500px; /* Large enough to accommodate all content */
     overflow: hidden;
-    transition: max-height var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
-                opacity var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
-                transform var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+    transition:
+      max-height var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
+      opacity var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1)),
+      transform var(--transition-normal, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
 
     /* Initial animation when first rendered */
     animation: expandIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -137,7 +142,11 @@
   .orientation-panel.blue {
     border-color: #3b82f6;
     border-style: solid;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, white 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.05) 0%,
+      white 100%
+    );
   }
 
   .orientation-panel.red {

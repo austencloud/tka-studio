@@ -22,7 +22,9 @@
 
   onMount(() => {
     try {
-      adminChallengeService = resolve<IAdminChallengeService>(TYPES.IAdminChallengeService);
+      adminChallengeService = resolve<IAdminChallengeService>(
+        TYPES.IAdminChallengeService
+      );
       isLoading = false;
     } catch (error) {
       console.error("❌ Failed to initialize AdminDashboard:", error);
@@ -41,20 +43,39 @@
     <!-- Content Area -->
     <main class="content">
       {#if activeSection === "challenges" && adminChallengeService}
-        <div id="challenges-panel" role="tabpanel" aria-labelledby="challenges-tab">
+        <div
+          id="challenges-panel"
+          role="tabpanel"
+          aria-labelledby="challenges-tab"
+        >
           <DailyChallengeScheduler {adminChallengeService} />
         </div>
       {:else if activeSection === "analytics"}
-        <div id="analytics-panel" role="tabpanel" aria-labelledby="analytics-tab" class="placeholder-section">
+        <div
+          id="analytics-panel"
+          role="tabpanel"
+          aria-labelledby="analytics-tab"
+          class="placeholder-section"
+        >
           <i class="fas fa-chart-line"></i>
           <h2>Analytics Dashboard</h2>
-          <p>Coming soon: View app usage, popular sequences, and user engagement metrics.</p>
+          <p>
+            Coming soon: View app usage, popular sequences, and user engagement
+            metrics.
+          </p>
         </div>
       {:else if activeSection === "users"}
-        <div id="users-panel" role="tabpanel" aria-labelledby="users-tab" class="placeholder-section">
+        <div
+          id="users-panel"
+          role="tabpanel"
+          aria-labelledby="users-tab"
+          class="placeholder-section"
+        >
           <i class="fas fa-users"></i>
           <h2>User Management</h2>
-          <p>Coming soon: View users, grant achievements, and manage permissions.</p>
+          <p>
+            Coming soon: View users, grant achievements, and manage permissions.
+          </p>
         </div>
       {/if}
     </main>
@@ -142,4 +163,3 @@
     }
   }
 </style>
-

@@ -4,4 +4,3 @@ export * from "./workspace-panel";
 export * from "./shared/domain";
 export * from "./shared/services/implementations";
 export * from "./shared/state";
-

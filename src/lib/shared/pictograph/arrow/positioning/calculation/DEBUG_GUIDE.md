@@ -1,7 +1,9 @@
 # Dash Arrow Positioning Diagnostic Tool
 
 ## Problem
+
 When modifying directional tuple transformation matrices in `DirectionalTupleProcessor.ts`, changes may have no effect on arrow positioning. This indicates the transformation pipeline is either:
+
 - Not being executed (motion type/rotation/grid mode not detected correctly)
 - Catching errors and using fallback values
 - Being bypassed by caching or async issues
@@ -18,8 +20,8 @@ Add the debug button to any component that displays pictographs:
 
 ```svelte
 <script>
-  import DashPositioningDebugButton from '$shared/pictograph/arrow/positioning/calculation/components/DashPositioningDebugButton.svelte';
-  import { pictographState } from './your-pictograph-state';
+  import DashPositioningDebugButton from "$shared/pictograph/arrow/positioning/calculation/components/DashPositioningDebugButton.svelte";
+  import { pictographState } from "./your-pictograph-state";
 </script>
 
 <!-- Add near your pictograph display -->
@@ -30,6 +32,7 @@ Add the debug button to any component that displays pictographs:
 ```
 
 Good places to add this:
+
 - `src/lib/modules/build/animate/components/AnimationPanel.svelte`
 - `src/lib/modules/explore/shared/components/ExploreTab.svelte`
 - `src/lib/shared/pictograph/shared/components/Pictograph.svelte`
@@ -40,7 +43,7 @@ Use the composable in any Svelte component:
 
 ```svelte
 <script lang="ts">
-  import { useDashPositioningDebug } from '$shared/pictograph/arrow/positioning/calculation/services/implementations/useDashPositioningDebug.svelte';
+  import { useDashPositioningDebug } from "$shared/pictograph/arrow/positioning/calculation/services/implementations/useDashPositioningDebug.svelte";
 
   const { debugPictograph, debugBothArrows } = useDashPositioningDebug();
 
@@ -67,31 +70,37 @@ window.debugDashArrow(pictographData, false);
 The diagnostic runs 8 comprehensive checks:
 
 ### ✅ STEP 1: Motion Type Detection
+
 - Validates motion is detected as DASH
 - Checks raw motion type value
 - **Common issue**: Motion type string not matching "dash" exactly
 
 ### ✅ STEP 2: Rotation Direction Detection
+
 - Validates rotation direction (CW/CCW/NoRotation)
 - Checks turn count
 - **Common issue**: 1 turn not mapped to "clockwise" correctly
 
 ### ✅ STEP 3: Grid Mode Detection
+
 - Determines if grid is Diamond or Box mode
 - Checks motion start/end locations (cardinal vs diagonal)
 - **Common issue**: Wrong grid mode causes wrong transformation matrices
 
 ### ✅ STEP 4: Arrow Location Calculation
+
 - Uses `DashLocationCalculator` to get arrow position
 - Shows calculated location vs motion locations
 - **Common issue**: Arrow location doesn't match expected position
 
 ### ✅ STEP 5: Base Adjustment Retrieval
+
 - Gets XY values from JSON files
 - Shows special vs default placement
 - **Common issue**: JSON key mismatch returns (0,0)
 
 ### ✅ STEP 6: Directional Tuple Generation ⚠️ CRITICAL
+
 - **This is where your transformation matrices are applied**
 - Generates 4 tuples (one per quadrant) from base XY
 - Shows all 4 transformed values
@@ -99,11 +108,13 @@ The diagnostic runs 8 comprehensive checks:
 - **Common issue**: All tuples identical to base = NO TRANSFORMATION
 
 ### ✅ STEP 7: Quadrant Index Calculation
+
 - Determines which quadrant the arrow is in
 - Shows index mapping (0=NE, 1=SE, 2=SW, 3=NW)
 - **Common issue**: Wrong index selects wrong tuple
 
 ### ✅ STEP 8: Final Adjustment Application
+
 - Shows which tuple was selected
 - Compares final vs base adjustment
 - **Validates transformation was applied to final result**
@@ -112,6 +123,7 @@ The diagnostic runs 8 comprehensive checks:
 ## Interpreting Results
 
 ### ✅ Success Output Example
+
 ```
 🔍 DASH POSITIONING DIAGNOSTIC
   📋 STEP 1: Motion Type Detection
@@ -138,6 +150,7 @@ The diagnostic runs 8 comprehensive checks:
 ```
 
 ### ⚠️ Problem Output Example
+
 ```
 🔍 DASH POSITIONING DIAGNOSTIC
   📋 STEP 1: Motion Type Detection
@@ -163,9 +176,11 @@ The diagnostic runs 8 comprehensive checks:
 ## Common Issues & Fixes
 
 ### Issue: "Transformation matrices NOT being applied"
+
 **Symptoms**: All tuples identical to base in Step 6
 
 **Possible causes**:
+
 1. Motion type not detected as "dash" (check Step 1)
 2. Rotation direction not detected as CW/CCW (check Step 2)
 3. Grid mode wrong (check Step 3)
@@ -174,22 +189,27 @@ The diagnostic runs 8 comprehensive checks:
 **Fix**: Check the console for caught errors in Step 6. The transformation logic in `DirectionalTupleProcessor.generateDirectionalTuples()` might be throwing an error.
 
 ### Issue: "Changes to matrices have no effect"
+
 **Symptoms**: Modified `DirectionalTupleProcessor.ts` lines 200-206 but arrows don't move
 
 **Possible causes**:
+
 1. Wrong code path being executed (box mode instead of diamond)
 2. Error being caught and base adjustment returned
 3. Module not reloaded (HMR issue)
 
 **Fix**:
+
 1. Run diagnostic to confirm which code path is executed
 2. Add `console.log()` directly in the transformation matrix code
 3. Hard refresh browser (Ctrl+Shift+R)
 
 ### Issue: "Base adjustment is (0, 0)"
+
 **Symptoms**: Step 5 shows (0, 0) for base adjustment
 
 **Possible causes**:
+
 1. JSON key mismatch in placement files
 2. Motion parameters don't match any JSON entry
 3. JSON file not loaded
@@ -217,6 +237,7 @@ The diagnostic runs 8 comprehensive checks:
 **Your issue**: Modifying lines 200-206 in DirectionalTupleProcessor has no effect
 
 **Steps**:
+
 1. Add debug button to AnimationPanel
 2. Load a pictograph with clockwise dash + 1 turn
 3. Click debug button

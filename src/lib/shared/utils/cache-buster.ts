@@ -3,7 +3,10 @@
  * Use this when the app gets stuck on white screen
  */
 
-import { nuclearCacheClear, diagnoseCacheState } from "$shared/auth/utils/nuclearCacheClear";
+import {
+  nuclearCacheClear,
+  diagnoseCacheState,
+} from "$shared/auth/utils/nuclearCacheClear";
 
 export async function clearAllCaches(): Promise<void> {
   if (typeof window === "undefined") return;
@@ -83,7 +86,4 @@ export function registerCacheClearShortcut(): void {
       }
     }
   });
-
-  console.log("✨ Cache clear shortcut registered: Ctrl+Shift+Delete");
-  console.log("💡 Or visit: http://localhost:5173/?clear-cache");
 }

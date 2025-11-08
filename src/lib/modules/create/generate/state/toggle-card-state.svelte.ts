@@ -6,7 +6,11 @@
  * Follows TKA architecture: services handle business logic, runes handle reactivity.
  */
 
-import type { IDeviceDetector, IHapticFeedbackService, IRippleEffectService } from "$shared";
+import type {
+  IDeviceDetector,
+  IHapticFeedbackService,
+  IRippleEffectService,
+} from "$shared";
 import { resolve, TYPES } from "$shared";
 
 /**
@@ -35,8 +39,12 @@ export function createToggleCardState(props: {
   async function initialize(): Promise<() => void> {
     try {
       // Resolve services from DI container
-      hapticService = await resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
-      rippleService = await resolve<IRippleEffectService>(TYPES.IRippleEffectService);
+      hapticService = await resolve<IHapticFeedbackService>(
+        TYPES.IHapticFeedbackService
+      );
+      rippleService = await resolve<IRippleEffectService>(
+        TYPES.IRippleEffectService
+      );
       deviceDetector = await resolve<IDeviceDetector>(TYPES.IDeviceDetector);
 
       // Set initial layout state
@@ -64,13 +72,14 @@ export function createToggleCardState(props: {
       }
 
       // Attach ripple effect to card
-      const cleanupRipple = cardElement && rippleService
-        ? rippleService.attachRipple(cardElement, {
-            color: 'rgba(255, 255, 255, 0.4)',
-            duration: 600,
-            opacity: 0.5
-          })
-        : () => {};
+      const cleanupRipple =
+        cardElement && rippleService
+          ? rippleService.attachRipple(cardElement, {
+              color: "rgba(255, 255, 255, 0.4)",
+              duration: 600,
+              opacity: 0.5,
+            })
+          : () => {};
 
       // Return consolidated cleanup function
       return () => {
@@ -102,9 +111,10 @@ export function createToggleCardState(props: {
   function handleCardClick() {
     hapticService?.trigger("selection");
     const activeOption = props.getActiveOption(); // Get current value reactively
-    const newValue = activeOption === props.option1.value
-      ? props.option2.value
-      : props.option1.value;
+    const newValue =
+      activeOption === props.option1.value
+        ? props.option2.value
+        : props.option1.value;
     props.onToggle(newValue);
   }
 
@@ -146,4 +156,3 @@ export function createToggleCardState(props: {
     initialize,
   };
 }
-

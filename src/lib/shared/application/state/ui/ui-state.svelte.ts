@@ -11,7 +11,10 @@ function getInitialModuleSync(): TabId | null {
     if (cached) {
       const parsed = JSON.parse(cached);
       if (parsed?.moduleId) {
-        console.log(`📦 [ui-state] Initial module from localStorage:`, parsed.moduleId);
+        console.log(
+          `📦 [ui-state] Initial module from localStorage:`,
+          parsed.moduleId
+        );
         return parsed.moduleId as TabId;
       }
     }

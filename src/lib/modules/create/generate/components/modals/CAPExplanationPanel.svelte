@@ -3,9 +3,7 @@ CAPExplanationPanel.svelte - Displays explanation of selected CAP transformation
 Shows contextual information based on current selection
 -->
 <script lang="ts">
-  let {
-    explanationText
-  } = $props<{
+  let { explanationText } = $props<{
     explanationText: string;
   }>();
 </script>

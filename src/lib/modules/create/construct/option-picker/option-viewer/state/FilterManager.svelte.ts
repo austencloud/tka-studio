@@ -34,8 +34,8 @@ export function createFilterManager() {
   // Reversal filter state
   let reversalFilter = $state({
     continuous: true,
-    '1-reversal': true,
-    '2-reversals': true,
+    "1-reversal": true,
+    "2-reversals": true,
   });
 
   /**
@@ -43,11 +43,11 @@ export function createFilterManager() {
    */
   function getCurrentFilters(sortMethod: SortMethod): Record<string, boolean> {
     switch (sortMethod) {
-      case 'type':
+      case "type":
         return typeFilter;
-      case 'endPosition':
+      case "endPosition":
         return endPositionFilter;
-      case 'reversals':
+      case "reversals":
         return reversalFilter;
       default:
         return {};
@@ -59,19 +59,19 @@ export function createFilterManager() {
    */
   function toggleFilter(sortMethod: SortMethod, filterKey: string): void {
     switch (sortMethod) {
-      case 'type':
+      case "type":
         if (filterKey in typeFilter) {
           const key = filterKey as keyof TypeFilter;
           typeFilter[key] = !typeFilter[key];
         }
         break;
-      case 'endPosition':
+      case "endPosition":
         if (filterKey in endPositionFilter) {
           endPositionFilter[filterKey as keyof typeof endPositionFilter] =
             !endPositionFilter[filterKey as keyof typeof endPositionFilter];
         }
         break;
-      case 'reversals':
+      case "reversals":
         if (filterKey in reversalFilter) {
           reversalFilter[filterKey as keyof typeof reversalFilter] =
             !reversalFilter[filterKey as keyof typeof reversalFilter];
@@ -85,18 +85,18 @@ export function createFilterManager() {
    */
   function clearFilters(sortMethod: SortMethod): void {
     switch (sortMethod) {
-      case 'type':
-        Object.keys(typeFilter).forEach(key => {
+      case "type":
+        Object.keys(typeFilter).forEach((key) => {
           typeFilter[key as keyof TypeFilter] = true;
         });
         break;
-      case 'endPosition':
-        Object.keys(endPositionFilter).forEach(key => {
+      case "endPosition":
+        Object.keys(endPositionFilter).forEach((key) => {
           endPositionFilter[key as keyof typeof endPositionFilter] = true;
         });
         break;
-      case 'reversals':
-        Object.keys(reversalFilter).forEach(key => {
+      case "reversals":
+        Object.keys(reversalFilter).forEach((key) => {
           reversalFilter[key as keyof typeof reversalFilter] = true;
         });
         break;
@@ -123,8 +123,8 @@ export function createFilterManager() {
     });
     Object.assign(reversalFilter, {
       continuous: true,
-      '1-reversal': true,
-      '2-reversals': true,
+      "1-reversal": true,
+      "2-reversals": true,
     });
   }
 
@@ -132,7 +132,7 @@ export function createFilterManager() {
    * Check if any filters are currently active (disabled)
    */
   function hasActiveFilters(currentFilters: Record<string, boolean>): boolean {
-    return Object.values(currentFilters).some(active => !active);
+    return Object.values(currentFilters).some((active) => !active);
   }
 
   /**
@@ -156,9 +156,15 @@ export function createFilterManager() {
   }
 
   return {
-    get typeFilter() { return typeFilter; },
-    get endPositionFilter() { return endPositionFilter; },
-    get reversalFilter() { return reversalFilter; },
+    get typeFilter() {
+      return typeFilter;
+    },
+    get endPositionFilter() {
+      return endPositionFilter;
+    },
+    get reversalFilter() {
+      return reversalFilter;
+    },
     getCurrentFilters,
     toggleFilter,
     clearFilters,

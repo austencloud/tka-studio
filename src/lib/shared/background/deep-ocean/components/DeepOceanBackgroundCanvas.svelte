@@ -16,16 +16,16 @@
     quality?: QualityLevel;
     paused?: boolean;
   }
-  
+
   const { dimensions, quality = "medium", paused = false }: Props = $props();
 
   // Canvas element
   let canvas: HTMLCanvasElement;
   let ctx: CanvasRenderingContext2D | null = null;
-  
+
   // Service (resolved via DI)
   let backgroundSystem: IBackgroundSystem | null = null;
-  
+
   // Animation frame tracking
   let animationFrame: number | null = null;
   let lastFrameTime = 0;
@@ -34,7 +34,7 @@
     try {
       // Resolve the new orchestrator service
       backgroundSystem = resolve<IBackgroundSystem>(TYPES.IBackgroundSystem);
-      
+
       // Initialize canvas context
       ctx = canvas.getContext("2d");
       if (!ctx) {
@@ -44,7 +44,7 @@
 
       // Initialize the background system
       backgroundSystem.initialize(dimensions, quality);
-      
+
       // Start animation loop
       startAnimation();
     } catch (error) {
@@ -59,27 +59,27 @@
 
   function startAnimation() {
     if (!backgroundSystem || !ctx || paused) return;
-    
+
     const animate = (currentTime: number) => {
       if (!backgroundSystem || !ctx) return;
-      
+
       const deltaTime = currentTime - lastFrameTime;
       const frameMultiplier = deltaTime / 16.67; // Normalize to 60fps
       lastFrameTime = currentTime;
 
       // Clear canvas
       ctx.clearRect(0, 0, dimensions.width, dimensions.height);
-      
+
       // Update and draw
       backgroundSystem.update(dimensions, frameMultiplier);
       backgroundSystem.draw(ctx, dimensions);
-      
+
       // Continue animation
       if (!paused) {
         animationFrame = requestAnimationFrame(animate);
       }
     };
-    
+
     animationFrame = requestAnimationFrame(animate);
   }
 
@@ -123,7 +123,11 @@
   style:height="{dimensions.height}px"
 >
   <!-- Fallback content for browsers without canvas support -->
-  <div class="fallback-gradient" style:width="{dimensions.width}px" style:height="{dimensions.height}px">
+  <div
+    class="fallback-gradient"
+    style:width="{dimensions.width}px"
+    style:height="{dimensions.height}px"
+  >
     <div class="gradient-ocean"></div>
   </div>
 </canvas>

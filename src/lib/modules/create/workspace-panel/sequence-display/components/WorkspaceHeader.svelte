@@ -18,7 +18,7 @@
   let {
     word = "",
     isMultiSelectMode = false,
-    sequence = null
+    sequence = null,
   } = $props<{
     word?: string;
     isMultiSelectMode?: boolean;
@@ -26,7 +26,9 @@
   }>();
 
   // Resolve services
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   function handleSettingsClick() {
     hapticService?.trigger("selection");
@@ -42,8 +44,6 @@
         <WordLabel {word} {sequence} />
       </div>
     </div>
-
-
   </div>
 {/if}
 

@@ -53,8 +53,8 @@
     <div class="danger-content">
       <p class="warning-text">
         <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
-        Deleting your account is permanent and cannot be undone. All your
-        progress and data will be lost.
+        Deleting your account is permanent and cannot be undone. All your progress
+        and data will be lost.
       </p>
 
       {#if !uiState.showDeleteConfirmation}
@@ -72,7 +72,10 @@
             <button class="button button--secondary" onclick={handleCancel}>
               Cancel
             </button>
-            <button class="button button--danger-confirm" onclick={onDeleteAccount}>
+            <button
+              class="button button--danger-confirm"
+              onclick={onDeleteAccount}
+            >
               <i class="fas fa-trash-alt" aria-hidden="true"></i>
               Yes, Delete Forever
             </button>

@@ -17,17 +17,17 @@
  */
 
 import type {
-    BuildModeId,
-    ArrowPosition,
-    BeatData,
-    PictographData,
-    SequenceData,
-    ValidationResult,
+  BuildModeId,
+  ArrowPosition,
+  BeatData,
+  PictographData,
+  SequenceData,
+  ValidationResult,
 } from "$shared";
 import { GridMode } from "$shared";
 import type {
-    ISequencePersistenceService,
-    ISequenceService,
+  ISequencePersistenceService,
+  ISequenceService,
 } from "../services/contracts";
 import type { ISequenceStatisticsService } from "../services/contracts/ISequenceStatisticsService";
 import type { ISequenceTransformationService } from "../services/contracts/ISequenceTransformationService";
@@ -57,7 +57,7 @@ export function createSequenceState(services: SequenceStateServices) {
     sequencePersistenceService,
     sequenceStatisticsService,
     sequenceTransformationService,
-    sequenceValidationService
+    sequenceValidationService,
   } = services;
 
   // Create sub-states
@@ -105,7 +105,9 @@ export function createSequenceState(services: SequenceStateServices) {
     }
   }
 
-  async function saveCurrentState(activeBuildSection: BuildModeId): Promise<void> {
+  async function saveCurrentState(
+    activeBuildSection: BuildModeId
+  ): Promise<void> {
     await persistenceCoordinator.saveState({
       currentSequence: coreState.currentSequence,
       selectedStartPosition: selectionState.selectedStartPosition,
@@ -137,7 +139,9 @@ export function createSequenceState(services: SequenceStateServices) {
       coreState.setSequences(sequences);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Unknown error loading sequences";
+        error instanceof Error
+          ? error.message
+          : "Unknown error loading sequences";
       coreState.setError(errorMessage);
       console.error("Failed to load sequences:", error);
     } finally {
@@ -165,7 +169,9 @@ export function createSequenceState(services: SequenceStateServices) {
       return sequence;
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Unknown error creating sequence";
+        error instanceof Error
+          ? error.message
+          : "Unknown error creating sequence";
       coreState.setError(errorMessage);
       console.error("Failed to create sequence:", error);
       return null;
@@ -184,7 +190,11 @@ export function createSequenceState(services: SequenceStateServices) {
     try {
       await sequenceService.updateBeat(sequenceId, beatIndex, beatData);
       // Update local state
-      if (coreState.currentSequence && beatIndex >= 0 && beatIndex < coreState.currentSequence.beats.length) {
+      if (
+        coreState.currentSequence &&
+        beatIndex >= 0 &&
+        beatIndex < coreState.currentSequence.beats.length
+      ) {
         const newBeats = [...coreState.currentSequence.beats];
         newBeats[beatIndex] = beatData;
         coreState.setCurrentSequence({
@@ -211,7 +221,9 @@ export function createSequenceState(services: SequenceStateServices) {
     // Update start position from sequence
     if (sequence && sequence.startingPositionBeat) {
       selectionState.setStartPosition(sequence.startingPositionBeat);
-      console.log("⏪ SequenceState: Updated hasStartPosition to true (from sequence)");
+      console.log(
+        "⏪ SequenceState: Updated hasStartPosition to true (from sequence)"
+      );
     } else {
       selectionState.setStartPosition(null);
     }
@@ -227,7 +239,9 @@ export function createSequenceState(services: SequenceStateServices) {
     }, SAVE_DEBOUNCE_MS);
   }
 
-  function setSelectedStartPosition(startPosition: PictographData | null): void {
+  function setSelectedStartPosition(
+    startPosition: PictographData | null
+  ): void {
     selectionState.setStartPosition(startPosition);
 
     // 🚀 PERFORMANCE: Debounced auto-save
@@ -261,7 +275,9 @@ export function createSequenceState(services: SequenceStateServices) {
       console.log("✅ SequenceState: Sequence cleared completely");
     } catch (error) {
       console.error("❌ SequenceState: Failed to clear sequence:", error);
-      coreState.setError(error instanceof Error ? error.message : "Failed to clear sequence");
+      coreState.setError(
+        error instanceof Error ? error.message : "Failed to clear sequence"
+      );
       animationState.endClearing();
     }
   }
@@ -270,7 +286,8 @@ export function createSequenceState(services: SequenceStateServices) {
     const sequence = coreState.currentSequence;
     if (sequence) {
       const beats = sequence.beats || [];
-      const startPosition = sequence.startingPositionBeat || sequence.startPosition;
+      const startPosition =
+        sequence.startingPositionBeat || sequence.startPosition;
 
       if (beats.length > 0) {
         return beats.map((beat: BeatData) => beat).filter(Boolean);
@@ -303,7 +320,10 @@ export function createSequenceState(services: SequenceStateServices) {
     }
 
     // Otherwise return selected beat
-    if (selectionState.selectedBeatIndex === null || !coreState.currentSequence) {
+    if (
+      selectionState.selectedBeatIndex === null ||
+      !coreState.currentSequence
+    ) {
       return null;
     }
 
@@ -326,7 +346,11 @@ export function createSequenceState(services: SequenceStateServices) {
     if (beatNumber === 0) {
       // Start position - always allow selection
       selectionState.selectBeat(beatNumber);
-    } else if (currentSequence && beatNumber >= 1 && beatNumber <= currentSequence.beats.length) {
+    } else if (
+      currentSequence &&
+      beatNumber >= 1 &&
+      beatNumber <= currentSequence.beats.length
+    ) {
       // Regular beat - validate it exists
       selectionState.selectBeat(beatNumber);
     } else {
@@ -413,12 +437,15 @@ export function createSequenceState(services: SequenceStateServices) {
     getArrowPositions: () => arrowState.arrowPositions,
     getArrowPositioningInProgress: () => arrowState.arrowPositioningInProgress,
     getArrowPositioningError: () => arrowState.arrowPositioningError,
-    getCurrentBeats: () => (coreState.currentSequence ? [...coreState.currentSequence.beats] : []),
+    getCurrentBeats: () =>
+      coreState.currentSequence ? [...coreState.currentSequence.beats] : [],
     getSelectedBeatData,
-    getSelectedBeat: () => beatOperations.getBeat(selectionState.selectedBeatIndex ?? 0),
+    getSelectedBeat: () =>
+      beatOperations.getBeat(selectionState.selectedBeatIndex ?? 0),
     getHasCurrentSequence: () => coreState.hasSequence,
     getSequenceCount: () => coreState.sequenceCount,
-    getHasUnsavedChanges: () => coreState.currentSequence !== null && coreState.sequences.length > 0,
+    getHasUnsavedChanges: () =>
+      coreState.currentSequence !== null && coreState.sequences.length > 0,
     getHasArrowPositions: () => arrowState.hasArrowPositions,
     getArrowPositioningComplete: () => arrowState.arrowPositioningComplete,
     hasSequence: () => coreState.hasSequence,
@@ -433,17 +460,27 @@ export function createSequenceState(services: SequenceStateServices) {
       coreState.addSequence(sequence);
       setCurrentSequence(sequence);
     },
-    updateSequence: (sequence: SequenceData) => coreState.updateSequence(sequence),
-    removeSequence: (sequenceId: string) => coreState.removeSequence(sequenceId),
-    setSequences: (sequences: SequenceData[]) => coreState.setSequences(sequences),
+    updateSequence: (sequence: SequenceData) =>
+      coreState.updateSequence(sequence),
+    removeSequence: (sequenceId: string) =>
+      coreState.removeSequence(sequenceId),
+    setSequences: (sequences: SequenceData[]) =>
+      coreState.setSequences(sequences),
     setLoading: (loading: boolean) => coreState.setLoading(loading),
     setError: (error: string | null) => coreState.setError(error),
     clearError: () => coreState.clearError(),
     updateCurrentBeat: (beatIndex: number, beatData: BeatData) => {
-      if (coreState.currentSequence && beatIndex >= 0 && beatIndex < coreState.currentSequence.beats.length) {
+      if (
+        coreState.currentSequence &&
+        beatIndex >= 0 &&
+        beatIndex < coreState.currentSequence.beats.length
+      ) {
         const newBeats = [...coreState.currentSequence.beats];
         newBeats[beatIndex] = beatData;
-        coreState.setCurrentSequence({ ...coreState.currentSequence, beats: newBeats });
+        coreState.setCurrentSequence({
+          ...coreState.currentSequence,
+          beats: newBeats,
+        });
       }
     },
 
@@ -451,7 +488,8 @@ export function createSequenceState(services: SequenceStateServices) {
     selectBeat,
     clearSelection: () => selectionState.clearSelection(),
     selectStartPositionForEditing: () => selectionState.selectStartPosition(),
-    isBeatSelected: (beatNumber: number) => selectionState.isBeatSelected(beatNumber),
+    isBeatSelected: (beatNumber: number) =>
+      selectionState.isBeatSelected(beatNumber),
     setSelectedStartPosition,
 
     // Grid mode
@@ -459,9 +497,12 @@ export function createSequenceState(services: SequenceStateServices) {
     setShowBeatNumbers: (_show: boolean) => {}, // No-op, always shown
 
     // Arrow state
-    setArrowPositions: (positions: Map<string, ArrowPosition>) => arrowState.setArrowPositions(positions),
-    setArrowPositioningInProgress: (inProgress: boolean) => arrowState.setPositioningInProgress(inProgress),
-    setArrowPositioningError: (error: string | null) => arrowState.setPositioningError(error),
+    setArrowPositions: (positions: Map<string, ArrowPosition>) =>
+      arrowState.setArrowPositions(positions),
+    setArrowPositioningInProgress: (inProgress: boolean) =>
+      arrowState.setPositioningInProgress(inProgress),
+    setArrowPositioningError: (error: string | null) =>
+      arrowState.setPositioningError(error),
     getArrowPosition: (color: string) => arrowState.getArrowPosition(color),
     clearArrowPositions: () => arrowState.clearArrowPositions(),
 
@@ -476,9 +517,16 @@ export function createSequenceState(services: SequenceStateServices) {
     removeBeat: (beatIndex: number) => beatOperations.removeBeat(beatIndex),
     removeBeatWithAnimation: (beatIndex: number, onComplete?: () => void) =>
       beatOperations.removeBeatWithAnimation(beatIndex, onComplete),
-    removeBeatAndSubsequent: (beatIndex: number) => beatOperations.removeBeatAndSubsequent(beatIndex),
-    removeBeatAndSubsequentWithAnimation: (beatIndex: number, onComplete?: () => void) =>
-      beatOperations.removeBeatAndSubsequentWithAnimation(beatIndex, onComplete),
+    removeBeatAndSubsequent: (beatIndex: number) =>
+      beatOperations.removeBeatAndSubsequent(beatIndex),
+    removeBeatAndSubsequentWithAnimation: (
+      beatIndex: number,
+      onComplete?: () => void
+    ) =>
+      beatOperations.removeBeatAndSubsequentWithAnimation(
+        beatIndex,
+        onComplete
+      ),
     updateBeat: (beatIndex: number, beatData: Partial<BeatData>) =>
       beatOperations.updateBeat(beatIndex, beatData),
     insertBeat: (beatIndex: number, beatData?: Partial<BeatData>) =>
@@ -489,14 +537,17 @@ export function createSequenceState(services: SequenceStateServices) {
     hasContent: () => beatOperations.hasContent(),
 
     // Transform operations - delegate to facade
-    setStartPosition: (startPosition: BeatData) => transformOperations.setStartPosition(startPosition),
+    setStartPosition: (startPosition: BeatData) =>
+      transformOperations.setStartPosition(startPosition),
     mirrorSequence: () => transformOperations.mirrorSequence(),
     swapColors: () => transformOperations.swapColors(),
     rotateSequence: (direction: "clockwise" | "counterclockwise") =>
       transformOperations.rotateSequence(direction),
     reverseSequence: () => transformOperations.reverseSequence(),
-    duplicateSequence: (newName?: string) => transformOperations.duplicateSequence(newName),
-    validateCurrentSequence: (): ValidationResult | null => transformOperations.validateSequence(),
+    duplicateSequence: (newName?: string) =>
+      transformOperations.duplicateSequence(newName),
+    validateCurrentSequence: (): ValidationResult | null =>
+      transformOperations.validateSequence(),
 
     // Persistence
     initializeWithPersistence,
@@ -519,9 +570,11 @@ export function createSequenceState(services: SequenceStateServices) {
     get selectionCount() {
       return selectionState.selectionCount;
     },
-    enterMultiSelectMode: (beatNumber: number) => selectionState.enterMultiSelectMode(beatNumber),
+    enterMultiSelectMode: (beatNumber: number) =>
+      selectionState.enterMultiSelectMode(beatNumber),
     exitMultiSelectMode: () => selectionState.exitMultiSelectMode(),
-    toggleBeatInMultiSelect: (beatNumber: number) => selectionState.toggleBeatInMultiSelect(beatNumber),
+    toggleBeatInMultiSelect: (beatNumber: number) =>
+      selectionState.toggleBeatInMultiSelect(beatNumber),
   };
 }
 

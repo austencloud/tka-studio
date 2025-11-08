@@ -1,29 +1,31 @@
 <!-- TurnControlButton.svelte - Collapsible button with preview and swipe gestures -->
 <script lang="ts">
-  import type { BeatData, IHapticFeedbackService } from '$shared';
-  import { resolve, TYPES } from '$shared';
-  import { onMount } from 'svelte';
-  import type { ITurnControlService } from '../services/TurnControlService';
+  import type { BeatData, IHapticFeedbackService } from "$shared";
+  import { resolve, TYPES } from "$shared";
+  import { onMount } from "svelte";
+  import type { ITurnControlService } from "../services/TurnControlService";
 
   // Props
   const {
     color,
     currentBeatData,
     isExpanded = false,
-    layoutMode = 'comfortable',
+    layoutMode = "comfortable",
     onExpand,
-    onTurnAmountChanged
+    onTurnAmountChanged,
   } = $props<{
-    color: 'blue' | 'red';
+    color: "blue" | "red";
     currentBeatData: BeatData | null;
     isExpanded?: boolean;
-    layoutMode?: 'compact' | 'balanced' | 'comfortable';
+    layoutMode?: "compact" | "balanced" | "comfortable";
     onExpand: () => void;
     onTurnAmountChanged: (color: string, turnAmount: number) => void;
   }>();
 
   // Services
-  const turnControlService = resolve(TYPES.ITurnControlService) as ITurnControlService;
+  const turnControlService = resolve(
+    TYPES.ITurnControlService
+  ) as ITurnControlService;
   let hapticService: IHapticFeedbackService;
 
   // Touch/swipe state
@@ -32,16 +34,22 @@
   let isSwiping = $state(false);
 
   // Get display values
-  const displayLabel = $derived(() => color === 'blue' ? 'Left' : 'Right');
+  const displayLabel = $derived(() => (color === "blue" ? "Left" : "Right"));
   const turnValue = $derived(() => {
-    const value = turnControlService.getCurrentTurnValue(currentBeatData, color);
+    const value = turnControlService.getCurrentTurnValue(
+      currentBeatData,
+      color
+    );
     return turnControlService.getTurnValue(value);
   });
   const motionType = $derived(() => {
-    if (!currentBeatData) return 'Static';
-    const motion = color === 'blue' ? currentBeatData.motions?.blue : currentBeatData.motions?.red;
-    if (!motion) return 'Static';
-    const type = motion.motionType || 'static';
+    if (!currentBeatData) return "Static";
+    const motion =
+      color === "blue"
+        ? currentBeatData.motions?.blue
+        : currentBeatData.motions?.red;
+    if (!motion) return "Static";
+    const type = motion.motionType || "static";
     return type.charAt(0).toUpperCase() + type.slice(1);
   });
   const previewText = $derived(() => {
@@ -86,7 +94,10 @@
     const swipeThreshold = 50;
 
     if (Math.abs(deltaX) > swipeThreshold) {
-      const currentValue = turnControlService.getCurrentTurnValue(currentBeatData, color);
+      const currentValue = turnControlService.getCurrentTurnValue(
+        currentBeatData,
+        color
+      );
 
       if (deltaX > 0) {
         // Swipe right - increment
@@ -118,19 +129,21 @@
   }
 
   onMount(() => {
-    hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+    hapticService = resolve<IHapticFeedbackService>(
+      TYPES.IHapticFeedbackService
+    );
   });
 </script>
 
 <button
   class="turn-control-button"
-  class:blue={color === 'blue'}
-  class:red={color === 'red'}
+  class:blue={color === "blue"}
+  class:red={color === "red"}
   class:expanded={isExpanded}
   class:swiping={isSwiping}
-  class:compact={layoutMode === 'compact'}
-  class:balanced={layoutMode === 'balanced'}
-  class:comfortable={layoutMode === 'comfortable'}
+  class:compact={layoutMode === "compact"}
+  class:balanced={layoutMode === "balanced"}
+  class:comfortable={layoutMode === "comfortable"}
   onclick={handleClick}
   ontouchstart={handleTouchStart}
   ontouchmove={handleTouchMove}
@@ -194,12 +207,20 @@
 
   .turn-control-button.blue {
     border-color: #3b82f6;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.04) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.08) 0%,
+      rgba(59, 130, 246, 0.04) 100%
+    );
   }
 
   .turn-control-button.red {
     border-color: #ef4444;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.04) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.08) 0%,
+      rgba(239, 68, 68, 0.04) 100%
+    );
   }
 
   .turn-control-button:hover:not(.expanded) {
@@ -208,11 +229,19 @@
   }
 
   .turn-control-button.blue:hover:not(.expanded) {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.12) 0%, rgba(59, 130, 246, 0.06) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(59, 130, 246, 0.12) 0%,
+      rgba(59, 130, 246, 0.06) 100%
+    );
   }
 
   .turn-control-button.red:hover:not(.expanded) {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.12) 0%, rgba(239, 68, 68, 0.06) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(239, 68, 68, 0.12) 0%,
+      rgba(239, 68, 68, 0.06) 100%
+    );
   }
 
   .turn-control-button:active:not(.expanded) {

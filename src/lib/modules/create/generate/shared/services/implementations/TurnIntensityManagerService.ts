@@ -15,7 +15,9 @@ export interface TurnAllocation {
 }
 
 @injectable()
-export class TurnIntensityManagerService implements ITurnIntensityManagerService {
+export class TurnIntensityManagerService
+  implements ITurnIntensityManagerService
+{
   private wordLength: number;
   private level: number;
   private maxTurnIntensity: number;

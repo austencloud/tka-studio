@@ -315,31 +315,31 @@ export class DirectionalTupleCalculator implements IDirectionalTupleCalculator {
 
     // Dispatch by motion type and grid
     let result: Array<[number, number]>;
-    let branchTaken = '';
+    let branchTaken = "";
 
     if (mt === "dash") {
       if (gridIsDiamond) {
-        branchTaken = 'dashDiamond()';
+        branchTaken = "dashDiamond()";
         result = dashDiamond();
       } else {
-        branchTaken = 'dashBox()';
+        branchTaken = "dashBox()";
         result = dashBox();
       }
     } else if (mt === "static") {
       if (gridIsDiamond) {
-        branchTaken = 'staticDiamond()';
+        branchTaken = "staticDiamond()";
         result = staticDiamond();
       } else {
-        branchTaken = 'staticBox()';
+        branchTaken = "staticBox()";
         result = staticBox();
       }
     } else {
       // pro/anti/float
       if (gridIsDiamond) {
-        branchTaken = 'shiftDiamond()';
+        branchTaken = "shiftDiamond()";
         result = shiftDiamond();
       } else {
-        branchTaken = 'shiftBox()';
+        branchTaken = "shiftBox()";
         result = shiftBox();
       }
     }

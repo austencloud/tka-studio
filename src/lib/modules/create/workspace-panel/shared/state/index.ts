@@ -1,3 +1,3 @@
 // Barrel exports for shared workbench state
 
-export * from './workbench-state.svelte';
+export * from "./workbench-state.svelte";

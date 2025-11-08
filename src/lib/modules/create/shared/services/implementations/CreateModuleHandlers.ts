@@ -1,6 +1,6 @@
 /**
  * CreateModuleHandlers.ts
- * 
+ *
  * Service implementation for CreateModule event handlers.
  * Extracts handler logic from component to improve testability and maintainability.
  */
@@ -11,7 +11,10 @@ import type { PictographData, BuildModeId } from "$shared";
 import type { NavigationState } from "$shared/navigation/state/navigation-state.svelte";
 import type { CreateModuleState } from "../../state/create-module-state.svelte";
 import type { PanelCoordinationState } from "../../state/panel-coordination-state.svelte";
-import type { ICreateModuleHandlers, ClearSequenceParams } from "../contracts/ICreateModuleHandlers";
+import type {
+  ICreateModuleHandlers,
+  ClearSequenceParams,
+} from "../contracts/ICreateModuleHandlers";
 import type { ICreateModuleService } from "../contracts/ICreateModuleService";
 import type { IBeatOperationsService } from "../contracts/IBeatOperationsService";
 import { executeClearSequenceWorkflow } from "../../utils/clearSequenceWorkflow";
@@ -19,8 +22,10 @@ import { executeClearSequenceWorkflow } from "../../utils/clearSequenceWorkflow"
 @injectable()
 export class CreateModuleHandlers implements ICreateModuleHandlers {
   constructor(
-    @inject(TYPES.ICreateModuleService) private createModuleService: ICreateModuleService,
-    @inject(TYPES.IBeatOperationsService) private beatOperationsService: IBeatOperationsService
+    @inject(TYPES.ICreateModuleService)
+    private createModuleService: ICreateModuleService,
+    @inject(TYPES.IBeatOperationsService)
+    private beatOperationsService: IBeatOperationsService
   ) {}
 
   /**
@@ -32,7 +37,10 @@ export class CreateModuleHandlers implements ICreateModuleHandlers {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to select option";
-      console.error("❌ CreateModuleHandlers: Error handling option selection:", err);
+      console.error(
+        "❌ CreateModuleHandlers: Error handling option selection:",
+        err
+      );
       throw new Error(errorMessage);
     }
   }
@@ -83,7 +91,10 @@ export class CreateModuleHandlers implements ICreateModuleHandlers {
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to clear sequence";
-      console.error("❌ CreateModuleHandlers: Failed to clear sequence completely", err);
+      console.error(
+        "❌ CreateModuleHandlers: Failed to clear sequence completely",
+        err
+      );
       throw new Error(errorMessage);
     }
   }
@@ -96,7 +107,9 @@ export class CreateModuleHandlers implements ICreateModuleHandlers {
     CreateModuleState: CreateModuleState | null
   ): void {
     if (!CreateModuleState) {
-      console.warn("⚠️ CreateModuleHandlers: Cannot remove beat - CreateModuleState not initialized");
+      console.warn(
+        "⚠️ CreateModuleHandlers: Cannot remove beat - CreateModuleState not initialized"
+      );
       throw new Error("CreateModuleState not initialized");
     }
 

@@ -19,18 +19,18 @@ import type { GenerationOptions } from "../../domain";
  * - Update the workbench directly (returns data instead)
  */
 export interface IGenerationOrchestrationService {
-	/**
-	 * Generate a complete sequence based on provided options
-	 *
-	 * Orchestrates the entire generation pipeline:
-	 * 1. Routes to appropriate generation mode (freeform vs circular)
-	 * 2. Composes necessary services for that mode
-	 * 3. Executes generation steps in correct order
-	 * 4. Returns fully constructed SequenceData
-	 *
-	 * @param options - Generation configuration (mode, length, difficulty, etc.)
-	 * @returns Promise resolving to complete SequenceData ready for workbench
-	 * @throws Error if generation fails at any step
-	 */
-	generateSequence(options: GenerationOptions): Promise<SequenceData>;
+  /**
+   * Generate a complete sequence based on provided options
+   *
+   * Orchestrates the entire generation pipeline:
+   * 1. Routes to appropriate generation mode (freeform vs circular)
+   * 2. Composes necessary services for that mode
+   * 3. Executes generation steps in correct order
+   * 4. Returns fully constructed SequenceData
+   *
+   * @param options - Generation configuration (mode, length, difficulty, etc.)
+   * @returns Promise resolving to complete SequenceData ready for workbench
+   * @throws Error if generation fails at any step
+   */
+  generateSequence(options: GenerationOptions): Promise<SequenceData>;
 }

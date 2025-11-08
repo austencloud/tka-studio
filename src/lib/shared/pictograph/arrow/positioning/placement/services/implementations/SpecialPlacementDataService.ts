@@ -25,6 +25,49 @@ export class SpecialPlacementDataService
   // Track in-flight loading operations to prevent race conditions
   private loadingPromises = new Map<string, Promise<void>>();
 
+  // Manifest of which files actually exist (loaded lazily)
+  private manifest: Record<string, string[]> | null = null;
+  private manifestLoadPromise: Promise<void> | null = null;
+
+  /**
+   * Load the manifest file that tells us which placement files exist
+   */
+  private async loadManifest(gridMode: string): Promise<void> {
+    if (this.manifest !== null) return;
+
+    if (this.manifestLoadPromise) {
+      await this.manifestLoadPromise;
+      return;
+    }
+
+    this.manifestLoadPromise = (async () => {
+      try {
+        const manifestPath = `/data/arrow_placement/${gridMode}/special/placement_manifest.json`;
+        this.manifest = (await jsonCache.get(manifestPath)) as Record<
+          string,
+          string[]
+        >;
+      } catch (error) {
+        // If manifest doesn't exist, assume empty (no special placements)
+        this.manifest = {};
+      }
+    })();
+
+    await this.manifestLoadPromise;
+  }
+
+  /**
+   * Check if a placement file exists for the given letter
+   */
+  private async hasPlacementFile(
+    gridMode: string,
+    oriKey: string,
+    letter: string
+  ): Promise<boolean> {
+    await this.loadManifest(gridMode);
+    return this.manifest?.[oriKey]?.includes(letter) ?? false;
+  }
+
   /**
    * Get special placement data for a specific letter.
    * Returns cached data if available, otherwise loads from JSON.
@@ -41,6 +84,14 @@ export class SpecialPlacementDataService
       // Return cached data if available
       if (this.cache[gridMode]![oriKey]![letter]) {
         return this.cache[gridMode]![oriKey]![letter]!;
+      }
+
+      // Check manifest to see if file exists before attempting to fetch
+      const fileExists = await this.hasPlacementFile(gridMode, oriKey, letter);
+      if (!fileExists) {
+        // No placement file exists - cache and return empty object immediately
+        this.cache[gridMode]![oriKey]![letter] = {};
+        return {};
       }
 
       const cacheKey = `${gridMode}:${oriKey}:${letter}`;

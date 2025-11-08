@@ -1,24 +1,24 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { clearAllFirebaseCache } from '$shared/auth';
+  import { onMount } from "svelte";
+  import { clearAllFirebaseCache } from "$shared/auth";
 
-  let status = $state('Ready to clear cache...');
+  let status = $state("Ready to clear cache...");
   let cleared = $state(false);
 
   async function clearCache() {
     try {
-      status = '🧹 Clearing all Firebase cache...';
+      status = "🧹 Clearing all Firebase cache...";
       await clearAllFirebaseCache();
-      status = '✅ Cache cleared successfully!';
+      status = "✅ Cache cleared successfully!";
       cleared = true;
 
       // Auto-redirect to home after 2 seconds
       setTimeout(() => {
-        status = '🔄 Redirecting to home...';
-        window.location.href = '/';
+        status = "🔄 Redirecting to home...";
+        window.location.href = "/";
       }, 2000);
     } catch (error) {
-      console.error('Cache clear error:', error);
+      console.error("Cache clear error:", error);
       status = `❌ Error: ${error}`;
     }
   }

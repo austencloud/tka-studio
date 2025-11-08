@@ -32,8 +32,12 @@ export class CreateModuleInitializer {
       sequencePersistenceService: resolve<ISequencePersistenceService>(
         TYPES.ISequencePersistenceService
       ),
-      startPositionService: resolve<IStartPositionService>(TYPES.IStartPositionService),
-      CreateModuleService: resolve<ICreateModuleService>(TYPES.ICreateModuleService),
+      startPositionService: resolve<IStartPositionService>(
+        TYPES.IStartPositionService
+      ),
+      CreateModuleService: resolve<ICreateModuleService>(
+        TYPES.ICreateModuleService
+      ),
       deviceDetector: resolve<IDeviceDetector>(TYPES.IDeviceDetector),
       viewportService: resolve<IViewportService>(TYPES.IViewportService),
     };
@@ -55,15 +59,14 @@ export class CreateModuleInitializer {
   /**
    * Create state factories from resolved services
    */
-  async createStates(services: CreateModuleServices): Promise<CreateModuleStates> {
-    const {
-      sequenceService,
-      sequencePersistenceService,
-      CreateModuleService
-    } = services;
+  async createStates(
+    services: CreateModuleServices
+  ): Promise<CreateModuleStates> {
+    const { sequenceService, sequencePersistenceService, CreateModuleService } =
+      services;
 
     // Wait a tick to ensure component context is fully established
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
 
     const CreateModuleState = createCreateModuleState(
       sequenceService,
@@ -101,7 +104,8 @@ export class CreateModuleInitializer {
 
     // Set up option history callback
     CreateModuleEventService.setAddOptionToHistoryCallback(
-      (beatIndex, beatData) => CreateModuleState.addOptionToHistory(beatIndex, beatData)
+      (beatIndex, beatData) =>
+        CreateModuleState.addOptionToHistory(beatIndex, beatData)
     );
 
     // Load start positions
@@ -169,9 +173,7 @@ export class CreateModuleInitializer {
         error: error instanceof Error ? error.message : String(error),
       };
 
-      throw new Error(
-        `CreateModule initialization failed: ${status.error}`
-      );
+      throw new Error(`CreateModule initialization failed: ${status.error}`);
     }
   }
 }

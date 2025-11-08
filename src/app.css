@@ -203,7 +203,12 @@ h6 {
 
   /* Panel Background Colors (for explore panels, settings, etc.) */
   --panel-bg-nightSky: rgba(255, 255, 255, 0.05);
-  --panel-bg-aurora: rgba(20, 10, 40, 0.85); /* Dark purple overlay for light aurora bg */
+  --panel-bg-aurora: rgba(
+    20,
+    10,
+    40,
+    0.85
+  ); /* Dark purple overlay for light aurora bg */
   --panel-bg-snowfall: rgba(255, 255, 255, 0.05);
   --panel-bg-deepOcean: rgba(255, 255, 255, 0.05);
 
@@ -240,7 +245,12 @@ h6 {
   --text-primary-deepOcean: #ffffff;
 
   --text-secondary-nightSky: rgba(255, 255, 255, 0.7);
-  --text-secondary-aurora: rgba(255, 255, 255, 0.85); /* Slightly brighter for readability */
+  --text-secondary-aurora: rgba(
+    255,
+    255,
+    255,
+    0.85
+  ); /* Slightly brighter for readability */
   --text-secondary-snowfall: rgba(255, 255, 255, 0.7);
   --text-secondary-deepOcean: rgba(255, 255, 255, 0.7);
 
@@ -262,7 +272,12 @@ h6 {
 
   /* Active Button/Filter Styles */
   --button-active-nightSky: rgba(255, 255, 255, 0.15);
-  --button-active-aurora: rgba(88, 28, 135, 0.75); /* Rich purple for active state */
+  --button-active-aurora: rgba(
+    88,
+    28,
+    135,
+    0.75
+  ); /* Rich purple for active state */
   --button-active-snowfall: rgba(255, 255, 255, 0.15);
   --button-active-deepOcean: rgba(255, 255, 255, 0.15);
 
@@ -601,7 +616,7 @@ body.deep-ocean-flow::before {
   [class*="spin-"] {
     animation: none !important;
   }
-  
+
   /* Reduce duration for non-essential transitions but don't eliminate them */
   .beat-animation,
   .pictograph-transition,
@@ -609,7 +624,7 @@ body.deep-ocean-flow::before {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
-  
+
   /* Preserve essential UI transitions like drawers, modals, navigation */
   /* These are necessary for usability and should not be disabled */
 }

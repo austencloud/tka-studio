@@ -7,14 +7,14 @@
   import type { IHapticFeedbackService } from "$shared/application/services/contracts";
   import { resolve, TYPES } from "$shared/inversify";
 
-  let {
-    onclick,
-  } = $props<{
+  let { onclick } = $props<{
     onclick?: () => void;
   }>();
 
   // Resolve haptic feedback service
-  const hapticService = resolve<IHapticFeedbackService>(TYPES.IHapticFeedbackService);
+  const hapticService = resolve<IHapticFeedbackService>(
+    TYPES.IHapticFeedbackService
+  );
 
   function handleClick() {
     hapticService?.trigger("selection");

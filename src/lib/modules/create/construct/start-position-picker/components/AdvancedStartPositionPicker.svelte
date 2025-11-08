@@ -53,16 +53,16 @@
     const groups = {
       alpha: [] as PictographData[],
       beta: [] as PictographData[],
-      gamma: [] as PictographData[]
+      gamma: [] as PictographData[],
     };
 
-    pictographDataSet.forEach(pictograph => {
-      const position = pictograph.startPosition?.toLowerCase() || '';
-      if (position.startsWith('alpha')) {
+    pictographDataSet.forEach((pictograph) => {
+      const position = pictograph.startPosition?.toLowerCase() || "";
+      if (position.startsWith("alpha")) {
         groups.alpha.push(pictograph);
-      } else if (position.startsWith('beta')) {
+      } else if (position.startsWith("beta")) {
         groups.beta.push(pictograph);
-      } else if (position.startsWith('gamma')) {
+      } else if (position.startsWith("gamma")) {
         groups.gamma.push(pictograph);
       }
     });
@@ -76,7 +76,11 @@
 <div class="advanced-picker-container">
   <!-- Responsive Grid of all 16 start positions -->
   <SimpleGlassScroll variant="primary" height="100%" width="100%">
-    <ResponsivePositionGrid {isTransitioning} {hasOverflow} {isSideBySideLayout}>
+    <ResponsivePositionGrid
+      {isTransitioning}
+      {hasOverflow}
+      {isSideBySideLayout}
+    >
       <!-- Alpha row (4 variations) -->
       <PositionGroupGrid
         pictographs={positionGroups.alpha}

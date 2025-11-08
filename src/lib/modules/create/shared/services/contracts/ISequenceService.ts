@@ -1,6 +1,6 @@
 /**
  * Sequence Service Contract
- * 
+ *
  * Core service for sequence CRUD operations
  */
 
@@ -21,7 +21,11 @@ export interface ISequenceService {
    * @param beatData - New beat data
    * @returns Promise that resolves when update is complete
    */
-  updateBeat(sequenceId: string, beatIndex: number, beatData: BeatData): Promise<void>;
+  updateBeat(
+    sequenceId: string,
+    beatIndex: number,
+    beatData: BeatData
+  ): Promise<void>;
 
   /**
    * Get a sequence by ID

@@ -24,7 +24,9 @@ export interface NavigationSyncManagerConfig {
  * Creates navigation sync effects
  * @returns Cleanup function
  */
-export function createNavigationSyncEffects(config: NavigationSyncManagerConfig): () => void {
+export function createNavigationSyncEffects(
+  config: NavigationSyncManagerConfig
+): () => void {
   const { CreateModuleState, navigationState, navigationSyncService } = config;
 
   // Effect: Sync navigation state TO Create Module State
