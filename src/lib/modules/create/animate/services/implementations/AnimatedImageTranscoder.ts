@@ -1,5 +1,4 @@
 import { injectable } from "inversify";
-import WebPEncoder from "webp-encoder";
 import type {
   IAnimatedImageTranscoder,
   WebpTranscodeOptions,
@@ -8,6 +7,7 @@ import type {
 @injectable()
 export class AnimatedImageTranscoder implements IAnimatedImageTranscoder {
   private encoderReadyPromise: Promise<void> | null = null;
+  private WebPEncoder: any = null;
 
   async convertGifToWebp(
     blob: Blob,
@@ -17,11 +17,17 @@ export class AnimatedImageTranscoder implements IAnimatedImageTranscoder {
       throw new Error("WebP transcoding is only available in the browser");
     }
 
+    // Dynamically import webp-encoder only in browser context to avoid SSR issues
+    if (!this.WebPEncoder) {
+      const module = await import("webp-encoder");
+      this.WebPEncoder = module.default;
+    }
+
     await this.ensureEncoderReady();
 
     const gifBuffer = new Uint8Array(await blob.arrayBuffer());
     const losslessFlag = options.lossless ? 1 : 0;
-    const encodedBuffer = WebPEncoder.encodeGifImageData(
+    const encodedBuffer = this.WebPEncoder.encodeGifImageData(
       gifBuffer,
       gifBuffer.length,
       losslessFlag
@@ -75,7 +81,10 @@ export class AnimatedImageTranscoder implements IAnimatedImageTranscoder {
   }
 
   private hasEncoderApi(): boolean {
-    const api = (WebPEncoder as unknown as { api?: Record<string, unknown> })
+    if (!this.WebPEncoder) {
+      return false;
+    }
+    const api = (this.WebPEncoder as unknown as { api?: Record<string, unknown> })
       .api;
     return Boolean(
       api &&

@@ -9,7 +9,9 @@
       "Bash(then cat .nvmrc)",
       "Bash(else echo \"File does not exist\")",
       "Bash(fi)",
-      "Bash(nul)"
+      "Bash(nul)",
+      "Bash(npm run build:*)",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []

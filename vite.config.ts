@@ -181,6 +181,8 @@ export default defineConfig({
     alias: {
       // Aliases handled by SvelteKit
     },
+    // Force browser builds during SSR to avoid Node.js require() issues
+    conditions: ["browser", "module", "import", "default"],
   },
   // ============================================================================
   // BUILD (Production optimization)
@@ -216,7 +218,18 @@ export default defineConfig({
   // SSR
   // ============================================================================
   ssr: {
-    noExternal: ["svelte", "webp-encoder"],
+    noExternal: [
+      "svelte",
+      "inversify", // Force bundle to avoid CommonJS require()
+      "reflect-metadata", // Required by inversify, often has CJS issues
+      "gif.js", // May contain CJS code
+      "html2canvas", // May contain CJS code
+      "file-saver", // Often has CJS exports
+      "@jdfranel/snowflake-generator", // May contain CJS code
+      "@tsparticles/basic",
+      "@tsparticles/engine",
+      "@tsparticles/preset-snow",
+    ],
     external: ["pdfjs-dist", "page-flip"],
   },
   // ============================================================================
