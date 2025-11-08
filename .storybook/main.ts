@@ -13,5 +13,16 @@ const config: StorybookConfig = {
     name: "@storybook/sveltekit",
     options: {},
   },
+  async viteFinal(config) {
+    // Define environment variables for Storybook
+    config.define = {
+      ...config.define,
+      'import.meta.env.MODE': JSON.stringify('development'),
+      'import.meta.env.DEV': 'true',
+      'import.meta.env.PROD': 'false',
+      'import.meta.env.SSR': 'false',
+    };
+    return config;
+  },
 };
 export default config;
