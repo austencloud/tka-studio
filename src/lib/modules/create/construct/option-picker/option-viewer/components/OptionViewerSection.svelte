@@ -439,7 +439,11 @@ Renders a section with:
     box-sizing: border-box;
     will-change: opacity;
     transform: translateZ(0);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Only transition specific properties to prevent unwanted scale/size animations during content changes */
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      filter 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow: hidden;
     box-shadow:
       0 1px 2px rgba(0, 0, 0, 0.1),

@@ -2,7 +2,7 @@
   import { onMount, untrack } from "svelte";
 
   type Orientation = "horizontal" | "vertical";
-  type CueMood = "fresh" | "returning" | "redo" | "default";
+  type CueMood = "fresh" | "default";
 
   const { orientation = "vertical", mood = "default" } = $props<{
     orientation?: Orientation;
@@ -15,18 +15,6 @@
       "Start something new?",
       "How do you want to create?",
       "Pick a creation path.",
-    ],
-    returning: [
-      "Welcome back.",
-      "Ready for another round?",
-      "Continue creating?",
-      "Jump back in?",
-    ],
-    redo: [
-      "Need a do-over?",
-      "Reset and try again?",
-      "Ready to revise?",
-      "Take another pass?",
     ],
     default: [
       "Ready to create?",
@@ -101,51 +89,23 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    padding: 1.25rem 1.5rem;
-    border-radius: 18px;
-    background: linear-gradient(
-      145deg,
-      rgba(27, 34, 56, 0.8),
-      rgba(18, 22, 40, 0.6)
-    );
-    box-shadow:
-      inset 0 0 0 1px rgba(120, 160, 255, 0.1),
-      0 18px 40px rgba(4, 8, 24, 0.55);
-    max-width: 22rem;
+    gap: 0.875rem;
+    padding: 0;
+    max-width: 100%;
     width: 100%;
     text-align: center;
-    backdrop-filter: blur(18px);
-    color: rgba(255, 255, 255, 0.98);
-    overflow: hidden;
-  }
-
-  .creation-cue::after {
-    content: "";
-    position: absolute;
-    inset: -45% -55%;
-    background: radial-gradient(
-      circle,
-      rgba(90, 140, 255, 0.12),
-      transparent 60%
-    );
-    pointer-events: none;
-    animation: cueGlow 6s ease-in-out infinite alternate;
   }
 
   .cue-message {
-    position: relative;
-    z-index: 1;
     margin: 0;
-    font-size: clamp(1.35rem, 2vw, 1.75rem);
-    font-weight: 600;
-    letter-spacing: 0.01em;
-    color: rgba(234, 238, 255, 0.95);
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.4;
   }
 
   .cue-pointer {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -160,59 +120,48 @@
 
   .pointer-base path {
     fill: none;
-    stroke: rgba(158, 208, 255, 0.75);
-    stroke-width: 4;
+    stroke: rgba(255, 255, 255, 0.2);
+    stroke-width: 2.5;
     stroke-linecap: round;
     stroke-linejoin: round;
-    filter: drop-shadow(0 0 6px rgba(136, 188, 255, 0.35));
   }
 
   .creation-cue[data-orientation="horizontal"] {
     flex-direction: row;
     text-align: left;
-    max-width: 26rem;
-    padding: 1.5rem 1.75rem;
-    gap: 1.5rem;
+    gap: 1.25rem;
+    justify-content: center;
   }
 
   .creation-cue[data-orientation="horizontal"] .cue-pointer {
     flex-direction: row;
     align-items: center;
-    animation: pointerGlideX 2.4s ease-in-out infinite;
+    animation: pointerGlideX 2.8s ease-in-out infinite;
   }
 
   .creation-cue[data-orientation="horizontal"] .pointer-base {
-    width: 7.5rem;
+    width: 5rem;
     height: auto;
   }
 
   .creation-cue[data-orientation="vertical"] .cue-pointer {
-    animation: pointerGlideY 2.4s ease-in-out infinite;
+    animation: pointerGlideY 2.8s ease-in-out infinite;
   }
 
   .creation-cue[data-orientation="vertical"] .pointer-base {
-    width: 1.5rem;
+    width: 1.25rem;
     height: auto;
-  }
-
-  @keyframes cueGlow {
-    from {
-      opacity: 0.6;
-      transform: translate3d(0, 0, 0);
-    }
-    to {
-      opacity: 0.35;
-      transform: translate3d(2%, -2%, 0);
-    }
   }
 
   @keyframes pointerGlideX {
     0%,
     100% {
       transform: translateX(0);
+      opacity: 0.4;
     }
     50% {
-      transform: translateX(6px);
+      transform: translateX(8px);
+      opacity: 0.7;
     }
   }
 
@@ -220,21 +169,21 @@
     0%,
     100% {
       transform: translateY(0);
+      opacity: 0.4;
     }
     50% {
-      transform: translateY(6px);
+      transform: translateY(8px);
+      opacity: 0.7;
     }
   }
 
   @media (max-width: 640px) {
-    .creation-cue {
-      max-width: min(100%, 20rem);
-      padding: 1rem 1.25rem;
-      gap: 0.75rem;
+    .cue-message {
+      font-size: 0.9375rem;
     }
 
-    .cue-message {
-      font-size: 1.2rem;
+    .creation-cue[data-orientation="horizontal"] .pointer-base {
+      width: 4rem;
     }
   }
 </style>

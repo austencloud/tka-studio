@@ -204,10 +204,12 @@
   // ============================================================================
   // TRANSITION CONFIGURATION
   // ============================================================================
+  // Note: Internal transitions disabled - parent handles crossfade transition
+  // This prevents double-transitions when switching between creation methods
 
-  const OUT_DURATION = 250;
-  const IN_DURATION = 250;
-  const IN_DELAY = OUT_DURATION;
+  const OUT_DURATION = 0;
+  const IN_DURATION = 0;
+  const IN_DELAY = 0;
 
   const fadeOutParams = { duration: OUT_DURATION };
   const fadeInParams = { duration: IN_DURATION, delay: IN_DELAY };

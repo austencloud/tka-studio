@@ -17,7 +17,7 @@
     setAnyPanelOpen,
     setSideBySideLayout,
   } from "$shared";
-  import { onMount, setContext } from "svelte";
+  import { onMount, setContext, tick } from "svelte";
   import ErrorBanner from "./ErrorBanner.svelte";
   import type { CreateModuleServices } from "../services/ServiceInitializer";
   import type { ICreateModuleInitializationService } from "../services/contracts/ICreateModuleInitializationService";
@@ -38,6 +38,7 @@
   import ConfirmationDialogCoordinator from "./coordinators/ConfirmationDialogCoordinator.svelte";
   import HandPathSettingsView from "./HandPathSettingsView.svelte";
   import StandardWorkspaceLayout from "./StandardWorkspaceLayout.svelte";
+  import CreationMethodSelector from "../../workspace-panel/components/CreationMethodSelector.svelte";
 
   const logger = createComponentLogger("CreateModule");
 
@@ -125,15 +126,6 @@
   // ============================================================================
   // DERIVED STATE
   // ============================================================================
-  const creationCueOrientation = $derived(() => {
-    return shouldUseSideBySideLayout ? "horizontal" : "vertical";
-  });
-
-  const creationCueMood = $derived(() => {
-    if (!CreateModuleState) return "default";
-    return CreateModuleState.getCreationCueMood(hasSelectedCreationMethod);
-  });
-
   const isWorkspaceEmpty = $derived(() => {
     if (!CreateModuleState) return true;
     return CreateModuleState.isWorkspaceEmpty();
@@ -300,17 +292,27 @@
     handlers.handleOpenSharePanel(panelState);
   }
 
-  function handleCreationMethodSelected(method: BuildModeId) {
+  async function handleCreationMethodSelected(method: BuildModeId) {
     if (!handlers || !creationMethodPersistence) return;
-    handlers.handleCreationMethodSelected(
-      method,
-      CreateModuleState,
-      navigationState,
-      () => {
-        hasSelectedCreationMethod = true;
-        creationMethodPersistence!.markMethodSelected();
-      }
-    );
+
+    // FIRST: Set the active tab (but keep selector visible)
+    navigationState.setActiveTab(method);
+    CreateModuleState?.clearUndoHistory();
+
+    // Wait for Svelte to apply DOM updates
+    await tick();
+
+    // Wait multiple frames to ensure effects have completed and tool panel has fully rendered
+    // Frame 1: Effect is scheduled
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    // Frame 2: Effect executes and updates DOM
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    // Frame 3: Browser paints the new content
+    await new Promise(resolve => requestAnimationFrame(resolve));
+
+    // THEN: Mark as selected (which triggers the crossfade via effect)
+    hasSelectedCreationMethod = true;
+    creationMethodPersistence.markMethodSelected();
   }
 
   async function handleClearSequence() {
@@ -358,28 +360,43 @@
         handPathCoordinator={CreateModuleState.handPathCoordinator}
       />
     {:else}
-      <!-- Standard Workspace/Tool Panel Layout -->
-      <StandardWorkspaceLayout
-        {shouldUseSideBySideLayout}
-        {CreateModuleState}
-        creationCueOrientation={creationCueOrientation()}
-        creationCueMood={creationCueMood()}
-        {panelState}
-        bind:animatingBeatNumber
-        bind:toolPanelRef
-        bind:buttonPanelElement
-        bind:toolPanelElement
-        onPlayAnimation={handlePlayAnimation}
-        onClearSequence={handleClearSequence}
-        onShare={handleOpenSharePanel}
-        onSequenceActionsClick={handleOpenSequenceActions}
-        onMethodSelected={handleCreationMethodSelected}
-        onOptionSelected={handleOptionSelected}
-        onOpenFilters={handleOpenFilterPanel}
-        onCloseFilters={() => {
-          panelState.closeFilterPanel();
-        }}
-      />
+      <!-- Crossfade wrapper for smooth transitions -->
+      <div class="transition-wrapper">
+        <!-- Creation Method Selector -->
+        <div
+          class="transition-view"
+          class:active={navigationState.isCreationMethodSelectorVisible}
+          class:inactive={!navigationState.isCreationMethodSelectorVisible}
+        >
+          <CreationMethodSelector onMethodSelected={handleCreationMethodSelected} />
+        </div>
+
+        <!-- Standard Workspace/Tool Panel Layout -->
+        <div
+          class="transition-view"
+          class:active={!navigationState.isCreationMethodSelectorVisible}
+          class:inactive={navigationState.isCreationMethodSelectorVisible}
+        >
+          <StandardWorkspaceLayout
+            {shouldUseSideBySideLayout}
+            {CreateModuleState}
+            {panelState}
+            bind:animatingBeatNumber
+            bind:toolPanelRef
+            bind:buttonPanelElement
+            bind:toolPanelElement
+            onPlayAnimation={handlePlayAnimation}
+            onClearSequence={handleClearSequence}
+            onShare={handleOpenSharePanel}
+            onSequenceActionsClick={handleOpenSequenceActions}
+            onOptionSelected={handleOptionSelected}
+            onOpenFilters={handleOpenFilterPanel}
+            onCloseFilters={() => {
+              panelState.closeFilterPanel();
+            }}
+          />
+        </div>
+      </div>
     {/if}
   </div>
 
@@ -407,5 +424,36 @@
     width: 100%;
     overflow: hidden;
     transition: background-color 200ms ease-out;
+  }
+
+  /* Crossfade transition system */
+  .transition-wrapper {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .transition-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    transition: opacity 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-view.active {
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  .transition-view.inactive {
+    opacity: 0;
+    pointer-events: none;
+    z-index: 0;
   }
 </style>

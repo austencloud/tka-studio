@@ -87,8 +87,20 @@ Uses stepper pattern for direct increment/decrement interaction
     }
   }
 
+  // 🎨 Dynamic text color based on background lightness
+  function getTextColor(value: number): string {
+    if (value <= 2.0) {
+      // Light backgrounds (green, lime, amber) need dark text
+      return "black";
+    } else {
+      // Darker backgrounds (orange-red, deep red) need light text
+      return "white";
+    }
+  }
+
   const description = $derived(getDescription(currentIntensity));
   const dynamicColor = $derived(getColor(currentIntensity));
+  const textColor = $derived(getTextColor(currentIntensity));
 </script>
 
 <StepperCard
@@ -104,7 +116,7 @@ Uses stepper pattern for direct increment/decrement interaction
   {description}
   color={dynamicColor}
   {shadowColor}
-  textColor="white"
+  {textColor}
   {gridColumnSpan}
   {cardIndex}
   {headerFontSize}

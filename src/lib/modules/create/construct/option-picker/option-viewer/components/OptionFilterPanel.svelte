@@ -136,7 +136,7 @@ Provides a dedicated UI for filtering option viewer content:
     <div class="filter-panel-content">
       <!-- Continuity Filter Section -->
       <div class="filter-section">
-        <h3 class="section-title">Show Options</h3>
+        <h3 class="filter-section-title">Show Options</h3>
         <div class="toggle-group">
           <button
             class="toggle-option"
@@ -336,7 +336,7 @@ Provides a dedicated UI for filtering option viewer content:
     gap: 8px;
   }
 
-  .section-title {
+  .filter-section-title {
     font-size: 0.85rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
@@ -345,11 +345,11 @@ Provides a dedicated UI for filtering option viewer content:
     margin: 0;
   }
 
-  .filter-panel.compact .section-title {
+  .filter-panel.compact .filter-section-title {
     font-size: 0.8rem;
   }
 
-  .filter-panel.extra-compact .section-title {
+  .filter-panel.extra-compact .filter-section-title {
     font-size: 0.75rem;
     letter-spacing: 0.3px;
   }

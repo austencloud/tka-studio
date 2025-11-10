@@ -30,8 +30,8 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
   // Services
   let hapticService: IHapticFeedbackService;
 
-  // Animation state
-  let shouldAnimate = $state(true);
+  // Animation disabled - options appear instantly for speed
+  let shouldAnimate = $state(false);
   let animatedOptions = $state(new Set<string>());
 
   onMount(() => {
@@ -39,15 +39,13 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
       TYPES.IHapticFeedbackService
     );
 
-    // Trigger staggered animation
-    setTimeout(() => {
-      shouldAnimate = true;
-    }, 100);
+    // Animation disabled - do nothing
+    // Kept for API compatibility
   });
 
-  // Check if option should animate
+  // Check if option should animate (always false - animation disabled)
   function shouldOptionAnimate(optionId: string): boolean {
-    return shouldAnimate && !animatedOptions.has(optionId);
+    return false; // Animation disabled
   }
 
   // Handle animation end
@@ -154,12 +152,12 @@ Responsive grid layout: 2×3 or 3×2 depending on viewport
     min-height: 0; /* Allow flexbox to shrink */
     min-width: 0; /* Allow flexbox to shrink */
 
-    /* Initial state for animation */
-    opacity: 0;
-    transform: scale(0.8) translateY(20px);
+    /* Animation disabled - start in visible state */
+    opacity: 1;
+    transform: scale(1) translateY(0);
   }
 
-  /* After animation completes, ensure visible state */
+  /* Animation class (kept for compatibility but never applied) */
   .option-button:not(.animate) {
     opacity: 1;
     transform: scale(1) translateY(0);

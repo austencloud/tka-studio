@@ -36,48 +36,45 @@
   in:fade={{ duration: 400, delay: 200 }}
   out:fade={{ duration: 200 }}
 >
-  <!-- Centered welcome content with undo button above -->
-  <div
-    class="welcome-content"
-    class:horizontal-cue={orientation === "horizontal"}
-  >
-    <!-- Undo button - centered above title -->
-    {#if CreateModuleState?.canUndo}
-      <button
-        class="welcome-undo-button"
-        onclick={() => CreateModuleState?.undo()}
-        transition:fade={{ duration: 200 }}
-        title={CreateModuleState.undoHistory[
-          CreateModuleState.undoHistory.length - 1
-        ]?.metadata?.description || "Undo last action"}
+  <!-- Undo button - positioned in top-right -->
+  {#if CreateModuleState?.canUndo}
+    <button
+      class="welcome-undo-button"
+      onclick={() => CreateModuleState?.undo()}
+      transition:fade={{ duration: 200 }}
+      title={CreateModuleState.undoHistory[
+        CreateModuleState.undoHistory.length - 1
+      ]?.metadata?.description || "Undo last action"}
+    >
+      <svg
+        width="18"
+        height="18"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path
-            d="M9 14L4 9L9 4"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path
-            d="M4 9H15A6 6 0 0 1 15 21H13"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-        <span>Undo</span>
-      </button>
-    {/if}
+        <path
+          d="M9 14L4 9L9 4"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+        <path
+          d="M4 9H15A6 6 0 0 1 15 21H13"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <span>Undo</span>
+    </button>
+  {/if}
 
+  <!-- Centered welcome content -->
+  <div class="welcome-content">
     <CreationWelcomeCue {orientation} {mood} />
   </div>
 </div>
@@ -90,68 +87,76 @@
     left: 0;
     right: 0;
     bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(0.75rem, 2vh, 1.25rem);
-
-    backdrop-filter: blur(20px);
-    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    padding: clamp(1rem, 3vh, 2rem);
     overflow: hidden;
   }
 
   .welcome-content {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
-    text-align: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
   }
 
-  .welcome-content.horizontal-cue {
-    align-items: flex-start;
-    text-align: left;
-  }
-
-  /* Welcome screen undo button - centered above title in natural flow */
+  /* Undo button - modern, minimal, top-right positioned */
   .welcome-undo-button {
-    padding: 0.75rem 1.25rem;
+    position: absolute;
+    top: clamp(1rem, 2vh, 1.5rem);
+    right: clamp(1rem, 2vh, 1.5rem);
+    z-index: 10;
+
+    padding: 0.625rem 1rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 
-    /* Match ButtonPanel undo button styling */
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.875rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.8125rem;
     font-weight: 500;
     cursor: pointer;
 
-    /* Smooth transitions */
-    transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
-
-    /* Backdrop blur for better readability */
-    backdrop-filter: blur(10px);
+    transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(12px);
   }
 
   .welcome-undo-button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 1);
-    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px);
   }
 
   .welcome-undo-button:active {
     transform: translateY(0);
+    background: rgba(255, 255, 255, 0.08);
   }
 
   .welcome-undo-button svg {
     flex-shrink: 0;
+    opacity: 0.9;
   }
 
   .welcome-undo-button span {
     white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .welcome-undo-button {
+      top: 0.75rem;
+      right: 0.75rem;
+      padding: 0.5rem 0.875rem;
+      font-size: 0.75rem;
+    }
+
+    .welcome-undo-button svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 </style>

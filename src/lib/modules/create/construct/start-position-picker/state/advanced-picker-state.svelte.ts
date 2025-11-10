@@ -25,12 +25,12 @@ export function createAdvancedPickerState() {
   /**
    * Initialize animations after mount
    * Call this from onMount() in the component
+   *
+   * Animation disabled - positions appear instantly for speed
    */
   function initializeAnimations() {
-    // Small delay to ensure DOM is ready, then start staggered animation
-    setTimeout(() => {
-      shouldAnimate = true;
-    }, 100);
+    // Animation disabled - do nothing
+    // Kept for API compatibility
   }
 
   /**
@@ -44,32 +44,31 @@ export function createAdvancedPickerState() {
       previousGridMode !== currentGridMode &&
       previousGridMode !== undefined
     ) {
-      // Grid mode changed - trigger transition
+      // Grid mode changed - update state but skip animation
       isTransitioning = true;
       animatedPictographs.clear();
 
-      // Wait for fade-out, then fade back in
+      // Quick state reset without animation
       setTimeout(() => {
-        shouldAnimate = true;
         isTransitioning = false;
-      }, 200); // 200ms fade-out duration
+      }, 50);
     }
     previousGridMode = currentGridMode;
   }
 
   /**
-   * Mark a pictograph as animated
+   * Mark a pictograph as animated (kept for compatibility)
    */
   function markAnimationComplete(pictographId: string) {
     animatedPictographs.add(pictographId);
-    animatedPictographs = new Set(animatedPictographs); // Trigger reactivity
+    animatedPictographs = new Set(animatedPictographs);
   }
 
   /**
    * Check if a pictograph should animate
    */
   function shouldPictographAnimate(pictographId: string): boolean {
-    return shouldAnimate && !animatedPictographs.has(pictographId);
+    return false; // Animation disabled
   }
 
   /**

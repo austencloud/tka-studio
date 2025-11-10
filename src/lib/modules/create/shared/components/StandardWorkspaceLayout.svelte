@@ -10,10 +10,8 @@
 
   import { navigationState, type BuildModeId, type PictographData } from "$shared";
   import { fade } from "svelte/transition";
-  import { cubicOut } from "svelte/easing";
   import ButtonPanel from "../../workspace-panel/shared/components/ButtonPanel.svelte";
   import { AnimationSheetCoordinator } from "$shared/coordinators";
-  import CreationWelcomeScreen from "./CreationWelcomeScreen.svelte";
   import CreationWorkspaceArea from "./CreationWorkspaceArea.svelte";
   import CreationToolPanelSlot from "./CreationToolPanelSlot.svelte";
   import type { createCreateModuleState as CreateModuleStateType } from "../state/create-module-state.svelte";
@@ -28,8 +26,6 @@
   let {
     shouldUseSideBySideLayout,
     CreateModuleState,
-    creationCueOrientation,
-    creationCueMood,
     panelState,
     // Bindable props
     animatingBeatNumber = $bindable(null),
@@ -41,15 +37,12 @@
     onClearSequence,
     onShare,
     onSequenceActionsClick,
-    onMethodSelected,
     onOptionSelected,
     onOpenFilters,
     onCloseFilters,
   }: {
     shouldUseSideBySideLayout: boolean;
     CreateModuleState: CreateModuleState;
-    creationCueOrientation: "horizontal" | "vertical";
-    creationCueMood: "default" | "redo" | "returning" | "fresh";
     panelState: PanelCoordinationState;
     animatingBeatNumber?: number | null;
     toolPanelRef?: IToolPanelMethods | null;
@@ -59,7 +52,6 @@
     onClearSequence: () => void;
     onShare: () => void;
     onSequenceActionsClick: () => void;
-    onMethodSelected: (method: BuildModeId) => void;
     onOptionSelected: (option: PictographData) => Promise<void>;
     onOpenFilters: () => void;
     onCloseFilters: () => void;
@@ -69,36 +61,24 @@
 <div
   class="layout-wrapper"
   class:side-by-side={shouldUseSideBySideLayout}
-  in:fade={{ duration: 500, delay: 250, easing: cubicOut }}
 >
   <!-- Workspace Panel -->
   <div
     class="workspace-container"
     class:hidden-workspace={navigationState.activeTab === "gestural" &&
       !CreateModuleState?.handPathCoordinator?.isStarted}
-    class:collapsed={navigationState.isCreationMethodSelectorVisible}
   >
     <!-- Workspace Content Area -->
     <div class="workspace-content">
-      {#if navigationState.isCreationMethodSelectorVisible}
-        <!-- Layout 1: Welcome screen when selector is visible -->
-        <CreationWelcomeScreen
-          orientation={creationCueOrientation}
-          mood={creationCueMood}
-        />
-      {:else}
-        <!-- Layout 2: Actual workspace when method is selected -->
-        {@const animStateRef = toolPanelRef?.getAnimationStateRef?.()}
-        <CreationWorkspaceArea
-          {animatingBeatNumber}
-          {onPlayAnimation}
-          {...animStateRef ? { animationStateRef: animStateRef } : {}}
-        />
-      {/if}
+      <CreationWorkspaceArea
+        {animatingBeatNumber}
+        {onPlayAnimation}
+        {...toolPanelRef?.getAnimationStateRef?.() ? { animationStateRef: toolPanelRef.getAnimationStateRef() } : {}}
+      />
     </div>
 
-    <!-- Button Panel (hidden when creation method selector is visible) -->
-    {#if navigationState.activeTab !== "gestural" && !navigationState.isCreationMethodSelectorVisible}
+    <!-- Button Panel -->
+    {#if navigationState.activeTab !== "gestural"}
       <div
         class="button-panel-wrapper"
         bind:this={buttonPanelElement}
@@ -123,11 +103,10 @@
     />
   </div>
 
-  <!-- Tool Panel or Creation Method Screen -->
+  <!-- Tool Panel -->
   <div class="tool-panel-container" bind:this={toolPanelElement}>
     <CreationToolPanelSlot
       bind:toolPanelRef
-      onMethodSelected={onMethodSelected}
       onOptionSelected={onOptionSelected}
       onPracticeBeatIndexChange={(index) => {
         panelState.setPracticeBeatIndex(index);
@@ -165,11 +144,6 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
-    transition: flex 300ms cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .workspace-container.collapsed {
-    flex: 2;
   }
 
   .workspace-container.hidden-workspace {
@@ -204,10 +178,6 @@
 
   .layout-wrapper.side-by-side .workspace-container {
     flex: 5;
-  }
-
-  .layout-wrapper.side-by-side .workspace-container.collapsed {
-    flex: 2;
   }
 
   .layout-wrapper.side-by-side .tool-panel-container {

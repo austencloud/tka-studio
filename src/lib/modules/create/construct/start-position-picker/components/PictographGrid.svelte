@@ -21,34 +21,27 @@
     isAnimating?: boolean;
   } = $props();
 
-  // Animation state for entrance effect
+  // Animation disabled - positions appear instantly for speed
   let shouldAnimate = $state(false);
   let animatedPictographs = $state(new Set<string>());
 
   // Services
   let hapticService: IHapticFeedbackService;
 
-  // Trigger animation on mount
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
     );
-
-    // Small delay to ensure DOM is ready, then start staggered animation
-    setTimeout(() => {
-      shouldAnimate = true;
-    }, 100);
   });
 
-  // Handle animation completion for each pictograph
+  // Animation handlers (kept for compatibility but never trigger)
   function handleAnimationEnd(pictographId: string) {
     animatedPictographs.add(pictographId);
-    animatedPictographs = new Set(animatedPictographs); // Trigger reactivity
+    animatedPictographs = new Set(animatedPictographs);
   }
 
-  // Check if a pictograph should animate
   function shouldPictographAnimate(pictographId: string): boolean {
-    return shouldAnimate && !animatedPictographs.has(pictographId);
+    return false; // Animation disabled
   }
 
   // Handle pictograph selection with haptic feedback

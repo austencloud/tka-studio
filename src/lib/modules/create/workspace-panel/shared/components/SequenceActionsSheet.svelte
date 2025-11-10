@@ -335,6 +335,10 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+
+    /* Prevent pull-to-refresh when scrolling content */
+    overscroll-behavior: contain;
+    overscroll-behavior-y: contain;
   }
 
   /* Empty state */
