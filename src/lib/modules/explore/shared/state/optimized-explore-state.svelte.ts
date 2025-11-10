@@ -6,6 +6,7 @@
  * - Intelligent image preloading
  * - Mobile-first performance optimizations
  * - Skeleton loading states
+ * - Connection-aware image request throttling
  */
 
 import { resolve } from "$shared";
@@ -15,12 +16,21 @@ import type {
   IOptimizedExploreService,
   SequenceMetadata,
 } from "../services/contracts/IOptimizedExploreService";
+import { adjustQueueForConnection } from "../utils/image-request-queue";
+import { getConnectionInfo } from "../utils/connection-quality";
 
 export function createOptimizedExploreState() {
   // Services
   const galleryService = resolve(
     TYPES.IOptimizedExploreService
   ) as IOptimizedExploreService;
+
+  // Initialize connection-aware image request throttling
+  const connectionInfo = getConnectionInfo();
+  adjustQueueForConnection(connectionInfo.quality);
+  console.log(
+    `📡 Image queue configured for ${connectionInfo.quality} connection (${connectionInfo.effectiveType})`
+  );
 
   // Core state
   let sequences = $state<SequenceMetadata[]>([]);
