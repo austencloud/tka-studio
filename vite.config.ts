@@ -164,6 +164,12 @@ const webpStaticCopyPlugin = () => {
 // ============================================================================
 
 export default defineConfig({
+  // ============================================================================
+  // ENVIRONMENT & DEFINES
+  // ============================================================================
+  define: {
+    __DEFINES__: JSON.stringify({}),
+  },
   plugins: [
     sveltekit({
       // Explicitly enable HMR and hot module replacement
@@ -240,8 +246,8 @@ export default defineConfig({
   },
   // ============================================================================
   // DEPENDENCY PRE-BUNDLING (Vite 6.0)
-  // ⚡ PERFORMANCE: Only pre-bundle lightweight essentials
-  // Heavy libraries (fabric, dexie, page-flip) load on-demand when features are used
+  // ⚡ PERFORMANCE: Only pre-bundle lightweight essentials + dependencies that need ESM transformation
+  // Heavy libraries (fabric, page-flip) are excluded and load on-demand when features are used
   // This reduces initial dev server load time from 30s+ to ~5-10s
   // ============================================================================
   optimizeDeps: {
@@ -258,12 +264,15 @@ export default defineConfig({
 
       // Small utilities
       "file-saver",
+
+      // ⚡ PERFORMANCE FIX: Pre-bundle dexie for proper ESM handling
+      // Needs Vite transformation despite being in dataModule (Tier 1)
+      "dexie",
     ],
     exclude: [
       "pdfjs-dist",
       // ⚡ Lazy-load these heavy libraries on-demand
       "fabric",        // ~500KB canvas library (loads when user uses animator)
-      "dexie",         // IndexedDB wrapper (loads when needed)
       "page-flip",     // PDF flipbook (loads in learn module)
     ],
   },
