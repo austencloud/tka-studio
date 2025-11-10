@@ -7,6 +7,7 @@
   import OrientationControlPanel from "./OrientationControlPanel.svelte";
   import TurnControlPanel from "./TurnControlPanel.svelte";
   import TurnEditModal from "./TurnEditModal.svelte";
+  import RotationOverrideButton from "./RotationOverrideButton.svelte";
 
   let hapticService: IHapticFeedbackService;
 
@@ -108,6 +109,14 @@
 </script>
 
 <div class="main-adjustment-panel" data-testid="main-adjustment-panel">
+  <!-- Rotation Override Toolbar -->
+  {#if currentBeatData && currentBeatData.beatNumber >= 1}
+    <div class="override-toolbar">
+      <RotationOverrideButton beatData={currentBeatData} arrowColor="blue" />
+      <RotationOverrideButton beatData={currentBeatData} arrowColor="red" />
+    </div>
+  {/if}
+
   <div class="panel-content">
     {#if activePanel === "orientation"}
       <OrientationControlPanel
@@ -148,6 +157,14 @@
     transition: height var(--transition-normal);
   }
 
+  .override-toolbar {
+    display: flex;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
   .panel-content {
     flex: 1;
     overflow: auto;
@@ -171,6 +188,8 @@
 
   /* Responsive adjustments */
   @media (max-width: 768px) {
-    /* Mobile responsive styles can be added here if needed */
+    .override-toolbar {
+      padding: var(--spacing-xs);
+    }
   }
 </style>

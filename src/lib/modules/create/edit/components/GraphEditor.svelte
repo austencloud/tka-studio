@@ -2,10 +2,12 @@
 <script lang="ts">
   import type { BeatData, IHapticFeedbackService } from "$shared";
   import { Pictograph, resolve, TYPES } from "$shared";
-  import { onMount } from "svelte";
+  import type { IRotationOverrideManager } from "$shared/pictograph/arrow/positioning/placement/services/implementations";
+  import { onMount, onDestroy } from "svelte";
   import MainAdjustmentPanel from "./MainAdjustmentPanel.svelte";
 
   let hapticService: IHapticFeedbackService;
+  let rotationOverrideManager: IRotationOverrideManager;
 
   // Props - sequence state and optional external data
   const {
@@ -31,6 +33,7 @@
 
   // Internal state
   let errorMessage = $state<string | null>(null);
+  let selectedArrowColor = $state<"blue" | "red">("blue"); // Track which arrow is selected for 'X' key
 
   // Handle orientation changes
   function handleOrientationChanged(color: string, orientation: string) {
@@ -98,10 +101,91 @@
     errorMessage = null;
   }
 
+  // Keyboard event handler for rotation override
+  async function handleKeyDown(event: KeyboardEvent) {
+    // Only handle 'X' key
+    if (event.key.toLowerCase() !== "x") return;
+
+    // Ignore if modifier keys are pressed (Ctrl, Alt, Meta)
+    if (event.ctrlKey || event.altKey || event.metaKey) return;
+
+    // Ignore if focused on an input element
+    const target = event.target as HTMLElement;
+    if (
+      target.tagName === "INPUT" ||
+      target.tagName === "TEXTAREA" ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    // Only handle if we have beat data
+    if (!selectedBeatData || !rotationOverrideManager) return;
+
+    // Get the motion for the selected arrow
+    const motion =
+      selectedArrowColor === "blue"
+        ? selectedBeatData.motions?.blue
+        : selectedBeatData.motions?.red;
+
+    if (!motion) return;
+
+    // Check if this motion type supports rotation override
+    const motionType = motion.motionType?.toLowerCase();
+    if (motionType !== "dash" && motionType !== "static") {
+      console.warn(
+        `Rotation override not available for ${motionType} arrows. Only DASH and STATIC arrows can have rotation overrides.`
+      );
+      return;
+    }
+
+    // Prevent default behavior
+    event.preventDefault();
+
+    // Toggle the rotation override
+    try {
+      hapticService?.trigger("selection");
+      const newState = await rotationOverrideManager.toggleRotationOverride(
+        motion,
+        selectedBeatData
+      );
+
+      // Trigger pictograph refresh
+      window.dispatchEvent(
+        new CustomEvent("rotation-override-changed", {
+          detail: {
+            beatData: selectedBeatData,
+            arrowColor: selectedArrowColor,
+            isActive: newState,
+          },
+        })
+      );
+
+      // Show brief notification (optional)
+      console.log(
+        `Rotation override ${newState ? "enabled" : "disabled"} for ${selectedArrowColor} arrow`
+      );
+    } catch (error) {
+      console.error("Failed to toggle rotation override:", error);
+      errorMessage = "Failed to toggle rotation override";
+    }
+  }
+
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
     );
+    rotationOverrideManager = resolve<IRotationOverrideManager>(
+      TYPES.IRotationOverrideManager
+    );
+
+    // Add keyboard event listener
+    window.addEventListener("keydown", handleKeyDown);
+  });
+
+  onDestroy(() => {
+    // Clean up keyboard event listener
+    window.removeEventListener("keydown", handleKeyDown);
   });
 </script>
 
