@@ -95,9 +95,9 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     number
   > = {
     [GridLocation.NORTH]: 180,
-    [GridLocation.EAST]: 90,
+    [GridLocation.EAST]: 270,
     [GridLocation.SOUTH]: 0,
-    [GridLocation.WEST]: 270,
+    [GridLocation.WEST]: 90,
     [GridLocation.NORTHEAST]: 135,
     [GridLocation.SOUTHEAST]: 45,
     [GridLocation.SOUTHWEST]: 315,
@@ -218,12 +218,12 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
   // Static from RADIAL (IN/OUT) override angles
   private readonly staticRadialOverrideMap: Record<
     GridLocation,
-    number | Record<string, number>
+    Record<string, number>
   > = {
-    [GridLocation.NORTH]: 180,
-    [GridLocation.EAST]: 270,
-    [GridLocation.SOUTH]: 0,
-    [GridLocation.WEST]: 90,
+    [GridLocation.NORTH]: { cw: 180, ccw: 180 },
+    [GridLocation.EAST]: { cw: 270, ccw: 270 },
+    [GridLocation.SOUTH]: { cw: 0, ccw: 0 },
+    [GridLocation.WEST]: { cw: 90, ccw: 90 },
     [GridLocation.NORTHEAST]: { cw: 225, ccw: 135 },
     [GridLocation.SOUTHEAST]: { cw: 315, ccw: 45 },
     [GridLocation.SOUTHWEST]: { cw: 45, ccw: 315 },
@@ -233,11 +233,11 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
   // Static from NON-RADIAL (CLOCK/COUNTER) override angles
   private readonly staticNonRadialOverrideMap: Record<
     GridLocation,
-    number | Record<string, number>
+    Record<string, number>
   > = {
-    [GridLocation.NORTH]: 0,
+    [GridLocation.NORTH]: { cw: 0, ccw: 0 },
     [GridLocation.EAST]: { cw: 90, ccw: 270 },
-    [GridLocation.SOUTH]: 180,
+    [GridLocation.SOUTH]: { cw: 180, ccw: 180 },
     [GridLocation.WEST]: { cw: 270, ccw: 90 },
     [GridLocation.NORTHEAST]: { cw: 45, ccw: 315 },
     [GridLocation.SOUTHEAST]: { cw: 135, ccw: 225 },
