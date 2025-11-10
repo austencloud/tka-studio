@@ -87,14 +87,23 @@ Uses stepper pattern for direct increment/decrement interaction
     }
   }
 
-  // 🎨 Dynamic text color based on background lightness
+  // 🎨 Dynamic text color with smooth transition based on background lightness
   function getTextColor(value: number): string {
-    if (value <= 2.0) {
-      // Light backgrounds (green, lime, amber) need dark text
-      return "black";
+    // Define transition zone between 2.0x and 2.5x
+    const transitionStart = 2.0;
+    const transitionEnd = 2.5;
+
+    if (value <= transitionStart) {
+      // Light backgrounds (green, lime, amber) - pure black
+      return "rgb(0, 0, 0)";
+    } else if (value >= transitionEnd) {
+      // Darker backgrounds (orange-red, deep red) - pure white
+      return "rgb(255, 255, 255)";
     } else {
-      // Darker backgrounds (orange-red, deep red) need light text
-      return "white";
+      // Smooth transition zone - interpolate between black and white
+      const progress = (value - transitionStart) / (transitionEnd - transitionStart);
+      const grayValue = Math.round(progress * 255);
+      return `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
     }
   }
 

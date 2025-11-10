@@ -33,7 +33,6 @@
 <div class="carousel-panel" id={panelId} role="presentation">
   <div class="tab-panel" role="tabpanel" aria-labelledby={labelledBy}>
     <h2 class="panel-title">{copy.subtitle}</h2>
-    <p class="support-message">{copy.message}</p>
     <div class="support-grid">
       {#each supportOptions as option}
         <a

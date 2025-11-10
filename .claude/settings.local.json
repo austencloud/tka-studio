@@ -49,7 +49,11 @@
       "Bash(tee:*)",
       "Bash(netstat:*)",
       "Bash(dir /s /b 'f:\\_THE KINETIC ALPHABET\\_TKA-STUDIO\\static\\gallery\\*_small.webp' 2)",
-      "Bash(dir /s /b 'f:\\_THE KINETIC ALPHABET\\_TKA-STUDIO\\static\\gallery\\*_medium.webp' 2)"
+      "Bash(dir /s /b 'f:\\_THE KINETIC ALPHABET\\_TKA-STUDIO\\static\\gallery\\*_medium.webp' 2)",
+      "Bash(dir:*)",
+      "Bash(mkdir:*)",
+      "Bash(git rm:*)",
+      "Bash(rm:*)"
     ],
     "deny": [],
     "ask": []

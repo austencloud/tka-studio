@@ -13,8 +13,13 @@ export const desktopSidebarState = $state({
   // Sidebar visibility - controlled by viewport and layout conditions
   isVisible: false,
 
-  // Sidebar width - measured dynamically by DesktopNavigationSidebar component
-  width: 280, // Default sidebar width
+  // Sidebar collapsed state - toggled by user
+  isCollapsed: false,
+
+  // Sidebar widths
+  expandedWidth: 280, // Full sidebar width
+  collapsedWidth: 72, // Collapsed sidebar width (icon-only)
+  width: 280, // Current width (computed based on collapsed state)
 
   // Track if conditions are met for showing sidebar
   isDesktopDevice: false,
@@ -28,6 +33,18 @@ export function setDesktopSidebarVisible(visible: boolean) {
 
 export function setDesktopSidebarWidth(width: number) {
   desktopSidebarState.width = width;
+}
+
+export function setDesktopSidebarCollapsed(collapsed: boolean) {
+  desktopSidebarState.isCollapsed = collapsed;
+  // Update current width based on collapsed state
+  desktopSidebarState.width = collapsed
+    ? desktopSidebarState.collapsedWidth
+    : desktopSidebarState.expandedWidth;
+}
+
+export function toggleDesktopSidebarCollapsed() {
+  setDesktopSidebarCollapsed(!desktopSidebarState.isCollapsed);
 }
 
 export function setIsDesktopDevice(isDesktop: boolean) {
@@ -67,4 +84,37 @@ export function updateDesktopSidebarVisibility(
   setDesktopSidebarVisible(shouldShow);
   setIsDesktopDevice(isDesktop);
   setIsSideBySideLayout(isSideBySideLayout);
+}
+
+/**
+ * LocalStorage persistence for collapsed state
+ */
+const STORAGE_KEY = "tka-desktop-sidebar-collapsed";
+
+export function loadDesktopSidebarCollapsedState(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    return stored === "true";
+  } catch (error) {
+    console.warn("Failed to load desktop sidebar collapsed state:", error);
+    return false;
+  }
+}
+
+export function saveDesktopSidebarCollapsedState(collapsed: boolean) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem(STORAGE_KEY, collapsed.toString());
+  } catch (error) {
+    console.warn("Failed to save desktop sidebar collapsed state:", error);
+  }
+}
+
+/**
+ * Initialize desktop sidebar collapsed state from localStorage
+ */
+export function initializeDesktopSidebarCollapsedState() {
+  const collapsed = loadDesktopSidebarCollapsedState();
+  setDesktopSidebarCollapsed(collapsed);
 }

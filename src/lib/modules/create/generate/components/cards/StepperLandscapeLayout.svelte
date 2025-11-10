@@ -123,7 +123,9 @@ Used when card aspect ratio is wide/landscape
     color: color-mix(in srgb, var(--text-color) 40%, transparent);
 
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      background 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 
     user-select: none;
     -webkit-user-select: none;
@@ -163,6 +165,7 @@ Used when card aspect ratio is wide/landscape
   .touch-zone:focus-visible {
     outline: 2px solid color-mix(in srgb, var(--text-color) 70%, transparent);
     outline-offset: -2px;
+    transition: outline-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .zone-icon {
@@ -178,7 +181,11 @@ Used when card aspect ratio is wide/landscape
     border-radius: 50%;
     color: var(--text-color);
 
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
   }
 
@@ -222,6 +229,7 @@ Used when card aspect ratio is wide/landscape
     pointer-events: none;
     white-space: nowrap;
     z-index: 3;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Landscape mode: Absolutely positioned subtitle and description */
@@ -240,6 +248,7 @@ Used when card aspect ratio is wide/landscape
     overflow: hidden;
     text-overflow: ellipsis;
     pointer-events: none;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-subtitle:has(~ .card-description) {
@@ -262,6 +271,7 @@ Used when card aspect ratio is wide/landscape
     overflow: hidden;
     text-overflow: ellipsis;
     pointer-events: none;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Desktop optimization: Larger controls */

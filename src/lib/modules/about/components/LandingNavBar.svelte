@@ -2,9 +2,9 @@
   import type { IHapticFeedbackService } from "$shared";
   import { onMount } from "svelte";
   import {
-    getLandingBackground,
+    getInfoBackground,
     resolve,
-    setLandingBackground,
+    setInfoBackground,
     TYPES,
   } from "../../../shared";
   import SettingsModal from "./SettingsModal.svelte";
@@ -15,7 +15,7 @@
   }>();
 
   let showSettingsModal = $state(false);
-  let landingBackground = $derived(getLandingBackground());
+  let landingBackground = $derived(getInfoBackground());
   let hapticService: IHapticFeedbackService;
 
   onMount(() => {
@@ -30,7 +30,7 @@
       background === "snowfall" ||
       background === "nightSky"
     ) {
-      setLandingBackground(background);
+      setInfoBackground(background);
       onBackgroundChange?.(background);
     }
   }

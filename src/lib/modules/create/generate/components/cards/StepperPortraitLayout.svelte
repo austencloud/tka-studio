@@ -148,7 +148,9 @@ Used when card aspect ratio is tall/portrait
     background: transparent;
     border: none;
     cursor: pointer;
-    transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      outline-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
     user-select: none;
     -webkit-user-select: none;
@@ -178,6 +180,7 @@ Used when card aspect ratio is tall/portrait
   .portrait-touch-zone:focus-visible {
     outline: 2px solid color-mix(in srgb, var(--text-color) 70%, transparent);
     outline-offset: -2px;
+    transition: outline-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Portrait mode: Visual button indicators (non-interactive) */
@@ -197,7 +200,11 @@ Used when card aspect ratio is tall/portrait
     pointer-events: none;
     z-index: 2;
 
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .stepper-button-visual svg {
@@ -237,6 +244,7 @@ Used when card aspect ratio is tall/portrait
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     white-space: nowrap;
     flex-shrink: 0;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Portrait mode: Subtitle and description */
@@ -251,6 +259,7 @@ Used when card aspect ratio is tall/portrait
     text-overflow: ellipsis;
     width: 100%;
     flex-shrink: 0;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .card-description {
@@ -265,6 +274,7 @@ Used when card aspect ratio is tall/portrait
     text-overflow: ellipsis;
     width: 100%;
     flex-shrink: 0;
+    transition: color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Desktop optimization: Larger controls */

@@ -13,6 +13,12 @@
     toggleSettingsDialog,
   } from "../../application/state/app-state.svelte";
   import type { ModuleDefinition, Section, ModuleId } from "../domain/types";
+  import {
+    desktopSidebarState,
+    toggleDesktopSidebarCollapsed,
+    initializeDesktopSidebarCollapsedState,
+    saveDesktopSidebarCollapsedState,
+  } from "../../layout/desktop-sidebar-state.svelte";
 
   let {
     currentModule,
@@ -38,6 +44,9 @@
 
   // Track which modules are expanded
   let expandedModules = $state<Set<string>>(new Set([currentModule]));
+
+  // Get collapsed state reactively
+  const isCollapsed = $derived(desktopSidebarState.isCollapsed);
 
   // Ensure current module is always expanded
   $effect(() => {
@@ -84,7 +93,16 @@
     toggleSettingsDialog();
   }
 
+  function handleToggleCollapse() {
+    hapticService?.trigger("selection");
+    toggleDesktopSidebarCollapsed();
+    saveDesktopSidebarCollapsedState(desktopSidebarState.isCollapsed);
+  }
+
   onMount(() => {
+    // Initialize collapsed state from localStorage
+    initializeDesktopSidebarCollapsedState();
+
     // Initialize services
     hapticService = resolve<IHapticFeedbackService>(
       TYPES.IHapticFeedbackService
@@ -116,13 +134,24 @@
   });
 </script>
 
-<nav class="desktop-navigation-sidebar" bind:this={sidebarElement}>
+<nav class="desktop-navigation-sidebar" class:collapsed={isCollapsed} bind:this={sidebarElement}>
   <!-- Sidebar Header/Branding -->
   <div class="sidebar-header">
     <div class="studio-logo">
       <i class="fas fa-palette"></i>
-      <span class="studio-name">TKA Studio</span>
+      {#if !isCollapsed}
+        <span class="studio-name">TKA Studio</span>
+      {/if}
     </div>
+    <!-- Collapse Toggle Button -->
+    <button
+      class="collapse-toggle"
+      onclick={handleToggleCollapse}
+      aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+      title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+    >
+      <i class="fas fa-{isCollapsed ? 'angle-right' : 'angle-left'}"></i>
+    </button>
   </div>
 
   <!-- Modules List -->
@@ -141,14 +170,16 @@
           aria-expanded={isExpanded}
         >
           <span class="module-icon">{@html module.icon}</span>
-          <span class="module-label">{module.label}</span>
-          <span class="expand-icon">
-            <i class="fas fa-chevron-{isExpanded ? 'down' : 'right'}"></i>
-          </span>
+          {#if !isCollapsed}
+            <span class="module-label">{module.label}</span>
+            <span class="expand-icon">
+              <i class="fas fa-chevron-{isExpanded ? 'down' : 'right'}"></i>
+            </span>
+          {/if}
         </button>
 
         <!-- Module Sections/Tabs (collapsible) -->
-        {#if isExpanded && module.sections.length > 0}
+        {#if isExpanded && module.sections.length > 0 && !isCollapsed}
           <div class="sections-list" transition:slide={{ duration: 200 }}>
             {#each module.sections as section}
               {@const isSectionActive = currentSection === section.id && isActive}
@@ -187,7 +218,9 @@
       aria-label="Settings"
     >
       <i class="fas fa-cog"></i>
-      <span>Settings</span>
+      {#if !isCollapsed}
+        <span>Settings</span>
+      {/if}
     </button>
   </div>
 </nav>
@@ -210,9 +243,14 @@
     border-right: 1px solid rgba(255, 255, 255, 0.08);
     z-index: 150;
     overflow: hidden;
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     /* Safe area support */
     padding-left: env(safe-area-inset-left);
+  }
+
+  .desktop-navigation-sidebar.collapsed {
+    width: 72px;
   }
 
   /* ============================================================================
@@ -226,6 +264,15 @@
       rgba(103, 126, 234, 0.08) 0%,
       rgba(118, 75, 162, 0.08) 100%
     );
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+  }
+
+  .desktop-navigation-sidebar.collapsed .sidebar-header {
+    padding: 24px 12px;
+    align-items: center;
   }
 
   .studio-logo {
@@ -233,6 +280,11 @@
     align-items: center;
     gap: 12px;
     color: rgba(255, 255, 255, 0.95);
+  }
+
+  .desktop-navigation-sidebar.collapsed .studio-logo {
+    justify-content: center;
+    gap: 0;
   }
 
   .studio-logo i {
@@ -256,6 +308,38 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+
+  /* ============================================================================
+     COLLAPSE TOGGLE BUTTON
+     ============================================================================ */
+  .collapse-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 16px;
+  }
+
+  .collapse-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .collapse-toggle:active {
+    transform: scale(0.95);
+  }
+
+  .desktop-navigation-sidebar.collapsed .collapse-toggle {
+    padding: 12px 8px;
   }
 
   /* ============================================================================
@@ -317,6 +401,11 @@
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
+  }
+
+  .desktop-navigation-sidebar.collapsed .module-button {
+    justify-content: center;
+    padding: 12px 8px;
   }
 
   .module-button::before {
@@ -502,6 +591,11 @@
     transition: all 0.25s ease;
     font-size: 15px;
     font-weight: 500;
+  }
+
+  .desktop-navigation-sidebar.collapsed .footer-button {
+    justify-content: center;
+    padding: 12px 8px;
   }
 
   .footer-button:hover {
