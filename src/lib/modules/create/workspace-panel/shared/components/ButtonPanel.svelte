@@ -46,7 +46,7 @@
   const showPlayButton = $derived(CreateModuleState.canShowActionButtons());
   const showShareButton = $derived(CreateModuleState.canShowActionButtons());
   const showSequenceActions = $derived(
-    CreateModuleState.canShowActionButtons()
+    CreateModuleState.canShowSequenceActionsButton()
   );
   const canClearSequence = $derived(CreateModuleState.canClearSequence(true));
   const isAnimating = $derived(panelState.isAnimationPanelOpen);

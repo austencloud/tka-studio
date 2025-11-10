@@ -72,7 +72,7 @@
       id: "rotate",
       label: "Rotate",
       icon: '<i class="fas fa-redo"></i>',
-      description: "Rotate 90°",
+      description: "Rotate 45° & toggle grid",
       color: "#ec4899",
       requiresSequence: true,
       handler: onRotate,

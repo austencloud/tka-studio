@@ -34,7 +34,7 @@
     );
   });
 
-  function handleMirror() {
+  async function handleMirror() {
     const currentSequence = CreateModuleState.sequenceState.currentSequence;
     if (!currentSequence) {
       logger.warn("No sequence to mirror");
@@ -42,11 +42,11 @@
     }
 
     logger.log("Mirroring sequence vertically (including start position)");
-    CreateModuleState.sequenceState.mirrorSequence();
-    logger.log("✅ Sequence mirrored successfully");
+    await CreateModuleState.sequenceState.mirrorSequence();
+    logger.log("✅ Sequence mirrored and saved successfully");
   }
 
-  function handleRotate() {
+  async function handleRotate() {
     const currentSequence = CreateModuleState.sequenceState.currentSequence;
     if (!currentSequence) {
       logger.warn("No sequence to rotate");
@@ -54,11 +54,11 @@
     }
 
     logger.log("Rotating sequence 90° clockwise (including start position)");
-    CreateModuleState.sequenceState.rotateSequence("clockwise");
-    logger.log("✅ Sequence rotated successfully");
+    await CreateModuleState.sequenceState.rotateSequence("clockwise");
+    logger.log("✅ Sequence rotated and saved successfully");
   }
 
-  function handleColorSwap() {
+  async function handleColorSwap() {
     const currentSequence = CreateModuleState.sequenceState.currentSequence;
     if (!currentSequence) {
       logger.warn("No sequence to color swap");
@@ -68,11 +68,11 @@
     logger.log(
       "Swapping sequence colors (blue ↔ red, including start position)"
     );
-    CreateModuleState.sequenceState.swapColors();
-    logger.log("✅ Sequence colors swapped successfully");
+    await CreateModuleState.sequenceState.swapColors();
+    logger.log("✅ Sequence colors swapped and saved successfully");
   }
 
-  function handleReverse() {
+  async function handleReverse() {
     const currentSequence = CreateModuleState.sequenceState.currentSequence;
     if (!currentSequence) {
       logger.warn("No sequence to reverse");
@@ -80,8 +80,8 @@
     }
 
     logger.log("Reversing sequence (playing backwards)");
-    CreateModuleState.sequenceState.reverseSequence();
-    logger.log("✅ Sequence reversed successfully");
+    await CreateModuleState.sequenceState.reverseSequence();
+    logger.log("✅ Sequence reversed and saved successfully");
   }
 
   function handleCopyJSON() {

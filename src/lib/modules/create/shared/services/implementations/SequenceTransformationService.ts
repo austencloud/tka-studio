@@ -7,7 +7,7 @@
  * Based on legacy desktop app implementation with modern TypeScript patterns.
  */
 
-import type { BeatData, SequenceData } from "$shared";
+import type { BeatData, SequenceData, IGridPositionDeriver } from "$shared";
 import {
   createSequenceData,
   updateSequenceData,
@@ -16,6 +16,9 @@ import {
   MotionColor,
   MotionType,
   RotationDirection,
+  TYPES,
+  resolve,
+  createMotionData,
 } from "$shared";
 import { injectable } from "inversify";
 import { createBeatData } from "../../domain/factories/createBeatData";
@@ -23,6 +26,7 @@ import type { ISequenceTransformationService } from "../contracts/ISequenceTrans
 import {
   QUARTER_POSITION_MAP_CW,
   LOCATION_MAP_CLOCKWISE,
+  LOCATION_MAP_EIGHTH_CW,
   VERTICAL_MIRROR_POSITION_MAP,
   VERTICAL_MIRROR_LOCATION_MAP,
   SWAPPED_POSITION_MAP,
@@ -233,10 +237,12 @@ export class SequenceTransformationService
   }
 
   /**
-   * Rotate sequence 90° clockwise
-   * - Rotates all positions using quarter rotation map
-   * - Rotates all locations clockwise
+   * Rotate sequence 45° clockwise
+   * - Rotates all locations by 45° (one step: N → NE → E → SE → S → SW → W → NW → N)
+   * - Derives new positions from rotated locations
    * - Toggles grid mode (DIAMOND ↔ BOX)
+   *
+   * Based on legacy desktop app sequence_rotater.py implementation
    */
   rotateSequence(
     sequence: SequenceData,
@@ -252,7 +258,7 @@ export class SequenceTransformationService
       ? this.rotateBeat(sequence.startingPositionBeat)
       : undefined;
 
-    // Toggle grid mode
+    // Toggle grid mode (DIAMOND ↔ BOX)
     const newGridMode =
       sequence.gridMode === GridMode.DIAMOND ? GridMode.BOX : GridMode.DIAMOND;
 
@@ -267,44 +273,76 @@ export class SequenceTransformationService
   }
 
   /**
-   * Rotate a single beat 90° clockwise
+   * Rotate a single beat 45° clockwise
+   * - Rotates each location by 45° (one position in cw order)
+   * - Derives new positions from rotated blue/red location pairs
+   * - Creates fresh motion data with new placement data
+   * - Toggles grid mode for each motion
    */
   private rotateBeat(beat: BeatData): BeatData {
     if (beat.isBlank || !beat) {
       return beat;
     }
 
-    // Rotate positions (handle undefined as null)
-    const rotatedStartPosition = beat.startPosition
-      ? QUARTER_POSITION_MAP_CW[beat.startPosition]
-      : (beat.startPosition ?? null);
-    const rotatedEndPosition = beat.endPosition
-      ? QUARTER_POSITION_MAP_CW[beat.endPosition]
-      : (beat.endPosition ?? null);
+    // Get position deriver service
+    const positionDeriver = resolve<IGridPositionDeriver>(
+      TYPES.IGridPositionDeriver
+    );
 
-    // Rotate motions
+    // Determine new grid mode (toggle DIAMOND ↔ BOX)
+    const currentGridMode = beat.motions[MotionColor.BLUE]?.gridMode ?? GridMode.DIAMOND;
+    const newGridMode = currentGridMode === GridMode.DIAMOND ? GridMode.BOX : GridMode.DIAMOND;
+
+    // Rotate motions and locations (keep orientations - they're relative)
     const rotatedMotions = { ...beat.motions };
 
-    // Rotate blue motion
+    // Rotate blue motion locations
+    // Use createMotionData to ensure fresh placement data with new grid mode
     if (beat.motions[MotionColor.BLUE]) {
       const blueMotion = beat.motions[MotionColor.BLUE]!;
-      rotatedMotions[MotionColor.BLUE] = {
-        ...blueMotion,
-        startLocation: LOCATION_MAP_CLOCKWISE[blueMotion.startLocation],
-        endLocation: LOCATION_MAP_CLOCKWISE[blueMotion.endLocation],
-        arrowLocation: LOCATION_MAP_CLOCKWISE[blueMotion.arrowLocation],
-      };
+      // Destructure to exclude old placement data - force regeneration
+      const { arrowPlacementData, propPlacementData, ...motionWithoutPlacement } = blueMotion;
+      rotatedMotions[MotionColor.BLUE] = createMotionData({
+        ...motionWithoutPlacement,
+        startLocation: LOCATION_MAP_EIGHTH_CW[blueMotion.startLocation],
+        endLocation: LOCATION_MAP_EIGHTH_CW[blueMotion.endLocation],
+        arrowLocation: LOCATION_MAP_EIGHTH_CW[blueMotion.arrowLocation],
+        gridMode: newGridMode,
+      });
     }
 
-    // Rotate red motion
+    // Rotate red motion locations
+    // Use createMotionData to ensure fresh placement data with new grid mode
     if (beat.motions[MotionColor.RED]) {
       const redMotion = beat.motions[MotionColor.RED]!;
-      rotatedMotions[MotionColor.RED] = {
-        ...redMotion,
-        startLocation: LOCATION_MAP_CLOCKWISE[redMotion.startLocation],
-        endLocation: LOCATION_MAP_CLOCKWISE[redMotion.endLocation],
-        arrowLocation: LOCATION_MAP_CLOCKWISE[redMotion.arrowLocation],
-      };
+      // Destructure to exclude old placement data - force regeneration
+      const { arrowPlacementData, propPlacementData, ...motionWithoutPlacement } = redMotion;
+      rotatedMotions[MotionColor.RED] = createMotionData({
+        ...motionWithoutPlacement,
+        startLocation: LOCATION_MAP_EIGHTH_CW[redMotion.startLocation],
+        endLocation: LOCATION_MAP_EIGHTH_CW[redMotion.endLocation],
+        arrowLocation: LOCATION_MAP_EIGHTH_CW[redMotion.arrowLocation],
+        gridMode: newGridMode,
+      });
+    }
+
+    // Derive new positions from rotated locations
+    const rotatedBlueMotion = rotatedMotions[MotionColor.BLUE];
+    const rotatedRedMotion = rotatedMotions[MotionColor.RED];
+
+    let rotatedStartPosition = beat.startPosition ?? null;
+    let rotatedEndPosition = beat.endPosition ?? null;
+
+    // Derive start position from rotated start locations
+    if (rotatedBlueMotion && rotatedRedMotion) {
+      rotatedStartPosition = positionDeriver.getGridPositionFromLocations(
+        rotatedBlueMotion.startLocation,
+        rotatedRedMotion.startLocation
+      );
+      rotatedEndPosition = positionDeriver.getGridPositionFromLocations(
+        rotatedBlueMotion.endLocation,
+        rotatedRedMotion.endLocation
+      );
     }
 
     return createBeatData({

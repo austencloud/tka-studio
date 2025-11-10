@@ -27,6 +27,7 @@ export interface TransformOperationsConfig {
   sequenceTransformationService?: ISequenceTransformationService | null;
   sequenceValidationService?: ISequenceValidationService | null;
   onError?: (error: string) => void;
+  onSave?: () => Promise<void>;
 }
 
 export function createSequenceTransformOperations(
@@ -39,6 +40,7 @@ export function createSequenceTransformOperations(
     sequenceTransformationService,
     sequenceValidationService,
     onError,
+    onSave,
   } = config;
 
   function handleError(message: string, error?: unknown) {
@@ -70,7 +72,7 @@ export function createSequenceTransformOperations(
       }
     },
 
-    mirrorSequence() {
+    async mirrorSequence() {
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
@@ -85,12 +87,15 @@ export function createSequenceTransformOperations(
         }
 
         coreState.clearError();
+
+        // Persist the transformed sequence
+        await onSave?.();
       } catch (error) {
         handleError("Failed to mirror sequence", error);
       }
     },
 
-    swapColors() {
+    async swapColors() {
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
@@ -105,12 +110,15 @@ export function createSequenceTransformOperations(
         }
 
         coreState.clearError();
+
+        // Persist the transformed sequence
+        await onSave?.();
       } catch (error) {
         handleError("Failed to swap colors", error);
       }
     },
 
-    rotateSequence(direction: "clockwise" | "counterclockwise") {
+    async rotateSequence(direction: "clockwise" | "counterclockwise") {
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
@@ -127,6 +135,9 @@ export function createSequenceTransformOperations(
         }
 
         coreState.clearError();
+
+        // Persist the transformed sequence
+        await onSave?.();
       } catch (error) {
         handleError("Failed to rotate sequence", error);
       }
@@ -149,7 +160,7 @@ export function createSequenceTransformOperations(
       }
     },
 
-    reverseSequence() {
+    async reverseSequence() {
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
@@ -164,6 +175,9 @@ export function createSequenceTransformOperations(
         }
 
         coreState.clearError();
+
+        // Persist the transformed sequence
+        await onSave?.();
       } catch (error) {
         handleError("Failed to reverse sequence", error);
       }
