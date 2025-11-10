@@ -16,32 +16,22 @@ export const CONTACT_EMAIL = "tkaflowarts@gmail.com";
 export const LANDING_TEXT: LandingTextContent = {
   hero: {
     title: "The Kinetic Alphabet",
-    subtitle: "Master flow arts with data-driven sequence creation",
+    subtitle: "A choreography toolbox!",
     cta: "Enter Studio",
   },
   resources: {
     title: "Resources",
-    subtitle: "Learning materials and documentation",
-  },
-  community: {
-    title: "Community",
-    subtitle: "Social links",
+    subtitle: "Learning materials and guides",
   },
   support: {
-    title: "Support Development",
-    subtitle: "Help keep this project alive",
-    message:
-      "TKA Studio is free during beta. Eventually there will be paid features, but a free version will always exist. Your support helps fund hosting and continued development.",
+    title: "Support",
+    subtitle: "Connect with us and help keep TKA alive",
   },
   dev: {
     title: "For Developers",
     subtitle: "Open source & contributions",
     message:
       "TKA Studio is open source. Check out the code, report bugs, or contribute features.",
-  },
-  contact: {
-    title: "Get in Touch",
-    subtitle: "Questions, feedback, or collaborations",
   },
 };
 
@@ -59,10 +49,10 @@ export const SOCIAL_LINKS: SocialLink[] = [
     color: "#E4405F",
   },
   {
-    name: "Email",
-    url: `mailto:${CONTACT_EMAIL}`,
-    icon: "fas fa-envelope",
-    color: "#667eea",
+    name: "Discord",
+    url: "https://discord.gg/tka",
+    icon: "fab fa-discord",
+    color: "#5865F2",
   },
 ];
 
@@ -72,7 +62,7 @@ export const RESOURCES: Resource[] = [
     description:
       "Comprehensive introduction to The Kinetic Alphabet methodology",
     url: "https://drive.google.com/file/d/1cgAWbrFiLgUSDEsCB0Mmu2d7Bu5PW45a/view?usp=drive_link",
-    icon: "/images/level_images/level_1.png",
+    icon: "/guide-cover.png",
     type: "download",
   },
 ];
@@ -85,8 +75,14 @@ export const SUPPORT_OPTIONS: SupportOption[] = [
     color: "#00457C",
   },
   {
+    name: "Venmo",
+    url: "venmo://paycharge?txn=pay&recipients=austencloud", // Deep link to Venmo app
+    icon: "fas fa-wallet", // Using wallet icon (Venmo brand icon not in Font Awesome)
+    color: "#008CFF",
+  },
+  {
     name: "Zelle",
-    url: "mailto:austencloud@gmail.com?subject=Zelle%20Donation",
+    url: "austencloud@gmail.com", // Email only - will copy to clipboard
     icon: "fas fa-money-bill-wave",
     color: "#6D1ED4",
   },

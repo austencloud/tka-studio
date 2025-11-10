@@ -7,18 +7,16 @@
     panelId,
     labelledBy,
     copy,
+    githubUrl,
+    discordUrl,
     contactEmail,
-    onContact = () => {},
-    isContactLoading = false,
-    enableSmartContact = false,
   }: {
     panelId: string;
     labelledBy: string;
     copy: LandingDevContent;
+    githubUrl: string;
+    discordUrl: string;
     contactEmail: string;
-    onContact?: () => void;
-    isContactLoading?: boolean;
-    enableSmartContact?: boolean;
   } = $props();
 
   // Services
@@ -30,10 +28,8 @@
     );
   });
 
-  function handleContactClick() {
-    // Trigger haptic feedback for contact button
+  function handleLinkClick() {
     hapticService?.trigger("selection");
-    onContact();
   }
 </script>
 
@@ -44,9 +40,10 @@
     <div class="dev-links">
       <a
         class="dev-card"
-        href="https://github.com/austencloud/tka-sequence-constructor"
+        href={githubUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onclick={handleLinkClick}
       >
         <i class="fab fa-github"></i>
         <div>
@@ -57,37 +54,43 @@
 
       <a
         class="dev-card"
-        href={`mailto:${contactEmail}?subject=Development Collaboration`}
+        href={discordUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onclick={handleLinkClick}
       >
-        <i class="fas fa-envelope"></i>
+        <i class="fab fa-discord"></i>
         <div>
-          <h3>Contact for Dev Work</h3>
-          <p>Want to collaborate or contribute? Get in touch</p>
+          <h3>Join Discord</h3>
+          <p>Chat with the community and dev team</p>
         </div>
       </a>
 
-      {#if enableSmartContact}
-        <button
-          class="dev-card contact-card"
-          type="button"
-          onclick={handleContactClick}
-          disabled={isContactLoading}
-        >
-          <i
-            class={`fas ${isContactLoading ? "fa-circle-notch fa-spin" : "fa-paper-plane"}`}
-          ></i>
-          <div>
-            <h3>
-              {isContactLoading ? "Preparing Gmail..." : "Compose in Gmail"}
-            </h3>
-            <p>
-              {isContactLoading
-                ? "Hang tight while we open a Gmail compose window"
-                : "Prefer Gmail? We can auto-fill a message for you"}
-            </p>
-          </div>
-        </button>
-      {/if}
+      <a
+        class="dev-card"
+        href={`${githubUrl}/issues/new`}
+        target="_blank"
+        rel="noopener noreferrer"
+        onclick={handleLinkClick}
+      >
+        <i class="fas fa-bug"></i>
+        <div>
+          <h3>Report Bug or Request Feature</h3>
+          <p>Help improve TKA with your feedback</p>
+        </div>
+      </a>
+
+      <a
+        class="dev-card"
+        href={`mailto:${contactEmail}?subject=TKA Development Inquiry`}
+        onclick={handleLinkClick}
+      >
+        <i class="fas fa-envelope"></i>
+        <div>
+          <h3>Email Us</h3>
+          <p>Direct email for partnerships or questions</p>
+        </div>
+      </a>
     </div>
   </div>
 </div>
@@ -140,12 +143,6 @@
     text-align: left;
   }
 
-  .dev-card:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
-    transform: none !important;
-  }
-
   @media (min-width: 640px) {
     .dev-card {
       gap: clamp(1rem, 2vw, 1.5rem);
@@ -154,11 +151,21 @@
     }
   }
 
-  .dev-card:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(34, 197, 94, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  /* Hover only on devices that support it (desktop) */
+  @media (hover: hover) and (pointer: fine) {
+    .dev-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(34, 197, 94, 0.5);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  /* Active state - brief feedback that auto-reverts */
+  .dev-card:active {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-1px) scale(0.98);
+    transition-duration: 0.05s;
   }
 
   .dev-card:focus-visible {
@@ -211,18 +218,9 @@
     }
   }
 
-  .contact-card {
-    border-color: rgba(34, 197, 94, 0.4);
-    background: rgba(34, 197, 94, 0.08);
-  }
-
-  .contact-card:disabled {
-    opacity: 0.75;
-    cursor: progress;
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .dev-card:hover {
+    .dev-card:hover,
+    .dev-card:active {
       transform: none;
     }
   }

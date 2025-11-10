@@ -21,17 +21,11 @@
     SUPPORT_OPTIONS,
     type LandingTab,
   } from "../domain";
-  import {
-    smartContact,
-    smartEmailContact,
-    DEV_CONTACT_OPTIONS,
-  } from "../utils/smart-contact";
 
   import LandingHeroSection from "./LandingHeroSection.svelte";
   import LandingTabNavigation from "./LandingTabNavigation.svelte";
   import LandingResourcesPanel from "./LandingResourcesPanel.svelte";
   import LandingCommunityPanel from "./LandingCommunityPanel.svelte";
-  import LandingSupportPanel from "./LandingSupportPanel.svelte";
   import LandingDevPanel from "./LandingDevPanel.svelte";
   import LandingCTASection from "./LandingCTASection.svelte";
 
@@ -39,7 +33,6 @@
 
   let activeTab = $state<LandingTab>("resources");
   let emblaApi: EmblaCarouselType | undefined = $state(undefined);
-  let isContactLoading = $state(false);
 
   // Services
   let hapticService: IHapticFeedbackService | null = $state(null);
@@ -116,30 +109,12 @@
     }
   }
 
-  async function handleDevContact() {
-    if (browser && !isContactLoading) {
-      isContactLoading = true;
-      try {
-        await smartContact(DEV_CONTACT_OPTIONS);
-      } catch (error) {
-        console.error("Failed to initiate contact:", error);
-      } finally {
-        setTimeout(() => {
-          isContactLoading = false;
-        }, 1000);
-      }
-    }
-  }
-
-  async function handleSocialClick(
+  function handleSocialClick(
     event: MouseEvent,
     social: (typeof SOCIAL_LINKS)[number]
   ) {
-    if (social.url.startsWith("mailto:")) {
-      event.preventDefault();
-      const email = social.url.replace("mailto:", "");
-      await smartEmailContact(email);
-    }
+    // Let browser handle all social/payment links naturally
+    // No special handling needed
   }
 </script>
 
@@ -206,28 +181,23 @@
           />
 
           <LandingCommunityPanel
-            panelId="panel-community"
-            labelledBy="tab-community"
-            copy={LANDING_TEXT.community}
-            socialLinks={SOCIAL_LINKS}
-            onSocialClick={handleSocialClick}
-          />
-
-          <LandingSupportPanel
             panelId="panel-support"
             labelledBy="tab-support"
             copy={LANDING_TEXT.support}
+            socialLinks={SOCIAL_LINKS}
             supportOptions={SUPPORT_OPTIONS}
+            onSocialClick={handleSocialClick}
+            onSupportClick={handleSocialClick}
           />
 
           <LandingDevPanel
             panelId="panel-dev"
             labelledBy="tab-dev"
             copy={LANDING_TEXT.dev}
+            githubUrl="https://github.com/austencloud/tka-studio"
+            discordUrl={SOCIAL_LINKS.find((link) => link.name === "Discord")
+              ?.url || "https://discord.gg/tka"}
             contactEmail={CONTACT_EMAIL}
-            onContact={handleDevContact}
-            {isContactLoading}
-            enableSmartContact={browser}
           />
         </HorizontalSwipeContainer>
       </div>

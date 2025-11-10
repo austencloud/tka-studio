@@ -15,18 +15,11 @@ export const LANDING_SECTIONS: LandingSection[] = [
     gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
   },
   {
-    id: "community" satisfies LandingTab,
-    label: "Community",
-    icon: '<i class="fas fa-users"></i>',
-    color: "rgba(56, 189, 248, 1)",
-    gradient: "linear-gradient(135deg, #38bdf8 0%, #06b6d4 100%)",
-  },
-  {
     id: "support" satisfies LandingTab,
     label: "Support",
     icon: '<i class="fas fa-heart"></i>',
-    color: "rgba(244, 63, 94, 1)",
-    gradient: "linear-gradient(135deg, #f43f5e 0%, #ec4899 100%)",
+    color: "rgba(236, 72, 153, 1)",
+    gradient: "linear-gradient(135deg, #ec4899 0%, #db2777 100%)",
   },
   {
     id: "dev" satisfies LandingTab,

@@ -63,11 +63,28 @@
 </div>
 
 <style>
+  .tab-panel {
+    container-type: size;
+    container-name: resource-panel;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-title {
+    flex-shrink: 0;
+  }
+
   .resources-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.75rem;
     width: 100%;
+    max-width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
 
   .resources-grid:has(> :nth-child(2)) {
@@ -99,6 +116,11 @@
     transition: all 0.2s ease;
     text-align: center;
     min-height: 0;
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   @media (min-width: 640px) {
@@ -130,6 +152,18 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
+  /* Book covers/images scale responsively to container height */
+  .resource-icon:has(img) {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    /* Use container query units to scale based on available space */
+    max-height: 70cqh; /* 70% of container height */
+    padding: 0.5rem;
+    background: none;
+    box-shadow: none;
+  }
+
   @media (min-width: 640px) {
     .resource-icon {
       width: 120px;
@@ -137,12 +171,24 @@
       font-size: 2.75rem;
       padding: 0.5rem;
     }
+
+    .resource-icon:has(img) {
+      max-height: 75cqh; /* Use more space on tablet */
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .resource-icon:has(img) {
+      max-height: 80cqh; /* Use most space on desktop */
+    }
   }
 
   .resource-icon img {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 0.5rem;
   }
 
   .resource-content {
@@ -150,6 +196,7 @@
     flex-direction: column;
     gap: 0.375rem;
     width: 100%;
+    flex-shrink: 0;
   }
 
   @media (min-width: 640px) {

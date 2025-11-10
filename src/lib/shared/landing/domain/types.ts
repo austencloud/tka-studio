@@ -6,7 +6,7 @@
 
 import type { Section } from "../../navigation/domain/types";
 
-export type LandingTab = "resources" | "community" | "support" | "dev";
+export type LandingTab = "resources" | "support" | "dev";
 
 export interface LandingSection extends Section {
   color: string;
@@ -46,21 +46,15 @@ export interface LandingPanelContent {
   subtitle: string;
 }
 
-export interface LandingSupportContent extends LandingPanelContent {
-  message: string;
-}
+export interface LandingSupportContent extends LandingPanelContent {}
 
 export interface LandingDevContent extends LandingPanelContent {
   message: string;
 }
 
-export interface LandingContactContent extends LandingPanelContent {}
-
 export interface LandingTextContent {
   hero: LandingHeroContent;
   resources: LandingPanelContent;
-  community: LandingPanelContent;
   support: LandingSupportContent;
   dev: LandingDevContent;
-  contact: LandingContactContent;
 }
