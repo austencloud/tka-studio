@@ -353,7 +353,6 @@
                 propAssets={pictographState.propAssets[color]}
                 propPosition={pictographState.propPositions[color]}
                 showProp={pictographState.showProps}
-                {gridMode}
               />
             {/if}
           {/each}
@@ -370,7 +369,6 @@
                 shouldMirror={pictographState.arrowMirroring[color] || false}
                 showArrow={pictographState.showArrows}
                 isClickable={arrowsClickable}
-                {gridMode}
               />
             {/if}
           {/each}
@@ -415,7 +413,6 @@
                   propAssets={pictographState.propAssets[color]}
                   propPosition={pictographState.propPositions[color]}
                   showProp={pictographState.showProps}
-                  {gridMode}
                 />
               {/if}
             {/each}

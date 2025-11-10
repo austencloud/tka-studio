@@ -107,10 +107,7 @@ export async function switchModule(module: ModuleId): Promise<void> {
   try {
     // ⚡ PERFORMANCE: Load feature module on-demand (Tier 3)
     // Only loads the DI services needed for this specific tab
-    // Skip for 'about' since it has no DI dependencies
-    if (module !== "about") {
-      await loadFeatureModule(module);
-    }
+    await loadFeatureModule(module);
 
     setActiveModule(module);
 
@@ -155,9 +152,7 @@ export async function initializeModulePersistence(): Promise<void> {
         // Valid saved module that user has access to
 
         // ⚡ PERFORMANCE: Load initial module's DI services
-        if (moduleId !== "about") {
-          await loadFeatureModule(moduleId);
-        }
+        await loadFeatureModule(moduleId);
 
         setActiveModule(moduleId);
         if (browser) {
@@ -170,9 +165,7 @@ export async function initializeModulePersistence(): Promise<void> {
         const defaultModule = getActiveModuleOrDefault();
 
         // Load default module's DI services
-        if (defaultModule !== "about") {
-          await loadFeatureModule(defaultModule);
-        }
+        await loadFeatureModule(defaultModule);
 
         setActiveModule(defaultModule);
         // DON'T save to persistence or localStorage - preserve the cached admin preference
@@ -182,9 +175,7 @@ export async function initializeModulePersistence(): Promise<void> {
       const defaultModule = getActiveModuleOrDefault();
 
       // Load default module's DI services
-      if (defaultModule !== "about") {
-        await loadFeatureModule(defaultModule);
-      }
+      await loadFeatureModule(defaultModule);
 
       setActiveModule(defaultModule);
       await persistence.saveActiveTab(defaultModule);

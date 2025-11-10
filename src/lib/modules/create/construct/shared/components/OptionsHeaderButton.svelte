@@ -15,7 +15,7 @@
     titleHtml?: string;
     isFilterPanelOpen?: boolean;
     compact?: boolean;
-    onOpenFilters?: () => void;
+    onOpenFilters?: (() => void) | undefined;
   } = $props();
 
   const hapticService = resolve<IHapticFeedbackService>(

@@ -223,7 +223,7 @@
     drawerElement.addEventListener('touchmove', handleMove, { passive: false });
 
     return () => {
-      drawerElement.removeEventListener('touchmove', handleMove);
+      drawerElement?.removeEventListener('touchmove', handleMove);
     };
   });
 </script>

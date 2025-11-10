@@ -10,7 +10,7 @@
 
   import { resolve, TYPES } from "$shared";
   import type { ICAPTypeService } from "$shared";
-  import CAPSelectionModal from "../../../generate/components/modals/CAPSelectionModal.svelte";
+  import CAPSelectionModal from "../../../generate/components/modals/CAPSelectionPanel.svelte";
   import { getCreateModuleContext } from "../../context";
 
   // Get context

@@ -103,7 +103,7 @@ Matches the desktop Python app navigation pattern exactly.
   const uniqueSections = $derived(() => {
     if (currentSortMethod === ExploreSortMethod.ALPHABETICAL) {
       const seen = new Set<string>();
-      return availableSections.filter((section) => {
+      return availableSections.filter((section: string) => {
         const letter = getSectionDisplayText(section, currentSortMethod);
         if (seen.has(letter)) {
           return false;

@@ -26,7 +26,7 @@
     mood,
   }: {
     orientation: "horizontal" | "vertical";
-    mood: "default" | "redo" | "returning" | "fresh";
+    mood: "default" | "fresh";
   } = $props();
 </script>
 
