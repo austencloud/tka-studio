@@ -1,11 +1,11 @@
 <!--
-Grid.svelte - Modern Rune-Based Grid Component
+GridSvg.svelte - Grid Component with Beautiful Rotation Animation
 
-Renders the diamond or box grid background using real SVG assets.
-Uses pure runes instead of stores for reactivity.
+Loads diamond grid and rotates it 45° with cumulative rotation.
+Pure reactive approach - grid mode determines styling, rotation provides animation.
 -->
 <script lang="ts">
-  import { createGridPointData, GridMode } from "$shared";
+  import { GridMode } from "$shared";
   import { resolve, TYPES } from "../../../inversify";
   import type { ISvgPreloadService } from "../../shared/services/contracts/ISvgPreloadService";
 
@@ -14,7 +14,7 @@ Uses pure runes instead of stores for reactivity.
     onLoaded,
     onError,
   } = $props<{
-    /** Grid mode - diamond or box */
+    /** Grid mode - derived from motion data */
     gridMode?: GridMode;
     /** Called when grid is successfully loaded */
     onLoaded?: () => void;
@@ -22,166 +22,95 @@ Uses pure runes instead of stores for reactivity.
     onError?: (error: string) => void;
   }>();
 
-  // State using runes
+  // State
   let isLoaded = $state(false);
   let hasError = $state(false);
   let errorMessage = $state<string | null>(null);
+
+  // Track cumulative rotation for beautiful animation (ephemeral UI state)
+  // Initialize based on starting gridMode: box mode starts at 45°, diamond at 0°
+  let cumulativeRotation = $state(gridMode === GridMode.BOX ? 45 : 0);
+  let previousGridMode = $state(gridMode);
 
   // Get SVG preload service
   const svgPreloadService = resolve(
     TYPES.ISvgPreloadService
   ) as ISvgPreloadService;
 
-  // Load grid SVG using preload service for better performance
-  async function loadGridSvg(): Promise<string> {
+  // Load diamond grid (we rotate it to create box appearance)
+  async function loadGrid(): Promise<string> {
     try {
-      // Use preload service - returns immediately if cached
-      const svgText = await svgPreloadService.getSvgContent(
-        "grid",
-        `${gridMode}_grid`
-      );
-
-      // Mark as loaded
+      const svgText = await svgPreloadService.getSvgContent("grid", "diamond_grid");
       isLoaded = true;
-      hasError = false;
-      errorMessage = null;
       onLoaded?.();
-
       return svgText;
     } catch (error) {
       hasError = true;
-      errorMessage = `Failed to load ${gridMode} grid`;
+      errorMessage = "Failed to load grid";
       onError?.(errorMessage);
       throw error;
     }
   }
 
-  // Derived state - grid data for positioning (in case parent components need it)
-  const gridData = $derived(() => {
-    return createGridPointData(gridMode);
-  });
-
-  // Initialize loading state when grid mode changes
+  // Increment cumulative rotation by 45° whenever gridMode changes
   $effect(() => {
-    isLoaded = false;
-    hasError = false;
-    errorMessage = null;
-  });
-
-  // Cleanup - removed unused image handlers since we're using native SVG
-
-  // Fallback grid rendering using coordinates
-  const fallbackGridPath = $derived(() => {
-    const data = gridData();
-
-    if (gridMode === GridMode.DIAMOND) {
-      // Create diamond shape from hand points
-      const points = [
-        data.allHandPointsNormal.n_diamond_hand_point?.coordinates,
-        data.allHandPointsNormal.e_diamond_hand_point?.coordinates,
-        data.allHandPointsNormal.s_diamond_hand_point?.coordinates,
-        data.allHandPointsNormal.w_diamond_hand_point?.coordinates,
-      ].filter(Boolean);
-
-      if (points.length === 4) {
-        return `M ${points[0]!.x},${points[0]!.y} L ${points[1]!.x},${points[1]!.y} L ${points[2]!.x},${points[2]!.y} L ${points[3]!.x},${points[3]!.y} Z`;
-      }
-    } else {
-      // Create box shape from hand points
-      const points = [
-        data.allHandPointsNormal.nw_box_hand_point?.coordinates,
-        data.allHandPointsNormal.ne_box_hand_point?.coordinates,
-        data.allHandPointsNormal.se_box_hand_point?.coordinates,
-        data.allHandPointsNormal.sw_box_hand_point?.coordinates,
-      ].filter(Boolean);
-
-      if (points.length === 4) {
-        return `M ${points[0]!.x},${points[0]!.y} L ${points[1]!.x},${points[1]!.y} L ${points[2]!.x},${points[2]!.y} L ${points[3]!.x},${points[3]!.y} Z`;
-      }
-    }
-
-    // Ultimate fallback - simple centered shape
-    const center = { x: 475, y: 475 };
-    const size = 143;
-
-    if (gridMode === GridMode.DIAMOND) {
-      return `M ${center.x},${center.y - size} L ${center.x + size},${center.y} L ${center.x},${center.y + size} L ${center.x - size},${center.y} Z`;
-    } else {
-      return `M ${center.x - size},${center.y - size} L ${center.x + size},${center.y - size} L ${center.x + size},${center.y + size} L ${center.x - size},${center.y + size} Z`;
+    if (gridMode !== previousGridMode) {
+      cumulativeRotation += 45;
+      previousGridMode = gridMode;
     }
   });
 </script>
 
-<!-- Grid Group -->
+<!-- Grid Container - Rotates cumulatively by 45° each time -->
 <g
-  class="grid"
-  class:grid-loaded={isLoaded}
-  class:grid-error={hasError}
+  class="grid-container"
+  class:box-mode={gridMode === GridMode.BOX}
   data-grid-mode={gridMode}
+  style="transform: rotate({cumulativeRotation}deg)"
 >
   {#if !hasError}
-    <!-- Native SVG grid for better performance -->
-    <!-- Key on gridMode to reload SVG when mode changes -->
-    {#key gridMode}
-      {#await loadGridSvg() then gridSvgContent}
-        <g class="grid-svg">
-          {@html gridSvgContent}
-        </g>
-      {:catch}
-        <!-- Fallback grid rendering -->
-        <g class="fallback-grid">
-          <path
-            d={fallbackGridPath()}
-            fill="none"
-            stroke="#e5e7eb"
-            stroke-width="2"
-            stroke-dasharray="5,5"
-          />
-
-          <!-- Center point -->
-          <circle cx="475" cy="475" r="3" fill="#9ca3af" />
-        </g>
-      {/await}
-    {/key}
-  {:else}
-    <!-- Error fallback -->
-    <g class="fallback-grid">
-      <path
-        d={fallbackGridPath()}
-        fill="none"
-        stroke="#e5e7eb"
-        stroke-width="2"
-        stroke-dasharray="5,5"
-      />
-
-      <!-- Center point -->
-      <circle cx="475" cy="475" r="3" fill="#9ca3af" />
-    </g>
+    {#await loadGrid() then gridSvgContent}
+      <g class="grid-layer">
+        {@html gridSvgContent}
+      </g>
+    {/await}
   {/if}
 </g>
 
 <style>
-  .grid {
-    /* Grid is rendered first, so it's in the background */
+  .grid-container {
+    transform-origin: 475px 475px;
+    transition: transform 0.2s ease;
     z-index: 1;
   }
 
-  .grid-loaded {
-    opacity: 1;
-    transition: opacity 0.3s ease;
+  /* Outer points - animate opacity for smooth morph */
+  :global(#n_diamond_outer_point),
+  :global(#e_diamond_outer_point),
+  :global(#s_diamond_outer_point),
+  :global(#w_diamond_outer_point) {
+    fill: #000;
+    stroke: #000;
+    stroke-width: 13;
+    stroke-miterlimit: 10;
+    transition: fill-opacity 0.2s ease, stroke-opacity 0.2s ease;
   }
 
-  .grid-error .fallback-grid {
-    opacity: 0.7;
+  /* Diamond mode - filled circles */
+  :global(.grid-container:not(.box-mode) #n_diamond_outer_point),
+  :global(.grid-container:not(.box-mode) #e_diamond_outer_point),
+  :global(.grid-container:not(.box-mode) #s_diamond_outer_point),
+  :global(.grid-container:not(.box-mode) #w_diamond_outer_point) {
+    fill-opacity: 1;
+    stroke-opacity: 0;
   }
 
-  .fallback-grid path {
-    animation: dash 2s linear infinite;
-  }
-
-  @keyframes dash {
-    to {
-      stroke-dashoffset: -10;
-    }
+  /* Box mode - outlined circles */
+  :global(.grid-container.box-mode #n_diamond_outer_point),
+  :global(.grid-container.box-mode #e_diamond_outer_point),
+  :global(.grid-container.box-mode #s_diamond_outer_point),
+  :global(.grid-container.box-mode #w_diamond_outer_point) {
+    fill-opacity: 0;
+    stroke-opacity: 1;
   }
 </style>

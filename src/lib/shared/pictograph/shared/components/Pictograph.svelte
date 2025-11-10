@@ -9,7 +9,7 @@
     type ITurnsTupleGeneratorService,
     type PictographData,
   } from "$shared";
-  import { onMount } from "svelte";
+  import { onMount, onDestroy } from "svelte";
   import { resolve, TYPES } from "../../../inversify";
   import ArrowSvg from "../../arrow/rendering/components/ArrowSvg.svelte";
   import GridSvg from "../../grid/components/GridSvg.svelte";
@@ -235,10 +235,30 @@
   // LIFECYCLE & EFFECTS
   // =============================================================================
 
+  // Handle rotation override changes
+  function handleRotationOverrideChanged(event: CustomEvent) {
+    // Recalculate arrow positions when rotation override changes
+    pictographState.calculateArrowPositions();
+  }
+
   // Calculate arrow and prop positions when component mounts
   onMount(async () => {
     await pictographState.calculateArrowPositions();
     await pictographState.calculatePropPositions();
+
+    // Listen for rotation override changes
+    window.addEventListener(
+      "rotation-override-changed",
+      handleRotationOverrideChanged as EventListener
+    );
+  });
+
+  onDestroy(() => {
+    // Clean up event listener
+    window.removeEventListener(
+      "rotation-override-changed",
+      handleRotationOverrideChanged as EventListener
+    );
   });
 </script>
 
@@ -307,6 +327,7 @@
                 propAssets={pictographState.propAssets[color]}
                 propPosition={pictographState.propPositions[color]}
                 showProp={pictographState.showProps}
+                {gridMode}
               />
             {/if}
           {/each}
@@ -323,6 +344,7 @@
                 shouldMirror={pictographState.arrowMirroring[color] || false}
                 showArrow={pictographState.showArrows}
                 isClickable={arrowsClickable}
+                {gridMode}
               />
             {/if}
           {/each}
@@ -367,6 +389,7 @@
                   propAssets={pictographState.propAssets[color]}
                   propPosition={pictographState.propPositions[color]}
                   showProp={pictographState.showProps}
+                  {gridMode}
                 />
               {/if}
             {/each}
