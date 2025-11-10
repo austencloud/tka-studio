@@ -90,6 +90,13 @@
   async function triggerFullAnimation() {
     if (!containerRef) return;
 
+    // Only trigger animation if we're prepared for it (i.e., from Generate, not Undo/Redo)
+    // Generate dispatches "prepare-sequence-animation" event which sets isPreparingFullAnimation = true
+    // Undo/Redo just updates the sequence directly without this flag
+    if (!displayState.isPreparingFullAnimation) {
+      return; // Skip animation for Undo/Redo operations
+    }
+
     const dispatchEvent = (event: CustomEvent) =>
       containerRef?.dispatchEvent(event);
     const mode = displayState.isSequentialMode ? "sequential" : "all-at-once";
