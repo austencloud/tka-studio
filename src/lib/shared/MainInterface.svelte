@@ -179,7 +179,7 @@
   <main
     class="content-area"
     class:about-active={isAboutActive}
-    class:has-primary-nav={moduleHasPrimaryNav(currentModule())}
+    class:has-primary-nav={moduleHasPrimaryNav(currentModule()) && !showDesktopSidebar}
     class:nav-landscape={layoutState.isPrimaryNavLandscape}
     class:has-top-bar={true}
   >

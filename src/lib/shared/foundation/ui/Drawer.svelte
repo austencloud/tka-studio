@@ -67,12 +67,9 @@
   // Swipe-to-dismiss state
   let drawerElement = $state<HTMLElement | null>(null);
   let isDragging = $state(false);
-  let dragStartX = 0;
-  let dragStartY = 0;
-  let dragDeltaX = $state(0);
-  let dragDeltaY = $state(0);
-  let dragStartTime = 0;
-  let touchListenersAttached = false;
+  let startY = 0;
+  let currentY = $state(0); // Must be reactive to update transform in real-time
+  let startTime = 0;
 
   // Initialize layout service if responsive layout is enabled
   onMount(() => {
@@ -84,13 +81,6 @@
         TYPES.IResponsiveLayoutService
       );
     }
-
-    return () => {
-      // Cleanup touch listeners on unmount
-      if (drawerElement && touchListenersAttached) {
-        drawerElement.removeEventListener("touchmove", handleTouchMove as any);
-      }
-    };
   });
 
   // Reactive layout detection
@@ -109,6 +99,7 @@
       if (isOpen) {
         shouldRender = true;
         isAnimatedOpen = false; // Start closed
+        isDragging = false; // Reset drag state when opening
         // Force browser to render the closed state first using RAF for reliability
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
@@ -121,6 +112,7 @@
       if (wasOpen && !isOpen) {
         emitClose("programmatic");
         isAnimatedOpen = false; // Trigger close animation
+        isDragging = false; // Reset drag state when closing
         // Keep in DOM during closing animation (350ms), then remove
         setTimeout(() => {
           shouldRender = false;
@@ -176,142 +168,63 @@
     `drawer-content ${drawerClass} ${respectLayoutMode && isSideBySideLayout ? "side-by-side-layout" : ""}`.trim()
   );
 
-  // Touch/Mouse drag handlers (based on swipeGesture.ts pattern)
+  // Simple touch handlers for swipe-to-dismiss
   function handleTouchStart(event: TouchEvent) {
-    if (!dismissible) return;
+    if (!dismissible || placement !== "bottom") return;
 
+    startY = event.touches[0]!.clientY;
+    startTime = Date.now();
     isDragging = true;
-    dragStartX = event.touches[0]!.clientX;
-    dragStartY = event.touches[0]!.clientY;
-    dragStartTime = Date.now();
-    dragDeltaX = 0;
-    dragDeltaY = 0;
   }
 
   function handleTouchMove(event: TouchEvent) {
-    if (!isDragging || !dismissible) return;
+    if (!isDragging || !dismissible || placement !== "bottom") return;
 
-    const currentX = event.touches[0]!.clientX;
-    const currentY = event.touches[0]!.clientY;
-    const deltaX = currentX - dragStartX;
-    const deltaY = currentY - dragStartY;
+    currentY = event.touches[0]!.clientY;
+    const deltaY = currentY - startY;
 
-    // Apply drag based on placement - only allow correct direction
-    if (placement === "right") {
-      dragDeltaX = Math.max(0, deltaX); // Only right
-    } else if (placement === "bottom") {
-      dragDeltaY = Math.max(0, deltaY); // Only down
-    } else if (placement === "left") {
-      dragDeltaX = Math.min(0, deltaX); // Only left
-    } else if (placement === "top") {
-      dragDeltaY = Math.min(0, deltaY); // Only up
-    }
-
-    // Prevent default if dragging significantly
-    const distance = Math.abs(
-      placement === "right" || placement === "left" ? dragDeltaX : dragDeltaY
-    );
-    if (distance > 25) {
+    // Only allow downward drag
+    if (deltaY > 0) {
+      // Prevent page scroll/bounce while dragging
       event.preventDefault();
     }
   }
 
   function handleTouchEnd(event: TouchEvent) {
-    if (!isDragging || !dismissible) return;
+    if (!isDragging || !dismissible || placement !== "bottom") return;
 
-    const threshold = 100;
-    const maxDuration = 500;
-    const duration = Date.now() - dragStartTime;
-    const distance = Math.abs(
-      placement === "right" || placement === "left" ? dragDeltaX : dragDeltaY
-    );
+    const deltaY = currentY - startY;
+    const duration = Date.now() - startTime;
 
-    // Dismiss if dragged past threshold or fast swipe
-    if (distance > threshold || (distance > 50 && duration < maxDuration)) {
+    // Dismiss if dragged down >100px or fast swipe (>50px in <500ms)
+    if (deltaY > 100 || (deltaY > 50 && duration < 500)) {
       emitClose("programmatic");
       isOpen = false;
     }
 
+    // Reset
     isDragging = false;
-    dragDeltaX = 0;
-    dragDeltaY = 0;
+    startY = 0;
+    currentY = 0;
   }
 
-  // Mouse handlers for desktop
-  function handleMouseDown(event: MouseEvent) {
-    if (!dismissible) return;
-
-    isDragging = true;
-    dragStartX = event.clientX;
-    dragStartY = event.clientY;
-    dragStartTime = Date.now();
-    dragDeltaX = 0;
-    dragDeltaY = 0;
-  }
-
-  function handleMouseMove(event: MouseEvent) {
-    if (!isDragging || !dismissible) return;
-
-    const deltaX = event.clientX - dragStartX;
-    const deltaY = event.clientY - dragStartY;
-
-    // Apply drag based on placement
-    if (placement === "right") {
-      dragDeltaX = Math.max(0, deltaX);
-    } else if (placement === "bottom") {
-      dragDeltaY = Math.max(0, deltaY);
-    } else if (placement === "left") {
-      dragDeltaX = Math.min(0, deltaX);
-    } else if (placement === "top") {
-      dragDeltaY = Math.min(0, deltaY);
-    }
-  }
-
-  function handleMouseUp(event: MouseEvent) {
-    if (!isDragging || !dismissible) return;
-
-    const threshold = 100;
-    const maxDuration = 500;
-    const duration = Date.now() - dragStartTime;
-    const distance = Math.abs(
-      placement === "right" || placement === "left" ? dragDeltaX : dragDeltaY
-    );
-
-    if (distance > threshold || (distance > 50 && duration < maxDuration)) {
-      emitClose("programmatic");
-      isOpen = false;
-    }
-
-    isDragging = false;
-    dragDeltaX = 0;
-    dragDeltaY = 0;
-  }
-
-  // Compute transform for dragging
-  const dragTransform = $derived(() => {
-    if (!isDragging) return "";
-
-    if (placement === "right") {
-      return `translate3d(${dragDeltaX}px, 0, 0)`;
-    } else if (placement === "bottom") {
-      return `translate3d(0, ${dragDeltaY}px, 0)`;
-    } else if (placement === "left") {
-      return `translate3d(${dragDeltaX}px, 0, 0)`;
-    } else if (placement === "top") {
-      return `translate3d(0, ${dragDeltaY}px, 0)`;
-    }
-    return "";
+  // Compute drag offset
+  const dragOffset = $derived(() => {
+    if (!isDragging || placement !== "bottom") return 0;
+    const delta = currentY - startY;
+    return Math.max(0, delta); // Only allow downward
   });
 
-  // Attach touch listeners with passive: false when drawer element is available
+  // Add passive: false touchmove listener to allow preventDefault
   $effect(() => {
-    if (drawerElement && !touchListenersAttached) {
-      // Add touchmove listener with passive: false to allow preventDefault
-      drawerElement.addEventListener("touchmove", handleTouchMove as any, {
-        passive: false,
-      });
-      touchListenersAttached = true;
-    }
+    if (!drawerElement) return;
+
+    const handleMove = (e: TouchEvent) => handleTouchMove(e);
+    drawerElement.addEventListener('touchmove', handleMove, { passive: false });
+
+    return () => {
+      drawerElement.removeEventListener('touchmove', handleMove);
+    };
   });
 </script>
 
@@ -336,13 +249,10 @@
     aria-modal="true"
     aria-labelledby={labelledBy}
     aria-label={ariaLabel}
-    style:transform={isDragging ? dragTransform() : ""}
+    style:transform={isDragging && dragOffset() > 0 ? `translateY(${dragOffset()}px)` : ""}
     style:transition={isDragging ? "none" : ""}
     ontouchstart={handleTouchStart}
     ontouchend={handleTouchEnd}
-    onmousedown={handleMouseDown}
-    onmousemove={handleMouseMove}
-    onmouseup={handleMouseUp}
   >
     {#if showHandle}
       <div class="drawer-handle" aria-hidden="true"></div>
@@ -410,15 +320,16 @@
       var(--sheet-border-subtle, 1px solid rgba(255, 255, 255, 0.1))
     );
 
-    /* Smooth CSS transitions - THIS IS THE MAGIC */
+    /* Smooth CSS transitions */
     transition:
       transform 350ms cubic-bezier(0.32, 0.72, 0, 1),
       opacity 350ms cubic-bezier(0.32, 0.72, 0, 1);
     will-change: transform;
 
-    /* Enable swipe-to-dismiss without browser interference */
-    touch-action: none;
-    user-select: none;
+    /* Prevent pull-to-refresh ONLY on this drawer, not globally */
+    overscroll-behavior-y: contain;
+    /* Allow touch manipulation without disabling all gestures */
+    touch-action: pan-y;
   }
 
   .drawer-content[data-state="closed"] {
@@ -610,6 +521,10 @@
     min-height: 0;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+
+    /* Contain scroll - don't chain to parent */
+    overscroll-behavior-y: contain;
   }
 
   /* Scrollbar styling */
