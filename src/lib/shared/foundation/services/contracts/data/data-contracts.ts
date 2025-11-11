@@ -76,6 +76,16 @@ export interface IMotionQueryHandler {
     sequence: unknown[],
     gridMode: GridMode
   ): Promise<PictographData[]>;
+
+  /**
+   * Find letter by motion configuration
+   * Used when reversing sequences to find the correct letter for the reversed motion
+   */
+  findLetterByMotionConfiguration(
+    blueMotion: import("$shared").MotionData,
+    redMotion: import("$shared").MotionData,
+    gridMode: GridMode
+  ): Promise<string | null>;
 }
 
 // ICSVPictographParserService moved to dedicated contract file

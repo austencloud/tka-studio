@@ -17,9 +17,9 @@
     showNextHandButton?: boolean;
     nextHandButtonText?: string;
     currentGridMode?: GridMode;
-    onBackClick?: () => void;
-    onNextHand?: () => void;
-    onGridModeChange?: (gridMode: GridMode) => void;
+    onBackClick?: (() => void) | undefined;
+    onNextHand?: (() => void) | undefined;
+    onGridModeChange?: ((gridMode: GridMode) => void) | undefined;
   } = $props();
 
   const hapticService = resolve<IHapticFeedbackService>(

@@ -16,9 +16,12 @@
   import {
     desktopSidebarState,
     toggleDesktopSidebarCollapsed,
+    setDesktopSidebarCollapsed,
     initializeDesktopSidebarCollapsedState,
     saveDesktopSidebarCollapsedState,
   } from "../../layout/desktop-sidebar-state.svelte";
+  import InfoButton from "../../info/components/InfoButton.svelte";
+  import { toggleInfo } from "../../info/state/info-state.svelte";
 
   let {
     currentModule,
@@ -48,13 +51,6 @@
   // Get collapsed state reactively
   const isCollapsed = $derived(desktopSidebarState.isCollapsed);
 
-  // Ensure current module is always expanded
-  $effect(() => {
-    if (currentModule && !expandedModules.has(currentModule)) {
-      expandedModules = new Set([...expandedModules, currentModule]);
-    }
-  });
-
   function toggleModuleExpansion(moduleId: string) {
     const newExpanded = new Set(expandedModules);
     if (newExpanded.has(moduleId)) {
@@ -65,10 +61,26 @@
     expandedModules = newExpanded;
   }
 
-  function handleModuleTap(moduleId: string) {
+  function handleModuleTap(moduleId: string, isDisabled: boolean = false) {
+    // Don't trigger haptic or allow interaction for disabled modules
+    if (isDisabled) {
+      return;
+    }
+
     hapticService?.trigger("selection");
-    // Module buttons only toggle expansion, they don't navigate
-    toggleModuleExpansion(moduleId);
+
+    // If sidebar is collapsed, expand it and show the clicked module's sections
+    if (isCollapsed) {
+      // Expand the sidebar
+      setDesktopSidebarCollapsed(false);
+      saveDesktopSidebarCollapsedState(false);
+
+      // Expand only the clicked module, collapse all others
+      expandedModules = new Set([moduleId]);
+    } else {
+      // When expanded, module buttons toggle expansion
+      toggleModuleExpansion(moduleId);
+    }
   }
 
   function handleSectionTap(moduleId: string, section: Section) {
@@ -97,6 +109,11 @@
     hapticService?.trigger("selection");
     toggleDesktopSidebarCollapsed();
     saveDesktopSidebarCollapsedState(desktopSidebarState.isCollapsed);
+  }
+
+  function handleLogoTap() {
+    hapticService?.trigger("selection");
+    toggleInfo();
   }
 
   onMount(() => {
@@ -137,12 +154,17 @@
 <nav class="desktop-navigation-sidebar" class:collapsed={isCollapsed} bind:this={sidebarElement}>
   <!-- Sidebar Header/Branding -->
   <div class="sidebar-header">
-    <div class="studio-logo">
-      <i class="fas fa-palette"></i>
+    <button
+      class="studio-logo"
+      onclick={handleLogoTap}
+      aria-label="Open resources and support"
+      title="Resources & Support"
+    >
+      <InfoButton variant="sidebar-icon" />
       {#if !isCollapsed}
         <span class="studio-name">TKA Studio</span>
       {/if}
-    </div>
+    </button>
     <!-- Collapse Toggle Button -->
     <button
       class="collapse-toggle"
@@ -159,22 +181,32 @@
     {#each modules.filter((m: ModuleDefinition) => m.isMain) as module}
       {@const isActive = currentModule === module.id}
       {@const isExpanded = expandedModules.has(module.id)}
+      {@const isDisabled = module.disabled ?? false}
 
       <div class="module-group">
         <!-- Module Button -->
         <button
           class="module-button"
+          class:active={isActive}
           class:expanded={isExpanded}
-          onclick={() => handleModuleTap(module.id)}
+          class:disabled={isDisabled}
+          onclick={() => handleModuleTap(module.id, isDisabled)}
           aria-label={module.label}
           aria-expanded={isExpanded}
+          aria-current={isActive ? "page" : undefined}
+          aria-disabled={isDisabled}
+          disabled={isDisabled}
         >
           <span class="module-icon">{@html module.icon}</span>
           {#if !isCollapsed}
             <span class="module-label">{module.label}</span>
-            <span class="expand-icon">
-              <i class="fas fa-chevron-{isExpanded ? 'down' : 'right'}"></i>
-            </span>
+            {#if isDisabled && module.disabledMessage}
+              <span class="disabled-badge">{module.disabledMessage}</span>
+            {:else}
+              <span class="expand-icon">
+                <i class="fas fa-chevron-{isExpanded ? 'down' : 'right'}"></i>
+              </span>
+            {/if}
           {/if}
         </button>
 
@@ -280,6 +312,36 @@
     align-items: center;
     gap: 12px;
     color: rgba(255, 255, 255, 0.95);
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .studio-logo::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .studio-logo:hover::before {
+    opacity: 1;
+  }
+
+  .studio-logo:hover {
+    transform: translateX(2px);
+  }
+
+  .studio-logo:active {
+    transform: scale(0.98);
   }
 
   .desktop-navigation-sidebar.collapsed .studio-logo {
@@ -287,14 +349,7 @@
     gap: 0;
   }
 
-  .studio-logo i {
-    font-size: 24px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.3));
-  }
+  /* InfoButton in sidebar logo inherits its own styling from InfoButton.svelte */
 
   .studio-name {
     font-size: 20px;
@@ -433,6 +488,37 @@
     color: rgba(255, 255, 255, 0.85);
   }
 
+  /* Active module indicator - shows which module you're currently in */
+  .module-button.active {
+    color: rgba(255, 255, 255, 0.95);
+    position: relative;
+  }
+
+  .module-button.active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: linear-gradient(
+      135deg,
+      rgba(103, 126, 234, 0.8) 0%,
+      rgba(118, 75, 162, 0.8) 100%
+    );
+    border-radius: 0 2px 2px 0;
+    box-shadow: 0 0 8px rgba(103, 126, 234, 0.4);
+  }
+
+  .desktop-navigation-sidebar.collapsed .module-button.active::after {
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 3px;
+    border-radius: 2px;
+  }
+
   .module-icon {
     font-size: 20px;
     display: flex;
@@ -468,6 +554,33 @@
 
   .module-button:hover .expand-icon {
     opacity: 1;
+  }
+
+  /* Disabled module styles */
+  .module-button.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .module-button.disabled:hover {
+    transform: none;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .module-button.disabled::before {
+    display: none;
+  }
+
+  .disabled-badge {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    letter-spacing: 0.5px;
   }
 
   /* ============================================================================
@@ -621,6 +734,11 @@
       transition: none !important;
       animation: none !important;
     }
+
+    .studio-logo:hover,
+    .studio-logo:active {
+      transform: none !important;
+    }
   }
 
   /* ============================================================================
@@ -639,9 +757,11 @@
   }
 
   /* Focus styles for keyboard navigation */
+  .studio-logo:focus-visible,
   .module-button:focus-visible,
   .section-button:focus-visible,
-  .footer-button:focus-visible {
+  .footer-button:focus-visible,
+  .collapse-toggle:focus-visible {
     outline: 2px solid rgba(102, 126, 234, 0.6);
     outline-offset: 2px;
   }

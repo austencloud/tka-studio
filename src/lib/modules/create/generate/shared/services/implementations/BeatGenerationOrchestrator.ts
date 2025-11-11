@@ -133,7 +133,8 @@ export class BeatGenerationOrchestrator implements IBeatGenerationOrchestrator {
 
     // 🎯 CRITICAL FIX: Calculate arrow placements BEFORE returning the beat
     // This ensures arrows have correct positions instead of default (0, 0)
-    nextBeat = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(nextBeat);
+    const updatedPictographData = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(nextBeat);
+    nextBeat = { ...nextBeat, ...updatedPictographData };
 
     return nextBeat;
   }

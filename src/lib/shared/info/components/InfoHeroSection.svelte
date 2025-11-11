@@ -26,14 +26,14 @@
 <style>
   .hero-section {
     text-align: center;
-    padding: clamp(3.5rem, 8vh, 5rem) 0 clamp(0.5rem, 2vh, 1rem) 0;
+    padding: clamp(1rem, 2vh, 1.5rem) 0 clamp(0.375rem, 1vh, 0.5rem) 0;
     flex-shrink: 0;
   }
 
   .hero-title {
-    font-size: clamp(1.75rem, 5vw, 3rem);
+    font-size: clamp(1.25rem, 3.5vw, 1.875rem);
     font-weight: 900;
-    margin-bottom: clamp(0.25rem, 1vh, 0.5rem);
+    margin-bottom: clamp(0.25rem, 0.5vh, 0.375rem);
     line-height: 1.1;
     position: relative;
     display: inline-block;
@@ -176,25 +176,26 @@
   }
 
   .hero-subtitle {
-    font-size: clamp(0.875rem, 2vw, 1.125rem);
+    font-size: clamp(0.6875rem, 1.5vw, 0.875rem);
     color: rgba(255, 255, 255, 0.8);
     margin: 0;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+    line-height: 1.3;
   }
 
-  @media (max-height: 600px) {
+  @media (max-height: 700px) {
     .hero-section {
-      padding: 0.25rem 0;
+      padding: clamp(0.75rem, 2vh, 1.25rem) 0 clamp(0.375rem, 1vh, 0.5rem) 0;
     }
 
     .hero-title {
-      font-size: clamp(1.25rem, 4vw, 1.75rem);
+      font-size: clamp(1.25rem, 3.5vw, 1.75rem);
     }
 
     .hero-subtitle {
-      font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+      font-size: clamp(0.6875rem, 1.5vw, 0.875rem);
     }
   }
 

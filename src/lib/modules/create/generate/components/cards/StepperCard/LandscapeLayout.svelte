@@ -1,13 +1,13 @@
 <!--
-StepperLandscapeLayout.svelte - Landscape/horizontal stepper layout
+LandscapeLayout.svelte - Landscape/horizontal stepper layout
 Left half decrements, right half increments (horizontal layout)
 Used when card aspect ratio is wide/landscape
 -->
 <script lang="ts">
-  import CardHeader from "./shared/CardHeader.svelte";
-  import LandscapeTouchZone from "./StepperCard/components/LandscapeTouchZone.svelte";
-  import LandscapeStepperValue from "./StepperCard/components/LandscapeStepperValue.svelte";
-  import LandscapeCardFooter from "./StepperCard/components/LandscapeCardFooter.svelte";
+  import CardHeader from "../shared/CardHeader.svelte";
+  import LandscapeTouchZone from "./components/LandscapeTouchZone.svelte";
+  import LandscapeStepperValue from "./components/LandscapeStepperValue.svelte";
+  import LandscapeCardFooter from "./components/LandscapeCardFooter.svelte";
 
   let {
     title,
@@ -42,7 +42,7 @@ Used when card aspect ratio is wide/landscape
   type="decrement"
   disabled={!canDecrement}
   onclick={handleDecrement}
-  onkeydown={(e: KeyboardEvent) => handleKeydown(e, "decrement")}
+  onkeydown={(e) => handleKeydown(e, "decrement")}
   {title}
 />
 
@@ -50,7 +50,7 @@ Used when card aspect ratio is wide/landscape
   type="increment"
   disabled={!canIncrement}
   onclick={handleIncrement}
-  onkeydown={(e: KeyboardEvent) => handleKeydown(e, "increment")}
+  onkeydown={(e) => handleKeydown(e, "increment")}
   {title}
 />
 

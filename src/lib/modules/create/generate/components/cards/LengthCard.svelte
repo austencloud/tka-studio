@@ -3,7 +3,7 @@ LengthCard.svelte - Card for selecting sequence length
 Shows current length with +/- stepper controls for quick adjustment
 -->
 <script lang="ts">
-  import StepperCard from "./StepperCard.svelte";
+  import StepperCard from "./StepperCard/StepperCard.svelte";
 
   let {
     currentLength,

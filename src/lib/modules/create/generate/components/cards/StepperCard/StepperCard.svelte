@@ -8,8 +8,8 @@ Landscape: Left half decrements, right half increments (horizontal layout)
   import type { IHapticFeedbackService, IRippleEffectService } from "$shared";
   import { resolve, TYPES } from "$shared";
   import { onMount } from "svelte";
-  import StepperLandscapeLayout from "./StepperLandscapeLayout.svelte";
-  import StepperPortraitLayout from "./StepperPortraitLayout.svelte";
+  import LandscapeLayout from "./LandscapeLayout.svelte";
+  import PortraitLayout from "./PortraitLayout.svelte";
 
   let {
     title,
@@ -127,7 +127,7 @@ Landscape: Left half decrements, right half increments (horizontal layout)
 >
   <!-- Portrait Mode: Shown by default, hidden in landscape via container query -->
   <div class="portrait-only">
-    <StepperPortraitLayout
+    <PortraitLayout
       {title}
       {displayValue}
       {subtitle}
@@ -143,7 +143,7 @@ Landscape: Left half decrements, right half increments (horizontal layout)
 
   <!-- Landscape Mode: Hidden by default, shown in landscape via container query -->
   <div class="landscape-only">
-    <StepperLandscapeLayout
+    <LandscapeLayout
       {title}
       {displayValue}
       {subtitle}

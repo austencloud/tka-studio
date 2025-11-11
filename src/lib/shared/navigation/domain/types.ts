@@ -41,6 +41,8 @@ export interface ModuleDefinition {
   description?: string;
   isMain: boolean;
   sections: Section[]; // Sections within this module
+  disabled?: boolean; // For conditional module accessibility (e.g., coming soon for non-admin)
+  disabledMessage?: string; // Message to show when module is disabled
 }
 
 export interface ModuleSelectorState {

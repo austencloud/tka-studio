@@ -139,7 +139,8 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
     );
 
     // 🎯 CRITICAL FIX: Calculate arrow placements for start beat
-    startBeat = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(startBeat);
+    const startPictographData = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(startBeat);
+    startBeat = { ...startBeat, ...startPictographData };
 
     const sequence: BeatData[] = [startBeat];
 
@@ -277,7 +278,8 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
       this.orientationCalculationService.updateEndOrientations(finalBeat);
 
     // 🎯 CRITICAL FIX: Calculate arrow placements for final beat
-    finalBeat = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(finalBeat);
+    const finalPictographData = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(finalBeat);
+    finalBeat = { ...finalBeat, ...finalPictographData };
 
     sequence.push(finalBeat);
 
@@ -409,7 +411,8 @@ export class PartialSequenceGenerator implements IPartialSequenceGenerator {
       this.orientationCalculationService.updateEndOrientations(nextBeat);
 
     // 🎯 CRITICAL FIX: Calculate arrow placements before returning
-    nextBeat = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(nextBeat);
+    const nextPictographData = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(nextBeat);
+    nextBeat = { ...nextBeat, ...nextPictographData };
 
     return nextBeat;
   }

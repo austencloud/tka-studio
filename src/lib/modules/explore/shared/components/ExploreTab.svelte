@@ -8,7 +8,7 @@
   import ErrorBanner from "../../../create/shared/components/ErrorBanner.svelte";
 
   import type { IExploreThumbnailService } from "../../display";
-  import { SequenceDisplayPanel } from "../../display/components";
+  import { SequenceDisplayPanel, SequenceDetailPanel } from "../../display/components";
   import FilterModal from "../../filtering/components/FilterModal.svelte";
   import CompactFilterPanel from "../../filtering/components/CompactFilterPanel.svelte";
   import { SimpleNavigationSidebar } from "../../navigation/components";
@@ -37,6 +37,10 @@
   let showAnimator = $state<boolean>(false);
   // Remove isInitialized blocking state - show UI immediately with skeletons
 
+  // Detail panel state
+  let isDetailPanelOpen = $state<boolean>(false);
+  let selectedSequenceForDetail = $state<SequenceData | null>(null);
+
   // Services
   let deviceDetector: IDeviceDetector | null = null;
 
@@ -47,6 +51,13 @@
   const isPortraitMobile = $derived(
     responsiveSettings?.isMobile &&
       responsiveSettings?.orientation === "portrait"
+  );
+
+  // ✅ PURE RUNES: Viewport mode for detail panel
+  const detailPanelViewMode = $derived<"desktop" | "mobile">(
+    responsiveSettings && (responsiveSettings.isMobile || responsiveSettings.isTablet)
+      ? "mobile"
+      : "desktop"
   );
 
   // ✅ SYNC WITH BOTTOM NAVIGATION STATE
@@ -101,6 +112,9 @@
         case "select":
           handleSequenceSelect(sequence);
           break;
+        case "view-detail":
+          handleViewDetail(sequence);
+          break;
         case "delete":
           handleSequenceDelete(sequence);
           break;
@@ -120,6 +134,49 @@
       console.error("❌ BrowseTab: Action failed:", err);
       error =
         err instanceof Error ? err.message : `Failed to ${action} sequence`;
+    }
+  }
+
+  function handleViewDetail(sequence: SequenceData) {
+    console.log("📋 BrowseTab: Opening detail panel for sequence:", sequence.id);
+    selectedSequenceForDetail = sequence;
+    isDetailPanelOpen = true;
+  }
+
+  function handleCloseDetailPanel() {
+    console.log("📋 BrowseTab: Closing detail panel");
+    isDetailPanelOpen = false;
+    // Delay clearing to allow transition
+    setTimeout(() => {
+      selectedSequenceForDetail = null;
+    }, 300);
+  }
+
+  async function handleDetailPanelAction(action: string, sequence: SequenceData) {
+    console.log("📋 BrowseTab: Detail panel action:", action);
+
+    // Handle actions from the detail panel
+    switch (action) {
+      case "play":
+      case "animate":
+        galleryState.openAnimationModal(sequence);
+        break;
+      case "fullscreen":
+        handleSpotlightView(sequence);
+        break;
+      case "favorite":
+        await galleryState.toggleFavorite(sequence.id);
+        break;
+      case "edit":
+        // TODO: Navigate to edit/construct tab
+        console.log("🖊️ Edit sequence:", sequence.id);
+        break;
+      case "delete":
+        handleSequenceDelete(sequence);
+        handleCloseDetailPanel(); // Close panel before showing delete dialog
+        break;
+      default:
+        console.warn("⚠️ Unknown detail panel action:", action);
     }
   }
 
@@ -264,16 +321,42 @@
         {/snippet}
 
         {#snippet centerPanel()}
-          <SequenceDisplayPanel
-            sequences={galleryState.displayedSequences}
-            sections={galleryState.sequenceSections}
-            isLoading={galleryState.isLoading}
-            {error}
-            showSections={galleryState.showSections}
-            onAction={handleSequenceAction}
-          />
+          <div class="sequences-with-detail" class:panel-open={isDetailPanelOpen && detailPanelViewMode === "desktop"}>
+            <div class="sequences-main">
+              <SequenceDisplayPanel
+                sequences={galleryState.displayedSequences}
+                sections={galleryState.sequenceSections}
+                isLoading={galleryState.isLoading}
+                {error}
+                showSections={galleryState.showSections}
+                onAction={handleSequenceAction}
+              />
+            </div>
+
+            <!-- Desktop Detail Panel (part of layout) -->
+            {#if detailPanelViewMode === "desktop"}
+              <SequenceDetailPanel
+                sequence={selectedSequenceForDetail}
+                isOpen={isDetailPanelOpen}
+                onClose={handleCloseDetailPanel}
+                onAction={handleDetailPanelAction}
+                viewMode="desktop"
+              />
+            {/if}
+          </div>
         {/snippet}
       </ExploreLayout>
+
+      <!-- Mobile Detail Panel (overlay) -->
+      {#if detailPanelViewMode === "mobile"}
+        <SequenceDetailPanel
+          sequence={selectedSequenceForDetail}
+          isOpen={isDetailPanelOpen}
+          onClose={handleCloseDetailPanel}
+          onAction={handleDetailPanelAction}
+          viewMode="mobile"
+        />
+      {/if}
 
       <!-- Filter Modal -->
       <FilterModal
@@ -305,5 +388,30 @@
     flex-direction: column;
     overflow: hidden;
     min-height: 0;
+  }
+
+  /* Container for sequences grid + detail panel */
+  .sequences-with-detail {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: 100%;
+    transition: all 0.3s ease;
+  }
+
+  /* Main sequences area (grid) */
+  .sequences-main {
+    flex: 1;
+    overflow: hidden;
+    min-width: 0; /* Allow flexbox shrinking */
+    transition: all 0.3s ease;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sequences-with-detail,
+    .sequences-main {
+      transition: none;
+    }
   }
 </style>

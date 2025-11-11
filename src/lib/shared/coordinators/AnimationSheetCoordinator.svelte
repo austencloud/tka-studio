@@ -236,9 +236,7 @@
     animatingBeatNumber = null;
   }
 
-  function handleSpeedChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const newSpeed = parseFloat(target.value);
+  function handleSpeedChange(newSpeed: number) {
     hapticService?.trigger("selection");
     playbackController?.setSpeed(newSpeed);
   }

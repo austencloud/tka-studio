@@ -170,7 +170,6 @@ Refactored to use Drawer component for consistent behavior
     border-radius: 20px 20px 0 0;
     display: flex;
     flex-direction: column;
-    position: relative;
     z-index: 9999;
   }
 

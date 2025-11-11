@@ -70,122 +70,131 @@
 </script>
 
 <div class="carousel-panel" id={panelId} role="presentation">
-  <div
-    class="tab-panel"
-    role="tabpanel"
-    aria-labelledby={labelledBy}
-    aria-label={copy.title}
-  >
+  <div class="tab-panel" role="tabpanel" aria-labelledby={labelledBy} aria-label={copy.title}>
     <div class="community-content">
-      <!-- Social Media Section -->
-      <section class="community-section">
-        <h3 class="section-title">Follow & Share</h3>
-        <p class="section-description">Stay connected and spread the word</p>
-        <div class="button-grid">
-          {#each socialLinks as social}
-            <a
-              class="community-button"
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              style="--brand-color: {social.color}"
-              title={social.name}
-              onclick={(event) => handleSocialClick(event, social)}
-            >
-              <div class="icon-circle">
-                <i class={social.icon}></i>
-              </div>
-              <span class="button-label">{social.name}</span>
-            </a>
-          {/each}
-        </div>
-      </section>
+    <!-- Social Media Section -->
+    <section class="community-section">
+      <h3 class="section-title">Follow & Share</h3>
+      <p class="section-description">Stay connected and spread the word</p>
+      <div class="button-grid">
+        {#each socialLinks as social}
+          <a
+            class="community-button"
+            href={social.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            style="--brand-color: {social.color}"
+            title={social.name}
+            onclick={(event) => handleSocialClick(event, social)}
+          >
+            <div class="icon-circle">
+              <i class={social.icon}></i>
+            </div>
+            <span class="button-label">{social.name}</span>
+          </a>
+        {/each}
+      </div>
+    </section>
 
-      <!-- Support Section -->
-      <section class="community-section">
-        <h3 class="section-title">Support with a Donation</h3>
-        <p class="section-description">Help fund hosting and development</p>
-        <div class="button-grid">
-          {#each supportOptions as support}
-            <a
-              class="community-button"
-              class:copied={support.name === "Zelle" && copiedEmail}
-              href={support.name === "Zelle" ? "#" : support.url}
-              target={support.name === "Zelle" ? undefined : "_blank"}
-              rel={support.name === "Zelle" ? undefined : "noopener noreferrer"}
-              style="--brand-color: {support.color}"
-              title={support.name === "Zelle"
-                ? copiedEmail
-                  ? "Email copied! Paste in your bank's Zelle app"
-                  : "Copy email to use in your bank's Zelle app"
-                : support.name}
-              onclick={(event) => handleSupportClick(event, support)}
-            >
-              <div class="icon-circle">
-                <i class={support.icon}></i>
-              </div>
-              <span class="button-label">
-                {#if support.name === "Zelle" && copiedEmail}
-                  <span class="copied-label">
-                    <i class="fas fa-check-circle"></i>
-                    Email Copied!
-                  </span>
-                {:else if support.name === "Zelle"}
-                  <span class="zelle-label">
-                    Zelle
-                    <span class="copy-hint">(tap to copy)</span>
-                  </span>
-                {:else}
-                  {support.name}
-                {/if}
-              </span>
-            </a>
-          {/each}
-        </div>
-      </section>
-    </div>
+    <!-- Support Section -->
+    <section class="community-section">
+      <h3 class="section-title">Support with a Donation</h3>
+      <p class="section-description">Help fund hosting and development</p>
+      <div class="button-grid">
+        {#each supportOptions as support}
+          <a
+            class="community-button"
+            class:copied={support.name === "Zelle" && copiedEmail}
+            href={support.name === "Zelle" ? "#" : support.url}
+            target={support.name === "Zelle" ? undefined : "_blank"}
+            rel={support.name === "Zelle" ? undefined : "noopener noreferrer"}
+            style="--brand-color: {support.color}"
+            title={support.name === "Zelle"
+              ? copiedEmail
+                ? "Email copied! Paste in your bank's Zelle app"
+                : "Copy email to use in your bank's Zelle app"
+              : support.name}
+            onclick={(event) => handleSupportClick(event, support)}
+          >
+            <div class="icon-circle">
+              <i class={support.icon}></i>
+            </div>
+            <span class="button-label">
+              {#if support.name === "Zelle" && copiedEmail}
+                <span class="copied-label">
+                  <i class="fas fa-check-circle"></i>
+                  Email Copied!
+                </span>
+              {:else if support.name === "Zelle"}
+                <span class="zelle-label">
+                  Zelle
+                  <span class="copy-hint">(tap to copy)</span>
+                </span>
+              {:else}
+                {support.name}
+              {/if}
+            </span>
+          </a>
+        {/each}
+      </div>
+    </section>
+  </div>
   </div>
 </div>
 
 <style>
+  .carousel-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tab-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
   .community-content {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
-    padding: 1rem;
-    height: 100%;
-    overflow-y: auto;
+    gap: clamp(0.75rem, 2.5cqh, 1.25rem);
+    padding: clamp(0.5rem, 1vh, 0.75rem);
+  }
+
+  @media (min-width: 1024px) {
+    .community-content {
+      padding: 0;
+    }
   }
 
   .community-section {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: clamp(0.5rem, 1.5cqh, 0.75rem);
   }
 
   .section-title {
-    font-size: 1.125rem;
+    font-size: clamp(0.75rem, 2cqh, 0.9375rem);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.9);
     margin: 0;
-    padding-left: 0.25rem;
     text-align: center;
+    flex-shrink: 0;
   }
 
   .section-description {
-    font-size: 0.875rem;
+    font-size: clamp(0.625rem, 1.5cqh, 0.75rem);
     font-weight: 400;
     color: rgba(255, 255, 255, 0.6);
-    margin: -0.5rem 0 0 0;
-    padding-left: 0.25rem;
+    margin: clamp(-0.25rem, -0.75cqh, -0.125rem) 0 0 0;
     font-style: italic;
     text-align: center;
+    flex-shrink: 0;
   }
 
   .button-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
+    gap: clamp(0.375rem, 1cqh, 0.5rem);
   }
 
   .community-button {
@@ -193,8 +202,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    padding: 1.25rem 0.75rem;
+    gap: clamp(0.25rem, 1cqh, 0.375rem);
+    padding: clamp(0.5rem, 1.75cqh, 0.75rem) clamp(0.375rem, 1cqw, 0.5rem);
     text-decoration: none;
     color: white;
     position: relative;
@@ -208,7 +217,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
+    border-radius: clamp(0.5rem, 1.25cqh, 0.75rem);
 
     /* Unified smooth transition - no bounce chaos */
     transition: all 0.3s ease;
@@ -269,9 +278,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 3.5rem;
-    height: 3.5rem;
-    font-size: 1.75rem;
+    width: clamp(2rem, 5.5cqh, 2.75rem);
+    height: clamp(2rem, 5.5cqh, 2.75rem);
+    font-size: clamp(1rem, 2.75cqh, 1.375rem);
     color: white;
     background: var(--brand-color);
     border-radius: 50%;
@@ -295,10 +304,11 @@
   }
 
   .button-label {
-    font-size: 0.875rem;
+    font-size: clamp(0.625rem, 1.5cqh, 0.75rem);
     font-weight: 500;
     text-align: center;
     transition: color 0.3s ease;
+    line-height: 1.2;
   }
 
   .community-button:hover .button-label {
@@ -332,45 +342,6 @@
     font-size: 1rem;
   }
 
-  /* Responsive adjustments */
-  @media (min-width: 640px) {
-    .community-content {
-      padding: 1.5rem;
-      gap: 2.5rem;
-    }
-
-    .section-title {
-      font-size: 1.25rem;
-    }
-
-    .button-grid {
-      gap: 1.25rem;
-    }
-
-    .community-button {
-      padding: 1.5rem 1rem;
-    }
-
-    .icon-circle {
-      width: 4rem;
-      height: 4rem;
-      font-size: 2rem;
-    }
-
-    .button-label {
-      font-size: 0.9375rem;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .community-content {
-      padding: 2rem;
-    }
-
-    .button-grid {
-      gap: 1.5rem;
-    }
-  }
 
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {

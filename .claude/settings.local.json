@@ -53,7 +53,11 @@
       "Bash(dir:*)",
       "Bash(mkdir:*)",
       "Bash(git rm:*)",
-      "Bash(rm:*)"
+      "Bash(rm:*)",
+      "Bash(npx playwright test desktop-sidebar-collapsed-expand.spec.ts --reporter=line)",
+      "Bash(npx playwright test:*)",
+      "Bash(npm run test:e2e:*)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []

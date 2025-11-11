@@ -36,7 +36,7 @@
 <style>
   .cta-section {
     flex-shrink: 0;
-    padding: clamp(0.75rem, 2vh, 1rem);
+    padding: clamp(0.375rem, 1vh, 0.5rem) 0;
     text-align: center;
   }
 
@@ -44,21 +44,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.75rem;
-    padding: clamp(1rem, 2.5vh, 1.25rem) clamp(2rem, 5vw, 3rem);
+    gap: 0.5rem;
+    padding: clamp(0.625rem, 1.5vh, 0.875rem) clamp(1.25rem, 3.5vw, 2rem);
     width: 100%;
-    max-width: 400px;
-    min-height: 56px;
+    max-width: 360px;
+    min-height: 44px;
     margin: 0 auto;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    border-radius: 2rem;
-    font-size: clamp(1.125rem, 4vw, 1.375rem);
+    border-radius: 1.25rem;
+    font-size: clamp(0.9375rem, 3vw, 1.125rem);
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
   }
 
   .cta-button:hover {
@@ -76,18 +76,23 @@
   }
 
   .cta-button i {
-    font-size: clamp(1.125rem, 3vw, 1.375rem);
+    font-size: clamp(1rem, 2.75vw, 1.25rem);
   }
 
-  @media (max-height: 600px) {
+  @media (max-height: 700px) {
     .cta-section {
-      padding: 0.5rem 0;
+      padding: 0.375rem 0;
     }
 
     .cta-button {
-      min-height: 48px;
-      padding: 0.75rem 1.5rem;
-      font-size: 0.9375rem;
+      min-height: 44px;
+      padding: 0.625rem 1.25rem;
+      font-size: clamp(0.875rem, 3vw, 1rem);
+      gap: 0.5rem;
+    }
+
+    .cta-button i {
+      font-size: clamp(0.875rem, 2.5vw, 1rem);
     }
   }
 

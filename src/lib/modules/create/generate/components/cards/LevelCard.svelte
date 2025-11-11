@@ -4,7 +4,7 @@ Uses stepper pattern for space-efficient level selection
 -->
 <script lang="ts">
   import { DifficultyLevel } from "../../shared/domain";
-  import StepperCard from "./StepperCard.svelte";
+  import StepperCard from "./StepperCard/StepperCard.svelte";
 
   let {
     currentLevel,

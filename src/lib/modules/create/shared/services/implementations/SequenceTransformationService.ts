@@ -7,7 +7,7 @@
  * Based on legacy desktop app implementation with modern TypeScript patterns.
  */
 
-import type { BeatData, SequenceData, IGridPositionDeriver } from "$shared";
+import type { BeatData, SequenceData, IGridPositionDeriver, IMotionQueryHandler } from "$shared";
 import {
   createSequenceData,
   updateSequenceData,
@@ -20,7 +20,7 @@ import {
   resolve,
   createMotionData,
 } from "$shared";
-import { injectable } from "inversify";
+import { inject, injectable } from "inversify";
 import { createBeatData } from "../../domain/factories/createBeatData";
 import type { ISequenceTransformationService } from "../contracts/ISequenceTransformationService";
 import {
@@ -36,6 +36,10 @@ import {
 export class SequenceTransformationService
   implements ISequenceTransformationService
 {
+  constructor(
+    @inject(TYPES.IMotionQueryHandler)
+    private readonly motionQueryHandler: IMotionQueryHandler
+  ) {}
   /**
    * Clear all beats in a sequence (make them blank)
    */
@@ -358,12 +362,11 @@ export class SequenceTransformationService
    * - Creates new start position from final beat's end position/orientations
    * - Reverses beat order
    * - Each beat: swaps positions/locations/orientations, flips rotation direction
-   * - Letter must be looked up from dataset based on new motion configuration
+   * - Letter is looked up from dataset based on new motion configuration
    *
-   * NOTE: This is a complex transformation that requires pictograph dataset lookup.
-   * For now, we only reverse the beat structure. Letter lookup will be added separately.
+   * This is a complex transformation that requires pictograph dataset lookup.
    */
-  reverseSequence(sequence: SequenceData): SequenceData {
+  async reverseSequence(sequence: SequenceData): Promise<SequenceData> {
     if (sequence.beats.length === 0) {
       return sequence;
     }
@@ -372,10 +375,16 @@ export class SequenceTransformationService
     const finalBeat = sequence.beats[sequence.beats.length - 1]!;
     const newStartPosition = this.createStartPositionFromBeatEnd(finalBeat);
 
-    // Step 2: Reverse and transform each beat
-    const reversedBeats = [...sequence.beats]
-      .reverse()
-      .map((beat, index) => this.reverseBeat(beat, index + 1));
+    // Step 2: Reverse and transform each beat with letter lookup
+    const reversedBeats: BeatData[] = [];
+    const reversedBeatArray = [...sequence.beats].reverse();
+    const gridMode = sequence.gridMode ?? GridMode.DIAMOND; // Default to DIAMOND if undefined
+
+    for (let index = 0; index < reversedBeatArray.length; index++) {
+      const beat = reversedBeatArray[index]!;
+      const reversedBeat = await this.reverseBeat(beat, index + 1, gridMode);
+      reversedBeats.push(reversedBeat);
+    }
 
     return updateSequenceData(sequence, {
       beats: reversedBeats,
@@ -440,10 +449,9 @@ export class SequenceTransformationService
    * - Swaps start/end orientations
    * - Flips rotation direction (CW ↔ CCW, noRotation stays same)
    * - Keeps motionType and turns the same
-   *
-   * TODO: Lookup correct letter from pictograph dataset based on new motion configuration
+   * - Looks up correct letter from pictograph dataset based on new motion configuration
    */
-  private reverseBeat(beat: BeatData, newBeatNumber: number): BeatData {
+  private async reverseBeat(beat: BeatData, newBeatNumber: number, gridMode: GridMode): Promise<BeatData> {
     if (beat.isBlank || !beat) {
       return { ...beat, beatNumber: newBeatNumber };
     }
@@ -487,14 +495,33 @@ export class SequenceTransformationService
       };
     }
 
+    // Look up the correct letter from the pictograph dataset
+    let correctLetter: Letter | null = beat.letter ?? null; // Default to original letter as fallback
+    if (reversedMotions[MotionColor.BLUE] && reversedMotions[MotionColor.RED]) {
+      try {
+        const foundLetter = await this.motionQueryHandler.findLetterByMotionConfiguration(
+          reversedMotions[MotionColor.BLUE]!,
+          reversedMotions[MotionColor.RED]!,
+          gridMode
+        );
+        if (foundLetter) {
+          correctLetter = foundLetter as Letter;
+          console.log(`✅ Reverse: Found letter "${correctLetter}" for reversed beat (was "${beat.letter}")`);
+        } else {
+          console.warn(`⚠️ Reverse: No letter found for reversed beat, keeping original letter "${beat.letter}"`);
+        }
+      } catch (error) {
+        console.error(`❌ Reverse: Error looking up letter for reversed beat:`, error);
+      }
+    }
+
     return createBeatData({
       ...beat,
       beatNumber: newBeatNumber,
       startPosition: swappedStartPosition,
       endPosition: swappedEndPosition,
       motions: reversedMotions,
-      // TODO: Look up correct letter from pictograph dataset
-      // For now, keep the original letter as placeholder
+      letter: correctLetter,
     });
   }
 }

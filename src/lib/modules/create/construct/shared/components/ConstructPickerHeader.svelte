@@ -146,21 +146,6 @@
     min-height: 44px;
   }
 
-  .header-title {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    white-space: nowrap;
-    overflow: visible;
-  }
-
-  .header-title.rich :global(span) {
-    white-space: nowrap;
-  }
-
   /* Compact mode: Reduced height for tight spaces */
   .construct-picker-header.compact {
     padding: 2px 6px;
@@ -170,10 +155,6 @@
   .construct-picker-header.compact .header-right,
   .construct-picker-header.compact .header-center {
     min-height: 36px;
-  }
-
-  .construct-picker-header.compact .header-title {
-    font-size: 0.85rem;
   }
 
   /* Mobile optimizations */
@@ -192,10 +173,6 @@
     .construct-picker-header.compact .header-right,
     .construct-picker-header.compact .header-center {
       min-height: 32px;
-    }
-
-    .construct-picker-header.compact .header-title {
-      font-size: 0.8rem;
     }
   }
 </style>

@@ -21,7 +21,14 @@ function isModuleAccessible(moduleId: ModuleId): boolean {
   if (moduleId === "admin") {
     return authStore.isAdmin;
   }
-  // All other modules are accessible to everyone
+
+  // For non-admin users, only the Create module is accessible
+  // All other modules are disabled/coming soon
+  if (!authStore.isAdmin && moduleId !== "create") {
+    return false;
+  }
+
+  // Admin users have access to all modules
   return true;
 }
 
@@ -99,6 +106,13 @@ export function getInitialModuleFromCache(): ModuleId {
 
 export async function switchModule(module: ModuleId): Promise<void> {
   if (getActiveModule() === module) {
+    return;
+  }
+
+  // Check if user has access to the module
+  if (!isModuleAccessible(module)) {
+    console.warn(`⚠️ switchModule: User does not have access to module "${module}"`);
+    setIsTransitioning(false);
     return;
   }
 

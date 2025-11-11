@@ -50,7 +50,7 @@
     letter?: Letter | null;
     beatData?: BeatData | null;
     onClose?: () => void;
-    onSpeedChange?: (event: Event) => void;
+    onSpeedChange?: (newSpeed: number) => void;
     onCanvasReady?: (canvas: HTMLCanvasElement | null) => void;
   } = $props();
 </script>

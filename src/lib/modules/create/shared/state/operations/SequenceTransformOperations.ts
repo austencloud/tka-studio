@@ -164,7 +164,7 @@ export function createSequenceTransformOperations(
       if (!coreState.currentSequence || !sequenceTransformationService) return;
 
       try {
-        const reversedSequence = sequenceTransformationService.reverseSequence(
+        const reversedSequence = await sequenceTransformationService.reverseSequence(
           coreState.currentSequence
         );
         coreState.setCurrentSequence(reversedSequence);

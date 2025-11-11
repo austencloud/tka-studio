@@ -63,7 +63,7 @@
                 coverUrl={getCoverUrl(sequence)}
                 isFavorite={sequence.isFavorite}
                 onPrimaryAction={(sequence) =>
-                  handleSequenceAction("fullscreen", sequence)}
+                  handleSequenceAction("view-detail", sequence)}
                 onFavoriteToggle={(sequence) =>
                   handleSequenceAction("favorite", sequence)}
                 onOverflowAction={handleSequenceAction}
@@ -88,7 +88,7 @@
         coverUrl={getCoverUrl(sequence)}
         isFavorite={sequence.isFavorite}
         onPrimaryAction={(sequence) =>
-          handleSequenceAction("fullscreen", sequence)}
+          handleSequenceAction("view-detail", sequence)}
         onFavoriteToggle={(sequence) =>
           handleSequenceAction("favorite", sequence)}
         onOverflowAction={handleSequenceAction}
@@ -135,18 +135,11 @@
     }
   }
 
-  /* Tablet breakpoint */
-  @container (min-width: 481px) and (max-width: 768px) {
+  /* Tablet and foldable breakpoint - 3 columns for Z Fold horizontal and tablets */
+  @container (min-width: 481px) and (max-width: 1199px) {
     .sequences-grid.grid-view {
-      grid-template-columns: repeat(2, 1fr); /* 2 columns for tablets */
+      grid-template-columns: repeat(3, 1fr); /* 3 columns for tablets, foldables, and medium screens */
       gap: var(--spacing-md);
-    }
-  }
-
-  /* Desktop breakpoints */
-  @container (min-width: 769px) and (max-width: 1199px) {
-    .sequences-grid.grid-view {
-      grid-template-columns: repeat(3, 1fr); /* 3 columns for medium desktop */
     }
   }
 

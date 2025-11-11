@@ -41,7 +41,8 @@ export class StartPositionSelector implements IStartPositionSelector {
 
     // 🎯 CRITICAL FIX: Calculate arrow placements for start position
     // This ensures start position arrows have correct positions instead of default (0, 0)
-    startBeat = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(startBeat);
+    const updatedPictographData = await this.arrowPositioningOrchestrator.calculateAllArrowPoints(startBeat);
+    startBeat = { ...startBeat, ...updatedPictographData };
 
     return startBeat;
   }

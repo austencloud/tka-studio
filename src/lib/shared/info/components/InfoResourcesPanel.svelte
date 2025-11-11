@@ -63,28 +63,41 @@
 </div>
 
 <style>
-  .tab-panel {
-    container-type: size;
-    container-name: resource-panel;
-    height: 100%;
+  .carousel-panel {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+  }
+
+  .tab-panel {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(0.5rem, 1vh, 0.75rem);
+  }
+
+  @media (min-width: 1024px) {
+    .tab-panel {
+      padding: 0;
+    }
   }
 
   .panel-title {
     flex-shrink: 0;
+    font-size: clamp(0.75rem, 2cqh, 0.875rem);
+    margin-bottom: clamp(0.25rem, 1cqh, 0.375rem);
+  }
+
+  @media (min-width: 1024px) {
+    .panel-title {
+      display: none;
+    }
   }
 
   .resources-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: clamp(0.375rem, 1cqh, 0.5rem);
     width: 100%;
     max-width: 100%;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
   }
 
   .resources-grid:has(> :nth-child(2)) {
@@ -93,7 +106,7 @@
 
   @media (min-width: 640px) {
     .resources-grid {
-      gap: 1rem;
+      gap: clamp(0.625rem, 2cqh, 0.875rem);
     }
 
     .resources-grid:has(> :nth-child(3)) {
@@ -106,11 +119,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    gap: 0.75rem;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
+    gap: clamp(0.5rem, 1.5cqh, 0.75rem);
+    padding: 0;
     text-decoration: none;
     color: inherit;
     transition: all 0.2s ease;
@@ -123,32 +133,22 @@
     overflow: hidden;
   }
 
-  @media (min-width: 640px) {
-    .resource-card {
-      gap: 1rem;
-      padding: 1.25rem;
-    }
-  }
-
   .resource-card:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(102, 126, 234, 0.5);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
   }
 
   .resource-icon {
-    width: 100px;
-    height: 100px;
+    width: clamp(50px, 10cqh, 80px);
+    height: clamp(50px, 10cqh, 80px);
     background: rgba(255, 255, 255, 0.95);
-    border-radius: 1rem;
+    border-radius: clamp(0.375rem, 1.25cqh, 0.625rem);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 2.25rem;
+    font-size: clamp(1.25rem, 3.5cqh, 1.875rem);
     color: #667eea;
-    padding: 0.375rem;
+    padding: clamp(0.25rem, 0.5cqh, 0.375rem);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
@@ -158,29 +158,10 @@
     height: auto;
     aspect-ratio: 3 / 4;
     /* Use container query units to scale based on available space */
-    max-height: 70cqh; /* 70% of container height */
-    padding: 0.5rem;
+    max-height: clamp(35cqh, 50cqh, 60cqh);
+    padding: clamp(0.25rem, 0.75cqh, 0.375rem);
     background: none;
     box-shadow: none;
-  }
-
-  @media (min-width: 640px) {
-    .resource-icon {
-      width: 120px;
-      height: 120px;
-      font-size: 2.75rem;
-      padding: 0.5rem;
-    }
-
-    .resource-icon:has(img) {
-      max-height: 75cqh; /* Use more space on tablet */
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .resource-icon:has(img) {
-      max-height: 80cqh; /* Use most space on desktop */
-    }
   }
 
   .resource-icon img {
@@ -188,50 +169,30 @@
     height: 100%;
     object-fit: contain;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 0.5rem;
+    border-radius: clamp(0.25rem, 0.75cqh, 0.375rem);
   }
 
   .resource-content {
     display: flex;
     flex-direction: column;
-    gap: 0.375rem;
+    gap: clamp(0.125rem, 0.5cqh, 0.25rem);
     width: 100%;
     flex-shrink: 0;
   }
 
-  @media (min-width: 640px) {
-    .resource-content {
-      gap: 0.5rem;
-    }
-  }
-
   .resource-content h3 {
-    font-size: 1rem;
+    font-size: clamp(0.75rem, 1.875cqh, 0.875rem);
     font-weight: 600;
     color: white;
     margin: 0;
-    line-height: 1.3;
-  }
-
-  @media (min-width: 640px) {
-    .resource-content h3 {
-      font-size: 1.125rem;
-      line-height: 1.2;
-    }
+    line-height: 1.2;
   }
 
   .resource-content p {
-    font-size: 0.8125rem;
+    font-size: clamp(0.625rem, 1.5cqh, 0.75rem);
     color: rgba(255, 255, 255, 0.75);
     margin: 0;
-    line-height: 1.4;
-  }
-
-  @media (min-width: 640px) {
-    .resource-content p {
-      font-size: 0.875rem;
-      line-height: 1.45;
-    }
+    line-height: 1.25;
   }
 
   @media (prefers-reduced-motion: reduce) {

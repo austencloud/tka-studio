@@ -3,7 +3,7 @@ TurnIntensityCard.svelte - Card for selecting turn intensity
 Uses stepper pattern for direct increment/decrement interaction
 -->
 <script lang="ts">
-  import StepperCard from "./StepperCard.svelte";
+  import StepperCard from "./StepperCard/StepperCard.svelte";
 
   let {
     currentIntensity,
@@ -101,7 +101,8 @@ Uses stepper pattern for direct increment/decrement interaction
       return "rgb(255, 255, 255)";
     } else {
       // Smooth transition zone - interpolate between black and white
-      const progress = (value - transitionStart) / (transitionEnd - transitionStart);
+      const progress =
+        (value - transitionStart) / (transitionEnd - transitionStart);
       const grayValue = Math.round(progress * 255);
       return `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
     }

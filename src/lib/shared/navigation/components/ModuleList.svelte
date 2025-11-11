@@ -91,8 +91,16 @@
 
   function handleModuleClick(
     moduleId: ModuleId,
-    event: PointerEvent | MouseEvent
+    event: PointerEvent | MouseEvent,
+    isDisabled: boolean = false
   ) {
+    // Don't trigger click for disabled modules
+    if (isDisabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     // If user was dragging, don't trigger the click
     if (dragState.isDragging) {
       event.preventDefault();
@@ -163,16 +171,20 @@
     {#each mainModules as module}
       {@const moduleColor = extractModuleColor(module.icon)}
       {@const isActive = currentModule === module.id}
+      {@const isDisabled = module.disabled ?? false}
 
       <button
         class="module-item"
         class:active={isActive}
+        class:disabled={isDisabled}
         onpointerdown={handlePointerDown}
         onpointermove={handlePointerMove}
-        onclick={(e) => handleModuleClick(module.id, e)}
-        onmouseenter={() => handleModuleHoverStart(module.id)}
-        onmouseleave={() => handleModuleHoverEnd(module.id)}
+        onclick={(e) => handleModuleClick(module.id, e, isDisabled)}
+        onmouseenter={() => !isDisabled && handleModuleHoverStart(module.id)}
+        onmouseleave={() => !isDisabled && handleModuleHoverEnd(module.id)}
         style="--module-color: {moduleColor};"
+        aria-disabled={isDisabled}
+        disabled={isDisabled}
       >
         <!-- Premium layered background -->
         <div class="card-background"></div>
@@ -188,8 +200,11 @@
             {/if}
           </div>
 
-          <!-- Active indicator dot -->
-          {#if isActive}
+          <!-- Coming soon badge for disabled modules -->
+          {#if isDisabled && module.disabledMessage}
+            <div class="disabled-badge">{module.disabledMessage}</div>
+          {:else if isActive}
+            <!-- Active indicator dot -->
             <div class="active-indicator"></div>
           {/if}
         </div>
@@ -206,16 +221,20 @@
       {#each devModules as module}
         {@const moduleColor = extractModuleColor(module.icon)}
         {@const isActive = currentModule === module.id}
+        {@const isDisabled = module.disabled ?? false}
 
         <button
           class="module-item"
           class:active={isActive}
+          class:disabled={isDisabled}
           onpointerdown={handlePointerDown}
           onpointermove={handlePointerMove}
-          onclick={(e) => handleModuleClick(module.id, e)}
-          onmouseenter={() => handleModuleHoverStart(module.id)}
-          onmouseleave={() => handleModuleHoverEnd(module.id)}
+          onclick={(e) => handleModuleClick(module.id, e, isDisabled)}
+          onmouseenter={() => !isDisabled && handleModuleHoverStart(module.id)}
+          onmouseleave={() => !isDisabled && handleModuleHoverEnd(module.id)}
           style="--module-color: {moduleColor};"
+          aria-disabled={isDisabled}
+          disabled={isDisabled}
         >
           <!-- Premium layered background -->
           <div class="card-background"></div>
@@ -231,8 +250,11 @@
               {/if}
             </div>
 
-            <!-- Active indicator dot -->
-            {#if isActive}
+            <!-- Coming soon badge for disabled modules -->
+            {#if isDisabled && module.disabledMessage}
+              <div class="disabled-badge">{module.disabledMessage}</div>
+            {:else if isActive}
+              <!-- Active indicator dot -->
               <div class="active-indicator"></div>
             {/if}
           </div>
@@ -472,6 +494,43 @@
 
   .module-item.active:active {
     transform: translateX(2px) scale(0.98);
+  }
+
+  /* ============================================================================
+     DISABLED STATE
+     ============================================================================ */
+  .module-item.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .module-item.disabled:hover {
+    transform: none;
+  }
+
+  .module-item.disabled:hover .card-background {
+    transform: none;
+  }
+
+  .module-item.disabled:hover .hover-glow {
+    opacity: 0;
+  }
+
+  .module-item.disabled .item-icon {
+    opacity: 0.7;
+  }
+
+  .disabled-badge {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    letter-spacing: 0.6px;
+    flex-shrink: 0;
   }
 
   /* ============================================================================

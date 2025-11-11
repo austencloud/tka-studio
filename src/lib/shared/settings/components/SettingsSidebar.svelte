@@ -58,7 +58,7 @@
 </script>
 
 <aside class="settings-sidebar" bind:this={sidebarElement}>
-  <nav class="sidebar-nav" class:use-dropdown={shouldUseDropdown}>
+  <nav class="settings-sidebar-nav" class:use-dropdown={shouldUseDropdown}>
     {#if shouldUseDropdown}
       <!-- Dropdown selector pattern (6+ tabs) - Future implementation -->
       <div class="tab-dropdown">
@@ -79,7 +79,7 @@
       <!-- Icon-above-text pattern (3-5 tabs) - Current implementation -->
       {#each tabs as tab}
         <button
-          class="sidebar-item"
+          class="settings-sidebar-item"
           class:active={activeTab === tab.id}
           class:narrow={isNarrow}
           class:wide={isWide}
@@ -107,14 +107,14 @@
     container-type: inline-size;
   }
 
-  .sidebar-nav {
-    padding: clamp(12px, 2vw, 24px);
+  .settings-sidebar-nav {
+    padding: clamp(12px, 2vw, 8px);
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
 
-  .sidebar-item {
+  .settings-sidebar-item {
     display: flex;
     align-items: center;
     gap: clamp(
@@ -143,7 +143,7 @@
   /* Container query for sidebar responsiveness */
   @container (max-width: 160px) {
     /* Icon-only mode for very narrow sidebars */
-    .sidebar-item {
+    .settings-sidebar-item {
       justify-content: center;
       gap: 0;
       padding: clamp(
@@ -164,7 +164,7 @@
 
   @container (min-width: 161px) {
     /* Show labels when there's enough space */
-    .sidebar-item {
+    .settings-sidebar-item {
       gap: clamp(8px, 1vw, 16px);
     }
 
@@ -173,18 +173,18 @@
     }
   }
 
-  .sidebar-item:hover {
+  .settings-sidebar-item:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
     color: #ffffff;
     transform: scale(1.02); /* Subtle scale */
   }
 
-  .sidebar-item:active {
+  .settings-sidebar-item:active {
     transform: scale(0.98); /* Press feedback */
   }
 
-  .sidebar-item.active {
+  .settings-sidebar-item.active {
     background: rgba(99, 102, 241, 0.25); /* Indigo theme */
     color: #ffffff;
     border-color: rgba(99, 102, 241, 0.6);
@@ -192,7 +192,7 @@
     font-weight: 600; /* Emphasize active tab */
   }
 
-  .sidebar-item.active:hover {
+  .settings-sidebar-item.active:hover {
     background: rgba(99, 102, 241, 0.3);
     box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
   }
@@ -205,7 +205,7 @@
     flex-shrink: 0; /* Prevent icon from shrinking */
   }
 
-  .sidebar-item:hover .sidebar-icon {
+  .settings-sidebar-item:hover .sidebar-icon {
     transform: scale(1.1); /* Icon emphasis on hover */
   }
 
@@ -224,7 +224,7 @@
       position: relative;
     }
 
-    .sidebar-nav {
+    .settings-sidebar-nav {
       flex-direction: row;
       overflow: visible; /* No scrolling needed - all tabs fit */
       padding: 8px 8px;
@@ -233,7 +233,7 @@
       justify-content: space-between;
     }
 
-    .sidebar-item {
+    .settings-sidebar-item {
       /* Icon-above-text layout */
       flex-direction: column; /* Stack icon above text */
       align-items: center;
@@ -267,12 +267,12 @@
 
   /* Narrow mobile screens - Maintain icon-above-text */
   @media (max-width: 480px) {
-    .sidebar-nav {
+    .settings-sidebar-nav {
       padding: 6px 6px;
       gap: 3px;
     }
 
-    .sidebar-item {
+    .settings-sidebar-item {
       padding: 6px 4px;
       min-height: 58px;
       gap: 3px;
@@ -289,12 +289,12 @@
 
   /* Ultra-narrow screens - Maintain icon-above-text with minimum sizes */
   @media (max-width: 390px) {
-    .sidebar-nav {
+    .settings-sidebar-nav {
       padding: 5px 4px;
       gap: 2px;
     }
 
-    .sidebar-item {
+    .settings-sidebar-item {
       padding: 5px 3px;
       min-height: 56px;
       gap: 2px;
@@ -315,11 +315,11 @@
       max-height: 60px;
     }
 
-    .sidebar-nav {
+    .settings-sidebar-nav {
       padding: 4px 6px;
     }
 
-    .sidebar-item {
+    .settings-sidebar-item {
       min-height: 50px;
       padding: 4px 4px;
       gap: 2px;
@@ -335,7 +335,7 @@
   }
 
   /* Dropdown selector pattern (6+ tabs) - Activated automatically */
-  .sidebar-nav.use-dropdown {
+  .settings-sidebar-nav.use-dropdown {
     padding: 12px 16px;
     justify-content: center;
   }
@@ -388,7 +388,7 @@
 
   /* Mobile dropdown adjustments */
   @media (max-width: 768px) {
-    .sidebar-nav.use-dropdown {
+    .settings-sidebar-nav.use-dropdown {
       padding: 10px 14px;
     }
 

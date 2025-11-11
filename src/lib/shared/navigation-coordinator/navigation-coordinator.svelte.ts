@@ -103,5 +103,15 @@ export function getModuleDefinitions() {
       return isAdmin;
     }
     return true;
+  }).map((module) => {
+    // For non-admin users, disable all modules except Create
+    if (!isAdmin && module.id !== "create") {
+      return {
+        ...module,
+        disabled: true,
+        disabledMessage: "Coming Soon"
+      };
+    }
+    return module;
   });
 }

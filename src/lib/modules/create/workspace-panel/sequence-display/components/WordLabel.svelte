@@ -171,7 +171,7 @@
 
   .word-label.has-word {
     /* Slightly smaller to ensure 8 letter units fit comfortably on one line */
-    font-size: clamp(1.5rem, 5.5cqi, 2.75rem);
+      font-size: clamp(1.25rem, 7vw, 2rem);
   }
 
   /* Contextual messages (hand path status, etc.) - Container-aware sizing */
@@ -249,9 +249,7 @@
       padding: 0.2rem 0.5rem;
     }
 
-    .word-label.has-word {
-      font-size: clamp(1.5rem, 5.5cqi, 2.5rem);
-    }
+
 
     .copied-message {
       font-size: 0.8rem;
@@ -265,8 +263,6 @@
       font-size: clamp(1rem, 6vw, 1.75rem);
     }
 
-    .word-label.has-word {
-      font-size: clamp(1.25rem, 7vw, 2rem);
-    }
+
   }
 </style>

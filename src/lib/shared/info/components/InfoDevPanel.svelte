@@ -38,109 +38,118 @@
     <h2 class="panel-title">{copy.subtitle}</h2>
     <p class="dev-message">{copy.message}</p>
     <div class="dev-links">
-      <a
-        class="dev-card discord-highlight"
-        href={discordUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        onclick={handleLinkClick}
-      >
-        <i class="fab fa-discord"></i>
-        <div>
-          <h3>Join Our Discord Community</h3>
-          <p>Get help, share feedback, and chat directly with the developer</p>
-        </div>
-      </a>
+    <a
+      class="dev-card discord-highlight"
+      href={discordUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      onclick={handleLinkClick}
+    >
+      <i class="fab fa-discord"></i>
+      <div>
+        <h3>Join Our Discord Community</h3>
+        <p>Get help, share feedback, and chat directly with the developer</p>
+      </div>
+    </a>
 
-      <a
-        class="dev-card"
-        href={githubUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        onclick={handleLinkClick}
-      >
-        <i class="fab fa-github"></i>
-        <div>
-          <h3>View on GitHub</h3>
-          <p>Explore the source code and contribute</p>
-        </div>
-      </a>
+    <a
+      class="dev-card"
+      href={githubUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      onclick={handleLinkClick}
+    >
+      <i class="fab fa-github"></i>
+      <div>
+        <h3>View on GitHub</h3>
+        <p>Explore the source code and contribute</p>
+      </div>
+    </a>
 
-      <a
-        class="dev-card"
-        href={`${githubUrl}/issues/new`}
-        target="_blank"
-        rel="noopener noreferrer"
-        onclick={handleLinkClick}
-      >
-        <i class="fas fa-bug"></i>
-        <div>
-          <h3>Report Bug or Request Feature</h3>
-          <p>Help improve TKA with your feedback</p>
-        </div>
-      </a>
-    </div>
+    <a
+      class="dev-card"
+      href={`${githubUrl}/issues/new`}
+      target="_blank"
+      rel="noopener noreferrer"
+      onclick={handleLinkClick}
+    >
+      <i class="fas fa-bug"></i>
+      <div>
+        <h3>Report Bug or Request Feature</h3>
+        <p>Help improve TKA with your feedback</p>
+      </div>
+    </a>
+  </div>
   </div>
 </div>
 
 <style>
-  .dev-links {
+  .carousel-panel {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-    width: 100%;
-    flex: 1;
-    justify-content: center;
+  }
+
+  .tab-panel {
+    display: flex;
+    flex-direction: column;
+    padding: clamp(0.5rem, 1vh, 0.75rem);
+  }
+
+  @media (min-width: 1024px) {
+    .tab-panel {
+      padding: 0;
+    }
+  }
+
+  .panel-title {
+    font-size: clamp(0.75rem, 2cqh, 0.875rem);
+    margin-bottom: clamp(0.25rem, 1cqh, 0.375rem);
+  }
+
+  @media (min-width: 1024px) {
+    .panel-title {
+      display: none;
+    }
   }
 
   .dev-message {
-    font-size: 0.875rem;
+    font-size: clamp(0.625rem, 1.5cqh, 0.75rem);
     color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 0.75rem;
-    line-height: 1.45;
+    margin-bottom: clamp(0.25rem, 1cqh, 0.375rem);
+    line-height: 1.25;
     text-align: center;
     flex-shrink: 0;
   }
 
-  @media (min-width: 640px) {
-    .dev-message {
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      margin-bottom: clamp(1rem, 2vh, 1.5rem);
-      line-height: 1.5;
-    }
+  .dev-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.625rem, 2cqh, 1rem);
+    width: 100%;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 1024px) {
     .dev-links {
-      gap: clamp(1rem, 2vh, 1.5rem);
+      flex: 1;
+      justify-content: center;
     }
   }
 
   .dev-card {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1rem;
+    gap: clamp(0.5rem, 1.5cqh, 0.625rem);
+    padding: clamp(0.5rem, 1.5cqh, 0.625rem) clamp(0.625rem, 1.75cqh, 0.75rem);
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.75rem;
+    border-radius: clamp(0.375rem, 1.25cqh, 0.5rem);
     text-decoration: none;
     color: inherit;
     transition: all 0.2s ease;
     cursor: pointer;
     width: 100%;
     text-align: left;
-    flex: 1;
-    min-height: 90px;
-  }
-
-  @media (min-width: 640px) {
-    .dev-card {
-      gap: clamp(1rem, 2vw, 1.5rem);
-      padding: clamp(1rem, 2.5vh, 1.5rem);
-      min-height: 80px;
-    }
   }
 
   /* Hover only on devices that support it (desktop) */
@@ -183,15 +192,9 @@
   }
 
   .dev-card i {
-    font-size: 2.25rem;
+    font-size: clamp(1.25rem, 3.5cqh, 1.75rem);
     color: rgba(34, 197, 94, 0.9);
     flex-shrink: 0;
-  }
-
-  @media (min-width: 640px) {
-    .dev-card i {
-      font-size: clamp(2.5rem, 6vw, 3rem);
-    }
   }
 
   .dev-card div {
@@ -200,31 +203,18 @@
   }
 
   .dev-card h3 {
-    font-size: 0.9375rem;
+    font-size: clamp(0.6875rem, 1.75cqh, 0.8125rem);
     font-weight: 600;
     color: white;
     margin: 0 0 0.125rem 0;
-  }
-
-  @media (min-width: 640px) {
-    .dev-card h3 {
-      font-size: clamp(1rem, 2.5vw, 1.125rem);
-      margin: 0 0 0.25rem 0;
-    }
+    line-height: 1.2;
   }
 
   .dev-card p {
-    font-size: 0.8125rem;
+    font-size: clamp(0.625rem, 1.5cqh, 0.75rem);
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 640px) {
-    .dev-card p {
-      font-size: clamp(0.875rem, 2vw, 1rem);
-      line-height: 1.4;
-    }
+    line-height: 1.25;
   }
 
   @media (prefers-reduced-motion: reduce) {

@@ -14,6 +14,7 @@
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import ProfileButton from "./ProfileButton.svelte";
   import InfoButton from "../../info/components/InfoButton.svelte";
+  import { desktopSidebarState } from "../../layout/desktop-sidebar-state.svelte";
 
   // Props
   let {
@@ -27,6 +28,10 @@
     left?: import("svelte").Snippet;
     content?: import("svelte").Snippet;
   }>();
+
+  // Desktop sidebar awareness
+  const showDesktopSidebar = $derived(desktopSidebarState.isVisible);
+  const desktopSidebarWidth = $derived(desktopSidebarState.width);
 
   // Services
   let deviceDetector: IDeviceDetector | null = null;
@@ -113,12 +118,17 @@
   class="top-bar"
   class:layout-top={navigationLayout === "top"}
   class:layout-left={navigationLayout === "left"}
+  class:has-desktop-sidebar={showDesktopSidebar}
   style:height="{computedHeight}px"
   style:padding="0 {computedPadding}"
+  style:--desktop-sidebar-width="{desktopSidebarWidth}px"
 >
   <!-- Left: Info/home button + Module-specific left content (e.g., back button) -->
   <div class="top-bar__left">
-    <InfoButton />
+    <!-- Only show InfoButton when desktop sidebar is not visible -->
+    {#if !showDesktopSidebar}
+      <InfoButton />
+    {/if}
     {#if left}
       {@render left()}
     {/if}
@@ -178,6 +188,14 @@
   }
 
   /* ============================================================================
+     DESKTOP SIDEBAR SUPPORT
+     ============================================================================ */
+  .top-bar.has-desktop-sidebar {
+    left: var(--desktop-sidebar-width, 280px);
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ============================================================================
      LAYOUT SECTIONS
      ============================================================================ */
   .top-bar__left {
@@ -207,6 +225,12 @@
   /* ============================================================================
      ACCESSIBILITY
      ============================================================================ */
+  @media (prefers-reduced-motion: reduce) {
+    .top-bar.has-desktop-sidebar {
+      transition: none !important;
+    }
+  }
+
   @media (prefers-contrast: high) {
     .top-bar {
       background: rgba(0, 0, 0, 0.95);

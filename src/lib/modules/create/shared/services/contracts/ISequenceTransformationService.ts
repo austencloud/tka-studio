@@ -37,6 +37,7 @@ export interface ISequenceTransformationService {
    * - Creates new start position from final beat's end state
    * - Reverses beat order and transforms each beat
    * - Swaps positions, locations, orientations; flips rotation direction
+   * - Looks up correct letters from pictograph dataset based on reversed motion configuration
    */
-  reverseSequence(sequence: SequenceData): SequenceData;
+  reverseSequence(sequence: SequenceData): Promise<SequenceData>;
 }

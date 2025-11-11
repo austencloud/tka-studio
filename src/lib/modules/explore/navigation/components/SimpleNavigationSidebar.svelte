@@ -78,7 +78,7 @@ Matches the desktop Python app navigation pattern exactly.
     if (sortMethod === ExploreSortMethod.ALPHABETICAL) {
       // Extract the letter portion before the hyphen (handles "A - 4 beats" format)
       const parts = cleanText.split(" - ");
-      if (parts.length > 1) {
+      if (parts.length > 1 && parts[0]) {
         return parts[0].trim(); // Return just "A" or "Γ" etc.
       }
 
@@ -173,11 +173,12 @@ Matches the desktop Python app navigation pattern exactly.
   }
 
   .nav-header {
-    margin-bottom: 1rem;
+    display: none; /* Hide header in vertical mode - buttons are self-explanatory */
   }
 
-  /* Horizontal header - compact */
+  /* Horizontal header - show and make compact */
   .simple-navigation-sidebar.horizontal .nav-header {
+    display: block;
     margin-bottom: 0;
     flex-shrink: 0;
   }
@@ -187,8 +188,11 @@ Matches the desktop Python app navigation pattern exactly.
     font-size: clamp(0.8rem, 2.2vw, 1.1rem);
     font-weight: bold;
     text-align: center;
-    margin: 0 0 clamp(0.25rem, 1vw, 0.5rem) 0;
-    padding: clamp(0.25rem, 1vw, 0.5rem);
+    margin: 0 0 0.5rem 0;
+    padding: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   /* Horizontal header text - inline */
@@ -303,7 +307,7 @@ Matches the desktop Python app navigation pattern exactly.
 
     .header-text {
       font-size: 1rem;
-      padding: 0.5rem;
+      padding: 0.25rem;
     }
 
     .nav-button {

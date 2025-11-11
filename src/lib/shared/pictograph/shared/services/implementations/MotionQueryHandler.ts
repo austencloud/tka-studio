@@ -376,4 +376,61 @@ export class MotionQueryHandler implements IMotionQueryHandler {
       color
     );
   }
+
+  /**
+   * Find letter by motion configuration
+   * Used when reversing sequences to find the correct letter for the reversed motion
+   *
+   * @param blueMotion - Blue motion data
+   * @param redMotion - Red motion data
+   * @param gridMode - Grid mode (diamond/box)
+   * @returns Letter enum or null if no match found
+   */
+  async findLetterByMotionConfiguration(
+    blueMotion: MotionData,
+    redMotion: MotionData,
+    gridMode: GridMode
+  ): Promise<string | null> {
+    await this.ensureInitialized();
+
+    if (!this.parsedData) {
+      console.error("❌ No parsed CSV data available");
+      return null;
+    }
+
+    const actualGridMode =
+      gridMode === GridMode.SKEWED ? GridMode.DIAMOND : gridMode;
+    const csvRows =
+      this.parsedData[actualGridMode as keyof typeof this.parsedData] || [];
+
+    // Search for a matching pictograph in the CSV data
+    for (const row of csvRows) {
+      // Match based on:
+      // 1. Motion types (pro, anti, static, dash, etc.)
+      // 2. Start locations
+      // 3. End locations
+      // 4. Rotation directions
+      const matchesBlueMotion =
+        row.blueMotionType?.toLowerCase() === blueMotion.motionType?.toLowerCase() &&
+        row.blueStartLocation?.toLowerCase() === blueMotion.startLocation?.toLowerCase() &&
+        row.blueEndLocation?.toLowerCase() === blueMotion.endLocation?.toLowerCase() &&
+        row.blueRotationDirection?.toLowerCase() === blueMotion.rotationDirection?.toLowerCase();
+
+      const matchesRedMotion =
+        row.redMotionType?.toLowerCase() === redMotion.motionType?.toLowerCase() &&
+        row.redStartLocation?.toLowerCase() === redMotion.startLocation?.toLowerCase() &&
+        row.redEndLocation?.toLowerCase() === redMotion.endLocation?.toLowerCase() &&
+        row.redRotationDirection?.toLowerCase() === redMotion.rotationDirection?.toLowerCase();
+
+      if (matchesBlueMotion && matchesRedMotion) {
+        return row.letter || null;
+      }
+    }
+
+    // No match found
+    console.warn(
+      `⚠️ No letter found for motion configuration: Blue(${blueMotion.motionType} ${blueMotion.startLocation}->${blueMotion.endLocation} ${blueMotion.rotationDirection}), Red(${redMotion.motionType} ${redMotion.startLocation}->${redMotion.endLocation} ${redMotion.rotationDirection})`
+    );
+    return null;
+  }
 }
