@@ -93,14 +93,6 @@
         />
       </div>
     {/if}
-
-    <!-- Animation Coordinator -->
-    <AnimationSheetCoordinator
-      sequence={CreateModuleState.sequenceState.currentSequence}
-      bind:isOpen={panelState.isAnimationPanelOpen}
-      bind:animatingBeatNumber
-      combinedPanelHeight={panelState.combinedPanelHeight}
-    />
   </div>
 
   <!-- Tool Panel -->
@@ -116,6 +108,14 @@
     />
   </div>
 </div>
+
+<!-- Animation Coordinator - Rendered outside workspace-container to escape stacking context -->
+<AnimationSheetCoordinator
+  sequence={CreateModuleState.sequenceState.currentSequence}
+  bind:isOpen={panelState.isAnimationPanelOpen}
+  bind:animatingBeatNumber
+  combinedPanelHeight={panelState.combinedPanelHeight}
+/>
 
 <style>
   .layout-wrapper {
