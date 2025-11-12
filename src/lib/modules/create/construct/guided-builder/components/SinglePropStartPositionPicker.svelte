@@ -222,7 +222,7 @@ With grid mode toggle to switch between Diamond and Box mode
   }
 
   /* Moderate landscape: optimize 2x2 for width */
-  @container start-picker (aspect-ratio > 1.3) and (aspect-ratio <= 1.8) {
+  @container start-picker (aspect-ratio > 1.4) and (aspect-ratio <= 1.8) {
     .position-grid {
       grid-template-columns: repeat(2, 1fr);
       grid-template-rows: repeat(2, 1fr);
@@ -230,8 +230,8 @@ With grid mode toggle to switch between Diamond and Box mode
     }
   }
 
-  /* Tall portrait: 4 rows × 1 column */
-  @container start-picker (aspect-ratio < 0.65) {
+  /* Tall portrait: 4 rows × 1 column - more generous threshold */
+  @container start-picker (aspect-ratio < 0.85) {
     .position-grid {
       grid-template-columns: 1fr;
       grid-template-rows: repeat(4, 1fr);
@@ -240,7 +240,7 @@ With grid mode toggle to switch between Diamond and Box mode
   }
 
   /* Very tall and narrow: stack vertically with smaller gaps */
-  @container start-picker (aspect-ratio < 0.5) {
+  @container start-picker (aspect-ratio < 0.6) {
     .position-grid {
       gap: clamp(0.5rem, 2cqmin, 1rem);
       padding: 0.25rem;
@@ -276,24 +276,24 @@ With grid mode toggle to switch between Diamond and Box mode
     }
   }
 
-  @container start-picker (aspect-ratio > 1.3) and (aspect-ratio <= 1.8) {
+  @container start-picker (aspect-ratio > 1.4) and (aspect-ratio <= 1.8) {
     .position-button {
       max-width: 300px;
       max-height: 300px;
     }
   }
 
-  @container start-picker (aspect-ratio >= 0.65) and (aspect-ratio <= 1.3) {
+  @container start-picker (aspect-ratio >= 0.85) and (aspect-ratio <= 1.4) {
     .position-button {
       max-width: 250px;
       max-height: 250px;
     }
   }
 
-  @container start-picker (aspect-ratio < 0.65) {
+  @container start-picker (aspect-ratio < 0.85) {
     .position-button {
-      max-width: 350px;
-      max-height: 200px;
+      max-width: 100%;
+      max-height: min(180px, 20cqh);
     }
   }
 

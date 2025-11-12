@@ -59,7 +59,8 @@
       "Bash(npm run test:e2e:*)",
       "Bash(tree:*)",
       "Bash(timeout 5 echo:*)",
-      "Bash(timeout 30 sh:*)"
+      "Bash(timeout 30 sh:*)",
+      "Bash(taskkill:*)"
     ],
     "deny": [],
     "ask": []
