@@ -62,8 +62,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(0.75rem, 2vh, 1rem);
-    padding: clamp(1.25rem, 3vh, 1.75rem) clamp(1rem, 2.5vh, 1.5rem);
+    gap: 0.875rem;
+    padding: 1.5rem 1.25rem;
 
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -74,12 +74,10 @@
     text-align: center;
     position: relative;
     overflow: hidden;
-    aspect-ratio: 1 / 1.1;
 
-    /* Consistent sizing that scales with container */
-    width: clamp(180px, 22vw, 250px);
-    min-width: 180px;
-    max-width: 250px;
+    /* Simple flexible sizing */
+    width: 220px;
+    flex-shrink: 0;
   }
 
   .method-card::before {
@@ -129,12 +127,12 @@
   }
 
   .method-icon {
-    font-size: clamp(2rem, 6cqi, 2.75rem);
+    font-size: 2.25rem;
     line-height: 1;
     color: var(--method-color, rgba(255, 255, 255, 0.9));
     flex-shrink: 0;
-    width: clamp(3.5rem, 12cqi, 4.5rem);
-    height: clamp(3.5rem, 12cqi, 4.5rem);
+    width: 4rem;
+    height: 4rem;
     display: grid;
     place-items: center;
     background: rgba(255, 255, 255, 0.04);
@@ -160,13 +158,13 @@
   .method-content {
     display: flex;
     flex-direction: column;
-    gap: clamp(0.25rem, 1cqi, 0.375rem);
+    gap: 0.375rem;
     flex: 1;
     justify-content: center;
   }
 
   .method-title {
-    font-size: clamp(1.125rem, 5cqi, 1.5rem);
+    font-size: 1.25rem;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
     margin: 0;
@@ -174,7 +172,7 @@
   }
 
   .method-description {
-    font-size: clamp(0.8125rem, 3.5cqi, 0.9375rem);
+    font-size: 0.875rem;
     font-weight: 400;
     color: rgba(255, 255, 255, 0.5);
     margin: 0;
@@ -183,8 +181,8 @@
 
   .method-arrow {
     position: absolute;
-    bottom: clamp(0.875rem, 2vh, 1.125rem);
-    right: clamp(0.875rem, 2vh, 1.125rem);
+    bottom: 1rem;
+    right: 1rem;
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.2);
     transition: all 220ms ease;
@@ -218,8 +216,8 @@
 
   .coming-soon-badge {
     position: absolute;
-    top: clamp(0.875rem, 2vh, 1.125rem);
-    right: clamp(0.875rem, 2vh, 1.125rem);
+    top: 1rem;
+    right: 1rem;
     font-size: 0.6875rem;
     font-weight: 700;
     text-transform: uppercase;
@@ -231,32 +229,29 @@
     letter-spacing: 0.5px;
   }
 
-  /* Mobile: constrain width and remove aspect ratio */
-  @media (max-width: 599px) {
+  /* Small screens: horizontal compact layout */
+  @media (max-width: 500px) {
     .method-card {
-      max-width: 280px;
-      margin: 0 auto;
-      aspect-ratio: auto;
-    }
-  }
-
-  /* Extra small screens: horizontal layout */
-  @media (max-width: 400px) {
-    .method-card {
+      width: 100%;
+      max-width: 400px;
       flex-direction: row;
-      aspect-ratio: auto;
       text-align: left;
       padding: 1rem 1.25rem;
-      max-width: 100%;
     }
 
     .method-content {
       align-items: flex-start;
+      flex: 1;
+    }
+
+    .method-icon {
+      flex-shrink: 0;
     }
 
     .method-arrow {
       position: static;
       margin-left: auto;
+      flex-shrink: 0;
     }
 
     .coming-soon-badge {
@@ -264,6 +259,7 @@
       margin-left: auto;
       font-size: 0.625rem;
       padding: 0.25rem 0.5rem;
+      flex-shrink: 0;
     }
   }
 </style>

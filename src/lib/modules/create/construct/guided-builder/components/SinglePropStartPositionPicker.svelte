@@ -176,18 +176,19 @@ With grid mode toggle to switch between Diamond and Box mode
     flex-direction: column;
     height: 100%;
     width: 100%;
-    padding: clamp(0.5rem, 2cqmin, 1.5rem);
-    gap: clamp(0.75rem, 3cqmin, 1.5rem);
+    padding: min(2cqmin, 1.5rem);
+    gap: min(2cqmin, 1rem);
     container-type: size;
     container-name: start-picker;
+    box-sizing: border-box;
   }
 
   .picker-header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 1rem;
-    padding: 0.5rem;
+    gap: min(2cqmin, 1rem);
+    padding: min(1cqmin, 0.5rem);
     flex-shrink: 0;
   }
 
@@ -196,105 +197,51 @@ With grid mode toggle to switch between Diamond and Box mode
     justify-content: flex-end;
   }
 
-  /* Default: 2x2 grid for balanced/square containers */
+  /* Intelligent auto-flowing grid - adapts to any container size */
   .position-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: clamp(0.75rem, 3cqmin, 2rem);
+    /* Auto-fit ensures grid reorganizes based on available space */
+    /* Each cell gets minimum 35% of container width, maximum 1fr of space */
+    grid-template-columns: repeat(auto-fit, minmax(min(35cqw, 100%), 1fr));
+    gap: min(3cqmin, 1.5rem);
     flex: 1;
     align-items: center;
     justify-items: center;
     width: 100%;
-    max-width: min(100%, 700px);
     margin: 0 auto;
-    padding: clamp(0.5rem, 2cqmin, 1rem);
-    container-type: inline-size;
-  }
-
-  /* Wide landscape: 1 row × 4 columns */
-  @container start-picker (aspect-ratio > 1.8) {
-    .position-grid {
-      grid-template-columns: repeat(4, 1fr);
-      grid-template-rows: 1fr;
-      max-width: min(100%, 1200px);
-    }
-  }
-
-  /* Moderate landscape: optimize 2x2 for width */
-  @container start-picker (aspect-ratio > 1.4) and (aspect-ratio <= 1.8) {
-    .position-grid {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      max-width: min(90%, 800px);
-    }
-  }
-
-  /* Tall portrait: 4 rows × 1 column - more generous threshold */
-  @container start-picker (aspect-ratio < 0.85) {
-    .position-grid {
-      grid-template-columns: 1fr;
-      grid-template-rows: repeat(4, 1fr);
-      max-width: min(100%, 400px);
-    }
-  }
-
-  /* Very tall and narrow: stack vertically with smaller gaps */
-  @container start-picker (aspect-ratio < 0.6) {
-    .position-grid {
-      gap: clamp(0.5rem, 2cqmin, 1rem);
-      padding: 0.25rem;
-    }
+    padding: min(2cqmin, 1rem);
+    /* Ensure grid takes full available height */
+    align-content: center;
   }
 
   .position-button {
+    /* Fluid sizing relative to grid cell */
     width: 100%;
-    height: 100%;
     aspect-ratio: 1 / 1;
+
+    /* Constrain to fit within grid cell and container */
+    max-width: min(100%, 30cqh, 280px);
+    max-height: min(100%, 22cqh);
+
     min-width: 0;
     min-height: 0;
+
     background: rgba(255, 255, 255, 0.05);
     border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: clamp(8px, 2cqmin, 16px);
-    padding: clamp(0.5rem, 2cqmin, 1rem);
+    border-radius: min(2cqmin, 16px);
+    padding: min(2cqmin, 1rem);
+
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: clamp(0.25rem, 1cqmin, 0.75rem);
+    gap: min(1cqmin, 0.75rem);
+
     position: relative;
     overflow: hidden;
-  }
-
-  /* Constrain button max size based on grid layout */
-  @container start-picker (aspect-ratio > 1.8) {
-    .position-button {
-      max-width: 280px;
-      max-height: 280px;
-    }
-  }
-
-  @container start-picker (aspect-ratio > 1.4) and (aspect-ratio <= 1.8) {
-    .position-button {
-      max-width: 300px;
-      max-height: 300px;
-    }
-  }
-
-  @container start-picker (aspect-ratio >= 0.85) and (aspect-ratio <= 1.4) {
-    .position-button {
-      max-width: 250px;
-      max-height: 250px;
-    }
-  }
-
-  @container start-picker (aspect-ratio < 0.85) {
-    .position-button {
-      max-width: 100%;
-      max-height: min(180px, 20cqh);
-    }
   }
 
   .position-button::before {
@@ -318,10 +265,13 @@ With grid mode toggle to switch between Diamond and Box mode
     justify-content: center;
     position: relative;
     min-height: 0;
+    min-width: 0;
+    /* Ensure pictograph scales to fit available space */
+    container-type: size;
   }
 
   .position-label {
-    font-size: clamp(0.6875rem, 2cqmin, 1rem);
+    font-size: min(2cqmin, 1rem);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.7);
     text-transform: uppercase;
@@ -351,32 +301,5 @@ With grid mode toggle to switch between Diamond and Box mode
   .position-button:active {
     transform: translateY(-2px) scale(0.98);
     transition: transform 0.1s ease;
-  }
-
-  /* Small container adjustments */
-  @container start-picker (max-width: 500px) {
-    .position-grid {
-      gap: clamp(0.5rem, 2cqmin, 1rem);
-    }
-
-    .position-button {
-      padding: clamp(0.375rem, 1.5cqmin, 0.75rem);
-    }
-  }
-
-  /* Header adjustments for small containers */
-  @container start-picker (max-width: 400px) {
-    .picker-header {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-    }
-
-    .header-spacer {
-      display: none;
-    }
-
-    .grid-toggle-container {
-      justify-content: center;
-    }
   }
 </style>

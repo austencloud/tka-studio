@@ -69,6 +69,8 @@
   let isDragging = $state(false);
   let startY = 0;
   let currentY = $state(0); // Must be reactive to update transform in real-time
+  let startX = 0;
+  let currentX = $state(0); // For horizontal swipe (right/left placement)
   let startTime = 0;
 
   // Initialize layout service if responsive layout is enabled
@@ -170,50 +172,115 @@
 
   // Simple touch handlers for swipe-to-dismiss
   function handleTouchStart(event: TouchEvent) {
-    if (!dismissible || placement !== "bottom") return;
+    if (!dismissible) return;
 
-    startY = event.touches[0]!.clientY;
+    const touch = event.touches[0]!;
+    startY = touch.clientY;
+    startX = touch.clientX;
     startTime = Date.now();
     isDragging = true;
   }
 
   function handleTouchMove(event: TouchEvent) {
-    if (!isDragging || !dismissible || placement !== "bottom") return;
+    if (!isDragging || !dismissible) return;
 
-    currentY = event.touches[0]!.clientY;
-    const deltaY = currentY - startY;
+    const touch = event.touches[0]!;
+    currentY = touch.clientY;
+    currentX = touch.clientX;
 
-    // Only allow downward drag
-    if (deltaY > 0) {
-      // Prevent page scroll/bounce while dragging
-      event.preventDefault();
+    // Bottom placement: allow downward drag
+    if (placement === "bottom") {
+      const deltaY = currentY - startY;
+      if (deltaY > 0) {
+        event.preventDefault();
+      }
+    }
+    // Top placement: allow upward drag
+    else if (placement === "top") {
+      const deltaY = currentY - startY;
+      if (deltaY < 0) {
+        event.preventDefault();
+      }
+    }
+    // Right placement: allow rightward drag (swipe away to the right)
+    else if (placement === "right") {
+      const deltaX = currentX - startX;
+      if (deltaX > 0) {
+        event.preventDefault();
+      }
+    }
+    // Left placement: allow leftward drag (swipe away to the left)
+    else if (placement === "left") {
+      const deltaX = currentX - startX;
+      if (deltaX < 0) {
+        event.preventDefault();
+      }
     }
   }
 
   function handleTouchEnd(event: TouchEvent) {
-    if (!isDragging || !dismissible || placement !== "bottom") return;
+    if (!isDragging || !dismissible) return;
 
     const deltaY = currentY - startY;
+    const deltaX = currentX - startX;
     const duration = Date.now() - startTime;
 
     // Reset drag state first
     isDragging = false;
-    const wasAboveThreshold = deltaY > 100 || (deltaY > 50 && duration < 500);
+    let wasAboveThreshold = false;
+
+    // Bottom: dragged down >100px or fast swipe down (>50px in <500ms)
+    if (placement === "bottom") {
+      wasAboveThreshold = deltaY > 100 || (deltaY > 50 && duration < 500);
+    }
+    // Top: dragged up >100px or fast swipe up
+    else if (placement === "top") {
+      wasAboveThreshold = deltaY < -100 || (deltaY < -50 && duration < 500);
+    }
+    // Right: dragged right >100px or fast swipe right
+    else if (placement === "right") {
+      wasAboveThreshold = deltaX > 100 || (deltaX > 50 && duration < 500);
+    }
+    // Left: dragged left >100px or fast swipe left
+    else if (placement === "left") {
+      wasAboveThreshold = deltaX < -100 || (deltaX < -50 && duration < 500);
+    }
+
     startY = 0;
     currentY = 0;
+    startX = 0;
+    currentX = 0;
 
-    // Dismiss if dragged down >100px or fast swipe (>50px in <500ms)
+    // Dismiss if threshold was met
     if (wasAboveThreshold) {
       // Setting isOpen to false will trigger the $effect which calls emitClose
       isOpen = false;
     }
   }
 
-  // Compute drag offset
-  const dragOffset = $derived(() => {
-    if (!isDragging || placement !== "bottom") return 0;
+  // Compute drag offset (vertical or horizontal based on placement)
+  const dragOffsetY = $derived(() => {
+    if (!isDragging) return 0;
     const delta = currentY - startY;
-    return Math.max(0, delta); // Only allow downward
+
+    if (placement === "bottom") {
+      return Math.max(0, delta); // Only allow downward
+    } else if (placement === "top") {
+      return Math.min(0, delta); // Only allow upward
+    }
+    return 0;
+  });
+
+  const dragOffsetX = $derived(() => {
+    if (!isDragging) return 0;
+    const delta = currentX - startX;
+
+    if (placement === "right") {
+      return Math.max(0, delta); // Only allow rightward
+    } else if (placement === "left") {
+      return Math.min(0, delta); // Only allow leftward
+    }
+    return 0;
   });
 
   // Add passive: false touchmove listener to allow preventDefault
@@ -250,7 +317,9 @@
     aria-modal="true"
     aria-labelledby={labelledBy}
     aria-label={ariaLabel}
-    style:transform={isDragging && dragOffset() > 0 ? `translateY(${dragOffset()}px)` : ""}
+    style:transform={isDragging && (dragOffsetY() !== 0 || dragOffsetX() !== 0)
+      ? `translate(${dragOffsetX()}px, ${dragOffsetY()}px)`
+      : ""}
     style:transition={isDragging ? "none" : ""}
     ontouchstart={handleTouchStart}
     ontouchend={handleTouchEnd}
@@ -329,8 +398,15 @@
 
     /* Prevent pull-to-refresh ONLY on this drawer, not globally */
     overscroll-behavior-y: contain;
-    /* Allow touch manipulation without disabling all gestures */
+    /* Allow touch manipulation - default to vertical panning */
     touch-action: pan-y;
+  }
+
+  /* Horizontal touch action for right/left placement */
+  .drawer-content[data-placement="right"],
+  .drawer-content[data-placement="left"] {
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
   }
 
   .drawer-content[data-state="closed"] {

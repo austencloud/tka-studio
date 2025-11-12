@@ -144,6 +144,8 @@
     flex-direction: column;
     overflow: hidden;
     position: relative;
+    /* Prevent creating a new stacking context that traps modals/drawers */
+    /* Do NOT set z-index here - that would create a stacking context */
   }
 
   .workspace-container.hidden-workspace {

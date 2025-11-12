@@ -120,7 +120,7 @@
     place-items: center;
     height: 100%;
     width: 100%;
-    padding: clamp(1rem, 3vh, 2rem);
+    padding: 1.5rem;
     overflow: auto;
     box-sizing: border-box;
     container-type: size;
@@ -130,7 +130,7 @@
   .content-container {
     display: flex;
     flex-direction: column;
-    gap: clamp(2rem, 5vh, 3rem);
+    gap: 2.5rem;
     width: 100%;
     max-width: 100%;
     align-items: center;
@@ -144,28 +144,12 @@
 
   .methods-container {
     display: flex;
-    flex-direction: column;
-    gap: clamp(0.75rem, 2vh, 1rem);
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-  }
-
-  /* Desktop: flex row layout centered with equal gaps */
-  @container method-selector (min-width: 600px) {
-    .methods-container {
-      flex-direction: row;
-      justify-content: center;
-      gap: clamp(1rem, 2.5vh, 1.5rem);
-    }
-  }
-
-  /* Tablet: flex row centered but tighter */
-  @container method-selector (min-width: 450px) and (max-width: 599px) {
-    .methods-container {
-      flex-direction: row;
-      justify-content: center;
-      gap: 0.875rem;
-    }
+    justify-content: center;
   }
 </style>

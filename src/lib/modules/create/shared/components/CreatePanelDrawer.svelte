@@ -109,12 +109,13 @@
       }`
   );
 
-  // Dynamic inline styles for width - use measured tool panel width in side-by-side mode
+  // Dynamic inline styles for width and z-index
   const drawerStyle = $derived.by(() => {
+    let styles = "--sheet-z-index: 150;"; // Ensure panel appears above navigation (z-index: 100)
     if (isSideBySideLayout && toolPanelWidth > 0) {
-      return `--measured-panel-width: ${toolPanelWidth}px;`;
+      styles += ` --measured-panel-width: ${toolPanelWidth}px;`;
     }
-    return "";
+    return styles;
   });
 
   // Handle close event
@@ -156,25 +157,27 @@
 </script>
 
 {#key drawerKey}
-  <Drawer
-    bind:isOpen
-    {...labelledBy ? { labelledBy } : {}}
-    {...ariaLabel ? { ariaLabel } : {}}
-    onclose={handleClose}
-    onbackdropclick={handleBackdropClickInternal}
-    {closeOnBackdrop}
-    {focusTrap}
-    {lockScroll}
-    {showHandle}
-    respectLayoutMode={true}
-    placement={drawerPlacement}
-    class={drawerClass}
-    backdropClass={drawerBackdropClass}
-  >
-    <div class="panel-content" style={panelHeightStyle}>
-      {@render children()}
-    </div>
-  </Drawer>
+  <div style={drawerStyle}>
+    <Drawer
+      bind:isOpen
+      {...labelledBy ? { labelledBy } : {}}
+      {...ariaLabel ? { ariaLabel } : {}}
+      onclose={handleClose}
+      onbackdropclick={handleBackdropClickInternal}
+      {closeOnBackdrop}
+      {focusTrap}
+      {lockScroll}
+      {showHandle}
+      respectLayoutMode={true}
+      placement={drawerPlacement}
+      class={drawerClass}
+      backdropClass={drawerBackdropClass}
+    >
+      <div class="panel-content" style={panelHeightStyle}>
+        {@render children()}
+      </div>
+    </Drawer>
+  </div>
 {/key}
 
 <style>
@@ -199,6 +202,7 @@
       0 -8px 32px rgba(0, 0, 0, 0.5),
       0 -2px 8px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    /* Z-index set via --sheet-z-index CSS variable in drawerStyle */
   }
 
   /*
@@ -220,25 +224,19 @@
 
   /*
    * Mobile/Stacked layout: Panels slide from bottom
-   * Full width, height determined by combinedPanelHeight prop
+   * Height determined by combinedPanelHeight prop via .panel-content
    */
   :global(
     .drawer-content[class*="-panel-container"][data-placement="bottom"]:not(
         .side-by-side-layout
       )
   ) {
-    left: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    top: 0 !important;
-    bottom: 0;
-    height: 100vh !important;
-    max-height: 100vh !important;
+    /* Let base Drawer handle positioning from bottom */
+    /* Width is already set by base Drawer */
+    /* Height is controlled by .panel-content below */
   }
 
-  /* 
+  /*
    * Backdrop styling - transparent, gesture-enabled for swipe-to-dismiss
    * Backdrop handles gesture detection but provides no visual overlay
    */
@@ -248,6 +246,7 @@
     -webkit-backdrop-filter: none !important;
     /* CRITICAL: Keep pointer-events enabled for gesture detection */
     pointer-events: auto !important;
+    /* Z-index automatically set to one less than drawer content by base Drawer */
   }
 
   /* 
