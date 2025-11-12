@@ -20,19 +20,14 @@
   import { onMount } from "svelte";
   import { authStore } from "$shared/auth";
   import CreationWelcomeCue from "../../shared/components/CreationWelcomeCue.svelte";
-  import SelectorUndoButton from "./SelectorUndoButton.svelte";
   import MethodCard from "./MethodCard.svelte";
-  import { getCreateModuleContext } from "../../shared/context";
+  import SelectorUndoButton from "./SelectorUndoButton.svelte";
 
   let {
     onMethodSelected,
   }: {
     onMethodSelected: (method: BuildModeId) => void;
   } = $props();
-
-  // Get context for undo functionality
-  const ctx = getCreateModuleContext();
-  const { CreateModuleState } = ctx;
 
   // Services
   let hapticService: IHapticFeedbackService | null = $state(null);
@@ -69,7 +64,18 @@
     },
   ];
 
-  function handleMethodClick(methodId: BuildModeId, event: MouseEvent) {
+  async function handleMethodClick(
+    methodId: BuildModeId,
+    event: MouseEvent,
+    isDisabled: boolean = false
+  ) {
+    // Don't allow selection of disabled methods
+    if (isDisabled) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+
     // Trigger selection haptic feedback for creation mode selection
     hapticService?.trigger("selection");
 
@@ -80,14 +86,7 @@
 
 <div class="creation-method-selector">
   <!-- Undo button - top-left corner -->
-  {#if CreateModuleState?.canUndo}
-    <SelectorUndoButton
-      onUndo={() => CreateModuleState?.undo()}
-      undoDescription={CreateModuleState.undoHistory[
-        CreateModuleState.undoHistory.length - 1
-      ]?.metadata?.description || "Undo last action"}
-    />
-  {/if}
+  <SelectorUndoButton />
 
   <div class="content-container">
     <!-- Welcome cue at the top - always vertical -->
@@ -106,8 +105,8 @@
           description={method.description}
           color={method.color}
           {index}
-          disabled={isDisabled}
-          onClick={handleMethodClick}
+          {isDisabled}
+          onclick={(e) => handleMethodClick(method.id, e, isDisabled)}
         />
       {/each}
     </div>
@@ -144,19 +143,29 @@
   }
 
   .methods-container {
-    display: grid;
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: clamp(0.75rem, 2vh, 1rem);
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
   }
 
-  /* 3-column layout for viewports 600px and above */
-  @media (min-width: 600px) {
+  /* Desktop: flex row layout centered with equal gaps */
+  @container method-selector (min-width: 600px) {
     .methods-container {
-      grid-template-columns: repeat(3, 1fr);
+      flex-direction: row;
+      justify-content: center;
       gap: clamp(1rem, 2.5vh, 1.5rem);
+    }
+  }
+
+  /* Tablet: flex row centered but tighter */
+  @container method-selector (min-width: 450px) and (max-width: 599px) {
+    .methods-container {
+      flex-direction: row;
+      justify-content: center;
+      gap: 0.875rem;
     }
   }
 </style>

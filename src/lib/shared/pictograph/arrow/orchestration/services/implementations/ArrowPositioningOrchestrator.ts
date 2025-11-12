@@ -64,8 +64,6 @@ export class ArrowPositioningOrchestrator
      * Calculate arrow position asynchronously with full service coordination.
      */
     try {
-      // STEP 1: Extract or use provided motion data
-      // ✅ FIXED: Pass color directly since ArrowPlacementData no longer has color
       const motion = motionData;
       if (!motion) {
         console.warn(
@@ -75,7 +73,6 @@ export class ArrowPositioningOrchestrator
         return [center.x, center.y, 0];
       }
 
-      // STEP 2: Calculate location and initial position
       const location = this.locationCalculator.calculateLocation(
         motion,
         pictographData
@@ -88,34 +85,25 @@ export class ArrowPositioningOrchestrator
       const validPosition =
         this.dataProcessor.ensureValidPosition(initialPosition);
 
-      // STEP 3: Calculate rotation
       const rotation = await this.rotationCalculator.calculateRotation(
         motion,
         location,
         pictographData
       );
 
-      // STEP 4: Calculate adjustment using sophisticated service
       const adjustment = await this.adjustmentCalculator.calculateAdjustment(
         pictographData,
         motion,
-        pictographData.letter || "A", // ✅ FIXED: Pass letter as 3rd parameter
-        location, // ✅ FIXED: Pass location as 4th parameter
-        motion.color // ✅ FIXED: Pass color as 5th parameter
+        pictographData.letter || "A",
+        location,
+        motion.color
       );
 
       const [adjustmentX, adjustmentY] =
         this.dataProcessor.extractAdjustmentValues(adjustment);
 
-      // STEP 5: Calculate final position (no rotation transformation needed)
-      // The adjustment values are already calculated correctly for the final position
       const finalX = validPosition.x + adjustmentX;
       const finalY = validPosition.y + adjustmentY;
-
-      console.log(`🎯 FINAL ARROW POSITION for ${motionData.color}:`);
-      console.log(`  Initial position: [${validPosition.x}, ${validPosition.y}]`);
-      console.log(`  Adjustment: [${adjustmentX}, ${adjustmentY}]`);
-      console.log(`  FINAL: [${finalX}, ${finalY}]`);
 
       return [finalX, finalY, rotation];
     } catch (error) {
@@ -147,38 +135,22 @@ export class ArrowPositioningOrchestrator
         motionData
       );
 
-      console.log(`[ArrowPos] ${color} arrow calculated:`, { x, y, rotation });
-
-      // CRITICAL: Also calculate mirroring for this arrow
       const shouldMirror = this.shouldMirrorArrow(arrowData, pictographData);
 
-      // Apply manual adjustments from keyboard controls (WASD)
       const manualAdjustX = arrowData.manualAdjustmentX || 0;
       const manualAdjustY = arrowData.manualAdjustmentY || 0;
 
-      console.log(`[ArrowPos] ${color} manual adjustments from arrowData:`, {
-        manualAdjustX,
-        manualAdjustY,
-      });
-      console.log(`[ArrowPos] ${color} arrowData:`, arrowData);
-
       const updates: Partial<ArrowPlacementData> = {
-        positionX: x + manualAdjustX, // Add manual adjustment to calculated position
-        positionY: y + manualAdjustY, // Add manual adjustment to calculated position
+        positionX: x + manualAdjustX,
+        positionY: y + manualAdjustY,
         rotationAngle: rotation,
-        svgMirrored: shouldMirror, // ✅ FIXED: Use correct property name
-        manualAdjustmentX: manualAdjustX, // Preserve manual adjustments
-        manualAdjustmentY: manualAdjustY, // Preserve manual adjustments
+        svgMirrored: shouldMirror,
+        manualAdjustmentX: manualAdjustX,
+        manualAdjustmentY: manualAdjustY,
       };
 
-      console.log(`[ArrowPos] ${color} final position:`, {
-        x: x + manualAdjustX,
-        y: y + manualAdjustY,
-      });
-
-      // 🚨 CRITICAL FIX: Pass the calculated arrow location to persist in pictograph data
       const motionUpdates = {
-        arrowLocation: location, // Use the calculated location from above
+        arrowLocation: location,
       } as unknown as Partial<MotionData>;
 
       return this.dataProcessor.updateArrowInPictograph(
@@ -211,7 +183,6 @@ export class ArrowPositioningOrchestrator
           pictographData.motions[color as keyof typeof pictographData.motions];
         const arrowData = motionData?.arrowPlacementData;
         if (arrowData && motionData) {
-          // Calculate location first to store it properly
           const calculatedLocation = this.locationCalculator.calculateLocation(
             motionData,
             updatedPictograph
@@ -222,7 +193,6 @@ export class ArrowPositioningOrchestrator
             motionData
           );
 
-          // CRITICAL: Also calculate mirroring for this arrow
           const currentMotionData =
             updatedPictograph.motions?.[
               color as keyof typeof updatedPictograph.motions
@@ -233,34 +203,20 @@ export class ArrowPositioningOrchestrator
             currentMotionData
           );
 
-          // Apply manual adjustments from keyboard controls (WASD)
           const manualAdjustX = arrowData.manualAdjustmentX || 0;
           const manualAdjustY = arrowData.manualAdjustmentY || 0;
 
-          console.log(`[ArrowPos ALL] ${color} manual adjustments:`, {
-            manualAdjustX,
-            manualAdjustY,
-          });
-          console.log(`[ArrowPos ALL] ${color} calculated pos:`, {
-            x,
-            y,
-            rotation,
-          });
-
           const updates: Partial<ArrowPlacementData> = {
-            positionX: x + manualAdjustX, // Add manual adjustment to calculated position
-            positionY: y + manualAdjustY, // Add manual adjustment to calculated position
+            positionX: x + manualAdjustX,
+            positionY: y + manualAdjustY,
             rotationAngle: rotation,
-            svgMirrored: shouldMirror, // ✅ FIXED: Use correct property name
-            manualAdjustmentX: manualAdjustX, // Preserve manual adjustments
-            manualAdjustmentY: manualAdjustY, // Preserve manual adjustments
+            svgMirrored: shouldMirror,
+            manualAdjustmentX: manualAdjustX,
+            manualAdjustmentY: manualAdjustY,
           };
 
-          console.log(`[ArrowPos ALL] ${color} final updates:`, updates);
-
-          // 🚨 CRITICAL FIX: Pass the calculated arrow location to persist in pictograph data
           const motionUpdates = {
-            arrowLocation: calculatedLocation, // Use the calculated location from above
+            arrowLocation: calculatedLocation,
           } as unknown as Partial<MotionData>;
 
           updatedPictograph = this.dataProcessor.updateArrowInPictograph(
@@ -295,7 +251,6 @@ export class ArrowPositioningOrchestrator
      * - Other motions follow "pro" rules
      */
 
-    // Get motion data for this arrow's color
     if (!pictographData?.motions || !motionData) {
       return false;
     }
@@ -307,13 +262,11 @@ export class ArrowPositioningOrchestrator
       return false;
     }
 
-    // Mirror conditions matching desktop implementation
     const mirrorConditions = {
       anti: { cw: true, ccw: false },
       other: { cw: false, ccw: true },
     };
 
-    // Use "anti" conditions for anti motion, "other" for everything else (pro, static, dash, float)
     const conditionKey = motionType === "anti" ? "anti" : "other";
     const shouldMirror =
       mirrorConditions[conditionKey][
@@ -333,7 +286,6 @@ export class ArrowPositioningOrchestrator
     if (shouldMirror) {
       arrowItem.style.transform = `${arrowItem.style.transform || ""} scaleX(-1)`;
     } else {
-      // Remove mirror transformation
       const transform = arrowItem.style.transform || "";
       arrowItem.style.transform = transform
         .replace(/scaleX\(-1\)\s*/g, "")

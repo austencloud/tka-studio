@@ -27,7 +27,7 @@ function getInitialModuleSync(): TabId | null {
 
 // Centralized UI state leveraging Svelte 5 runes.
 // Uses TabId (which includes both ModuleId and LegacyTabId) for backwards compatibility
-const uiState = $state({
+export const uiState = $state({
   activeModule: getInitialModuleSync(), // Load from localStorage immediately
   showSettings: false,
   isFullScreen: false,

@@ -1,13 +1,8 @@
 <!--
   MethodCard.svelte
 
-  Individual creation method card that displays an icon, title, description,
-  and either a "Coming Soon" badge or navigation arrow.
-
-  FUTURE ANIMATION:
-  Has data-method-id and data-method-index attributes for implementing
-  a morphing animation where the selected card transforms into its
-  corresponding tab position in the bottom navigation bar.
+  A single creation method card for the method selector.
+  Displays an icon, title, and description for a creation mode option.
 -->
 <script lang="ts">
   import { fly } from "svelte/transition";
@@ -19,40 +14,31 @@
     title,
     description,
     color,
-    index = 0,
-    disabled = false,
-    onClick,
+    index,
+    isDisabled = false,
+    onclick,
   }: {
     id: BuildModeId;
     icon: string;
     title: string;
     description: string;
     color: string;
-    index?: number;
-    disabled?: boolean;
-    onClick: (methodId: BuildModeId, event: MouseEvent) => void;
+    index: number;
+    isDisabled?: boolean;
+    onclick: (event: MouseEvent) => void;
   } = $props();
-
-  function handleClick(event: MouseEvent) {
-    if (disabled) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-    onClick(id, event);
-  }
 </script>
 
 <button
   class="method-card"
-  class:disabled
+  class:disabled={isDisabled}
   data-method-id={id}
   data-method-index={index}
-  onclick={handleClick}
+  {onclick}
   in:fly={{ y: 20, delay: 200 + index * 100, duration: 300 }}
   style="--method-color: {color}"
-  aria-disabled={disabled}
-  {disabled}
+  aria-disabled={isDisabled}
+  disabled={isDisabled}
 >
   <div class="method-icon">
     <i class="fas {icon}"></i>
@@ -61,7 +47,7 @@
     <h3 class="method-title">{title}</h3>
     <p class="method-description">{description}</p>
   </div>
-  {#if disabled}
+  {#if isDisabled}
     <div class="coming-soon-badge">Coming Soon</div>
   {:else}
     <div class="method-arrow">
@@ -89,7 +75,11 @@
     position: relative;
     overflow: hidden;
     aspect-ratio: 1 / 1.1;
-    width: 100%;
+
+    /* Consistent sizing that scales with container */
+    width: clamp(180px, 22vw, 250px);
+    min-width: 180px;
+    max-width: 250px;
   }
 
   .method-card::before {
@@ -241,11 +231,12 @@
     letter-spacing: 0.5px;
   }
 
-  /* Mobile: constrain width when in single-column vertical stack */
+  /* Mobile: constrain width and remove aspect ratio */
   @media (max-width: 599px) {
     .method-card {
       max-width: 280px;
       margin: 0 auto;
+      aspect-ratio: auto;
     }
   }
 

@@ -235,10 +235,17 @@ export const authStore = {
                 "🚧 [authStore] FORCE_ADMIN_MODE enabled - user is admin"
               );
             } else {
+              console.log("🔍 [authStore] Checking admin status for user:", user.uid);
               const userDocRef = doc(firestore, `users/${user.uid}`);
               const userDoc = await getDoc(userDocRef);
+              console.log("📄 [authStore] User document exists:", userDoc.exists());
               if (userDoc.exists()) {
-                isAdmin = userDoc.data()?.isAdmin === true;
+                const userData = userDoc.data();
+                console.log("📊 [authStore] User data:", userData);
+                isAdmin = userData?.isAdmin === true;
+                console.log("👤 [authStore] isAdmin status:", isAdmin);
+              } else {
+                console.log("⚠️ [authStore] No user document found in Firestore");
               }
             }
           } catch (error) {

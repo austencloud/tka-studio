@@ -196,16 +196,17 @@
     const deltaY = currentY - startY;
     const duration = Date.now() - startTime;
 
-    // Dismiss if dragged down >100px or fast swipe (>50px in <500ms)
-    if (deltaY > 100 || (deltaY > 50 && duration < 500)) {
-      emitClose("programmatic");
-      isOpen = false;
-    }
-
-    // Reset
+    // Reset drag state first
     isDragging = false;
+    const wasAboveThreshold = deltaY > 100 || (deltaY > 50 && duration < 500);
     startY = 0;
     currentY = 0;
+
+    // Dismiss if dragged down >100px or fast swipe (>50px in <500ms)
+    if (wasAboveThreshold) {
+      // Setting isOpen to false will trigger the $effect which calls emitClose
+      isOpen = false;
+    }
   }
 
   // Compute drag offset

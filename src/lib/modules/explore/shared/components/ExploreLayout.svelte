@@ -14,7 +14,12 @@ Provides responsive layout:
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
 
   // ✅ PURE RUNES: Props using modern Svelte 5 runes
-  const { sortControls, navigationSidebar, centerPanel, isUIVisible = true } = $props<{
+  const {
+    sortControls,
+    navigationSidebar,
+    centerPanel,
+    isUIVisible = true,
+  } = $props<{
     sortControls: Snippet;
     navigationSidebar: Snippet;
     centerPanel: Snippet;
@@ -65,7 +70,7 @@ Provides responsive layout:
   {/if}
 
   <!-- Main Content Area -->
-  <div class="main-content">
+  <div class="explore-content">
     <!-- Wider Screens: Vertical Navigation Sidebar -->
     {#if !isPortraitMobile}
       {@render navigationSidebar()}
@@ -96,12 +101,23 @@ Provides responsive layout:
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(10px);
+    max-height: 200px; /* Adjust based on your actual content height */
+    overflow: hidden;
     transform: translateY(0);
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .top-section.hidden {
     transform: translateY(-100%);
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    border-bottom-width: 0;
   }
 
   /* Horizontal Navigation - Portrait mobile only */
@@ -112,14 +128,14 @@ Provides responsive layout:
   }
 
   /* Main Content Area - Left panel + Center panel */
-  .main-content {
+  .explore-content {
     display: flex;
     flex: 1;
     overflow: hidden;
   }
 
   /* Portrait mobile - no sidebar in main content */
-  .gallery-layout.portrait-mobile .main-content {
+  .gallery-layout.portrait-mobile .explore-content {
     flex-direction: column;
   }
 
@@ -143,6 +159,7 @@ Provides responsive layout:
     .top-section {
       padding: 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      max-height: 150px; /* Smaller max-height for mobile */
     }
 
     .center-panel {
@@ -156,7 +173,7 @@ Provides responsive layout:
       padding: 14px;
     }
 
-    .main-content {
+    .explore-content {
       flex-direction: row;
     }
   }

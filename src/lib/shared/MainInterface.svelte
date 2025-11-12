@@ -54,6 +54,7 @@
     type IViewportService,
   } from "$shared";
   import { useDesktopSidebarVisibility } from "./navigation/services/desktop-sidebar-visibility.svelte";
+  import { explorerScrollState } from "../modules/explore/shared/state/ExplorerScrollState.svelte";
 
   // Reactive state
   const activeModule = $derived(getActiveTab()); // Using legacy getActiveTab for now
@@ -65,6 +66,11 @@
     typeof useDesktopSidebarVisibility
   > | null = null;
   const showDesktopSidebar = $derived(desktopSidebarState.isVisible);
+
+  // Primary navigation visibility - only hide in Explorer module during scroll
+  const isPrimaryNavVisible = $derived(
+    currentModule() === "explore" ? explorerScrollState.isUIVisible : true
+  );
 
   const createHeaderMatches = [
     "Choose Creation Mode",
@@ -185,6 +191,7 @@
     class:about-active={isAboutActive}
     class:has-primary-nav={moduleHasPrimaryNav(currentModule()) &&
       !showDesktopSidebar}
+    class:nav-hidden={!isPrimaryNavVisible}
     class:nav-landscape={layoutState.isPrimaryNavLandscape}
     class:has-top-bar={true}
   >
@@ -208,6 +215,7 @@
       }}
       onLayoutChange={setPrimaryNavLandscape}
       onHeightChange={setPrimaryNavHeight}
+      isUIVisible={isPrimaryNavVisible}
     />
   {/if}
 
@@ -265,6 +273,7 @@
   .content-area.has-primary-nav {
     padding-bottom: var(--primary-nav-height, 64px);
     padding-left: 0;
+    transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .content-area.has-primary-nav.nav-landscape {

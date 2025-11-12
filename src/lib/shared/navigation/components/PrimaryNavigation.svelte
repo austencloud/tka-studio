@@ -11,9 +11,9 @@
   import type { ResponsiveSettings } from "$shared/device/domain/models/device-models";
   import { onMount } from "svelte";
   import {
-    getShowSettings,
     toggleSettingsDialog,
   } from "../../application/state/app-state.svelte";
+  import { uiState } from "../../application/state/ui/ui-state.svelte";
   import type { Section } from "../domain/types";
 
   let {
@@ -25,6 +25,7 @@
     onHeightChange,
     showModuleSwitcher = true,
     showSettings = true,
+    isUIVisible = true,
   } = $props<{
     sections: Section[];
     currentSection: string;
@@ -34,6 +35,7 @@
     onHeightChange?: (height: number) => void;
     showModuleSwitcher?: boolean;
     showSettings?: boolean;
+    isUIVisible?: boolean;
   }>();
 
   // Services
@@ -51,6 +53,9 @@
 
   // Determine if navigation should be hidden (any modal panel open in side-by-side layout)
   let shouldHideNav = $derived(shouldHideUIForPanels());
+
+  // Reactive state for settings dialog visibility - directly access the state
+  let isSettingsActive = $derived(uiState.showSettings);
 
   // Abbreviated labels for compact mode
   const abbreviations: Record<string, string> = {
@@ -152,6 +157,7 @@
   class="primary-navigation"
   class:layout-bottom={!isLandscape}
   class:layout-side={isLandscape}
+  class:hidden={!isUIVisible}
   bind:this={navElement}
 >
   <!-- Module Switcher Button (Left) -->
@@ -196,7 +202,7 @@
   {#if showSettings}
     <button
       class="nav-button settings-button"
-      class:active={getShowSettings()}
+      class:active={isSettingsActive}
       onclick={handleSettingsTap}
       aria-label="Settings"
       style="--section-color: rgba(255, 255, 255, 1); --section-gradient: rgba(255, 255, 255, 1);"
@@ -221,6 +227,9 @@
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: var(--glass-backdrop-strong);
     z-index: 100;
+    transition:
+      transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* ============================================================================
@@ -246,6 +255,13 @@
     container-name: primary-nav;
   }
 
+  /* Hidden state for bottom layout - slide down */
+  .primary-navigation.layout-bottom.hidden {
+    transform: translateY(100%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
   /* ============================================================================
      SIDE LAYOUT (Landscape Mobile)
      ============================================================================ */
@@ -260,6 +276,13 @@
     width: 72px;
     /* Account for safe area on sides */
     min-height: 100vh;
+  }
+
+  /* Hidden state for side layout - slide left */
+  .primary-navigation.layout-side.hidden {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
   }
 
   /* ============================================================================

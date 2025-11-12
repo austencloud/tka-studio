@@ -1,27 +1,29 @@
 <!--
   SelectorUndoButton.svelte
 
-  Undo button displayed in the top-left corner of the creation method selector.
-  Shows when there are actions available to undo in the CreateModule state.
+  Undo button for the creation method selector.
+  Appears in the top-left corner when undo is available.
 -->
 <script lang="ts">
-  let {
-    onUndo,
-    undoDescription = "Undo last action",
-  }: {
-    onUndo: () => void;
-    undoDescription?: string;
-  } = $props();
+  import { getCreateModuleContext } from "../../shared/context";
+
+  // Get context for undo functionality
+  const ctx = getCreateModuleContext();
+  const { CreateModuleState } = ctx;
 </script>
 
-<button
-  class="selector-undo-button"
-  onclick={onUndo}
-  title={undoDescription}
->
-  <i class="fas fa-rotate-left" aria-hidden="true"></i>
-  <span>Undo</span>
-</button>
+{#if CreateModuleState?.canUndo}
+  <button
+    class="selector-undo-button"
+    onclick={() => CreateModuleState?.undo()}
+    title={CreateModuleState.undoHistory[
+      CreateModuleState.undoHistory.length - 1
+    ]?.metadata?.description || "Undo last action"}
+  >
+    <i class="fas fa-rotate-left" aria-hidden="true"></i>
+    <span>Undo</span>
+  </button>
+{/if}
 
 <style>
   .selector-undo-button {
