@@ -34,25 +34,20 @@ export class ArrowLifecycleManager implements IArrowLifecycleManager {
    * Load arrow assets for a single motion
    */
   async loadArrowAssets(motionData: MotionData): Promise<ArrowAssets> {
-    try {
-      if (!motionData.arrowPlacementData) {
-        throw new Error("No arrow placement data available");
-      }
-
-      const svgData = await this.arrowRenderer.loadArrowSvg(
-        motionData.arrowPlacementData,
-        motionData
-      );
-
-      return createArrowAssets({
-        imageSrc: svgData.imageSrc,
-        viewBox: svgData.viewBox,
-        center: svgData.center,
-      });
-    } catch (error) {
-      console.error("Failed to load arrow assets:", error);
-      throw error;
+    if (!motionData.arrowPlacementData) {
+      throw new Error("No arrow placement data available");
     }
+
+    const svgData = await this.arrowRenderer.loadArrowSvg(
+      motionData.arrowPlacementData,
+      motionData
+    );
+
+    return createArrowAssets({
+      imageSrc: svgData.imageSrc,
+      viewBox: svgData.viewBox,
+      center: svgData.center,
+    });
   }
 
   /**
@@ -62,32 +57,23 @@ export class ArrowLifecycleManager implements IArrowLifecycleManager {
     motionData: MotionData,
     pictographData: PictographData
   ): Promise<ArrowPosition> {
-    try {
-      const [x, y, rotation] =
-        await this.positioningOrchestrator.calculateArrowPoint(
-          pictographData,
-          motionData
-        );
+    const [x, y, rotation] =
+      await this.positioningOrchestrator.calculateArrowPoint(
+        pictographData,
+        motionData
+      );
 
-      // Apply manual adjustments from keyboard controls (WASD)
-      const manualAdjustX =
-        motionData.arrowPlacementData?.manualAdjustmentX || 0;
-      const manualAdjustY =
-        motionData.arrowPlacementData?.manualAdjustmentY || 0;
+    // Apply manual adjustments from keyboard controls (WASD)
+    const manualAdjustX =
+      motionData.arrowPlacementData?.manualAdjustmentX || 0;
+    const manualAdjustY =
+      motionData.arrowPlacementData?.manualAdjustmentY || 0;
 
-      const finalPosition = createArrowPosition({
-        x: x + manualAdjustX,
-        y: y + manualAdjustY,
-        rotation,
-      });
-
-      console.log(`🔵 ArrowLifecycleManager RETURNING position for ${motionData.color}:`, finalPosition);
-
-      return finalPosition;
-    } catch (error) {
-      console.error("Failed to calculate arrow position:", error);
-      throw error;
-    }
+    return createArrowPosition({
+      x: x + manualAdjustX,
+      y: y + manualAdjustY,
+      rotation,
+    });
   }
 
   /**
@@ -97,20 +83,15 @@ export class ArrowLifecycleManager implements IArrowLifecycleManager {
     motionData: MotionData,
     pictographData: PictographData
   ): boolean {
-    try {
-      if (!motionData.arrowPlacementData) {
-        return false;
-      }
-
-      return this.positioningOrchestrator.shouldMirrorArrow(
-        motionData.arrowPlacementData,
-        pictographData,
-        motionData
-      );
-    } catch (error) {
-      console.error("Failed to determine arrow mirroring:", error);
+    if (!motionData.arrowPlacementData) {
       return false;
     }
+
+    return this.positioningOrchestrator.shouldMirrorArrow(
+      motionData.arrowPlacementData,
+      pictographData,
+      motionData
+    );
   }
 
   /**

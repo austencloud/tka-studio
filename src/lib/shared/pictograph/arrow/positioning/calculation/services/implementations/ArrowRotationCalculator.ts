@@ -72,10 +72,10 @@ export class ArrowRotationCalculator implements IArrowRotationCalculator {
     [GridLocation.EAST]: 90,
     [GridLocation.SOUTH]: 180,
     [GridLocation.WEST]: 270,
-    [GridLocation.NORTHEAST]: 315,
-    [GridLocation.SOUTHEAST]: 225,
-    [GridLocation.SOUTHWEST]: 135,
-    [GridLocation.NORTHWEST]: 45,
+    [GridLocation.NORTHEAST]: 45,
+    [GridLocation.SOUTHEAST]: 135,
+    [GridLocation.SOUTHWEST]: 225,
+    [GridLocation.NORTHWEST]: 315,
   };
 
   // Static arrow rotation for NON-RADIAL orientations (CLOCK/COUNTER) - Box Mode

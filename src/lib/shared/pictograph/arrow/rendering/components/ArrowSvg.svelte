@@ -271,23 +271,12 @@ Now with intelligent rotation animation matching prop behavior!
 
     event.stopPropagation();
 
-    console.log("[ArrowSvg] Arrow clicked:", {
-      color,
-      currentPosition: arrowPosition,
-      motionData: motionData,
-    });
-
     // Trigger haptic feedback
     hapticService?.trigger("selection");
 
     // Select the arrow in global state
     selectedArrowState.selectArrow(motionData, color, pictographData);
   }
-
-  // Log when arrow position changes
-  $effect(() => {
-    console.log(`🎨 [ArrowSvg] ${color} arrow position received:`, arrowPosition);
-  });
 </script>
 
 {#if showArrow}

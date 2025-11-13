@@ -155,27 +155,17 @@ Now with smooth transitions when position or orientation changes!
     const normalizedTarget = ((target % 360) + 360) % 360;
 
     if (direction === "cw") {
-      // If target is already greater than previous (in normalized space), use it directly
-      if (normalizedTarget > normalizedPrevious + EPSILON) {
-        // Adjust target to be in the correct rotation cycle relative to previous
-        const cycles = Math.floor(previous / 360);
-        return cycles * 360 + normalizedTarget;
-      }
-      // Otherwise, add 360 to go the long way clockwise
-      const cycles = Math.floor(previous / 360);
-      return (cycles + 1) * 360 + normalizedTarget;
+      // Calculate the clockwise distance from previous to target
+      let cwDistance = (normalizedTarget - normalizedPrevious + 360) % 360;
+      // Apply that distance to the previous rotation (maintaining the rotation cycle)
+      return previous + cwDistance;
     }
 
     if (direction === "ccw") {
-      // If target is already less than previous (in normalized space), use it directly
-      if (normalizedTarget < normalizedPrevious - EPSILON) {
-        // Adjust target to be in the correct rotation cycle relative to previous
-        const cycles = Math.floor(previous / 360);
-        return cycles * 360 + normalizedTarget;
-      }
-      // Otherwise, subtract 360 to go the long way counter-clockwise
-      const cycles = Math.floor(previous / 360);
-      return (cycles - 1) * 360 + normalizedTarget;
+      // Calculate the counter-clockwise distance from previous to target
+      let ccwDistance = (normalizedPrevious - normalizedTarget + 360) % 360;
+      // Apply that distance in the negative direction
+      return previous - ccwDistance;
     }
 
     const delta = normalizeDelta(target - previous);
@@ -209,6 +199,6 @@ Now with smooth transitions when position or orientation changes!
     pointer-events: none;
     /* Smooth transition for position and rotation changes - matches arrow behavior */
     /* IMPORTANT: transform must be a CSS property (not SVG attribute) for transitions to work */
-    transition: transform 0.2s ease;
+    transition: transform 0.2s linear;
   }
 </style>
