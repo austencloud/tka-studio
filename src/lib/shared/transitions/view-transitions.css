@@ -1,0 +1,218 @@
+/**
+ * CSS View Transitions API Styles
+ * Modern 2025/2026 approach for smooth cross-document transitions
+ *
+ * These styles are applied when the browser supports View Transitions API
+ * Provides smooth, native-feeling transitions between module views
+ */
+
+/* ============================================================================
+   VIEW TRANSITION ROOT
+   ============================================================================ */
+::view-transition {
+  /* Slightly slower for smoother feel */
+  --transition-duration: 400ms;
+  --transition-easing: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================================================
+   OLD AND NEW VIEW STATES
+   Base styles for transitioning views
+   ============================================================================ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--transition-duration);
+  animation-timing-function: var(--transition-easing);
+}
+
+/* ============================================================================
+   DEFAULT FADE TRANSITION (Neutral direction)
+   Clean crossfade with slight scale for depth
+   ============================================================================ */
+::view-transition-old(root) {
+  animation-name: fade-out-scale;
+}
+
+::view-transition-new(root) {
+  animation-name: fade-in-scale;
+  animation-delay: 50ms; /* Slight delay for cleaner transition */
+}
+
+@keyframes fade-out-scale {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes fade-in-scale {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================================
+   FORWARD TRANSITION (Slide left)
+   Used when navigating to a "higher" or "next" module
+   ============================================================================ */
+.view-transition-forward::view-transition-old(root) {
+  animation-name: slide-out-left;
+}
+
+.view-transition-forward::view-transition-new(root) {
+  animation-name: slide-in-right;
+}
+
+@keyframes slide-out-left {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================================================
+   BACKWARD TRANSITION (Slide right)
+   Used when navigating to a "lower" or "previous" module
+   ============================================================================ */
+.view-transition-backward::view-transition-old(root) {
+  animation-name: slide-out-right;
+}
+
+.view-transition-backward::view-transition-new(root) {
+  animation-name: slide-in-left;
+}
+
+@keyframes slide-out-right {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(10%);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-10%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================================================
+   MODULE-SPECIFIC TRANSITIONS
+   Different modules can have unique transition styles
+   ============================================================================ */
+::view-transition-group(module-content) {
+  animation-duration: var(--transition-duration);
+  animation-timing-function: var(--transition-easing);
+}
+
+/* ============================================================================
+   ACCESSIBILITY
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition {
+    --transition-duration: 1ms !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Instant transitions */
+  ::view-transition-old(root) {
+    opacity: 0;
+  }
+
+  ::view-transition-new(root) {
+    opacity: 1;
+  }
+}
+
+/* ============================================================================
+   HIGH CONTRAST MODE
+   ============================================================================ */
+@media (prefers-contrast: high) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    /* Remove scale effects in high contrast */
+    transform: none !important;
+  }
+}
+
+/* ============================================================================
+   FALLBACK FOR BROWSERS WITHOUT VIEW TRANSITIONS API
+   Manual CSS transition classes
+   ============================================================================ */
+.module-transition-enter {
+  animation: fade-in-scale var(--transition-duration, 400ms) var(--transition-easing, ease) forwards;
+}
+
+.module-transition-exit {
+  animation: fade-out-scale var(--transition-duration, 400ms) var(--transition-easing, ease) forwards;
+}
+
+/* Position modules absolutely during transition to prevent overlap */
+.module-transition-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.module-transition-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.module-transition-view.entering {
+  z-index: 2;
+  animation: fade-in-scale 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.module-transition-view.exiting {
+  z-index: 1;
+  animation: fade-out-scale 400ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.module-transition-view.active {
+  z-index: 1;
+  position: relative;
+}
