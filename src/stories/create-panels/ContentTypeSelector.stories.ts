@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/svelte";
-import ContentTypeSelector from "../../lib/modules/create/share/components/ContentTypeSelector.svelte";
+import ContentTypeSelector from "../../lib/shared/share/components/ContentTypeSelector.svelte";
 
 type ContentType = "video" | "animation" | "image";
 
