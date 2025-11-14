@@ -19,6 +19,7 @@ export interface ClearSequenceParams {
   constructTabState: ConstructTabState;
   panelState: PanelCoordinationState;
   resetCreationMethodSelection: () => void;
+  shouldResetCreationMethod?: boolean; // Optional flag to control whether to reset creation method (default: true)
 }
 
 /**

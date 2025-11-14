@@ -140,7 +140,7 @@ export class ExploreLoader implements IExploreLoader {
 
     return createSequenceData({
       id: word,
-      name: String(rawSeq.name || word || "Unnamed Sequence"),
+      name: this.cleanSequenceName(String(rawSeq.name || word || "Unnamed Sequence")),
       word,
       beats: metadata.beats,
       thumbnails: this.parseThumbnails(rawSeq.thumbnails),
@@ -174,7 +174,7 @@ export class ExploreLoader implements IExploreLoader {
 
     return createSequenceData({
       id: word,
-      name: String(rawSeq.name || word || "Unnamed Sequence"),
+      name: this.cleanSequenceName(String(rawSeq.name || word || "Unnamed Sequence")),
       word,
       beats: [],
       thumbnails: this.parseThumbnails(rawSeq.thumbnails),
@@ -297,5 +297,12 @@ export class ExploreLoader implements IExploreLoader {
     }
 
     return null;
+  }
+
+  /**
+   * Remove " Sequence" suffix from sequence names
+   */
+  private cleanSequenceName(name: string): string {
+    return name.replace(/\s+Sequence$/i, "");
   }
 }

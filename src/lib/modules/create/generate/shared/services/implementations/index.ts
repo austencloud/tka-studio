@@ -19,6 +19,7 @@ export { TurnManagementService } from "./TurnManagementService";
 export { CAPExplanationTextGenerator } from "./CAPExplanationTextGenerator";
 export { CAPTypeService } from "./CAPTypeService";
 export { CardConfigurationService } from "./CardConfigurationService";
+export { GeneratorPadder } from "./GeneratorPadder";
 export { LevelConversionService } from "./LevelConversionService";
 export { ResponsiveTypographyService } from "./ResponsiveTypographyService";
 

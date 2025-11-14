@@ -51,6 +51,10 @@
   // Get collapsed state reactively
   const isCollapsed = $derived(desktopSidebarState.isCollapsed);
 
+  // Track when we're transitioning from collapsed to expanded
+  // This prevents sections from sliding in while the sidebar is still narrow
+  let isTransitioningFromCollapsed = $state(false);
+
   function toggleModuleExpansion(moduleId: string) {
     const newExpanded = new Set(expandedModules);
     if (newExpanded.has(moduleId)) {
@@ -75,8 +79,14 @@
       setDesktopSidebarCollapsed(false);
       saveDesktopSidebarCollapsedState(false);
 
-      // Expand only the clicked module, collapse all others
-      expandedModules = new Set([moduleId]);
+      // Set transition flag to prevent section slide animation during width expansion
+      isTransitioningFromCollapsed = true;
+
+      // Delay expanding the module until after the sidebar width transition completes (300ms)
+      setTimeout(() => {
+        expandedModules = new Set([moduleId]);
+        isTransitioningFromCollapsed = false;
+      }, 300);
     } else {
       // When expanded, module buttons toggle expansion
       toggleModuleExpansion(moduleId);
@@ -211,7 +221,7 @@
         </button>
 
         <!-- Module Sections/Tabs (collapsible) -->
-        {#if isExpanded && module.sections.length > 0 && !isCollapsed}
+        {#if isExpanded && module.sections.length > 0 && !isCollapsed && !isTransitioningFromCollapsed}
           <div class="sections-list" transition:slide={{ duration: 200 }}>
             {#each module.sections as section}
               {@const isSectionActive = currentSection === section.id && isActive}

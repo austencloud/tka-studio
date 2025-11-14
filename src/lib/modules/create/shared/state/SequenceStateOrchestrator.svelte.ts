@@ -555,6 +555,8 @@ export function createSequenceState(services: SequenceStateServices) {
     saveCurrentState,
     saveSequenceDataOnly,
     clearPersistedState: () => persistenceCoordinator.clearState(),
+    updateCachedActiveTab: (activeTab: BuildModeId) =>
+      persistenceCoordinator.updateCachedActiveTab(activeTab),
 
     // Service integration
     loadSequences,

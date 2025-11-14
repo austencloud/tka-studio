@@ -15,6 +15,7 @@
   import GeneratePanel from "../../generate/components/GeneratePanel.svelte";
   import ConstructTabContent from "./ConstructTabContent.svelte";
   import { GuidedConstructTab } from "../../guided";
+  import { desktopSidebarState } from "$lib/shared/layout/desktop-sidebar-state.svelte";
 
   // Get context
   const ctx = getCreateModuleContext();
@@ -28,6 +29,7 @@
   // Derive values from context
   const isSideBySideLayout = () => layout.shouldUseSideBySideLayout;
   const isFilterPanelOpen = $derived(panelState.isFilterPanelOpen);
+  const showDesktopSidebar = $derived(desktopSidebarState.isVisible);
 
   // Derived state for which panel to show
   const activeToolPanel = $derived(navigationState.activeTab);
@@ -43,7 +45,19 @@
   );
 
   const isPickerStateLoading = $derived(!constructTabState?.isPersistenceInitialized);
-  const currentSequenceData = $derived(createModuleState.sequenceState.currentSequence);
+
+  // Convert SequenceData to PictographData[] for OptionViewer
+  // Include startingPositionBeat as the first element if it exists
+  const currentSequenceData = $derived.by(() => {
+    const seq = createModuleState.sequenceState.currentSequence;
+    if (!seq) return [];
+
+    const startBeat = seq.startingPositionBeat || seq.startPosition;
+    if (!startBeat) return [...seq.beats];
+
+    // Include start position beat as first element, followed by regular beats
+    return [startBeat, ...seq.beats];
+  });
 
   // Transition state for undo animations
   let isUndoingOption = $state(false);
@@ -146,7 +160,10 @@
             {/if}
           {:else if activeToolPanel === "generator"}
             <!-- Generator Mode - Automatic sequence generation -->
-            <GeneratePanel sequenceState={createModuleState.sequenceState} />
+            <GeneratePanel
+              sequenceState={createModuleState.sequenceState}
+              isDesktop={showDesktopSidebar}
+            />
           {:else if activeToolPanel === "gestural"}
             <!-- Hand Path Builder (coming soon) -->
             <div class="coming-soon-panel">

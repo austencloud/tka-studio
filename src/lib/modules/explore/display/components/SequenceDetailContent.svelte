@@ -194,7 +194,7 @@ Used by both desktop side panel and mobile slide-up overlay.
 
   <!-- Metadata -->
   <div class="metadata">
-    <h2 class="word-label">{sequence.name || sequence.word}</h2>
+    <h2 class="viewer-word-label">{sequence.name || sequence.word}</h2>
     <div class="metadata-row">
       <span class="metadata-item">Length: {sequence.sequenceLength} beats</span>
       <span class="metadata-item">Level: {sequence.difficultyLevel}</span>
@@ -455,7 +455,7 @@ Used by both desktop side panel and mobile slide-up overlay.
     gap: 8px;
   }
 
-  .word-label {
+  .viewer-word-label {
     font-size: clamp(20px, 5vw, 28px);
     font-weight: 700;
     color: white;

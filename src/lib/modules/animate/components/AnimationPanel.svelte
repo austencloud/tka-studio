@@ -109,7 +109,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start; /* Align to top for header */
-    gap: 16px;
     padding: 0; /* No padding - PanelHeader handles its own spacing */
     padding-bottom: calc(24px + env(safe-area-inset-bottom));
     width: 100%;
@@ -140,7 +139,6 @@
     align-items: center;
     justify-content: center;
     min-height: 0;
-    padding: 0 24px; /* Horizontal padding for canvas */
   }
 
   .loading-message,
@@ -160,7 +158,6 @@
     .animation-panel {
       padding: 0 16px 16px 16px;
       padding-bottom: calc(16px + env(safe-area-inset-bottom));
-      gap: 12px;
     }
   }
 
@@ -168,7 +165,6 @@
     .animation-panel {
       padding: 0 12px 12px 12px;
       padding-bottom: calc(12px + env(safe-area-inset-bottom));
-      gap: 8px;
     }
   }
 
@@ -176,7 +172,6 @@
   @media (min-aspect-ratio: 17/10) and (max-height: 500px) {
     .animation-panel {
       padding: 0 12px 12px 12px;
-      gap: 8px;
     }
 
     .canvas-container {

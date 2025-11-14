@@ -6,10 +6,14 @@
  *
  * Workflow:
  * 1. Push undo snapshot
- * 2. Trigger layout transition (reset creation method selection)
+ * 2. Trigger layout transition (optionally reset creation method selection)
  * 3. Wait for fade/layout animations (300ms)
  * 4. Clear all sequence data and UI state
  * 5. Close related panels
+ *
+ * Behavior modes:
+ * - shouldResetCreationMethod = true: Returns to creation method selector (initial state)
+ * - shouldResetCreationMethod = false: Keeps creation mode selected, returns to start position picker
  *
  * Domain: Create module - Sequence management
  */
@@ -28,6 +32,7 @@ export interface ClearSequenceConfig {
   constructTabState: ConstructTabState;
   panelState: PanelCoordinationState;
   resetCreationMethodSelection: () => void;
+  shouldResetCreationMethod?: boolean; // Optional flag to control whether to reset creation method (default: true for backward compatibility)
 }
 
 /**
@@ -42,6 +47,7 @@ export async function executeClearSequenceWorkflow(
     constructTabState,
     panelState,
     resetCreationMethodSelection,
+    shouldResetCreationMethod = true, // Default to true for backward compatibility
   } = config;
 
   try {
@@ -52,8 +58,11 @@ export async function executeClearSequenceWorkflow(
 
     // 2. Manually trigger layout transition - bypass the effect system
     // This ensures immediate fade starts regardless of workspace state
-    resetCreationMethodSelection();
-    navigationState.setCreationMethodSelectorVisible(true);
+    // Only reset creation method selection if explicitly requested
+    if (shouldResetCreationMethod) {
+      resetCreationMethodSelection();
+      navigationState.setCreationMethodSelectorVisible(true);
+    }
 
     // 3. Wait for fade and layout transition to complete (300ms)
     // Everything fades together - beats, workspace, button panel, layout

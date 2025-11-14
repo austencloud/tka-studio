@@ -396,6 +396,7 @@
           hasSelectedCreationMethod = false;
           creationMethodPersistence!.resetSelection();
         },
+        shouldResetCreationMethod: false, // Keep creation mode selected, just reset to start position picker
       });
     } catch (err) {
       error = err instanceof Error ? err.message : "Failed to clear sequence";

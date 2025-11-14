@@ -223,8 +223,6 @@
 <!-- Subtle Fullscreen Hint (non-blocking) -->
 <FullscreenHint />
 
-<!-- Subtle Install Banner (non-blocking) -->
-<SubtleInstallBanner />
 
 <!-- Enhanced PWA Install Guide (modal with device-specific instructions) -->
 <EnhancedPWAInstallGuide bind:showGuide={showPWAInstallGuide} />

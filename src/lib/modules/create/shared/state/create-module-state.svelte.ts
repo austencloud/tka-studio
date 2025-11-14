@@ -218,7 +218,10 @@ export function createCreateModuleState(
 
     // Set flag to prevent sync loop
     isUpdatingFromToggle = true;
-    setactiveToolPanelInternal(panel, true);
+
+    // Await the panel switch to ensure state is properly saved/loaded
+    await setactiveToolPanelInternal(panel, true);
+
     // Also sync to navigation state directly
     navigationState.setCurrentSection(panel);
     // Reset flag after a microtask to allow sync effects to see the updated state
@@ -232,7 +235,7 @@ export function createCreateModuleState(
    * @param panel - The panel to activate
    * @param addToHistory - Whether to add this navigation to history
    */
-  function setactiveToolPanelInternal(
+  async function setactiveToolPanelInternal(
     panel: BuildModeId,
     addToHistory: boolean = true
   ) {
@@ -240,6 +243,23 @@ export function createCreateModuleState(
       "🔄 createModuleState.setactiveToolPanelInternal called with:",
       { panel, currentActiveSection: activeSection }
     );
+
+    // Only swap workspace state when switching between creation modes
+    // (assembler, constructor, generator each have their own workspace)
+    const isCreationMode = (mode: BuildModeId) =>
+      mode === "assembler" || mode === "constructor" || mode === "generator";
+
+    const previousMode = activeSection;
+    const isModeSwitching =
+      previousMode !== panel &&
+      isCreationMode(previousMode) &&
+      isCreationMode(panel);
+
+    // Save current mode's state before switching
+    if (isModeSwitching && isPersistenceInitialized) {
+      console.log(`💾 Saving ${previousMode} workspace before switching to ${panel}`);
+      await saveCurrentState();
+    }
 
     // Track the last content tab (generator or constructor) BEFORE navigating away from it
     if (
@@ -267,11 +287,58 @@ export function createCreateModuleState(
       "✅ createModuleState.activeSection updated to:",
       activeSection
     );
-    // Save the active tab to persistence
-    saveCurrentState();
+
+    // Load new mode's state after switching
+    if (isModeSwitching && isPersistenceInitialized && sequencePersistenceService) {
+      console.log(`📂 Loading ${panel} workspace state`);
+
+      // CRITICAL: Update the persistence coordinator's cached tab IMMEDIATELY
+      // This must happen BEFORE loading state to prevent race conditions where
+      // Generator auto-generates and saves using the wrong (stale) cached mode
+      // Use updateCachedActiveTab() to ONLY update the cache without saving the current sequence
+      sequenceState.updateCachedActiveTab(panel);
+
+      try {
+        const savedState = await sequencePersistenceService.loadCurrentState(panel);
+        if (savedState) {
+          // Restore the saved state for this mode
+          sequenceState.setCurrentSequence(savedState.currentSequence);
+          if (savedState.selectedStartPosition) {
+            sequenceState.setSelectedStartPosition(savedState.selectedStartPosition);
+          } else {
+            sequenceState.setSelectedStartPosition(null);
+          }
+
+          // Sync construct tab state if available
+          if (constructTabState) {
+            if (savedState.hasStartPosition && savedState.selectedStartPosition) {
+              constructTabState.setShowStartPositionPicker(false);
+              constructTabState.setSelectedStartPosition(savedState.selectedStartPosition);
+            } else {
+              constructTabState.setShowStartPositionPicker(true);
+              constructTabState.setSelectedStartPosition(null);
+            }
+          }
+        } else {
+          // No saved state for this mode - start fresh
+          console.log(`🆕 No saved state for ${panel}, starting fresh`);
+          sequenceState.setCurrentSequence(null);
+          sequenceState.setSelectedStartPosition(null);
+          if (constructTabState) {
+            constructTabState.setShowStartPositionPicker(true);
+            constructTabState.setSelectedStartPosition(null);
+          }
+        }
+      } catch (error) {
+        console.error(`❌ Failed to load ${panel} state:`, error);
+      }
+    } else if (!isModeSwitching) {
+      // Not switching between creation modes, just save current state
+      await saveCurrentState();
+    }
   }
 
-  function goBack() {
+  async function goBack() {
     if (navigationHistory.length > 0) {
       // Get the previous entry
       const previous = navigationHistory.pop();
@@ -279,7 +346,7 @@ export function createCreateModuleState(
         // Set flag to prevent sync loop
         isNavigatingBack = true;
         // Set without adding to history (using internal method)
-        setactiveToolPanelInternal(previous.panel, false);
+        await setactiveToolPanelInternal(previous.panel, false);
         // Reset flag after state settles
         setTimeout(() => {
           isNavigatingBack = false;
@@ -577,24 +644,38 @@ export function createCreateModuleState(
 
   async function initializeWithPersistence(): Promise<void> {
     try {
-      // Initialize sequence state first
-      await sequenceState.initializeWithPersistence();
-
       // Initialize hand path coordinator services
       handPathCoordinator.initializeServices();
 
-      // Load saved Create Module State using the sequence persistence service
+      // Determine which mode to load initially
+      // Priority: 1) saved activeBuildSection, 2) default to "constructor"
+      let modeToLoad: BuildModeId = "constructor";
+
       if (sequencePersistenceService) {
-        const savedState = await sequencePersistenceService.loadCurrentState();
-        if (savedState?.activeBuildSection) {
-          activeSection = savedState.activeBuildSection;
-        } else {
-          // Set default tab when no saved state is found
-          activeSection = "constructor";
+        // First, check if there's any saved state to determine which mode was last active
+        const lastActiveState = await sequencePersistenceService.loadCurrentState();
+        if (lastActiveState?.activeBuildSection) {
+          modeToLoad = lastActiveState.activeBuildSection;
         }
-      } else {
-        // Set default tab when no persistence service is available
-        activeSection = "constructor";
+      }
+
+      // Set active section before loading state
+      activeSection = modeToLoad;
+
+      // Initialize sequence state with the correct mode
+      await sequenceState.initializeWithPersistence();
+
+      // If the loaded state doesn't match the current mode (edge case), reload the correct mode
+      if (sequencePersistenceService) {
+        const savedState = await sequencePersistenceService.loadCurrentState(modeToLoad);
+        if (savedState) {
+          // Ensure we're loading the correct mode's state
+          sequenceState.setCurrentSequence(savedState.currentSequence);
+          if (savedState.selectedStartPosition) {
+            sequenceState.setSelectedStartPosition(savedState.selectedStartPosition);
+          }
+          console.log(`📂 Initialized with ${modeToLoad} workspace state`);
+        }
       }
 
       // Rebuild option history from persisted sequence

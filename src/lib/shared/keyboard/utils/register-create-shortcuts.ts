@@ -263,8 +263,9 @@ export function registerCreateShortcuts(
             constructTabState,
             panelState,
             resetCreationMethodSelection: () => {
-              // This will be handled by the workflow
+              // Keep creation method selected when clearing via keyboard
             },
+            shouldResetCreationMethod: false, // Keep creation mode selected, just reset to start position picker
           });
 
           // Close edit panel if it's open

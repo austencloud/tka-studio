@@ -193,6 +193,13 @@ Delegates ALL logic to services (SRP compliant)
     flex: 1 1 auto; /* Grow to fill available space, allow shrink, auto basis */
     display: grid;
 
+    /* Constrain maximum size to prevent cards from becoming too large */
+    width: 100%; /* Take full available width before max-width constraint */
+    max-width: 900px;
+    max-height: 900px;
+    margin: 0 auto; /* Center horizontally */
+    align-self: center; /* Center vertically in flex container */
+
     /* Use programmatic element spacing from parent */
     gap: var(--element-spacing);
 

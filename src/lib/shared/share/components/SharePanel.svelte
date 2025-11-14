@@ -713,9 +713,7 @@
       transition-duration: 0.01ms !important;
     }
 
-    .type-button:hover,
-    .action-btn:hover,
-    .options-toggle:hover {
+    .action-btn:hover {
       transform: none !important;
     }
   }
