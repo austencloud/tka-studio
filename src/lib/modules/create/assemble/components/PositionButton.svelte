@@ -7,13 +7,7 @@ Displays a pictograph with a location label in a selectable button
   import type { GridMode, PictographData } from "$shared";
   import { GridLocation, Pictograph, MotionColor } from "$shared";
 
-  const {
-    pictograph,
-    location,
-    handColor,
-    gridMode,
-    onSelect,
-  } = $props<{
+  const { pictograph, location, handColor, gridMode, onSelect } = $props<{
     pictograph: PictographData;
     location: GridLocation;
     handColor: MotionColor;
@@ -27,11 +21,7 @@ Displays a pictograph with a location label in a selectable button
   onclick={() => onSelect(pictograph, location)}
   aria-label={`Select starting position ${location}`}
 >
-  <Pictograph
-    pictographData={pictograph}
-    visibleHand={handColor}
-    {gridMode}
-  />
+  <Pictograph pictographData={pictograph} visibleHand={handColor} {gridMode} />
 </button>
 
 <style>

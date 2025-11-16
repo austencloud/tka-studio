@@ -45,41 +45,31 @@ export class CreateModuleInitializationService
     this.sequencePersistenceService = resolve(
       TYPES.ISequencePersistenceService
     );
-    this.startPositionService = resolve(
-      TYPES.IStartPositionService
-    );
-    this.CreateModuleService = resolve(
-      TYPES.ICreateModuleService
-    );
-    this.layoutService = resolve(
-      TYPES.IResponsiveLayoutService
-    );
-    this.navigationSyncService = resolve(
-      TYPES.INavigationSyncService
-    );
-    this.beatOperationsService = resolve(
-      TYPES.IBeatOperationsService
-    );
+    this.startPositionService = resolve(TYPES.IStartPositionService);
+    this.CreateModuleService = resolve(TYPES.ICreateModuleService);
+    this.layoutService = resolve(TYPES.IResponsiveLayoutService);
+    this.navigationSyncService = resolve(TYPES.INavigationSyncService);
+    this.beatOperationsService = resolve(TYPES.IBeatOperationsService);
 
     // Wait a tick to ensure component context is fully established
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     // Create state objects
     const CreateModuleState = createCreateModuleState(
-      this.sequenceService,
-      this.sequencePersistenceService
+      this.sequenceService!,
+      this.sequencePersistenceService!
     );
 
     const constructTabState = createConstructTabState(
-      this.CreateModuleService,
+      this.CreateModuleService!,
       CreateModuleState.sequenceState,
-      this.sequencePersistenceService,
+      this.sequencePersistenceService!,
       CreateModuleState,
       navigationState
     );
 
     // Initialize services
-    await this.CreateModuleService.initialize();
+    await this.CreateModuleService!.initialize();
 
     // Initialize state with persistence
     await CreateModuleState.initializeWithPersistence();
@@ -98,9 +88,9 @@ export class CreateModuleInitializationService
       CreateModuleService: this.CreateModuleService,
       CreateModuleState,
       constructTabState,
-      layoutService: this.layoutService,
-      navigationSyncService: this.navigationSyncService,
-      beatOperationsService: this.beatOperationsService,
+      layoutService: this.layoutService!,
+      navigationSyncService: this.navigationSyncService!,
+      beatOperationsService: this.beatOperationsService!,
     };
   }
 

@@ -9,8 +9,7 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../../../inversify/types";
 import type { TextRenderOptions, UserInfo } from "../../domain/models";
 import type { ITextRenderingService } from "../contracts";
-import { IDimensionCalculationService } from "../contracts/IDimensionCalculationService";
-
+import type { IDimensionCalculationService } from "../contracts/IDimensionCalculationService";
 @injectable()
 export class TextRenderingService implements ITextRenderingService {
   // Font configuration matching WordLabel component exactly

@@ -2,16 +2,13 @@
   VisibilityTab.svelte - Pictograph Visibility Settings
 
   Allows users to control which elements are visible in pictographs:
-  - Motion visibility (Red/Blue)
-  - Dependent glyphs (TKA, VTG, Elemental, Positions) - require both motions
-  - Independent glyphs (Reversals)
+  - Glyphs (TKA, VTG, Elemental, Positions, Reversals)
   - Grid elements (Non-radial points)
 
   Features:
   - Interactive preview pictograph
   - Click-to-toggle on preview elements
   - Toggle buttons for each element type
-  - Dependency warnings and constraints
 -->
 <script lang="ts">
   import { getVisibilityStateManager } from "$lib/shared/pictograph/shared/state/visibility-state.svelte";
@@ -24,10 +21,10 @@
     createMotionData,
   } from "$shared";
   import { onMount } from "svelte";
-  import Pictograph from "$lib/shared/pictograph/shared/components/Pictograph.svelte";
   import { Letter } from "$lib/shared/foundation/domain/models/Letter";
   import { GridMode } from "$lib/shared/pictograph/grid/domain/enums/grid-enums";
   import { GridPosition } from "$lib/shared/pictograph/grid/domain/enums/grid-enums";
+  import { ElementVisibilityControls, PreviewSection } from "./visibility";
 
   interface Props {
     currentSettings: Record<string, unknown>;
@@ -40,8 +37,6 @@
   const visibilityManager = getVisibilityStateManager();
 
   // Local reactive state for UI
-  let redMotionVisible = $state(true);
-  let blueMotionVisible = $state(true);
   let tkaVisible = $state(true);
   let vtgVisible = $state(false);
   let elementalVisible = $state(false);
@@ -49,9 +44,8 @@
   let reversalsVisible = $state(true);
   let nonRadialVisible = $state(false);
 
-  // Derived states
-  const allMotionsVisible = $derived(redMotionVisible && blueMotionVisible);
-  const showDependencyWarning = $derived(!allMotionsVisible);
+  // Preview visibility toggle for small screens
+  let showPreview = $state(false);
 
   // Example pictograph data for preview - Letter A with proper MotionData
   // Use createMotionData to ensure all required fields including propPlacementData
@@ -59,7 +53,7 @@
     id: "visibility-preview",
     letter: Letter.A,
     startPosition: GridPosition.ALPHA1,
-    endPosition: GridPosition.ALPHA5,
+    endPosition: GridPosition.ALPHA3,
     gridMode: GridMode.DIAMOND,
     motions: {
       blue: createMotionData({
@@ -67,22 +61,22 @@
         rotationDirection: RotationDirection.CLOCKWISE,
         startLocation: GridLocation.SOUTH,
         endLocation: GridLocation.WEST,
-        turns: 1,
+        turns: 0,
         startOrientation: Orientation.IN,
-        endOrientation: Orientation.CLOCK,
+        endOrientation: Orientation.IN,
         color: MotionColor.BLUE,
         isVisible: true,
         arrowLocation: GridLocation.WEST,
         gridMode: GridMode.DIAMOND,
       }),
       red: createMotionData({
-        motionType: MotionType.ANTI,
-        rotationDirection: RotationDirection.COUNTER_CLOCKWISE,
+        motionType: MotionType.PRO,
+        rotationDirection: RotationDirection.CLOCKWISE,
         startLocation: GridLocation.NORTH,
         endLocation: GridLocation.EAST,
-        turns: 1,
-        startOrientation: Orientation.OUT,
-        endOrientation: Orientation.COUNTER,
+        turns: 0,
+        startOrientation: Orientation.IN,
+        endOrientation: Orientation.IN,
         color: MotionColor.RED,
         isVisible: true,
         arrowLocation: GridLocation.EAST,
@@ -93,8 +87,6 @@
 
   onMount(() => {
     // Load initial state from visibility manager
-    redMotionVisible = visibilityManager.getMotionVisibility(MotionColor.RED);
-    blueMotionVisible = visibilityManager.getMotionVisibility(MotionColor.BLUE);
     tkaVisible = visibilityManager.getRawGlyphVisibility("TKA");
     vtgVisible = visibilityManager.getRawGlyphVisibility("VTG");
     elementalVisible = visibilityManager.getRawGlyphVisibility("Elemental");
@@ -104,10 +96,6 @@
 
     // Register observer for external changes
     const observer = () => {
-      redMotionVisible = visibilityManager.getMotionVisibility(MotionColor.RED);
-      blueMotionVisible = visibilityManager.getMotionVisibility(
-        MotionColor.BLUE
-      );
       tkaVisible = visibilityManager.getRawGlyphVisibility("TKA");
       vtgVisible = visibilityManager.getRawGlyphVisibility("VTG");
       elementalVisible = visibilityManager.getRawGlyphVisibility("Elemental");
@@ -122,24 +110,6 @@
       visibilityManager.unregisterObserver(observer);
     };
   });
-
-  function toggleRedMotion() {
-    const newValue = !redMotionVisible;
-    redMotionVisible = newValue;
-    visibilityManager.setMotionVisibility(MotionColor.RED, newValue);
-    // Note: The manager might have adjusted the value due to constraints
-    redMotionVisible = visibilityManager.getMotionVisibility(MotionColor.RED);
-    blueMotionVisible = visibilityManager.getMotionVisibility(MotionColor.BLUE);
-  }
-
-  function toggleBlueMotion() {
-    const newValue = !blueMotionVisible;
-    blueMotionVisible = newValue;
-    visibilityManager.setMotionVisibility(MotionColor.BLUE, newValue);
-    // Note: The manager might have adjusted the value due to constraints
-    redMotionVisible = visibilityManager.getMotionVisibility(MotionColor.RED);
-    blueMotionVisible = visibilityManager.getMotionVisibility(MotionColor.BLUE);
-  }
 
   function toggleTKA() {
     tkaVisible = !tkaVisible;
@@ -177,172 +147,46 @@
   <div class="header">
     <h3 class="title">Visibility Settings</h3>
     <p class="description">Control which elements are visible in pictographs</p>
+
+    <!-- Preview Toggle Button (only visible on small containers) -->
+    <button
+      class="preview-toggle-btn"
+      onclick={() => (showPreview = !showPreview)}
+      aria-expanded={showPreview}
+      aria-controls="preview-section"
+    >
+      <span class="toggle-icon" class:expanded={showPreview}>▼</span>
+      {showPreview ? "Hide" : "Show"} Preview
+    </button>
   </div>
 
   <!-- Main Content - 50/50 Split -->
   <div class="content">
-    <!-- Left Side: Controls -->
-    <div class="controls-section">
-      <!-- Motion Controls -->
-      <div class="control-group motion-group">
-        <h4 class="group-title">Motion Visibility</h4>
-        <p class="group-note">At least one motion must remain visible</p>
-
-        <div class="toggle-row">
-          <span class="toggle-label">Red Motion</span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={redMotionVisible}
-              onchange={toggleRedMotion}
-              aria-label="Toggle red motion visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row">
-          <span class="toggle-label">Blue Motion</span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={blueMotionVisible}
-              onchange={toggleBlueMotion}
-              aria-label="Toggle blue motion visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
-
-      <!-- Dependency Warning -->
-      {#if showDependencyWarning}
-        <div class="dependency-warning">
-          ⚠️ Dependent glyphs require both motions to be visible
-        </div>
-      {/if}
-
-      <!-- Element Visibility Controls -->
-      <div class="control-group element-group">
-        <h4 class="group-title">Element Visibility</h4>
-
-        <!-- Dependent Glyphs -->
-        <div class="toggle-row" class:disabled={!allMotionsVisible}>
-          <span class="toggle-label">
-            TKA
-            {#if !allMotionsVisible}
-              <span class="disabled-badge">requires both motions</span>
-            {/if}
-          </span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={tkaVisible && allMotionsVisible}
-              disabled={!allMotionsVisible}
-              onchange={toggleTKA}
-              aria-label="Toggle TKA glyph visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row" class:disabled={!allMotionsVisible}>
-          <span class="toggle-label">
-            VTG
-            {#if !allMotionsVisible}
-              <span class="disabled-badge">requires both motions</span>
-            {/if}
-          </span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={vtgVisible && allMotionsVisible}
-              disabled={!allMotionsVisible}
-              onchange={toggleVTG}
-              aria-label="Toggle VTG glyph visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row" class:disabled={!allMotionsVisible}>
-          <span class="toggle-label">
-            Elemental
-            {#if !allMotionsVisible}
-              <span class="disabled-badge">requires both motions</span>
-            {/if}
-          </span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={elementalVisible && allMotionsVisible}
-              disabled={!allMotionsVisible}
-              onchange={toggleElemental}
-              aria-label="Toggle elemental glyph visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <div class="toggle-row" class:disabled={!allMotionsVisible}>
-          <span class="toggle-label">
-            Positions
-            {#if !allMotionsVisible}
-              <span class="disabled-badge">requires both motions</span>
-            {/if}
-          </span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={positionsVisible && allMotionsVisible}
-              disabled={!allMotionsVisible}
-              onchange={togglePositions}
-              aria-label="Toggle position glyph visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <!-- Independent Glyphs -->
-        <div class="toggle-row">
-          <span class="toggle-label">Reversals</span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={reversalsVisible}
-              onchange={toggleReversals}
-              aria-label="Toggle reversal indicators visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-
-        <!-- Grid Elements -->
-        <div class="toggle-row">
-          <span class="toggle-label">Non-radial Points</span>
-          <label class="toggle-switch">
-            <input
-              type="checkbox"
-              checked={nonRadialVisible}
-              onchange={toggleNonRadial}
-              aria-label="Toggle non-radial points visibility"
-            />
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
-      </div>
+    <!-- Left Side: Controls (hidden on small screens when preview is shown) -->
+    <div class="controls-section" class:hidden-mobile={showPreview}>
+      <ElementVisibilityControls
+        {tkaVisible}
+        {vtgVisible}
+        {elementalVisible}
+        {positionsVisible}
+        {reversalsVisible}
+        {nonRadialVisible}
+        onToggleTKA={toggleTKA}
+        onToggleVTG={toggleVTG}
+        onToggleElemental={toggleElemental}
+        onTogglePositions={togglePositions}
+        onToggleReversals={toggleReversals}
+        onToggleNonRadial={toggleNonRadial}
+      />
     </div>
 
-    <!-- Right Side: Interactive Preview -->
-    <div class="preview-section">
-      <h4 class="preview-title">Interactive Preview</h4>
-      <p class="preview-note">
-        Click elements in the preview to toggle their visibility
-      </p>
-
-      <div class="preview-container">
-        <Pictograph pictographData={examplePictographData} size={300} />
-      </div>
+    <!-- Right Side: Interactive Preview (only shown on small screens when toggled) -->
+    <div
+      id="preview-section"
+      class="preview-wrapper"
+      class:visible-mobile={showPreview}
+    >
+      <PreviewSection pictographData={examplePictographData} />
     </div>
   </div>
 </div>
@@ -351,247 +195,169 @@
   .visibility-tab {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: clamp(1rem, 2.5vw, 1.5rem);
     max-width: 100%;
-    padding: 0 8px;
+    padding: 0 clamp(0.5rem, 1vw, 1rem);
+    container-type: inline-size;
   }
 
   /* Header */
   .header {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2vw, 1rem);
     text-align: center;
   }
 
   .title {
-    font-size: 20px;
+    font-size: clamp(1.125rem, 2vw + 0.5rem, 1.5rem);
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
-    margin: 0 0 8px 0;
+    margin: 0;
   }
 
   .description {
-    font-size: 14px;
+    font-size: clamp(0.813rem, 1.5vw + 0.25rem, 1rem);
     color: rgba(255, 255, 255, 0.7);
     margin: 0;
   }
 
-  /* Main Content - 50/50 Split */
+  /* Main Content - Fluid Container Query Layout */
   .content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
+    grid-template-columns: 1fr;
+    gap: clamp(1rem, 2.5vw, 2rem);
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: clamp(0.625rem, 1vw, 0.875rem);
+    padding: clamp(1rem, 2.5vw, 1.75rem);
+    align-items: start;
   }
 
   /* Controls Section */
   .controls-section {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    min-width: 0;
   }
 
-  .control-group {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 16px;
+  /* Hide controls on small screens when preview is active */
+  .controls-section.hidden-mobile {
+    display: none;
   }
 
-  .motion-group {
-    background: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.2);
-  }
-
-  .element-group {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-
-  .group-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    margin: 0 0 8px 0;
-  }
-
-  .group-note {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
-    font-style: italic;
-    margin: 0 0 12px 0;
-  }
-
-  /* Dependency Warning */
-  .dependency-warning {
-    background: rgba(255, 193, 7, 0.1);
-    border: 2px solid rgba(255, 193, 7, 0.3);
-    border-radius: 8px;
-    padding: 12px;
-    color: rgba(255, 193, 7, 1);
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-  }
-
-  /* Toggle Row */
-  .toggle-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    transition: opacity 0.2s;
-  }
-
-  .toggle-row:last-child {
-    border-bottom: none;
-  }
-
-  .toggle-row.disabled {
-    opacity: 0.5;
-  }
-
-  .toggle-label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 14px;
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.95);
-  }
-
-  .disabled-badge {
-    font-size: 11px;
-    font-weight: 400;
-    color: rgba(255, 193, 7, 0.9);
-  }
-
-  /* Toggle Switch */
-  .toggle-switch {
-    flex-shrink: 0;
-    position: relative;
-    display: inline-block;
-    width: 48px;
-    height: 28px;
-    cursor: pointer;
-  }
-
-  .toggle-switch input {
-    position: absolute;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    margin: 0;
-    z-index: 2;
-    top: 0;
-    left: 0;
-  }
-
-  .toggle-slider {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 14px;
-    transition: all 0.3s;
-  }
-
-  .toggle-slider:before {
-    content: "";
-    position: absolute;
-    height: 22px;
-    width: 22px;
-    left: 3px;
-    bottom: 3px;
-    background: white;
-    border-radius: 50%;
-    transition: all 0.3s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  input:checked + .toggle-slider {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
-  }
-
-  input:checked + .toggle-slider:before {
-    transform: translateX(20px);
-  }
-
-  input:disabled + .toggle-slider {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  /* Preview Section */
-  .preview-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .preview-title {
-    font-size: 15px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    margin: 0;
-    text-align: center;
-  }
-
-  .preview-note {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
-    font-style: italic;
-    margin: 0;
-    text-align: center;
-  }
-
-  .preview-container {
-    flex: 1;
+  /* Preview Toggle Button - Only visible on small containers */
+  .preview-toggle-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 20px;
-    min-height: 300px;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 20rem;
+    margin: 0 auto;
+    padding: clamp(0.625rem, 1.5vw, 0.875rem);
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border: none;
+    border-radius: clamp(0.5rem, 1vw, 0.75rem);
+    font-size: clamp(0.813rem, 1.5vw, 0.938rem);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+    min-height: 44px;
   }
 
-  /* Responsive Design */
-  @media (max-width: 968px) {
+  .preview-toggle-btn:hover {
+    background: linear-gradient(135deg, #4f46e5, #4338ca);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .preview-toggle-btn:active {
+    transform: translateY(0);
+  }
+
+  .preview-toggle-btn:focus-visible {
+    outline: 2px solid rgba(191, 219, 254, 0.7);
+    outline-offset: 2px;
+  }
+
+  .toggle-icon {
+    display: inline-block;
+    transition: transform 0.3s ease;
+    font-size: 0.75em;
+  }
+
+  .toggle-icon.expanded {
+    transform: rotate(180deg);
+  }
+
+  /* Preview Wrapper - Hidden by default on small screens, shows when toggled */
+  .preview-wrapper {
+    display: none;
+  }
+
+  .preview-wrapper.visible-mobile {
+    display: block;
+  }
+
+  /* Container Query - Two Column Layout for Wider Containers */
+  @container (min-width: 700px) {
     .content {
-      grid-template-columns: 1fr;
-      gap: 20px;
+      grid-template-columns: minmax(min(100%, 20rem), 1fr) minmax(
+          min(100%, 25rem),
+          2fr
+        );
+      gap: clamp(1.5rem, 3vw, 2.5rem);
     }
 
-    .preview-section {
-      order: -1; /* Show preview first on mobile */
+    /* Hide toggle button on larger containers */
+    .preview-toggle-btn {
+      display: none;
+    }
+
+    /* Always show both sections on larger containers */
+    .controls-section,
+    .controls-section.hidden-mobile {
+      display: flex;
+    }
+
+    .preview-wrapper,
+    .preview-wrapper.visible-mobile {
+      display: block;
+      overflow: visible;
+    }
+  }
+
+  /* Container Query - Balanced Layout for Very Wide Containers */
+  @container (min-width: 1000px) {
+    .content {
+      grid-template-columns: minmax(22rem, 1fr) minmax(30rem, 2.5fr);
     }
   }
 
   /* Accessibility */
   @media (prefers-reduced-motion: reduce) {
-    .toggle-row,
-    .toggle-slider,
-    .toggle-slider:before {
+    .preview-toggle-btn,
+    .toggle-icon,
+    .preview-wrapper {
       transition: none;
+    }
+
+    .preview-toggle-btn:hover {
+      transform: none;
     }
   }
 
   @media (prefers-contrast: high) {
-    .control-group,
     .content {
       border-width: 2px;
       border-color: rgba(255, 255, 255, 0.3);
     }
 
-    .dependency-warning {
-      border-width: 3px;
+    .preview-toggle-btn {
+      border: 2px solid rgba(255, 255, 255, 0.3);
     }
   }
 </style>

@@ -5,7 +5,7 @@
  * Extracted from OptionPickerService for better separation of concerns.
  */
 
-import type { PictographData , GridPosition} from "$shared";
+import type { PictographData, GridPosition } from "$shared";
 import { GridPositionGroup } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";

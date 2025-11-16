@@ -11,24 +11,22 @@ import {
   GIF_INITIAL_CAPTURE_DELAY_MS,
 } from "../../constants/timing";
 import type { AnimationPanelState } from "../../state/animation-panel-state.svelte";
-import type { Letter} from "$shared";
-import { TYPES, type ISvgImageService } from "$shared";
-import { IFileDownloadService } from "$shared/foundation/services/contracts";
+import type { Letter } from "$shared";
+import type { ISvgImageService } from "$shared";
+import { TYPES } from "$shared";
+import type { IFileDownloadService } from "$shared/foundation/services/contracts";
 import { getLetterImagePath } from "$shared/pictograph/tka-glyph/utils";
 import { inject, injectable } from "inversify";
 import type { IAnimationPlaybackController } from "../contracts/IAnimationPlaybackController";
-import { ICanvasRenderer } from "../contracts/ICanvasRenderer";
+import type { ICanvasRenderer } from "../contracts/ICanvasRenderer";
 import type {
   AnimationExportFormat,
   GifExportOrchestratorOptions,
   IGifExportOrchestrator,
 } from "../contracts/IGifExportOrchestrator";
-import { IAnimatedImageTranscoder } from "../contracts/IAnimatedImageTranscoder";
-import {
-  IGifExportService} from "../contracts/IGifExportService";
-import type {
-  GifExportProgress
-} from "../contracts/IGifExportService";
+import type { IAnimatedImageTranscoder } from "../contracts/IAnimatedImageTranscoder";
+import type { IGifExportService } from "../contracts/IGifExportService";
+import type { GifExportProgress } from "../contracts/IGifExportService";
 
 interface LetterOverlayAssets {
   image: HTMLImageElement | null;

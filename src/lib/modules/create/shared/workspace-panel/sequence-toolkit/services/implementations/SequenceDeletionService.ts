@@ -11,10 +11,9 @@ import { inject, injectable } from "inversify";
 import type { ISequenceDeletionService } from "../contracts";
 
 // Import from build shared contracts
-import {
-  IPersistenceService,
-  ISequenceService,
-} from "../../../../services/contracts";
+import type { IPersistenceService, ISequenceService } from "../../../../services/contracts";
+import {  } from "../../../../services/contracts";
+import {} from "../../../../services/contracts";
 
 @injectable()
 export class SequenceDeletionService implements ISequenceDeletionService {

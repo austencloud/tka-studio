@@ -92,9 +92,7 @@ async function isGoogleSignedIn(): Promise<boolean> {
     // Method 4: Check if gapi is loaded and user is signed in
     if (typeof window !== "undefined" && (window as any).gapi?.auth2) {
       const authInstance = (window as any).gapi.auth2.getAuthInstance();
-      if (
-        authInstance?.isSignedIn?.get()
-      ) {
+      if (authInstance?.isSignedIn?.get()) {
         return true;
       }
     }

@@ -7,13 +7,8 @@
  * @see Legacy: legacy_web/BetaPropDirectionCalculator.ts
  */
 
-import type {
-  VectorDirection} from "$shared";
-import {
-  MotionType,
-  type MotionData,
-  type PropPlacementData,
-} from "$shared";
+import type { VectorDirection } from "$shared";
+import { MotionType, type MotionData, type PropPlacementData } from "$shared";
 import { LetterGHHandler } from "./LetterGHHandler";
 import { LetterIHandler } from "./LetterIHandler";
 import { LetterYZHandler } from "./LetterYZHandler";

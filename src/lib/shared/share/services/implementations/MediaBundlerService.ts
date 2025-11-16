@@ -6,11 +6,11 @@
  */
 
 import { injectable, inject } from "inversify";
-import { IShareService } from "../contracts";
+import type { IShareService } from "../contracts";
 import type { IMediaBundlerService } from "../contracts";
 import type { SequenceData } from "$shared";
 import type { InstagramMediaItem, ShareOptions } from "../../domain";
-import { validateMediaItem, INSTAGRAM_MEDIA_CONSTRAINTS } from "../../domain";
+import { INSTAGRAM_MEDIA_CONSTRAINTS, validateMediaItem } from "../../domain";
 import { TYPES } from "$shared/inversify";
 
 @injectable()

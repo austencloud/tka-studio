@@ -8,7 +8,7 @@ import { RotationDirection } from "$shared/pictograph/shared/domain/enums/pictog
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import { PropContinuity } from "../../../shared/domain/models/generate-models";
-import { IPictographFilterService } from "../../../shared/services/contracts";
+import type { IPictographFilterService } from "../../../shared/services/contracts";
 import type {
   IRotationDirectionService,
   RotationDirections,

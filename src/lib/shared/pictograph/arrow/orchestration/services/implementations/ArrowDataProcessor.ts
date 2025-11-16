@@ -11,11 +11,8 @@ import { inject, injectable } from "inversify";
 import { TYPES } from "../../../../../inversify";
 import type { MotionData } from "../../../../shared/domain/models/MotionData";
 import type { PictographData } from "../../../../shared/domain/models/PictographData";
-import {
-  IArrowGridCoordinateService} from "../contracts";
-import type {
-  IArrowDataProcessor
-} from "../contracts";
+import type { IArrowGridCoordinateService } from "../contracts";
+import type { IArrowDataProcessor } from "../contracts";
 
 @injectable()
 export class ArrowDataProcessor implements IArrowDataProcessor {

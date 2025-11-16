@@ -8,13 +8,8 @@
  * with independent localStorage persistence.
  */
 
-import {
-  IPersistenceService} from "$shared";
-import type {
-  ActiveCreateModule,
-  PictographData,
-  SequenceData,
-} from "$shared";
+import type { IPersistenceService } from "$shared";
+import type { ActiveCreateModule, PictographData, SequenceData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { ISequencePersistenceService } from "../contracts";

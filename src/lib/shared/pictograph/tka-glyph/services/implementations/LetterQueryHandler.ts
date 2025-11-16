@@ -6,22 +6,14 @@
  */
 
 import type { CodexLetterMapping } from "$learn/codex";
-import { ICodexLetterMappingRepo } from "$learn/codex/services/contracts";
-import type {
-  CSVRow,
-  MotionType,
-  PictographData,
- Letter } from "$shared";
-import { GridMode ,
-  ICSVPictographParser} from "$shared";
+import type { ICodexLetterMappingRepo } from "$learn/codex/services/contracts";
+import type { CSVRow, MotionType, PictographData, Letter } from "$shared";
+import { GridMode, type ICSVPictographParser } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable, optional } from "inversify";
 import type { ParsedCsvRow } from "../../../../../modules/create/generate/shared/domain";
-import {
-  ICSVLoader} from "../../../../foundation/services/contracts/data";
-import type {
-  ILetterQueryHandler,
-} from "../../../../foundation/services/contracts/data";
+import type { ICSVLoader } from "../../../../foundation/services/contracts/data";
+import type { ILetterQueryHandler } from "../../../../foundation/services/contracts/data";
 
 interface CsvParseError {
   error: string;

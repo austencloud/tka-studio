@@ -6,7 +6,7 @@
  */
 
 import type { IGridRenderingService } from "$shared";
-import { GridMode , ISvgConfig } from "$shared";
+import { GridMode, type ISvgConfig } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 

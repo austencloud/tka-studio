@@ -17,14 +17,14 @@ export async function clearAllGalleryCaches(): Promise<void> {
 
   try {
     // 1. Clear ExploreCacheService
-    const exploreCacheService = resolve(
+    const exploreCacheService = resolve<IExploreCacheService>(
       TYPES.IExploreCacheService
     );
     exploreCacheService.clearCache();
     console.log("✅ Cleared ExploreCacheService");
 
     // 2. Clear OptimizedExploreService
-    const optimizedService = resolve(
+    const optimizedService = resolve<IOptimizedExploreService>(
       TYPES.IOptimizedExploreService
     );
     optimizedService.clearCache();

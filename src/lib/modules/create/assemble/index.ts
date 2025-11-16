@@ -10,6 +10,9 @@ export { default as GuidedConstructTab } from "./components/AssemblerTab.svelte"
 export { default as SinglePropStartPositionPicker } from "./components/SinglePropStartPositionPicker.svelte";
 export { default as GuidedOptionViewer } from "./components/AssemblyOptionPicker.svelte";
 
+// Handpath Builder Module
+export * from "./handpath-builder";
+
 // Services
 export { GuidedOptionGenerator } from "./services/GuidedOptionGenerator";
 export type { IGuidedOptionGenerator } from "./services/GuidedOptionGenerator";

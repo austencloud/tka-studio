@@ -7,11 +7,8 @@
  * Based on legacy desktop app implementation with modern TypeScript patterns.
  */
 
-import type {
-  BeatData,
-  SequenceData,
-  IGridPositionDeriver
-} from "$shared";
+import type { BeatData, SequenceData, IGridPositionDeriver } from "$shared";
+import type { IMotionQueryHandler } from "$shared";
 import {
   createSequenceData,
   updateSequenceData,
@@ -23,8 +20,7 @@ import {
   TYPES,
   resolve,
   createMotionData,
-
-  IMotionQueryHandler} from "$shared";
+} from "$shared";
 import { inject, injectable } from "inversify";
 import { createBeatData } from "../../domain/factories/createBeatData";
 import type { ISequenceTransformationService } from "../contracts/ISequenceTransformationService";

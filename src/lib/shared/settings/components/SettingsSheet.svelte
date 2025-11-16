@@ -13,10 +13,12 @@
     updateSettings,
   } from "../../application/state/app-state.svelte";
   import SettingsSidebar from "./SettingsSidebar.svelte";
+  import IOSTabBar from "./IOSTabBar.svelte";
   import AccessibilityTab from "./tabs/AccessibilityTab.svelte";
   import BackgroundTab from "./tabs/background/BackgroundTab.svelte";
   import PropTypeTab from "./tabs/PropTypeTab.svelte";
   import VisibilityTab from "./tabs/VisibilityTab.svelte";
+  import Toast from "./Toast.svelte";
   import {
     loadActiveTab,
     validateActiveTab as validateTab,
@@ -45,6 +47,10 @@
 
   // Track if a save is in progress (for visual feedback)
   let isSaving = $state(false);
+
+  // Toast notification state
+  let showToast = $state(false);
+  let toastMessage = $state("All changes saved");
 
   onMount(() => {
     hapticService = resolve<IHapticFeedbackService>(
@@ -85,7 +91,8 @@
 
   // Handle tab switching
   function switchTab(tabId: string) {
-    hapticService?.trigger("selection");
+    // iOS uses light impact for tab changes
+    hapticService?.trigger("impact");
     activeTab = tabId;
     saveActiveTab(tabId);
   }
@@ -105,10 +112,14 @@
 
     await updateSettings(settingsToApply);
 
-    // Brief delay for visual feedback
+    // Show success toast
+    isSaving = false;
+    showToast = true;
+
+    // Reset toast after it displays
     setTimeout(() => {
-      isSaving = false;
-    }, 300);
+      showToast = false;
+    }, 100);
   }
 
   // Handle close (no unsaved changes warning needed with instant save)
@@ -134,22 +145,23 @@
   closeOnBackdrop={true}
 >
   <div class="settings-sheet__container">
-    <!-- Header -->
+    <!-- Header - iOS Style -->
     <header class="settings-sheet__header">
+      <div class="header-spacer"></div>
       <h2 id="settings-sheet-title">Settings</h2>
       <button
-        class="settings-sheet__close"
+        class="settings-sheet__done-btn"
         onclick={handleClose}
-        aria-label="Close settings"
+        aria-label="Done"
       >
-        <span aria-hidden="true">&times;</span>
+        Done
       </button>
     </header>
 
     <!-- Main content area -->
     <div class="settings-sheet__body">
-      <!-- Sidebar Navigation -->
-      <aside class="settings-sheet__sidebar">
+      <!-- Desktop Sidebar Navigation (left side) -->
+      <aside class="settings-sheet__sidebar settings-sheet__sidebar--desktop">
         <SettingsSidebar {tabs} {activeTab} onTabSelect={switchTab} />
       </aside>
 
@@ -177,31 +189,14 @@
       </main>
     </div>
 
-    <!-- Footer with close button and auto-save indicator -->
-    <footer class="settings-sheet__footer">
-      <div class="save-status">
-        {#if isSaving}
-          <span class="save-indicator saving">
-            <i class="fas fa-sync fa-spin"></i>
-            Saving...
-          </span>
-        {:else}
-          <span class="save-indicator saved">
-            <i class="fas fa-check"></i>
-            All changes saved
-          </span>
-        {/if}
-      </div>
-      <button
-        class="settings-sheet__button settings-sheet__button--close"
-        onclick={handleClose}
-        aria-label="Close settings"
-      >
-        <i class="fas fa-times"></i>
-        Close
-      </button>
-    </footer>
+    <!-- Mobile Bottom Tab Bar (iOS Native) -->
+    <div class="settings-sheet__bottom-tabs">
+      <IOSTabBar {tabs} {activeTab} onTabSelect={switchTab} />
+    </div>
   </div>
+
+  <!-- Toast Notification -->
+  <Toast show={showToast} message={toastMessage} />
 </Drawer>
 
 <style>
@@ -250,57 +245,70 @@
       0 -8px 32px rgba(0, 0, 0, 0.5),
       0 -2px 8px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    /* iOS system font */
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui,
+      sans-serif;
     /* NO overflow: hidden here - let child elements handle scrolling */
   }
 
-  /* Header - Enhanced for glass morphism */
+  /* Header - iOS Style */
   .settings-sheet__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 20px 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 17px 20px;
+    border-bottom: 0.33px solid rgba(255, 255, 255, 0.2); /* iOS hairline */
     background: rgba(255, 255, 255, 0.02);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     flex-shrink: 0;
   }
 
+  /* Header spacer for balance (matches Done button width) */
+  .header-spacer {
+    width: 44px;
+  }
+
   .settings-sheet__header h2 {
-    font-size: 24px;
+    font-size: 17px; /* iOS standard modal title size */
     font-weight: 600;
     color: rgba(255, 255, 255, 0.95);
     margin: 0;
+    letter-spacing: -0.41px; /* iOS tight tracking */
+    flex: 1;
+    text-align: center;
   }
 
-  .settings-sheet__close {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
+  /* Done Button - iOS Style */
+  .settings-sheet__done-btn {
+    padding: 0;
     border: none;
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 28px;
-    line-height: 1;
+    background: transparent;
+    color: #007aff; /* iOS system blue */
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.41px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: opacity 0.2s ease;
+    min-width: 44px;
+    min-height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .settings-sheet__close:hover {
-    background: rgba(255, 255, 255, 0.16);
-    transform: scale(1.05);
+  .settings-sheet__done-btn:hover {
+    opacity: 0.7;
   }
 
-  .settings-sheet__close:active {
-    transform: scale(0.95);
+  .settings-sheet__done-btn:active {
+    opacity: 0.4;
   }
 
-  .settings-sheet__close:focus-visible {
-    outline: 2px solid rgba(191, 219, 254, 0.7);
+  .settings-sheet__done-btn:focus-visible {
+    outline: 2px solid #007aff;
     outline-offset: 2px;
+    border-radius: 4px;
   }
 
   /* Body - sidebar + content */
@@ -311,14 +319,20 @@
     min-height: 0;
   }
 
-  .settings-sheet__sidebar {
+  /* Desktop Sidebar (hidden on mobile) */
+  .settings-sheet__sidebar--desktop {
     flex-shrink: 0;
     width: 200px;
     border-right: 1px solid rgba(255, 255, 255, 0.12);
     background: rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    overflow-y: visible; /* Changed from auto - no scrolling needed */
+    overflow-y: visible;
+  }
+
+  /* Mobile Bottom Tab Bar (hidden on desktop) */
+  .settings-sheet__bottom-tabs {
+    display: none; /* Hidden on desktop */
   }
 
   .settings-sheet__content {
@@ -326,8 +340,8 @@
     overflow-y: visible; /* Changed from auto - no scrolling needed */
     padding: 24px;
     background: rgba(0, 0, 0, 0.05);
-    /* Smooth fade-slide animation when content changes */
-    animation: contentFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* iOS spring animation - approximated */
+    animation: ios-spring-in 0.5s cubic-bezier(0.36, 0.66, 0.04, 1);
     /* Hide scrollbar completely - only show when actually scrolling */
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -339,105 +353,22 @@
     width: 0;
   }
 
-  /* Content entrance animation */
-  @keyframes contentFadeIn {
-    from {
+  /* iOS Spring Animation */
+  @keyframes ios-spring-in {
+    0% {
       opacity: 0;
-      transform: translateY(8px);
+      transform: translateY(10px) scale(0.98);
     }
-    to {
+    50% {
+      opacity: 0.8;
+      transform: translateY(-2px) scale(1.01);
+    }
+    100% {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 
-  /* Footer - 2025 Standard: Auto-save indicator + Close button */
-  .settings-sheet__footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 16px 24px;
-    border-top: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    flex-shrink: 0;
-  }
-
-  /* Save status indicator */
-  .save-status {
-    flex: 1;
-    display: flex;
-    align-items: center;
-  }
-
-  .save-indicator {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-  }
-
-  .save-indicator.saving {
-    color: rgba(147, 197, 253, 0.9); /* Light blue */
-  }
-
-  .save-indicator.saved {
-    color: rgba(134, 239, 172, 0.9); /* Light green */
-  }
-
-  .save-indicator i {
-    font-size: 14px;
-  }
-
-  .settings-sheet__button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
-    min-height: 44px; /* Touch target */
-  }
-
-  /* Close button - primary action in instant-save pattern */
-  .settings-sheet__button--close {
-    background: rgba(255, 255, 255, 0.08);
-    color: rgba(255, 255, 255, 0.9);
-    border: 1.5px solid rgba(255, 255, 255, 0.15);
-  }
-
-  .settings-sheet__button--close:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.25);
-    transform: scale(1.02);
-  }
-
-  .settings-sheet__button--close:active {
-    transform: scale(0.98);
-  }
-
-  .settings-sheet__button:focus-visible {
-    outline: 2px solid #6366f1; /* Indigo focus ring */
-    outline-offset: 2px;
-  }
-
-  /* Icon spacing within buttons */
-  .settings-sheet__button i {
-    font-size: 14px;
-    transition: transform 0.2s ease;
-  }
-
-  .settings-sheet__button:hover:not(:disabled) i {
-    transform: scale(1.1); /* Subtle icon emphasis */
-  }
 
   /* Loading state */
   .loading-state {
@@ -448,34 +379,56 @@
     color: rgba(255, 255, 255, 0.7);
   }
 
-  /* Responsive design */
+  /* Mobile Responsive - iOS Bottom Tab Bar Pattern */
   @media (max-width: 768px) {
     .settings-sheet__container {
       height: 100%;
       max-height: 100%;
+      /* iOS safe areas for notch/home indicator/keyboard */
+      padding-bottom: max(
+        env(safe-area-inset-bottom, 0px),
+        env(keyboard-inset-height, 0px)
+      );
     }
 
     .settings-sheet__body {
       flex-direction: column;
+      /* Account for bottom tab bar height (49px) */
+      padding-bottom: 0;
     }
 
-    .settings-sheet__sidebar {
-      width: 100%;
-      border-right: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      overflow-y: visible;
+    /* Hide desktop sidebar on mobile */
+    .settings-sheet__sidebar--desktop {
+      display: none;
+    }
+
+    /* Show iOS-native bottom tab bar on mobile */
+    .settings-sheet__bottom-tabs {
+      display: block;
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      /* iOS safe area padding for home indicator */
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      flex-shrink: 0;
+      z-index: 10;
     }
 
     .settings-sheet__content {
-      padding: 20px 18px;
+      padding: 16px;
+      /* Prevent content from hiding under tab bar */
+      padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
     }
 
     .settings-sheet__header {
-      padding: 18px 20px;
+      padding: 14px 16px;
+      /* iOS safe area for notch/Dynamic Island */
+      padding-top: calc(14px + env(safe-area-inset-top, 0px));
     }
 
     .settings-sheet__header h2 {
-      font-size: 20px;
+      font-size: 17px; /* Maintain iOS modal title size */
     }
   }
 
@@ -486,41 +439,43 @@
     }
 
     .settings-sheet__header {
-      padding: 14px 16px;
+      padding: 12px 16px;
+      padding-top: calc(12px + env(safe-area-inset-top, 0px));
     }
 
     .settings-sheet__header h2 {
-      font-size: 18px;
+      font-size: 17px; /* iOS consistency */
     }
 
     .settings-sheet__content {
-      padding: 8px 14px;
+      padding: 12px 16px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     }
+  }
 
-    .settings-sheet__close {
-      width: 44px; /* Maintain 44px minimum for accessibility */
-      height: 44px;
-      font-size: 24px;
-    }
-
-    .settings-sheet__button {
-      padding: 10px 20px;
-      font-size: 14px;
+  /* Landscape orientation - Dynamic Island clearance */
+  @media (orientation: landscape) and (max-width: 896px) {
+    .settings-sheet__header {
+      padding-left: max(16px, env(safe-area-inset-left, 0px));
+      padding-right: max(16px, env(safe-area-inset-right, 0px));
     }
   }
 
   /* Reduced motion */
   @media (prefers-reduced-motion: reduce) {
-    .settings-sheet__close,
-    .settings-sheet__button,
-    .save-indicator {
+    .settings-sheet__done-btn {
       transition: none;
     }
 
-    .settings-sheet__close:hover,
-    .settings-sheet__close:active,
-    .settings-sheet__button--close:hover {
-      transform: none;
+    .settings-sheet__content {
+      animation: none;
+    }
+  }
+
+  /* Light mode - iOS automatically handles via color-scheme */
+  @media (prefers-color-scheme: light) {
+    .settings-sheet__done-btn {
+      color: #007aff; /* iOS system blue works in both modes */
     }
   }
 
@@ -534,12 +489,16 @@
     }
 
     .settings-sheet__header,
-    .settings-sheet__sidebar,
-    .settings-sheet__footer {
+    .settings-sheet__sidebar--desktop,
+    .settings-sheet__bottom-tabs {
       border-color: white;
       backdrop-filter: none;
       -webkit-backdrop-filter: none;
       background: rgba(0, 0, 0, 0.5);
+    }
+
+    .settings-sheet__done-btn {
+      color: #0a84ff; /* Higher contrast blue */
     }
   }
 </style>

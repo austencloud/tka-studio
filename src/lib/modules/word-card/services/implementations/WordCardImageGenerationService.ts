@@ -9,12 +9,9 @@
 import type { SequenceData, WordCardDimensions } from "$shared";
 
 // Behavioral contracts
-import {
-  IWordCardMetadataOverlayService,
-  IWordCardSVGCompositionService} from "../contracts";
-import type {
-  IWordCardImageGenerationService
-} from "../contracts";
+import type { IWordCardMetadataOverlayService, IWordCardSVGCompositionService } from "../contracts";
+import {  } from "../contracts";
+import type { IWordCardImageGenerationService } from "../contracts";
 
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";

@@ -5,22 +5,17 @@
  * Uses the correct position mapping based on hand location combinations.
  */
 
-import type {
-  CSVRow,
-  ICSVPictographParser
-,
-  GridMode,
-  Letter} from "$shared";
+import type { CSVRow, ICSVPictographParser, GridMode, Letter } from "$shared";
 import {
   GridPosition,
   MotionColor,
   createMotionData,
   createPictographData,
   type PictographData,
-
-  IEnumMapper,
-  IGridPositionDeriver,
-  IOrientationCalculationService} from "$shared";
+  type IEnumMapper,
+  type IGridPositionDeriver,
+  type IOrientationCalculationService,
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { Orientation } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 import { inject, injectable } from "inversify";

@@ -7,8 +7,7 @@ import type {
   ResponsiveSettings,
 } from "../../domain/models/device-models";
 import type { IDeviceDetector } from "../contracts/IDeviceDetector";
-import { IViewportService } from "../contracts/IViewportService";
-
+import type { IViewportService } from "../contracts/IViewportService";
 /**
  * Device Detector Implementation
  *

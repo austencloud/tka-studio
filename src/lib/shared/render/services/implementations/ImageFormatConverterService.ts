@@ -6,7 +6,7 @@
  * Provides both format conversion and file download capabilities.
  */
 
-import { IFileDownloadService } from "$shared/foundation/services/contracts";
+import type { IFileDownloadService } from "$shared/foundation/services/contracts";
 import { TYPES } from "$shared/inversify";
 import * as pkg from "file-saver";
 import { inject, injectable } from "inversify";

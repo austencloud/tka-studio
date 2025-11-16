@@ -50,9 +50,7 @@ function setGlobalContainer(container: InversifyContainer | null): void {
 }
 
 function getGlobalPromise(): Promise<InversifyContainer> | null {
-  if (
-    globalThis.__TKA_CONTAINER_PROMISE__
-  ) {
+  if (globalThis.__TKA_CONTAINER_PROMISE__) {
     return globalThis.__TKA_CONTAINER_PROMISE__;
   }
   return null;

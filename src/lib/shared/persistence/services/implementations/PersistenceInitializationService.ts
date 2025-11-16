@@ -7,7 +7,7 @@
 
 import { injectable, inject } from "inversify";
 import { TYPES } from "$shared/inversify/types";
-import { IPersistenceService } from "../contracts/IPersistenceService";
+import type { IPersistenceService } from "../contracts/IPersistenceService";
 import type { IPersistenceInitializationService } from "../contracts";
 
 @injectable()

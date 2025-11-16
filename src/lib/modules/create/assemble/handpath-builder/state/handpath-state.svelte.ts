@@ -5,15 +5,14 @@
  * Implements fine-grained reactivity and immutable state updates.
  */
 
+import type { GridMode, RotationDirection } from "$shared";
 import {
   GridLocation,
-  GridMode,
   HandMotionType,
   type MotionColor,
   MotionColor as MC,
   type MotionData,
   PropType,
-  RotationDirection,
 } from "$shared";
 import { PathBuilderMode } from "../domain";
 import type {
@@ -34,7 +33,7 @@ export function createGesturalPathState() {
   // ============================================================================
 
   /** Current builder mode (discrete vs continuous) */
-  let mode = $state<PathBuilderMode>(PathBuilderMode.DISCRETE);
+  const mode = $state<PathBuilderMode>(PathBuilderMode.DISCRETE);
 
   /** Session configuration */
   let config = $state<PathBuilderConfig | null>(null);

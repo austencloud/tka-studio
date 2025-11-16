@@ -113,15 +113,11 @@ export function createCreateModuleState(
   const sequenceState = createSequenceState({
     sequenceService,
     sequencePersistenceService: sequencePersistenceService!,
-    sequenceStatisticsService: resolve(
-      TYPES.ISequenceStatisticsService
-    ),
+    sequenceStatisticsService: resolve(TYPES.ISequenceStatisticsService),
     sequenceTransformationService: resolve(
       TYPES.ISequenceTransformationService
     ),
-    sequenceValidationService: resolve(
-      TYPES.ISequenceValidationService
-    ),
+    sequenceValidationService: resolve(TYPES.ISequenceValidationService),
   });
 
   // Hand Path Coordinator for gestural path building

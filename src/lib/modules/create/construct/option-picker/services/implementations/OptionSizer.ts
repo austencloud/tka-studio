@@ -5,7 +5,7 @@
  * Replaces 4 complex calculation methods with 1 simple, reliable approach.
  */
 
-import { IDeviceDetector } from "$shared";
+import type { IDeviceDetector } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type {

@@ -1,27 +1,20 @@
-import { IReversalDetectionService } from "$create/shared/services/contracts";
+import type { IReversalDetectionService } from "$create/shared/services/contracts";
 import type { BeatData, SequenceData } from "$shared";
 import { inject, injectable } from "inversify";
 // Import TYPES directly from inversify/types to avoid HMR issues with re-exports
 import { TYPES } from "$shared/inversify/types";
-import { ICAPEndPositionSelector } from "../../../circular/services/contracts/ICAPEndPositionSelector";
-import { ICAPExecutorSelector } from "../../../circular/services/contracts/ICAPExecutorSelector";
-import { IPartialSequenceGenerator } from "../../../circular/services/contracts/IPartialSequenceGenerator";
-import { IRotationDirectionService } from "../../../circular/services/contracts/IRotationDirectionService";
-import {
-  GenerationMode,
-  PropContinuity,
-  type GenerationOptions,
-} from "../../domain";
-import {
-  IBeatGenerationOrchestrator} from "../contracts/IBeatGenerationOrchestrator";
-import type {
-  BeatGenerationOptions
-} from "../contracts/IBeatGenerationOrchestrator";
+import type { ICAPEndPositionSelector } from "../../../circular/services/contracts/ICAPEndPositionSelector";
+import type { ICAPExecutorSelector } from "../../../circular/services/contracts/ICAPExecutorSelector";
+import type { IPartialSequenceGenerator } from "../../../circular/services/contracts/IPartialSequenceGenerator";
+import type { IRotationDirectionService } from "../../../circular/services/contracts/IRotationDirectionService";
+import type { GenerationOptions } from "../../domain";
+import { GenerationMode, PropContinuity } from "../../domain";
+import type { IBeatGenerationOrchestrator } from "../contracts/IBeatGenerationOrchestrator";
+import type { BeatGenerationOptions } from "../contracts/IBeatGenerationOrchestrator";
 import type { IGenerationOrchestrationService } from "../contracts/IGenerationOrchestrationService";
-import { ISequenceMetadataService } from "../contracts/ISequenceMetadataService";
-import { IStartPositionSelector } from "../contracts/IStartPositionSelector";
-import { ITurnAllocator } from "../contracts/ITurnAllocator";
-
+import type { ISequenceMetadataService } from "../contracts/ISequenceMetadataService";
+import type { IStartPositionSelector } from "../contracts/IStartPositionSelector";
+import type { ITurnAllocator } from "../contracts/ITurnAllocator";
 /**
  * Service orchestrating the complete sequence generation pipeline
  *

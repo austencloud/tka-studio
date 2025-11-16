@@ -5,7 +5,7 @@
  * Simplified version of the desktop PlacementKeyGenerator logic.
  */
 
-import type { MotionType} from "$shared";
+import type { MotionType } from "$shared";
 import { type MotionData, type PictographData } from "$shared";
 
 export interface IArrowPlacementKeyService {

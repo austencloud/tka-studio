@@ -14,12 +14,13 @@
  */
 
 import type { BeatData } from "$create/shared/workspace-panel";
-import type { GridLocation} from "$shared";
-import { MotionColor, type IGridPositionDeriver } from "$shared";
+import type { GridLocation } from "$shared";
+import type { IGridPositionDeriver } from "$shared";
+import { MotionColor } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import type { GridPosition } from "$shared/pictograph/grid/domain/enums/grid-enums";
 import { inject, injectable } from "inversify";
-import { IOrientationCalculationService } from "../../../shared/services/contracts";
+import type { IOrientationCalculationService } from "../../../shared/services/contracts";
 import {
   HALVED_CAPS,
   QUARTERED_CAPS,

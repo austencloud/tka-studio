@@ -188,9 +188,7 @@ export class TurnsTupleGeneratorService implements ITurnsTupleGeneratorService {
       const proMotion =
         blueMotion.motionType.toLowerCase() === "pro" ? blueMotion : redMotion;
       const antiMotion =
-        blueMotion.motionType.toLowerCase() === "anti"
-          ? blueMotion
-          : redMotion;
+        blueMotion.motionType.toLowerCase() === "anti" ? blueMotion : redMotion;
 
       return `(${proMotion.turns}, ${antiMotion.turns})`;
     }

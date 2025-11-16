@@ -10,8 +10,8 @@ import { MotionType } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { IPropInterpolator, InterpolationResult } from "../contracts";
-import { IAngleCalculator } from "../contracts/IAngleCalculator";
-import { IEndpointCalculator } from "../contracts/IEndpointCalculator";
+import type { IAngleCalculator } from "../contracts/IAngleCalculator";
+import type { IEndpointCalculator } from "../contracts/IEndpointCalculator";
 
 @injectable()
 export class PropInterpolator implements IPropInterpolator {

@@ -43,4 +43,10 @@ export interface IShareService {
    * Validate share options
    */
   validateOptions(options: ShareOptions): { valid: boolean; errors: string[] };
+
+  /**
+   * Share sequence via device's native share functionality
+   * Handles Web Share API with file sharing and fallbacks
+   */
+  shareViaDevice(sequence: SequenceData, options: ShareOptions): Promise<void>;
 }

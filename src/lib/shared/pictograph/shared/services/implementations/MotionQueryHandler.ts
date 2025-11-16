@@ -5,22 +5,21 @@
  * Uses shared services for CSV loading, parsing, and transformation.
  */
 
-import type { CSVRow ,
-  Orientation} from "$shared";
+import type { CSVRow, Orientation } from "$shared";
 import {
   GridMode,
   MotionColor,
   createMotionData,
   type MotionData,
   type PictographData,
- ICSVPictographParser } from "$shared";
+  type ICSVPictographParser,
+} from "$shared";
 import { inject, injectable } from "inversify";
 import type { ParsedCsvRow } from "../../../../../modules/create/generate/shared/domain";
-import { ICSVLoader} from "../../../../foundation";
+import type { ICSVLoader } from "../../../../foundation";
 import type { IMotionQueryHandler } from "../../../../foundation";
 import { TYPES } from "../../../../inversify";
-import { IOrientationCalculator } from "../../../prop/services/contracts/IOrientationCalculationService";
-
+import type { IOrientationCalculator } from "../../../prop/services/contracts/IOrientationCalculationService";
 // Temporary interface definition
 interface ICSVParser {
   parseCSV(csvText: string): { rows: ParsedCsvRow[] };

@@ -5,15 +5,14 @@
  * Implements the PRO/ANTI determination based on hand path direction.
  */
 
+import type { MotionData, PropType } from "$shared";
 import {
   createMotionData,
   GridLocation,
   GridMode,
   HandMotionType,
-  type MotionData,
   MotionType,
   Orientation,
-  type PropType,
   RotationDirection,
 } from "$shared";
 import { inject, injectable } from "inversify";

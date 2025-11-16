@@ -4,21 +4,14 @@
  * Orchestrates the core beat-by-beat generation loop.
  * Extracted from SequenceGenerationService for single responsibility.
  */
-import {
-  ILetterQueryHandler,
-  IArrowPositioningOrchestrator} from "$shared";
-import type {
-  BeatData
-} from "$shared";
+import type { ILetterQueryHandler, IArrowPositioningOrchestrator } from "$shared";
+import type { BeatData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import { PropContinuity } from "../../domain/models/generate-models";
-import {
-  IBeatConverterService,
-  IOrientationCalculationService,
-  IPictographFilterService,
-  ITurnManagementService,
-} from "../contracts";
+import type { IBeatConverterService, IOrientationCalculationService, IPictographFilterService, ITurnManagementService } from "../contracts";
+import {  } from "../contracts";
+import {} from "../contracts";
 import type {
   BeatGenerationOptions,
   IBeatGenerationOrchestrator,

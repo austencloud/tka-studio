@@ -95,10 +95,10 @@
     height: 100%;
     padding: 0;
 
-    /* Stretch items to fill grid cells completely */
-    align-items: stretch;
-    justify-items: stretch;
-    align-content: stretch;
+    /* Center items instead of stretching them */
+    align-items: center;
+    justify-items: center;
+    align-content: center;
   }
 
   /* Tall container (portrait): Use 3x1 column layout */
@@ -119,7 +119,7 @@
 
   .pictograph-container {
     width: 100%;
-    height: 100%;
+    /* Height determined by aspect-ratio and content, not stretched */
     aspect-ratio: 1 / 1;
     position: relative;
     cursor: pointer;
@@ -181,7 +181,7 @@
 
   .pictograph-wrapper {
     width: 100%;
-    height: 100%;
+    /* Height determined by pictograph content */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -193,20 +193,12 @@
       flex-direction: row;
       gap: var(--spacing-md);
     }
-
-    .pictograph-container {
-      width: 30%;
-    }
   }
 
   /* Even smaller on very small screens */
   @media (max-width: 480px) {
     .pictograph-row {
       gap: var(--spacing-sm);
-    }
-
-    .pictograph-container {
-      width: 30%;
     }
   }
 

@@ -5,8 +5,8 @@ import {
   type MotionData,
   type PictographData,
 } from "$shared";
-import { ISpecialPlacementService } from "$shared/pictograph/arrow/positioning/placement/services/contracts";
-import { IRotationAngleOverrideKeyGenerator } from "$shared/pictograph/arrow/positioning/key-generation/services/implementations/RotationAngleOverrideKeyGenerator";
+import type { ISpecialPlacementService } from "$shared/pictograph/arrow/positioning/placement/services/contracts";
+import type { IRotationAngleOverrideKeyGenerator } from "$shared/pictograph/arrow/positioning/key-generation/services/implementations/RotationAngleOverrideKeyGenerator";
 import { injectable, inject, optional } from "inversify";
 import { TYPES } from "$shared/inversify/types";
 

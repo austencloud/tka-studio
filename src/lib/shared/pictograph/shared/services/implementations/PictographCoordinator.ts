@@ -9,7 +9,7 @@ import type { PictographData } from "$shared";
 import { createArrowLifecycleResult } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import { IArrowLifecycleManager } from "../../../arrow/orchestration/services/contracts";
+import type { IArrowLifecycleManager } from "../../../arrow/orchestration/services/contracts";
 import type {
   IPictographCoordinator,
   PictographRenderingState,

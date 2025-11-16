@@ -9,13 +9,11 @@ import { Point } from "fabric";
 import { injectable, inject } from "inversify";
 import { TYPES } from "../../../../../inversify";
 import type { GridLocation } from "../../../../grid";
-import { MotionType, type MotionData } from "../../../../shared";
+import type { MotionData } from "../../../../shared";
+import { MotionType } from "../../../../shared";
 import type { IArrowLocationCalculator } from "../../../positioning";
-import {
-  IArrowQuadrantCalculator} from "../contracts";
-import type {
-  IArrowAdjustmentProcessor
-} from "../contracts";
+import type { IArrowQuadrantCalculator } from "../contracts";
+import type { IArrowAdjustmentProcessor } from "../contracts";
 
 @injectable()
 export class ArrowAdjustmentProcessor implements IArrowAdjustmentProcessor {

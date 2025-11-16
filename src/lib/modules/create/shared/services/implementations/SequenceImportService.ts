@@ -7,6 +7,7 @@
 
 import { PngMetadataExtractor } from "$lib/shared/pictograph/shared/utils/png-metadata-extractor";
 import type { BeatData, Letter, SequenceData } from "$shared";
+import type { IEnumMapper } from "$shared";
 import {
   createMotionData,
   createPictographData,
@@ -20,7 +21,7 @@ import {
   PngMetadataArraySchema,
   PropType,
   RotationDirection,
- IEnumMapper} from "$shared";
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { ISequenceImportService } from "../contracts";

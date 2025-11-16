@@ -18,17 +18,12 @@
  */
 
 import type { BeatData } from "$create/shared/workspace-panel";
-import type {
-  Letter} from "$shared";
-import {
-  MotionColor,
-  MotionType,
-  RotationDirection,
-  type IGridPositionDeriver,
-} from "$shared";
+import type { Letter } from "$shared";
+import type { IGridPositionDeriver } from "$shared";
+import { MotionColor, MotionType, RotationDirection } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import { IOrientationCalculationService } from "../../../shared/services/contracts";
+import type { IOrientationCalculationService } from "../../../shared/services/contracts";
 import {
   COMPLEMENTARY_CAP_VALIDATION_SET,
   getComplementaryLetter,

@@ -5,7 +5,7 @@
  * Direct TypeScript port of the Python DirectionalTupleProcessor.
  */
 
-import type { GridLocation} from "$shared";
+import type { GridLocation } from "$shared";
 import { type MotionData } from "$shared";
 import type { Point } from "fabric";
 

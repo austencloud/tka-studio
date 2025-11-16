@@ -33,14 +33,12 @@
     onSequenceActionsClick,
     onShare,
     onPlayAnimation,
-    onEditInConstructor, // NEW: For Generator → Constructor transfer
     visible = true,
   }: {
     onClearSequence?: () => void;
     onSequenceActionsClick?: () => void;
     onShare?: () => void;
     onPlayAnimation?: () => void;
-    onEditInConstructor?: () => void; // NEW: Transfer to Constructor
     visible?: boolean;
   } = $props();
 
@@ -136,20 +134,6 @@
           {#if showPlayButton && onPlayAnimation}
             <div>
               <PlayButton onclick={onPlayAnimation} {isAnimating} />
-            </div>
-          {/if}
-
-          <!-- Edit in Constructor Button (Generator only) -->
-          {#if showEditInConstructor}
-            <div>
-              <button
-                class="panel-button edit-in-constructor-button"
-                onclick={onEditInConstructor}
-                aria-label="Edit in Constructor"
-                title="Open in Constructor for editing"
-              >
-                <i class="fas fa-hammer" aria-hidden="true"></i>
-              </button>
             </div>
           {/if}
 

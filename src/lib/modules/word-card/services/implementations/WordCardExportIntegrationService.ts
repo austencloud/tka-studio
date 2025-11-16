@@ -5,13 +5,8 @@
  * Handles DOM element selection, export orchestration, and file downloads.
  */
 
-import {
-  IFileDownloadService} from "$shared";
-import type {
-  DownloadResult,
-  ExportResult,
-  SequenceData,
-} from "$shared";
+import type { IFileDownloadService } from "$shared";
+import type { DownloadResult, ExportResult, SequenceData } from "$shared";
 import { inject, injectable } from "inversify";
 import { TYPES } from "$shared/inversify/types";
 import type {
@@ -316,11 +311,9 @@ export class WordCardExportIntegrationService
     let elements: HTMLElement[] = [];
 
     for (const selector of selectors) {
-      const found = document.querySelectorAll(
-        selector
-      );
+      const found = document.querySelectorAll(selector);
       if (found.length > 0) {
-        elements = Array.from(found);
+        elements = Array.from(found) as HTMLElement[];
         console.log(
           `✅ Found ${elements.length} page elements using selector: ${selector}`
         );

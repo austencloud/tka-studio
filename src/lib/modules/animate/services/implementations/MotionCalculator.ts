@@ -9,7 +9,7 @@ import { Orientation, RotationDirection } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import { PI, TWO_PI } from "../../domain/math-constants.js";
-import { IAngleCalculator } from "../contracts/IAngleCalculator";
+import type { IAngleCalculator } from "../contracts/IAngleCalculator";
 import type { IMotionCalculator } from "../contracts/IMotionCalculator";
 import {
   mapOrientationToAngle,

@@ -1,9 +1,5 @@
-import type {
-  BeatData,
-  GridMode,
-  PictographData,
-
-  GridLocation} from "$shared";
+import type { BeatData, GridMode, PictographData, GridLocation } from "$shared";
+import type { IGridPositionDeriver } from "$shared";
 import {
   createMotionData,
   createPictographData,
@@ -14,8 +10,7 @@ import {
   Orientation,
   PropType,
   RotationDirection,
-
-  IGridPositionDeriver} from "$shared";
+} from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { IStartPositionService } from "../contracts";

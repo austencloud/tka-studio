@@ -15,9 +15,7 @@ import type { IWorkbenchService } from "../services/contracts";
  */
 export function createWorkbenchState() {
   // Get the service
-  const workbenchService = resolve(
-    TYPES.IWorkbenchService
-  );
+  const workbenchService = resolve<IWorkbenchService>(TYPES.IWorkbenchService);
 
   // Simple reactive state - just what we need
   let selectedBeatIndex = $state<number | null>(null);

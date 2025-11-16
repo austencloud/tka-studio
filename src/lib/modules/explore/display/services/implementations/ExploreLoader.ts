@@ -5,19 +5,15 @@
  * Handles validation, metadata extraction, and data normalization.
  */
 
-import type {
-  GridPositionGroup} from "$shared";
-import {
-  createSequenceData,
-  type SequenceData,
-} from "$shared";
+import type { GridPositionGroup } from "$shared";
+import type { SequenceData } from "$shared";
+import { createSequenceData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { GridMode } from "$shared/pictograph/grid/domain/enums/grid-enums";
 import type { PropType } from "$shared/pictograph/prop/domain/enums/PropType";
 import { inject, injectable } from "inversify";
 import type { IExploreLoader } from "../contracts/IExploreLoader";
-import { IExploreMetadataExtractor } from "../contracts/IExploreMetadataExtractor";
-
+import type { IExploreMetadataExtractor } from "../contracts/IExploreMetadataExtractor";
 // Constants for validation
 const MAX_WORD_LENGTH = 200;
 const SEQUENCE_INDEX_URL = "/sequence-index.json";

@@ -9,7 +9,7 @@ import { Point } from "fabric";
 import { inject, injectable } from "inversify";
 import { TYPES } from "../../../../../../inversify";
 import type { MotionData, PictographData } from "$shared";
-import { ILetterClassificationService } from "../contracts/ILetterClassificationService";
+import type { ILetterClassificationService } from "../contracts/ILetterClassificationService";
 import type { ISpecialPlacementLookupService } from "../contracts/ISpecialPlacementLookupService";
 
 @injectable()
@@ -44,9 +44,9 @@ export class SpecialPlacementLookupService
       (letterData[letter] as Record<string, unknown>) || letterData;
 
     // Get turn-specific data
-    const turnData = (actualLetterData)[
-      turnsTuple
-    ] as Record<string, unknown> | undefined;
+    const turnData = actualLetterData[turnsTuple] as
+      | Record<string, unknown>
+      | undefined;
 
     if (!turnData) {
       return null;
@@ -87,9 +87,9 @@ export class SpecialPlacementLookupService
       (letterData[letter] as Record<string, unknown>) || letterData;
 
     // Get turn-specific data
-    const turnData = (actualLetterData)[
-      turnsTuple
-    ] as Record<string, unknown> | undefined;
+    const turnData = actualLetterData[turnsTuple] as
+      | Record<string, unknown>
+      | undefined;
 
     if (!turnData) {
       return false;

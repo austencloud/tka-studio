@@ -5,7 +5,7 @@
  * Uses the render module for image generation.
  */
 
-import { ISequenceRenderService } from "$render";
+import type { ISequenceRenderService } from "$render";
 import type { SequenceData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
@@ -100,7 +100,63 @@ export class ShareService implements IShareService {
     };
   }
 
+  async shareViaDevice(
+    sequence: SequenceData,
+    options: ShareOptions
+  ): Promise<void> {
+    // Check if Web Share API is available
+    if (!navigator.share || !navigator.canShare) {
+      throw new Error(
+        "Sharing not available on this device. Use the download button to save the image."
+      );
+    }
+
+    // Get the image blob
+    const blob = await this.getImageBlob(sequence, options);
+
+    // Create a File object with optimal metadata for sharing
+    const filename = this.generateFilename(sequence, options);
+    const mimeType = this.getMimeType(options.format);
+
+    const file = new File([blob], filename, {
+      type: mimeType,
+      lastModified: Date.now(),
+    });
+
+    // Prepare share data
+    const shareData: ShareData = {
+      title: "TKA Sequence",
+      text: `Check out this TKA sequence: ${sequence.name || "Untitled"}`,
+      files: [file],
+    };
+
+    // Try to share with files
+    if (navigator.canShare(shareData)) {
+      await navigator.share(shareData);
+    } else {
+      // Fallback to URL sharing if file sharing not supported
+      await navigator.share({
+        title: "TKA Sequence",
+        text: `Check out this TKA sequence: ${sequence.name || "Untitled"}`,
+        url: window.location.href,
+      });
+    }
+  }
+
   // Private helper methods
+
+  private getMimeType(format: string): string {
+    switch (format) {
+      case "PNG":
+        return "image/png";
+      case "JPEG":
+        return "image/jpeg";
+      case "WebP":
+        return "image/webp";
+      default:
+        return "image/png";
+    }
+  }
 
   private convertToRenderOptions(shareOptions: ShareOptions) {
     // Convert our simple ShareOptions to the render service's SequenceExportOptions

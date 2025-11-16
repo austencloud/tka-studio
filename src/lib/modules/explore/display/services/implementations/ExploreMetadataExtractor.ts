@@ -23,8 +23,7 @@ import type {
   IExploreMetadataExtractor,
   SequenceMetadata,
 } from "../contracts/IExploreMetadataExtractor";
-import { ISequenceDifficultyCalculator } from "../contracts/ISequenceDifficultyCalculator";
-
+import type { ISequenceDifficultyCalculator } from "../contracts/ISequenceDifficultyCalculator";
 // Constants for metadata extraction
 const DEFAULT_METADATA: SequenceMetadata = {
   beats: [],

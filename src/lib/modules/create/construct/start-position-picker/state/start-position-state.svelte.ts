@@ -21,18 +21,16 @@ export function createSimplifiedStartPositionState() {
 
   function getService(): IStartPositionService {
     if (!startPositionService) {
-      startPositionService = resolve(
-        TYPES.IStartPositionService
-      );
+      startPositionService = resolve(TYPES.IStartPositionService);
     }
-    return startPositionService;
+    return startPositionService!;
   }
 
   function getSettingsService(): ISettingsService {
     if (!settingsService) {
       settingsService = resolve(TYPES.ISettingsService);
     }
-    return settingsService;
+    return settingsService!;
   }
 
   // Load grid mode from settings (defaults to DIAMOND if not set)

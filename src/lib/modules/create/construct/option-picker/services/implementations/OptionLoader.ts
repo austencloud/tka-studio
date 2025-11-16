@@ -5,11 +5,11 @@
  * Extracted from OptionPickerService for better separation of concerns.
  */
 
-import { IMotionQueryHandler} from "$shared";
+import type { IMotionQueryHandler } from "$shared";
 import type { GridMode, PictographData } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import { IPositionAnalyzer } from "../contracts";
+import type { IPositionAnalyzer } from "../contracts";
 import type { IOptionLoader } from "../contracts";
 
 @injectable()

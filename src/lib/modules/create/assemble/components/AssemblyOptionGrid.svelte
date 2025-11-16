@@ -31,7 +31,7 @@ Displays 6 option buttons in one of four layouts:
     <AssemblyOptionButton
       {option}
       {visibleHand}
-      isDisabled={isDisabled}
+      {isDisabled}
       ariaLabel={getOptionLabel?.(option, index)}
       onSelect={onOptionSelect}
     />

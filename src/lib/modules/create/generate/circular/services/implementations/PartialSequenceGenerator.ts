@@ -4,25 +4,18 @@
  * Generates partial sequences for circular mode (CAP preparation).
  * Extracted from SequenceGenerationService - EXACT original logic preserved.
  */
-import {
-  IGridPositionDeriver,
-  ILetterQueryHandler,
-  IArrowPositioningOrchestrator} from "$shared";
-import type {
-  BeatData
-} from "$shared";
+import type { IGridPositionDeriver, ILetterQueryHandler, IArrowPositioningOrchestrator } from "$shared";
+import {  } from "$shared";
+import {} from "$shared";
+import type { BeatData } from "$shared";
 import { RotationDirection } from "$shared/pictograph/shared/domain/enums/pictograph-enums";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
 import type { GenerationOptions } from "../../../shared/domain/models/generate-models";
 import { PropContinuity } from "../../../shared/domain/models/generate-models";
-import {
-  IBeatConverterService,
-  IOrientationCalculationService,
-  IPictographFilterService,
-  ISequenceMetadataService,
-  ITurnManagementService,
-} from "../../../shared/services/contracts";
+import type { IBeatConverterService, IOrientationCalculationService, IPictographFilterService, ISequenceMetadataService, ITurnManagementService } from "../../../shared/services/contracts";
+import {  } from "../../../shared/services/contracts";
+import {} from "../../../shared/services/contracts";
 import type { IPartialSequenceGenerator } from "../contracts/IPartialSequenceGenerator";
 
 @injectable()

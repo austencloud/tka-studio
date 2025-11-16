@@ -8,14 +8,8 @@ import type {
 } from "../../shared";
 import { TYPES } from "$shared/inversify/types";
 import type { DeepOceanState } from "../domain/models/DeepOceanModels";
-import {
-  IBubblePhysics,
-  IMarineLifeAnimator,
-  IParticleSystem,
-  IOceanRenderer,
-  ILightRayCalculator,
-} from "./contracts";
-
+import type { IBubblePhysics, IMarineLifeAnimator, IParticleSystem, IOceanRenderer, ILightRayCalculator } from "./contracts";
+import {  } from "./contracts";
 /**
  * Deep Ocean Background Orchestrator
  *

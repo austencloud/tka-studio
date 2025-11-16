@@ -59,7 +59,19 @@
       "Bash(git reset:*)",
       "Bash(npx prettier:*)",
       "Bash(npx eslint:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Bash(node fix-imports.mjs:*)",
+      "Bash(check-output2.txt)",
+      "Bash(if exist fix-decorator-imports.js del fix-decorator-imports.js)",
+      "Bash(cd:*)",
+      "Bash(cut:*)",
+      "Bash(node fix-all-decorator-imports.mjs:*)",
+      "Bash(do sed -i 's/^import { \\(I[A-Z][a-zA-Z,[:space:]]*\\) } from /import type { \\1 } from /g' \"$file\" echo \"Fixed: $file\" done)",
+      "Bash(if exist fix-decorator-imports.mjs del fix-decorator-imports.mjs)",
+      "Bash(if exist fix-all-decorator-imports.mjs del fix-all-decorator-imports.mjs)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

@@ -14,11 +14,8 @@ import { z } from "zod";
 // Use barrel exports for consistency
 import { GridMode, GridPositionGroup } from "../../pictograph/grid/domain";
 import { PropType } from "../../pictograph/prop/domain";
-import type {
-  MotionDataSchema} from "../../pictograph/shared/domain/schemas";
-import {
-  PictographDataSchema,
-} from "../../pictograph/shared/domain/schemas";
+import type { MotionDataSchema } from "../../pictograph/shared/domain/schemas";
+import { PictographDataSchema } from "../../pictograph/shared/domain/schemas";
 
 // ============================================================================
 // COORDINATE AND PLACEMENT SCHEMAS

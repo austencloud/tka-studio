@@ -5,8 +5,7 @@
  * Migrated from utils/betaDetection.ts to proper service architecture.
  */
 
-import {
-  IGridPositionDeriver} from "$shared";
+import type { IGridPositionDeriver } from "$shared";
 import type {
   GridPosition,
   IBetaDetectionService,

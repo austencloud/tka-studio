@@ -5,7 +5,7 @@
  * where data corruption or missing information occurs.
  */
 
-import type { MotionData, PictographData , GridMode} from "$shared";
+import type { MotionData, PictographData, GridMode } from "$shared";
 import { resolve } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 // import type { IBetaDetectionService, IGridModeDeriver } from "../../contracts";
@@ -170,8 +170,7 @@ export class PictographDataDebugger {
     if (!pictographData.motions) return false;
 
     return Object.values(pictographData.motions).every(
-      (motion) =>
-        motion?.propType && motion.endLocation && motion.color
+      (motion) => motion?.propType && motion.endLocation && motion.color
     );
   }
 

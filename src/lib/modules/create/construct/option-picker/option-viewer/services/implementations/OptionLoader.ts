@@ -5,20 +5,20 @@
  * Extracted from OptionPickerService for better separation of concerns.
  */
 
-import { IMotionQueryHandler} from "$shared";
 import type { GridMode, PictographData } from "$shared";
+import * as SharedTypes from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import { IPositionAnalyzer } from "../contracts";
+import * as ContractTypes from "../contracts";
 import type { IOptionLoader } from "../contracts";
 
 @injectable()
 export class OptionLoader implements IOptionLoader {
   constructor(
-    @inject(TYPES.IGridPositionDeriver) private positionMapper: any,
+    @inject(TYPES.IGridPositionDeriver) private positionMapper: SharedTypes.IGridPositionDeriver,
     @inject(TYPES.IMotionQueryHandler)
-    private motionQueryHandler: IMotionQueryHandler,
-    @inject(TYPES.IPositionAnalyzer) private positionAnalyzer: IPositionAnalyzer
+    private motionQueryHandler: SharedTypes.IMotionQueryHandler,
+    @inject(TYPES.IPositionAnalyzer) private positionAnalyzer: ContractTypes.IPositionAnalyzer
   ) {}
 
   /**
@@ -29,7 +29,7 @@ export class OptionLoader implements IOptionLoader {
     sequence: PictographData[],
     gridMode: GridMode
   ): Promise<PictographData[]> {
-    if (!sequence || sequence.length === 0) {
+    if (sequence.length === 0) {
       return [];
     }
 
@@ -63,7 +63,7 @@ export class OptionLoader implements IOptionLoader {
           );
 
         const optionStartPositionStr = optionStartPosition
-          ?.toString()
+          .toString()
           .toLowerCase();
         const targetEndPosition = endPosition.toLowerCase();
 

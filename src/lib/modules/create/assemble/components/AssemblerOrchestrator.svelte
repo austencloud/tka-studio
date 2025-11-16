@@ -107,7 +107,11 @@ Integrates with workspace for real-time updates
     position: PictographData,
     location: GridLocation
   ) {
-    console.log("[AssemblerOrchestrator] Start position selected:", location, position);
+    console.log(
+      "[AssemblerOrchestrator] Start position selected:",
+      location,
+      position
+    );
     hapticService?.trigger("selection");
 
     // Update config with starting location
@@ -142,18 +146,29 @@ Integrates with workspace for real-time updates
   async function handleOptionSelected(option: PictographData) {
     if (isTransitioning) return;
 
-    console.log("[AssemblerOrchestrator] Option selected in phase:", guidedState.currentPhase);
+    console.log(
+      "[AssemblerOrchestrator] Option selected in phase:",
+      guidedState.currentPhase
+    );
     isTransitioning = true;
     hapticService?.trigger("selection");
 
     // Add to appropriate sequence
     if (guidedState.currentPhase === "blue") {
       guidedState.addBlueBeat(option);
-      console.log("[AssemblerOrchestrator] Blue sequence now has", guidedState.blueSequence.length, "beats");
+      console.log(
+        "[AssemblerOrchestrator] Blue sequence now has",
+        guidedState.blueSequence.length,
+        "beats"
+      );
 
       // Update workspace with blue-only pictograph
       const workspaceSequence = [...guidedState.blueSequence];
-      console.log("[AssemblerOrchestrator] Calling onSequenceUpdate with", workspaceSequence.length, "beats");
+      console.log(
+        "[AssemblerOrchestrator] Calling onSequenceUpdate with",
+        workspaceSequence.length,
+        "beats"
+      );
       onSequenceUpdate?.(workspaceSequence);
     } else if (guidedState.currentPhase === "red") {
       guidedState.addRedBeat(option);

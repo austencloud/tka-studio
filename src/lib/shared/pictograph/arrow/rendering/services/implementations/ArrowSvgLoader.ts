@@ -11,10 +11,9 @@
  * Extracted from ArrowRenderer to improve modularity and reusability.
  */
 
-import {
-  IArrowPathResolver,
-  IArrowSvgParser,
-  ISvgColorTransformer} from "$shared";
+import type { IArrowPathResolver, IArrowSvgParser, ISvgColorTransformer } from "$shared";
+
+import {  } from "$shared";
 import type {
   ArrowPlacementData,
   ArrowSvgData,

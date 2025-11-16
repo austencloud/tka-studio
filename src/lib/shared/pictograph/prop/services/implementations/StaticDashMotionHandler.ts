@@ -2,14 +2,8 @@
  * Static/Dash Motion Handler Implementation
  */
 
-import type {
-  MotionColor,
-  VectorDirection} from "$shared";
-import {
-  GridLocation,
-  GridMode,
-  type MotionData
-} from "$shared";
+import type { MotionColor, VectorDirection } from "$shared";
+import { GridLocation, GridMode, type MotionData } from "$shared";
 import type { BoxLoc, DiamondLoc } from "../../domain/direction/DirectionMaps";
 import {
   BOX_NON_RADIAL_MAP,

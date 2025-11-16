@@ -42,7 +42,7 @@ import type {
   XPGainEvent,
 } from "../../domain/models";
 import type { IAchievementService } from "../contracts";
-import { INotificationService } from "../contracts/INotificationService";
+import type { INotificationService } from "../contracts/INotificationService";
 import { TYPES } from "../../../inversify/types";
 
 @injectable()

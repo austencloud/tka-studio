@@ -15,8 +15,8 @@ import type {
   ICreateModuleHandlers,
   ClearSequenceParams,
 } from "../contracts/ICreateModuleHandlers";
-import { ICreateModuleService } from "../contracts/ICreateModuleService";
-import { IBeatOperationsService } from "../contracts/IBeatOperationsService";
+import type { ICreateModuleService } from "../contracts/ICreateModuleService";
+import type { IBeatOperationsService } from "../contracts/IBeatOperationsService";
 import { executeClearSequenceWorkflow } from "../../utils/clearSequenceWorkflow";
 
 @injectable()

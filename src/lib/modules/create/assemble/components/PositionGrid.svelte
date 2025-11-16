@@ -11,22 +11,17 @@ Displays 4 position buttons in one of three layouts:
   import { GridLocation, MotionColor } from "$shared";
   import PositionButton from "./PositionButton.svelte";
 
-  const {
-    positions,
-    locations,
-    handColor,
-    gridMode,
-    onPositionSelect,
-  } = $props<{
-    positions: PictographData[];
-    locations: GridLocation[];
-    handColor: MotionColor;
-    gridMode: GridMode;
-    onPositionSelect: (
-      pictograph: PictographData,
-      location: GridLocation
-    ) => void;
-  }>();
+  const { positions, locations, handColor, gridMode, onPositionSelect } =
+    $props<{
+      positions: PictographData[];
+      locations: GridLocation[];
+      handColor: MotionColor;
+      gridMode: GridMode;
+      onPositionSelect: (
+        pictograph: PictographData,
+        location: GridLocation
+      ) => void;
+    }>();
 </script>
 
 <div class="position-grid">

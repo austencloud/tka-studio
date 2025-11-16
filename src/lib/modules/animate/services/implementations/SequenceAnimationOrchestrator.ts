@@ -14,13 +14,12 @@ import type {
 } from "$shared";
 import { TYPES } from "$shared/inversify/types";
 import { inject, injectable } from "inversify";
-import {
+import type {
   IAnimationStateManager,
   IBeatCalculator,
-  IPropInterpolator} from "../contracts";
-import type {
-  ISequenceAnimationOrchestrator,
+  IPropInterpolator,
 } from "../contracts";
+import type { ISequenceAnimationOrchestrator } from "../contracts";
 
 /**
  * Lightweight Animation Orchestrator

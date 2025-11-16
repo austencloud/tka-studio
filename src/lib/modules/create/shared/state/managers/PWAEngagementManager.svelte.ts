@@ -8,6 +8,7 @@
  */
 
 import { createComponentLogger, resolve, TYPES } from "$shared";
+import type { IPWAEngagementService } from "$shared/mobile/services/contracts/IPWAEngagementService";
 import type { createCreateModuleState as CreateModuleStateType } from "../create-module-state.svelte";
 
 type CreateModuleState = ReturnType<typeof CreateModuleStateType>;
@@ -41,9 +42,9 @@ export function createPWAEngagementEffect(
       if (!CreateModuleState.hasSequence) return;
 
       try {
-        const engagementService = resolve(TYPES.IPWAEngagementService);
-        engagementService?.recordSequenceCreated?.();
-        engagementService?.recordInteraction?.(); // Also count as interaction
+        const engagementService = resolve<IPWAEngagementService>(TYPES.IPWAEngagementService);
+        engagementService?.recordSequenceCreated();
+        engagementService?.recordInteraction(); // Also count as interaction
         hasTrackedSequenceCreation = true;
         getLogger().log("PWA engagement: sequence created");
       } catch (error) {

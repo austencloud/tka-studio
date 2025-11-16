@@ -5,8 +5,7 @@
  * This replaces the PictographRenderingService with explicit composition.
  */
 
-import type {
-  MotionColor} from "$shared";
+import type { MotionColor } from "$shared";
 import {
   GridMode,
   resolve,

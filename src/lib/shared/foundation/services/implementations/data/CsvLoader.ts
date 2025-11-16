@@ -171,10 +171,7 @@ export class CsvLoader implements ICSVLoader {
   }
 
   private isWindowDataAvailable(): boolean {
-    return (
-      window.csvData !== undefined &&
-      window.csvData !== null
-    );
+    return window.csvData !== undefined && window.csvData !== null;
   }
 
   private async loadFromStaticFiles(): Promise<CsvDataSet> {

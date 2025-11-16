@@ -86,10 +86,7 @@ export function createConstructTabState(
       return;
     }
 
-    if (
-      source === "user" &&
-      createModuleState?.pushUndoSnapshot
-    ) {
+    if (source === "user" && createModuleState?.pushUndoSnapshot) {
       createModuleState.pushUndoSnapshot("SELECT_START_POSITION", {
         description: "Select start position",
       });
@@ -192,9 +189,7 @@ export function createConstructTabState(
     }
 
     // Register callbacks with Create Module State for undo functionality
-    if (
-      createModuleState?.setShowStartPositionPickerCallback
-    ) {
+    if (createModuleState?.setShowStartPositionPickerCallback) {
       createModuleState.setShowStartPositionPickerCallback(() => {
         setShowStartPositionPicker(true);
       });

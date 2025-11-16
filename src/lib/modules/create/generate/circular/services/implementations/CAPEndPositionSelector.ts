@@ -4,7 +4,7 @@ import { TYPES } from "$shared/inversify/types";
 import type { SliceSize } from "../../domain/models/circular-models";
 import { CAPType } from "../../domain/models/circular-models";
 import type { ICAPEndPositionSelector } from "../contracts/ICAPEndPositionSelector";
-import { IRotatedEndPositionSelector } from "../contracts/IRotatedEndPositionSelector";
+import type { IRotatedEndPositionSelector } from "../contracts/IRotatedEndPositionSelector";
 import {
   VERTICAL_MIRROR_POSITION_MAP,
   SWAPPED_POSITION_MAP,
