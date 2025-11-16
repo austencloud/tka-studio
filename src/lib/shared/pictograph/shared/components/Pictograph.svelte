@@ -9,6 +9,10 @@
     type ITurnsTupleGeneratorService,
     type PictographData,
   } from "$shared";
+  import ElementalGlyph from "./ElementalGlyph.svelte";
+  import PositionGlyph from "./PositionGlyph.svelte";
+  import VTGGlyph from "./VTGGlyph.svelte";
+  import { calculateVTGFromPictograph } from "../domain/utils/vtg-calculator";
   import { onMount, onDestroy } from "svelte";
   import { resolve, tryResolve, TYPES } from "../../../inversify";
   import ArrowSvg from "../../arrow/rendering/components/ArrowSvg.svelte";
@@ -123,6 +127,15 @@
       return "(s, 0, 0)"; // Fallback if service not available yet
     }
     return generator.generateTurnsTuple(pictographData);
+  });
+
+  // Calculate VTG mode and elemental type from pictograph data
+  const vtgInfo = $derived.by(() => {
+    if (!pictographData) {
+      return { vtgMode: null, elementalType: null };
+    }
+    // Use the derived grid mode for VTG calculation
+    return calculateVTGFromPictograph(pictographData, gridMode);
   });
 
   // Create a content key that changes when pictograph content changes
@@ -396,6 +409,28 @@
             redReversal={delayedRedReversal}
             hasValidData={pictographState.hasValidData}
           />
+
+          <!-- Elemental glyph -->
+          <ElementalGlyph
+            elementalType={vtgInfo.elementalType}
+            letter={pictographData?.letter}
+            hasValidData={pictographState.hasValidData}
+          />
+
+          <!-- VTG glyph -->
+          <VTGGlyph
+            vtgMode={vtgInfo.vtgMode}
+            letter={pictographData?.letter}
+            hasValidData={pictographState.hasValidData}
+          />
+
+          <!-- Position glyph -->
+          <PositionGlyph
+            startPosition={pictographData?.startPosition}
+            endPosition={pictographData?.endPosition}
+            letter={pictographData?.letter}
+            hasValidData={pictographState.hasValidData}
+          />
         </g>
       {:else}
         <!-- With transitions - use key block for fade in/out -->
@@ -454,6 +489,28 @@
             <ReversalIndicators
               blueReversal={delayedBlueReversal}
               redReversal={delayedRedReversal}
+              hasValidData={pictographState.hasValidData}
+            />
+
+            <!-- Elemental glyph -->
+            <ElementalGlyph
+              elementalType={vtgInfo.elementalType}
+              letter={pictographData?.letter}
+              hasValidData={pictographState.hasValidData}
+            />
+
+            <!-- VTG glyph -->
+            <VTGGlyph
+              vtgMode={vtgInfo.vtgMode}
+              letter={pictographData?.letter}
+              hasValidData={pictographState.hasValidData}
+            />
+
+            <!-- Position glyph -->
+            <PositionGlyph
+              startPosition={pictographData?.startPosition}
+              endPosition={pictographData?.endPosition}
+              letter={pictographData?.letter}
               hasValidData={pictographState.hasValidData}
             />
           </g>

@@ -82,6 +82,9 @@ export enum ElementalType {
   WATER = "water",
   FIRE = "fire",
   EARTH = "earth",
+  AIR = "air",
+  SUN = "sun",
+  MOON = "moon",
 }
 
 export enum GlyphType {
