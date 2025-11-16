@@ -2,6 +2,7 @@ import { ContainerModule, type ContainerModuleLoadOptions } from "inversify";
 import {
   ExploreCacheService,
   ExploreDeleteService,
+  ExploreEventHandlerService,
   ExploreFilterService,
   ExploreLoader,
   ExploreMetadataExtractor,
@@ -40,6 +41,7 @@ export const exploreModule = new ContainerModule(
     options.bind(TYPES.IOptimizedExploreService).to(OptimizedExploreService);
     options.bind(TYPES.INavigationService).to(NavigationService);
     options.bind(TYPES.IDeleteService).to(ExploreDeleteService);
+    options.bind(TYPES.IExploreEventHandlerService).to(ExploreEventHandlerService);
 
     // User Explore Service
     options.bind(TYPES.IUserExploreService).to(UserExploreService);

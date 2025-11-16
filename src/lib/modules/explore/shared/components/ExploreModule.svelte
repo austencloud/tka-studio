@@ -7,7 +7,7 @@
   import { navigationState } from "../../../../shared/navigation/state/navigation-state.svelte";
   import ErrorBanner from "../../../create/shared/components/ErrorBanner.svelte";
 
-  import type { IExploreThumbnailService } from "../../display";
+  import type { IExploreEventHandlerService } from "../services/contracts";
   import UsersExplorePanel from "../../users/components/UsersExplorePanel.svelte";
   import CollectionsExplorePanel from "../../collections/components/CollectionsExplorePanel.svelte";
   import { createExploreState } from "../state/explore-state-factory.svelte";
@@ -17,7 +17,6 @@
   import { ExplorerScrollBehaviorService } from "../services/implementations/ExplorerScrollBehaviorService";
   import { desktopSidebarState } from "../../../../shared/layout/desktop-sidebar-state.svelte";
   import { galleryControlsManager } from "../state/gallery-controls-state.svelte";
-  import { useExploreHandlers } from "../composables/useExploreHandlers.svelte";
 
   type ExploreModuleType = "sequences" | "users" | "collections";
 
@@ -26,8 +25,8 @@
   // ============================================================================
 
   const galleryState = createExploreState();
-  const thumbnailService = resolve<IExploreThumbnailService>(
-    TYPES.IExploreThumbnailService
+  const eventHandlerService = resolve<IExploreEventHandlerService>(
+    TYPES.IExploreEventHandlerService
   );
 
   // ✅ PURE RUNES: Local state

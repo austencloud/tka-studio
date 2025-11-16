@@ -1,14 +1,14 @@
 <!--
 Gallery Top Bar Controls
 Renders the Gallery controls in the TopBar when desktop sidebar is visible
-Uses shared gallery controls state from ExploreTab (Svelte 5 runes pattern)
+Uses shared gallery controls state from ExploreModule (Svelte 5 runes pattern)
 -->
 <script lang="ts">
   import { ViewPresetsDropdown } from "../../filtering/components";
   import { NavigationDropdown } from "../../navigation/components";
   import { galleryControlsManager } from "../state/gallery-controls-state.svelte";
 
-  // Get gallery controls from global reactive state (provided by ExploreTab)
+  // Get gallery controls from global reactive state (provided by ExploreModule)
   const galleryControls = $derived(galleryControlsManager.current);
 </script>
 
@@ -70,7 +70,7 @@ Uses shared gallery controls state from ExploreTab (Svelte 5 runes pattern)
     flex-shrink: 0;
   }
 
-  /* Advanced Filter Button - matching the style from ExploreTab */
+  /* Advanced Filter Button - matching the style from ExploreModule */
   .advanced-filter-button {
     display: flex;
     align-items: center;
