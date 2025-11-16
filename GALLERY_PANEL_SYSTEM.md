@@ -90,7 +90,7 @@ Mobile-optimized bottom sheet for sorting and navigation:
 ### 1. Add Device Detection
 
 ```typescript
-// In ExploreTab
+// In ExploreModule
 const isMobile = $derived(
   responsiveSettings?.isMobile || responsiveSettings?.isTablet
 );
@@ -202,7 +202,7 @@ function handleSequenceClick(sequence: SequenceData) {
 
 ## Next Steps
 
-1. **Wire up in ExploreTab**
+1. **Wire up in ExploreModule**
    - Add device detection
    - Replace mobile dropdowns with buttons
    - Add SidePanel components

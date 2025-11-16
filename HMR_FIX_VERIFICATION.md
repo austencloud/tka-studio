@@ -61,7 +61,7 @@ Improved [inversify/index.ts:112-169](src/lib/shared/inversify/index.ts#L112-L16
 
 ### Test 3: HMR Preserves Module Services
 1. **Navigate to the Explore tab**
-2. **Make a trivial change** to any file (e.g., add a comment to ExploreTab.svelte)
+2. **Make a trivial change** to any file (e.g., add a comment to ExploreModule.svelte)
 3. **Save the file** to trigger HMR
 4. **Verify** that:
    - The console shows: `🔄 HMR: Restoring feature modules: explore`

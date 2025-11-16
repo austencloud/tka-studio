@@ -21,7 +21,7 @@ Successfully integrated Gallery controls into the TopBar when desktop sidebar is
 - When desktop sidebar is hidden: controls render in their original position
 
 ### 4. **Context-Based State Sharing**
-- **File**: `src/lib/modules/explore/shared/components/ExploreTab.svelte:117-126`
+- **File**: `src/lib/modules/explore/shared/components/ExploreModule.svelte:117-126`
 - Created `galleryControls` context to expose:
   - `currentFilter`
   - `currentSortMethod`
@@ -65,9 +65,9 @@ Successfully integrated Gallery controls into the TopBar when desktop sidebar is
 - No jarring hide/show of TopBar when switching modules
 
 ### ✅ **Context-Based Communication**
-- Clean data flow from ExploreTab → GalleryTopBarControls
+- Clean data flow from ExploreModule → GalleryTopBarControls
 - No prop drilling through multiple components
-- State management stays in ExploreTab
+- State management stays in ExploreModule
 
 ## User Experience Flow
 
@@ -90,7 +90,7 @@ Successfully integrated Gallery controls into the TopBar when desktop sidebar is
 1. `src/lib/shared/navigation/state/navigation-state.svelte.ts`
 2. `src/lib/shared/MainInterface.svelte`
 3. `src/lib/modules/explore/shared/components/ExploreLayout.svelte`
-4. `src/lib/modules/explore/shared/components/ExploreTab.svelte`
+4. `src/lib/modules/explore/shared/components/ExploreModule.svelte`
 5. **NEW**: `src/lib/modules/explore/shared/components/GalleryTopBarControls.svelte`
 
 ## Testing Recommendations
