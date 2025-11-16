@@ -16,6 +16,7 @@
   import AccessibilityTab from "./tabs/AccessibilityTab.svelte";
   import BackgroundTab from "./tabs/background/BackgroundTab.svelte";
   import PropTypeTab from "./tabs/PropTypeTab.svelte";
+  import VisibilityTab from "./tabs/VisibilityTab.svelte";
   import {
     loadActiveTab,
     validateActiveTab as validateTab,
@@ -23,7 +24,7 @@
   } from "../utils/tab-persistence.svelte";
 
   // Valid tab IDs for validation
-  const VALID_TAB_IDS = ["PropType", "Background", "Accessibility"];
+  const VALID_TAB_IDS = ["PropType", "Background", "Visibility", "Accessibility"];
 
   // Props
   let { isOpen = false } = $props<{ isOpen?: boolean }>();
@@ -64,6 +65,11 @@
       id: "Background",
       label: "Background",
       icon: '<i class="fas fa-star"></i>',
+    },
+    {
+      id: "Visibility",
+      label: "Visibility",
+      icon: '<i class="fas fa-eye"></i>',
     },
     {
       id: "Accessibility",
@@ -152,6 +158,11 @@
           <PropTypeTab {settings} onUpdate={handlePropUpdate} />
         {:else if activeTab === "Background"}
           <BackgroundTab {settings} onUpdate={handlePropUpdate} />
+        {:else if activeTab === "Visibility"}
+          <VisibilityTab
+            currentSettings={settings}
+            onSettingUpdate={handlePropUpdate}
+          />
         {:else if activeTab === "Accessibility"}
           <AccessibilityTab
             currentSettings={settings}
