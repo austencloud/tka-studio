@@ -20,7 +20,7 @@
   import LibraryTab from "../../modules/library/LibraryTab.svelte"; // Legacy support
   import WordCardTab from "../../modules/word-card/components/WordCardTab.svelte";
   import WriteTab from "../../modules/write/components/WriteTab.svelte";
-  import { ExploreTab } from "../../modules";
+  import { ExploreModule } from "../../modules";
 
   interface Props {
     activeModule: string | null;
@@ -57,7 +57,7 @@
         {#if isModuleActive("create")}
           <CreateModule {onTabAccessibilityChange} {onCurrentWordChange} />
         {:else if isModuleActive("explore")}
-          <ExploreTab />
+          <ExploreModule />
         {:else if isModuleActive("learn")}
           <LearnTab onHeaderChange={onLearnHeaderChange} />
         {:else if isModuleActive("collect")}
@@ -133,8 +133,12 @@
   }
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 
   .module-loading p {

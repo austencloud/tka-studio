@@ -218,7 +218,6 @@ export async function initializeModulePersistence(): Promise<void> {
         if (cached) {
           const parsed = JSON.parse(cached);
           savedModule = parsed.moduleId;
-          console.log(`📦 [initializeModulePersistence] Found cached module in localStorage: ${savedModule}`);
         }
       } catch (e) {
         // Ignore parse errors
@@ -230,9 +229,6 @@ export async function initializeModulePersistence(): Promise<void> {
       const persistence = getPersistenceService();
       await persistence.initialize();
       savedModule = await persistence.getActiveTab();
-      if (savedModule) {
-        console.log(`📦 [initializeModulePersistence] Found module in Firestore: ${savedModule}`);
-      }
     }
 
     if (savedModule) {
@@ -241,13 +237,11 @@ export async function initializeModulePersistence(): Promise<void> {
 
       // IMPORTANT: During initial load, skip access check because auth might not be ready yet
       // revalidateCurrentModule() will correct this after auth loads if needed
-      console.log(`📦 [initializeModulePersistence] Loading services for module: ${moduleId}`);
 
       // ⚡ CRITICAL: Load module services BEFORE setting activeModule
       // This prevents the UI from trying to render before services are ready
       await loadFeatureModule(moduleId);
 
-      console.log(`📦 [initializeModulePersistence] Services loaded, setting activeModule to: ${moduleId}`);
       setActiveModule(moduleId);
 
       if (browser) {
@@ -256,8 +250,6 @@ export async function initializeModulePersistence(): Promise<void> {
     } else {
       // No saved module
       const defaultModule = "create" as ModuleId;
-
-      console.log(`📦 [initializeModulePersistence] No saved module, using default: ${defaultModule}`);
 
       // Load default module's DI services
       await loadFeatureModule(defaultModule);
