@@ -96,6 +96,4 @@ export function registerCommandPaletteCommands(
       state.closeCommandPalette();
     },
   });
-
-  console.log("✅ Command palette commands registered");
 }

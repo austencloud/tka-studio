@@ -38,8 +38,6 @@ export class KeyboardShortcutService implements IKeyboardShortcutService {
     // Use capture phase to intercept events BEFORE browser defaults
     window.addEventListener("keydown", this.keydownHandler, true);
     this.isInitialized = true;
-
-    console.log("⌨️ KeyboardShortcutService initialized");
   }
 
   dispose(): void {
@@ -117,7 +115,6 @@ export class KeyboardShortcutService implements IKeyboardShortcutService {
   }
 
   setContext(context: ShortcutContext): void {
-    console.log(`⌨️ Context changed: ${this.currentContext} → ${context}`);
     this.currentContext = context;
   }
 

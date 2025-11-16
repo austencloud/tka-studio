@@ -345,6 +345,4 @@ export function registerCreateShortcuts(
       // increaseCurrentValue();
     },
   });
-
-  console.log("✅ CREATE module shortcuts registered");
 }

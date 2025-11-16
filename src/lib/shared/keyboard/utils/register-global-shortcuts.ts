@@ -113,6 +113,4 @@ export function registerGlobalShortcuts(
       },
     });
   });
-
-  console.log("✅ Global shortcuts registered");
 }
